@@ -1,5 +1,7 @@
 // app/contexts/CategoryContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { ENDPOINTS } from '../../config/api';
+import apiClient from '../../utils/apiClient';
 
 type Category = {
   id: number;
@@ -34,15 +36,16 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
         setLoadingMore(true);
       }
 
-      const response = await fetch(
-        `http://10.0.2.2:3001/products/categories?page=${pageNum}&per_page=20`
-      );
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const { data, error } = await apiClient.get<Category[]>(ENDPOINTS.CATEGORIES.LIST(pageNum, 20));
+
+      if (error) {
+        throw new Error(error);
       }
       
-      const data = await response.json();
+      if (!data) {
+        setHasMore(false);
+        return [];
+      }
       
       if (data.length === 0) {
         setHasMore(false);
@@ -53,6 +56,7 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
       
       setError(null);
       return data;
+      
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Error fetching categories:', err);
