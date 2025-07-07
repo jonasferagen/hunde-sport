@@ -1,5 +1,11 @@
 import { Stack } from "expo-router";
+// app/_layout.tsx
+import { CategoryProvider } from './contexts/CategoryContext';
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <CategoryProvider>
+      <Stack />
+    </CategoryProvider>
+  );
 }
