@@ -5,7 +5,11 @@ import { CategoryProvider } from './contexts/CategoryContext';
 export default function RootLayout() {
   return (
     <CategoryProvider>
-      <Stack />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
     </CategoryProvider>
   );
 }
