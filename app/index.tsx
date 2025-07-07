@@ -1,6 +1,6 @@
 // app/index.tsx
 import { memo } from 'react';
-import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
 import { useCategories } from './contexts/CategoryContext';
 
 // Define prop types for better type checking
@@ -65,7 +65,7 @@ const createStyles = () => {
 const styles = createStyles();
 
 export default function Index() {
-  const { categories, loading, loadingMore, error, loadMore } = useCategories();
+  const { categories, loading, loadingMore, error, loadMore, refresh } = useCategories();
 
   const renderFooter = () => {
     if (!loadingMore) return null;
@@ -91,10 +91,12 @@ export default function Index() {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text style={styles.error}>Error: {error}</Text>
+        <Text style={styles.error}>{error}</Text>
+        <Button onPress={refresh} title="Retry" />
       </View>
     );
   }
+
 
   return (
     <View style={styles.container}>
