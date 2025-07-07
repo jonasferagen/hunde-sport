@@ -103,3 +103,5 @@ export const useCategories = () => {
   }
   return context;
 };
+
+export default CategoryProvider;
