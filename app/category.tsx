@@ -1,14 +1,38 @@
 import { Product } from '@/types';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useEffect } from 'react';
-import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { memo, useEffect } from 'react';
+import { ActivityIndicator, Button, FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useProducts } from './contexts/ProductContext';
+
+const ProductItem = memo<Product>(({ id, name }) => {
+  const handlePress = () => {
+    router.push({
+      pathname: "/product",
+      params: { 
+        name: name,
+        id: id.toString()
+      }
+    });
+  };
+
+  return (
+    <TouchableOpacity 
+      style={styles.productItem}
+      onPress={handlePress}
+    >
+      <Text style={styles.productText}>{name}</Text>
+    </TouchableOpacity>
+  );
+}, (prevProps, nextProps) => {
+  return prevProps.id === nextProps.id && prevProps.name === nextProps.name;
+});
+
+const keyExtractor = (item: Product) => item.id.toString();
 
 export default function CategoryScreen() {
   const { name, id } = useLocalSearchParams<{ name: string; id?: string }>();
   const { products, loading, error, hasMore, loadMore, setCategoryId } = useProducts();
   const navigation = useNavigation();
-
 
   useEffect(() => {
     if (id) {
@@ -34,24 +58,8 @@ export default function CategoryScreen() {
     );
   };
 
-    const renderItem = ({item}: {item: Product}) => {
-//      console.log(item);
-    return (
-    <TouchableOpacity 
-      style={styles.productItem}
-      onPress={() => {
-        router.push({
-          pathname: "/product",
-          params: { 
-            name: item.name,
-            id: item.id.toString()
-          }
-        });
-      }}
-    >
-      <Text style={styles.productText}>{item.name}</Text>
-    </TouchableOpacity>
-    );
+  const renderItem = ({item}: ListRenderItemInfo<Product>) => {
+    return <ProductItem {...item} />;
   };
 
   if (error) {
@@ -64,21 +72,22 @@ export default function CategoryScreen() {
   }
 
   return (
-
-      <FlatList
-        data={products}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContent}
-        onEndReached={() => {
-          if (!loading && hasMore) {
-            loadMore();
-          }
-        }}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-      />
-
+    <FlatList
+      data={products}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      contentContainerStyle={styles.listContent}
+      onEndReached={() => {
+        if (!loading && hasMore) {
+          loadMore();
+        }
+      }}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={renderFooter}
+      initialNumToRender={10}
+      maxToRenderPerBatch={10}
+      windowSize={11}
+    />
   );
 }
 
