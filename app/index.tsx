@@ -69,7 +69,7 @@ const createStyles = () => {
     categoryImage: {
       width: 40,
       height: 40,
-      marginRight: 15
+      marginHorizontal: 15
     },
     categoryText: {
       flex: 1,
@@ -99,9 +99,12 @@ export default function Index() {
     );
   };
 
-  const renderItem: ListRenderItem<Category> = ({ item }) => (
-    <CategoryItem {...item} />
-  );
+  const renderItem: ListRenderItem<Category> = ({ item }) => {
+
+    return (
+      <CategoryItem {...item} />
+    );
+  };
 
   if (loading && !loadingMore) {
     return (

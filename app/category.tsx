@@ -1,3 +1,4 @@
+import { Product } from '@/types';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -33,7 +34,9 @@ export default function CategoryScreen() {
     );
   };
 
-  const renderItem = ({ item }: { item: { id: number; name: string } }) => (
+    const renderItem = ({item}: {item: Product}) => {
+//      console.log(item);
+    return (
     <TouchableOpacity 
       style={styles.productItem}
       onPress={() => {
@@ -48,11 +51,12 @@ export default function CategoryScreen() {
     >
       <Text style={styles.productText}>{item.name}</Text>
     </TouchableOpacity>
-  );
+    );
+  };
 
   if (error) {
     return (
-      <View style={styles.container}>
+      <View>
         <Text style={styles.error}>{error}</Text>
         <Button onPress={() => setCategoryId(id ? parseInt(id, 10) : null)} title="Retry" />
       </View>
@@ -60,7 +64,7 @@ export default function CategoryScreen() {
   }
 
   return (
-    <View style={styles.container}>
+
       <FlatList
         data={products}
         renderItem={renderItem}
@@ -74,15 +78,11 @@ export default function CategoryScreen() {
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
-    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   listContent: {
     padding: 16,
   },
