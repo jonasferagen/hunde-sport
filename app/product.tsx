@@ -7,7 +7,7 @@ import { useProducts } from './contexts/ProductContext';
 export default function ProductScreen() {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const { product, loading, getProductById } = useProducts();
-
+  console.log('---');
   console.log(product);
 
   useEffect(() => {

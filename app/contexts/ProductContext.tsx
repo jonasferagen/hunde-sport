@@ -91,12 +91,22 @@ export const ProductProvider: React.FC<{children: React.ReactNode}> = ({ childre
   }, [categoryId]);
 
   const getProductById = async (id: number): Promise<Product | null> => {
+    const existingProduct = products.find(p => p.id === id);
+    if (existingProduct) {
+      setProduct(existingProduct);
+      return existingProduct;
+    }
+
     try {
       setLoading(true);
       const { data, error } = await apiClient.get<Product>(`${ENDPOINTS.PRODUCTS.LIST(1)}/${id}`);
       
       if (error) {
         throw new Error(error);
+      }
+
+      if (data) {
+        setProducts(prev => [...prev, data]);
       }
       
       setProduct(data || null);
