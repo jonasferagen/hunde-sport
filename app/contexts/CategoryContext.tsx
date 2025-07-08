@@ -17,8 +17,10 @@ type CategoryContextType = {
   loadingMore: boolean;
   error: string | null;
   hasMore: boolean;
+  parentId: number | null;
   loadMore: () => Promise<void>;
   refresh: () => Promise<void>;
+  setParentId: (id: number | null) => void;
 };
 
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [parentId, setParentId] = useState<number | null>(null);
 
   const fetchCategories = async (pageNum: number, append = false) => {
     try {
@@ -39,7 +42,9 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
         setLoadingMore(true);
       }
 
-      const { data, error } = await apiClient.get<Category[]>(ENDPOINTS.CATEGORIES.LIST(pageNum));
+      const { data, error } = await apiClient.get<Category[]>(
+        ENDPOINTS.CATEGORIES.LIST(pageNum, parentId || 0)
+      );
       const filteredData = data!.filter(category => category.image && category.image.src);
 
 
@@ -83,9 +88,13 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
     await fetchCategories(1, false);
   };
 
+  // Reset and fetch categories when parentId changes
   useEffect(() => {
+    setPage(1);
+    setCategories([]);
+    setHasMore(true);
     fetchCategories(1, false);
-  }, []);
+  }, [parentId]);
 
   return (
     <CategoryContext.Provider 
@@ -95,8 +104,10 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
         loadingMore,
         error, 
         hasMore,
+        parentId,
         loadMore,
-        refresh 
+        refresh,
+        setParentId
       }}
     >
       {children}

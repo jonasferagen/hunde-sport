@@ -1,8 +1,9 @@
 // app/index.tsx
 import { memo } from 'react';
-import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
 import { useCategories } from './contexts/CategoryContext';
+import { router } from 'expo-router';
 
 // Define prop types for better type checking
 interface CategoryItemProps {
@@ -17,27 +18,35 @@ interface CategoryItemProps {
 
 // Memoized list item component with areEqual comparison
 const CategoryItem = memo(({ item }: CategoryItemProps) => { 
-  console.log('Image URI:', item.image?.src);
+  const handlePress = () => {
+    router.push({
+      pathname: "/category",
+      params: { name: item.name }
+    });
+  };
+
   return (
-    <View style={styles.categoryItem}>
-      {item.image && (
-        <View style={styles.svgContainer}>
-          <SvgUri 
-            width="40"
-            height="40"
-            uri={item.image.src}
-          />
-        </View>
-      )}
-      <Text 
-        style={styles.categoryText} 
-        numberOfLines={1} 
-        ellipsizeMode="tail"
-        selectable={false}
-      >
-        {item.name}
-      </Text>
-    </View>
+    <TouchableOpacity onPress={handlePress}>
+      <View style={styles.categoryItem}>
+        {item.image && (
+          <View style={styles.svgContainer}>
+            <SvgUri 
+              width="40"
+              height="40"
+              uri={item.image.src}
+            />
+          </View>
+        )}
+        <Text 
+          style={styles.categoryText} 
+          numberOfLines={1} 
+          ellipsizeMode="tail"
+          selectable={false}
+        >
+          {item.name}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 }, 
 (prevProps, nextProps) => {
@@ -136,7 +145,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Kategorier</Text>
+      <Text style={styles.title}>Hva leter du etter?</Text>
       <FlatList
         data={categories}
         keyExtractor={keyExtractor}
