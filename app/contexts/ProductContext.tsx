@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
+import type { Product } from '../../types';
 import apiClient from '../../utils/apiClient';
-import { Product } from '../types';
 
 type ProductContextType = {
   products: Product[];
@@ -10,15 +10,18 @@ type ProductContextType = {
   error: string | null;
   hasMore: boolean;
   categoryId: number | null;
+  product: Product | null;
   loadMore: () => Promise<void>;
   refresh: () => Promise<void>;
   setCategoryId: (id: number | null) => void;
+  getProductById: (id: number) => Promise<Product | null>;
 };
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export const ProductProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -87,6 +90,26 @@ export const ProductProvider: React.FC<{children: React.ReactNode}> = ({ childre
     fetchProducts(1, false);
   }, [categoryId]);
 
+  const getProductById = async (id: number): Promise<Product | null> => {
+    try {
+      setLoading(true);
+      const { data, error } = await apiClient.get<Product>(`${ENDPOINTS.PRODUCTS.LIST(1)}/${id}`);
+      
+      if (error) {
+        throw new Error(error);
+      }
+      
+      setProduct(data || null);
+      return data || null;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Error fetching product:', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ProductContext.Provider 
       value={{
@@ -96,9 +119,11 @@ export const ProductProvider: React.FC<{children: React.ReactNode}> = ({ childre
         error,
         hasMore,
         categoryId,
+        product,
         loadMore,
         refresh,
         setCategoryId,
+        getProductById,
       }}
     >
       {children}

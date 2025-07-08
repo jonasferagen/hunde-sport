@@ -11,6 +11,10 @@ export interface Category {
 export interface Product {
   id: number;
   name: string;
+  description: string;
+  short_description: string;
+  categories: Category[];
+  images: Image[];
   // Add more product fields as needed
 }
 
@@ -18,5 +22,3 @@ export interface CategoryItemProps {
   item: Category;
 }
 
-// Re-export all types for easier imports
-export * from './index';

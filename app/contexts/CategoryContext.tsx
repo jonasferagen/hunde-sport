@@ -1,8 +1,8 @@
 // app/contexts/CategoryContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
+import type { Category } from '../../types';
 import apiClient from '../../utils/apiClient';
-import { Category } from '../types';
 
 type CategoryContextType = {
   categories: Category[];

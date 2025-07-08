@@ -1,10 +1,10 @@
 // app/index.tsx
+import { router } from 'expo-router';
 import { memo } from 'react';
 import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
+import type { CategoryItemProps } from '../types';
 import { useCategories } from './contexts/CategoryContext';
-import { router } from 'expo-router';
-import { Category, CategoryItemProps } from './types';
 
 // Memoized list item component with areEqual comparison
 const CategoryItem = memo<CategoryItemProps>(({ item }) => { 

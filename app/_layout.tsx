@@ -13,6 +13,6 @@ export default function RootLayout() {
           }}
         />
       </ProductProvider>
-    </CategoryProvider>
+    </CategoryProvider> 
   );
 }

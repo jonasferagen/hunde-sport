@@ -1,12 +1,13 @@
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useProducts } from './contexts/ProductContext';
 
 export default function CategoryScreen() {
   const { name, id } = useLocalSearchParams<{ name: string; id?: string }>();
   const { products, loading, error, hasMore, loadMore, setCategoryId } = useProducts();
   const navigation = useNavigation();
+
 
   useEffect(() => {
     if (id) {
@@ -33,9 +34,20 @@ export default function CategoryScreen() {
   };
 
   const renderItem = ({ item }: { item: { id: number; name: string } }) => (
-    <View style={styles.productItem}>
+    <TouchableOpacity 
+      style={styles.productItem}
+      onPress={() => {
+        router.push({
+          pathname: "/product",
+          params: { 
+            name: item.name,
+            id: item.id.toString()
+          }
+        });
+      }}
+    >
       <Text style={styles.productText}>{item.name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   if (error) {
@@ -78,6 +90,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    backgroundColor: '#fff',
   },
   productText: {
     fontSize: 16,
