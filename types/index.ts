@@ -26,7 +26,6 @@ export interface Product {
   short_description: string;
   categories: Category[];
   images: Image[];
-  // Add more product fields as needed
 }
 
 export interface BaseContextType {
