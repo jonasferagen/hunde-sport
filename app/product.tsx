@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import FullScreenLoader from './components/FullScreenLoader';
 import ProductDetails from './components/product/ProductDetails';
 import ProductImage from './components/product/ProductImage';
 import ProductTitle from './components/product/ProductTitle';
@@ -17,9 +18,7 @@ export default function ProductScreen() {
   }, [id]);
 
   if (loading && !product) {
-    return (
-      <ActivityIndicator size="large" />
-    );
+    return <FullScreenLoader />;
   }
 
   if (!product) {
@@ -33,8 +32,8 @@ export default function ProductScreen() {
       <ProductTitle name={product.name} />
       {product.images && product.images.length > 0 && (
         <View style={styles.imageContainer}>
-          {product.images.map((image) => (
-            <ProductImage key={image.src} image={image} />
+          {product.images.map((image, index) => (
+            <ProductImage key={`${image.src}-${index}`} image={image} />
           ))}
         </View>
       )}
@@ -44,11 +43,6 @@ export default function ProductScreen() {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   imageContainer: {
     marginBottom: 20,
   },

@@ -4,8 +4,10 @@ import { memo } from 'react';
 import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Category } from '../types';
 import CategoryImage from './components/category/CategoryImage';
+import FullScreenLoader from './components/FullScreenLoader';
 import RetryView from './components/RetryView';
 import { useCategories } from './contexts/CategoryContext';
+
 
 // Memoized list item component with areEqual comparison
 const CategoryItem = memo<Category>(({ id, name, image }) => { 
@@ -108,9 +110,7 @@ export default function Index() {
   };
 
   if (loading && !loadingMore) {
-    return (
-        <ActivityIndicator size="large" />
-    );
+    return <FullScreenLoader />;
   }
 
   if (error) {

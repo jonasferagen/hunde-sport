@@ -2,6 +2,7 @@ import { Product } from '@/types';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { memo, useEffect } from 'react';
 import { ActivityIndicator, FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FullScreenLoader from './components/FullScreenLoader';
 import RetryView from './components/RetryView';
 import { useProducts } from './contexts/ProductContext';
 
@@ -62,6 +63,10 @@ export default function CategoryScreen() {
   const renderItem = ({item}: ListRenderItemInfo<Product>) => {
     return <ProductItem {...item} />;
   };
+
+  if (loading && products.length === 0) {
+    return <FullScreenLoader />;
+  }
 
   if (error) {
     return <RetryView error={error} onRetry={() => setCategoryId(id ? parseInt(id, 10) : null)} />;
