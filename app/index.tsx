@@ -2,8 +2,8 @@
 import { router } from 'expo-router';
 import { memo } from 'react';
 import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SvgUri } from 'react-native-svg';
 import type { Category } from '../types';
+import CategoryImage from './components/category/CategoryImage';
 import { useCategories } from './contexts/CategoryContext';
 
 // Memoized list item component with areEqual comparison
@@ -22,12 +22,8 @@ const CategoryItem = memo<Category>(({ id, name, image }) => {
     <TouchableOpacity onPress={handlePress}>
       <View style={styles.categoryItem}>
         {image && (
-          <View style={styles.svgContainer}>
-            <SvgUri 
-              width="40"
-              height="40"
-              uri={image.src}
-            />
+          <View style={styles.categoryImage}>
+            <CategoryImage image={image} />
           </View>
         )}
         <Text 
@@ -65,12 +61,6 @@ const createStyles = () => {
       fontWeight: 'bold',
       marginBottom: 20,
       textAlign: 'center',
-    },
-
-    svgContainer: {
-      width: 40,
-      height: 40,
-      marginRight: 15,
     },
     categoryItem: {
       flexDirection: 'row',

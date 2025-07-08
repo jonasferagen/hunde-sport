@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
-import ProductDetails from './components/ProductDetails';
-import ProductImage from './components/ProductImage';
+import ProductDetails from './components/product/ProductDetails';
+import ProductImage from './components/product/ProductImage';
 import { useProducts } from './contexts/ProductContext';
 
 export default function ProductScreen() {
