@@ -5,18 +5,17 @@ export const Colors = {
   secondary: 'rgb(161, 138, 117)',
   accent: 'rgb(247, 177, 163)',
   bgPrimary: 'rgb(255, 255, 255)',
-  bgSecondary: 'rgb(246, 246, 246)',
+  lightGray: 'rgb(246, 246, 246)',
 };
+
+export const PADDING = 20;
 
 export const AppStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.bgPrimary,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
+    padding: PADDING,
+  }
 });
+
+export default Colors;

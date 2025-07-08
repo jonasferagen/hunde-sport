@@ -13,6 +13,7 @@ function Layout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          contentStyle: { backgroundColor: 'transparent' },
         }}
       />
     </View>
