@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import ProductDetails from './components/product/ProductDetails';
 import ProductImage from './components/product/ProductImage';
+import ProductTitle from './components/product/ProductTitle';
 import { useProducts } from './contexts/ProductContext';
 
 export default function ProductScreen() {
@@ -33,7 +34,7 @@ export default function ProductScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text>{product.name}</Text>
+      <ProductTitle name={product.name} />
       {product.images && product.images.length > 0 && (
         <View style={styles.imageContainer}>
           {product.images.map((image) => (

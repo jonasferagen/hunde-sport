@@ -1,18 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { Product } from '../../../types';
+import { stripHtml } from '../../../utils/helpers';
 
 interface ProductDetailsProps {
   product: Product;
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  // Function to strip HTML tags for clean text display
-  const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
-
   return (
     <View style={styles.content}>
-      <Text style={styles.title}>{product.name}</Text>
       {product.short_description && (
         <Text style={styles.description}>{stripHtml(product.short_description)}</Text>
       )}
@@ -24,11 +21,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 const styles = StyleSheet.create({
   content: {
     padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
   },
   description: {
     fontSize: 16,
