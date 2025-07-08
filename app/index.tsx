@@ -3,17 +3,17 @@ import { router } from 'expo-router';
 import { memo } from 'react';
 import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
-import type { CategoryItemProps } from '../types';
+import type { Category } from '../types';
 import { useCategories } from './contexts/CategoryContext';
 
 // Memoized list item component with areEqual comparison
-const CategoryItem = memo<CategoryItemProps>(({ item }) => { 
+const CategoryItem = memo<Category>(({ id, name, image }) => { 
   const handlePress = () => {
     router.push({
       pathname: "/category",
       params: { 
-        name: item.name,
-        id: item.id.toString()
+        name: name,
+        id: id.toString()
       }
     });
   };
@@ -21,12 +21,12 @@ const CategoryItem = memo<CategoryItemProps>(({ item }) => {
   return (
     <TouchableOpacity onPress={handlePress}>
       <View style={styles.categoryItem}>
-        {item.image && (
+        {image && (
           <View style={styles.svgContainer}>
             <SvgUri 
               width="40"
               height="40"
-              uri={item.image.src}
+              uri={image.src}
             />
           </View>
         )}
@@ -36,21 +36,20 @@ const CategoryItem = memo<CategoryItemProps>(({ item }) => {
           ellipsizeMode="tail"
           selectable={false}
         >
-          {item.name}
+          {name}
         </Text>
       </View>
     </TouchableOpacity>
   );
 }, 
 (prevProps, nextProps) => {
-  return prevProps.item.id === nextProps.item.id && 
-         prevProps.item.name === nextProps.item.name &&
-         prevProps.item.image?.src === nextProps.item.image?.src;
+  return prevProps.id === nextProps.id && 
+         prevProps.name === nextProps.name &&
+         prevProps.image?.src === nextProps.image?.src;
 });
 
-
 // Memoized key extractor
-const keyExtractor = (item: { id: number }, index: number) => `${item.id}_${index}`;
+const keyExtractor = (item: Category, index: number) => `${item.id}_${index}`;
 
 // Memoized styles to prevent recreation on every render
 const createStyles = () => {
@@ -114,8 +113,8 @@ export default function Index() {
     );
   };
 
-  const renderItem: ListRenderItem<{ id: number; name: string }> = ({ item }) => (
-    <CategoryItem item={item} />
+  const renderItem: ListRenderItem<Category> = ({ item }) => (
+    <CategoryItem {...item} />
   );
 
   if (loading && !loadingMore) {

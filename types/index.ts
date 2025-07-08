@@ -29,10 +29,6 @@ export interface Product {
   // Add more product fields as needed
 }
 
-export interface CategoryItemProps {
-  item: Category;
-}
-
 export interface BaseContextType {
   loading: boolean;
   loadingMore: boolean;
