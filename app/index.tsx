@@ -20,6 +20,7 @@ const CategoryItem = memo<Category>(({ id, name, image }) => {
 
   return (
     <TouchableOpacity onPress={handlePress}>
+      
       <View style={styles.categoryItem}>
         {image && (
           <View style={styles.categoryImage}>

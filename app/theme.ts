@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+
 export const Colors = {
   primary: 'rgb(101, 150, 161)',
   secondary: 'rgb(161, 138, 117)',
@@ -14,7 +15,8 @@ export const AppStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.bgPrimary,
-    padding: PADDING,
+    paddingTop: PADDING,
+    paddingBottom: PADDING,
   }
 });
 

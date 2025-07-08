@@ -4,6 +4,13 @@ import { ENDPOINTS } from '../../config/api';
 import type { BaseContextType, Category } from '../../types';
 import apiClient from '../../utils/apiClient';
 
+const mapToCategory = (item: any): Category => ({
+  id: item.id,
+  name: item.name,
+  parent: item.parent,
+  image: item.image,
+});
+
 type CategoryContextType = BaseContextType & {
   categories: Category[];
   parentId: number | null;
@@ -29,11 +36,9 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
         setLoadingMore(true);
       }
 
-      const { data, error } = await apiClient.get<Category[]>(
+      const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.CATEGORIES.LIST(pageNum, parentId || 0)
       );
-      const filteredData = data!.filter(category => category.image && category.image.src);
-
 
       if (error) {
         throw new Error(error);
@@ -43,7 +48,10 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
         setHasMore(false);
         return [];
       }
-      
+
+      const mappedData = data.map(mapToCategory);
+      const filteredData = mappedData.filter(category => category.image && category.image.src);
+
       if (filteredData.length === 0) {
         setHasMore(false);
       } else {
