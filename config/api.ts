@@ -10,6 +10,11 @@ export const ENDPOINTS = {
       `${API_BASE_URL}/products/categories?parent=${parent}&page=${page}&per_page=10&hide_empty=true`,
     // Add more category-related endpoints here as needed
   },
+  PRODUCTS: {
+    LIST: (page: number, parent: number = 0) => 
+      `${API_BASE_URL}/products?page=${page}&per_page=10&hide_empty=true`,
+    // Add more product-related endpoints here as needed
+  },
   // Add other API endpoints here
 };
 

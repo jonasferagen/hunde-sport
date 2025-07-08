@@ -4,24 +4,17 @@ import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, 
 import { SvgUri } from 'react-native-svg';
 import { useCategories } from './contexts/CategoryContext';
 import { router } from 'expo-router';
-
-// Define prop types for better type checking
-interface CategoryItemProps {
-  item: { 
-    id: number; 
-    name: string;
-    image?: {
-      src: string;
-    };
-  };
-}
+import { Category, CategoryItemProps } from './types';
 
 // Memoized list item component with areEqual comparison
-const CategoryItem = memo(({ item }: CategoryItemProps) => { 
+const CategoryItem = memo<CategoryItemProps>(({ item }) => { 
   const handlePress = () => {
     router.push({
       pathname: "/category",
-      params: { name: item.name }
+      params: { 
+        name: item.name,
+        id: item.id.toString()
+      }
     });
   };
 

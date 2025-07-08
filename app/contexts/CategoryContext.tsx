@@ -2,14 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
 import apiClient from '../../utils/apiClient';
-
-type Category = {
-  id: number;
-  name: string;
-  image?: {
-    src: string;
-  };
-};
+import { Category } from '../types';
 
 type CategoryContextType = {
   categories: Category[];
