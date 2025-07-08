@@ -1,3 +1,17 @@
+
+export type ApiResponse<T> = {
+  data: T | null;
+  error: string | null;
+  status: number;
+};
+
+export type ApiError = {
+  message: string;
+  status: number;
+};
+
+
+
 export interface Image {
   src: string;
 }

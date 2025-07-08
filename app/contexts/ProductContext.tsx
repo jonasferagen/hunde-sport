@@ -3,6 +3,8 @@ import { ENDPOINTS } from '../../config/api';
 import type { Product } from '../../types';
 import apiClient from '../../utils/apiClient';
 
+const mapToProduct = (item: Product): Product => ({ ...item });
+
 type ProductContextType = {
   products: Product[];
   loading: boolean;
@@ -50,7 +52,8 @@ export const ProductProvider: React.FC<{children: React.ReactNode}> = ({ childre
       if (!data || data.length === 0) {
         setHasMore(false);
       } else {
-        setProducts(prev => append ? [...prev, ...data] : data);
+        const mappedProducts = data.map(mapToProduct);
+        setProducts(prev => append ? [...prev, ...mappedProducts] : mappedProducts);
         setPage(pageNum + 1);
       }
       
@@ -106,11 +109,14 @@ export const ProductProvider: React.FC<{children: React.ReactNode}> = ({ childre
       }
 
       if (data) {
-        setProducts(prev => [...prev, data]);
+        const mappedProduct = mapToProduct(data);
+        setProducts(prev => [...prev, mappedProduct]);
+        setProduct(mappedProduct);
+        return mappedProduct;
       }
       
-      setProduct(data || null);
-      return data || null;
+      setProduct(null);
+      return null;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Error fetching product:', err);
