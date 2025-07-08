@@ -1,9 +1,10 @@
 // app/index.tsx
 import { router } from 'expo-router';
 import { memo } from 'react';
-import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Category } from '../types';
 import CategoryImage from './components/category/CategoryImage';
+import RetryView from './components/RetryView';
 import { useCategories } from './contexts/CategoryContext';
 
 // Memoized list item component with areEqual comparison
@@ -113,12 +114,7 @@ export default function Index() {
   }
 
   if (error) {
-    return (
-      <View>
-        <Text style={styles.error}>{error}</Text>
-        <Button onPress={refresh} title="Retry" />
-      </View>
-    );
+    return <RetryView error={error} onRetry={refresh} />;
   }
 
 

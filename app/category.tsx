@@ -1,7 +1,8 @@
 import { Product } from '@/types';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { memo, useEffect } from 'react';
-import { ActivityIndicator, Button, FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import RetryView from './components/RetryView';
 import { useProducts } from './contexts/ProductContext';
 
 const ProductItem = memo<Product>(({ id, name }) => {
@@ -63,12 +64,7 @@ export default function CategoryScreen() {
   };
 
   if (error) {
-    return (
-      <View>
-        <Text style={styles.error}>{error}</Text>
-        <Button onPress={() => setCategoryId(id ? parseInt(id, 10) : null)} title="Retry" />
-      </View>
-    );
+    return <RetryView error={error} onRetry={() => setCategoryId(id ? parseInt(id, 10) : null)} />;
   }
 
   return (
