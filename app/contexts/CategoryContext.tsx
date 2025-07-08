@@ -6,6 +6,9 @@ import apiClient from '../../utils/apiClient';
 type Category = {
   id: number;
   name: string;
+  image?: {
+    src: string;
+  };
 };
 
 type CategoryContextType = {
@@ -36,7 +39,9 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
         setLoadingMore(true);
       }
 
-      const { data, error } = await apiClient.get<Category[]>(ENDPOINTS.CATEGORIES.LIST(pageNum, 20));
+      const { data, error } = await apiClient.get<Category[]>(ENDPOINTS.CATEGORIES.LIST(pageNum));
+      const filteredData = data!.filter(category => category.image && category.image.src);
+
 
       if (error) {
         throw new Error(error);
@@ -47,15 +52,15 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
         return [];
       }
       
-      if (data.length === 0) {
+      if (filteredData.length === 0) {
         setHasMore(false);
       } else {
-        setCategories(prev => append ? [...prev, ...data] : data);
+        setCategories(prev => append ? [...prev, ...filteredData] : filteredData);
         setPage(pageNum + 1);
       }
       
       setError(null);
-      return data;
+      return filteredData;
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -99,7 +104,6 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
   );
 };
 
-// Add this hook at the bottom of the file
 export const useCategories = () => {
   const context = useContext(CategoryContext);
   if (context === undefined) {

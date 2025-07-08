@@ -1,31 +1,51 @@
 // app/index.tsx
 import { memo } from 'react';
 import { ActivityIndicator, Button, FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import { useCategories } from './contexts/CategoryContext';
 
 // Define prop types for better type checking
 interface CategoryItemProps {
-  item: { id: number; name: string };
+  item: { 
+    id: number; 
+    name: string;
+    image?: {
+      src: string;
+    };
+  };
 }
 
 // Memoized list item component with areEqual comparison
-const CategoryItem = memo(({ item }: CategoryItemProps) => (
-  <View style={styles.categoryItem}>
-    <Text 
-      style={styles.categoryText} 
-      numberOfLines={1} 
-      ellipsizeMode="tail"
-      selectable={false}
-    >
-      {item.name}
-    </Text>
-  </View>
-), 
-// Custom comparison function to prevent unnecessary re-renders
+const CategoryItem = memo(({ item }: CategoryItemProps) => { 
+  console.log('Image URI:', item.image?.src);
+  return (
+    <View style={styles.categoryItem}>
+      {item.image && (
+        <View style={styles.svgContainer}>
+          <SvgUri 
+            width="40"
+            height="40"
+            uri={item.image.src}
+          />
+        </View>
+      )}
+      <Text 
+        style={styles.categoryText} 
+        numberOfLines={1} 
+        ellipsizeMode="tail"
+        selectable={false}
+      >
+        {item.name}
+      </Text>
+    </View>
+  );
+}, 
 (prevProps, nextProps) => {
   return prevProps.item.id === nextProps.item.id && 
-         prevProps.item.name === nextProps.item.name;
+         prevProps.item.name === nextProps.item.name &&
+         prevProps.item.image?.src === nextProps.item.image?.src;
 });
+
 
 // Memoized key extractor
 const keyExtractor = (item: { id: number }, index: number) => `${item.id}_${index}`;
@@ -33,6 +53,7 @@ const keyExtractor = (item: { id: number }, index: number) => `${item.id}_${inde
 // Memoized styles to prevent recreation on every render
 const createStyles = () => {
   return StyleSheet.create({
+    
     container: {
       flex: 1,
       padding: 20,
@@ -44,12 +65,27 @@ const createStyles = () => {
       marginBottom: 20,
       textAlign: 'center',
     },
+
+    svgContainer: {
+      width: 40,
+      height: 40,
+      marginRight: 15,
+    },
     categoryItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
       padding: 15,
+      paddingLeft:0,
       borderBottomWidth: 1,
       borderBottomColor: '#eee',
     },
+    categoryImage: {
+      width: 40,
+      height: 40,
+      marginRight: 15
+    },
     categoryText: {
+      flex: 1,
       fontSize: 16,
     },
     error: {

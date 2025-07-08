@@ -6,8 +6,8 @@ export const API_BASE_URL = __DEV__
 // API endpoints
 export const ENDPOINTS = {
   CATEGORIES: {
-    LIST: (page: number, perPage: number) => 
-      `${API_BASE_URL}/products/categories?page=${page}&per_page=${perPage}`,
+    LIST: (page: number) => 
+      `${API_BASE_URL}/products/categories?page=${page}&per_page=10&hide_empty=true`,
     // Add more category-related endpoints here as needed
   },
   // Add other API endpoints here
