@@ -1,4 +1,3 @@
-
 export type ApiResponse<T> = {
   data: T | null;
   error: string | null;
@@ -9,8 +8,6 @@ export type ApiError = {
   message: string;
   status: number;
 };
-
-
 
 export interface Image {
   src: string;
@@ -36,3 +33,11 @@ export interface CategoryItemProps {
   item: Category;
 }
 
+export interface BaseContextType {
+  loading: boolean;
+  loadingMore: boolean;
+  error: string | null;
+  hasMore: boolean;
+  loadMore: () => Promise<void>;
+  refresh: () => Promise<void>;
+}

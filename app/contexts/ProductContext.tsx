@@ -1,20 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
-import type { Product } from '../../types';
+import type { BaseContextType, Product } from '../../types';
 import apiClient from '../../utils/apiClient';
 
 const mapToProduct = (item: Product): Product => ({ ...item });
 
-type ProductContextType = {
+type ProductContextType = BaseContextType & {
   products: Product[];
-  loading: boolean;
-  loadingMore: boolean;
-  error: string | null;
-  hasMore: boolean;
   categoryId: number | null;
   product: Product | null;
-  loadMore: () => Promise<void>;
-  refresh: () => Promise<void>;
   setCategoryId: (id: number | null) => void;
   getProductById: (id: number) => Promise<Product | null>;
 };

@@ -1,18 +1,12 @@
 // app/contexts/CategoryContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
-import type { Category } from '../../types';
+import type { BaseContextType, Category } from '../../types';
 import apiClient from '../../utils/apiClient';
 
-type CategoryContextType = {
+type CategoryContextType = BaseContextType & {
   categories: Category[];
-  loading: boolean;
-  loadingMore: boolean;
-  error: string | null;
-  hasMore: boolean;
   parentId: number | null;
-  loadMore: () => Promise<void>;
-  refresh: () => Promise<void>;
   setParentId: (id: number | null) => void;
 };
 
