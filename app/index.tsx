@@ -50,12 +50,7 @@ const keyExtractor = (item: Category, index: number) => `${item.id}_${index}`;
 // Memoized styles to prevent recreation on every render
 const createStyles = () => {
   return StyleSheet.create({
-    
-    container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: '#fff',
-    },
+
     title: {
       fontSize: 24,
       fontWeight: 'bold',
@@ -109,15 +104,13 @@ export default function Index() {
 
   if (loading && !loadingMore) {
     return (
-      <View style={styles.container}>
         <ActivityIndicator size="large" />
-      </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.container}>
+      <View>
         <Text style={styles.error}>{error}</Text>
         <Button onPress={refresh} title="Retry" />
       </View>
@@ -126,7 +119,7 @@ export default function Index() {
 
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
       <FlatList
         data={categories}

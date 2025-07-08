@@ -18,22 +18,18 @@ export default function ProductScreen() {
 
   if (loading && !product) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" />
-      </View>
+      <ActivityIndicator size="large" />
     );
   }
 
   if (!product) {
     return (
-      <View style={styles.container}>
-        <Text>Product not found</Text>
-      </View>
+      <Text>Product not found</Text>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView>
       <ProductTitle name={product.name} />
       {product.images && product.images.length > 0 && (
         <View style={styles.imageContainer}>
@@ -48,10 +44,6 @@ export default function ProductScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
