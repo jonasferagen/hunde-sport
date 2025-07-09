@@ -19,10 +19,10 @@ const CategoryContext = createContext<CategoryContextType | undefined>(undefined
 
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [categoryData, setCategoryData] = useState<Record<string, CategoryState>>({});
-    const [activeParentId, setActiveParentId] = useState<number | null>(null);
+    const [activeParentId, setActiveParentId] = useState<number>(0);
     const { setBreadcrumbs } = useBreadcrumbs();
 
-    const fetchCategories = useCallback(async (parentId: number | null, pageNum: number, append = false) => {
+    const fetchCategories = useCallback(async (parentId: number, pageNum: number, append = false) => {
         const key = getKey(parentId);
         const currentState = categoryData[key] ?? defaultCategoryState;
 
@@ -71,22 +71,22 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
     }, [activeParentId]);
 
-    const loadMore = useCallback(async (parentId: number | null) => {
+    const loadMore = useCallback(async (parentId: number) => {
         const key = getKey(parentId);
         const state = categoryData[key] ?? defaultCategoryState;
         if (state.loading || state.loadingMore || !state.hasMore) return;
         await fetchCategories(parentId, state.page, true);
     }, [categoryData, fetchCategories]);
 
-    const refresh = useCallback(async (parentId: number | null) => {
+    const refresh = useCallback(async (parentId: number) => {
         await fetchCategories(parentId, 1, false);
     }, [fetchCategories]);
 
-    const setParentId = useCallback((id: number | null) => {
+    const setParentId = useCallback((id: number) => {
         setActiveParentId(id);
     }, []);
 
-    const getCategoryState = useCallback((parentId: number | null) => {
+    const getCategoryState = useCallback((parentId: number) => {
         const key = getKey(parentId);
         return categoryData[key] ?? defaultCategoryState;
     }, [categoryData]);
@@ -100,7 +100,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     );
 };
 
-export const useCategories = (parentId: number | null) => {
+export const useCategories = (parentId: number) => {
     const context = useContext(CategoryContext);
     if (!context) {
         throw new Error('useCategories must be used within a CategoryProvider');

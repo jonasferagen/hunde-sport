@@ -9,5 +9,8 @@ export const mapToProduct = (item: any): Product => ({
     images: item.images || [],
 });
 
-export const getKey = (categoryId: number | null): string =>
-    categoryId?.toString() ?? 'all';
+export const getKey = (productId: number): string =>
+    productId.toString();
+
+
+export default mapToProduct;

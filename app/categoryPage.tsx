@@ -16,18 +16,18 @@ const CategoryPage = () => {
 
   // Fetch both sub-categories and products for the current category ID
   const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setParentId } = useCategories(numericId);
-  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts, setActiveCategoryId } = useProducts(numericId);
+  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts, setActiveproductId } = useProducts(numericId);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
   useEffect(() => {
     if (!isNaN(numericId)) {
       // Set the active ID for both contexts
       setParentId(numericId);
-      setActiveCategoryId(numericId);
+      setActiveproductId(numericId);
       // Update the breadcrumb trail with the current category
       setTrail({ id: numericId, name, type: 'category' });
     }
-  }, [numericId, name, setParentId, setActiveCategoryId]);
+  }, [numericId, name, setParentId, setActiveproductId]);
 
   const isLoading = categoriesLoading || productsLoading;
   const hasData = categories.length > 0 || products.length > 0;
@@ -43,7 +43,6 @@ const CategoryPage = () => {
   if (error) {
     return <RetryView error={error} onRetry={refresh} />;
   }
-
   // If there are sub-categories, show them. Otherwise, show products.
   const hasSubCategories = categories.length > 0;
 

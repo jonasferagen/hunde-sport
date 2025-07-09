@@ -20,12 +20,11 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [productData, setProductData] = useState<Record<string, ProductState>>({});
     const [productDetailCache, setProductDetailCache] = useState<Record<string, Product>>({});
-    const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
+    const [activeproductId, setActiveproductId] = useState<number>(0);
 
-    const fetchProducts = useCallback(async (categoryId: number | null, pageNum: number, append = false) => {
-        if (categoryId === null) return;
+    const fetchProducts = useCallback(async (productId: number, pageNum: number, append = false) => {
 
-        const key = getKey(categoryId);
+        const key = getKey(productId);
         const currentState = productData[key] ?? defaultProductState;
 
         if (!currentState.hasMore && append) return;
@@ -36,7 +35,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }));
 
         try {
-            const products = await fetchProductList(categoryId, pageNum);
+            const products = await fetchProductList(productId, pageNum);
 
             setProductData(prev => {
                 const state = prev[key] ?? defaultProductState;
@@ -67,12 +66,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }, [productData]);
 
     useEffect(() => {
-        if (activeCategoryId === null) return;
-        const key = getKey(activeCategoryId);
+        if (activeproductId === null) return;
+        const key = getKey(activeproductId);
         if (!productData[key]) {
-            fetchProducts(activeCategoryId, 1, false);
+            fetchProducts(activeproductId, 1, false);
         }
-    }, [activeCategoryId]);
+    }, [activeproductId]);
 
     const getProductById = useCallback(async (productId: number): Promise<Product | null> => {
         for (const key in productData) {
@@ -92,19 +91,19 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     }, [productData, productDetailCache]);
 
-    const loadMore = useCallback(async (categoryId: number | null) => {
-        const key = getKey(categoryId);
+    const loadMore = useCallback(async (productId: number) => {
+        const key = getKey(productId);
         const state = productData[key] ?? defaultProductState;
         if (state.loading || state.loadingMore || !state.hasMore) return;
-        await fetchProducts(categoryId, state.page, true);
+        await fetchProducts(productId, state.page, true);
     }, [productData, fetchProducts]);
 
-    const refresh = useCallback(async (categoryId: number | null) => {
-        await fetchProducts(categoryId, 1, false);
+    const refresh = useCallback(async (productId: number) => {
+        await fetchProducts(productId, 1, false);
     }, [fetchProducts]);
 
-    const getProductState = useCallback((categoryId: number | null) => {
-        const key = getKey(categoryId);
+    const getProductState = useCallback((productId: number) => {
+        const key = getKey(productId);
         return productData[key] ?? defaultProductState;
     }, [productData]);
 
@@ -115,7 +114,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 getProductById,
                 loadMore,
                 refresh,
-                setActiveCategoryId,
+                setActiveproductId,
             }}
         >
             {children}
@@ -123,19 +122,21 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     );
 };
 
-export const useProducts = (categoryId: number | null) => {
+export const useProducts = (productId: number) => {
     const context = useContext(ProductContext);
     if (!context) {
         throw new Error('useProducts must be used within a ProductProvider');
     }
 
-    const state = context.getProductState(categoryId);
+    const state = context.getProductState(productId);
 
     return {
         ...state,
-        loadMore: () => context.loadMore(categoryId),
-        refresh: () => context.refresh(categoryId),
-        setActiveCategoryId: context.setActiveCategoryId,
+        loadMore: () => context.loadMore(productId),
+        refresh: () => context.refresh(productId),
+        setActiveproductId: context.setActiveproductId,
         getProductById: context.getProductById,
     };
 };
+
+export default ProductProvider;

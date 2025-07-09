@@ -13,7 +13,7 @@ import { useProducts } from './contexts/ProductContext/ProductProvider';
 
 export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string; name: string }>();
-  const { getProductById } = useProducts(null); // Pass null, we only need the function
+  const { getProductById } = useProducts(Number(id)); // Pass null, we only need the function
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
   const [product, setProduct] = useState<Product | null>(null);

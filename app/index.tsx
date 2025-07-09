@@ -24,7 +24,7 @@ const createStyles = () => {
 const styles = createStyles();
 
 export default function Index() {
-  const { categories, loading, loadingMore, error, loadMore, refresh } = useCategories(null);
+  const { categories, loading, loadingMore, error, loadMore, refresh } = useCategories(0);
 
   // Show loader only when root categories are loading and list is empty
   if (loading && categories.length === 0) {

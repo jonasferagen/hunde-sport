@@ -10,9 +10,11 @@ export interface ProductState {
 }
 
 export interface ProductContextType {
-    getProductState: (categoryId: number | null) => ProductState;
+    getProductState: (productId: number) => ProductState;
     getProductById: (productId: number) => Promise<Product | null>;
-    loadMore: (categoryId: number | null) => void;
-    refresh: (categoryId: number | null) => void;
-    setActiveCategoryId: (id: number | null) => void;
+    loadMore: (productId: number) => void;
+    refresh: (productId: number) => void;
+    setActiveproductId: (id: number) => void;
 }
+
+export default ProductContextType;
