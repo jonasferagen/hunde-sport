@@ -20,12 +20,11 @@ const defaultState: PaginatedState<any> = {
 
 export function usePaginatedResource<T>(
     fetcher: (id: number, page: number) => Promise<T[]>,
-    getKey: (id: number) => string
+    key: string
 ) {
     const [data, setData] = useState<Record<string, PaginatedState<T>>>({});
 
     const fetchPage = useCallback(async (id: number, page: number, append = false) => {
-        const key = getKey(id);
         const current = data[key] ?? defaultState;
 
         if (!current.hasMore && append) return;
@@ -65,11 +64,11 @@ export function usePaginatedResource<T>(
                 },
             }));
         }
-    }, [data, fetcher, getKey]);
+    }, [data, fetcher, key]);
 
     const getState = useCallback((id: number) => {
-        return data[getKey(id)] ?? defaultState;
-    }, [data, getKey]);
+        return data[key] ?? defaultState;
+    }, [data, key]);
 
     const loadMore = useCallback((id: number) => {
         const state = getState(id);

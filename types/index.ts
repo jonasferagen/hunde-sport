@@ -9,11 +9,12 @@ export type ApiError = {
   status: number;
 };
 
+
 export interface Image {
   src: string;
 }
 
-export interface Category {
+export interface ProductCategory {
   id: number;
   name: string;
   parent: number;
@@ -25,7 +26,7 @@ export interface Product {
   name: string;
   description: string;
   short_description: string;
-  categories: Category[];
+  categories: ProductCategory[];
   images: Image[];
 }
 
@@ -33,13 +34,4 @@ export interface Breadcrumb {
   id: number | null;
   name: string;
   type?: 'category' | 'product';
-}
-
-export interface BaseContextType {
-  loading: boolean;
-  loadingMore: boolean;
-  error: string | null;
-  hasMore: boolean;
-  loadMore: () => Promise<void>;
-  refresh: () => Promise<void>;
 }

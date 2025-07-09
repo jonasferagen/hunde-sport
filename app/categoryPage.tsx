@@ -7,7 +7,7 @@ import FullScreenLoader from './components/FullScreenLoader';
 import ProductList from './components/product/ProductList';
 import RetryView from './components/RetryView';
 import { useBreadcrumbs } from './contexts/BreadcrumbContext/BreadcrumbProvider';
-import { useCategories } from './contexts/CategoryContext/CategoryProvider';
+import { useProductCategories } from './contexts/ProductCategory';
 import { useProducts } from './contexts/ProductContext/ProductProvider';
 
 const CategoryPage = () => {
@@ -15,7 +15,7 @@ const CategoryPage = () => {
   const categoryId = Number(id);
 
   // Fetch both sub-categories and products for the current category ID
-  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setCategoryId } = useCategories(categoryId);
+  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setCategoryId } = useProductCategories(categoryId);
   const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts } = useProducts(categoryId);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
