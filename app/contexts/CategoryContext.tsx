@@ -50,7 +50,7 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
       }
 
       const mappedData = data.map(mapToCategory);
-      const filteredData = mappedData.filter(category => category.image && category.image.src);
+      const filteredData = mappedData; //mappedData.filter(category => category.image && category.image.src);
 
       if (filteredData.length === 0) {
         setHasMore(false);
