@@ -1,7 +1,7 @@
 import type { Product } from '../../../types';
 
 export interface ProductState {
-    products: Product[];
+    items: Product[];
     loading: boolean;
     loadingMore: boolean;
     error: string | null;
@@ -14,7 +14,7 @@ export interface ProductContextType {
     getProductById: (productId: number) => Promise<Product | null>;
     loadMore: (productId: number) => void;
     refresh: (productId: number) => void;
-    setActiveproductId: (id: number) => void;
+    // setActiveProductId: (id: number) => void;
 }
 
 export default ProductContextType;

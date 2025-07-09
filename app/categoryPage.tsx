@@ -15,19 +15,19 @@ const CategoryPage = () => {
   const numericId = Number(id);
 
   // Fetch both sub-categories and products for the current category ID
-  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setParentId } = useCategories(numericId);
-  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts, setActiveproductId } = useProducts(numericId);
+  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setCategoryId } = useCategories(numericId);
+  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts } = useProducts(numericId);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
+
   useEffect(() => {
-    if (!isNaN(numericId)) {
-      // Set the active ID for both contexts
-      setParentId(numericId);
-      setActiveproductId(numericId);
-      // Update the breadcrumb trail with the current category
-      setTrail({ id: numericId, name, type: 'category' });
-    }
-  }, [numericId, name, setParentId, setActiveproductId]);
+    // Set the active ID for both contexts
+    setCategoryId(numericId);
+    // setActiveproductId(numericId);
+    // Update the breadcrumb trail with the current category
+    setTrail({ id: numericId, name, type: 'category' });
+
+  }, [numericId, name, setCategoryId]);
 
   const isLoading = categoriesLoading || productsLoading;
   const hasData = categories.length > 0 || products.length > 0;

@@ -10,10 +10,10 @@ export interface CategoryState {
 }
 
 export interface CategoryContextType {
-    getCategoryState: (parentId: number) => CategoryState;
-    loadMore: (parentId: number) => void;
-    refresh: (parentId: number) => void;
-    setParentId: (id: number) => void;
+    getCategoryState: (CategoryId: number) => CategoryState;
+    loadMore: (CategoryId: number) => void;
+    refresh: (CategoryId: number) => void;
+    setCategoryId: (id: number) => void;
 }
 
 export default CategoryContextType;

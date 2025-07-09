@@ -7,37 +7,37 @@ import type { CategoryContextType } from './categoryTypes';
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
 
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [activeParentId, setActiveParentId] = useState<number>(0);
+    const [activeCategoryId, setActiveCategoryId] = useState<number>(0);
 
     const {
         getState: getCategoryState,
         loadMore,
         refresh,
-    } = usePaginatedResource<Category>(fetchCategoryData, () => activeParentId.toString());
+    } = usePaginatedResource<Category>(fetchCategoryData, () => activeCategoryId.toString());
 
     useEffect(() => {
-        refresh(activeParentId);
-    }, [activeParentId]);
+        refresh(activeCategoryId);
+    }, [activeCategoryId]);
 
     return (
-        <CategoryContext.Provider value={{ getCategoryState, loadMore, refresh, setParentId: setActiveParentId }}>
+        <CategoryContext.Provider value={{ getCategoryState, loadMore, refresh, setCategoryId: setActiveCategoryId }}>
             {children}
         </CategoryContext.Provider>
     );
 };
 
-export const useCategories = (parentId: number) => {
+export const useCategories = (CategoryId: number) => {
     const context = useContext(CategoryContext);
     if (!context) throw new Error('useCategories must be used within a CategoryProvider');
 
-    const state = context.getCategoryState(parentId);
+    const state = context.getCategoryState(CategoryId);
 
     return {
         ...state,
         categories: state.items, // optional alias
-        loadMore: () => context.loadMore(parentId),
-        refresh: () => context.refresh(parentId),
-        setParentId: context.setParentId,
+        loadMore: () => context.loadMore(CategoryId),
+        refresh: () => context.refresh(CategoryId),
+        setCategoryId: context.setCategoryId,
     };
 };
 
