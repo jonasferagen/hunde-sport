@@ -1,116 +1,60 @@
-import { Product } from '@/types';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { memo, useEffect } from 'react';
-import { ActivityIndicator, FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Breadcrumbs from './components/Breadcrumbs';
+import CategoryList from './components/category/CategoryList';
 import FullScreenLoader from './components/FullScreenLoader';
 import RetryView from './components/RetryView';
-import { useProducts } from './contexts/ProductContext';
+import { useCategories } from './contexts/CategoryContext';
 
-const ProductItem = memo<Product>(({ id, name }) => {
-  const handlePress = () => {
-    router.push({
-      pathname: "/product",
-      params: { 
-        name: name,
-        id: id.toString()
-      }
-    });
-  };
-
-  return (
-    <TouchableOpacity 
-      style={styles.productItem}
-      onPress={handlePress}
-    >
-      <Text style={styles.productText}>{name}</Text>
-    </TouchableOpacity>
-  );
-}, (prevProps, nextProps) => {
-  return prevProps.id === nextProps.id && prevProps.name === nextProps.name;
-});
-
-const keyExtractor = (item: Product) => item.id.toString();
-
-export default function CategoryScreen() {
-  const { name, id } = useLocalSearchParams<{ name: string; id?: string }>();
-  const { products, loading, error, hasMore, loadMore, setCategoryId } = useProducts();
-  const navigation = useNavigation();
+const CategoryPage = () => {
+  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
+  const { categories, loading, loadingMore, error, loadMore, refresh, setParentId, breadcrumbs } = useCategories();
 
   useEffect(() => {
-    if (id) {
-      setCategoryId(parseInt(id, 10));
+    const parentId = Number(id);
+    if (!isNaN(parentId)) {
+      setParentId(parentId, name);
     }
-    
-    // Set the header title
-    navigation.setOptions({
-      title: name || 'Category',
-    });
-    
+
+    // When the component unmounts, reset the parentId if navigating back
     return () => {
-      setCategoryId(null);
+      // This logic might need adjustment based on navigation flow
     };
-  }, [id, name, navigation]);
+  }, [id, name, setParentId]);
 
-  const renderFooter = () => {
-    if (!loading) return null;
-    return (
-      <View style={styles.loadingMore}>
-        <ActivityIndicator size="small" />
-      </View>
-    );
-  };
-
-  const renderItem = ({item}: ListRenderItemInfo<Product>) => {
-    return <ProductItem {...item} />;
-  };
-
-  if (loading && products.length === 0) {
+  if (loading && !loadingMore) {
     return <FullScreenLoader />;
   }
 
   if (error) {
-    return <RetryView error={error} onRetry={() => setCategoryId(id ? parseInt(id, 10) : null)} />;
+    return <RetryView error={error} onRetry={refresh} />;
   }
 
   return (
-    <FlatList
-      data={products}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      contentContainerStyle={styles.listContent}
-      onEndReached={() => {
-        if (!loading && hasMore) {
-          loadMore();
-        }
-      }}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={renderFooter}
-      initialNumToRender={10}
-      maxToRenderPerBatch={10}
-      windowSize={11}
-    />
+    <View style={styles.container}>
+      <Stack.Screen options={{ title: name }} />
+      <Breadcrumbs trail={breadcrumbs} onNavigate={(parentId) => setParentId(parentId)} />
+      <Text style={styles.title}>{name}</Text>
+      <CategoryList categories={categories} loadMore={loadMore} loadingMore={loadingMore} />
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  listContent: {
-    padding: 16,
+  container: {
+    flex: 1,
   },
-  productItem: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    backgroundColor: '#fff',
-  },
-  productText: {
-    fontSize: 16,
-  },
-  loadingMore: {
-    paddingVertical: 20,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   error: {
     color: 'red',
     textAlign: 'center',
-    margin: 20,
   },
 });
+
+export default CategoryPage;

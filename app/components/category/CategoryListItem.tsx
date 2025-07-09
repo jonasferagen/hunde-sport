@@ -2,11 +2,10 @@ import { router } from 'expo-router';
 import { memo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Category } from '../../../types';
-import CategoryImage from './CategoryImage';
 
 // Memoized list item component with areEqual comparison
 const CategoryListItem = memo<Category>(
-  ({ id, name, image }) => {
+  ({ id, name }) => {
     const handlePress = () => {
       router.push({
         pathname: '/category',
@@ -20,11 +19,6 @@ const CategoryListItem = memo<Category>(
     return (
       <TouchableOpacity onPress={handlePress}>
         <View style={styles.categoryItem}>
-          {image && (
-            <View style={styles.categoryImage}>
-              <CategoryImage image={image} />
-            </View>
-          )}
           <Text style={styles.categoryText} numberOfLines={1} ellipsizeMode="tail" selectable={false}>
             {name}
           </Text>
@@ -33,7 +27,7 @@ const CategoryListItem = memo<Category>(
     );
   },
   (prevProps, nextProps) => {
-    return prevProps.id === nextProps.id && prevProps.name === nextProps.name && prevProps.image?.src === nextProps.image?.src;
+    return prevProps.id === nextProps.id && prevProps.name === nextProps.name;
   }
 );
 
@@ -41,15 +35,9 @@ const styles = StyleSheet.create({
   categoryItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
-    paddingLeft: 0,
+    padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-  },
-  categoryImage: {
-    width: 40,
-    height: 40,
-    marginHorizontal: 15,
   },
   categoryText: {
     flex: 1,

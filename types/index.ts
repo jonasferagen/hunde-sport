@@ -29,6 +29,11 @@ export interface Product {
   images: Image[];
 }
 
+export interface Breadcrumb {
+  id: number | null;
+  name: string;
+}
+
 export interface BaseContextType {
   loading: boolean;
   loadingMore: boolean;

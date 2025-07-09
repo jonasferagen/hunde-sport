@@ -1,7 +1,7 @@
 // app/contexts/CategoryContext.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
-import type { BaseContextType, Category } from '../../types';
+import type { Breadcrumb, Category } from '../../types';
 import apiClient from '../../utils/apiClient';
 
 const mapToCategory = (item: any): Category => ({
@@ -11,24 +11,39 @@ const mapToCategory = (item: any): Category => ({
   image: item.image,
 });
 
-type CategoryContextType = BaseContextType & {
+interface CategoryContextType {
   categories: Category[];
-  parentId: number | null;
-  setParentId: (id: number | null) => void;
-};
+  loading: boolean;
+  loadingMore: boolean;
+  error: string | null;
+  loadMore: () => void;
+  refresh: () => void;
+  setParentId: (id: number | null, name?: string) => void;
+  breadcrumbs: Breadcrumb[];
+}
 
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
 
-export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [parentId, setParentId] = useState<number | null>(null);
+  const [parentId, setParentIdState] = useState<number | null>(null);
+  const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([{ id: null, name: 'Home' }]);
+
+  useEffect(() => {
+    // Reset and fetch new categories when parentId changes
+    setCategories([]);
+    setPage(1);
+    setHasMore(true);
+    fetchCategories(1, false);
+  }, [parentId]);
 
   const fetchCategories = async (pageNum: number, append = false) => {
+    if (!hasMore && append) return;
     try {
       if (pageNum === 1) {
         setLoading(true);
@@ -83,28 +98,36 @@ export const CategoryProvider: React.FC<{children: React.ReactNode}> = ({ childr
     await fetchCategories(1, false);
   };
 
-  // Reset and fetch categories when parentId changes
-  useEffect(() => {
-    setPage(1);
-    setCategories([]);
-    setHasMore(true);
-    fetchCategories(1, false);
-  }, [parentId]);
+  const handleSetParentId = useCallback((id: number | null, name?: string) => {
+    setBreadcrumbs(currentBreadcrumbs => {
+      const newBreadcrumbs = [...currentBreadcrumbs];
+      const existingIndex = newBreadcrumbs.findIndex(b => b.id === id);
+
+      if (id === null) {
+        return [{ id: null, name: 'Home' }];
+      } else if (existingIndex !== -1) {
+        return newBreadcrumbs.slice(0, existingIndex + 1);
+      } else if (name) {
+        return [...newBreadcrumbs, { id, name }];
+      }
+      return newBreadcrumbs; // Return original if no changes
+    });
+
+    setParentIdState(id);
+  }, []); // No dependencies, so the function is created only once
 
   return (
-    <CategoryContext.Provider 
-      value={{ 
-        categories, 
-        loading, 
+    <CategoryContext.Provider
+      value={{
+        categories,
+        loading,
         loadingMore,
-        error, 
-        hasMore,
-        parentId,
+        error,
         loadMore,
         refresh,
-        setParentId
-      }}
-    >
+        setParentId: handleSetParentId,
+        breadcrumbs,
+      }}>
       {children}
     </CategoryContext.Provider>
   );
