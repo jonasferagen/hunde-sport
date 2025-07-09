@@ -12,22 +12,21 @@ import { useProducts } from './contexts/ProductContext/ProductProvider';
 
 const CategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
-  const numericId = Number(id);
+  const categoryId = Number(id);
 
   // Fetch both sub-categories and products for the current category ID
-  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setCategoryId } = useCategories(numericId);
-  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts } = useProducts(numericId);
+  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setCategoryId } = useCategories(categoryId);
+  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts } = useProducts(categoryId);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
 
   useEffect(() => {
     // Set the active ID for both contexts
-    setCategoryId(numericId);
-    // setActiveproductId(numericId);
+    setCategoryId(categoryId);
     // Update the breadcrumb trail with the current category
-    setTrail({ id: numericId, name, type: 'category' });
+    setTrail({ id: categoryId, name, type: 'category' });
 
-  }, [numericId, name, setCategoryId]);
+  }, [categoryId, name, setCategoryId]);
 
   const isLoading = categoriesLoading || productsLoading;
   const hasData = categories.length > 0 || products.length > 0;
@@ -43,8 +42,6 @@ const CategoryPage = () => {
   if (error) {
     return <RetryView error={error} onRetry={refresh} />;
   }
-  // If there are sub-categories, show them. Otherwise, show products.
-  const hasSubCategories = categories.length > 0;
 
   return (
     <View style={styles.container}>
@@ -58,13 +55,8 @@ const CategoryPage = () => {
         }
       }} />
       <Text style={styles.title}>{name}</Text>
-      {
-        hasSubCategories ? (
-          <CategoryList categories={categories} loadMore={loadMoreCategories} loadingMore={loadingMoreCategories} />
-        ) : (
-          <ProductList products={products} loadMore={loadMoreProducts} loadingMore={loadingMoreProducts} />
-        )
-      }
+      <CategoryList categories={categories} loadMore={loadMoreCategories} loadingMore={loadingMoreCategories} />
+      <ProductList products={products} loadMore={loadMoreProducts} loadingMore={loadingMoreProducts} />
     </View>
   );
 };
