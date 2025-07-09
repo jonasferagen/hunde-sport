@@ -1,7 +1,7 @@
 import { ItemCache } from '@/context/ItemCache';
 import { PaginatedResource } from '@/context/PaginatedResource';
 import type { ProductCategory } from '@/types';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext } from 'react';
 import { fetchProductCategoryData } from './ProductCategoryApi';
 
 interface ProductCategoryState {
@@ -14,38 +14,27 @@ interface ProductCategoryState {
 }
 
 interface ProductCategoryContextType {
-    getCategoryState: (productCategoryId: number) => ProductCategoryState;
+    getState: (productCategoryId: number) => ProductCategoryState;
     loadMore: (productCategoryId: number) => void;
     refresh: (productCategoryId: number) => void;
-    setProductCategoryId: (id: number) => void;
     getProductCategoryById: (id: number) => Promise<ProductCategory | null>;
+    hydrateCache: (items: ProductCategory[]) => void;
 }
 
 export const ProductCategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [productCategoryId, setProductCategoryId] = useState<number>(0);
-
     const {
-        getState: getCategoryState,
+        getState,
         loadMore,
         refresh,
-    } = PaginatedResource<ProductCategory>(fetchProductCategoryData, String(productCategoryId));
+    } = PaginatedResource<ProductCategory>(fetchProductCategoryData);
 
     const { getItem: getProductCategoryById, hydrateCache } = ItemCache<ProductCategory>(async (id: number) => {
-        return Promise.reject('Not implemented');
+        // This could be implemented to fetch a single category from the API if needed
+        return Promise.reject('Single category fetch not implemented');
     });
 
-    useEffect(() => {
-        refresh(productCategoryId);
-    }, [productCategoryId]);
-
-    useEffect(() => {
-        const state = getCategoryState(productCategoryId);
-        hydrateCache(state.items);
-    }, [getCategoryState, productCategoryId, hydrateCache]);
-
-
     return (
-        <ProductCategoryContext.Provider value={{ getCategoryState, loadMore, refresh, setProductCategoryId, getProductCategoryById }}>
+        <ProductCategoryContext.Provider value={{ getState, loadMore, refresh, getProductCategoryById, hydrateCache }}>
             {children}
         </ProductCategoryContext.Provider>
     );

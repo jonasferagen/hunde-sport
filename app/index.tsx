@@ -1,8 +1,5 @@
 // app/index.tsx
-import FullScreenLoader from '@/components/FullScreenLoader';
-import ProductCategoryList from '@/components/productCategory/ProductCategoryList';
-import RetryView from '@/components/RetryView';
-import { useProductCategories } from '@/context/ProductCategory/ProductCategory';
+import ProductCategories from '@/components/ProductCategories';
 import { StyleSheet, Text, View } from 'react-native';
 
 // Memoized styles to prevent recreation on every render
@@ -23,22 +20,13 @@ const createStyles = () => {
 
 const styles = createStyles();
 
+const rootProductCategoryId = 0;
+
 export default function Index() {
-  const { items, loading, loadingMore, error, loadMore, refresh } = useProductCategories(0);
-
-  // Show loader only when root categories are loading and list is empty
-  if (loading && items.length === 0) {
-    return <FullScreenLoader />;
-  }
-
-  if (error) {
-    return <RetryView error={error} onRetry={refresh} />;
-  }
-
   return (
     <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
-      <ProductCategoryList productCategories={items} loadMore={loadMore} loadingMore={loadingMore} />
+      <ProductCategories productCategoryId={rootProductCategoryId} />
     </View>
   );
 }

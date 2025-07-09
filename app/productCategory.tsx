@@ -6,16 +6,27 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-
 const ProductCategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const productCategoryId = Number(id);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
-
   useEffect(() => {
     setTrail({ id: productCategoryId, name, type: 'productCategory' });
   }, [productCategoryId, name, setTrail]);
+
+  /*
+  // Test: Verify that getProductCategoryById retrieves items from the cache after hydration.
+  useEffect(() => {
+    if (items.length > 0) {
+      const testId = items[0].id;
+      getProductCategoryById(testId).then(categoryFromCache => {
+        console.log(`[Test] Fetched category ${testId} from cache:`, categoryFromCache);
+      });
+    }
+  }, [items, getProductCategoryById]);
+  */
+
 
   return (
     <View style={styles.container}>
@@ -29,8 +40,9 @@ const ProductCategoryPage = () => {
         }
       }} />
       <Text style={styles.title}>{name}</Text>
-      <ProductsByCategory productCategoryId={productCategoryId} />
+
       <ProductCategories productCategoryId={productCategoryId} />
+      <ProductsByCategory productCategoryId={productCategoryId} />
     </View>
   );
 };

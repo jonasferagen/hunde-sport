@@ -13,8 +13,10 @@ export async function fetchProductCategoryData(CategoryId: number, pageNum: numb
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.CATEGORIES.LIST(pageNum, CategoryId)
     );
+
     if (error) throw new Error(error);
-    return data?.map(mapToCategory) ?? [];
+    const result = data?.map(mapToCategory) ?? [];
+    return result;
 }
 
 export default fetchProductCategoryData;

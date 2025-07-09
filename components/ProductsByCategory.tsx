@@ -1,5 +1,3 @@
-
-
 import { useProductsByProductCategoryId } from "@/context/Product/Product";
 import FullScreenLoader from "./FullScreenLoader";
 import ProductList from "./product/ProductList";

@@ -8,8 +8,8 @@ export interface PaginatedState<T> {
     page: number;
     hasMore: boolean;
 }
-
-const defaultState: PaginatedState<any> = {
+/*
+const _defaultState: PaginatedState<any> = {
     items: [],
     loading: false,
     loadingMore: false,
@@ -17,68 +17,73 @@ const defaultState: PaginatedState<any> = {
     page: 1,
     hasMore: true,
 };
-
+*/
 export function PaginatedResource<T>(
-    fetcher: (id: number, page: number) => Promise<T[]>,
-    key: string
+    fetcher: (id: number, page: number) => Promise<T[]>
 ) {
     const [data, setData] = useState<Record<string, PaginatedState<T>>>({});
 
-    const fetchPage = useCallback(async (id: number, page: number, append = false) => {
-        const current = data[key] ?? defaultState;
+    const defaultState: PaginatedState<T> = {
+        items: [],
+        loading: false,
+        loadingMore: false,
+        error: null,
+        page: 1,
+        hasMore: true,
+    };
 
-        if (!current.hasMore && append) return;
-
-        setData(prev => ({
-            ...prev,
-            [key]: { ...current, loading: page === 1, loadingMore: page > 1, error: null },
-        }));
+    const refresh = useCallback(async (id: number) => {
+        const key = String(id);
+        setData(prev => ({ ...prev, [key]: { ...defaultState, loading: true } }));
 
         try {
-            const result = await fetcher(id, page);
-
-            setData(prev => {
-                const existing = prev[key] ?? defaultState;
-                const newItems = append ? [...existing.items, ...result] : result;
-                return {
-                    ...prev,
-                    [key]: {
-                        ...existing,
-                        items: newItems,
-                        page: page + 1,
-                        hasMore: result.length > 0,
-                        loading: false,
-                        loadingMore: false,
-                        error: null,
-                    },
-                };
-            });
-        } catch (e) {
+            const newItems = await fetcher(id, 1);
             setData(prev => ({
                 ...prev,
                 [key]: {
-                    ...prev[key],
-                    loading: false,
-                    loadingMore: false,
-                    error: e instanceof Error ? e.message : 'Unknown error',
+                    ...defaultState,
+                    items: newItems,
+                    hasMore: newItems.length > 0,
                 },
             }));
+        } catch (e) {
+            const message = e instanceof Error ? e.message : 'Unknown error';
+            setData(prev => ({ ...prev, [key]: { ...defaultState, error: message } }));
         }
-    }, [data, fetcher, key]);
+    }, [fetcher]);
+
+    const loadMore = useCallback(async (id: number) => {
+        const key = String(id);
+        const currentState = data[key] ?? defaultState;
+
+        if (currentState.loading || currentState.loadingMore || !currentState.hasMore) return;
+
+        setData(prev => ({ ...prev, [key]: { ...currentState, loadingMore: true } }));
+
+        try {
+            const nextPage = currentState.page + 1;
+            const newItems = await fetcher(id, nextPage);
+
+            setData(prev => ({
+                ...prev,
+                [key]: {
+                    ...currentState,
+                    items: [...currentState.items, ...newItems],
+                    page: nextPage,
+                    hasMore: newItems.length > 0,
+                    loadingMore: false,
+                },
+            }));
+        } catch (e) {
+            const message = e instanceof Error ? e.message : 'Unknown error';
+            setData(prev => ({ ...prev, [key]: { ...currentState, error: message, loadingMore: false } }));
+        }
+    }, [data, fetcher]);
 
     const getState = useCallback((id: number) => {
+        const key = String(id);
         return data[key] ?? defaultState;
-    }, [data, key]);
-
-    const loadMore = useCallback((id: number) => {
-        const state = getState(id);
-        if (state.loading || state.loadingMore || !state.hasMore) return;
-        fetchPage(id, state.page, true);
-    }, [getState, fetchPage]);
-
-    const refresh = useCallback((id: number) => {
-        fetchPage(id, 1, false);
-    }, [fetchPage]);
+    }, [data]);
 
     return { getState, loadMore, refresh };
 }
