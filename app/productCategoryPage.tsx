@@ -1,44 +1,52 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import ProductCategories from './_productCategories';
 import Breadcrumbs from './components/Breadcrumbs';
-import CategoryList from './components/category/CategoryList';
 import FullScreenLoader from './components/FullScreenLoader';
 import ProductList from './components/product/ProductList';
 import RetryView from './components/RetryView';
 import { useBreadcrumbs } from './contexts/BreadcrumbContext/BreadcrumbProvider';
-import { useProductCategories } from './contexts/ProductCategory';
+import useProductCategories from './contexts/ProductCategory';
 import { useProducts } from './contexts/ProductContext/ProductProvider';
 
-const CategoryPage = () => {
-  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
-  const categoryId = Number(id);
 
-  // Fetch both sub-categories and products for the current category ID
-  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setCategoryId } = useProductCategories(categoryId);
-  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts } = useProducts(categoryId);
+const ProductCategoryPage = () => {
+  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
+  const productCategoryId = Number(id);
+
+  const { setProductCategoryId } = useProductCategories(productCategoryId);
+  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts } = useProducts(productCategoryId);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
+  /*
+  useEffect(() => {
+    if (categories.length > 0) {
+      const testId = categories[0].id;
+      getProductCategoryById(testId).then(categoryFromCache => {
+        console.log(`[Test] Fetched category ${testId} from cache:`, categoryFromCache);
+      });
+    }
+  }, [categories, getProductCategoryById]);
+*/
 
   useEffect(() => {
     // Set the active ID for both contexts
-    setCategoryId(categoryId);
+    setProductCategoryId(productCategoryId);
     // Update the breadcrumb trail with the current category
-    setTrail({ id: categoryId, name, type: 'category' });
+    setTrail({ id: productCategoryId, name, type: 'category' });
 
-  }, [categoryId, name, setCategoryId]);
+  }, [productCategoryId, name, setProductCategoryId, setTrail]);
 
-  const isLoading = categoriesLoading || productsLoading;
-  const hasData = categories.length > 0 || products.length > 0;
+  const isLoading = productsLoading;
+  const hasData = products.length > 0;
 
-  // Show a single loader until we have some data to display
   if (isLoading && !hasData) {
     return <FullScreenLoader />;
   }
 
-  // Handle errors from either context
-  const error = categoriesError || productsError;
-  const refresh = categoriesError ? refreshCategories : refreshProducts;
+  const error = productsError;
+  const refresh = refreshProducts;
   if (error) {
     return <RetryView error={error} onRetry={refresh} />;
   }
@@ -51,11 +59,11 @@ const CategoryPage = () => {
         if (crumb.id === null) {
           router.replace('/');
         } else {
-          router.push({ pathname: '/categoryPage', params: { id: crumb.id.toString(), name: crumb.name } });
+          router.push({ pathname: '/productCategoryPage', params: { id: crumb.id.toString(), name: crumb.name } });
         }
       }} />
       <Text style={styles.title}>{name}</Text>
-      <CategoryList categories={categories} loadMore={loadMoreCategories} loadingMore={loadingMoreCategories} />
+      <ProductCategories productCategoryId={productCategoryId} />
       <ProductList products={products} loadMore={loadMoreProducts} loadingMore={loadingMoreProducts} />
     </View>
   );
@@ -77,4 +85,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoryPage;
+export default ProductCategoryPage;

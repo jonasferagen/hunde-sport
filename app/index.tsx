@@ -1,7 +1,7 @@
 // app/index.tsx
 import { StyleSheet, Text, View } from 'react-native';
-import CategoryList from './components/category/CategoryList';
 import FullScreenLoader from './components/FullScreenLoader';
+import ProductCategoryList from './components/productCategory/ProductCategoryList';
 import RetryView from './components/RetryView';
 import { useProductCategories } from './contexts/ProductCategory';
 
@@ -38,7 +38,7 @@ export default function Index() {
   return (
     <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
-      <CategoryList categories={categories} loadMore={loadMore} loadingMore={loadingMore} />
+      <ProductCategoryList productCategories={categories} loadMore={loadMore} loadingMore={loadingMore} />
     </View>
   );
 }

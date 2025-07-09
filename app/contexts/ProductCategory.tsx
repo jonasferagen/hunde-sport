@@ -12,7 +12,8 @@ export const useProductCategories = (categoryId: number) => {
         categories: state.items, // optional alias
         loadMore: () => context.loadMore(categoryId),
         refresh: () => context.refresh(categoryId),
-        setCategoryId: context.setCategoryId,
+        setProductCategoryId: context.setProductCategoryId,
+        getProductCategoryById: context.getProductCategoryById,
     };
 };
 

@@ -74,7 +74,7 @@ export default function ProductScreen() {
           if (crumb.id === null) {
             router.replace('/');
           } else if (crumb.type === 'category') {
-            router.push({ pathname: '/categoryPage', params: { id: crumb.id.toString(), name: crumb.name } });
+            router.push({ pathname: '/productPage', params: { id: crumb.id.toString(), name: crumb.name } });
           }
         }}
       />

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { Product } from '../../../types';
-import { useItemCache } from '../useItemCache';
-import { usePaginatedResource } from '../usePaginatedResource';
+import { ItemCache } from '../ItemCache';
+import { PaginatedResource } from '../PaginatedResource';
 import { fetchProductDetail, fetchProductList } from './productApi';
 import type { ProductContextType } from './productTypes';
 
@@ -14,11 +14,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         getState: getProductState,
         loadMore,
         refresh,
-    } = usePaginatedResource<Product>(fetchProductList, String(categoryId));
+    } = PaginatedResource<Product>(fetchProductList, String(categoryId));
 
     const {
         getItem: getProductById,
-    } = useItemCache<Product>(fetchProductDetail);
+    } = ItemCache<Product>(fetchProductDetail);
 
     return (
         <ProductContext.Provider

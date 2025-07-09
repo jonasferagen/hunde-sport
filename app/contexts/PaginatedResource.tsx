@@ -18,7 +18,7 @@ const defaultState: PaginatedState<any> = {
     hasMore: true,
 };
 
-export function usePaginatedResource<T>(
+export function PaginatedResource<T>(
     fetcher: (id: number, page: number) => Promise<T[]>,
     key: string
 ) {
@@ -83,4 +83,4 @@ export function usePaginatedResource<T>(
     return { getState, loadMore, refresh };
 }
 
-export default usePaginatedResource;
+export default PaginatedResource;
