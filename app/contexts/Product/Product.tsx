@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import ProductContext from './ProductContext/ProductContext';
+import ProductContext from './ProductContext';
 
 export const useProductsByProductCategoryId = (productCategoryId: number) => {
     const context = useContext(ProductContext);

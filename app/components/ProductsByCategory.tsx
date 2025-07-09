@@ -1,11 +1,11 @@
 
 
-import FullScreenLoader from "./components/FullScreenLoader";
-import ProductList from "./components/product/ProductList";
-import RetryView from "./components/RetryView";
-import { useProductsByProductCategoryId } from "./contexts/Product";
+import { useProductsByProductCategoryId } from "../contexts/Product/Product";
+import FullScreenLoader from "./FullScreenLoader";
+import ProductList from "./product/ProductList";
+import RetryView from "./RetryView";
 
-export default function Products({ productCategoryId }: { productCategoryId: number }) {
+export default function ProductsByCategory({ productCategoryId }: { productCategoryId: number }) {
 
     const { items, loading, error, refresh, loadMore, loadingMore } = useProductsByProductCategoryId(productCategoryId);
 

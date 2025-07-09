@@ -1,9 +1,9 @@
 
 
-import FullScreenLoader from "./components/FullScreenLoader";
-import ProductCategoryList from "./components/productCategory/ProductCategoryList";
-import RetryView from "./components/RetryView";
-import { useProductCategories } from './contexts/ProductCategory';
+import { useProductCategories } from '../contexts/ProductCategory/ProductCategory';
+import FullScreenLoader from "./FullScreenLoader";
+import RetryView from "./RetryView";
+import ProductCategoryList from "./productCategory/ProductCategoryList";
 
 export default function ProductCategories({ productCategoryId }: { productCategoryId: number }) {
 

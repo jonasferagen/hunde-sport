@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import FullScreenLoader from './components/FullScreenLoader';
 import ProductCategoryList from './components/productCategory/ProductCategoryList';
 import RetryView from './components/RetryView';
-import { useProductCategories } from './contexts/ProductCategory';
+import { useProductCategories } from './contexts/ProductCategory/ProductCategory';
 
 // Memoized styles to prevent recreation on every render
 const createStyles = () => {

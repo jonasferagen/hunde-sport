@@ -25,7 +25,7 @@ export interface ProductContextType {
 
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
-    const [productCategoryId] = useState<number>(849);
+    const [productCategoryId] = useState<number>(0);
     const {
         getState: getProductState,
         loadMore,
@@ -46,7 +46,6 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // console.log(state.items);
     }, [getProductState, productCategoryId]);
 
-    // console.log(productCategoryId);
 
     return (
         <ProductContext.Provider

@@ -8,7 +8,7 @@ const ProductCategoryListItem = memo<ProductCategory>(
   ({ id, name }) => {
     const handlePress = () => {
       router.push({
-        pathname: '/productCategoryPage',
+        pathname: '/screens/productCategory',
         params: {
           name: name,
           id: id.toString(),
