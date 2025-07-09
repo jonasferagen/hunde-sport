@@ -1,9 +1,9 @@
 import { Stack } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BreadcrumbProvider } from "./contexts/BreadcrumbContext";
-import { CategoryProvider } from './contexts/CategoryContext';
-import { ProductProvider } from './contexts/ProductContext';
+import { BreadcrumbProvider } from "./contexts/BreadcrumbContext/BreadcrumbProvider";
+import { CategoryProvider } from './contexts/CategoryContext/CategoryProvider';
+import { ProductProvider } from './contexts/ProductContext/ProductProvider';
 import { AppStyles } from "./theme";
 
 

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import CategoryList from './components/category/CategoryList';
 import FullScreenLoader from './components/FullScreenLoader';
 import RetryView from './components/RetryView';
-import { useCategories } from './contexts/CategoryContext';
+import { useCategories } from './contexts/CategoryContext/CategoryProvider';
 
 // Memoized styles to prevent recreation on every render
 const createStyles = () => {
@@ -28,7 +28,7 @@ export default function Index() {
 
   // Show loader only when root categories are loading and list is empty
   if (loading && categories.length === 0) {
-    return <FullScreenLoader/>;
+    return <FullScreenLoader />;
   }
 
   if (error) {

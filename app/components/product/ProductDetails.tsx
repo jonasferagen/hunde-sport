@@ -8,7 +8,6 @@ interface ProductDetailsProps {
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  console.log(product);
   return (
     <View style={styles.content}>
       {product.short_description && (

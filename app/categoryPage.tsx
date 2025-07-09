@@ -6,9 +6,9 @@ import CategoryList from './components/category/CategoryList';
 import FullScreenLoader from './components/FullScreenLoader';
 import ProductList from './components/product/ProductList';
 import RetryView from './components/RetryView';
-import { useBreadcrumbs } from './contexts/BreadcrumbContext';
-import { useCategories } from './contexts/CategoryContext';
-import { useProducts } from './contexts/ProductContext';
+import { useBreadcrumbs } from './contexts/BreadcrumbContext/BreadcrumbProvider';
+import { useCategories } from './contexts/CategoryContext/CategoryProvider';
+import { useProducts } from './contexts/ProductContext/ProductProvider';
 
 const CategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
