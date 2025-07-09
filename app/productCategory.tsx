@@ -27,7 +27,6 @@ const ProductCategoryPage = () => {
   }, [items, getProductCategoryById]);
   */
 
-
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: name }} />
@@ -40,6 +39,8 @@ const ProductCategoryPage = () => {
         }
       }} />
       <Text style={styles.title}>{name}</Text>
+
+
 
       <ProductCategories productCategoryId={productCategoryId} />
       <ProductsByCategory productCategoryId={productCategoryId} />

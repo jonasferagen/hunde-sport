@@ -1,10 +1,10 @@
+import { ItemCache } from '@/context/ItemCache';
+import { PaginatedResource } from '@/context/PaginatedResource';
 import type { Product } from '@/types';
-import React, { createContext, useEffect, useState } from 'react';
-import { ItemCache } from '../ItemCache';
-import { PaginatedResource } from '../PaginatedResource';
-import { fetchProductDetail, fetchProductList } from './ProductApi';
+import React, { createContext } from 'react';
+import { fetchProductList } from './ProductApi';
 
-export interface ProductState {
+interface ProductState {
     items: Product[];
     loading: boolean;
     loadingMore: boolean;
@@ -13,55 +13,35 @@ export interface ProductState {
     hasMore: boolean;
 }
 
-export interface ProductContextType {
-    getProductState: (productId: number) => ProductState;
-    getProductById: (productId: number) => Promise<Product | null>;
-    loadMore: (productId: number) => void;
-    refresh: (productId: number) => void;
-    // setActiveProductId: (id: number) => void;
+interface ProductContextType {
+    getState: (productCategoryId: number) => ProductState;
+    loadMore: (productCategoryId: number) => void;
+    refresh: (productCategoryId: number) => void;
+    getProductById: (id: number) => Promise<Product | null>;
+    hydrateCache: (items: Product[]) => void;
 }
 
-
-
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
-    const [productCategoryId] = useState<number>(0);
     const {
-        getState: getProductState,
+        getState,
         loadMore,
         refresh,
-    } = PaginatedResource<Product>(fetchProductList, String(productCategoryId));
+    } = PaginatedResource<Product>(fetchProductList);
 
-    const {
-        getItem: getProductById,
-    } = ItemCache<Product>(fetchProductDetail);
+    const { getItem: getProductById, hydrateCache } = ItemCache<Product>(async (id: number) => {
+        // This could be implemented to fetch a single category from the API if needed
+        return Promise.reject('Single category fetch not implemented');
+    });
 
-    useEffect(() => {
-        refresh(productCategoryId);
-    }, [productCategoryId]);
-
-
-    useEffect(() => {
-        const state = getProductState(productCategoryId);
-        // console.log(state.items);
-    }, [getProductState, productCategoryId]);
 
 
     return (
-        <ProductContext.Provider
-            value={{
-                getProductState,
-                getProductById,
-                loadMore,
-                refresh,
-            }}
-        >
+        <ProductContext.Provider value={{ getState, loadMore, refresh, getProductById, hydrateCache }}>
             {children}
         </ProductContext.Provider>
     );
 };
 
+export const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export default ProductContext;
-

@@ -18,6 +18,7 @@ export async function fetchProductList(productId: number, page: number): Promise
         ENDPOINTS.PRODUCTS.LIST(page, productId)
     );
     if (error) throw new Error(error);
+
     return (data ?? []).map(mapToProduct);
 }
 

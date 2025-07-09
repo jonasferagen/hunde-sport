@@ -81,6 +81,7 @@ export function PaginatedResource<T>(
     }, [data, fetcher]);
 
     const getState = useCallback((id: number) => {
+
         const key = String(id);
         return data[key] ?? defaultState;
     }, [data]);
