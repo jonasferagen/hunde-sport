@@ -9,7 +9,7 @@ import ProductImage from './components/product/ProductImage';
 import ProductTitle from './components/product/ProductTitle';
 
 import { useBreadcrumbs } from './contexts/BreadcrumbContext/BreadcrumbProvider';
-import { useProducts } from './contexts/ProductContext/ProductProvider';
+import { useProducts } from './contexts/ProductContext/ProductContext';
 
 export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string; name: string }>();

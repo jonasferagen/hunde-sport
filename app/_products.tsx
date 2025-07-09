@@ -3,11 +3,11 @@
 import FullScreenLoader from "./components/FullScreenLoader";
 import ProductList from "./components/product/ProductList";
 import RetryView from "./components/RetryView";
-import { useProducts } from "./contexts/ProductContext/ProductProvider";
+import { useProductsByProductCategoryId } from "./contexts/Product";
 
-export default function Products(productCategoryId: number) {
+export default function Products({ productCategoryId }: { productCategoryId: number }) {
 
-    const { products, loading, error, refresh, loadMore, loadingMore } = useProducts(productCategoryId);
+    const { items, loading, error, refresh, loadMore, loadingMore } = useProductsByProductCategoryId(productCategoryId);
 
     if (loading) {
         return <FullScreenLoader />;
@@ -18,6 +18,6 @@ export default function Products(productCategoryId: number) {
     }
 
     return (
-        <ProductList products={products} loadMore={loadMore} loadingMore={loadingMore} />
+        <ProductList products={items} loadMore={loadMore} loadingMore={loadingMore} />
     );
 }

@@ -2,21 +2,14 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import ProductCategories from './_productCategories';
+import Products from './_products';
 import Breadcrumbs from './components/Breadcrumbs';
-import FullScreenLoader from './components/FullScreenLoader';
-import ProductList from './components/product/ProductList';
-import RetryView from './components/RetryView';
 import { useBreadcrumbs } from './contexts/BreadcrumbContext/BreadcrumbProvider';
-import useProductCategories from './contexts/ProductCategory';
-import { useProducts } from './contexts/ProductContext/ProductProvider';
 
 
 const ProductCategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const productCategoryId = Number(id);
-
-  const { setProductCategoryId } = useProductCategories(productCategoryId);
-  const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts } = useProducts(productCategoryId);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
   /*
@@ -31,25 +24,8 @@ const ProductCategoryPage = () => {
 */
 
   useEffect(() => {
-    // Set the active ID for both contexts
-    setProductCategoryId(productCategoryId);
-    // Update the breadcrumb trail with the current category
-    setTrail({ id: productCategoryId, name, type: 'category' });
-
-  }, [productCategoryId, name, setProductCategoryId, setTrail]);
-
-  const isLoading = productsLoading;
-  const hasData = products.length > 0;
-
-  if (isLoading && !hasData) {
-    return <FullScreenLoader />;
-  }
-
-  const error = productsError;
-  const refresh = refreshProducts;
-  if (error) {
-    return <RetryView error={error} onRetry={refresh} />;
-  }
+    setTrail({ id: productCategoryId, name, type: 'productCategory' });
+  }, [productCategoryId, name, setTrail]);
 
   return (
     <View style={styles.container}>
@@ -64,7 +40,7 @@ const ProductCategoryPage = () => {
       }} />
       <Text style={styles.title}>{name}</Text>
       <ProductCategories productCategoryId={productCategoryId} />
-      <ProductList products={products} loadMore={loadMoreProducts} loadingMore={loadingMoreProducts} />
+      <Products productCategoryId={productCategoryId} />
     </View>
   );
 };

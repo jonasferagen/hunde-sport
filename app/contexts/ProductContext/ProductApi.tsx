@@ -1,7 +1,17 @@
 import { ENDPOINTS } from '../../../config/api';
 import type { Product } from '../../../types';
 import apiClient from '../../../utils/apiClient';
-import { mapToProduct } from './productUtils';
+
+
+const mapToProduct = (item: any): Product => ({
+    id: item.id,
+    name: item.name,
+    description: item.description,
+    short_description: item.short_description,
+    categories: item.categories || [],
+    images: item.images || [],
+});
+
 
 export async function fetchProductList(productId: number, page: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(

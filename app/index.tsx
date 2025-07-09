@@ -24,10 +24,10 @@ const createStyles = () => {
 const styles = createStyles();
 
 export default function Index() {
-  const { categories, loading, loadingMore, error, loadMore, refresh } = useProductCategories(0);
+  const { items, loading, loadingMore, error, loadMore, refresh } = useProductCategories(0);
 
   // Show loader only when root categories are loading and list is empty
-  if (loading && categories.length === 0) {
+  if (loading && items.length === 0) {
     return <FullScreenLoader />;
   }
 
@@ -38,7 +38,7 @@ export default function Index() {
   return (
     <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
-      <ProductCategoryList productCategories={categories} loadMore={loadMore} loadingMore={loadingMore} />
+      <ProductCategoryList productCategories={items} loadMore={loadMore} loadingMore={loadingMore} />
     </View>
   );
 }

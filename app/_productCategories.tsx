@@ -7,7 +7,7 @@ import { useProductCategories } from './contexts/ProductCategory';
 
 export default function ProductCategories({ productCategoryId }: { productCategoryId: number }) {
 
-    const { categories, loading, error, refresh, loadMore, loadingMore } = useProductCategories(productCategoryId);
+    const { items, loading, error, refresh, loadMore, loadingMore } = useProductCategories(productCategoryId);
 
     if (loading) {
         return <FullScreenLoader />;
@@ -18,6 +18,6 @@ export default function ProductCategories({ productCategoryId }: { productCatego
     }
 
     return (
-        <ProductCategoryList productCategories={categories} loadMore={loadMore} loadingMore={loadingMore} />
+        <ProductCategoryList productCategories={items} loadMore={loadMore} loadingMore={loadingMore} />
     );
 }
