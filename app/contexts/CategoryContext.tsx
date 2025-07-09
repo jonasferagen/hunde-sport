@@ -97,7 +97,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         },
       }));
     }
-  }, [categoryData, setBreadcrumbs]);
+  }, [categoryData]);
 
   useEffect(() => {
     const key = getKey(activeParentId);

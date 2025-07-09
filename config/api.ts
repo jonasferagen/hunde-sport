@@ -1,19 +1,20 @@
 // Base URL for API requests
-export const API_BASE_URL = __DEV__ 
+export const API_BASE_URL = __DEV__
   ? 'http://10.0.2.2:3001'  // For Android emulator
   : 'https://your-production-api.com'; // Update this for production
 
-  
+
 // API endpoints
 export const ENDPOINTS = {
   CATEGORIES: {
-    LIST: (page: number, parent: number = 0) => 
+    LIST: (page: number, parent: number = 0) =>
       `${API_BASE_URL}/products/categories?parent=${parent}&page=${page}&per_page=10&hide_empty=true`,
     // Add more category-related endpoints here as needed
   },
   PRODUCTS: {
-    LIST: (page: number, categoryId: number = 0) => 
+    LIST: (page: number, categoryId: number = 0) =>
       `${API_BASE_URL}/products?page=${page}&category=${categoryId}&status=publish&per_page=10&hide_empty=true`,
+    GET: (id: number) => `${API_BASE_URL}/products/${id}`,
     // Add more product-related endpoints here as needed
   },
   // Add other API endpoints here
