@@ -1,14 +1,14 @@
 import { router } from 'expo-router';
 import { memo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import type { ProductCategory } from '../../../types';
+import type { ProductCategory } from '../../types';
 
 // Memoized list item component with areEqual comparison
 const ProductCategoryListItem = memo<ProductCategory>(
   ({ id, name }) => {
     const handlePress = () => {
       router.push({
-        pathname: '/screens/productCategory',
+        pathname: '/productCategory',
         params: {
           name: name,
           id: id.toString(),

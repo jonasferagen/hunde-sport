@@ -1,10 +1,10 @@
+import Breadcrumbs from '@/components/Breadcrumbs';
+import ProductCategories from '@/components/ProductCategories';
+import ProductsByCategory from '@/components/ProductsByCategory';
+import { useBreadcrumbs } from '@/context/BreadcrumbContext/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Breadcrumbs from '../components/Breadcrumbs';
-import ProductCategories from '../components/ProductCategories';
-import ProductsByCategory from '../components/ProductsByCategory';
-import { useBreadcrumbs } from '../contexts/BreadcrumbContext/BreadcrumbProvider';
 
 
 const ProductCategoryPage = () => {

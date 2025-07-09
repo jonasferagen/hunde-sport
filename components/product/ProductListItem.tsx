@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import type { Product } from '../../../types';
+import type { Product } from '../../types';
 import ProductImage from './ProductImage';
 
 const ProductListItem: React.FC<Product> = ({ id, name, images }) => {

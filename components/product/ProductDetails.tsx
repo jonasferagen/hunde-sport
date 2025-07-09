@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import type { Product } from '../../../types';
-import { stripHtml } from '../../../utils/helpers';
+import type { Product } from '../../types';
+import { stripHtml } from '../../utils/helpers';
 
 interface ProductDetailsProps {
   product: Product;

@@ -1,9 +1,9 @@
+import Breadcrumbs from '@/components/Breadcrumbs';
+import ProductTitle from '@/components/product/ProductTitle';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet } from 'react-native';
-import Breadcrumbs from '../components/Breadcrumbs';
-import ProductTitle from '../components/product/ProductTitle';
 
-import { useBreadcrumbs } from '../contexts/BreadcrumbContext/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/context/BreadcrumbContext/BreadcrumbProvider';
 
 export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string; name: string }>();

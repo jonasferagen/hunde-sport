@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
-import type { ProductCategory } from '../../../types';
+import type { ProductCategory } from '../../types';
 import ProductCategoryListItem from './ProductCategoryListItem';
 
 interface ProductCategoryListProps {

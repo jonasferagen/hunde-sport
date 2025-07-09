@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import type { Image as ImageType } from '../../../types';
+import type { Image as ImageType } from '../../types';
 interface ProductImageProps {
   image: ImageType;
 }

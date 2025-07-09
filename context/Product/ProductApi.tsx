@@ -1,6 +1,6 @@
-import { ENDPOINTS } from '../../../config/api';
-import type { Product } from '../../../types';
-import apiClient from '../../../utils/apiClient';
+import { ENDPOINTS } from '@/config/api';
+import type { Product } from '@/types';
+import apiClient from '@/utils/apiClient';
 
 
 const mapToProduct = (item: any): Product => ({

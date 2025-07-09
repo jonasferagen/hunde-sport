@@ -1,6 +1,6 @@
 
 
-import { useProductsByProductCategoryId } from "../contexts/Product/Product";
+import { useProductsByProductCategoryId } from "@/context/Product/Product";
 import FullScreenLoader from "./FullScreenLoader";
 import ProductList from "./product/ProductList";
 import RetryView from "./RetryView";

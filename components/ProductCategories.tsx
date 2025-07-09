@@ -1,6 +1,6 @@
 
 
-import { useProductCategories } from '../contexts/ProductCategory/ProductCategory';
+import { useProductCategories } from '@/context/ProductCategory/ProductCategory';
 import FullScreenLoader from "./FullScreenLoader";
 import RetryView from "./RetryView";
 import ProductCategoryList from "./productCategory/ProductCategoryList";

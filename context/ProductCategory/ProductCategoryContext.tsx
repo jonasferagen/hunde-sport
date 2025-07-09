@@ -1,7 +1,7 @@
+import { ItemCache } from '@/context/ItemCache';
+import { PaginatedResource } from '@/context/PaginatedResource';
+import type { ProductCategory } from '@/types';
 import React, { createContext, useEffect, useState } from 'react';
-import type { ProductCategory } from '../../../types';
-import { ItemCache } from '../ItemCache';
-import { PaginatedResource } from '../PaginatedResource';
 import { fetchProductCategoryData } from './ProductCategoryApi';
 
 interface ProductCategoryState {
@@ -51,5 +51,6 @@ export const ProductCategoryProvider: React.FC<{ children: React.ReactNode }> = 
     );
 };
 
-const ProductCategoryContext = createContext<ProductCategoryContextType | undefined>(undefined);
+export const ProductCategoryContext = createContext<ProductCategoryContextType | undefined>(undefined);
+
 export default ProductCategoryContext;

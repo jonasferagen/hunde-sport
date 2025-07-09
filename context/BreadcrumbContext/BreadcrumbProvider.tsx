@@ -1,5 +1,5 @@
+import type { Breadcrumb } from '@/types';
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import type { Breadcrumb } from '../../../types';
 
 interface BreadcrumbContextType {
     breadcrumbs: Breadcrumb[];

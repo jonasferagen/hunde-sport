@@ -1,6 +1,6 @@
+import type { Breadcrumb } from '@/types';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import type { Breadcrumb } from '../../types';
 
 interface BreadcrumbsProps {
   trail: Breadcrumb[];

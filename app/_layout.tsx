@@ -1,9 +1,9 @@
+import { BreadcrumbProvider } from "@/context/BreadcrumbContext/BreadcrumbProvider";
+import { ProductProvider } from '@/context/Product/ProductContext';
+import { ProductCategoryProvider } from '@/context/ProductCategory/ProductCategoryContext';
 import { Stack } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BreadcrumbProvider } from "./contexts/BreadcrumbContext/BreadcrumbProvider";
-import { ProductProvider } from './contexts/Product/ProductContext';
-import { ProductCategoryProvider } from './contexts/ProductCategory/ProductCategoryContext';
 import { AppStyles } from "./theme";
 
 

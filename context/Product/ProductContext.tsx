@@ -1,5 +1,5 @@
+import type { Product } from '@/types';
 import React, { createContext, useEffect, useState } from 'react';
-import type { Product } from '../../../types';
 import { ItemCache } from '../ItemCache';
 import { PaginatedResource } from '../PaginatedResource';
 import { fetchProductDetail, fetchProductList } from './ProductApi';
