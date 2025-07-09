@@ -25,9 +25,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, loadMore, loadingMo
         );
     };
 
-
     return (
-
         <FlatList
             data={products}
             keyExtractor={keyExtractor}

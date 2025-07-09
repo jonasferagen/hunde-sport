@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Breadcrumbs from './components/Breadcrumbs';
@@ -6,6 +6,7 @@ import CategoryList from './components/category/CategoryList';
 import FullScreenLoader from './components/FullScreenLoader';
 import ProductList from './components/product/ProductList';
 import RetryView from './components/RetryView';
+import { useBreadcrumbs } from './contexts/BreadcrumbContext';
 import { useCategories } from './contexts/CategoryContext';
 import { useProducts } from './contexts/ProductContext';
 
@@ -14,14 +15,17 @@ const CategoryPage = () => {
   const numericId = Number(id);
 
   // Fetch both sub-categories and products for the current category ID
-  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setParentId, breadcrumbs } = useCategories(numericId);
+  const { categories, loading: categoriesLoading, loadMore: loadMoreCategories, loadingMore: loadingMoreCategories, error: categoriesError, refresh: refreshCategories, setParentId } = useCategories(numericId);
   const { products, loading: productsLoading, error: productsError, refresh: refreshProducts, loadMore: loadMoreProducts, loadingMore: loadingMoreProducts, setActiveCategoryId } = useProducts(numericId);
+  const { breadcrumbs, setTrail } = useBreadcrumbs();
 
   useEffect(() => {
     if (!isNaN(numericId)) {
       // Set the active ID for both contexts
-      setParentId(numericId, name);
+      setParentId(numericId);
       setActiveCategoryId(numericId);
+      // Update the breadcrumb trail with the current category
+      setTrail({ id: numericId, name, type: 'category' });
     }
   }, [numericId, name, setParentId, setActiveCategoryId]);
 
@@ -46,7 +50,14 @@ const CategoryPage = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: name }} />
-      <Breadcrumbs trail={breadcrumbs} onNavigate={(parentId) => setParentId(parentId)} />
+      <Breadcrumbs trail={breadcrumbs} onNavigate={(crumb) => {
+        setTrail(crumb);
+        if (crumb.id === null) {
+          router.replace('/');
+        } else {
+          router.push({ pathname: '/categoryPage', params: { id: crumb.id.toString(), name: crumb.name } });
+        }
+      }} />
       <Text style={styles.title}>{name}</Text>
       {
         hasSubCategories ? (

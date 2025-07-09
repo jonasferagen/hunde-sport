@@ -8,7 +8,7 @@ const ProductListItem: React.FC<Product> = ({ id, name, images }) => {
   const handlePress = () => {
     // Navigate to product detail page (you'll need to create this page)
     router.push({
-      pathname: '/product',
+      pathname: '/productPage',
       params: {
         name: name,
         id: id.toString(),

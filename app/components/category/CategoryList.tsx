@@ -25,7 +25,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ categories, loadMore, loadi
       </View>
     );
   };
-
+  console.log(categories);
   return (
     <FlatList
       data={categories}

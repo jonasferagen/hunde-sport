@@ -1,8 +1,9 @@
 // app/contexts/CategoryContext.tsx
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
-import type { Breadcrumb, Category } from '../../types';
+import type { Category } from '../../types';
 import apiClient from '../../utils/apiClient';
+import { useBreadcrumbs } from './BreadcrumbContext';
 
 // Represents the state for a single list of categories (e.g., for one parent category)
 interface CategoryState {
@@ -20,7 +21,6 @@ interface CategoryContextType {
   loadMore: (parentId: number | null) => void;
   refresh: (parentId: number | null) => void;
   setParentId: (id: number | null, name?: string) => void;
-  breadcrumbs: Breadcrumb[];
 }
 
 const mapToCategory = (item: any): Category => ({
@@ -45,7 +45,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // A map from parentId (or 'root') to the state for that category list
   const [categoryData, setCategoryData] = useState<Record<string, CategoryState>>({});
   const [activeParentId, setActiveParentId] = useState<number | null>(null);
-  const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([{ id: null, name: 'Home' }]);
+  const { setBreadcrumbs } = useBreadcrumbs();
 
   const getKey = (parentId: number | null) => parentId?.toString() ?? 'root';
 
@@ -57,12 +57,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     setCategoryData(prev => ({
       ...prev,
-      [key]: {
-        ...currentState,
-        loading: pageNum === 1,
-        loadingMore: pageNum > 1,
-        error: null,
-      },
+      [key]: { ...currentState, loading: pageNum === 1, loadingMore: pageNum > 1, error: null },
     }));
 
     try {
@@ -72,23 +67,25 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
       if (error) throw new Error(error);
 
-      const mappedData = data?.map(mapToCategory) ?? [];
+      if (data) {
+        const mappedData = data.map(mapToCategory) ?? [];
 
-      setCategoryData(prev => {
-        const state = prev[key];
-        const newCategories = append ? [...state.categories, ...mappedData] : mappedData;
-        return {
-          ...prev,
-          [key]: {
-            ...state,
-            categories: newCategories,
-            page: pageNum + 1,
-            hasMore: mappedData.length > 0,
-            loading: false,
-            loadingMore: false,
-          },
-        };
-      });
+        setCategoryData(prev => {
+          const state = prev[key];
+          const newCategories = append ? [...state.categories, ...mappedData] : mappedData;
+          return {
+            ...prev,
+            [key]: {
+              ...state,
+              categories: newCategories,
+              page: pageNum + 1,
+              hasMore: mappedData.length > 0,
+              loading: false,
+              loadingMore: false,
+            },
+          };
+        });
+      }
     } catch (err) {
       setCategoryData(prev => ({
         ...prev,
@@ -100,16 +97,15 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         },
       }));
     }
-  }, [categoryData]);
+  }, [categoryData, setBreadcrumbs]);
 
   useEffect(() => {
     const key = getKey(activeParentId);
-    // Fetch categories only if they haven't been loaded before.
+    // Only fetch if we don't have data for this key yet
     if (!categoryData[key]) {
       fetchCategories(activeParentId, 1, false);
     }
-  }, [activeParentId, categoryData, fetchCategories]);
-
+  }, [activeParentId]);
 
   const loadMore = useCallback(async (parentId: number | null) => {
     const key = getKey(parentId);
@@ -122,21 +118,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     await fetchCategories(parentId, 1, false);
   }, [fetchCategories]);
 
-  const handleSetParentId = useCallback((id: number | null, name?: string) => {
-    setBreadcrumbs(currentBreadcrumbs => {
-      const newBreadcrumbs = [...currentBreadcrumbs];
-      const existingIndex = newBreadcrumbs.findIndex(b => b.id === id);
-
-      if (id === null) {
-        return [{ id: null, name: 'Home' }];
-      } else if (existingIndex !== -1) {
-        return newBreadcrumbs.slice(0, existingIndex + 1);
-      } else if (name) {
-        return [...newBreadcrumbs, { id, name }];
-      }
-      return newBreadcrumbs;
-    });
-
+  const setParentId = useCallback((id: number | null) => {
     setActiveParentId(id);
   }, []);
 
@@ -151,9 +133,9 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         getCategoryState,
         loadMore,
         refresh,
-        setParentId: handleSetParentId,
-        breadcrumbs,
-      }}>
+        setParentId,
+      }}
+    >
       {children}
     </CategoryContext.Provider>
   );
@@ -172,7 +154,6 @@ export const useCategories = (parentId: number | null) => {
     loadMore: () => context.loadMore(parentId),
     refresh: () => context.refresh(parentId),
     setParentId: context.setParentId,
-    breadcrumbs: context.breadcrumbs,
   };
 };
 

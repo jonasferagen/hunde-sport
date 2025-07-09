@@ -1,34 +1,25 @@
-import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Breadcrumb } from '../../types';
 
 interface BreadcrumbsProps {
   trail: Breadcrumb[];
-  onNavigate: (id: number | null) => void;
+  onNavigate: (crumb: Breadcrumb) => void;
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
-  const handlePress = (id: number | null) => {
-    onNavigate(id);
-    if (id === null) {
-      router.replace('/');
-    } else {
-      // Find the breadcrumb to get the name
-      const breadcrumb = trail.find(b => b.id === id);
-      router.push({ pathname: '/categoryPage', params: { id: id.toString(), name: breadcrumb?.name || '' } });
-    }
-  };
+  // Add the 'Home' breadcrumb to the beginning of the trail
+  const fullTrail: Breadcrumb[] = [{ id: null, name: 'Home', type: 'category' }, ...trail];
 
   return (
     <View style={styles.container}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {trail.map((breadcrumb, index) => (
-          <View key={breadcrumb.id} style={styles.breadcrumbItem}>
-            <TouchableOpacity onPress={() => handlePress(breadcrumb.id)}>
+        {fullTrail.map((breadcrumb, index) => (
+          <View key={`${breadcrumb.type}-${breadcrumb.id}`} style={styles.breadcrumbItem}>
+            <TouchableOpacity onPress={() => onNavigate(breadcrumb)}>
               <Text style={styles.breadcrumbText}>{breadcrumb.name}</Text>
             </TouchableOpacity>
-            {index < trail.length - 1 && <Text style={styles.separator}>{' > '}</Text>}
+            {index < fullTrail.length - 1 && <Text style={styles.separator}>{' > '}</Text>}
           </View>
         ))}
       </ScrollView>

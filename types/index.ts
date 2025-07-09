@@ -32,6 +32,7 @@ export interface Product {
 export interface Breadcrumb {
   id: number | null;
   name: string;
+  type?: 'category' | 'product';
 }
 
 export interface BaseContextType {

@@ -109,12 +109,22 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [activeCategoryId, productData, fetchProducts]);
 
   const getProductById = useCallback(async (productId: number): Promise<Product | null> => {
+    // First, check if the product is in any of the loaded category lists
+    for (const key in productData) {
+      const foundProduct = productData[key].products.find(p => p.id === productId);
+      if (foundProduct) {
+        return foundProduct;
+      }
+    }
+
+    // Second, check the dedicated cache for individually fetched products
     if (productDetailCache[productId]) {
       return productDetailCache[productId];
     }
 
+    // Finally, if not found anywhere, fetch from the API
     try {
-      const { data, error } = await apiClient.get<Product>(`${ENDPOINTS.PRODUCTS.LIST(1)}/${productId}`);
+      const { data, error } = await apiClient.get<Product>(`${ENDPOINTS.PRODUCTS.GET(productId)}`);
       if (error) throw new Error(error);
 
       if (data) {
@@ -127,7 +137,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       console.error('Error fetching product:', err);
       return null;
     }
-  }, [productDetailCache]);
+  }, [productData, productDetailCache]);
 
   const loadMore = useCallback(async (categoryId: number | null) => {
     const key = getKey(categoryId);
