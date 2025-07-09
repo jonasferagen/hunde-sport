@@ -11,7 +11,7 @@ const ProductTitle: React.FC<ProductTitleProps> = ({ name }) => {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 22,
+    fontSize: 10,
     fontWeight: 'bold',
     marginHorizontal: 20,
     marginTop: 20,

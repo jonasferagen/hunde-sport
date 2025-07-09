@@ -16,7 +16,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
     } else {
       // Find the breadcrumb to get the name
       const breadcrumb = trail.find(b => b.id === id);
-      router.push({ pathname: '/category', params: { id: id.toString(), name: breadcrumb?.name || '' } });
+      router.push({ pathname: '/categoryPage', params: { id: id.toString(), name: breadcrumb?.name || '' } });
     }
   };
 

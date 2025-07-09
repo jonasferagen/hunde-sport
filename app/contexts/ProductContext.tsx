@@ -1,7 +1,26 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { ENDPOINTS } from '../../config/api';
-import type { BaseContextType, Product } from '../../types';
+import type { Product } from '../../types';
 import apiClient from '../../utils/apiClient';
+
+// Represents the state for a list of products for one category
+interface ProductState {
+  products: Product[];
+  loading: boolean;
+  loadingMore: boolean;
+  error: string | null;
+  page: number;
+  hasMore: boolean;
+}
+
+// The shape of the data provided by the context
+interface ProductContextType {
+  getProductState: (categoryId: number | null) => ProductState;
+  getProductById: (productId: number) => Promise<Product | null>;
+  loadMore: (categoryId: number | null) => void;
+  refresh: (categoryId: number | null) => void;
+  setActiveCategoryId: (id: number | null) => void;
+}
 
 const mapToProduct = (item: any): Product => ({
   id: item.id,
@@ -12,148 +31,149 @@ const mapToProduct = (item: any): Product => ({
   images: item.images || [],
 });
 
-type ProductContextType = BaseContextType & {
-  products: Product[];
-  categoryId: number | null;
-  product: Product | null;
-  setCategoryId: (id: number | null) => void;
-  getProductById: (id: number) => Promise<Product | null>;
-};
-
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-export const ProductProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
+const defaultProductState: ProductState = {
+  products: [],
+  loading: false,
+  loadingMore: false,
+  error: null,
+  page: 1,
+  hasMore: true,
+};
 
-  const fetchProducts = async (pageNum: number, append = false) => {
-    if (!categoryId) return [];
-    
+export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // A map from categoryId to the state for that product list
+  const [productData, setProductData] = useState<Record<string, ProductState>>({});
+  // A cache for individual product details
+  const [productDetailCache, setProductDetailCache] = useState<Record<string, Product>>({});
+  const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
+
+  const getKey = (categoryId: number | null) => categoryId?.toString() ?? 'all';
+
+  const fetchProducts = useCallback(async (categoryId: number | null, pageNum: number, append = false) => {
+    if (categoryId === null) return; // Don't fetch if no category is selected
+    const key = getKey(categoryId);
+    const currentState = productData[key] ?? defaultProductState;
+
+    if (!currentState.hasMore && append) return;
+
+    setProductData(prev => ({
+      ...prev,
+      [key]: { ...currentState, loading: pageNum === 1, loadingMore: pageNum > 1, error: null },
+    }));
+
     try {
-      if (pageNum === 1) {
-        setLoading(true);
-      } else {
-        setLoadingMore(true);
-      }
-
-      const { data, error } = await apiClient.get<Product[]>(
+      const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(pageNum, categoryId)
       );
 
-      if (error) {
-        throw new Error(error);
-      }
-      
-      if (!data || data.length === 0) {
-        setHasMore(false);
-      } else {
-        const mappedProducts = data.map(mapToProduct);
-        setProducts(prev => append ? [...prev, ...mappedProducts] : mappedProducts);
-        setPage(pageNum + 1);
-      }
-      
-      setError(null);
-      return data || [];
-      
+      if (error) throw new Error(error);
+
+      const mappedData = data?.map(mapToProduct) ?? [];
+
+      setProductData(prev => {
+        const state = prev[key];
+        const newProducts = append ? [...state.products, ...mappedData] : mappedData;
+        return {
+          ...prev,
+          [key]: {
+            ...state,
+            products: newProducts,
+            page: pageNum + 1,
+            hasMore: mappedData.length > 0,
+            loading: false,
+            loadingMore: false,
+          },
+        };
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Error fetching products:', err);
-      return [];
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
+      setProductData(prev => ({
+        ...prev,
+        [key]: {
+          ...prev[key],
+          error: err instanceof Error ? err.message : 'An unknown error occurred',
+          loading: false,
+          loadingMore: false,
+        },
+      }));
     }
-  };
+  }, [productData]);
 
-  const loadMore = async () => {
-    if (loading || loadingMore || !hasMore) return;
-    await fetchProducts(page, true);
-  };
-
-  const refresh = async () => {
-    setHasMore(true);
-    setPage(1);
-    await fetchProducts(1, false);
-  };
-
-  // Reset and fetch products when categoryId changes
   useEffect(() => {
-    if (!categoryId) {
-      setProducts([]);
-      return;
+    if (activeCategoryId === null) return;
+    const key = getKey(activeCategoryId);
+    if (!productData[key]) {
+      fetchProducts(activeCategoryId, 1, false);
     }
-    setPage(1);
-    setProducts([]);
-    setHasMore(true);
-    fetchProducts(1, false);
-  }, [categoryId]);
+  }, [activeCategoryId, productData, fetchProducts]);
 
-  const getProductById = async (id: number): Promise<Product | null> => {
-    const existingProduct = products.find(p => p.id === id);
-    if (existingProduct) {
-      setProduct(existingProduct);
-      return existingProduct;
+  const getProductById = useCallback(async (productId: number): Promise<Product | null> => {
+    if (productDetailCache[productId]) {
+      return productDetailCache[productId];
     }
 
     try {
-      setLoading(true);
-      const { data, error } = await apiClient.get<Product>(`${ENDPOINTS.PRODUCTS.LIST(1)}/${id}`);
-      
-      if (error) {
-        throw new Error(error);
-      }
+      const { data, error } = await apiClient.get<Product>(`${ENDPOINTS.PRODUCTS.LIST(1)}/${productId}`);
+      if (error) throw new Error(error);
 
       if (data) {
         const mappedProduct = mapToProduct(data);
-        setProducts(prev => [...prev, mappedProduct]);
-        setProduct(mappedProduct);
+        setProductDetailCache(prev => ({ ...prev, [productId]: mappedProduct }));
         return mappedProduct;
       }
-      
-      setProduct(null);
       return null;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Error fetching product:', err);
       return null;
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [productDetailCache]);
+
+  const loadMore = useCallback(async (categoryId: number | null) => {
+    const key = getKey(categoryId);
+    const state = productData[key] ?? defaultProductState;
+    if (state.loading || state.loadingMore || !state.hasMore) return;
+    await fetchProducts(categoryId, state.page, true);
+  }, [productData, fetchProducts]);
+
+  const refresh = useCallback(async (categoryId: number | null) => {
+    await fetchProducts(categoryId, 1, false);
+  }, [fetchProducts]);
+
+  const getProductState = useCallback((categoryId: number | null) => {
+    const key = getKey(categoryId);
+    return productData[key] ?? defaultProductState;
+  }, [productData]);
 
   return (
-    <ProductContext.Provider 
+    <ProductContext.Provider
       value={{
-        products,
-        loading,
-        loadingMore,
-        error,
-        hasMore,
-        categoryId,
-        product,
+        getProductState,
+        getProductById,
         loadMore,
         refresh,
-        setCategoryId,
-        getProductById,
-      }}
-    >
+        setActiveCategoryId,
+      }}>
       {children}
     </ProductContext.Provider>
   );
 };
 
-export const useProducts = () => {
+export const useProducts = (categoryId: number | null) => {
   const context = useContext(ProductContext);
   if (context === undefined) {
     throw new Error('useProducts must be used within a ProductProvider');
   }
-  return context;
+
+  const state = context.getProductState(categoryId);
+
+  return {
+    ...state,
+    loadMore: () => context.loadMore(categoryId),
+    refresh: () => context.refresh(categoryId),
+    setActiveCategoryId: context.setActiveCategoryId,
+    getProductById: context.getProductById,
+  };
 };
 
 export default ProductProvider;
