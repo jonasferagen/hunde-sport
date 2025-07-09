@@ -7,7 +7,5 @@ export const mapToCategory = (item: any): Category => ({
     image: item.image,
 });
 
-export const getKey = (parentId: number | null): string =>
-    parentId?.toString() ?? 'root';
 
 export default mapToCategory;

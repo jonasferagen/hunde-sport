@@ -15,7 +15,6 @@ export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string; name: string }>();
   const { getProductById } = useProducts(Number(id)); // Pass null, we only need the function
   const { breadcrumbs, setTrail } = useBreadcrumbs();
-
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

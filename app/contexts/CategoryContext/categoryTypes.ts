@@ -1,7 +1,7 @@
 import type { Category } from '../../../types';
 
 export interface CategoryState {
-    categories: Category[];
+    items: Category[];
     loading: boolean;
     loadingMore: boolean;
     error: string | null;
