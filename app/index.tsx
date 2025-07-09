@@ -8,9 +8,6 @@ import { useCategories } from './contexts/CategoryContext';
 // Memoized styles to prevent recreation on every render
 const createStyles = () => {
   return StyleSheet.create({
-    container: {
-      flex: 1,
-    },
     title: {
       fontSize: 24,
       fontWeight: 'bold',
@@ -27,10 +24,11 @@ const createStyles = () => {
 const styles = createStyles();
 
 export default function Index() {
-  const { categories, loading, loadingMore, error, loadMore, refresh } = useCategories();
+  const { categories, loading, loadingMore, error, loadMore, refresh } = useCategories(null);
 
-  if (loading && !loadingMore) {
-    return <FullScreenLoader />;
+  // Show loader only when root categories are loading and list is empty
+  if (loading && categories.length === 0) {
+    return <FullScreenLoader/>;
   }
 
   if (error) {
@@ -38,7 +36,7 @@ export default function Index() {
   }
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
       <CategoryList categories={categories} loadMore={loadMore} loadingMore={loadingMore} />
     </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
 import type { Category } from '../../../types';
 import CategoryListItem from './CategoryListItem';
 
@@ -20,6 +20,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ categories, loadMore, loadi
     if (!loadingMore) return null;
     return (
       <View style={styles.loadingMore}>
+        <Text>loading more</Text>
         <ActivityIndicator size="small" />
       </View>
     );

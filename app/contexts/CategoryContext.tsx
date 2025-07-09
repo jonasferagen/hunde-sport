@@ -4,6 +4,25 @@ import { ENDPOINTS } from '../../config/api';
 import type { Breadcrumb, Category } from '../../types';
 import apiClient from '../../utils/apiClient';
 
+// Represents the state for a single list of categories (e.g., for one parent category)
+interface CategoryState {
+  categories: Category[];
+  loading: boolean;
+  loadingMore: boolean;
+  error: string | null;
+  page: number;
+  hasMore: boolean;
+}
+
+// The shape of the data provided by the context
+interface CategoryContextType {
+  getCategoryState: (parentId: number | null) => CategoryState;
+  loadMore: (parentId: number | null) => void;
+  refresh: (parentId: number | null) => void;
+  setParentId: (id: number | null, name?: string) => void;
+  breadcrumbs: Breadcrumb[];
+}
+
 const mapToCategory = (item: any): Category => ({
   id: item.id,
   name: item.name,
@@ -11,92 +30,97 @@ const mapToCategory = (item: any): Category => ({
   image: item.image,
 });
 
-interface CategoryContextType {
-  categories: Category[];
-  loading: boolean;
-  loadingMore: boolean;
-  error: string | null;
-  loadMore: () => void;
-  refresh: () => void;
-  setParentId: (id: number | null, name?: string) => void;
-  breadcrumbs: Breadcrumb[];
-}
-
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
 
+const defaultCategoryState: CategoryState = {
+  categories: [],
+  loading: false,
+  loadingMore: false,
+  error: null,
+  page: 1,
+  hasMore: true,
+};
+
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [parentId, setParentIdState] = useState<number | null>(null);
+  // A map from parentId (or 'root') to the state for that category list
+  const [categoryData, setCategoryData] = useState<Record<string, CategoryState>>({});
+  const [activeParentId, setActiveParentId] = useState<number | null>(null);
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([{ id: null, name: 'Home' }]);
 
-  useEffect(() => {
-    // Reset and fetch new categories when parentId changes
-    setCategories([]);
-    setPage(1);
-    setHasMore(true);
-    fetchCategories(1, false);
-  }, [parentId]);
+  const getKey = (parentId: number | null) => parentId?.toString() ?? 'root';
 
-  const fetchCategories = async (pageNum: number, append = false) => {
-    if (!hasMore && append) return;
+  const fetchCategories = useCallback(async (parentId: number | null, pageNum: number, append = false) => {
+    const key = getKey(parentId);
+    const currentState = categoryData[key] ?? defaultCategoryState;
+
+    if (!currentState.hasMore && append) return;
+
+    setCategoryData(prev => ({
+      ...prev,
+      [key]: {
+        ...currentState,
+        loading: pageNum === 1,
+        loadingMore: pageNum > 1,
+        error: null,
+      },
+    }));
+
     try {
-      if (pageNum === 1) {
-        setLoading(true);
-      } else {
-        setLoadingMore(true);
-      }
-
       const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.CATEGORIES.LIST(pageNum, parentId || 0)
+        ENDPOINTS.CATEGORIES.LIST(pageNum, parentId ?? 0)
       );
 
-      if (error) {
-        throw new Error(error);
-      }
-      
-      if (!data) {
-        setHasMore(false);
-        return [];
-      }
+      if (error) throw new Error(error);
 
-      const mappedData = data.map(mapToCategory);
-      const filteredData = mappedData; //mappedData.filter(category => category.image && category.image.src);
+      const mappedData = data?.map(mapToCategory) ?? [];
 
-      if (filteredData.length === 0) {
-        setHasMore(false);
-      } else {
-        setCategories(prev => append ? [...prev, ...filteredData] : filteredData);
-        setPage(pageNum + 1);
-      }
-      
-      setError(null);
-      return filteredData;
-      
+      setCategoryData(prev => {
+        const state = prev[key];
+        const newCategories = append ? [...state.categories, ...mappedData] : mappedData;
+        return {
+          ...prev,
+          [key]: {
+            ...state,
+            categories: newCategories,
+            page: pageNum + 1,
+            hasMore: mappedData.length > 0,
+            loading: false,
+            loadingMore: false,
+          },
+        };
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Error fetching categories:', err);
-      return [];
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
+      setCategoryData(prev => ({
+        ...prev,
+        [key]: {
+          ...prev[key],
+          error: err instanceof Error ? err.message : 'An unknown error occurred',
+          loading: false,
+          loadingMore: false,
+        },
+      }));
     }
-  };
+  }, [categoryData]);
 
-  const loadMore = async () => {
-    if (loading || loadingMore || !hasMore) return;
-    await fetchCategories(page, true);
-  };
+  useEffect(() => {
+    const key = getKey(activeParentId);
+    // Fetch categories only if they haven't been loaded before.
+    if (!categoryData[key]) {
+      fetchCategories(activeParentId, 1, false);
+    }
+  }, [activeParentId, categoryData, fetchCategories]);
 
-  const refresh = async () => {
-    setHasMore(true);
-    setPage(1);
-    await fetchCategories(1, false);
-  };
+
+  const loadMore = useCallback(async (parentId: number | null) => {
+    const key = getKey(parentId);
+    const state = categoryData[key] ?? defaultCategoryState;
+    if (state.loading || state.loadingMore || !state.hasMore) return;
+    await fetchCategories(parentId, state.page, true);
+  }, [categoryData, fetchCategories]);
+
+  const refresh = useCallback(async (parentId: number | null) => {
+    await fetchCategories(parentId, 1, false);
+  }, [fetchCategories]);
 
   const handleSetParentId = useCallback((id: number | null, name?: string) => {
     setBreadcrumbs(currentBreadcrumbs => {
@@ -110,19 +134,21 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       } else if (name) {
         return [...newBreadcrumbs, { id, name }];
       }
-      return newBreadcrumbs; // Return original if no changes
+      return newBreadcrumbs;
     });
 
-    setParentIdState(id);
-  }, []); // No dependencies, so the function is created only once
+    setActiveParentId(id);
+  }, []);
+
+  const getCategoryState = useCallback((parentId: number | null) => {
+    const key = getKey(parentId);
+    return categoryData[key] ?? defaultCategoryState;
+  }, [categoryData]);
 
   return (
     <CategoryContext.Provider
       value={{
-        categories,
-        loading,
-        loadingMore,
-        error,
+        getCategoryState,
         loadMore,
         refresh,
         setParentId: handleSetParentId,
@@ -133,12 +159,21 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   );
 };
 
-export const useCategories = () => {
+export const useCategories = (parentId: number | null) => {
   const context = useContext(CategoryContext);
   if (context === undefined) {
     throw new Error('useCategories must be used within a CategoryProvider');
   }
-  return context;
+
+  const state = context.getCategoryState(parentId);
+
+  return {
+    ...state,
+    loadMore: () => context.loadMore(parentId),
+    refresh: () => context.refresh(parentId),
+    setParentId: context.setParentId,
+    breadcrumbs: context.breadcrumbs,
+  };
 };
 
 export default CategoryProvider;

@@ -9,21 +9,18 @@ import { useCategories } from './contexts/CategoryContext';
 
 const CategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
-  const { categories, loading, loadingMore, error, loadMore, refresh, setParentId, breadcrumbs } = useCategories();
+  const numericId = Number(id);
+
+  const { categories, loading, loadingMore, error, loadMore, refresh, setParentId, breadcrumbs } = useCategories(numericId);
 
   useEffect(() => {
-    const parentId = Number(id);
-    if (!isNaN(parentId)) {
-      setParentId(parentId, name);
+    if (!isNaN(numericId)) {
+      setParentId(numericId, name);
     }
+  }, [numericId, name, setParentId]);
 
-    // When the component unmounts, reset the parentId if navigating back
-    return () => {
-      // This logic might need adjustment based on navigation flow
-    };
-  }, [id, name, setParentId]);
-
-  if (loading && !loadingMore) {
+  // Show loader only when this specific category is loading and has no items yet.
+  if (loading && categories.length === 0) {
     return <FullScreenLoader />;
   }
 
@@ -32,7 +29,7 @@ const CategoryPage = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View>
       <Stack.Screen options={{ title: name }} />
       <Breadcrumbs trail={breadcrumbs} onNavigate={(parentId) => setParentId(parentId)} />
       <Text style={styles.title}>{name}</Text>
@@ -42,9 +39,6 @@ const CategoryPage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
