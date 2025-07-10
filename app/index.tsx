@@ -28,9 +28,9 @@ export default function Index() {
   return (
     <ScrollView>
       <Text style={styles.title}>Hva leter du etter?</Text>
-      <Categories categoryId={rootCategoryId} />
       <FeaturedProducts />
-
+      <Text style={styles.title}>Andre kategorier</Text>
+      <Categories categoryId={rootCategoryId} />
     </ScrollView>
   );
 }

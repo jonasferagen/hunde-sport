@@ -5,6 +5,18 @@ import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory } from './P
 
 
 
+const updateProductCache = (queryClient: any, queryResult: any) => {
+
+    if (queryResult.data) {
+        // When we fetch the list of products, we can populate the cache for each individual product.
+        queryResult.data.pages.forEach((page: any) => {
+            page.forEach((product: any) => {
+                queryClient.setQueryData(['product', product.id], product);
+            });
+        });
+    }
+}
+
 
 export const useProductsByCategory = (categoryId: number) => {
 
@@ -34,6 +46,7 @@ export const useProductsByCategory = (categoryId: number) => {
     return queryResult;
 };
 
+
 export const useFeaturedProducts = () => {
 
     const queryClient = useQueryClient();
@@ -58,10 +71,11 @@ export const useFeaturedProducts = () => {
             });
         }
     }, [queryResult.data, queryClient]);
+
     return queryResult;
 };
 
-export const useProduct = (productId: number) => {
+export const useProductById = (productId: number) => {
     return useQuery<Product>({
         queryKey: ['product', productId],
         queryFn: () => fetchProduct(productId)
