@@ -7,7 +7,7 @@ import CategoryContext from './CategoryContext';
 
 export const useCategoriesByCategory = (categoryId: number) => {
     // Creates its own paginator instance, making the hook self-contained
-    const { getState, loadMore, refresh } = usePaginatorResource<Category>(fetchCategoryByCategory);
+    const { getState, loadMore, refresh } = usePaginatorResource<Category>(String("category" + categoryId), fetchCategoryByCategory);
 
     // Still uses the shared context for caching
     const categoryContext = useContext(CategoryContext);

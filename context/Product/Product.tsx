@@ -1,12 +1,12 @@
 import { Product } from '@/types';
 import { usePaginatorResource } from '@/utils/paginatorResource';
 import { useContext, useEffect, useState } from 'react';
-import { fetchProductByCategory } from './ProductApi';
+import { fetchFeaturedProducts, fetchProductByCategory } from './ProductApi';
 import ProductContext from './ProductContext';
 
 export const useProductsByCategory = (categoryId: number) => {
     // Creates its own paginator instance, making the hook self-contained
-    const { getState, loadMore, refresh } = usePaginatorResource<Product>(fetchProductByCategory);
+    const { getState, loadMore, refresh } = usePaginatorResource<Product>("productsByCategory-" + categoryId, fetchProductByCategory);
 
     const productContext = useContext(ProductContext);
     const { hydrateCache, getItem } = productContext!;
@@ -33,6 +33,33 @@ export const useProductsByCategory = (categoryId: number) => {
     };
 };
 
+export const useFeaturedProducts = () => {
+    const { getState, loadMore, refresh } = usePaginatorResource<Product>('featuredProducts', fetchFeaturedProducts);
+
+    const productContext = useContext(ProductContext);
+    const { hydrateCache, getItem } = productContext!;
+
+    // Fetch data when the component mounts or the ID changes
+    useEffect(() => {
+        refresh(0);
+    }, [refresh]);
+
+    const state = getState(0);
+
+    // Hydrate the item cache whenever the items for this category change
+    useEffect(() => {
+        if (state.items.length > 0) {
+            hydrateCache(state.items);
+        }
+    }, [state.items, hydrateCache]);
+
+    return {
+        ...state,
+        loadMore: () => loadMore(0),
+        refresh: () => refresh(0),
+        getItem, // Provide getItem for convenience
+    };
+};
 
 
 export const useProductById = (productId: number) => {

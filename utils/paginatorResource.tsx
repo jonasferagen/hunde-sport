@@ -16,6 +16,7 @@ export interface PaginatorResourceActions<T> {
 }
 
 export function usePaginatorResource<T>(
+    key: string,
     fetcher: (page: number, id: number) => Promise<T[]>
 ): PaginatorResourceActions<T> {
     const [data, setData] = useState<Record<string, PaginatorState<T>>>({});
@@ -30,10 +31,8 @@ export function usePaginatorResource<T>(
     };
 
     const refresh = useCallback(async (id: number) => {
-        const key = String(id);
-        console.log('id', id);
-        setData(prev => ({ ...prev, [key]: { ...defaultState, loading: true } }));
 
+        setData(prev => ({ ...prev, [key]: { ...defaultState, loading: true } }));
 
         try {
             const newItems = await fetcher(1, id);
@@ -49,10 +48,9 @@ export function usePaginatorResource<T>(
             const message = e instanceof Error ? e.message : 'Unknown error';
             setData(prev => ({ ...prev, [key]: { ...defaultState, error: message } }));
         }
-    }, [fetcher]);
+    }, [fetcher, key]);
 
     const loadMore = useCallback(async (id: number) => {
-        const key = String(id);
         const currentState = data[key] ?? defaultState;
 
         if (currentState.loading || currentState.loadingMore || !currentState.hasMore) return;
@@ -77,12 +75,11 @@ export function usePaginatorResource<T>(
             const message = e instanceof Error ? e.message : 'Unknown error';
             setData(prev => ({ ...prev, [key]: { ...currentState, error: message, loadingMore: false } }));
         }
-    }, [data, fetcher]);
+    }, [data, key, fetcher]);
 
     const getState = useCallback((id: number) => {
-        const key = String(id);
         return data[key] ?? defaultState;
-    }, [data]);
+    }, [data, key]);
 
     return { getState, loadMore, refresh };
 }

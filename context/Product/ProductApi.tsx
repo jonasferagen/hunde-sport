@@ -25,8 +25,6 @@ export async function fetchProductByCategory(page: number, categoryId: number): 
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, 'category=' + categoryId)
     );
-
-
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
