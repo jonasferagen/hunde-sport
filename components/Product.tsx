@@ -1,23 +1,20 @@
 
 
-import { useProductById } from '@/context/Product/Product';
+import { useProduct } from '@/context/Product/Product';
 import FullScreenLoader from './FullScreenLoader';
-import RetryView from './RetryView';
 import ProductDetails from './product/ProductDetails';
 
 export default function Product({ productId }: { productId: number }) {
 
-    const { product, loading, error } = useProductById(productId);
+    const { data, isLoading, error } = useProduct(productId);
 
-    if (loading) {
+
+    if (isLoading) {
         return <FullScreenLoader />;
     }
 
-    if (error) {
-        return <RetryView error={error} onRetry={() => { }} />;
-    }
 
-    return <ProductDetails product={product!} />;
+    return <ProductDetails product={data!} />;
 
 
 }

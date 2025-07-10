@@ -19,7 +19,7 @@ const ProductListItem: React.FC<Product> = ({ id, name, images }) => {
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
       <View style={styles.card}>
-        <ProductImage image={images[0]} />
+        {images && images.length > 0 && <ProductImage image={images[0]} />}
         <Text style={styles.name}>{name}</Text>
       </View>
     </TouchableOpacity>

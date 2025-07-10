@@ -1,76 +1,45 @@
 
 import { Category } from '@/types';
-import { usePaginatorResource } from '@/utils/paginatorResource';
-import { useContext, useEffect, useState } from 'react';
-import { fetchCategoryByCategory } from './CategoryApi';
-import CategoryContext from './CategoryContext';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { fetchCategory, fetchCategoryByCategory } from './CategoryApi';
+
 
 export const useCategoriesByCategory = (categoryId: number) => {
-    // Creates its own paginator instance, making the hook self-contained
-    const { getState, loadMore, refresh } = usePaginatorResource<Category>(String("category" + categoryId), fetchCategoryByCategory);
 
-    // Still uses the shared context for caching
-    const categoryContext = useContext(CategoryContext);
-    const { hydrateCache, getCategoryById } = categoryContext!;
+    const queryClient = useQueryClient();
 
-    // Fetch data when the component mounts or the ID changes
+    const queryResult = useInfiniteQuery({
+        queryKey: ['featuredProducts'],
+        queryFn: ({ pageParam = 1 }) => fetchCategoryByCategory(categoryId),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            // Assuming a page size of 10, if the last page has 10 items, there might be more.
+            return lastPage.length === 10 ? allPages.length + 1 : undefined;
+        },
+    });
+
     useEffect(() => {
-        refresh(categoryId);
-    }, [categoryId, refresh]);
-
-    const state = getState(categoryId);
-
-    // Hydrate the item cache whenever the items for this category change
-    useEffect(() => {
-        if (state.items.length > 0) {
-            hydrateCache(state.items);
+        if (queryResult.data) {
+            // When we fetch the list of products, we can populate the cache for each individual product.
+            queryResult.data.pages.forEach(page => {
+                page.forEach(item => {
+                    queryClient.setQueryData(['category', item.id], item);
+                });
+            });
         }
-    }, [state.items, hydrateCache]);
+    }, [queryResult.data, queryClient]);
 
-    return {
-        ...state,
-        loadMore: () => loadMore(categoryId),
-        refresh: () => refresh(categoryId),
-        getCategoryById,
-    };
+    return queryResult;
 };
 
-export const useCategoryById = (id: number) => {
-    const context = useContext(CategoryContext);
-    const { getCategoryById } = context!;
-    const [category, setCategory] = useState<Category | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export const useCategory = (categoryId: number) => {
 
-    useEffect(() => {
-        let isMounted = true;
-        const fetchCategoryData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const item = await getCategoryById(id);
-                if (isMounted) {
-                    setCategory(item);
-                }
-            } catch (e: any) {
-                if (isMounted) {
-                    setError(e.message || 'Failed to fetch category');
-                }
-            } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
-            }
-        };
-
-        fetchCategoryData();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [id, getCategoryById]);
-
-    return { category, loading, error };
+    return useQuery<Category>({
+        queryKey: ['category', categoryId],
+        queryFn: () => fetchCategory(categoryId)
+    });
 };
+
 
 export default useCategoriesByCategory;

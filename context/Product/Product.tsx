@@ -1,101 +1,69 @@
 import { Product } from '@/types';
-import { usePaginatorResource } from '@/utils/paginatorResource';
-import { useContext, useEffect, useState } from 'react';
-import { fetchFeaturedProducts, fetchProductByCategory } from './ProductApi';
-import ProductContext from './ProductContext';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory } from './ProductApi';
+
+
+
 
 export const useProductsByCategory = (categoryId: number) => {
-    // Creates its own paginator instance, making the hook self-contained
-    const { getState, loadMore, refresh } = usePaginatorResource<Product>("productsByCategory-" + categoryId, fetchProductByCategory);
 
-    const productContext = useContext(ProductContext);
-    const { hydrateCache, getItem } = productContext!;
+    const queryClient = useQueryClient();
 
-    // Fetch data when the component mounts or the ID changes
+    const queryResult = useInfiniteQuery({
+        queryKey: ['productsByCategory', categoryId],
+        queryFn: ({ pageParam = 1 }) => fetchProductByCategory(pageParam, categoryId),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            // Assuming a page size of 10, if the last page has 10 items, there might be more.
+            return lastPage.length === 10 ? allPages.length + 1 : undefined;
+        },
+    });
+
     useEffect(() => {
-        refresh(categoryId);
-    }, [categoryId, refresh]);
-
-    const state = getState(categoryId);
-
-    // Hydrate the item cache whenever the items for this category change
-    useEffect(() => {
-        if (state.items.length > 0) {
-            hydrateCache(state.items);
+        if (queryResult.data) {
+            // When we fetch the list of products, we can populate the cache for each individual product.
+            queryResult.data.pages.forEach(page => {
+                page.forEach(product => {
+                    queryClient.setQueryData(['product', product.id], product);
+                });
+            });
         }
-    }, [state.items, hydrateCache]);
+    }, [queryResult.data, queryClient]);
 
-    return {
-        ...state,
-        loadMore: () => loadMore(categoryId),
-        refresh: () => refresh(categoryId),
-        getItem, // Provide getItem for convenience
-    };
+    return queryResult;
 };
 
 export const useFeaturedProducts = () => {
-    const { getState, loadMore, refresh } = usePaginatorResource<Product>('featuredProducts', fetchFeaturedProducts);
 
-    const productContext = useContext(ProductContext);
-    const { hydrateCache, getItem } = productContext!;
+    const queryClient = useQueryClient();
 
-    // Fetch data when the component mounts or the ID changes
+    const queryResult = useInfiniteQuery({
+        queryKey: ['featuredProducts'],
+        queryFn: ({ pageParam = 1 }) => fetchFeaturedProducts(pageParam),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            // Assuming a page size of 10, if the last page has 10 items, there might be more.
+            return lastPage.length === 10 ? allPages.length + 1 : undefined;
+        },
+    });
+
     useEffect(() => {
-        refresh(0);
-    }, [refresh]);
-
-    const state = getState(0);
-
-    // Hydrate the item cache whenever the items for this category change
-    useEffect(() => {
-        if (state.items.length > 0) {
-            hydrateCache(state.items);
+        if (queryResult.data) {
+            // When we fetch the list of products, we can populate the cache for each individual product.
+            queryResult.data.pages.forEach(page => {
+                page.forEach(product => {
+                    queryClient.setQueryData(['product', product.id], product);
+                });
+            });
         }
-    }, [state.items, hydrateCache]);
-
-    return {
-        ...state,
-        loadMore: () => loadMore(0),
-        refresh: () => refresh(0),
-        getItem, // Provide getItem for convenience
-    };
+    }, [queryResult.data, queryClient]);
+    return queryResult;
 };
 
-
-export const useProductById = (productId: number) => {
-    const context = useContext(ProductContext);
-    const { getItem } = context!;
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        let isMounted = true;
-        const fetchProduct = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const item = await getItem(productId);
-                if (isMounted) {
-                    setProduct(item);
-                }
-            } catch (e: any) {
-                if (isMounted) {
-                    setError(e.message || 'Failed to fetch product');
-                }
-            } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
-            }
-        };
-
-        fetchProduct();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [productId, getItem]);
-
-    return { product, loading, error };
+export const useProduct = (productId: number) => {
+    return useQuery<Product>({
+        queryKey: ['product', productId],
+        queryFn: () => fetchProduct(productId)
+    });
 };

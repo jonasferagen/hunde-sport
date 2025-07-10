@@ -4,7 +4,9 @@ import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, Text, View } f
 import CategoryListItem from './CategoryListItem';
 
 interface CategoryListProps {
-  categoryProvider: any;
+  categories: Category[];
+  loadMore: () => void;
+  loadingMore: boolean;
 }
 
 const keyExtractor = (item: Category, index: number) => `${item.id}_${index}`;
@@ -13,9 +15,7 @@ const renderItem: ListRenderItem<Category> = ({ item }) => {
   return <CategoryListItem {...item} />;
 };
 
-const CategoryList: React.FC<CategoryListProps> = (props) => {
-
-  const { items, loadMore, loadingMore } = props.categoryProvider
+const CategoryList: React.FC<CategoryListProps> = ({ categories, loadMore, loadingMore }) => {
 
   const renderFooter = () => {
     if (!loadingMore) return null;
@@ -29,7 +29,7 @@ const CategoryList: React.FC<CategoryListProps> = (props) => {
 
   return (
     <FlatList
-      data={items}
+      data={categories}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       onEndReached={loadMore}
