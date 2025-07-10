@@ -3,10 +3,7 @@ import { StyleSheet, Text } from 'react-native';
 
 import { FONT_SIZES } from '@/styles/Typography';
 
-
-
-
-export default function PageSectionTitle({ title, size }: { title: string; size: keyof typeof FONT_SIZES }) {
+export default function Heading({ title, size }: { title: string; size: keyof typeof FONT_SIZES }) {
     const styles = createStyles(size);
     return (
         <Text style={styles.title}>{title}</Text>

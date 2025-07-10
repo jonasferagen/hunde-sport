@@ -1,6 +1,6 @@
 import Categories from '@/components/features/category/Categories';
 import CategoryProducts from '@/components/features/category/CategoryProducts';
-import PageSectionTitle from "@/components/ui/_pageSectionTitle";
+import Heading from "@/components/ui/_heading";
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import PageSection from '@/components/ui/PageSection';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
@@ -32,11 +32,11 @@ const CategoryPage = () => {
       }} />
       <PageContent>
         <PageSection>
-          <PageSectionTitle title={name} size="lg" />
+          <Heading title={name} size="lg" />
           <CategoryProducts categoryId={categoryId} />
         </PageSection>
         <PageSection>
-          <PageSectionTitle title="Underkategorier" size="md" />
+          <Heading title="Underkategorier" size="md" />
           <Categories categoryId={categoryId} />
         </PageSection>
       </PageContent>

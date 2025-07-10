@@ -3,7 +3,7 @@ import Categories from '@/components/features/category/Categories';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
 import PageSection from '@/components/ui/PageSection';
 import { StyleSheet } from 'react-native';
-import PageSectionTitle from "../components/ui/_pageSectionTitle";
+import Heading from "../components/ui/_heading";
 import PageContent from "../components/ui/PageContent";
 import PageView from "../components/ui/PageView";
 
@@ -14,12 +14,12 @@ export default function Index() {
         <PageView>
             <PageContent>
                 <PageSection type="secondary">
-                    <PageSectionTitle title="Hva leter du etter?" size="xxl" />
+                    <Heading title="Hva leter du etter?" size="xxl" />
                     <FeaturedProducts />
                 </PageSection>
 
                 <PageSection type="primary">
-                    <PageSectionTitle title="Kategorier" size="lg" />
+                    <Heading title="Våre kategorier" size="lg" />
                     <Categories categoryId={rootCategoryId} />
                 </PageSection>
 
