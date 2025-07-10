@@ -1,5 +1,5 @@
 import { Product } from '@/types';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ProductContext from './ProductContext';
 
 export const useProductsByCategory = (categoryId: number) => {
@@ -30,14 +30,46 @@ export const useProductsByCategory = (categoryId: number) => {
     };
 };
 
-export const useProductById = (productId: number): Promise<Product | null> => {
+
+
+
+
+export const useProductById = (productId: number) => {
     const context = useContext(ProductContext);
     if (!context) throw new Error('This hook must be used within a ProductContextProvider');
 
     const { getItem } = context;
+    const [product, setProduct] = useState<Product | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    return getItem(productId);
+    useEffect(() => {
+        let isMounted = true;
+        const fetchProduct = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const item = await getItem(productId);
+                if (isMounted) {
+                    setProduct(item);
+                }
+            } catch (e: any) {
+                if (isMounted) {
+                    setError(e.message || 'Failed to fetch product');
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchProduct();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [productId, getItem]);
+
+    return { product, loading, error };
 };
-
-
-export default useProductsByCategory;
