@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-export interface PaginatedState<T> {
+export interface PaginatorState<T> {
     items: T[];
     loading: boolean;
     loadingMore: boolean;
@@ -8,22 +8,13 @@ export interface PaginatedState<T> {
     page: number;
     hasMore: boolean;
 }
-/*
-const _defaultState: PaginatedState<any> = {
-    items: [],
-    loading: false,
-    loadingMore: false,
-    error: null,
-    page: 1,
-    hasMore: true,
-};
-*/
-export function PaginatedResource<T>(
+
+export function PaginatorResource<T>(
     fetcher: (id: number, page: number) => Promise<T[]>
 ) {
-    const [data, setData] = useState<Record<string, PaginatedState<T>>>({});
+    const [data, setData] = useState<Record<string, PaginatorState<T>>>({});
 
-    const defaultState: PaginatedState<T> = {
+    const defaultState: PaginatorState<T> = {
         items: [],
         loading: false,
         loadingMore: false,
@@ -89,4 +80,4 @@ export function PaginatedResource<T>(
     return { getState, loadMore, refresh };
 }
 
-export default PaginatedResource;
+export default PaginatorResource;

@@ -1,6 +1,6 @@
-import { ItemCache } from '@/context/ItemCache';
-import { PaginatedResource } from '@/context/PaginatedResource';
 import type { ProductCategory } from '@/types';
+import { ItemCache } from '@/utils/itemCache';
+import PaginatorResource from '@/utils/paginatorResource';
 import React, { createContext } from 'react';
 import { fetchProductCategoryData } from './ProductCategoryApi';
 
@@ -26,7 +26,7 @@ export const ProductCategoryProvider: React.FC<{ children: React.ReactNode }> = 
         getState,
         loadMore,
         refresh,
-    } = PaginatedResource<ProductCategory>(fetchProductCategoryData);
+    } = PaginatorResource<ProductCategory>(fetchProductCategoryData);
 
     const { getItem: getProductCategoryById, hydrateCache } = ItemCache<ProductCategory>(async (id: number) => {
         // This could be implemented to fetch a single category from the API if needed

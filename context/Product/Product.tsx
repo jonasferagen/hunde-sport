@@ -23,8 +23,9 @@ export const useProductsByProductCategoryId = (productCategoryId: number) => {
 
     return {
         ...state,
-        loadMore: () => context.loadMore(productCategoryId),
-        refresh: () => context.refresh(productCategoryId),
+        loadMore: () => loadMore(productCategoryId),
+        refresh: () => refresh(productCategoryId),
+        getProductById,
     };
 };
 
