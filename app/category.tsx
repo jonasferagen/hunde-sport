@@ -1,5 +1,5 @@
 import Breadcrumbs from '@/components/Breadcrumbs';
-import ProductCategories from '@/components/ProductCategories';
+import Categories from '@/components/Categories';
 import ProductsByCategory from '@/components/ProductsByCategory';
 import { useBreadcrumbs } from '@/context/BreadcrumbContext/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
@@ -8,24 +8,13 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const ProductCategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
-  const productCategoryId = Number(id);
+  const categoryId = Number(id);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
 
   useEffect(() => {
-    setTrail({ id: productCategoryId, name, type: 'productCategory' });
-  }, [productCategoryId, name, setTrail]);
+    setTrail({ id: categoryId, name, type: 'category' });
+  }, [categoryId, name, setTrail]);
 
-  /*
-  // Test: Verify that getProductCategoryById retrieves items from the cache after hydration.
-  useEffect(() => {
-    if (items.length > 0) {
-      const testId = items[0].id;
-      getProductCategoryById(testId).then(categoryFromCache => {
-        console.log(`[Test] Fetched category ${testId} from cache:`, categoryFromCache);
-      });
-    }
-  }, [items, getProductCategoryById]);
-  */
 
   return (
     <View style={styles.container}>
@@ -35,15 +24,15 @@ const ProductCategoryPage = () => {
         if (crumb.id === null) {
           router.replace('/');
         } else {
-          router.push({ pathname: './productCategory', params: { id: crumb.id.toString(), name: crumb.name } });
+          router.push({ pathname: './category', params: { id: crumb.id.toString(), name: crumb.name } });
         }
       }} />
       <Text style={styles.title}>{name}</Text>
 
 
 
-      <ProductCategories productCategoryId={productCategoryId} />
-      <ProductsByCategory productCategoryId={productCategoryId} />
+      <Categories categoryId={categoryId} />
+      <ProductsByCategory categoryId={categoryId} />
     </View>
   );
 };

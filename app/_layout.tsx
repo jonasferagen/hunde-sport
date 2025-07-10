@@ -1,6 +1,6 @@
 import { BreadcrumbProvider } from "@/context/BreadcrumbContext/BreadcrumbProvider";
+import { CategoryProvider } from '@/context/Category/CategoryContext';
 import { ProductProvider } from '@/context/Product/ProductContext';
-import { ProductCategoryProvider } from '@/context/ProductCategory/ProductCategoryContext';
 import { Stack } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,11 +25,11 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <BreadcrumbProvider>
-        <ProductCategoryProvider>
+        <CategoryProvider>
           <ProductProvider>
             <Layout />
           </ProductProvider>
-        </ProductCategoryProvider>
+        </CategoryProvider>
       </BreadcrumbProvider>
     </SafeAreaProvider>
   );

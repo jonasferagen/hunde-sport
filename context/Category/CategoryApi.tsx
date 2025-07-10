@@ -1,17 +1,17 @@
 import { ENDPOINTS } from '@/config/api';
-import { ProductCategory } from '@/types';
+import { Category } from '@/types';
 import apiClient from '@/utils/apiClient';
 
-const mapToCategory = (item: any): ProductCategory => ({
+const mapToCategory = (item: any): Category => ({
     id: item.id,
     name: item.name,
     parent: item.parent,
     image: item.image,
 });
 
-export async function fetchProductCategoryData(CategoryId: number, pageNum: number) {
+export async function fetchCategoryByCategory(categoryId: number, pageNum: number) {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.CATEGORIES.LIST(pageNum, CategoryId)
+        ENDPOINTS.CATEGORIES.BYCATEGORY(pageNum, categoryId)
     );
 
     if (error) throw new Error(error);
@@ -19,4 +19,3 @@ export async function fetchProductCategoryData(CategoryId: number, pageNum: numb
     return result;
 }
 
-export default fetchProductCategoryData;

@@ -9,7 +9,7 @@ interface BreadcrumbsProps {
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
   // Add the 'Home' breadcrumb to the beginning of the trail
-  const fullTrail: Breadcrumb[] = [{ id: null, name: 'Hjem', type: 'productCategory' }, ...trail];
+  const fullTrail: Breadcrumb[] = [{ id: null, name: 'Hjem', type: 'category' }, ...trail];
 
   return (
     <View style={styles.container}>

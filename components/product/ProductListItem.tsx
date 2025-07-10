@@ -1,14 +1,14 @@
+import type { Product } from '@/types';
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import type { Product } from '../../types';
 import ProductImage from './ProductImage';
 
 const ProductListItem: React.FC<Product> = ({ id, name, images }) => {
   const handlePress = () => {
     // Navigate to product detail page (you'll need to create this page)
     router.push({
-      pathname: '/productPage',
+      pathname: '/product',
       params: {
         name: name,
         id: id.toString(),

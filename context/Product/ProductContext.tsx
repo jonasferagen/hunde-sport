@@ -2,7 +2,7 @@ import type { Product } from '@/types';
 import { ItemCache } from '@/utils/itemCache';
 import { PaginatorResource } from '@/utils/paginatorResource';
 import React, { createContext } from 'react';
-import { fetchProductList } from './ProductApi';
+import { fetchProductByCategory } from './ProductApi';
 
 interface ProductState {
     items: Product[];
@@ -17,8 +17,8 @@ interface ProductContextType {
     getState: (productCategoryId: number) => ProductState;
     loadMore: (productCategoryId: number) => void;
     refresh: (productCategoryId: number) => void;
-    getProductById: (id: number) => Promise<Product | null>;
     hydrateCache: (items: Product[]) => void;
+    getItem: (id: number) => Promise<Product | null>;
 }
 
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -26,17 +26,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         getState,
         loadMore,
         refresh,
-    } = PaginatorResource<Product>(fetchProductList);
+    } = PaginatorResource<Product>(fetchProductByCategory);
 
-    const { getItem: getProductById, hydrateCache } = ItemCache<Product>(async (id: number) => {
-        // This could be implemented to fetch a single category from the API if needed
-        return Promise.reject('Single category fetch not implemented');
+    const { getItem, hydrateCache } = ItemCache<Product>(async (id: number) => {
+        return Promise.reject('Single product fetch not implemented');
     });
 
-
-
     return (
-        <ProductContext.Provider value={{ getState, loadMore, refresh, getProductById, hydrateCache }}>
+        <ProductContext.Provider value={{ getState, loadMore, refresh, getItem, hydrateCache }}>
             {children}
         </ProductContext.Provider>
     );

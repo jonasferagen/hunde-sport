@@ -1,5 +1,5 @@
 // app/index.tsx
-import ProductCategories from '@/components/ProductCategories';
+import Categories from '@/components/Categories';
 import { StyleSheet, Text, View } from 'react-native';
 
 // Memoized styles to prevent recreation on every render
@@ -20,13 +20,13 @@ const createStyles = () => {
 
 const styles = createStyles();
 
-const rootProductCategoryId = 0;
+const rootCategoryId = 0;
 
 export default function Index() {
   return (
     <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
-      <ProductCategories productCategoryId={rootProductCategoryId} />
+      <Categories categoryId={rootCategoryId} />
     </View>
   );
 }

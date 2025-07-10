@@ -1,21 +1,21 @@
+import type { Category } from '@/types';
 import React from 'react';
 import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
-import type { ProductCategory } from '../../types';
-import ProductCategoryListItem from './ProductCategoryListItem';
+import CategoryListItem from './CategoryListItem';
 
-interface ProductCategoryListProps {
-  productCategories: ProductCategory[];
+interface CategoryListProps {
+  categories: Category[];
   loadMore: () => void;
   loadingMore: boolean;
 }
 
-const keyExtractor = (item: ProductCategory, index: number) => `${item.id}_${index}`;
+const keyExtractor = (item: Category, index: number) => `${item.id}_${index}`;
 
-const renderItem: ListRenderItem<ProductCategory> = ({ item }) => {
-  return <ProductCategoryListItem {...item} />;
+const renderItem: ListRenderItem<Category> = ({ item }) => {
+  return <CategoryListItem {...item} />;
 };
 
-const ProductCategoryList: React.FC<ProductCategoryListProps> = ({ productCategories, loadMore, loadingMore }) => {
+const CategoryList: React.FC<CategoryListProps> = ({ categories, loadMore, loadingMore }) => {
   const renderFooter = () => {
     if (!loadingMore) return null;
     return (
@@ -28,7 +28,7 @@ const ProductCategoryList: React.FC<ProductCategoryListProps> = ({ productCatego
 
   return (
     <FlatList
-      data={productCategories}
+      data={categories}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       onEndReached={loadMore}
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductCategoryList;
+export default CategoryList;

@@ -1,11 +1,11 @@
-import { useProductsByProductCategoryId } from "@/context/Product/Product";
+import { useProductsByCategory } from "@/context/Product/Product";
 import FullScreenLoader from "./FullScreenLoader";
 import ProductList from "./product/ProductList";
 import RetryView from "./RetryView";
 
-export default function ProductsByCategory({ productCategoryId }: { productCategoryId: number }) {
+export default function ProductsByCategory({ categoryId }: { categoryId: number }) {
 
-    const { items, loading, error, refresh, loadMore, loadingMore } = useProductsByProductCategoryId(productCategoryId);
+    const { items, loading, error, refresh, loadMore, loadingMore } = useProductsByCategory(categoryId);
 
     if (loading) {
         return <FullScreenLoader />;

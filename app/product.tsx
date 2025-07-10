@@ -1,5 +1,5 @@
 import Breadcrumbs from '@/components/Breadcrumbs';
-import ProductTitle from '@/components/product/ProductTitle';
+import Product from '@/components/Product';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -18,12 +18,12 @@ export default function ProductScreen() {
           setTrail(crumb);
           if (crumb.id === null) {
             router.replace('/');
-          } else if (crumb.type === 'productCategory') {
-            router.push({ pathname: './productCategory', params: { id: crumb.id.toString(), name: crumb.name } });
+          } else if (crumb.type === 'category') {
+            router.push({ pathname: './category', params: { id: crumb.id.toString(), name: crumb.name } });
           }
         }}
       />
-      <ProductTitle name={id} />
+      <Product productId={Number(id)} />
     </ScrollView>
   );
 }

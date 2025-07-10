@@ -7,12 +7,12 @@ export const API_BASE_URL = __DEV__
 // API endpoints
 export const ENDPOINTS = {
   CATEGORIES: {
-    LIST: (page: number, parent: number = 0) =>
+    BYCATEGORY: (page: number, parent: number = 0) =>
       `${API_BASE_URL}/products/categories?parent=${parent}&page=${page}&per_page=10&hide_empty=true`,
     // Add more category-related endpoints here as needed
   },
   PRODUCTS: {
-    LIST: (page: number, categoryId: number = 0) =>
+    BYCATEGORY: (page: number, categoryId: number = 0) =>
       `${API_BASE_URL}/products?page=${page}&category=${categoryId}&status=publish&per_page=10&hide_empty=true`,
     GET: (id: number) => `${API_BASE_URL}/products/${id}`,
     // Add more product-related endpoints here as needed

@@ -14,7 +14,7 @@ export interface Image {
   src: string;
 }
 
-export interface ProductCategory {
+export interface Category {
   id: number;
   name: string;
   parent: number;
@@ -26,12 +26,12 @@ export interface Product {
   name: string;
   description: string;
   short_description: string;
-  categories: ProductCategory[];
+  categories: Category[];
   images: Image[];
 }
 
 export interface Breadcrumb {
   id: number | null;
   name: string;
-  type?: 'productCategory' | 'product';
+  type?: 'category' | 'product';
 }

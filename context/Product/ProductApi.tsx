@@ -13,16 +13,16 @@ const mapToProduct = (item: any): Product => ({
 });
 
 
-export async function fetchProductList(productId: number, page: number): Promise<Product[]> {
+export async function fetchProductByCategory(productCategoryId: number, page: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, productId)
+        ENDPOINTS.PRODUCTS.BYCATEGORY(page, productCategoryId)
     );
     if (error) throw new Error(error);
 
     return (data ?? []).map(mapToProduct);
 }
 
-export async function fetchProductDetail(productId: number): Promise<Product> {
+export async function fetchProduct(productId: number): Promise<Product> {
     const { data, error } = await apiClient.get<any>(
         ENDPOINTS.PRODUCTS.GET(productId)
     );
@@ -30,4 +30,4 @@ export async function fetchProductDetail(productId: number): Promise<Product> {
     return mapToProduct(data);
 }
 
-export default fetchProductDetail;
+

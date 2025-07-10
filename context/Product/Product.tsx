@@ -1,18 +1,19 @@
+import { Product } from '@/types';
 import { useContext, useEffect } from 'react';
 import ProductContext from './ProductContext';
 
-export const useProductsByProductCategoryId = (productCategoryId: number) => {
+export const useProductsByCategory = (categoryId: number) => {
     const context = useContext(ProductContext);
     if (!context) throw new Error('This hook must be used within a ProductContextProvider');
 
-    const { getState, loadMore, refresh, getProductById, hydrateCache } = context;
+    const { getState, loadMore, refresh, getItem: getItem, hydrateCache } = context;
 
     // Fetch data when the component mounts or the ID changes
     useEffect(() => {
-        refresh(productCategoryId);
-    }, [productCategoryId, refresh]);
+        refresh(categoryId);
+    }, [categoryId, refresh]);
 
-    const state = getState(productCategoryId);
+    const state = getState(categoryId);
 
     // Hydrate the item cache whenever the items for this category change
     useEffect(() => {
@@ -23,10 +24,20 @@ export const useProductsByProductCategoryId = (productCategoryId: number) => {
 
     return {
         ...state,
-        loadMore: () => loadMore(productCategoryId),
-        refresh: () => refresh(productCategoryId),
-        getProductById,
+        loadMore: () => loadMore(categoryId),
+        refresh: () => refresh(categoryId),
+        getItem
     };
 };
 
-export default useProductsByProductCategoryId;
+export const useProductById = (productId: number): Promise<Product | null> => {
+    const context = useContext(ProductContext);
+    if (!context) throw new Error('This hook must be used within a ProductContextProvider');
+
+    const { getItem } = context;
+
+    return getItem(productId);
+};
+
+
+export default useProductsByCategory;
