@@ -1,4 +1,4 @@
-import { BreadcrumbProvider } from "@/context/BreadcrumbContext/BreadcrumbProvider";
+import { BreadcrumbProvider } from "@/context/BreadCrumb/BreadcrumbProvider";
 import { CategoryProvider } from '@/context/Category/CategoryContext';
 import { ProductProvider } from '@/context/Product/ProductContext';
 import { Stack } from "expo-router";

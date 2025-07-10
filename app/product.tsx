@@ -1,17 +1,20 @@
 import Breadcrumbs from '@/components/Breadcrumbs';
 import Product from '@/components/Product';
+import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
-import { useBreadcrumbs } from '@/context/BreadcrumbContext/BreadcrumbProvider';
-
 export default function ProductScreen() {
-  const { id } = useLocalSearchParams<{ id: string; name: string }>();
+  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const { breadcrumbs, setTrail } = useBreadcrumbs();
+  useEffect(() => {
+    setTrail({ id: Number(id), name, type: 'product' });
+  }, [id, name, setTrail]);
 
   return (
     <ScrollView>
-      <Stack.Screen options={{ title: id }} />
+      <Stack.Screen options={{ title: name }} />
       <Breadcrumbs
         trail={breadcrumbs}
         onNavigate={(crumb) => {

@@ -15,8 +15,7 @@ export async function fetchCategoryByCategory(categoryId: number, pageNum: numbe
     );
 
     if (error) throw new Error(error);
-    const result = data?.map(mapToCategory) ?? [];
-    return result;
+    return (data ?? []).map(mapToCategory);
 }
 
 export async function fetchCategory(id: number) {

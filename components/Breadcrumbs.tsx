@@ -16,9 +16,13 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {fullTrail.map((breadcrumb, index) => (
           <View key={`${breadcrumb.type}-${breadcrumb.id}`} style={styles.breadcrumbItem}>
-            <TouchableOpacity onPress={() => onNavigate(breadcrumb)}>
-              <Text style={styles.breadcrumbText}>{breadcrumb.name}</Text>
-            </TouchableOpacity>
+            {breadcrumb.type === 'product' ? (
+              <Text style={[styles.breadcrumbText, styles.breadcrumbProductText]}>{breadcrumb.name}</Text>
+            ) : (
+              <TouchableOpacity onPress={() => onNavigate(breadcrumb)}>
+                <Text style={styles.breadcrumbText}>{breadcrumb.name}</Text>
+              </TouchableOpacity>
+            )}
             {index < fullTrail.length - 1 && <Text style={styles.separator}>{' > '}</Text>}
           </View>
         ))}
@@ -43,6 +47,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#007bff',
   },
+  breadcrumbProductText: {
+    color: '#000',
+  },
+
   separator: {
     fontSize: 16,
     marginHorizontal: 4,

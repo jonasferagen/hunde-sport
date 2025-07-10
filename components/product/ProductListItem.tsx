@@ -48,6 +48,8 @@ const styles = StyleSheet.create({
   name: {
     marginTop: 10,
     fontWeight: 'bold',
+    minHeight: 50,
+    textOverflow: 'ellipsis',
     textAlign: 'center',
   },
 });

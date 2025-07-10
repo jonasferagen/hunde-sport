@@ -1,12 +1,12 @@
 import Breadcrumbs from '@/components/Breadcrumbs';
 import Categories from '@/components/Categories';
 import ProductsByCategory from '@/components/ProductsByCategory';
-import { useBreadcrumbs } from '@/context/BreadcrumbContext/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const ProductCategoryPage = () => {
+const CategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const categoryId = Number(id);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
@@ -28,11 +28,8 @@ const ProductCategoryPage = () => {
         }
       }} />
       <Text style={styles.title}>{name}</Text>
-
-
-
-      <Categories categoryId={categoryId} />
       <ProductsByCategory categoryId={categoryId} />
+      <Categories categoryId={categoryId} />
     </View>
   );
 };
@@ -46,11 +43,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 20,
     textAlign: 'center',
-  },
-  error: {
-    color: 'red',
-    textAlign: 'center',
-  },
+  }
 });
 
-export default ProductCategoryPage;
+export default CategoryPage;

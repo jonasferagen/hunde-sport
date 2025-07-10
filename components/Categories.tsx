@@ -7,17 +7,17 @@ import CategoryList from "./category/CategoryList";
 
 export default function Categories({ categoryId }: { categoryId: number }) {
 
-    const { items, loading, error, refresh, loadMore, loadingMore } = useCategoriesByCategory(categoryId);
+    const categoryProvider = useCategoriesByCategory(categoryId);
 
-    if (loading) {
+    if (categoryProvider.loading) {
         return <FullScreenLoader />;
     }
 
-    if (error) {
-        return <RetryView error={error} onRetry={refresh} />;
+    if (categoryProvider.error) {
+        return <RetryView error={categoryProvider.error} onRetry={categoryProvider.refresh} />;
     }
 
     return (
-        <CategoryList categories={items} loadMore={loadMore} loadingMore={loadingMore} />
+        <CategoryList categoryProvider={categoryProvider} />
     );
 }
