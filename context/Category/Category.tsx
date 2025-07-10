@@ -10,7 +10,7 @@ export const useCategoriesByCategory = (categoryId: number) => {
     const queryClient = useQueryClient();
 
     const queryResult = useInfiniteQuery({
-        queryKey: ['featuredProducts'],
+        queryKey: ['categoriesByCategory', categoryId],
         queryFn: ({ pageParam = 1 }) => fetchCategoryByCategory(categoryId),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {

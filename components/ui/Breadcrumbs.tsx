@@ -31,7 +31,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
   );
 };
 
-import { COLORS } from '@/config/theme';
+import { COLORS } from '@/styles/Theme';
 
 const styles = StyleSheet.create({
   container: {

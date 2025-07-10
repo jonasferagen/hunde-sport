@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 
 
 
@@ -48,21 +47,3 @@ export const BORDER_RADIUS = {
 };
 
 
-
-export const AppStyles = StyleSheet.create({
-  appContainer: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    marginVertical: SPACING.md,
-  },
-
-  pageContainer: {
-    flex: 1,
-    backgroundColor: COLORS.accent,
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.md,
-  },
-});
-
-
-export default AppStyles;

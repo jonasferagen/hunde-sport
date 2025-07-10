@@ -4,7 +4,7 @@ import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import PageView from "./_pageView";
+import PageView from "../components/ui/PageView";
 
 
 export default function ProductScreen() {

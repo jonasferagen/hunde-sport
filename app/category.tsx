@@ -1,13 +1,13 @@
 import Categories from '@/components/features/category/Categories';
 import CategoryProducts from '@/components/features/category/CategoryProducts';
+import PageTitle from "@/components/ui/_pageTitle";
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { StyleSheet, Text } from 'react-native';
-import PageView from "./_pageView";
-
-
+import { StyleSheet } from 'react-native';
+import PageContent from "../components/ui/PageContent";
+import PageView from "../components/ui/PageView";
 
 const CategoryPage = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
@@ -29,9 +29,11 @@ const CategoryPage = () => {
           router.push({ pathname: './category', params: { id: crumb.id.toString(), name: crumb.name } });
         }
       }} />
-      <Text style={styles.title}>{name}</Text>
-      <CategoryProducts categoryId={categoryId} />
-      <Categories categoryId={categoryId} />
+      <PageContent>
+        <PageTitle title={name} />
+        <CategoryProducts categoryId={categoryId} />
+        <Categories categoryId={categoryId} />
+      </PageContent>
     </PageView>
   );
 };
