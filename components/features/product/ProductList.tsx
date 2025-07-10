@@ -7,35 +7,48 @@ interface ProductListProps {
     products: Product[];
     loadMore: () => void;
     loadingMore: boolean;
+    itemHeight?: number; // Optional prop to control item height
 }
 
-const keyExtractor = (item: Product, index: number) => `${item.id}_${index}`;
+const ProductList: React.FC<ProductListProps> = ({
+    products,
+    loadMore,
+    loadingMore,
+    itemHeight = 200, // Default height, can be overridden
+}) => {
+    const renderItem: ListRenderItem<Product> = ({ item }) => (
+        <View style={{ height: itemHeight }}>
+            <ProductListItem product={item} />
+        </View>
+    );
 
-const renderItem: ListRenderItem<Product> = ({ item }) => {
-    return <ProductListItem product={item} />;
-};
-
-const ProductList: React.FC<ProductListProps> = ({ products, loadMore, loadingMore }) => {
     const renderFooter = () => {
         if (!loadingMore) return null;
         return (
-            <View style={styles.loadingMore}>
+            <View style={[styles.loadingMore, { height: itemHeight }]}>
                 <ActivityIndicator size="small" />
             </View>
         );
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { height: itemHeight }]}>
             <FlatList
                 data={products}
-                keyExtractor={keyExtractor}
                 renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+                horizontal={true}
+                contentContainerStyle={styles.listContent}
                 onEndReached={loadMore}
-                onEndReachedThreshold={0.3}
+                onEndReachedThreshold={0.1}
                 ListFooterComponent={renderFooter}
-                numColumns={2} // A common pattern for product lists
+                showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
+                getItemLayout={(data, index) => ({
+                    length: 160, // Width of each item
+                    offset: 160 * index, // Width * index
+                    index,
+                })}
             />
         </View>
     );
@@ -43,11 +56,16 @@ const ProductList: React.FC<ProductListProps> = ({ products, loadMore, loadingMo
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'row',
+        width: '100%',
+    },
+    listContent: {
+        paddingHorizontal: 16,
+        alignItems: 'center',
     },
     loadingMore: {
-        paddingVertical: 20,
+        width: 160,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

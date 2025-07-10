@@ -7,9 +7,10 @@ import ProductCard from './ProductCard';
 
 interface ProductListItemProps {
   product: Product;
+  width?: number;
 }
 
-const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
+const ProductListItem: React.FC<ProductListItemProps> = ({ product, width = 160 }) => {
 
 
   const { id, name, images, price } = product;
@@ -27,8 +28,8 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
 
 
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.container}>
-      <ProductCard image={images[0]} title={name} price={price} />
+    <TouchableOpacity onPress={handlePress} style={[styles.container, { width }]}>
+      <ProductCard image={images[0]} title={name} price={price} width={width} />
     </TouchableOpacity>
   );
 };

@@ -2,6 +2,8 @@
 import Categories from '@/components/features/category/Categories';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
 import PageTitle from '@/components/ui/_pageTitle';
+import PageSection from '@/components/ui/PageSection';
+import { StyleSheet, Text } from 'react-native';
 import PageContent from "../components/ui/PageContent";
 import PageView from "../components/ui/PageView";
 
@@ -14,10 +16,28 @@ export default function Index() {
         <PageView>
             <PageContent>
                 <PageTitle title="Hva leter du etter?" />
-                <FeaturedProducts />
+
+                <PageSection type="primary">
+                    <FeaturedProducts />
+                </PageSection>
+
+                <PageSection type="secondary">
+                    <Text>Kunder har ogsså sett på</Text>
+                </PageSection>
+
+                <PageSection type="primary">
+                    <FeaturedProducts />
+                </PageSection>
+
                 <PageTitle title="Andre kategorier" />
                 <Categories categoryId={rootCategoryId} />
             </PageContent>
         </PageView>
     );
 }
+
+
+const styles = StyleSheet.create({
+
+
+});

@@ -1,11 +1,13 @@
-
 import { AppStyles } from '@/styles/AppStyles';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 
 export default function PageContent({ children }: { children: React.ReactNode }) {
   return (
-    <View style={AppStyles.pageContent}>
+    <ScrollView
+      contentContainerStyle={AppStyles.pageContent}
+      showsVerticalScrollIndicator={false}
+    >
       {children}
-    </View>
+    </ScrollView>
   );
 }
