@@ -1,11 +1,8 @@
 // app/home.tsx
 import Categories from '@/components/features/category/Categories';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
-import PageSection from '@/components/ui/PageSection';
+import { Heading, PageContent, PageSection, PageView } from '@/components/ui/_index';
 import { StyleSheet } from 'react-native';
-import Heading from "../components/ui/_heading";
-import PageContent from "../components/ui/PageContent";
-import PageView from "../components/ui/PageView";
 
 const rootCategoryId = 0;
 

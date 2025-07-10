@@ -17,7 +17,6 @@ interface ProductCardProps {
 
 export default function ProductCard({ image, title, price, width = '100%' }: ProductCardProps) {
 
-
     return (
         <View style={[styles.container]}>
             <ImageBackground

@@ -1,8 +1,6 @@
 import Categories from '@/components/features/category/Categories';
 import CategoryProducts from '@/components/features/category/CategoryProducts';
-import Heading from "@/components/ui/_heading";
-import Breadcrumbs from '@/components/ui/Breadcrumbs';
-import PageSection from '@/components/ui/PageSection';
+import { Breadcrumbs, Heading, PageSection } from '@/components/ui/_index';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';

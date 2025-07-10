@@ -2,7 +2,7 @@ import type { Product } from '@/types';
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import ProductCard from './ProductCard';
+import ProductCard from '../../ui/ProductCard';
 
 
 interface ProductListItemProps {

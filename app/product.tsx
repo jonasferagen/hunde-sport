@@ -1,17 +1,90 @@
-import ProductImage from '@/components/features/product/_productImage';
-import Breadcrumbs from '@/components/ui/Breadcrumbs';
-import FullScreenLoader from '@/components/ui/FullScreenLoader';
-import PageSection from '@/components/ui/PageSection';
+import { Breadcrumbs, FullScreenLoader, Heading, PageContent, PageSection, PageView } from '@/components/ui/_index';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { useProduct } from '@/context/Product/Product';
 import { formatPrice } from '@/utils/helpers';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Button, FlatList, Image, StyleSheet, Text, View } from 'react-native';
-import PageContent from "../components/ui/PageContent";
-import PageView from "../components/ui/PageView";
-import Heading from "../components/ui/_heading";
+import { Button, Image, StyleSheet, Text, View } from 'react-native';
 
+import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
+import { FONT_SIZES } from '@/styles/Typography';
+
+const styles = StyleSheet.create({
+  content: {
+    padding: SPACING.md,
+  },
+
+  mainImageWrapper: {
+    width: '100%',
+    height: 300,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: BORDER_RADIUS.md,
+  },
+  mainImage: {
+    height: '100%',
+  },
+
+  name: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  price: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: FONT_SIZES.sm,
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  shortDescription: {
+    fontSize: FONT_SIZES.md,
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginVertical: SPACING.md,
+  },
+  tag: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: BORDER_RADIUS.lg,
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
+    margin: SPACING.xs,
+  },
+  tagText: {
+    color: '#333',
+    fontSize: FONT_SIZES.sm,
+  },
+  imageGalleryContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    marginTop: SPACING.md,
+  },
+  imageThumbnailWrapper: {
+    width: '31%', // Creates a 3-column grid with spacing
+    margin: '1%',
+    height: 120,
+    borderWidth: 1,
+    borderColor: '#eee',
+    borderRadius: BORDER_RADIUS.sm,
+    overflow: 'hidden', // Ensures the image respects the border radius
+  },
+  imageThumbnail: {
+    height: '100%',
+    width: '100%',
+    resizeMode: 'contain',
+  },
+
+});
 
 export default function ProductScreen() {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
@@ -70,59 +143,29 @@ export default function ProductScreen() {
 
         <PageSection type="secondary">
           <Text style={styles.description}>{product.description}</Text>
+
+          <View style={styles.tagContainer}>
+            {product.tags.map((tag) => (
+              <View key={tag.id} style={styles.tag}>
+                <Text style={styles.tagText}>{tag.name}</Text>
+              </View>
+            ))}
+          </View>
         </PageSection>
 
-        <FlatList
-          data={product.images.slice(1)}
-          renderItem={({ item }) => <ProductImage image={item} />}
-        />
+        <View style={styles.imageGalleryContainer}>
+          {product.images.slice(1).map((image) => (
+            <View key={image.src} style={styles.imageThumbnailWrapper}>
+              <Image
+                source={{ uri: image.src }}
+                style={styles.imageThumbnail}
+                resizeMode="contain"
+              />
+            </View>
+          ))}
+        </View>
       </PageContent>
 
     </PageView>
   );
 }
-
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { FONT_SIZES } from '@/styles/Typography';
-
-const styles = StyleSheet.create({
-  content: {
-    padding: SPACING.md,
-  },
-
-  mainImageWrapper: {
-    width: '100%',
-    height: 300,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: BORDER_RADIUS.md,
-  },
-  mainImage: {
-    height: '100%',
-  },
-
-  name: {
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  price: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: FONT_SIZES.sm,
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  shortDescription: {
-    fontSize: FONT_SIZES.md,
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-
-});
-
-
