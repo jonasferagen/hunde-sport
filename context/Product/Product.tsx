@@ -1,20 +1,17 @@
 import { Product } from '@/types';
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory } from './ProductApi';
 
 
 
-const updateProductCache = (queryClient: any, queryResult: any) => {
+const updateProductCache = (queryClient: QueryClient, queryResult: any) => {
 
-    if (queryResult.data) {
-        // When we fetch the list of products, we can populate the cache for each individual product.
-        queryResult.data.pages.forEach((page: any) => {
-            page.forEach((product: any) => {
-                queryClient.setQueryData(['product', product.id], product);
-            });
+    queryResult.data.pages.forEach((page: any) => {
+        page.forEach((product: Product) => {
+            queryClient.setQueryData(['product', product.id], product);
         });
-    }
+    });
 }
 
 
@@ -33,15 +30,8 @@ export const useProductsByCategory = (categoryId: number) => {
     });
 
     useEffect(() => {
-        if (queryResult.data) {
-            // When we fetch the list of products, we can populate the cache for each individual product.
-            queryResult.data.pages.forEach(page => {
-                page.forEach(product => {
-                    queryClient.setQueryData(['product', product.id], product);
-                });
-            });
-        }
-    }, [queryResult.data, queryClient]);
+        updateProductCache(queryClient, queryResult);
+    }, [queryResult, queryClient]);
 
     return queryResult;
 };
@@ -62,20 +52,13 @@ export const useFeaturedProducts = () => {
     });
 
     useEffect(() => {
-        if (queryResult.data) {
-            // When we fetch the list of products, we can populate the cache for each individual product.
-            queryResult.data.pages.forEach(page => {
-                page.forEach(product => {
-                    queryClient.setQueryData(['product', product.id], product);
-                });
-            });
-        }
-    }, [queryResult.data, queryClient]);
+        updateProductCache(queryClient, queryResult);
+    }, [queryResult, queryClient]);
 
     return queryResult;
 };
 
-export const useProductById = (productId: number) => {
+export const useProduct = (productId: number) => {
     return useQuery<Product>({
         queryKey: ['product', productId],
         queryFn: () => fetchProduct(productId)
