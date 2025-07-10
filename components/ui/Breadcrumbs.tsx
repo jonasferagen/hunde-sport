@@ -32,7 +32,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
 };
 
 import { COLORS } from '@/styles/Colors';
-import { SPACING } from '@/styles/Theme';
+import { SPACING } from '@/styles/Dimensions';
+import { FONT_SIZES } from '@/styles/Typography';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   breadcrumbText: {
-    fontSize: 16,
+    fontSize: FONT_SIZES.md,
     color: COLORS.textPrimary,
   },
 

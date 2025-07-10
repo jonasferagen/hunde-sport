@@ -7,6 +7,8 @@ import PageView from "../components/ui/PageView";
 
 const rootCategoryId = 0;
 
+console.log(rootCategoryId);
+
 export default function Index() {
     return (
         <PageView>

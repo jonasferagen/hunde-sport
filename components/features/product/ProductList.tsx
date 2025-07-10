@@ -12,7 +12,7 @@ interface ProductListProps {
 const keyExtractor = (item: Product, index: number) => `${item.id}_${index}`;
 
 const renderItem: ListRenderItem<Product> = ({ item }) => {
-    return <ProductListItem {...item} />;
+    return <ProductListItem product={item} />;
 };
 
 const ProductList: React.FC<ProductListProps> = ({ products, loadMore, loadingMore }) => {
@@ -26,20 +26,26 @@ const ProductList: React.FC<ProductListProps> = ({ products, loadMore, loadingMo
     };
 
     return (
-        <FlatList
-            data={products}
-            keyExtractor={keyExtractor}
-            renderItem={renderItem}
-            onEndReached={loadMore}
-            onEndReachedThreshold={0.3}
-            ListFooterComponent={renderFooter}
-            numColumns={2} // A common pattern for product lists
-            showsVerticalScrollIndicator={false}
-        />
+        <View style={styles.container}>
+            <FlatList
+                data={products}
+                keyExtractor={keyExtractor}
+                renderItem={renderItem}
+                onEndReached={loadMore}
+                onEndReachedThreshold={0.3}
+                ListFooterComponent={renderFooter}
+                numColumns={2} // A common pattern for product lists
+                showsVerticalScrollIndicator={false}
+            />
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+    },
     loadingMore: {
         paddingVertical: 20,
     },

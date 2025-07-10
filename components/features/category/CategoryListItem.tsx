@@ -3,7 +3,9 @@ import { router } from 'expo-router';
 import { memo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { COLORS, FONT_SIZES, SPACING } from '@/styles/Theme';
+import { COLORS } from '@/styles/Colors';
+import { SPACING } from '@/styles/Dimensions';
+import { FONT_SIZES } from '@/styles/Typography';
 
 // Memoized list item component with areEqual comparison
 const CategoryListItem = memo<Category>(

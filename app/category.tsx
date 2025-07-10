@@ -31,8 +31,8 @@ const CategoryPage = () => {
       }} />
       <PageContent>
         <PageTitle title={name} />
-        <CategoryProducts categoryId={categoryId} />
         <Categories categoryId={categoryId} />
+        <CategoryProducts categoryId={categoryId} />
       </PageContent>
     </PageView>
   );

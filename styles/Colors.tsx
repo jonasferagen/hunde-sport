@@ -1,10 +1,15 @@
 
+import { darken } from '@/utils/helpers';
+
+const primary = 'rgb(247, 177, 163)';
+const secondary = 'rgb(119, 131, 161)';
+const accent = 'rgb(161, 138, 117)';
 
 export const COLORS = {
   // Primary palette
-  primary: 'rgb(247, 177, 163)',
-  secondary: 'rgb(119, 131, 161)',
-  accent: 'rgb(161, 138, 117)',
+  primary: primary,
+  secondary: darken(secondary, 10),
+  accent: accent,
 
   // Text colors
   textPrimary: 'rgb(35,35,35)',

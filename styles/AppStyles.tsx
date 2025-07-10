@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { COLORS } from './Colors';
-import { SPACING } from './Theme';
+import { SPACING } from './Dimensions';
 
 export const AppStyles = StyleSheet.create({
     appContainer: {
