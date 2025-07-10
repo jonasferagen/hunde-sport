@@ -1,36 +1,28 @@
 // app/home.tsx
 import Categories from '@/components/features/category/Categories';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
-import PageTitle from '@/components/ui/_pageTitle';
 import PageSection from '@/components/ui/PageSection';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
+import PageSectionTitle from "../components/ui/_pageSectionTitle";
 import PageContent from "../components/ui/PageContent";
 import PageView from "../components/ui/PageView";
 
 const rootCategoryId = 0;
 
-console.log(rootCategoryId);
-
 export default function Index() {
     return (
         <PageView>
             <PageContent>
-                <PageTitle title="Hva leter du etter?" />
-
-                <PageSection type="primary">
-                    <FeaturedProducts />
-                </PageSection>
-
                 <PageSection type="secondary">
-                    <Text>Kunder har ogsså sett på</Text>
-                </PageSection>
-
-                <PageSection type="primary">
+                    <PageSectionTitle title="Hva leter du etter?" size="xxl" />
                     <FeaturedProducts />
                 </PageSection>
 
-                <PageTitle title="Andre kategorier" />
-                <Categories categoryId={rootCategoryId} />
+                <PageSection type="primary">
+                    <PageSectionTitle title="Kategorier" size="lg" />
+                    <Categories categoryId={rootCategoryId} />
+                </PageSection>
+
             </PageContent>
         </PageView>
     );

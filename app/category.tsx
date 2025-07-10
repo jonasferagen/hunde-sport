@@ -1,7 +1,8 @@
 import Categories from '@/components/features/category/Categories';
 import CategoryProducts from '@/components/features/category/CategoryProducts';
-import PageTitle from "@/components/ui/_pageTitle";
+import PageSectionTitle from "@/components/ui/_pageSectionTitle";
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import PageSection from '@/components/ui/PageSection';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
@@ -30,9 +31,14 @@ const CategoryPage = () => {
         }
       }} />
       <PageContent>
-        <PageTitle title={name} />
-        <Categories categoryId={categoryId} />
-        <CategoryProducts categoryId={categoryId} />
+        <PageSection>
+          <PageSectionTitle title={name} size="lg" />
+          <CategoryProducts categoryId={categoryId} />
+        </PageSection>
+        <PageSection>
+          <PageSectionTitle title="Underkategorier" size="md" />
+          <Categories categoryId={categoryId} />
+        </PageSection>
       </PageContent>
     </PageView>
   );

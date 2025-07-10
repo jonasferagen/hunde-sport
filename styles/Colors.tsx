@@ -1,5 +1,5 @@
 
-import { darken } from '@/utils/helpers';
+import { darken, lighten } from '@/utils/helpers';
 
 const primary = 'rgb(247, 177, 163)';
 const secondary = 'rgb(119, 131, 161)';
@@ -7,7 +7,7 @@ const accent = 'rgb(161, 138, 117)';
 
 export const COLORS = {
   // Primary palette
-  primary: primary,
+  primary: darken(primary, 10),
   secondary: darken(secondary, 10),
   accent: accent,
 
@@ -15,9 +15,9 @@ export const COLORS = {
   textPrimary: 'rgb(35,35,35)',
   textSecondary: 'rgb(117,117,117)',
 
-  textOnPrimary: 'rgb(0,255,255)', // For buttons etc.
-  textOnSecondary: 'rgb(255,0,255)', // For buttons etc.
-  textOnAccent: 'rgb(255,255,0)', // For buttons etc.
+  textOnPrimary: lighten(primary, 40),
+  textOnSecondary: lighten(secondary, 40),
+  textOnAccent: lighten(accent, 40),
 
   // Backgrounds
   backgroundPrimary: '#ffffff',

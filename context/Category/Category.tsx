@@ -11,7 +11,7 @@ export const useCategoriesByCategory = (categoryId: number) => {
 
     const queryResult = useInfiniteQuery({
         queryKey: ['categoriesByCategory', categoryId],
-        queryFn: ({ pageParam = 1 }) => fetchCategoryByCategory(categoryId),
+        queryFn: ({ pageParam = 1 }) => fetchCategoryByCategory(pageParam, categoryId),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
             // Assuming a page size of 10, if the last page has 10 items, there might be more.

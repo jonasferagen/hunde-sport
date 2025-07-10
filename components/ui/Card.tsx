@@ -1,9 +1,9 @@
 
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-export default function Card({ children }: { children: React.ReactNode }) {
+export default function Card({ children, style }: { children: React.ReactNode, style?: StyleProp<ViewStyle> }) {
     return (
-        <View style={styles.card}>
+        <View style={[styles.card, style]}>
             {children}
         </View>
     );
@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
         borderRadius: 8,
-        height: 200,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-        elevation: 3,
+        elevation: 1,
     },
 
 });
