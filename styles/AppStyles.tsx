@@ -1,16 +1,16 @@
 import { StyleSheet } from 'react-native';
-import { COLORS, SPACING } from './Theme';
+import { COLORS } from './Colors';
+import { SPACING } from './Theme';
 
 export const AppStyles = StyleSheet.create({
     appContainer: {
         flex: 1,
-        backgroundColor: COLORS.background,
+        backgroundColor: COLORS.backgroundPrimary,
         marginVertical: SPACING.md,
     },
 
     pageView: {
         flex: 1,
-        backgroundColor: COLORS.accent,
     },
 
     pageContent: {

@@ -23,7 +23,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
                 <Text style={styles.breadcrumbText}>{breadcrumb.name}</Text>
               </TouchableOpacity>
             )}
-            {index < fullTrail.length - 1 && <Text style={styles.separator}>{' > '}</Text>}
+            {index < fullTrail.length - 1 && <Text style={[styles.breadcrumbText, styles.separator]}>{' < '}</Text>}
           </View>
         ))}
       </ScrollView>
@@ -31,35 +31,30 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
   );
 };
 
-import { COLORS } from '@/styles/Theme';
+import { COLORS } from '@/styles/Colors';
+import { SPACING } from '@/styles/Theme';
 
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    borderTopWidth: 1,
-    borderTopColor: '#0f0',
+    backgroundColor: COLORS.backgroundSecondary,
   },
   breadcrumbItem: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   breadcrumbText: {
-    fontWeight: 'bold',
     fontSize: 16,
-    color: COLORS.primary,
+    color: COLORS.textPrimary,
   },
+
   breadcrumbProductText: {
-    color: COLORS.accent,
+    color: COLORS.textSecondary,
   },
 
   separator: {
-    fontSize: 16,
-    marginHorizontal: 4,
-    color: COLORS.primary,
+    marginHorizontal: SPACING.xs
   },
 });
 

@@ -32,7 +32,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider style={{ backgroundColor: '#00f' }}>
+      <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <BreadcrumbProvider>
             <Layout />
