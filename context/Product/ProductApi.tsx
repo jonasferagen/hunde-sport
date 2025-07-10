@@ -22,6 +22,12 @@ export async function fetchProductByCategory(productCategoryId: number, page: nu
     return (data ?? []).map(mapToProduct);
 }
 
+export async function fetchProductsByTag(tagId: number, page: number): Promise<Product[]> {
+    // This is a placeholder. You'll need to implement the actual endpoint.
+    console.warn('fetchProductsByTag is not implemented. Returning empty array.');
+    return Promise.resolve([]);
+}
+
 export async function fetchProduct(productId: number): Promise<Product> {
     const { data, error } = await apiClient.get<any>(
         ENDPOINTS.PRODUCTS.GET(productId)
@@ -29,5 +35,3 @@ export async function fetchProduct(productId: number): Promise<Product> {
     if (error) throw new Error(error);
     return mapToProduct(data);
 }
-
-

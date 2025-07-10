@@ -19,3 +19,12 @@ export async function fetchCategoryByCategory(categoryId: number, pageNum: numbe
     return result;
 }
 
+export async function fetchCategory(id: number) {
+    const { data, error } = await apiClient.get<any>(
+        ENDPOINTS.CATEGORIES.GET(id)
+    );
+
+    if (error) throw new Error(error);
+    if (!data) throw new Error(`Category with id ${id} not found`);
+    return mapToCategory(data);
+}

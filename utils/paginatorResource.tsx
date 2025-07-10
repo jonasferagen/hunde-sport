@@ -9,9 +9,15 @@ export interface PaginatorState<T> {
     hasMore: boolean;
 }
 
-export function PaginatorResource<T>(
+export interface PaginatorResourceActions<T> {
+    getState: (id: number) => PaginatorState<T>;
+    loadMore: (id: number) => Promise<void>;
+    refresh: (id: number) => Promise<void>;
+}
+
+export function usePaginatorResource<T>(
     fetcher: (id: number, page: number) => Promise<T[]>
-) {
+): PaginatorResourceActions<T> {
     const [data, setData] = useState<Record<string, PaginatorState<T>>>({});
 
     const defaultState: PaginatorState<T> = {
@@ -80,4 +86,4 @@ export function PaginatorResource<T>(
     return { getState, loadMore, refresh };
 }
 
-export default PaginatorResource;
+export default usePaginatorResource;

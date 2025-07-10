@@ -1,13 +1,13 @@
 
 
-import { useCategories } from '@/context/Category/Category';
+import { useCategoriesByCategory } from '@/context/Category/Category';
 import FullScreenLoader from "./FullScreenLoader";
 import RetryView from "./RetryView";
 import CategoryList from "./category/CategoryList";
 
 export default function Categories({ categoryId }: { categoryId: number }) {
 
-    const { items, loading, error, refresh, loadMore, loadingMore } = useCategories(categoryId);
+    const { items, loading, error, refresh, loadMore, loadingMore } = useCategoriesByCategory(categoryId);
 
     if (loading) {
         return <FullScreenLoader />;
