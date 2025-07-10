@@ -4,11 +4,13 @@ import FullScreenLoader from '@/components/ui/FullScreenLoader';
 import PageSection from '@/components/ui/PageSection';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { useProduct } from '@/context/Product/Product';
+import { formatPrice } from '@/utils/helpers';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import PageView from "../components/ui/PageView";
 import Heading from "../components/ui/_heading";
+
 
 export default function ProductScreen() {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
@@ -29,7 +31,7 @@ export default function ProductScreen() {
   }
 
   const product = data!;
-  const image = product.images[0];
+  const image = product.images.length > 0 ? product.images[0] : { src: undefined };
 
   return (
     <PageView>
@@ -57,8 +59,9 @@ export default function ProductScreen() {
           />
         </View>
 
-        <Text style={styles.price}>{formatPrice(product.price)}</Text>;
+        <Text style={styles.price}>{formatPrice(product.price)}</Text>
         <Text style={styles.shortDescription}>{product.short_description}</Text>
+        <Button title="Legg til i handlekurv" onPress={() => { }} />
 
       </PageSection>
 
@@ -76,7 +79,6 @@ export default function ProductScreen() {
 
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
-import { formatPrice } from '@/utils/helpers';
 
 const styles = StyleSheet.create({
   content: {

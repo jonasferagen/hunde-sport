@@ -3,14 +3,11 @@ import { QueryClient, useInfiniteQuery, useQuery, useQueryClient } from '@tansta
 import { useEffect } from 'react';
 import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory } from './ProductApi';
 
-
-
 const updateProductCache = (queryClient: QueryClient, queryResult: any) => {
 
     if (!queryResult.data) {
         return;
     }
-
     queryResult.data.pages.forEach((page: any) => {
         page.forEach((product: Product) => {
             queryClient.setQueryData(['product', product.id], product);

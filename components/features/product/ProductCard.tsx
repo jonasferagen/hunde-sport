@@ -1,21 +1,23 @@
 import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
-import type { Image as ImageType } from '@/types';
-import { decodeHtmlEntities, formatPrice, rgba } from "@/utils/helpers";
+import type { Image } from '@/types';
+import { formatPrice, rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 
 const mainColor = COLORS.secondary;
 
 interface ProductCardProps {
-    image: ImageType;
+    image: Image;
     title: string;
     price: string;
-    width?: number | string; // Add this line
+    width?: number | string;
 }
 
 export default function ProductCard({ image, title, price, width = '100%' }: ProductCardProps) {
+
+
     return (
         <View style={[styles.container]}>
             <ImageBackground
@@ -32,7 +34,7 @@ export default function ProductCard({ image, title, price, width = '100%' }: Pro
                     style={styles.gradient}
                 >
                     <Text style={styles.title} numberOfLines={2}>
-                        {decodeHtmlEntities(title)}
+                        {(title)}
                     </Text>
                 </LinearGradient>
             </ImageBackground>

@@ -26,10 +26,12 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product, width = 160 
     });
   };
 
+  const image = images.length > 0 ? images[0] : new Image();
+
 
   return (
     <TouchableOpacity onPress={handlePress} style={[styles.container, { width }]}>
-      <ProductCard image={images[0]} title={name} price={price} width={width} />
+      <ProductCard image={image} title={name} price={price} width={width} />
     </TouchableOpacity>
   );
 };
