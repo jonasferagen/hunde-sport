@@ -15,7 +15,6 @@ const renderItem: ListRenderItem<Category> = ({ item }) => {
 
 const CategoryList: React.FC<CategoryListProps> = (props) => {
 
-
   const { items, loadMore, loadingMore } = props.categoryProvider
 
   const renderFooter = () => {
@@ -41,7 +40,8 @@ const CategoryList: React.FC<CategoryListProps> = (props) => {
       updateCellsBatchingPeriod={50}
       windowSize={11}
       removeClippedSubviews={true}
-      showsVerticalScrollIndicator={false}
+      horizontal={true}
+      showsHorizontalScrollIndicator={true}
       getItemLayout={(data, index) => ({
         length: 50, // Height of your list item
         offset: 50 * index,

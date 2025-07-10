@@ -3,6 +3,8 @@ import { router } from 'expo-router';
 import { memo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { COLORS, FONT_SIZES, SPACING } from '@/config/theme';
+
 // Memoized list item component with areEqual comparison
 const CategoryListItem = memo<Category>(
   ({ id, name }) => {
@@ -31,19 +33,26 @@ const CategoryListItem = memo<Category>(
   }
 );
 
+
 const styles = StyleSheet.create({
   categoryItem: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    backgroundColor: COLORS.primary,
     alignItems: 'center',
-    padding: 20,
+    padding: SPACING.sm,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    borderRightWidth: 1,
+    borderRightColor: '#eee',
+    width: 100,
+    justifyContent: 'center',
 
   },
   categoryText: {
-    flex: 1,
-    fontSize: 16,
-  },
+    color: '#fff',
+    fontSize: FONT_SIZES.md,
+    padding: SPACING.xs,
+  }
 });
 
 export default CategoryListItem;

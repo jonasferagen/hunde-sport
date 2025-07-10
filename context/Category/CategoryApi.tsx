@@ -9,9 +9,9 @@ const mapToCategory = (item: any): Category => ({
     image: item.image,
 });
 
-export async function fetchCategoryByCategory(categoryId: number, pageNum: number) {
+export async function fetchCategoryByCategory(pageNum: number, categoryId: number) {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.CATEGORIES.BYCATEGORY(categoryId, pageNum)
+        ENDPOINTS.CATEGORIES.LIST(pageNum, 'parent=' + categoryId)
     );
 
     if (error) throw new Error(error);

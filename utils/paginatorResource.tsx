@@ -16,7 +16,7 @@ export interface PaginatorResourceActions<T> {
 }
 
 export function usePaginatorResource<T>(
-    fetcher: (id: number, page: number) => Promise<T[]>
+    fetcher: (page: number, id: number) => Promise<T[]>
 ): PaginatorResourceActions<T> {
     const [data, setData] = useState<Record<string, PaginatorState<T>>>({});
 
@@ -31,10 +31,12 @@ export function usePaginatorResource<T>(
 
     const refresh = useCallback(async (id: number) => {
         const key = String(id);
+        console.log('id', id);
         setData(prev => ({ ...prev, [key]: { ...defaultState, loading: true } }));
 
+
         try {
-            const newItems = await fetcher(id, 1);
+            const newItems = await fetcher(1, id);
             setData(prev => ({
                 ...prev,
                 [key]: {
@@ -59,7 +61,7 @@ export function usePaginatorResource<T>(
 
         try {
             const nextPage = currentState.page + 1;
-            const newItems = await fetcher(id, nextPage);
+            const newItems = await fetcher(nextPage, id);
 
             setData(prev => ({
                 ...prev,
@@ -78,7 +80,6 @@ export function usePaginatorResource<T>(
     }, [data, fetcher]);
 
     const getState = useCallback((id: number) => {
-
         const key = String(id);
         return data[key] ?? defaultState;
     }, [data]);

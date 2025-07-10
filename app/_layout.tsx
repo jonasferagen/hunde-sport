@@ -4,7 +4,7 @@ import { ProductProvider } from '@/context/Product/ProductContext';
 import { Stack } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AppStyles } from "./theme";
+import { AppStyles } from "../config/theme";
 
 
 function Layout() {

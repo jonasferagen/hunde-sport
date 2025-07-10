@@ -1,5 +1,6 @@
 // app/index.tsx
 import Categories from '@/components/Categories';
+import ProductsByCategory from '@/components/ProductsByCategory';
 import { StyleSheet, Text, View } from 'react-native';
 
 // Memoized styles to prevent recreation on every render
@@ -26,6 +27,7 @@ export default function Index() {
   return (
     <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
+      <ProductsByCategory categoryId={rootCategoryId} />
       <Categories categoryId={rootCategoryId} />
     </View>
   );

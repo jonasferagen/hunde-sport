@@ -12,18 +12,28 @@ const mapToProduct = (item: any): Product => ({
     images: item.images || [],
 });
 
-
-export async function fetchProductByCategory(categoryId: number, page: number): Promise<Product[]> {
+export async function fetchFeaturedProducts(page: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.BYCATEGORY(categoryId, page)
+        ENDPOINTS.PRODUCTS.LIST(page, 'featured=true')
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
 
-export async function fetchProductsByTag(tagId: number, page: number): Promise<Product[]> {
+
+export async function fetchProductByCategory(page: number, categoryId: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.BYTAG(tagId, page)
+        ENDPOINTS.PRODUCTS.LIST(page, 'category=' + categoryId)
+    );
+
+
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+export async function fetchProductsByTag(page: number, tagId: number): Promise<Product[]> {
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.LIST(page, 'tag=' + tagId)
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);

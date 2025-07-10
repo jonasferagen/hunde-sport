@@ -31,6 +31,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
   );
 };
 
+import { COLORS } from '@/config/theme';
+
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 8,
@@ -44,17 +46,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   breadcrumbText: {
+    fontWeight: 'bold',
     fontSize: 16,
-    color: '#007bff',
+    color: COLORS.primary,
   },
   breadcrumbProductText: {
-    color: '#000',
+    color: COLORS.accent,
   },
 
   separator: {
     fontSize: 16,
     marginHorizontal: 4,
-    color: '#6c757d',
+    color: COLORS.primary,
   },
 });
 
