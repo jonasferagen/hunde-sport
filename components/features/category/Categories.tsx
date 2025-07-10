@@ -1,9 +1,9 @@
 
 
 import { useCategoriesByCategory } from '@/context/Category/Category';
-import FullScreenLoader from "./FullScreenLoader";
-import RetryView from "./RetryView";
-import CategoryList from "./category/CategoryList";
+import FullScreenLoader from "../../ui/FullScreenLoader";
+import RetryView from "../../ui/RetryView";
+import CategoryList from "./CategoryList";
 
 export default function Categories({ categoryId }: { categoryId: number }) {
 

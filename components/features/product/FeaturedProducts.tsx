@@ -1,6 +1,6 @@
 import { useFeaturedProducts } from "@/context/Product/Product";
-import FullScreenLoader from "./FullScreenLoader";
-import ProductList from "./product/ProductList";
+import FullScreenLoader from "../../ui/FullScreenLoader";
+import ProductList from "./ProductList";
 export default function FeaturedProducts() {
 
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useFeaturedProducts();

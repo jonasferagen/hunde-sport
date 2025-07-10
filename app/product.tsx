@@ -1,5 +1,5 @@
-import Breadcrumbs from '@/components/Breadcrumbs';
-import Product from '@/components/Product';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import Product from '@/components/features/product/Product';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';

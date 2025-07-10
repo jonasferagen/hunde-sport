@@ -1,8 +1,8 @@
 
 
 import { useProduct } from '@/context/Product/Product';
-import FullScreenLoader from './FullScreenLoader';
-import ProductDetails from './product/ProductDetails';
+import FullScreenLoader from '../../ui/FullScreenLoader';
+import ProductDetails from './ProductDetails';
 
 export default function Product({ productId }: { productId: number }) {
 

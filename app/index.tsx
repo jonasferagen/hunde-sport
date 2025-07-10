@@ -1,6 +1,6 @@
 // app/index.tsx
-import Categories from '@/components/Categories';
-import FeaturedProducts from '@/components/FeaturedProducts';
+import Categories from '@/components/features/category/Categories';
+import FeaturedProducts from '@/components/features/product/FeaturedProducts';
 import { StyleSheet, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 

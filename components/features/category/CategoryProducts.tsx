@@ -1,6 +1,6 @@
 import { useProductsByCategory } from "@/context/Product/Product";
-import FullScreenLoader from "./FullScreenLoader";
-import ProductList from "./product/ProductList";
+import FullScreenLoader from "../../ui/FullScreenLoader";
+import ProductList from "../product/ProductList";
 
 export default function ProductsByCategory({ categoryId }: { categoryId: number }) {
 

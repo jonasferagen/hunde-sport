@@ -1,6 +1,6 @@
-import Breadcrumbs from '@/components/Breadcrumbs';
-import Categories from '@/components/Categories';
-import ProductsByCategory from '@/components/ProductsByCategory';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import Categories from '@/components/features/category/Categories';
+import CategoryProducts from '@/components/features/category/CategoryProducts';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
@@ -28,7 +28,7 @@ const CategoryPage = () => {
         }
       }} />
       <Text style={styles.title}>{name}</Text>
-      <ProductsByCategory categoryId={categoryId} />
+      <CategoryProducts categoryId={categoryId} />
       <Categories categoryId={categoryId} />
     </View>
   );
