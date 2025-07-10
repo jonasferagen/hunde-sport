@@ -8,10 +8,8 @@ export const useProductsByCategory = (categoryId: number) => {
     // Creates its own paginator instance, making the hook self-contained
     const { getState, loadMore, refresh } = usePaginatorResource<Product>(fetchProductByCategory);
 
-    // Still uses the shared context for caching
     const productContext = useContext(ProductContext);
-    if (!productContext) throw new Error('This hook must be used within a ProductContextProvider');
-    const { hydrateCache, getItem } = productContext;
+    const { hydrateCache, getItem } = productContext!;
 
     // Fetch data when the component mounts or the ID changes
     useEffect(() => {
@@ -39,9 +37,7 @@ export const useProductsByCategory = (categoryId: number) => {
 
 export const useProductById = (productId: number) => {
     const context = useContext(ProductContext);
-    if (!context) throw new Error('This hook must be used within a ProductContextProvider');
-
-    const { getItem } = context;
+    const { getItem } = context!;
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

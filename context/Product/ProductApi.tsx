@@ -13,24 +13,25 @@ const mapToProduct = (item: any): Product => ({
 });
 
 
-export async function fetchProductByCategory(productCategoryId: number, page: number): Promise<Product[]> {
+export async function fetchProductByCategory(categoryId: number, page: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.BYCATEGORY(page, productCategoryId)
+        ENDPOINTS.PRODUCTS.BYCATEGORY(categoryId, page)
     );
     if (error) throw new Error(error);
-
     return (data ?? []).map(mapToProduct);
 }
 
 export async function fetchProductsByTag(tagId: number, page: number): Promise<Product[]> {
-    // This is a placeholder. You'll need to implement the actual endpoint.
-    console.warn('fetchProductsByTag is not implemented. Returning empty array.');
-    return Promise.resolve([]);
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.BYTAG(tagId, page)
+    );
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
 }
 
-export async function fetchProduct(productId: number): Promise<Product> {
+export async function fetchProduct(id: number): Promise<Product> {
     const { data, error } = await apiClient.get<any>(
-        ENDPOINTS.PRODUCTS.GET(productId)
+        ENDPOINTS.PRODUCTS.GET(id)
     );
     if (error) throw new Error(error);
     return mapToProduct(data);

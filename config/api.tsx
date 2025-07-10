@@ -4,19 +4,23 @@ export const API_BASE_URL = __DEV__
   : 'https://your-production-api.com'; // Update this for production
 
 
+const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
+const PRODUCTS_URL = `${API_BASE_URL}/products`;
+
 // API endpoints
 export const ENDPOINTS = {
   CATEGORIES: {
-    BYCATEGORY: (page: number, parent: number = 0) =>
-      `${API_BASE_URL}/products/categories?parent=${parent}&page=${page}&per_page=10&hide_empty=true`,
-    GET: (id: number) => `${API_BASE_URL}/products/categories/${id}`,
+    GET: (id: number) => `${CATEGORIES_URL}/${id}`,
+    BYCATEGORY: (parent: number, page: number) =>
+      `${CATEGORIES_URL}?parent=${parent}&page=${page}&per_page=10&hide_empty=true`,
   },
   PRODUCTS: {
-    BYCATEGORY: (page: number, categoryId: number = 0) =>
-      `${API_BASE_URL}/products?page=${page}&category=${categoryId}&status=publish&per_page=10&hide_empty=true`,
-    GET: (id: number) => `${API_BASE_URL}/products/${id}`,
+    GET: (id: number) => `${PRODUCTS_URL}/${id}`,
+    BYCATEGORY: (categoryId: number, page: number) =>
+      `${PRODUCTS_URL}?page=${page}&category=${categoryId}&status=publish&per_page=10&hide_empty=true`,
+    BYTAG: (tagId: number, page: number) =>
+      `${PRODUCTS_URL}?page=${page}&tag=${tagId}&status=publish&per_page=10&hide_empty=true`,
   },
-  // Add other API endpoints here
 };
 
 // Helper function to get full API URL

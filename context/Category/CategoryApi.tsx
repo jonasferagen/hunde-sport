@@ -11,7 +11,7 @@ const mapToCategory = (item: any): Category => ({
 
 export async function fetchCategoryByCategory(categoryId: number, pageNum: number) {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.CATEGORIES.BYCATEGORY(pageNum, categoryId)
+        ENDPOINTS.CATEGORIES.BYCATEGORY(categoryId, pageNum)
     );
 
     if (error) throw new Error(error);
