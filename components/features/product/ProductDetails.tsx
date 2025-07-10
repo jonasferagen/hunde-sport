@@ -1,7 +1,12 @@
 import type { Product } from '@/types';
-import { stripHtml } from '@/utils/helpers';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { ProductDescription } from './_productDescription';
+import ProductImage from './_productImage';
+import { ProductPrice } from './_productPrice';
+import { ProductShortDescription } from './_productShortDescription';
+import { ProductTitle } from './_productTitle';
 
 interface ProductDetailsProps {
   product: Product;
@@ -10,10 +15,19 @@ interface ProductDetailsProps {
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   return (
     <View style={styles.content}>
-      {product.short_description && (
-        <Text style={styles.description}>{product.id} {stripHtml(product.short_description)}</Text>
+      <ProductTitle name={product.name} />
+      {product.images.length > 0 && (
+        <ProductImage image={product.images[0]} />
       )}
-      {/* You can add more product details here, like the full description */}
+      <ProductPrice price={product.price} />
+      <ProductShortDescription short_description={product.short_description} />
+      <ProductDescription description={product.description} />
+
+      <FlatList
+        data={product.images.slice(1)}
+        renderItem={({ item }) => <ProductImage image={item} />}
+      />
+
     </View>
   );
 };
@@ -27,6 +41,13 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 24,
   },
+
+  name: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  }
+
 });
 
 export default ProductDetails;

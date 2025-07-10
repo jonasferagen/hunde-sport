@@ -24,10 +24,28 @@ export interface Category {
 export interface Product {
   id: number;
   name: string;
+  price: string,
+  regular_price: string,
+  sale_price: string,
+  featured: boolean,
+  stock_quantity: number,
+  stock_status: string,
   description: string;
   short_description: string;
   categories: Category[];
   images: Image[];
+  tags: Tag[];
+  attributes: Attribute[];
+}
+
+export interface Attribute {
+  id: number;
+  name: string;
+}
+
+export interface Tag {
+  id: number;
+  name: string;
 }
 
 export interface Breadcrumb {

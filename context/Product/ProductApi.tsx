@@ -6,10 +6,18 @@ import apiClient from '@/utils/apiClient';
 const mapToProduct = (item: any): Product => ({
     id: item.id,
     name: item.name,
+    price: item.price,
+    regular_price: item.regular_price,
+    sale_price: item.sale_price,
+    featured: item.featured,
+    stock_quantity: item.stock_quantity,
+    stock_status: item.stock_status,
     description: item.description,
     short_description: item.short_description,
     categories: item.categories || [],
     images: item.images || [],
+    tags: item.tags || [],
+    attributes: item.attributes || [],
 });
 
 export async function fetchFeaturedProducts(page: number): Promise<Product[]> {

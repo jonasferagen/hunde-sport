@@ -7,6 +7,10 @@ import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory } from './P
 
 const updateProductCache = (queryClient: QueryClient, queryResult: any) => {
 
+    if (!queryResult.data) {
+        return;
+    }
+
     queryResult.data.pages.forEach((page: any) => {
         page.forEach((product: Product) => {
             queryClient.setQueryData(['product', product.id], product);

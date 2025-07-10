@@ -5,7 +5,7 @@ interface ProductTitleProps {
   name: string;
 }
 
-const ProductTitle: React.FC<ProductTitleProps> = ({ name }) => {
+export const ProductTitle: React.FC<ProductTitleProps> = ({ name }) => {
   return <Text style={styles.title}>{name}</Text>;
 };
 
@@ -18,5 +18,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default ProductTitle;

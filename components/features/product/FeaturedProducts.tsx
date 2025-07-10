@@ -12,5 +12,4 @@ export default function FeaturedProducts() {
     const products = data?.pages.flat() ?? [];
     return <ProductList products={products} loadMore={fetchNextPage} loadingMore={isFetchingNextPage} />;
 
-
 }

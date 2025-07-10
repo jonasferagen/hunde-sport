@@ -1,9 +1,9 @@
-import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import Product from '@/components/features/product/Product';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function ProductScreen() {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
@@ -12,8 +12,11 @@ export default function ProductScreen() {
     setTrail({ id: Number(id), name, type: 'product' });
   }, [id, name, setTrail]);
 
+
+
+
   return (
-    <ScrollView>
+    <View>
       <Stack.Screen options={{ title: name }} />
       <Breadcrumbs
         trail={breadcrumbs}
@@ -27,7 +30,7 @@ export default function ProductScreen() {
         }}
       />
       <Product productId={Number(id)} />
-    </ScrollView>
+    </View>
   );
 }
 

@@ -2,7 +2,7 @@ import type { Product } from '@/types';
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import ProductImage from './ProductImage';
+import ProductImage from './_productImage';
 
 const ProductListItem: React.FC<Product> = ({ id, name, images }) => {
   const handlePress = () => {

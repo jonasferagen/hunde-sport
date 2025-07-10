@@ -1,8 +1,7 @@
 // app/index.tsx
 import Categories from '@/components/features/category/Categories';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
-import { StyleSheet, Text } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View } from 'react-native';
 
 // Memoized styles to prevent recreation on every render
 const createStyles = () => {
@@ -26,11 +25,11 @@ const rootCategoryId = 0;
 
 export default function Index() {
   return (
-    <ScrollView>
+    <View>
       <Text style={styles.title}>Hva leter du etter?</Text>
       <FeaturedProducts />
       <Text style={styles.title}>Andre kategorier</Text>
       <Categories categoryId={rootCategoryId} />
-    </ScrollView>
+    </View>
   );
 }
