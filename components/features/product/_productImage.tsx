@@ -19,12 +19,14 @@ const ProductImage: React.FC<ProductImageProps> = ({ image }) => {
 
 const styles = StyleSheet.create({
   imageWrapper: {
-    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#fcc',
     width: '100%',
+    minHeight: 100,
   },
   image: {
-    width: '100%',
-    height: 150,
+    borderColor: '#000',
+    height: '100%',
   },
 });
 

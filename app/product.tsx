@@ -3,7 +3,9 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import PageView from "./_pageView";
+
 
 export default function ProductScreen() {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
@@ -13,10 +15,8 @@ export default function ProductScreen() {
   }, [id, name, setTrail]);
 
 
-
-
   return (
-    <View>
+    <PageView>
       <Stack.Screen options={{ title: name }} />
       <Breadcrumbs
         trail={breadcrumbs}
@@ -30,7 +30,7 @@ export default function ProductScreen() {
         }}
       />
       <Product productId={Number(id)} />
-    </View>
+    </PageView>
   );
 }
 

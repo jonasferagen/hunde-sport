@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    borderTopWidth: 1,
+    borderTopColor: '#0f0',
   },
   breadcrumbItem: {
     flexDirection: 'row',

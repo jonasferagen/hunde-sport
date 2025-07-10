@@ -7,7 +7,7 @@ export const COLORS = {
   primaryDark: '#2980b9',
   secondary: 'rgb(161, 138, 117)',
   accent: 'rgb(247, 177, 163)',
-  background: '#f9f9f9',
+  background: '#f9f969',
   card: '#ffffff',
   text: '#333333',
   textLight: '#666666',
@@ -50,12 +50,18 @@ export const BORDER_RADIUS = {
 
 
 export const AppStyles = StyleSheet.create({
-  container: {
+  appContainer: {
     flex: 1,
     backgroundColor: COLORS.background,
-    paddingTop: SPACING.md,
-    paddingBottom: SPACING.md,
-  }
+    marginVertical: SPACING.md,
+  },
+
+  pageContainer: {
+    flex: 1,
+    backgroundColor: COLORS.accent,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.md,
+  },
 });
 
 

@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '@/config/api';
 import type { Product } from '@/types';
 import apiClient from '@/utils/apiClient';
-
+import { stripHtml } from '@/utils/helpers';
 
 const mapToProduct = (item: any): Product => ({
     id: item.id,
@@ -12,8 +12,8 @@ const mapToProduct = (item: any): Product => ({
     featured: item.featured,
     stock_quantity: item.stock_quantity,
     stock_status: item.stock_status,
-    description: item.description,
-    short_description: item.short_description,
+    description: stripHtml(item.description),
+    short_description: stripHtml(item.short_description),
     categories: item.categories || [],
     images: item.images || [],
     tags: item.tags || [],

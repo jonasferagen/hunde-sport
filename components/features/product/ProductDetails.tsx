@@ -17,7 +17,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     <View style={styles.content}>
       <ProductTitle name={product.name} />
       {product.images.length > 0 && (
-        <ProductImage image={product.images[0]} />
+        <View style={styles.mainImageWrapper}>
+          <ProductImage image={product.images[0]} />
+        </View>
       )}
       <ProductPrice price={product.price} />
       <ProductShortDescription short_description={product.short_description} />
@@ -27,7 +29,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         data={product.images.slice(1)}
         renderItem={({ item }) => <ProductImage image={item} />}
       />
-
     </View>
   );
 };
@@ -41,7 +42,12 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 24,
   },
-
+  mainImageWrapper: {
+    width: '100%',
+    height: 300,
+    borderWidth: 1,
+    borderColor: '#f00',
+  },
   name: {
     textAlign: 'center',
     fontSize: 24,

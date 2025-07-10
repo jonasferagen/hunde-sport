@@ -10,7 +10,7 @@ import { AppStyles } from "../config/theme";
 function Layout() {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[AppStyles.container, { marginTop: insets.top }]}>
+    <View style={[AppStyles.appContainer, { marginTop: insets.top }]}>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -32,13 +32,13 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
+      <SafeAreaProvider style={{ backgroundColor: '#00f' }}>
         <QueryClientProvider client={queryClient}>
           <BreadcrumbProvider>
             <Layout />
           </BreadcrumbProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
-    </GestureHandlerRootView>
+    </GestureHandlerRootView >
   );
 }
