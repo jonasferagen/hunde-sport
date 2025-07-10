@@ -8,6 +8,7 @@ import { formatPrice } from '@/utils/helpers';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { Button, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import PageContent from "../components/ui/PageContent";
 import PageView from "../components/ui/PageView";
 import Heading from "../components/ui/_heading";
 
@@ -47,32 +48,36 @@ export default function ProductScreen() {
           }
         }}
       />
+      <PageContent>
 
-      <PageSection type="primary">
-        <Heading title={product.name} size="xxl" />
 
-        <View style={styles.mainImageWrapper}>
-          <Image
-            source={{ uri: image.src }}
-            style={styles.mainImage}
-            resizeMode="contain"
-          />
-        </View>
+        <PageSection type="primary">
+          <Heading title={product.name} size="xxl" />
 
-        <Text style={styles.price}>{formatPrice(product.price)}</Text>
-        <Text style={styles.shortDescription}>{product.short_description}</Text>
-        <Button title="Legg til i handlekurv" onPress={() => { }} />
+          <View style={styles.mainImageWrapper}>
+            <Image
+              source={{ uri: image.src }}
+              style={styles.mainImage}
+              resizeMode="contain"
+            />
+          </View>
 
-      </PageSection>
+          <Text style={styles.price}>{formatPrice(product.price)}</Text>
+          <Text style={styles.shortDescription}>{product.short_description}</Text>
+          <Button title="Legg til i handlekurv" onPress={() => { }} />
 
-      <PageSection type="secondary">
-        <Text style={styles.description}>{product.description}</Text>
-      </PageSection>
+        </PageSection>
 
-      <FlatList
-        data={product.images.slice(1)}
-        renderItem={({ item }) => <ProductImage image={item} />}
-      />
+        <PageSection type="secondary">
+          <Text style={styles.description}>{product.description}</Text>
+        </PageSection>
+
+        <FlatList
+          data={product.images.slice(1)}
+          renderItem={({ item }) => <ProductImage image={item} />}
+        />
+      </PageContent>
+
     </PageView>
   );
 }
