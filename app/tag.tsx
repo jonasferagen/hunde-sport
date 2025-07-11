@@ -20,17 +20,19 @@ export default function TagScreen() {
         <PageView>
             <PageContent>
                 <PageSection>
-                    <ProductList
-                        products={products}
-                        loadMore={fetchNextPage}
-                        loadingMore={isFetchingNextPage}
-                        HeaderComponent={<Heading title={`Produkter merket med "${name}"`} size="lg" />}
-                        EmptyComponent={
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>Ingen produkter funnet for dette merket.</Text>
-                            </View>
-                        }
-                    />
+                    <View style={{ flex: 1 }}>
+                        <Heading title={`Produkter merket med "${name}"`} size="lg" />
+                        <ProductList
+                            products={products}
+                            loadMore={fetchNextPage}
+                            loadingMore={isFetchingNextPage}
+                            EmptyComponent={
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text>{`Ingen produkter merket med "${name}" funnet`}</Text>
+                                </View>
+                            }
+                        />
+                    </View>
                 </PageSection>
             </PageContent>
         </PageView>

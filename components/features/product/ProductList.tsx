@@ -12,7 +12,7 @@ interface ProductListProps {
 
 export default function ProductList({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) {
     return (
-        <FlatList key='a'
+        <FlatList
             data={products}
             renderItem={({ item }) => (
                 <View style={styles.itemContainer}>

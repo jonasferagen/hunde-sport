@@ -19,12 +19,12 @@ export default function SearchScreen() {
         <PageView>
             <PageContent>
                 <PageSection>
-                    <View>
+                    <Heading title={`Søkeresultater for "${query}"`} size="lg" />
+                    <View style={{ flex: 1, flexDirection: 'column', maxHeight: 600, backgroundColor: 'green' }}>
                         <ProductList
                             products={products}
                             loadMore={fetchNextPage}
                             loadingMore={isFetchingNextPage}
-                            HeaderComponent={<Heading title={`Søkeresultater for "${query}"`} size="lg" />}
                             EmptyComponent={
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                     <Text>Ingen produkter funnet.</Text>
