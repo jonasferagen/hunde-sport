@@ -8,12 +8,12 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native";
 
 const mainColor = COLORS.secondary;
 
-interface ProductCardProps {
+interface ProductTileProps {
     product: Product;
     width?: number | string;
 }
 
-export default function ProductCard({ product, width = '100%' }: ProductCardProps) {
+export default function ProductTile({ product, width = '100%' }: ProductTileProps) {
     const { images, name, price } = product;
     const image = images[0];
 

@@ -8,7 +8,7 @@ import { StyleSheet } from 'react-native';
 import PageContent from "../components/ui/PageContent";
 import PageView from "../components/ui/PageView";
 
-const CategoryPage = () => {
+const CategoryScreen = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const categoryId = Number(id);
   const { breadcrumbs, setTrail } = useBreadcrumbs();
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CategoryPage;
+export default CategoryScreen;

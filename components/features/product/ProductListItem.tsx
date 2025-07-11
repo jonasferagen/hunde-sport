@@ -2,7 +2,7 @@ import type { Product } from '@/types';
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import ProductCard from '../../ui/ProductCard';
+import ProductTile from '../../ui/ProductTile';
 
 interface ProductListItemProps {
   product: Product;
@@ -26,7 +26,7 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product, width = 160 
 
   return (
     <TouchableOpacity onPress={handlePress} style={[styles.container, { width }]}>
-      <ProductCard product={product} width={width} />
+      <ProductTile product={product} width={width} />
     </TouchableOpacity>
   );
 };

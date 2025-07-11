@@ -8,85 +8,10 @@ import { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
+import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 
-const styles = StyleSheet.create({
-  content: {
-    padding: SPACING.md,
-  },
-
-  mainImageWrapper: {
-    width: '100%',
-    height: 300,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: BORDER_RADIUS.md,
-  },
-  mainImage: {
-    height: '100%',
-  },
-
-  name: {
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  price: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: FONT_SIZES.sm,
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  shortDescription: {
-    fontSize: FONT_SIZES.md,
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  tagContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginVertical: SPACING.md,
-  },
-  tag: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: BORDER_RADIUS.lg,
-    paddingVertical: SPACING.xs,
-    paddingHorizontal: SPACING.sm,
-    margin: SPACING.xs,
-  },
-  tagText: {
-    color: '#333',
-    fontSize: FONT_SIZES.sm,
-  },
-  imageGalleryContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    marginTop: SPACING.md,
-  },
-  imageThumbnailWrapper: {
-    width: '31%', // Creates a 3-column grid with spacing
-    margin: '1%',
-    height: 120,
-    borderWidth: 1,
-    borderColor: '#eee',
-    borderRadius: BORDER_RADIUS.sm,
-    overflow: 'hidden', // Ensures the image respects the border radius
-  },
-  imageThumbnail: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
-
-});
 
 export default function ProductScreen() {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
@@ -150,7 +75,8 @@ export default function ProductScreen() {
 
           <Text style={styles.price}>{formatPrice(product.price)}</Text>
           <Text style={styles.shortDescription}>{product.short_description}</Text>
-          <Button title="Legg til i handlekurv" onPress={() => { }} />
+
+          <Button color={COLORS.secondary} title="Legg til i handlekurv" onPress={() => { }} />
 
         </PageSection>
 
@@ -189,3 +115,78 @@ export default function ProductScreen() {
     </PageView>
   );
 }
+
+const styles = StyleSheet.create({
+  content: {
+    padding: SPACING.md,
+  },
+
+  mainImageWrapper: {
+    width: '100%',
+    height: 300,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: BORDER_RADIUS.md,
+  },
+  mainImage: {
+    height: '100%',
+  },
+  name: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  price: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: FONT_SIZES.sm,
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  shortDescription: {
+    fontSize: FONT_SIZES.md,
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginVertical: SPACING.md,
+  },
+  tag: {
+    backgroundColor: COLORS.primary,
+    borderRadius: BORDER_RADIUS.lg,
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
+    margin: SPACING.xs,
+  },
+  tagText: {
+    color: COLORS.textOnPrimary,
+    fontSize: FONT_SIZES.sm,
+  },
+  imageGalleryContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    marginTop: SPACING.md,
+  },
+  imageThumbnailWrapper: {
+    width: '31%', // Creates a 3-column grid with spacing
+    margin: '1%',
+    height: 120,
+    borderWidth: 1,
+    borderColor: '#eee',
+    borderRadius: BORDER_RADIUS.sm,
+    overflow: 'hidden', // Ensures the image respects the border radius
+  },
+  imageThumbnail: {
+    height: '100%',
+    width: '100%',
+    resizeMode: 'contain',
+  },
+});
