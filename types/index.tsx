@@ -36,6 +36,8 @@ export interface Product {
   images: Image[];
   tags: Tag[];
   attributes: Attribute[];
+  variations: number[];
+  related_ids: number[];
 }
 
 export interface Attribute {

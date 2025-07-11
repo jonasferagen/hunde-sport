@@ -11,30 +11,22 @@ interface ProductListItemProps {
 
 const ProductListItem: React.FC<ProductListItemProps> = ({ product, width = 160 }) => {
 
-
-  const { id, name, images, price } = product;
+  const { id, name } = product;
 
   const handlePress = () => {
-    // Navigate to product detail page (you'll need to create this page)
     router.push({
       pathname: '/product',
       params: {
-        name: name,
+        name,
         id: id.toString(),
       },
     });
   };
 
-  if (images.length === 0) {
-    images.push({ src: '' });
-  }
-
-  const image = images[0];
-
 
   return (
     <TouchableOpacity onPress={handlePress} style={[styles.container, { width }]}>
-      <ProductCard image={image} title={name} price={price} width={width} />
+      <ProductCard product={product} width={width} />
     </TouchableOpacity>
   );
 };

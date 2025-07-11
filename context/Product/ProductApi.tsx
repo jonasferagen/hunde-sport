@@ -3,6 +3,26 @@ import type { Product } from '@/types';
 import apiClient from '@/utils/apiClient';
 import { cleanHtml } from '@/utils/helpers';
 
+
+const allowedKeys: (keyof Product)[] = [
+    'id',
+    'name',
+    'price',
+    'regular_price',
+    'sale_price',
+    'featured',
+    'stock_quantity',
+    'stock_status',
+    'description',
+    'short_description',
+    'categories',
+    'images',
+    'tags',
+    'attributes',
+    'variations',
+    'related_ids',
+];
+
 const formatters: Record<string, (value: any) => any> = {
     name: cleanHtml,
     description: cleanHtml,
@@ -12,29 +32,28 @@ const formatters: Record<string, (value: any) => any> = {
 const mapToProduct = (item: any): Product => {
     const product: Partial<Product> = {};
 
-    for (const key in item) {
-        if (Object.prototype.hasOwnProperty.call(item, key)) {
-            const value = item[key];
-            if (formatters[key]) {
-                (product as any)[key] = formatters[key](value);
-            } else {
-                (product as any)[key] = value;
-            }
+    for (const key of allowedKeys) {
+
+        const isArray = Array.isArray(item[key]);
+        const value = isArray ? item[key] || [] : item[key];
+
+        if (value !== undefined) {
+            (product as any)[key] = formatters[key]
+                ? formatters[key](value)
+                : value;
         }
     }
 
-    // Ensure array types have default values
-    product.categories = product.categories || [];
-    product.images = product.images || [];
-    product.tags = product.tags || [];
-    product.attributes = product.attributes || [];
+    if (product.images!.length === 0) {
+        product.images!.push({ src: 'https://placehold.co/600x400' });
+    }
 
     return product as Product;
 };
 
 export async function fetchFeaturedProducts(page: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, 'featured=true')
+        ENDPOINTS.PRODUCTS.LIST(page, 'featured=true&min_price=1')
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);

@@ -1,7 +1,7 @@
 import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
-import type { Image } from '@/types';
+import type { Product } from '@/types';
 import { formatPrice, rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
@@ -9,13 +9,13 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native";
 const mainColor = COLORS.secondary;
 
 interface ProductCardProps {
-    image: Image;
-    title: string;
-    price: string;
+    product: Product;
     width?: number | string;
 }
 
-export default function ProductCard({ image, title, price, width = '100%' }: ProductCardProps) {
+export default function ProductCard({ product, width = '100%' }: ProductCardProps) {
+    const { images, name, price } = product;
+    const image = images[0];
 
     return (
         <View style={[styles.container]}>
@@ -32,9 +32,7 @@ export default function ProductCard({ image, title, price, width = '100%' }: Pro
                     colors={[rgba(mainColor, .7), rgba(mainColor, 1)]}
                     style={styles.gradient}
                 >
-                    <Text style={styles.title} numberOfLines={2}>
-                        {(title)}
-                    </Text>
+                    <Text style={styles.name} numberOfLines={2}>{name}</Text>
                 </LinearGradient>
             </ImageBackground>
         </View>
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
         padding: SPACING.sm,
         minHeight: 60, // Ensure gradient has minimum height
     },
-    title: {
+    name: {
         color: 'white',
         fontWeight: 'bold',
         fontSize: FONT_SIZES.sm,
