@@ -1,7 +1,22 @@
 import { Product } from '@/types';
 import { FlashList } from "@shopify/flash-list";
-import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import React, { memo, useCallback } from 'react';
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import ProductListItem from './ProductListItem';
+
+interface RenderProductProps {
+    item: Product;
+    onPress: (id: number) => void;
+}
+
+const RenderProduct = memo(({ item, onPress }: RenderProductProps) => (
+    <TouchableOpacity
+        onPress={() => onPress(item.id)}
+        style={styles.itemContainer}>
+        <ProductListItem product={item} />
+    </TouchableOpacity>
+));
 
 interface ProductListProps {
     products: Product[];
@@ -12,15 +27,21 @@ interface ProductListProps {
 }
 
 export default function ProductList({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) {
+    const handleProductPress = useCallback((id: number) => {
+        router.push({ pathname: '/product', params: { id: id.toString() } });
+    }, []);
+
+    const renderItem = useCallback(({ item }: { item: Product }) => (
+        <RenderProduct item={item} onPress={handleProductPress} />
+    ), [handleProductPress]);
+
+    const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
+
     return (
         <FlashList
             data={products}
-            renderItem={({ item }) => (
-                <View style={styles.itemContainer}>
-                    <Text>{item.name}</Text>
-                </View>
-            )}
-            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
             onEndReached={loadMore}
             onEndReachedThreshold={0.5}
             ListHeaderComponent={HeaderComponent}
@@ -29,6 +50,7 @@ export default function ProductList({ products, loadMore, loadingMore, HeaderCom
                 loadingMore ? <ActivityIndicator style={{ margin: 20 }} /> : null
             }
             contentContainerStyle={styles.listContainer}
+            estimatedItemSize={50}
         />
     );
 }

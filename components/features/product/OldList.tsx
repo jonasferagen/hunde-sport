@@ -1,7 +1,7 @@
 import type { Product } from '@/types';
 import React from 'react';
 import { ActivityIndicator, FlatList, ListRenderItem, StyleSheet, View } from 'react-native';
-import ProductListItem from './ProductListItem';
+import ProductListItem from './OldProductListItem';
 
 interface ProductListProps {
     products: Product[];

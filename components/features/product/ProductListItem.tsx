@@ -1,42 +1,24 @@
 import type { Product } from '@/types';
-import { router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import ProductTile from '../../ui/ProductTile';
+import { StyleSheet, Text, View } from 'react-native';
 
 interface ProductListItemProps {
   product: Product;
-  width?: number;
 }
 
-const ProductListItem: React.FC<ProductListItemProps> = ({ product, width = 160 }) => {
-
-  const { id, name } = product;
-
-  const handlePress = () => {
-    router.push({
-      pathname: '/product',
-      params: {
-        name,
-        id: id.toString(),
-      },
-    });
-  };
-
+const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
 
   return (
-    <TouchableOpacity onPress={handlePress} style={[styles.container, { width }]}>
-      <ProductTile product={product} width={width} />
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <Text>{product.name + 'ad'}</Text>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 5,
   },
-
 
 });
 

@@ -63,6 +63,7 @@ export async function fetchProductByCategory(page: number, categoryId: number): 
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, 'category=' + categoryId)
     );
+    console.log("fetchProductByCategory");
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
@@ -79,6 +80,7 @@ export async function searchProducts(page: number, query: string): Promise<Produ
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, `search=${query}`)
     );
+    console.log("searchProducts", page, query);
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
