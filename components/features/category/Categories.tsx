@@ -1,42 +1,38 @@
+import { Heading } from '@/components/ui';
 import { useCategoriesByCategory } from '@/context/Category/Category';
-import { SPACING } from '@/styles/Dimensions';
 import { FlashList } from '@shopify/flash-list';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import CategoryListItem from './CategoryListItem';
 
-export default function Categories({ categoryId }: { categoryId: number }) {
+export default function Categories({ categoryId, title }: { categoryId: number, title: string }) {
 
     const { data } = useCategoriesByCategory(categoryId);
 
+    const categories = data?.pages.flat() ?? [];
+
     return (
-        <FlashList
-            data={data?.pages.flat() ?? []}
-            renderItem={({ item }) =>
-                <CategoryListItem {...item} style={styles.item} />
-            }
-            keyExtractor={(item) => item.id.toString()}
-            scrollEnabled={false} // Disable scrolling since parent ScrollView will handle it
-            nestedScrollEnabled={false}
-            showsVerticalScrollIndicator={false}
-            // Performance optimizations
-            numColumns={2}
-            estimatedItemSize={10}
-            contentContainerStyle={styles.contentContainer}
-        />
+        categories.length > 0 && <View>
+            <FlashList
+                data={categories}
+                renderItem={({ item }) =>
+                    <CategoryListItem {...item} />
+                }
+                keyExtractor={(item) => item.id.toString()}
+                scrollEnabled={false} // Disable scrolling since parent ScrollView will handle it
+                nestedScrollEnabled={false}
+                showsVerticalScrollIndicator={false}
+                ListHeaderComponent={<Heading title={title} size="lg" />}
+                // Performance optimizations
+                numColumns={2}
+                estimatedItemSize={10}
+            />
+        </View>
 
     );
 };
 
 const styles = StyleSheet.create({
-    contentContainer: {
-        backgroundColor: 'transparent', // Needed because of typescript warning / issue with flashlist
-        // Use negative margin to counteract the item padding on the container edges.
-        marginHorizontal: -SPACING.sm,
-        marginVertical: -SPACING.sm,
-    },
-    item: {
-        // Use padding to create the visual gap between columns.
-        paddingHorizontal: SPACING.sm,
-        paddingVertical: SPACING.sm, // Optional: for vertical spacing between rows
+    container: {
+        flex: 1,
     },
 });

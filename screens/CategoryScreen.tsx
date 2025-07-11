@@ -34,8 +34,7 @@ const CategoryScreen = () => {
                     <CategoryProducts categoryId={categoryId} />
                 </PageSection>
                 <PageSection>
-                    <Heading title="Underkategorier" size="md" />
-                    <Categories categoryId={categoryId} />
+                    <Categories categoryId={categoryId} title="Underkategorier" />
                 </PageSection>
             </PageContent>
         </PageView>
