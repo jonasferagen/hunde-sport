@@ -171,9 +171,9 @@ export default function ProductScreen() {
 
         <View style={styles.imageGalleryContainer}>
           {product.images.map((image, index) => (
-            <View style={styles.imageThumbnailWrapper}>
+            <View key={'imageGalleryItem-' + index} style={styles.imageThumbnailWrapper}>
               <TouchableOpacity onPress={() => openImageViewer(index)}>
-                <Image key={image.src}
+                <Image
                   source={{ uri: image.src }}
                   style={styles.imageThumbnail}
                 />
@@ -187,6 +187,7 @@ export default function ProductScreen() {
         imageIndex={currentImageIndex}
         visible={isImageViewerVisible}
         onRequestClose={() => { setImageViewerVisible(false) }}
+        animationType='slide'
       />
     </PageView>
   );
