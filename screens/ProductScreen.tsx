@@ -14,8 +14,8 @@ import { FONT_SIZES } from '@/styles/Typography';
 
 
 export default function ProductScreen() {
-  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
-  const { breadcrumbs, setTrail } = useBreadcrumbs();
+  const { id } = useLocalSearchParams<{ id: string; name: string }>();
+  const { breadcrumbs, setTrail, setFullTrail } = useBreadcrumbs();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageViewerVisible, setImageViewerVisible] = useState(false);
 
@@ -23,8 +23,22 @@ export default function ProductScreen() {
 
 
   useEffect(() => {
-    setTrail({ id: Number(id), name, type: 'product' });
-  }, [id, name, setTrail]);
+    if (data) {
+      const categoryTrail = data.categories.map(category => ({
+        id: category.id,
+        name: category.name,
+        type: 'category' as const,
+      }));
+
+      const productCrumb = {
+        id: Number(id),
+        name: data.name,
+        type: 'product' as const,
+      };
+
+      setFullTrail([...categoryTrail, productCrumb]);
+    }
+  }, [data, id, setFullTrail]);
 
 
   if (isLoading) {
@@ -47,8 +61,7 @@ export default function ProductScreen() {
 
   return (
     <PageView>
-
-      <Stack.Screen options={{ title: name }} />
+      <Stack.Screen options={{ title: product.name }} />
       <Breadcrumbs
         trail={breadcrumbs}
         onNavigate={(crumb) => {

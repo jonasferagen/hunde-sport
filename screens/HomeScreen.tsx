@@ -8,7 +8,7 @@ const rootCategoryId = 0;
 export default function Index() {
     return (
         <PageView>
-            <PageContent>
+            <PageContent scrollable>
                 <PageSection type="secondary">
                     <Heading title="Hund og katt" size="xxl" />
                     <SearchBar />

@@ -18,7 +18,7 @@ const CategoryScreen = () => {
     }, [categoryId, name, setTrail]);
 
     return (
-        <PageView>
+        <PageView >
             <Stack.Screen options={{ title: name }} />
             <Breadcrumbs trail={breadcrumbs} onNavigate={(crumb) => {
                 setTrail(crumb);
@@ -28,7 +28,7 @@ const CategoryScreen = () => {
                     router.push({ pathname: './category', params: { id: crumb.id.toString(), name: crumb.name } });
                 }
             }} />
-            <PageContent>
+            <PageContent scrollable>
                 <PageSection>
                     <Heading title={name} size="lg" />
                     <CategoryProducts categoryId={categoryId} />

@@ -5,6 +5,7 @@ interface BreadcrumbContextType {
     breadcrumbs: Breadcrumb[];
     setBreadcrumbs: React.Dispatch<React.SetStateAction<Breadcrumb[]>>;
     setTrail: (crumb: Breadcrumb) => void;
+    setFullTrail: (trail: Breadcrumb[]) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
@@ -36,12 +37,17 @@ export const BreadcrumbProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         });
     }, []);
 
+    const setFullTrail = useCallback((trail: Breadcrumb[]) => {
+        setBreadcrumbs(trail);
+    }, []);
+
     return (
         <BreadcrumbContext.Provider
             value={{
                 breadcrumbs,
                 setBreadcrumbs,
                 setTrail,
+                setFullTrail,
             }}
         >
             {children}
