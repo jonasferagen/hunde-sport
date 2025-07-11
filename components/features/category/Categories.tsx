@@ -17,6 +17,7 @@ export default function Categories({ categoryId }: { categoryId: number }) {
             keyExtractor={(item) => item.id.toString()}
             scrollEnabled={false} // Disable scrolling since parent ScrollView will handle it
             nestedScrollEnabled={false}
+            showsVerticalScrollIndicator={false}
             // Performance optimizations
             numColumns={2}
             estimatedItemSize={10}
