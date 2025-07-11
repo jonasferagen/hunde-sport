@@ -14,6 +14,8 @@ export default function SearchScreen() {
 
     console.log(products.length);
 
+
+
     if (isLoading) {
         return <FullScreenLoader />;
     }
@@ -24,7 +26,9 @@ export default function SearchScreen() {
                 <PageSection>
                     <Button title="Back" onPress={() => router.back()} />
                     <Heading title={`Søkeresultater for "${query}"`} size="lg" />
-
+                    <Text>{products.length}</Text>
+                </PageSection>
+                <PageSection style={{ flex: 1 }}>
                     <ProductList
                         products={products}
                         loadMore={fetchNextPage}
