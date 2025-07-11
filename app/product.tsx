@@ -1,4 +1,4 @@
-import { Breadcrumbs, FullScreenLoader, Heading, PageContent, PageSection, PageView } from '@/components/ui/_index';
+import { Breadcrumbs, FullScreenLoader, Heading, PageContent, PageSection, PageView } from '@/components/ui';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { useProduct } from '@/context/Product/Product';
 import { formatPrice } from '@/utils/helpers';

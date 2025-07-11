@@ -1,12 +1,12 @@
 import Categories from '@/components/features/category/Categories';
 import CategoryProducts from '@/components/features/category/CategoryProducts';
-import { Breadcrumbs, Heading, PageSection } from '@/components/ui/_index';
+import { Breadcrumbs, Heading, PageSection } from '@/components/ui';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import PageContent from "../components/ui/PageContent";
-import PageView from "../components/ui/PageView";
+import PageContent from "../components/ui/page/PageContent";
+import PageView from "../components/ui/page/PageView";
 
 const CategoryScreen = () => {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
