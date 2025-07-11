@@ -2,6 +2,7 @@ export type ApiResponse<T> = {
   data: T | null;
   error: string | null;
   status: number;
+  headers: Headers;
 };
 
 export type ApiError = {
@@ -9,7 +10,9 @@ export type ApiError = {
   status: number;
 };
 
-
+/**
+ * Image interface
+ */
 export interface Image {
   src: string;
 }

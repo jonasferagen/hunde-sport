@@ -34,7 +34,7 @@ const apiClient = {
           // If we can't parse the error as JSON, use the status text
           errorMessage = response.statusText || errorMessage;
         }
-        
+
         throw new Error(errorMessage);
       }
 
@@ -44,15 +44,17 @@ const apiClient = {
         data,
         error: null,
         status: response.status,
+        headers: response.headers,
       };
     } catch (error) {
       // Handle network errors or JSON parsing errors
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      
+
       return {
         data: null,
         error: errorMessage,
         status: (error as any).status || 500,
+        headers: new Headers(),
       };
     }
   },
