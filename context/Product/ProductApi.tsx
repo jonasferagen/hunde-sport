@@ -75,6 +75,14 @@ export async function fetchProductsByTag(page: number, tagId: number): Promise<P
     return (data ?? []).map(mapToProduct);
 }
 
+export async function searchProducts(page: number, query: string): Promise<Product[]> {
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.LIST(page, `search=${query}`)
+    );
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
 export async function fetchProduct(id: number): Promise<Product> {
     const { data, error } = await apiClient.get<any>(
         ENDPOINTS.PRODUCTS.GET(id)

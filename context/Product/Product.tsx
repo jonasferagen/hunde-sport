@@ -1,7 +1,7 @@
 import { Product } from '@/types';
 import { QueryClient, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory } from './ProductApi';
+import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, searchProducts } from './ProductApi';
 
 const updateProductCache = (queryClient: QueryClient, queryResult: any) => {
 
@@ -58,6 +58,28 @@ export const useFeaturedProducts = () => {
 
     return queryResult;
 };
+
+export const useSearchProducts = (query: string) => {
+
+    const queryClient = useQueryClient();
+
+    const queryResult = useInfiniteQuery({
+        queryKey: ['searchProducts', query],
+        queryFn: ({ pageParam = 1 }) => searchProducts(pageParam, query),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === 10 ? allPages.length + 1 : undefined;
+        },
+        enabled: !!query, // Only run the query if there is a query string
+    });
+
+    useEffect(() => {
+        updateProductCache(queryClient, queryResult);
+    }, [queryResult, queryClient]);
+
+    return queryResult;
+
+}
 
 export const useProduct = (productId: number) => {
     return useQuery<Product>({
