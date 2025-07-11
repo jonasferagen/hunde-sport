@@ -3,8 +3,17 @@ import tinycolor from 'tinycolor2';
 
 export const cleanHtml = (html: string) => extractPlainText(decode(html));
 
-export const formatPrice = (price: string): string =>
-    Number(price).toFixed(0).replace('.', ',') + ',-';
+export const cleanNumber = (value: string) => {
+    if (value == null || value === '') return 0;
+
+    const num = parseFloat(value);
+    return isNaN(num) ? 0 : num;
+};
+
+export const formatPrice = (price: number): string => {
+
+    return price.toFixed(0).replace('.', ',') + ',-';
+}
 
 export const lighten = (color: string, amount: number) =>
     tinycolor(color).lighten(amount).toString();

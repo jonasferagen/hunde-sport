@@ -12,6 +12,8 @@ export default function SearchScreen() {
 
     const products = useMemo(() => data?.pages.flat() ?? [], [data]);
 
+    console.log(products.length);
+
     if (isLoading) {
         return <FullScreenLoader />;
     }

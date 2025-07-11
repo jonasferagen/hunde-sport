@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '@/config/api';
 import type { Product } from '@/types';
 import apiClient from '@/utils/apiClient';
-import { cleanHtml } from '@/utils/helpers';
+import { cleanHtml, cleanNumber } from '@/utils/helpers';
 
 
 const allowedKeys: (keyof Product)[] = [
@@ -11,7 +11,6 @@ const allowedKeys: (keyof Product)[] = [
     'regular_price',
     'sale_price',
     'featured',
-    'stock_quantity',
     'stock_status',
     'description',
     'short_description',
@@ -23,26 +22,24 @@ const allowedKeys: (keyof Product)[] = [
     'related_ids',
 ];
 
-const formatters: Record<string, (value: any) => any> = {
-    name: cleanHtml,
-    description: cleanHtml,
-    short_description: cleanHtml,
-};
-
 const mapToProduct = (item: any): Product => {
     const product: Partial<Product> = {};
 
-    for (const key of allowedKeys) {
-
-        const isArray = Array.isArray(item[key]);
-        const value = isArray ? item[key] || [] : item[key];
-
-        if (value !== undefined) {
-            (product as any)[key] = formatters[key]
-                ? formatters[key](value)
-                : value;
-        }
-    }
+    product.id = item.id;
+    product.name = cleanHtml(item.name);
+    product.price = cleanNumber(item.price);
+    product.regular_price = cleanNumber(item.regular_price);
+    product.sale_price = cleanNumber(item.sale_price);
+    product.featured = item.featured;
+    product.stock_status = item.stock_status;
+    product.description = cleanHtml(item.description);
+    product.short_description = cleanHtml(item.short_description);
+    product.categories = item.categories || [];
+    product.images = item.images || [];
+    product.tags = item.tags || [];
+    product.attributes = item.attributes || [];
+    product.variations = item.variations || [];
+    product.related_ids = item.related_ids || [];
 
     if (product.images!.length === 0) {
         product.images!.push({ src: 'https://placehold.co/600x400' });
@@ -63,7 +60,6 @@ export async function fetchProductByCategory(page: number, categoryId: number): 
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, 'category=' + categoryId)
     );
-    console.log("fetchProductByCategory");
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }

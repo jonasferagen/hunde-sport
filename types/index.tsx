@@ -24,11 +24,10 @@ export interface Category {
 export interface Product {
   id: number;
   name: string;
-  price: string,
-  regular_price: string,
-  sale_price: string,
+  price: number,
+  regular_price: number,
+  sale_price: number,
   featured: boolean,
-  stock_quantity: number,
   stock_status: string,
   description: string;
   short_description: string;
