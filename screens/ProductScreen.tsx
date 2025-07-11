@@ -60,7 +60,7 @@ export default function ProductScreen() {
           }
         }}
       />
-      <PageContent>
+      <PageContent scrollable>
         <PageSection type="primary">
           <Heading title={product.name} size="xxl" />
 

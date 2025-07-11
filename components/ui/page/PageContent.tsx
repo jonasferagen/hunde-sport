@@ -1,11 +1,25 @@
 // components/ui/PageContent.tsx
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 interface PageContentProps {
   children: React.ReactNode;
+  scrollable?: boolean;
 }
 
-export default function PageContent({ children }: PageContentProps) {
+export default function PageContent({ children, scrollable }: PageContentProps) {
+  if (scrollable) {
+    return (
+      <ScrollView
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={true}
+        scrollEventThrottle={16}
+        nestedScrollEnabled={true}
+      >
+        {children}
+      </ScrollView>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {children}
@@ -16,5 +30,8 @@ export default function PageContent({ children }: PageContentProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContentContainer: {
+    paddingBottom: 20, // Add some padding at the bottom
   },
 });
