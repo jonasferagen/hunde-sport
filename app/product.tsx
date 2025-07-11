@@ -2,9 +2,11 @@ import { Breadcrumbs, FullScreenLoader, Heading, PageContent, PageSection, PageV
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { useProduct } from '@/context/Product/Product';
 import { formatPrice } from '@/utils/helpers';
+import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ImageViewing from 'react-native-image-viewing';
 
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
@@ -89,12 +91,16 @@ const styles = StyleSheet.create({
 export default function ProductScreen() {
   const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const { breadcrumbs, setTrail } = useBreadcrumbs();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isImageViewerVisible, setImageViewerVisible] = useState(false);
+
+  const { data, isLoading, error } = useProduct(Number(id));
+
 
   useEffect(() => {
     setTrail({ id: Number(id), name, type: 'product' });
   }, [id, name, setTrail]);
 
-  const { data, isLoading, error } = useProduct(Number(id));
 
   if (isLoading) {
     return <FullScreenLoader />;
@@ -105,10 +111,21 @@ export default function ProductScreen() {
   }
 
   const product = data!;
-  const image = product.images.length > 0 ? product.images[0] : { src: undefined };
+
+  if (product.images.length === 0) {
+    product.images.push({ src: '' });
+  }
+  const mainImage = product.images[0];
+  const allImages = product.images.map(img => ({ uri: img.src }));
+
+  const openImageViewer = (index: number) => {
+    setCurrentImageIndex(index);
+    setImageViewerVisible(true);
+  };
 
   return (
     <PageView>
+
       <Stack.Screen options={{ title: name }} />
       <Breadcrumbs
         trail={breadcrumbs}
@@ -122,17 +139,16 @@ export default function ProductScreen() {
         }}
       />
       <PageContent>
-
-
         <PageSection type="primary">
           <Heading title={product.name} size="xxl" />
 
           <View style={styles.mainImageWrapper}>
-            <Image
-              source={{ uri: image.src }}
-              style={styles.mainImage}
-              resizeMode="contain"
-            />
+            <TouchableOpacity onPress={() => openImageViewer(0)}>
+              <Image
+                source={{ uri: mainImage.src }}
+                style={styles.mainImage}
+              />
+            </TouchableOpacity>
           </View>
 
           <Text style={styles.price}>{formatPrice(product.price)}</Text>
@@ -154,18 +170,24 @@ export default function ProductScreen() {
         </PageSection>
 
         <View style={styles.imageGalleryContainer}>
-          {product.images.slice(1).map((image) => (
-            <View key={image.src} style={styles.imageThumbnailWrapper}>
-              <Image
-                source={{ uri: image.src }}
-                style={styles.imageThumbnail}
-                resizeMode="contain"
-              />
+          {product.images.map((image, index) => (
+            <View style={styles.imageThumbnailWrapper}>
+              <TouchableOpacity onPress={() => openImageViewer(index)}>
+                <Image key={image.src}
+                  source={{ uri: image.src }}
+                  style={styles.imageThumbnail}
+                />
+              </TouchableOpacity>
             </View>
           ))}
         </View>
       </PageContent>
-
+      <ImageViewing
+        images={allImages}
+        imageIndex={currentImageIndex}
+        visible={isImageViewerVisible}
+        onRequestClose={() => { setImageViewerVisible(false) }}
+      />
     </PageView>
   );
 }
