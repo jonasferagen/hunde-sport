@@ -1,5 +1,5 @@
 import ProductList from '@/components/features/product/ProductList';
-import { Heading, PageView } from '@/components/ui';
+import { Heading, PageContent, PageSection, PageView } from '@/components/ui';
 import FullScreenLoader from '@/components/ui/FullScreenLoader';
 import { useSearchProducts } from '@/context/Product/Product';
 import { useLocalSearchParams } from 'expo-router';
@@ -17,17 +17,23 @@ export default function SearchScreen() {
 
     return (
         <PageView>
-            <ProductList
-                products={products}
-                loadMore={fetchNextPage}
-                loadingMore={isFetchingNextPage}
-                HeaderComponent={<Heading title={`Søkeresultater for "${query}"`} size="lg" />}
-                EmptyComponent={
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text>Ingen produkter funnet.</Text>
+            <PageContent>
+                <PageSection>
+                    <View>
+                        <ProductList
+                            products={products}
+                            loadMore={fetchNextPage}
+                            loadingMore={isFetchingNextPage}
+                            HeaderComponent={<Heading title={`Søkeresultater for "${query}"`} size="lg" />}
+                            EmptyComponent={
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text>Ingen produkter funnet.</Text>
+                                </View>
+                            }
+                        />
                     </View>
-                }
-            />
+                </PageSection>
+            </PageContent>
         </PageView>
     );
 }

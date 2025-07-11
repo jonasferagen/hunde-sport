@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   mainImageWrapper: {
     width: '100%',
     height: 300,
+    overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: BORDER_RADIUS.md,
@@ -141,16 +142,14 @@ const styles = StyleSheet.create({
   description: {
     fontSize: FONT_SIZES.sm,
     lineHeight: FONT_SIZES.lg,
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.sm,
   },
   shortDescription: {
     fontSize: FONT_SIZES.md,
     lineHeight: FONT_SIZES.xl,
-    marginHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.sm,
   },
   tagContainer: {
     flexDirection: 'row',
