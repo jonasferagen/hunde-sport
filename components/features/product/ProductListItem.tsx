@@ -4,7 +4,6 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import ProductCard from '../../ui/ProductCard';
 
-
 interface ProductListItemProps {
   product: Product;
   width?: number;
@@ -26,7 +25,11 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product, width = 160 
     });
   };
 
-  const image = images.length > 0 ? images[0] : new Image();
+  if (images.length === 0) {
+    images.push({ src: '' });
+  }
+
+  const image = images[0];
 
 
   return (
