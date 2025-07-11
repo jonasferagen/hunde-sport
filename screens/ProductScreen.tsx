@@ -21,14 +21,15 @@ export default function ProductScreen() {
 
   const { data, isLoading, error } = useProduct(Number(id));
 
+  console.log(data?.categories);
 
   useEffect(() => {
     if (data) {
-      const categoryTrail = data.categories.map(category => ({
-        id: category.id,
-        name: category.name,
+      const categoryCrumb = {
+        id: data.categories[0].id,
+        name: data.categories[0].name,
         type: 'category' as const,
-      }));
+      };
 
       const productCrumb = {
         id: Number(id),
@@ -36,7 +37,7 @@ export default function ProductScreen() {
         type: 'product' as const,
       };
 
-      setFullTrail([...categoryTrail, productCrumb]);
+      setFullTrail([categoryCrumb, productCrumb]);
     }
   }, [data, id, setFullTrail]);
 
@@ -93,9 +94,35 @@ export default function ProductScreen() {
 
         </PageSection>
 
-        <PageSection type="secondary">
+        <PageSection type="primary">
           <Text style={styles.description}>{product.description}</Text>
+          <View style={styles.categoryContainer}>
+            {product.categories.map((category) => (
+              <TouchableOpacity key={category.id} onPress={() => router.push(`/category?id=${category.id}&name=${category.name}`)}>
+                <View style={styles.category}>
+                  <Text style={styles.categoryText}>{category.name}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </PageSection>
 
+        <PageSection type="secondary">
+          <View style={styles.imageGalleryContainer}>
+            {product.images.map((image, index) => (
+              <View key={'imageGalleryItem-' + index} style={styles.imageThumbnailWrapper}>
+                <TouchableOpacity onPress={() => openImageViewer(index)}>
+                  <Image
+                    source={{ uri: image.src }}
+                    style={styles.imageThumbnail}
+                  />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        </PageSection>
+
+        <PageSection type="primary">
           <View style={styles.tagContainer}>
             {product.tags.map((tag) => (
               <TouchableOpacity key={tag.id} onPress={() => router.push(`/tag?id=${tag.id}&name=${tag.name}`)}>
@@ -107,18 +134,6 @@ export default function ProductScreen() {
           </View>
         </PageSection>
 
-        <View style={styles.imageGalleryContainer}>
-          {product.images.map((image, index) => (
-            <View key={'imageGalleryItem-' + index} style={styles.imageThumbnailWrapper}>
-              <TouchableOpacity onPress={() => openImageViewer(index)}>
-                <Image
-                  source={{ uri: image.src }}
-                  style={styles.imageThumbnail}
-                />
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
       </PageContent>
       <ImageViewing
         images={allImages}
@@ -170,15 +185,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: SPACING.md,
   },
-  tag: {
+  categoryContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginVertical: SPACING.md,
+  },
+  category: {
     backgroundColor: COLORS.primary,
     borderRadius: BORDER_RADIUS.lg,
     paddingVertical: SPACING.xs,
     paddingHorizontal: SPACING.sm,
     margin: SPACING.xs,
   },
-  tagText: {
+  categoryText: {
     color: COLORS.textOnPrimary,
+    fontSize: FONT_SIZES.sm,
+  },
+
+  tag: {
+    backgroundColor: COLORS.accent,
+    borderRadius: BORDER_RADIUS.lg,
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
+    margin: SPACING.xs,
+  },
+  tagText: {
+    color: COLORS.textOnAccent,
     fontSize: FONT_SIZES.sm,
   },
   imageGalleryContainer: {
