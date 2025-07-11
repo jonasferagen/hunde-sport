@@ -20,14 +20,13 @@ export default function PageSection({ children, type = 'primary', style }: PageS
 const styles = StyleSheet.create({
   container: {
     padding: SPACING.md,
-    minHeight: 300, // Set a minimum height as fallback
-    borderColor: COLORS.border,
-    borderWidth: 1,
   },
   primary: {
     backgroundColor: COLORS.backgroundPrimary,
   },
   secondary: {
     backgroundColor: COLORS.backgroundSecondary,
+    borderColor: COLORS.border,
+    borderBottomWidth: 1,
   },
 });
