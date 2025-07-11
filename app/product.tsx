@@ -131,23 +131,21 @@ const styles = StyleSheet.create({
   mainImage: {
     height: '100%',
   },
-  name: {
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
+
   price: {
-    fontSize: 24,
+    fontSize: FONT_SIZES.xxl,
     fontWeight: 'bold',
   },
   description: {
     fontSize: FONT_SIZES.sm,
+    lineHeight: FONT_SIZES.lg,
     marginHorizontal: 20,
     marginTop: 20,
     marginBottom: 10,
   },
   shortDescription: {
     fontSize: FONT_SIZES.md,
+    lineHeight: FONT_SIZES.xl,
     marginHorizontal: 20,
     marginTop: 20,
     marginBottom: 10,
@@ -187,6 +185,5 @@ const styles = StyleSheet.create({
   imageThumbnail: {
     height: '100%',
     width: '100%',
-    resizeMode: 'contain',
   },
 });
