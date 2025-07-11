@@ -85,9 +85,11 @@ export default function ProductScreen() {
 
           <View style={styles.tagContainer}>
             {product.tags.map((tag) => (
-              <View key={tag.id} style={styles.tag}>
-                <Text style={styles.tagText}>{tag.name}</Text>
-              </View>
+              <TouchableOpacity key={tag.id} onPress={() => router.push(`/tag?id=${tag.id}&name=${tag.name}`)}>
+                <View style={styles.tag}>
+                  <Text style={styles.tagText}>{tag.name}</Text>
+                </View>
+              </TouchableOpacity>
             ))}
           </View>
         </PageSection>

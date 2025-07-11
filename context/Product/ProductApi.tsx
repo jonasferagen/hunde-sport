@@ -69,7 +69,7 @@ export async function fetchProductByCategory(page: number, categoryId: number): 
 
 export async function fetchProductsByTag(page: number, tagId: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, 'tag=' + tagId)
+        ENDPOINTS.PRODUCTS.LIST(page, `tag=${tagId}`)
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);

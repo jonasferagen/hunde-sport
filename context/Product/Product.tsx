@@ -1,7 +1,7 @@
 import { Product } from '@/types';
 import { QueryClient, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, searchProducts } from './ProductApi';
+import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, fetchProductsByTag, searchProducts } from './ProductApi';
 
 const updateProductCache = (queryClient: QueryClient, queryResult: any) => {
 
@@ -28,6 +28,28 @@ export const useProductsByCategory = (categoryId: number) => {
             // Assuming a page size of 10, if the last page has 10 items, there might be more.
             return lastPage.length === 10 ? allPages.length + 1 : undefined;
         },
+    });
+
+    useEffect(() => {
+        updateProductCache(queryClient, queryResult);
+    }, [queryResult, queryClient]);
+
+    return queryResult;
+};
+
+
+export const useProductsByTag = (tagId: number) => {
+
+    const queryClient = useQueryClient();
+
+    const queryResult = useInfiniteQuery({
+        queryKey: ['productsByTag', tagId],
+        queryFn: ({ pageParam = 1 }) => fetchProductsByTag(pageParam, tagId),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === 10 ? allPages.length + 1 : undefined;
+        },
+        enabled: !!tagId, // Only run the query if there is a tagId
     });
 
     useEffect(() => {
