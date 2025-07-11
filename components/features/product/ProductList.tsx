@@ -1,6 +1,7 @@
 import { Product } from '@/types';
+import { FlashList } from "@shopify/flash-list";
 import React from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 interface ProductListProps {
     products: Product[];
@@ -12,7 +13,7 @@ interface ProductListProps {
 
 export default function ProductList({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) {
     return (
-        <FlatList
+        <FlashList
             data={products}
             renderItem={({ item }) => (
                 <View style={styles.itemContainer}>

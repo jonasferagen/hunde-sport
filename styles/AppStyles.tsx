@@ -8,17 +8,7 @@ export const AppStyles = StyleSheet.create({
         backgroundColor: COLORS.backgroundPrimary,
         marginVertical: SPACING.md,
     },
-    pageView: {
-        flex: 1,
-    },
-    pageContent: {
-        flex: 1,
-    },
-    pageSection: {
-        padding: SPACING.md,
-        flexGrow: 1,
-        minHeight: 200, // Set a minimum height as fallback
-    },
+
 });
 
 export default AppStyles;

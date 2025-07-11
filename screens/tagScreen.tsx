@@ -1,0 +1,40 @@
+import ProductList from '@/components/features/product/ProductList';
+import { Heading, PageContent, PageSection, PageView } from '@/components/ui';
+import FullScreenLoader from '@/components/ui/FullScreenLoader';
+import { useProductsByTag } from '@/context/Product/Product';
+import { useLocalSearchParams } from 'expo-router';
+import { Text, View } from 'react-native';
+
+export default function TagScreen() {
+    const { id, name } = useLocalSearchParams<{ id: string, name: string }>();
+    const tagId = parseInt(id || '0', 10);
+    const { data, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByTag(tagId);
+
+    if (isLoading) {
+        return <FullScreenLoader />;
+    }
+
+    const products = data?.pages.flat() ?? [];
+
+    return (
+        <PageView>
+            <PageContent>
+                <PageSection>
+                    <View style={{ flex: 1 }}>
+                        <Heading title={`Produkter merket med "${name}"`} size="lg" />
+                        <ProductList
+                            products={products}
+                            loadMore={fetchNextPage}
+                            loadingMore={isFetchingNextPage}
+                            EmptyComponent={
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text>{`Ingen produkter merket med "${name}" funnet`}</Text>
+                                </View>
+                            }
+                        />
+                    </View>
+                </PageSection>
+            </PageContent>
+        </PageView>
+    );
+}

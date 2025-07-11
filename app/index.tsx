@@ -1,33 +1,3 @@
-// app/home.tsx
-import Categories from '@/components/features/category/Categories';
-import FeaturedProducts from '@/components/features/product/FeaturedProducts';
-import { Heading, PageContent, PageSection, PageView, SearchBar } from '@/components/ui';
-import { StyleSheet } from 'react-native';
 
-const rootCategoryId = 0;
-
-export default function Index() {
-    return (
-        <PageView>
-            <PageContent>
-                <PageSection type="secondary">
-                    <Heading title="Hund og katt" size="xxl" />
-                    <SearchBar />
-                    <FeaturedProducts />
-                </PageSection>
-
-                <PageSection type="primary">
-                    <Heading title="Våre kategorier" size="lg" />
-                    <Categories categoryId={rootCategoryId} />
-                </PageSection>
-
-            </PageContent>
-        </PageView>
-    );
-}
-
-
-const styles = StyleSheet.create({
-
-
-});
+import HomeScreen from '@/screens/HomeScreen';
+export default HomeScreen;

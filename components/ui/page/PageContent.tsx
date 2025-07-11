@@ -8,7 +8,6 @@ interface PageContentProps {
 export default function PageContent({ children }: PageContentProps) {
   return (
     <ScrollView
-      style={styles.container}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={true}
       scrollEventThrottle={16}
@@ -20,9 +19,7 @@ export default function PageContent({ children }: PageContentProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+
   contentContainer: {
     paddingBottom: 20, // Add some padding at the bottom
   },
