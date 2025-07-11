@@ -1,20 +1,7 @@
 import { Product } from '@/types';
-import { QueryClient, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, fetchProductsByTag, searchProducts } from './ProductApi';
-
-const updateProductCache = (queryClient: QueryClient, queryResult: any) => {
-
-    if (!queryResult.data) {
-        return;
-    }
-    queryResult.data.pages.forEach((page: any) => {
-        page.forEach((product: Product) => {
-            queryClient.setQueryData(['product', product.id], product);
-        });
-    });
-}
-
 
 export const useProductsByCategory = (categoryId: number) => {
 
@@ -31,8 +18,13 @@ export const useProductsByCategory = (categoryId: number) => {
     });
 
     useEffect(() => {
-        updateProductCache(queryClient, queryResult);
-    }, [queryResult, queryClient]);
+        if (queryResult.data) {
+            const lastPage = queryResult.data.pages[queryResult.data.pages.length - 1];
+            lastPage.forEach((product: Product) => {
+                queryClient.setQueryData(['product', product.id], product);
+            });
+        }
+    }, [queryResult.data]);
 
     return queryResult;
 };
@@ -53,8 +45,13 @@ export const useProductsByTag = (tagId: number) => {
     });
 
     useEffect(() => {
-        updateProductCache(queryClient, queryResult);
-    }, [queryResult, queryClient]);
+        if (queryResult.data) {
+            const lastPage = queryResult.data.pages[queryResult.data.pages.length - 1];
+            lastPage.forEach((product: Product) => {
+                queryClient.setQueryData(['product', product.id], product);
+            });
+        }
+    }, [queryResult.data]);
 
     return queryResult;
 };
@@ -75,8 +72,13 @@ export const useFeaturedProducts = () => {
     });
 
     useEffect(() => {
-        updateProductCache(queryClient, queryResult);
-    }, [queryResult, queryClient]);
+        if (queryResult.data) {
+            const lastPage = queryResult.data.pages[queryResult.data.pages.length - 1];
+            lastPage.forEach((product: Product) => {
+                queryClient.setQueryData(['product', product.id], product);
+            });
+        }
+    }, [queryResult.data]);
 
     return queryResult;
 };
@@ -96,8 +98,14 @@ export const useSearchProducts = (query: string) => {
     });
 
     useEffect(() => {
-        updateProductCache(queryClient, queryResult);
-    }, [queryResult, queryClient]);
+
+        if (queryResult.data) {
+            const lastPage = queryResult.data.pages[queryResult.data.pages.length - 1];
+            lastPage.forEach((product: Product) => {
+                queryClient.setQueryData(['product', product.id], product);
+            });
+        }
+    }, [queryResult.data]);
 
     return queryResult;
 

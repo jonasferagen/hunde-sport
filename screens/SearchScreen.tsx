@@ -3,17 +3,18 @@ import { Heading, PageContent, PageSection, PageView } from '@/components/ui';
 import FullScreenLoader from '@/components/ui/FullScreenLoader';
 import { useSearchProducts } from '@/context/Product/Product';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo } from 'react';
 import { Button, Text, View } from 'react-native';
 
 export default function SearchScreen() {
     const { q: query } = useLocalSearchParams<{ q: string }>();
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(query || '');
 
+    const products = useMemo(() => data?.pages.flat() ?? [], [data]);
+
     if (isLoading) {
         return <FullScreenLoader />;
     }
-
-    const products = data?.pages.flat() ?? [];
 
     return (
         <PageView>
