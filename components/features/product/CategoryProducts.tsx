@@ -1,6 +1,6 @@
 import { useProductsByCategory } from "@/context/Product/Product";
 import FullScreenLoader from "../../ui/FullScreenLoader";
-import ProductList from "../product/OldList";
+import ProductList from "./ProductList";
 
 export default function ProductsByCategory({ categoryId }: { categoryId: number }) {
 
@@ -11,7 +11,7 @@ export default function ProductsByCategory({ categoryId }: { categoryId: number 
     }
 
 
-    return (
-        <ProductList products={data?.pages.flat() ?? []} loadMore={fetchNextPage} loadingMore={isFetchingNextPage} />
-    );
+    const products = data?.pages.flat() ?? [];
+    return <ProductList products={products} loadMore={fetchNextPage} loadingMore={isFetchingNextPage} />;
+
 }

@@ -4,21 +4,22 @@ import { FONT_SIZES } from '@/styles/Typography';
 import type { Product } from '@/types';
 import { formatPrice, rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { DimensionValue, ImageBackground, StyleSheet, Text, View } from "react-native";
 
 const mainColor = COLORS.secondary;
 
 interface ProductTileProps {
     product: Product;
-    width?: number | string;
+    width?: DimensionValue;
+    height?: DimensionValue;
 }
 
-export default function ProductTile({ product, width = '100%' }: ProductTileProps) {
+export default function ProductTile({ product, width = '100%', height = '100%' }: ProductTileProps) {
     const { images, name, price } = product;
     const image = images[0];
 
     return (
-        <View style={[styles.container]}>
+        <View style={[styles.container, { width }]}>
             <ImageBackground
                 source={{ uri: image.src }}
                 style={styles.imageBackground}
@@ -41,11 +42,9 @@ export default function ProductTile({ product, width = '100%' }: ProductTileProp
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
-        height: '100%',
-        aspectRatio: .8,
         borderRadius: BORDER_RADIUS.md,
         overflow: 'hidden',
+        marginRight: SPACING.sm,
     },
     imageBackground: {
         flex: 1,

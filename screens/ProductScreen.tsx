@@ -50,6 +50,7 @@ export default function ProductScreen() {
 
   const product = data!;
 
+
   const mainImage = product.images[0];
   const allImages = product.images.map(img => ({ uri: img.src }));
 

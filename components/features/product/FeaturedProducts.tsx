@@ -1,6 +1,8 @@
+import ProductTile from "@/components/ui/ProductTile";
 import { useFeaturedProducts } from "@/context/Product/Product";
+import { ScrollView } from "react-native";
 import FullScreenLoader from "../../ui/FullScreenLoader";
-import ProductList from "./OldList";
+
 export default function FeaturedProducts() {
 
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useFeaturedProducts();
@@ -11,7 +13,10 @@ export default function FeaturedProducts() {
 
     const products = data?.pages.flat() ?? [];
 
-
-    return <ProductList products={products} loadMore={fetchNextPage} loadingMore={isFetchingNextPage} />;
+    return <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {products.map((product) => (
+            <ProductTile key={product.id} product={product} width={200} height={150} />
+        ))}
+    </ScrollView>
 
 }

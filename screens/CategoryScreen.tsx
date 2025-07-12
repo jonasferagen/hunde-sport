@@ -1,5 +1,5 @@
 import Categories from '@/components/features/category/Categories';
-import CategoryProducts from '@/components/features/category/CategoryProducts';
+import CategoryProducts from '@/components/features/product/CategoryProducts';
 import { Heading, PageSection } from '@/components/ui';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
 import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
