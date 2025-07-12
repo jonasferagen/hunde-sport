@@ -21,7 +21,7 @@ const CategoryScreen = memo(() => {
             setTrail({ id: categoryId, name, type: 'category' });
         }, [categoryId, name, setTrail])
     );
-    console.log("category", { id: categoryId, name, type: 'category' });
+
     return (
         <PageView>
             <Stack.Screen options={{ title: name }} />
@@ -40,10 +40,10 @@ const CategoryScreen = memo(() => {
             <PageContent scrollable>
                 <PageSection key={`products-${categoryId}`}>
                     <Heading title={name} size="lg" />
-                    <CategoryProducts categoryId={categoryId} />
+                    <Categories categoryId={categoryId} />
                 </PageSection>
                 <PageSection key={`categories-${categoryId}`}>
-                    <Categories categoryId={categoryId} title="Underkategorier" />
+                    <CategoryProducts categoryId={categoryId} />
                 </PageSection>
             </PageContent>
         </PageView>
