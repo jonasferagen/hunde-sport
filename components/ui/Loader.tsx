@@ -2,10 +2,15 @@ import { COLORS } from '@/styles/Colors';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-const FullScreenLoader = () => {
+
+interface LoaderProps {
+  size?: 'small' | 'large',
+}
+
+const Loader = ({ size = 'large' }: LoaderProps) => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color={COLORS.secondary} />
+      <ActivityIndicator size={size} color={COLORS.secondary} />
     </View>
   );
 };
@@ -18,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FullScreenLoader;
+export default Loader;

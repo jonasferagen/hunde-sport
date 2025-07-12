@@ -1,8 +1,9 @@
+import { Loader } from '@/components/ui';
 import { Product } from '@/types';
 import { FlashList } from "@shopify/flash-list";
 import { router } from 'expo-router';
 import React, { memo, useCallback } from 'react';
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import ProductListItem from './ProductListItem';
 
 interface RenderProductProps {
@@ -47,7 +48,7 @@ export default function ProductList({ products, loadMore, loadingMore, HeaderCom
             ListHeaderComponent={HeaderComponent}
             ListEmptyComponent={EmptyComponent}
             ListFooterComponent={() =>
-                loadingMore ? <ActivityIndicator style={{ margin: 20 }} /> : null
+                loadingMore ? <Loader /> : null
             }
             contentContainerStyle={styles.listContainer}
             estimatedItemSize={50}

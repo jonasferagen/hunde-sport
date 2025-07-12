@@ -1,6 +1,6 @@
 import ProductList from '@/components/features/product/ProductList';
 import { Heading, PageContent, PageSection, PageView } from '@/components/ui';
-import FullScreenLoader from '@/components/ui/FullScreenLoader';
+import Loader from '@/components/ui/Loader';
 import { useProductsByTag } from '@/context/Product/Product';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
@@ -11,7 +11,7 @@ export default function TagScreen() {
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByTag(tagId);
 
     if (isLoading) {
-        return <FullScreenLoader />;
+        return <Loader />;
     }
 
     const products = data?.pages.flat() ?? [];

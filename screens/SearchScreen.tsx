@@ -1,6 +1,6 @@
 import ProductList from '@/components/features/product/ProductList';
 import { Heading, PageContent, PageSection, PageView } from '@/components/ui';
-import FullScreenLoader from '@/components/ui/FullScreenLoader';
+import Loader from '@/components/ui/Loader';
 import { useSearchProducts } from '@/context/Product/Product';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
@@ -17,7 +17,7 @@ export default function SearchScreen() {
 
 
     if (isLoading) {
-        return <FullScreenLoader />;
+        return <Loader />;
     }
 
     return (

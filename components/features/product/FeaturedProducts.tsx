@@ -1,14 +1,14 @@
 import ProductTile from "@/components/ui/ProductTile";
 import { useFeaturedProducts } from "@/context/Product/Product";
 import { ScrollView } from "react-native";
-import FullScreenLoader from "../../ui/FullScreenLoader";
+import Loader from "../../ui/Loader";
 
 export default function FeaturedProducts() {
 
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useFeaturedProducts();
 
     if (isLoading) {
-        return <FullScreenLoader />;
+        return <Loader />;
     }
 
     const products = data?.pages.flat() ?? [];

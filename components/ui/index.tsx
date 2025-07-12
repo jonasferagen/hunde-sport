@@ -1,5 +1,5 @@
-export { default as FullScreenLoader } from './FullScreenLoader';
 export { default as Heading } from './Heading';
+export { default as Loader } from './Loader';
 export { default as ProductCard } from './ProductTile';
 export { default as RetryView } from './RetryView';
 

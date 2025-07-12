@@ -1,5 +1,5 @@
 import { useProductsByCategory } from "@/context/Product/Product";
-import FullScreenLoader from "../../ui/FullScreenLoader";
+import Loader from "../../ui/Loader";
 import ProductList from "./ProductList";
 
 export default function ProductsByCategory({ categoryId }: { categoryId: number }) {
@@ -7,7 +7,7 @@ export default function ProductsByCategory({ categoryId }: { categoryId: number 
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByCategory(categoryId);
 
     if (isLoading) {
-        return <FullScreenLoader />;
+        return <Loader />;
     }
 
 
