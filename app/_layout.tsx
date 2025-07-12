@@ -1,4 +1,3 @@
-import TopMenu from "@/components/layout/TopMenu";
 import { BreadcrumbProvider } from "@/hooks/BreadCrumb/BreadcrumbProvider";
 import { CartProvider } from '@/hooks/Cart/CartProvider';
 import { StatusProvider, useStatus } from '@/hooks/Status/StatusProvider';
@@ -14,7 +13,6 @@ function Layout() {
   const insets = useSafeAreaInsets();
   return (
     <View style={[AppStyles.appContainer, { marginTop: insets.top }]}>
-      <TopMenu />
       <Stack
         screenOptions={{
           headerShown: false,

@@ -2,7 +2,8 @@ import { useCart } from '@/hooks/Cart/CartProvider';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useNavigation, useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Heading } from '../ui';
 
@@ -19,14 +20,15 @@ export default function TopMenu() {
     const { items } = useCart();
     const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
     const router = useRouter();
+    const navigation = useNavigation<DrawerNavigationProp<{}>>();
 
     return (
         <View style={styles.container}>
-            <Pressable onPress={() => { /* TODO: open drawer */ }}>
+            <Pressable onPress={() => navigation.toggleDrawer()}>
                 <MaterialCommunityIcons name="menu" size={24} />
             </Pressable>
             <Pressable onPress={() => router.push('/')}>
-                <Heading title="hunde-sport.no" size="lg" style={styles.heading} />
+                <Heading title="hunde-sport.no" size="lg" />
             </Pressable>
             <Pressable onPress={() => router.push('/cart')}>
                 <MaterialCommunityIcons name="cart-outline" size={24} />
@@ -41,32 +43,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: SPACING.md,
-        height: 60,
-        backgroundColor: 'white',
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        padding: SPACING.md,
+        backgroundColor: COLORS.primary,
     },
-    heading: {
-        flex: 1,
-        height: '100%',
-        justifyContent: 'center',
 
-    },
     badge: {
         position: 'absolute',
         right: -6,
         top: -3,
-        backgroundColor: COLORS.primary,
-        borderRadius: 8,
-        width: 16,
-        height: 16,
+        backgroundColor: COLORS.accent,
+        borderRadius: 10,
+        width: 20,
+        height: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
     badgeText: {
-        color: COLORS.textOnPrimary,
-        fontSize: 10,
+        color: 'white',
+        fontSize: 12,
         fontWeight: 'bold',
     },
 });
