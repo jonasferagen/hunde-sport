@@ -1,3 +1,4 @@
+import TopMenu from "@/components/layout/TopMenu";
 import { BreadcrumbProvider } from "@/hooks/BreadCrumb/BreadcrumbProvider";
 import { AppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -11,6 +12,7 @@ function Layout() {
   const insets = useSafeAreaInsets();
   return (
     <View style={[AppStyles.appContainer, { marginTop: insets.top }]}>
+      <TopMenu />
       <Stack
         screenOptions={{
           headerShown: false,

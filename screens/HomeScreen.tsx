@@ -18,7 +18,6 @@ export default function Index() {
                 <PageSection type="secondary">
                     <CategoryList categoryId={rootCategoryId} header={<Heading title="Våre kategorier" size="lg" />} />
                 </PageSection>
-
             </PageContent>
         </PageView>
     );
