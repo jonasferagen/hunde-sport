@@ -1,7 +1,6 @@
 import { Heading } from '@/components/ui';
 import { useCategoriesByCategory } from '@/context/Category/Category';
 import { FlashList } from '@shopify/flash-list';
-import { StyleSheet } from 'react-native';
 import CategoryListItem from './CategoryListItem';
 
 export default function Categories({ categoryId, title }: { categoryId: number, title: string }) {
@@ -30,9 +29,3 @@ export default function Categories({ categoryId, title }: { categoryId: number, 
 
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});

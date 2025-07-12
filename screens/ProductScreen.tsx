@@ -21,8 +21,6 @@ export default function ProductScreen() {
 
   const { data, isLoading, error } = useProduct(Number(id));
 
-  console.log(data?.categories);
-
   useEffect(() => {
     if (data) {
       const categoryCrumb = {

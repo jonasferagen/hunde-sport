@@ -9,13 +9,13 @@ export default function Index() {
     return (
         <PageView>
             <PageContent scrollable>
-                <PageSection type="secondary">
+                <PageSection type="primary">
                     <Heading title="Hund og katt" size="xxl" />
                     <SearchBar />
                     <FeaturedProducts />
                 </PageSection>
 
-                <PageSection type="primary">
+                <PageSection type="secondary">
                     <Heading title="Våre kategorier" size="lg" />
                     <Categories categoryId={rootCategoryId} title="Våre kategorier" />
                 </PageSection>

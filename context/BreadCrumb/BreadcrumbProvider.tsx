@@ -20,20 +20,22 @@ export const BreadcrumbProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                 return [];
             }
 
-            const index = prev.findIndex(b => b.id === crumb.id && b.type === crumb.type);
+            let newTrail = [...prev];
+
+            // If the new crumb is a category, remove any existing product from the end of the trail.
+            if (crumb.type === 'category' && newTrail.length > 0 && newTrail[newTrail.length - 1].type === 'product') {
+                newTrail.pop();
+            }
+
+            const index = newTrail.findIndex(b => b.id === crumb.id && b.type === crumb.type);
 
             // If the crumb is already in the trail, truncate to that point.
             if (index !== -1) {
-                return prev.slice(0, index + 1);
-            }
-
-            // If the last crumb is a product, replace it with the new crumb.
-            if (prev.length > 0 && prev[prev.length - 1].type === 'product') {
-                return [...prev.slice(0, -1), crumb];
+                return newTrail.slice(0, index + 1);
             }
 
             // Otherwise, append the new crumb.
-            return [...prev, crumb];
+            return [...newTrail, crumb];
         });
     }, []);
 

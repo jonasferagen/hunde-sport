@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         padding: 10,
-        backgroundColor: COLORS.backgroundPrimary,
+        backgroundColor: 'rgb(255, 255, 255)',
         borderRadius: 5,
     },
     button: {

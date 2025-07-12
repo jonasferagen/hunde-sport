@@ -5,6 +5,10 @@ const primary = 'rgb(247, 177, 163)';
 const secondary = 'rgb(119, 131, 161)';
 const accent = 'rgb(161, 138, 117)';
 
+
+const backgroundPrimary = 'rgb(246, 246, 246)';
+const backgroundSecondary = 'rgb(255, 255, 255)';
+
 export const COLORS = {
   // Primary palette
   primary: darken(primary, 10),
@@ -20,10 +24,9 @@ export const COLORS = {
   textOnAccent: lighten(accent, 40),
 
   // Backgrounds
-  backgroundPrimary: '#ffffff',
-  backgroundSecondary: '#f6f6f6',
+  backgroundPrimary: backgroundPrimary,
+  backgroundSecondary: backgroundSecondary,
 
   // Borders and outlines
-  border: '#E0E0E0',
+  border: darken(backgroundSecondary, 10),
 };
-

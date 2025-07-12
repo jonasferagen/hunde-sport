@@ -1,57 +1,54 @@
+import Categories from '@/components/features/category/Categories';
 import CategoryProducts from '@/components/features/category/CategoryProducts';
-import { Breadcrumbs, Heading, PageSection } from '@/components/ui';
+import { Heading, PageSection } from '@/components/ui';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
-import { useCategory } from '@/context/Category/Category';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { memo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import PageContent from "../components/ui/page/PageContent";
 import PageView from "../components/ui/page/PageView";
 
-const CategoryScreen = () => {
-    const { id } = useLocalSearchParams<{ id: string; name: string }>();
+const CategoryScreen = memo(() => {
+    const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
     const categoryId = Number(id);
-    const { breadcrumbs, setTrail, setFullTrail } = useBreadcrumbs();
-    const { data: category, isLoading } = useCategory(categoryId);
 
-    useEffect(() => {
-        if (category) {
-            const trail = [{ id: category.id, name: category.name, type: 'category' as const }];
-            setFullTrail(trail);
-        }
-    }, [category, setFullTrail]);
+    const { breadcrumbs, setTrail } = useBreadcrumbs();
 
-    if (isLoading || !category) {
-        return null; // Or a loading indicator
-    }
 
+    useFocusEffect(
+        useCallback(() => {
+            console.log("setting breadcrumbs for", { id: categoryId, name, type: 'category' });
+            setTrail({ id: categoryId, name, type: 'category' });
+        }, [categoryId, name, setTrail])
+    );
+    console.log("category", { id: categoryId, name, type: 'category' });
     return (
         <PageView>
-            <Stack.Screen options={{ title: category.name }} />
+            <Stack.Screen options={{ title: name }} />
+            { /*
             <Breadcrumbs trail={breadcrumbs} onNavigate={(crumb) => {
-                setTrail(crumb);
                 if (crumb.id === null) {
                     router.replace('/');
                 } else {
                     router.push({ pathname: './category', params: { id: crumb.id.toString(), name: crumb.name } });
                 }
             }} />
+             */
+            }
+
+
             <PageContent scrollable>
-                <PageSection>
-                    <Heading title={category.name} size="lg" />
+                <PageSection key={`products-${categoryId}`}>
+                    <Heading title={name} size="lg" />
                     <CategoryProducts categoryId={categoryId} />
                 </PageSection>
-                <PageSection>
-                    <Heading title="Underkategorier" size="lg" />
-                    { /*
+                <PageSection key={`categories-${categoryId}`}>
                     <Categories categoryId={categoryId} title="Underkategorier" />
-                    */
-                    }
                 </PageSection>
             </PageContent>
         </PageView>
     );
-};
+});
 
 const styles = StyleSheet.create({
     container: {
