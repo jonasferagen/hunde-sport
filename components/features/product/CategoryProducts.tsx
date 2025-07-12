@@ -1,4 +1,4 @@
-import { useProductsByCategory } from "@/context/Product/Product";
+import { useProductsByCategory } from "@/hooks/Product/Product";
 import { useMemo } from "react";
 import Loader from "../../ui/Loader";
 import ProductList from "./ProductList";

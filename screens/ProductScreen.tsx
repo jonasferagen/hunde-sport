@@ -1,6 +1,6 @@
 import { Breadcrumbs, FullScreenLoader, Heading, PageContent, PageSection, PageView } from '@/components/ui';
-import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
-import { useProduct } from '@/context/Product/Product';
+import { useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
+import { useProduct } from '@/hooks/Product/Product';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';

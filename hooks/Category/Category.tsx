@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { fetchCategory, fetchCategoryByCategory } from './CategoryApi';
 
 
-export const useCategoriesByCategory = (categoryId: number) => {
+export const useCategories = (categoryId: number) => {
 
     const queryClient = useQueryClient();
 
@@ -42,4 +42,4 @@ export const useCategory = (categoryId: number) => {
 };
 
 
-export default useCategoriesByCategory;
+export default useCategories;

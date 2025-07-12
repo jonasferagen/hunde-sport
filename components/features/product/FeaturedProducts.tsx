@@ -1,5 +1,5 @@
 import ProductTile from "@/components/ui/ProductTile";
-import { useFeaturedProducts } from "@/context/Product/Product";
+import { useFeaturedProducts } from "@/hooks/Product/Product";
 import { ScrollView } from "react-native";
 import Loader from "../../ui/Loader";
 

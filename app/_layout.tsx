@@ -1,4 +1,4 @@
-import { BreadcrumbProvider } from "@/context/BreadCrumb/BreadcrumbProvider";
+import { BreadcrumbProvider } from "@/hooks/BreadCrumb/BreadcrumbProvider";
 import { AppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from "expo-router";

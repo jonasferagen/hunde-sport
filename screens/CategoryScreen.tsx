@@ -1,7 +1,7 @@
 import CategoryList from '@/components/features/category/CategoryList';
 import CategoryProducts from '@/components/features/product/CategoryProducts';
 import { Heading, PageSection } from '@/components/ui';
-import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
 import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { memo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
@@ -36,12 +36,11 @@ const CategoryScreen = memo(() => {
              */
             }
 
-
+            <PageSection key={`products-${categoryId}`}>
+                <Heading title={name} size="lg" />
+                <CategoryList categoryId={categoryId} />
+            </PageSection>
             <PageContent scrollable>
-                <PageSection key={`products-${categoryId}`}>
-                    <Heading title={name} size="lg" />
-                    <CategoryList categoryId={categoryId} />
-                </PageSection>
                 <PageSection key={`categories-${categoryId}`}>
                     <CategoryProducts categoryId={categoryId} />
                 </PageSection>
@@ -50,18 +49,6 @@ const CategoryScreen = memo(() => {
     );
 });
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        borderTopColor: '#00f',
-        borderTopWidth: 1,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginVertical: 20,
-        textAlign: 'center',
-    }
-});
+const styles = StyleSheet.create({});
 
 export default CategoryScreen;

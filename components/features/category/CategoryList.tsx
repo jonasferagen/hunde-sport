@@ -1,4 +1,4 @@
-import { useCategoriesByCategory } from "@/context/Category/Category";
+import { useCategories } from "@/hooks/Category/Category";
 import { View } from "react-native";
 import CategoryListItem from "./CategoryListItem";
 
@@ -11,7 +11,7 @@ export type CategoryProps = {
 export default function CategoryList({ ...props }: CategoryProps) {
 
     const { categoryId, header, empty } = props;
-    const { data } = useCategoriesByCategory(categoryId);
+    const { data } = useCategories(categoryId);
 
     const categories = data?.pages.flat() ?? [];
 

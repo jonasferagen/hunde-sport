@@ -1,7 +1,7 @@
 import ProductList from '@/components/features/product/ProductList';
 import { Heading, PageContent, PageSection, PageView } from '@/components/ui';
 import Loader from '@/components/ui/Loader';
-import { useSearchProducts } from '@/context/Product/Product';
+import { useSearchProducts } from '@/hooks/Product/Product';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
 import { Button, Text, View } from 'react-native';
