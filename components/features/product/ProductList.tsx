@@ -12,7 +12,7 @@ interface RenderProductProps {
 }
 
 const RenderProduct = memo(({ item, onPress }: RenderProductProps) => (
-    <TouchableOpacity
+    <TouchableOpacity key={item.id}
         onPress={() => onPress(item.id)}
         style={styles.itemContainer}>
         <ProductListItem product={item} />
@@ -28,6 +28,10 @@ interface ProductListProps {
 }
 
 export default function ProductList({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) {
+
+
+
+
     const handleProductPress = useCallback((id: number) => {
         router.push({ pathname: '/product', params: { id: id.toString() } });
     }, []);
@@ -62,10 +66,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     listContainer: {
-        paddingHorizontal: 8,
+
     },
     itemContainer: {
         flex: 1,
-        padding: 8,
+        marginBottom: 8,
     },
 });
