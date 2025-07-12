@@ -1,16 +1,18 @@
+import { useCart } from '@/hooks/Cart/CartProvider';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import type { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface ProductListItemProps {
   product: Product;
 }
 
 const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
+  const { addToCart } = useCart();
 
   return (
     <View key={product.id} style={styles.container}>
@@ -19,7 +21,9 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
         <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
         <Text style={styles.price}>{formatPrice(product.price)}</Text>
       </View>
-      <MaterialCommunityIcons name="basket-plus" size={24} color="black" />
+      <Pressable onPress={() => addToCart(product)}>
+        <MaterialCommunityIcons name="basket-plus" size={24} color="black" />
+      </Pressable>
     </View>
   );
 };
