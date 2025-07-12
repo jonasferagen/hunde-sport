@@ -9,11 +9,12 @@ import { FONT_SIZES } from '@/styles/Typography';
 
 interface CategoryListItemProps extends Category {
   style?: StyleProp<ViewStyle>;
+  compact?: boolean;
 }
 
 // Memoized list item component with areEqual comparison
 const CategoryListItem = memo<CategoryListItemProps>(
-  ({ id, name, style }) => {
+  ({ id, name, style, compact = false }) => {
     const handlePress = () => {
       router.push({
         pathname: '/category',
@@ -25,9 +26,9 @@ const CategoryListItem = memo<CategoryListItemProps>(
     };
 
     return (
-      <TouchableOpacity onPress={handlePress} style={style}>
-        <View style={styles.categoryItem}>
-          <Text style={styles.categoryText} numberOfLines={1} ellipsizeMode="tail" selectable={false}>
+      <TouchableOpacity onPress={handlePress} style={[styles.container, style, compact && styles.containerCompact]}>
+        <View style={[styles.categoryItem, compact && styles.categoryItemCompact]}>
+          <Text style={[styles.categoryText, compact && styles.categoryTextCompact]} numberOfLines={1} ellipsizeMode="tail" selectable={false}>
             {name}
           </Text>
         </View>
@@ -35,11 +36,17 @@ const CategoryListItem = memo<CategoryListItemProps>(
     );
   },
   (prevProps, nextProps) => {
-    return prevProps.id === nextProps.id && prevProps.name === nextProps.name;
+    return prevProps.id === nextProps.id && prevProps.name === nextProps.name && prevProps.compact === nextProps.compact;
   }
 );
 
 const styles = StyleSheet.create({
+  container: {
+    width: '50%',
+  },
+  containerCompact: {
+    width: '33%',
+  },
   categoryItem: {
     flexDirection: 'row',
     backgroundColor: COLORS.secondary,
@@ -50,6 +57,9 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
   },
+  categoryItemCompact: {
+    padding: SPACING.xs,
+  },
   categoryText: {
     width: '100%',
     color: COLORS.textOnPrimary,
@@ -58,6 +68,9 @@ const styles = StyleSheet.create({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     maxWidth: '100%',
+  },
+  categoryTextCompact: {
+    fontSize: FONT_SIZES.sm,
   }
 });
 

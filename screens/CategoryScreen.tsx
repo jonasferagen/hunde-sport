@@ -1,4 +1,4 @@
-import Categories from '@/components/features/category/Categories';
+import CategoryList from '@/components/features/category/CategoryList';
 import CategoryProducts from '@/components/features/product/CategoryProducts';
 import { Heading, PageSection } from '@/components/ui';
 import { useBreadcrumbs } from '@/context/BreadCrumb/BreadcrumbProvider';
@@ -40,7 +40,7 @@ const CategoryScreen = memo(() => {
             <PageContent scrollable>
                 <PageSection key={`products-${categoryId}`}>
                     <Heading title={name} size="lg" />
-                    <Categories categoryId={categoryId} />
+                    <CategoryList categoryId={categoryId} />
                 </PageSection>
                 <PageSection key={`categories-${categoryId}`}>
                     <CategoryProducts categoryId={categoryId} />

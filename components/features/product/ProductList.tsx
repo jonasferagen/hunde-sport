@@ -30,8 +30,6 @@ interface ProductListProps {
 export default function ProductList({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) {
 
 
-
-
     const handleProductPress = useCallback((id: number) => {
         router.push({ pathname: '/product', params: { id: id.toString() } });
     }, []);
