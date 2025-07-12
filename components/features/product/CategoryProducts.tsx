@@ -9,9 +9,8 @@ export default function ProductsByCategory({ categoryId }: { categoryId: number 
     if (isLoading) {
         return <Loader />;
     }
-
-
     const products = data?.pages.flat() ?? [];
+    console.log("pbc");
     return <ProductList products={products} loadMore={fetchNextPage} loadingMore={isFetchingNextPage} />;
 
 }

@@ -10,10 +10,9 @@ export const cleanNumber = (value: string) => {
     return isNaN(num) ? 0 : num;
 };
 
-export const formatPrice = (price: number): string => {
+export const formatPrice = (price: number): string =>
+    price.toFixed(0).replace('.', ',') + ',-';
 
-    return price.toFixed(0).replace('.', ',') + ',-';
-}
 
 export const lighten = (color: string, amount: number) =>
     tinycolor(color).lighten(amount).toString();
