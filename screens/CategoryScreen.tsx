@@ -38,7 +38,7 @@ const CategoryScreen = memo(() => {
 
             <PageSection key={`products-${categoryId}`}>
                 <Heading title={name} size="lg" />
-                <CategoryList categoryId={categoryId} />
+                <CategoryList categoryId={categoryId} limit={3} />
             </PageSection>
             <PageContent scrollable>
                 <PageSection key={`categories-${categoryId}`}>
