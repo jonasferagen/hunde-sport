@@ -1,8 +1,8 @@
 import type { Category } from '@/types';
-import { router } from 'expo-router';
 import { memo } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
+import { Crumb, useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
@@ -16,14 +16,19 @@ interface CategoryListItemProps {
 // Memoized list item component with areEqual comparison
 export const CategoryListItem = memo<CategoryListItemProps>(
   ({ category, style, compact = false }) => {
+    const { handleNavigation, breadcrumbs } = useBreadcrumbs();
+
     const handlePress = () => {
-      router.push({
-        pathname: '/category',
-        params: {
-          id: category.id.toString(),
+      const newTrail: Crumb[] = [
+        ...breadcrumbs,
+        {
+          id: category.id,
           name: category.name,
+          type: 'category' as const,
+          image: category.image,
         },
-      });
+      ];
+      handleNavigation(newTrail);
     };
 
     return (

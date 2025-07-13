@@ -1,9 +1,9 @@
 import { useProductsByCategory } from "@/hooks/Product/Product";
 import { useMemo } from "react";
 import Loader from "../../ui/Loader";
-import ProductList from "./ProductList";
+import ProductList from "../product/ProductList";
 
-export default function ProductsByCategory({ categoryId }: { categoryId: number }) {
+export function CategoryProducts({ categoryId }: { categoryId: number }) {
 
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByCategory(categoryId);
     const products = useMemo(() => data?.pages.flat() ?? [], [data]);

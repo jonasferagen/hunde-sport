@@ -1,5 +1,5 @@
 // app/home.tsx
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 
 import { FONT_SIZES } from '@/styles/Typography';
 
@@ -7,16 +7,13 @@ import { FONT_SIZES } from '@/styles/Typography';
 interface HeadingProps {
     title: string;
     size: keyof typeof FONT_SIZES;
-    style?: StyleProp<ViewStyle>;
+    style?: StyleProp<TextStyle>;
 }
 
 export default function Heading({ title, size, style }: HeadingProps) {
     const styles = createStyles(size);
-    return (
-        <View style={style}>
-            <Text style={styles.title}>{title}</Text>
-        </View>
-    );
+    return <Text style={[styles.title, style]}>{title}</Text>
+
 }
 
 const createStyles = (size: keyof typeof FONT_SIZES) =>

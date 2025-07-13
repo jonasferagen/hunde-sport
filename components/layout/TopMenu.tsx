@@ -25,13 +25,13 @@ export function TopMenu() {
     return (
         <View style={styles.container}>
             <Pressable onPress={() => navigation.toggleDrawer()}>
-                <MaterialCommunityIcons name="menu" size={24} />
+                <MaterialCommunityIcons name="menu" size={24} style={styles.content} />
             </Pressable>
             <Pressable onPress={() => router.push('/')}>
-                <Heading title="hunde-sport.no" size="lg" />
+                <Heading title="hunde-sport.no" size="lg" style={styles.content} />
             </Pressable>
             <Pressable onPress={() => router.push('/shoppingCart')}>
-                <MaterialCommunityIcons name="cart-outline" size={24} />
+                <MaterialCommunityIcons name="cart-outline" size={24} style={styles.content} />
                 <Badge count={cartItemCount} />
             </Pressable>
         </View>
@@ -44,8 +44,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: SPACING.md,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.secondary,
     },
+
 
     badge: {
         position: 'absolute',
@@ -62,5 +63,8 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 12,
         fontWeight: 'bold',
+    },
+    content: {
+        color: COLORS.textOnSecondary,
     },
 });

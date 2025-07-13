@@ -1,6 +1,6 @@
 import { Category } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
@@ -32,16 +32,16 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
         setIsExpanded(isActive);
     }, [isActive]);
 
-    const newTrail = [...trail, { id: category.id, name: category.name, type: 'category' as const, image: category.image }];
+    const newTrail = useMemo(() => [...trail, { id: category.id, name: category.name, type: 'category' as const, image: category.image }], [trail, category]);
 
-    const handleNavigate = () => {
+    const handleNavigate = useCallback(() => {
         handleNavigation(newTrail);
-    };
+    }, [handleNavigation, newTrail]);
 
-    const handleExpand = () => {
+    const handleExpand = useCallback(() => {
         setTrail(newTrail);
         setIsExpanded(!isExpanded);
-    };
+    }, [setTrail, newTrail, isExpanded]);
 
     const renderExpandIcon = () => {
         if (hasChildren) {
