@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: SPACING.md,
-        backgroundColor: COLORS.secondary,
+        backgroundColor: COLORS.primary,
     },
 
 
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: -6,
         top: -3,
-        backgroundColor: COLORS.accent,
+        backgroundColor: COLORS.secondary,
         borderRadius: 10,
         width: 20,
         height: 20,
@@ -65,6 +65,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     content: {
-        color: COLORS.textOnSecondary,
+        color: COLORS.textOnPrimary,
     },
 });

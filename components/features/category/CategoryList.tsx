@@ -1,18 +1,18 @@
+import Chip from "@/components/ui/Chip";
 import { useCategories } from "@/hooks/Category/Category";
-import { ReactNode, useState } from "react";
-import { Button, View } from "react-native";
+import { SPACING } from "@/styles/Dimensions";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import CategoryListItem from "./CategoryListItem";
 
 export type CategoryProps = {
     categoryId?: number;
     limit?: number;
-    header?: ReactNode;
-    empty?: ReactNode;
 };
 
 export const CategoryList = ({ ...props }: CategoryProps) => {
 
-    const { categoryId, header, empty, limit } = props;
+    const { categoryId, limit } = props;
     const { data } = useCategories(categoryId ?? 0);
     const [showAll, setShowAll] = useState(false);
 
@@ -23,23 +23,34 @@ export const CategoryList = ({ ...props }: CategoryProps) => {
     const displayedCategories = showAll ? categories : limitedCategories;
 
     return (
-        <View>
-            {header}
-            {categories.length > 0 ? (
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        <View style={styles.container}>
+            {categories.length > 0 && (
+                <View style={styles.listContainer}>
+
                     {displayedCategories.map((category) => (
-                        <CategoryListItem key={category.id} category={category} compact={true} />
+                        <CategoryListItem key={category.id} category={category} />
                     ))}
+                    {limit && categories.length > limit && (
+                        <Chip
+                            label={showAll ? "Skjul.." : `Mer..(${categories.length - limit})`}
+                            onPress={() => setShowAll(!showAll)}
+                            variant="accent"
+                        />
+                    )}
                 </View>
-            ) : (
-                empty
-            )}
-            {limit && categories.length > limit && (
-                <Button
-                    title={showAll ? "Vis færre" : "Vis alle"}
-                    onPress={() => setShowAll(!showAll)}
-                />
             )}
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        alignItems: 'flex-start',
+    },
+    listContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+        marginBottom: SPACING.sm,
+    },
+});

@@ -21,12 +21,12 @@ const CategoryScreen = memo(() => {
             <PageContent>
                 <Stack.Screen options={{ title: name }} />
                 <Breadcrumbs />
-                <PageSection key={`products-${categoryId}`}>
+                <PageSection style={{ justifyContent: 'flex-start' }} key={`products-${categoryId}`}>
                     <View style={styles.headingContainer}>
                         <CategoryIcon image={image} size={24} style={styles.icon} />
                         <Heading title={name} size="lg" />
                     </View>
-                    <CategoryList categoryId={categoryId} limit={3} />
+                    <CategoryList categoryId={categoryId} limit={4} />
                 </PageSection>
                 <PageSection key={`categories-${categoryId}`} style={{ flex: 1 }} scrollable>
                     <CategoryProducts categoryId={categoryId} />
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
     headingContainer: {
         width: '100%',
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+
+
         marginBottom: SPACING.md,
     },
     icon: {

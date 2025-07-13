@@ -1,8 +1,8 @@
 
 import { darken, lighten } from '@/utils/helpers';
 
-const primary = 'rgb(247, 177, 163)';
-const secondary = 'rgb(119, 131, 161)';
+const primary = 'rgb(119, 131, 161)';
+const secondary = 'rgb(247, 177, 163)';
 const accent = 'rgb(161, 138, 117)';
 
 

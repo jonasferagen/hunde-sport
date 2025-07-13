@@ -21,6 +21,6 @@ const createStyles = (size: keyof typeof FONT_SIZES) =>
         title: {
             fontSize: FONT_SIZES[size],
             fontWeight: 'bold',
-            textAlign: 'center',
+            textAlign: 'left',
         },
     });

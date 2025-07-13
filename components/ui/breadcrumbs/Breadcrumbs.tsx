@@ -10,10 +10,10 @@ import { lighten } from '@/utils/helpers';
 
 export const Breadcrumbs = () => {
 
-    const { breadcrumbs, handleNavigation, setTrail } = useBreadcrumbs();
+    const { breadcrumbs, setTrail } = useBreadcrumbs();
 
     const onNavigate = (trail: Breadcrumb[]) => {
-        console.log(trail.length);
+
         setTrail(trail, true);
     };
 
@@ -42,8 +42,9 @@ export const Breadcrumbs = () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: lighten(COLORS.secondary, 10),
-        borderBottomColor: COLORS.secondary,
+        backgroundColor: lighten(COLORS.primary, 10),
+        borderBottomColor: COLORS.primary,
+        shadowColor: COLORS.primary,
         borderBottomWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
