@@ -1,10 +1,9 @@
 import { PageSection } from '@/components/layout';
-import { Heading } from '@/components/ui';
+import { Heading, Icon } from '@/components/ui';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
 import { FONT_SIZES } from '@/styles/Typography';
 import { formatPrice } from '@/utils/helpers';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { Button, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -17,7 +16,7 @@ export default function ShoppingCartScreen() {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
-            <PageSection type='primary'>
+            <PageSection primary>
                 <Heading title="Handlekurv" size="lg" />
             </PageSection>
             <FlatList
@@ -32,15 +31,15 @@ export default function ShoppingCartScreen() {
                         </View>
                         <View style={styles.quantityContainer}>
                             <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
-                                <MaterialCommunityIcons name="minus-circle-outline" size={24} color="#666" />
+                                <Icon name="minus" size={24} color="#666" />
                             </Pressable>
                             <Text style={styles.quantity}>{item.quantity}</Text>
                             <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                <MaterialCommunityIcons name="plus-circle-outline" size={24} color="#666" />
+                                <Icon name="plus" size={24} color="#666" />
                             </Pressable>
                         </View>
                         <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: 15 }}>
-                            <MaterialCommunityIcons name="trash-can-outline" size={24} color="#f00" />
+                            <Icon name="trash" size={24} color="#f00" />
                         </Pressable>
                     </View>
                 )}

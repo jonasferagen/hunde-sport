@@ -11,10 +11,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 
-function CustomDrawerContent(props: DrawerContentComponentProps) {
+function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTreeVisible: boolean }) {
 
     const gradientColors = ['#4c669f', '#3b5998', '#192f6a'] as const;
-    const [isCategoryTreeVisible, setCategoryTreeVisible] = React.useState(true);
 
     return (
         <LinearGradient
@@ -28,19 +27,9 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                 </Pressable>
             </View>
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
+                <DrawerItemList {...props} />
 
-                <View style={styles.drawerItemsContainer}>
-                    <DrawerItemList {...props} />
-                </View>
-                <Pressable onPress={() => setCategoryTreeVisible(!isCategoryTreeVisible)} style={styles.customDrawerItem}>
-                    <Icon name="tags" size={24} color={'#ccc'} style={styles.customDrawerIcon} />
-                    <View style={styles.productsLabelContainer}>
-                        <Text style={styles.drawerLabel}>Produkter</Text>
-                        <Icon name={isCategoryTreeVisible ? "chevron-up" : "chevron-down"} size={16} color={'#ccc'} />
-                    </View>
-                </Pressable>
-
-                {isCategoryTreeVisible && (
+                {props.isCategoryTreeVisible && (
                     <View style={styles.categoryContainer}>
                         <CategoryTree categoryId={0} />
                     </View>
@@ -53,9 +42,11 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
 
 export default function DrawerLayout() {
     const { cartItemCount } = useShoppingCart();
+    const [isCategoryTreeVisible, setCategoryTreeVisible] = React.useState(true);
+
     return (
         <Drawer
-            drawerContent={(props) => <CustomDrawerContent {...props} />}
+            drawerContent={(props) => <CustomDrawerContent {...props} isCategoryTreeVisible={isCategoryTreeVisible} />}
             screenOptions={{
                 header: () => <TopMenu />,
                 headerShown: true,
@@ -81,7 +72,23 @@ export default function DrawerLayout() {
                     ),
                 }}
             />
-            <Drawer.Screen name="category" options={{ drawerItemStyle: { display: 'none' } }} />
+            <Drawer.Screen name="category" options={{
+                title: 'Produkter',
+                drawerIcon: ({ color }) => <Icon name="tags" size={24} color={color} />,
+                header: () => <TopMenu />,
+                headerShown: true,
+                drawerLabel: ({ focused, color }) => (
+                    <View style={styles.productsLabelContainer}>
+                        <Text style={{ color, fontSize: FONT_SIZES.md }}>Produkter</Text>
+                        <Icon style={styles.customDrawerIcon} name={isCategoryTreeVisible ? "chevron-up" : "chevron-down"} size={16} color={color} />
+                    </View>
+                ),
+            }} listeners={{
+                drawerItemPress: (e) => {
+                    e.preventDefault();
+                    setCategoryTreeVisible(!isCategoryTreeVisible);
+                }
+            }} />
             <Drawer.Screen name="product" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />
 
@@ -98,8 +105,7 @@ const styles = StyleSheet.create({
         padding: SPACING.lg,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.2)',
+
     },
     headerText: {
         color: 'white',
@@ -111,11 +117,7 @@ const styles = StyleSheet.create({
         top: SPACING.lg,
         right: SPACING.lg,
     },
-    drawerItemsContainer: {
-        paddingTop: SPACING.md,
-        borderTopWidth: 1,
-        borderTopColor: 'rgba(255, 255, 255, 0.2)',
-    },
+
     customDrawerItem: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
         paddingVertical: SPACING.md,   // Adjust as needed
     },
     customDrawerIcon: {
-        marginRight: SPACING.sm,
+        marginRight: -SPACING.md,
     },
     productsLabelContainer: {
         flex: 1,
