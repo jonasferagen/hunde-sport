@@ -2,7 +2,7 @@ import { Loader } from '@/components/ui';
 import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category/Category';
 import { Breadcrumb } from '@/types';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CategoryTreeItem from './CategoryTreeItem';
 
@@ -15,7 +15,7 @@ interface CategoryTreeProps {
 export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTreeProps) => {
 
     const { data, isFetching, fetchNextPage, hasNextPage } = useCategories(categoryId);
-    const { init } = useBreadcrumbs();
+    const { init, breadcrumbs } = useBreadcrumbs();
 
     if (!trail.length) {
         trail = init();
@@ -23,7 +23,12 @@ export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTree
 
     const categories = data?.pages.flat() ?? [];
 
+    const activeChild = categories.find(c => breadcrumbs.some(b => b.id === c.id));
+    const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);
 
+    const handleToggleExpand = (itemId: number) => {
+        setExpandedItemId(prevId => (prevId === itemId ? null : itemId));
+    };
 
     if (isFetching && level === 0) {
         return <Loader size="small" />;
@@ -47,6 +52,8 @@ export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTree
                             category={category}
                             level={level}
                             trail={newTrail}
+                            isExpanded={expandedItemId === category.id}
+                            onExpand={handleToggleExpand}
                         />
                     );
                 })}

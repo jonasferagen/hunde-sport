@@ -29,10 +29,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     }, [setBreadcrumbs]);
 
     const handleNavigation = useCallback((trail: Breadcrumb[]) => {
-
-        console.log("Breadcrumbs: ", trail);
         const destination = trail[trail.length - 1];
-        console.log("Navigering til: ", destination)
         if (destination.type === 'home') {
             router.replace('/');
         } else {
@@ -40,6 +37,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
                 pathname: '/(drawer)/category',
                 params: {
                     id: destination.id,
+                    name: destination.name,
                 },
             });
         }

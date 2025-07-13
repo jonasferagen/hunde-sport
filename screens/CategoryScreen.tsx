@@ -14,6 +14,8 @@ const CategoryScreen = memo(() => {
     const categoryId = Number(id);
     const image = imageString ? JSON.parse(imageString) : undefined;
 
+    console.log(categoryId, name, image)
+
     return (
         <PageView>
             <PageContent>
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: SPACING.md,
     },
     icon: {
         marginRight: SPACING.sm,

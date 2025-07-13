@@ -1,6 +1,6 @@
 import { Breadcrumb, Category } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
@@ -16,9 +16,11 @@ interface CategoryTreeItemProps {
     category: Category;
     level: number;
     trail: Breadcrumb[];
+    isExpanded: boolean;
+    onExpand: (categoryId: number) => void;
 };
 
-export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemProps) => {
+export const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: CategoryTreeItemProps) => {
     const { data, isFetching } = useCategories(category.id);
     const { breadcrumbs, setTrail } = useBreadcrumbs();
 
@@ -26,20 +28,14 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
     const subcategories = data?.pages.flat() ?? [];
     const hasChildren = subcategories.length > 0;
     const isActive = breadcrumbs.some(crumb => crumb.id === category.id);
-    const [isExpanded, setIsExpanded] = useState(isActive);
-
-    useEffect(() => {
-        setIsExpanded(isActive);
-    }, [isActive]);
 
     const handleNavigate = useCallback(() => {
-
         setTrail(trail, true);
     }, [setTrail, trail]);
 
     const handleExpand = useCallback(() => {
-        setIsExpanded(!isExpanded);
-    }, [isExpanded]);
+        onExpand(category.id);
+    }, [onExpand, category.id]);
 
     const renderExpandIcon = () => {
         if (hasChildren) {
@@ -54,7 +50,7 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
                 <View style={styles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
                         <CategoryIcon image={category.image} size={24} style={styles.icon} />
-                        <Text style={isActive ? styles.activeText : null}>{category.name} ({category.count})</Text>
+                        <Text style={isExpanded ? styles.activeText : null}>{category.name} ({category.count})</Text>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
                         {renderExpandIcon()}
