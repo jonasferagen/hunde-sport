@@ -2,7 +2,7 @@ import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
 import Icon from '@/components/ui/Icon';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';
@@ -14,44 +14,37 @@ import { FONT_SIZES } from '@/styles/Typography';
 function CustomDrawerContent(props: DrawerContentComponentProps) {
 
     const gradientColors = ['#4c669f', '#3b5998', '#192f6a'] as const;
-    const { items } = useShoppingCart();
-    const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    const [isCategoryTreeVisible, setCategoryTreeVisible] = React.useState(true);
 
     return (
         <LinearGradient
             colors={gradientColors}
             style={styles.drawerContent}
         >
+            <View style={styles.headerContainer}>
+                <Text style={styles.headerText}>hunde-sport.no</Text>
+                <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
+                    <Icon name="close" size={30} color="white" />
+                </Pressable>
+            </View>
             <DrawerContentScrollView {...props} >
-                <View style={styles.headerContainer}>
-                    <Text style={styles.headerText}>hunde-sport.no</Text>
-                    <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
-                        <Icon name="close" size={30} color="white" />
-                    </Pressable>
-                </View>
 
                 <View style={styles.drawerItemsContainer}>
                     <DrawerItemList {...props} />
-                    <DrawerItem
-                        label="Handlekurv"
-                        labelStyle={styles.drawerLabel}
-                        onPress={() => props.navigation.navigate('shoppingCart' as never)}
-                        icon={({ color, size }) => (
-                            <View>
-                                <Icon name="shopping-cart" size={size} color={color} />
-                                {cartItemCount > 0 && (
-                                    <View style={styles.badge}>
-                                        <Text style={styles.badgeText}>{cartItemCount}</Text>
-                                    </View>
-                                )}
-                            </View>
-                        )}
-                    />
                 </View>
+                <Pressable onPress={() => setCategoryTreeVisible(!isCategoryTreeVisible)} style={styles.customDrawerItem}>
+                    <Icon name="tags" size={24} color={'#ccc'} style={styles.customDrawerIcon} />
+                    <View style={styles.productsLabelContainer}>
+                        <Text style={styles.drawerLabel}>Produkter</Text>
+                        <Icon name={isCategoryTreeVisible ? "chevron-up" : "chevron-down"} size={16} color={'#ccc'} />
+                    </View>
+                </Pressable>
 
-                <View style={styles.categoryContainer}>
-                    <CategoryTree categoryId={0} />
-                </View>
+                {isCategoryTreeVisible && (
+                    <View style={styles.categoryContainer}>
+                        <CategoryTree categoryId={0} />
+                    </View>
+                )}
             </DrawerContentScrollView>
 
         </LinearGradient>
@@ -59,6 +52,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
 }
 
 export default function DrawerLayout() {
+    const { cartItemCount } = useShoppingCart();
     return (
         <Drawer
             drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -67,14 +61,26 @@ export default function DrawerLayout() {
                 headerShown: true,
                 drawerActiveTintColor: '#fff',
                 drawerInactiveTintColor: '#ccc',
-                drawerLabelStyle: {
-                    marginLeft: 0,
-                    fontSize: FONT_SIZES.md,
-                }
+                drawerLabelStyle: styles.drawerLabel,
             }}
         >
             <Drawer.Screen name="index" options={{ title: 'Hjem', drawerIcon: ({ color }) => <Icon name="home" size={24} color={color} /> }} />
-            <Drawer.Screen name="shoppingCart" options={{ drawerItemStyle: { display: 'flex' } }} />
+            <Drawer.Screen
+                name="shoppingCart"
+                options={{
+                    title: 'Handlekurv',
+                    drawerIcon: ({ color, size }) => (
+                        <View>
+                            <Icon name="shopping-cart" size={size} color={color} />
+                            {cartItemCount > 0 && (
+                                <View style={styles.badge}>
+                                    <Text style={styles.badgeText}>{cartItemCount}</Text>
+                                </View>
+                            )}
+                        </View>
+                    ),
+                }}
+            />
             <Drawer.Screen name="category" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="product" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />
@@ -94,12 +100,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.2)',
     },
-    logo: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginBottom: SPACING.md,
-    },
     headerText: {
         color: 'white',
         fontSize: 18,
@@ -112,12 +112,30 @@ const styles = StyleSheet.create({
     },
     drawerItemsContainer: {
         paddingTop: SPACING.md,
+        borderTopWidth: 1,
+        borderTopColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    customDrawerItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: SPACING.md, // Adjust as needed
+        paddingVertical: SPACING.md,   // Adjust as needed
+    },
+    customDrawerIcon: {
+        marginRight: SPACING.sm,
+    },
+    productsLabelContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     drawerLabel: {
-        marginLeft: -20,
-        fontSize: 16,
         color: '#ccc',
+        fontSize: FONT_SIZES.md,
+        marginLeft: 0,
     },
+
     badge: {
         position: 'absolute',
         right: -10,
@@ -135,10 +153,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     categoryContainer: {
-        padding: SPACING.md,
-        backgroundColor: 'rgba(0,0,0,0.1)',
-        margin: SPACING.md,
-        borderRadius: 8,
-    }
+        marginLeft: SPACING.lg,
+    },
 
 });

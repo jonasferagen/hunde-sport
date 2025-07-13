@@ -17,8 +17,7 @@ const Badge = ({ count }: { count: number }) => {
 };
 
 export function TopMenu() {
-    const { items } = useShoppingCart();
-    const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    const { cartItemCount } = useShoppingCart();
     const router = useRouter();
     const navigation = useNavigation<DrawerNavigationProp<{}>>();
 

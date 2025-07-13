@@ -8,7 +8,6 @@ import { CategoryTree } from './CategoryTree';
 
 import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import useCategories from '@/hooks/Category/Category';
-import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { rgba } from '@/utils/helpers';
 
@@ -49,8 +48,8 @@ export const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand 
             <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={styles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
-                        <CategoryIcon image={category.image} size={24} style={styles.icon} />
-                        <Text style={isExpanded ? styles.activeText : null}>{category.name} ({category.count})</Text>
+                        <CategoryIcon image={category.image} size={24} style={[styles.categoryText, styles.icon]} />
+                        <Text style={[styles.categoryText, isExpanded ? styles.activeText : null]}>{category.name} ({category.count})</Text>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
                         {renderExpandIcon()}
@@ -70,7 +69,7 @@ export const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand 
     );
 };
 
-const highlightColor = rgba(COLORS.secondary, 0.3);
+const backgroundColor = rgba('white', 0.3);
 
 const styles = StyleSheet.create({
 
@@ -84,14 +83,16 @@ const styles = StyleSheet.create({
     categoryInfo: {
         flexDirection: 'row',
         alignItems: 'center',
+        color: 'white',
+    },
+    categoryText: {
+        color: 'white',
     },
     icon: {
         marginRight: SPACING.sm,
     },
     activeCategory: {
-        backgroundColor: highlightColor,
-        borderWidth: 1,
-        borderColor: highlightColor,
+        backgroundColor: backgroundColor,
         borderRadius: 8,
     },
     activeText: {

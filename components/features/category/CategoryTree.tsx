@@ -35,7 +35,7 @@ export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTree
 
     return (
         <View style={styles.container}>
-            <View style={styles.categoryList}>
+            <View>
                 {categories.map((category) => {
 
                     const newTrail = [...trail];
@@ -61,5 +61,4 @@ const styles = StyleSheet.create({
     container: {
         marginHorizontal: 0,
     },
-
 });

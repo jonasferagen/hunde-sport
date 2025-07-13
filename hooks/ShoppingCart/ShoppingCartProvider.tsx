@@ -1,5 +1,5 @@
 import type { Product } from '@/types';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { useStatus } from '../Status/StatusProvider';
 
 export interface ShoppingCartItem {
@@ -9,6 +9,8 @@ export interface ShoppingCartItem {
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
+    cartItemCount: number;
+    cartTotal: number;
     addToCart: (product: Product) => void;
     removeFromCart: (productId: number) => void;
     updateQuantity: (productId: number, quantity: number) => void;
@@ -49,10 +51,20 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         );
     }, []);
 
+    const cartItemCount = useMemo(() => {
+        return items.reduce((sum, item) => sum + item.quantity, 0);
+    }, [items]);
+
+    const cartTotal = useMemo(() => {
+        return items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    }, [items]);
+
     return (
         <ShoppingCartContext.Provider
             value={{
                 items,
+                cartItemCount,
+                cartTotal,
                 addToCart,
                 removeFromCart,
                 updateQuantity,
