@@ -1,10 +1,10 @@
-import CategoryList from '@/components/features/category/CategoryList';
+import CategoryTree from '@/components/features/category/CategoryTree';
 import TopMenu from '@/components/layout/TopMenu';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer';
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { SPACING } from '@/styles/Dimensions';
 
@@ -14,11 +14,16 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
             <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
                 <MaterialCommunityIcons name="close" size={30} color="black" />
             </Pressable>
-            <DrawerContentScrollView {...props}>
+
+            <DrawerContentScrollView {...props} >
+                <DrawerItemList {...props} />
                 <View>
-                    <CategoryList categoryId={0} />
+                    <CategoryTree categoryId={0} />
                 </View>
             </DrawerContentScrollView>
+            <View style={{ borderTopWidth: 1, borderTopColor: '#eee', paddingVertical: SPACING.md }}>
+                <Text style={{ textAlign: 'center' }}>hunde-sport.no</Text>
+            </View>
         </View>
     );
 }
@@ -33,7 +38,7 @@ export default function DrawerLayout() {
             }}
         >
             <Drawer.Screen name="index" options={{ title: 'Hjem' }} />
-            <Drawer.Screen name="cart" options={{ drawerItemStyle: { display: 'none' } }} />
+            <Drawer.Screen name="cart" options={{ drawerItemStyle: { display: 'flex' } }} />
             <Drawer.Screen name="category" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="product" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />

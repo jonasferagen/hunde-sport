@@ -27,7 +27,7 @@ export default function CategoryList({ ...props }: CategoryProps) {
             {categories.length > 0 ? (
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                     {displayedCategories.map((category) => (
-                        <CategoryListItem key={category.id} {...category} compact={true} />
+                        <CategoryListItem key={category.id} category={category} compact={true} />
                     ))}
                 </View>
             ) : (

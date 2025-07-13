@@ -7,20 +7,21 @@ import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 
-interface CategoryListItemProps extends Category {
+interface CategoryListItemProps {
+  category: Category;
   style?: StyleProp<ViewStyle>;
   compact?: boolean;
 }
 
 // Memoized list item component with areEqual comparison
 const CategoryListItem = memo<CategoryListItemProps>(
-  ({ id, name, style, compact = false }) => {
+  ({ category, style, compact = false }) => {
     const handlePress = () => {
       router.push({
         pathname: '/category',
         params: {
-          id: id.toString(),
-          name: name,
+          id: category.id.toString(),
+          name: category.name,
         },
       });
     };
@@ -29,14 +30,14 @@ const CategoryListItem = memo<CategoryListItemProps>(
       <TouchableOpacity onPress={handlePress} style={[styles.container, style, compact && styles.containerCompact]}>
         <View style={[styles.categoryItem, compact && styles.categoryItemCompact]}>
           <Text style={[styles.categoryText, compact && styles.categoryTextCompact]} numberOfLines={1} ellipsizeMode="tail" selectable={false}>
-            {name}
+            {category.name}
           </Text>
         </View>
       </TouchableOpacity>
     );
   },
   (prevProps, nextProps) => {
-    return prevProps.id === nextProps.id && prevProps.name === nextProps.name && prevProps.compact === nextProps.compact;
+    return prevProps.category.id === nextProps.category.id && prevProps.category.name === nextProps.category.name && prevProps.compact === nextProps.compact;
   }
 );
 

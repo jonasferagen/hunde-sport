@@ -7,6 +7,7 @@ const mapToCategory = (item: any): Category => ({
     name: item.name,
     parent: item.parent,
     image: item.image,
+    count: item.count,
 });
 
 export async function fetchCategoryByCategory(page: number, categoryId: number) {

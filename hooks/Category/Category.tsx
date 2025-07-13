@@ -15,6 +15,7 @@ export const useCategories = (categoryId: number) => {
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
             // Assuming a page size of 10, if the last page has 10 items, there might be more.
+
             return lastPage.length === 10 ? allPages.length + 1 : undefined;
         },
     });

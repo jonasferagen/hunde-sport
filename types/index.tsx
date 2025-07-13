@@ -22,6 +22,7 @@ export interface Category {
   name: string;
   parent: number;
   image?: Image;
+  count: number;
 }
 
 export interface Product {
