@@ -32,7 +32,6 @@ export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTree
         return <Loader size="small" />;
     }
 
-
     return (
         <View style={styles.container}>
             <View>

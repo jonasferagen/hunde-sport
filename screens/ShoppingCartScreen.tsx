@@ -13,6 +13,8 @@ export default function ShoppingCartScreen() {
 
     const totalPrice = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
+    console.log("ShoppingCartScreen rendered")
+
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: 'Handlekurv' }} />

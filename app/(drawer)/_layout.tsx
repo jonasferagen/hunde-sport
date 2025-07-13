@@ -1,6 +1,7 @@
 import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
 import Icon from '@/components/ui/Icon';
+import IconBadge from '@/components/ui/IconBadge';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -61,14 +62,7 @@ export default function DrawerLayout() {
                 options={{
                     title: 'Handlekurv',
                     drawerIcon: ({ color, size }) => (
-                        <View>
-                            <Icon name="shopping-cart" size={size} color={color} />
-                            {cartItemCount > 0 && (
-                                <View style={styles.badge}>
-                                    <Text style={styles.badgeText}>{cartItemCount}</Text>
-                                </View>
-                            )}
-                        </View>
+                        <IconBadge name="shopping-cart" size={size} color={color} count={cartItemCount} />
                     ),
                 }}
             />

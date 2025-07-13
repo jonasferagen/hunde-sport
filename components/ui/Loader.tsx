@@ -5,12 +5,13 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 interface LoaderProps {
   size?: 'small' | 'large',
+  color?: string,
 }
 
-const Loader = ({ size = 'large' }: LoaderProps) => {
+const Loader = ({ size = 'large', color = COLORS.textOnPrimary }: LoaderProps) => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={size} color={COLORS.secondary} />
+      <ActivityIndicator size={size} color={color} />
     </View>
   );
 };
