@@ -1,5 +1,4 @@
 import { Loader } from '@/components/ui';
-import { Crumb } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category/Category';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -7,28 +6,33 @@ import CategoryTreeItem from './CategoryTreeItem';
 
 interface CategoryTreeProps {
     categoryId: number;
-    level?: number;
-    trail?: Crumb[];
+    level: number;
 };
 
-export const CategoryTree = ({ categoryId = 0, level = 0, trail = [] }: CategoryTreeProps) => {
-    const { data, isLoading, error } = useCategories(categoryId);
+export const CategoryTree = ({ categoryId, level }: CategoryTreeProps) => {
+    const { data, isFetching, fetchNextPage, hasNextPage } = useCategories(categoryId);
 
     const categories = data?.pages.flat() ?? [];
 
-    if (isLoading && level === 0) {
+    if (isFetching && level === 0) {
         return <Loader size="small" />;
     }
 
-    if (error) {
-        return <Text>Error: {error.message}</Text>;
+    if (!data) {
+        return <Text>Error: Unable to fetch categories</Text>;
     }
 
     return (
         <View style={styles.container}>
-            {categories.map((category) => (
-                <CategoryTreeItem key={category.id} category={category} level={level} trail={trail} />
-            ))}
+            <View style={styles.categoryList}>
+                {categories.map((category) => (
+                    <CategoryTreeItem
+                        key={category.id}
+                        category={category}
+                        level={level}
+                    />
+                ))}
+            </View>
         </View>
     );
 };
@@ -36,5 +40,8 @@ export const CategoryTree = ({ categoryId = 0, level = 0, trail = [] }: Category
 const styles = StyleSheet.create({
     container: {
         marginHorizontal: 0,
+    },
+    categoryList: {
+        // Add styles for categoryList if needed
     },
 });

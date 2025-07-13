@@ -12,6 +12,11 @@ export const Breadcrumbs = () => {
     const { breadcrumbs, handleNavigation } = useBreadcrumbs();
 
     const onNavigate = (crumb: Crumb) => {
+        if (crumb.type === 'home') {
+            handleNavigation([crumb]);
+            return;
+        }
+
         const crumbIndex = breadcrumbs.findIndex((b) => b.id === crumb.id);
         if (crumbIndex !== -1) {
             const newTrail = breadcrumbs.slice(0, crumbIndex + 1);

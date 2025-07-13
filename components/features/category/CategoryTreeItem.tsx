@@ -1,12 +1,12 @@
 import { Category } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
 import { CategoryTree } from './CategoryTree';
 
-import { Crumb, useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import useCategories from '@/hooks/Category/Category';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
@@ -15,15 +15,14 @@ import { rgba } from '@/utils/helpers';
 interface CategoryTreeItemProps {
     category: Category;
     level: number;
-    trail: Crumb[];
 };
 
-export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemProps) => {
+export const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
     const { data, isFetching } = useCategories(category.id);
     const subcategories = data?.pages.flat() ?? [];
     const hasChildren = subcategories.length > 0;
 
-    const { breadcrumbs, handleNavigation, setTrail } = useBreadcrumbs();
+    const { breadcrumbs, handleNavigation, setTrail, navigateToCrumb } = useBreadcrumbs();
     const isActive = breadcrumbs.some(crumb => crumb.id === category.id);
 
     const [isExpanded, setIsExpanded] = useState(isActive);
@@ -32,16 +31,15 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
         setIsExpanded(isActive);
     }, [isActive]);
 
-    const newTrail = useMemo(() => [...trail, { id: category.id, name: category.name, type: 'category' as const, image: category.image }], [trail, category]);
-
     const handleNavigate = useCallback(() => {
-        handleNavigation(newTrail);
-    }, [handleNavigation, newTrail]);
+        navigateToCrumb({ id: category.id, name: category.name, type: 'category' as const });
+    }, [navigateToCrumb, category]);
 
     const handleExpand = useCallback(() => {
+        const newTrail = [...breadcrumbs, { id: category.id, name: category.name, type: 'category' as const }];
         setTrail(newTrail);
         setIsExpanded(!isExpanded);
-    }, [setTrail, newTrail, isExpanded]);
+    }, [setTrail, breadcrumbs, category, isExpanded]);
 
     const renderExpandIcon = () => {
         if (hasChildren) {
@@ -67,7 +65,6 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
                         <CategoryTree
                             categoryId={category.id}
                             level={level + 1}
-                            trail={newTrail}
                         />
                     </Animated.View>
                 )}

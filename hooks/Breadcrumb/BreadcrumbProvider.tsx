@@ -5,23 +5,30 @@ export interface Crumb {
     id: number | null;
     name: string;
     type: 'category' | 'product' | 'home';
-    image: any; // Add image property to Crumb interface
 }
 
 interface BreadcrumbContextType {
     breadcrumbs: Crumb[];
     handleNavigation: (trail: Crumb[]) => void;
     setTrail: (trail: Crumb[]) => void;
+    navigateToCrumb: (crumb: Crumb) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
+const HOME_CRUMB: Crumb = { id: null, name: 'Hjem', type: 'home' };
+
 export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
-    const [breadcrumbs, setBreadcrumbs] = useState<Crumb[]>([]);
+    const [breadcrumbs, setBreadcrumbs] = useState<Crumb[]>([HOME_CRUMB]);
 
     const setTrail = useCallback((newTrail: Crumb[]) => {
         setBreadcrumbs(newTrail);
     }, [setBreadcrumbs]);
+
+    const navigateToCrumb = useCallback((crumb: Crumb) => {
+        const newTrail = [...breadcrumbs, crumb];
+        handleNavigation(newTrail);
+    }, [breadcrumbs, handleNavigation]);
 
     const handleNavigation = useCallback((newTrail: Crumb[]) => {
         setBreadcrumbs(newTrail);
@@ -37,14 +44,13 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
                 params: {
                     id: destination.id?.toString(),
                     name: destination.name,
-                    image: JSON.stringify(destination.image),
                 },
             });
         }
     }, [setBreadcrumbs]);
 
     return (
-        <BreadcrumbContext.Provider value={{ breadcrumbs, handleNavigation, setTrail }}>
+        <BreadcrumbContext.Provider value={{ breadcrumbs, handleNavigation, setTrail, navigateToCrumb }}>
             {children}
         </BreadcrumbContext.Provider>
     );
