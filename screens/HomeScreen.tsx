@@ -8,13 +8,13 @@ export default function Index() {
     return (
         <PageView>
             <PageContent>
-                <PageSection type="primary">
+                <PageSection primary>
                     <Heading title="Hund og katt" size="xxl" />
                     <SearchBar />
                     <FeaturedProducts />
                 </PageSection>
 
-                <PageSection type="secondary" scrollable>
+                <PageSection scrollable>
                     <CategoryList />
                 </PageSection>
             </PageContent>
