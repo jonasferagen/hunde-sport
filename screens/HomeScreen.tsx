@@ -1,8 +1,8 @@
 
 import { CategoryList } from '@/components/features/category';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
-import { Heading, PageContent, PageSection, PageView, SearchBar } from '@/components/ui';
-
+import { PageContent, PageSection, PageView } from '@/components/layout';
+import { Heading, SearchBar } from '@/components/ui';
 
 export default function Index() {
     return (

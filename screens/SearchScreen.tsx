@@ -1,5 +1,6 @@
 import ProductList from '@/components/features/product/ProductList';
-import { Heading, PageContent, PageSection, PageView } from '@/components/ui';
+import { PageContent, PageSection, PageView } from '@/components/layout';
+import { Heading } from '@/components/ui';
 import Loader from '@/components/ui/Loader';
 import { useSearchProducts } from '@/hooks/Product/Product';
 import { router, useLocalSearchParams } from 'expo-router';

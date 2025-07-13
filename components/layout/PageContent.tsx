@@ -6,7 +6,7 @@ interface PageContentProps {
   scrollable?: boolean;
 }
 
-export default function PageContent({ children, scrollable }: PageContentProps) {
+export function PageContent({ children, scrollable }: PageContentProps) {
   if (scrollable) {
     return (
       <ScrollView

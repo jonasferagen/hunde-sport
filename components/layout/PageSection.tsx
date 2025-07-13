@@ -8,7 +8,7 @@ type PageSectionProps = {
   style?: ViewStyle;
 };
 
-export default function PageSection({ children, type = 'primary', style }: PageSectionProps) {
+export function PageSection({ children, type = 'primary', style }: PageSectionProps) {
   return (
     <View style={[styles.container, styles[type], style]}>
       {children}

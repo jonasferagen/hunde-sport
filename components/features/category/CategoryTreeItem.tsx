@@ -1,6 +1,5 @@
 import { Category } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
@@ -24,33 +23,24 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
     const subcategories = data?.pages.flat() ?? [];
     const hasChildren = subcategories.length > 0;
 
-    const { breadcrumbs, setTrail } = useBreadcrumbs();
+    const { breadcrumbs, handleNavigation, setTrail } = useBreadcrumbs();
     const isActive = breadcrumbs.some(crumb => crumb.id === category.id);
 
     const [isExpanded, setIsExpanded] = useState(isActive);
 
     useEffect(() => {
-        if (isActive) {
-            setIsExpanded(true);
-        }
+        setIsExpanded(isActive);
     }, [isActive]);
 
-    const newTrail = [...trail, { id: category.id, name: category.name, type: 'category' as const }];
-
-    const handleExpand = () => {
-        setIsExpanded(!isExpanded);
-        setTrail(newTrail);
-    };
+    const newTrail = [...trail, { id: category.id, name: category.name, type: 'category' as const, image: category.image }];
 
     const handleNavigate = () => {
+        handleNavigation(newTrail);
+    };
+
+    const handleExpand = () => {
         setTrail(newTrail);
-        router.push({
-            pathname: '/category',
-            params: {
-                id: category.id.toString(),
-                name: category.name,
-            },
-        });
+        setIsExpanded(!isExpanded);
     };
 
     const renderExpandIcon = () => {

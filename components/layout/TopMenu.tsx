@@ -16,7 +16,7 @@ const Badge = ({ count }: { count: number }) => {
     );
 };
 
-export default function TopMenu() {
+export function TopMenu() {
     const { items } = useCart();
     const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
     const router = useRouter();

@@ -1,4 +1,5 @@
-import { Heading, PageSection } from '@/components/ui';
+import { PageSection } from '@/components/layout';
+import { Heading } from '@/components/ui';
 import { useCart } from '@/hooks/Cart/CartProvider';
 import { COLORS } from '@/styles/Colors';
 import { FONT_SIZES } from '@/styles/Typography';

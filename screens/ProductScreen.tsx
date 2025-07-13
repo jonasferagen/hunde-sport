@@ -1,13 +1,14 @@
-import { Breadcrumbs, FullScreenLoader, Heading, PageContent, PageSection, PageView } from '@/components/ui';
-import { useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
+import { PageContent, PageSection, PageView } from '@/components/layout';
+import { Heading } from '@/components/ui';
 import { useProduct } from '@/hooks/Product/Product';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
+import Loader from '@/components/ui/Loader';
 import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
@@ -15,37 +16,18 @@ import { FONT_SIZES } from '@/styles/Typography';
 
 export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string; name: string }>();
-  const { breadcrumbs, setTrail, setFullTrail } = useBreadcrumbs();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageViewerVisible, setImageViewerVisible] = useState(false);
 
   const { data, isLoading, error } = useProduct(Number(id));
 
-  useEffect(() => {
-    if (data) {
-      const categoryCrumb = {
-        id: data.categories[0].id,
-        name: data.categories[0].name,
-        type: 'category' as const,
-      };
-
-      const productCrumb = {
-        id: Number(id),
-        name: data.name,
-        type: 'product' as const,
-      };
-
-      setFullTrail([categoryCrumb, productCrumb]);
-    }
-  }, [data, id, setFullTrail]);
-
-
   if (isLoading) {
-    return <FullScreenLoader />;
+    return <Loader />;
   }
 
   if (error) {
-    return <FullScreenLoader />;
+    return <Loader />;
   }
 
   const product = data!;
@@ -62,17 +44,7 @@ export default function ProductScreen() {
   return (
     <PageView>
       <Stack.Screen options={{ title: product.name }} />
-      <Breadcrumbs
-        trail={breadcrumbs}
-        onNavigate={(crumb) => {
-          setTrail(crumb);
-          if (crumb.id === null) {
-            router.replace('/');
-          } else if (crumb.type === 'category') {
-            router.push({ pathname: './category', params: { id: crumb.id.toString(), name: crumb.name } });
-          }
-        }}
-      />
+
       <PageContent scrollable>
         <PageSection type="primary">
           <Heading title={product.name} size="xxl" />
