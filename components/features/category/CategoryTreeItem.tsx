@@ -4,14 +4,16 @@ import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { SvgUri } from 'react-native-svg';
-import CategoryTree from './CategoryTree';
+import { CategoryIcon } from './CategoryIcon';
+import { CategoryTree } from './CategoryTree';
 
 import { Crumb, useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
 import useCategories from '@/hooks/Category/Category';
+import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
+import { rgba } from '@/utils/helpers';
 
-type CategoryTreeItemProps = {
+interface CategoryTreeItemProps {
     category: Category;
     level: number;
     trail: Crumb[];
@@ -37,6 +39,7 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
 
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
+        setTrail(newTrail);
     };
 
     const handleNavigate = () => {
@@ -57,19 +60,12 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
         return <View style={{ width: 24 }} />; // Placeholder for alignment
     };
 
-    const renderCategoryIcon = () => {
-        if (category.image?.src?.endsWith('.svg')) {
-            return <SvgUri width={24} height={24} uri={category.image.src} style={styles.icon} />;
-        }
-        return <Ionicons name="pricetag-outline" size={24} color="black" style={styles.icon} />;
-    };
-
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
             <View style={[isActive ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={styles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
-                        {renderCategoryIcon()}
+                        <CategoryIcon image={category.image} size={24} style={styles.icon} />
                         <Text style={isActive ? styles.activeText : null}>{category.name} ({category.count})</Text>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
@@ -90,6 +86,8 @@ export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemPro
     );
 };
 
+const highlightColor = rgba(COLORS.secondary, 0.3);
+
 const styles = StyleSheet.create({
 
     itemContainer: {
@@ -107,9 +105,9 @@ const styles = StyleSheet.create({
         marginRight: SPACING.sm,
     },
     activeCategory: {
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        backgroundColor: highlightColor,
         borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
+        borderColor: highlightColor,
         borderRadius: 8,
     },
     activeText: {

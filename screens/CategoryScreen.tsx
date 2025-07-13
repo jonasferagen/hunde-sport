@@ -1,4 +1,4 @@
-import CategoryList from '@/components/features/category/CategoryList';
+import { CategoryList } from '@/components/features/category/CategoryList';
 import CategoryProducts from '@/components/features/product/CategoryProducts';
 import { Breadcrumbs, Heading, PageSection } from '@/components/ui';
 import { useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
@@ -22,7 +22,7 @@ const CategoryScreen = memo(() => {
                     if (crumb.id === null) {
                         router.replace('/');
                     } else {
-                        router.push({ pathname: '(drawer)/category', params: { id: crumb.id.toString(), name: crumb.name } });
+                        router.push({ pathname: '/(drawer)/category', params: { id: crumb.id.toString(), name: crumb.name } });
                     }
                 }} />
 

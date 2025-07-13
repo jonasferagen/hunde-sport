@@ -1,9 +1,8 @@
 
-import CategoryList from '@/components/features/category/CategoryList';
+import { CategoryList } from '@/components/features/category';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
 import { Heading, PageContent, PageSection, PageView, SearchBar } from '@/components/ui';
 
-const rootCategoryId = 0;
 
 export default function Index() {
     return (
@@ -16,7 +15,7 @@ export default function Index() {
                 </PageSection>
 
                 <PageSection type="secondary">
-                    <CategoryList categoryId={rootCategoryId} header={<Heading title="Våre kategorier" size="lg" />} />
+                    <CategoryList header={<Heading title="Våre kategorier" size="lg" />} />
                 </PageSection>
             </PageContent>
         </PageView>

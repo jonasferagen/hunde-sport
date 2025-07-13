@@ -14,7 +14,7 @@ interface CategoryListItemProps {
 }
 
 // Memoized list item component with areEqual comparison
-const CategoryListItem = memo<CategoryListItemProps>(
+export const CategoryListItem = memo<CategoryListItemProps>(
   ({ category, style, compact = false }) => {
     const handlePress = () => {
       router.push({

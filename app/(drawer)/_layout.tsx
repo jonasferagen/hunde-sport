@@ -1,4 +1,4 @@
-import CategoryTree from '@/components/features/category/CategoryTree';
+import { CategoryTree } from '@/components/features/category';
 import TopMenu from '@/components/layout/TopMenu';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';

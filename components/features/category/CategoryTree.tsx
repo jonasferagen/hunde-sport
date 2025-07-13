@@ -5,13 +5,13 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CategoryTreeItem from './CategoryTreeItem';
 
-type CategoryTreeProps = {
+interface CategoryTreeProps {
     categoryId: number;
     level?: number;
     trail?: Crumb[];
 };
 
-const CategoryTree = ({ categoryId = 0, level = 0, trail = [] }: CategoryTreeProps) => {
+export const CategoryTree = ({ categoryId = 0, level = 0, trail = [] }: CategoryTreeProps) => {
     const { data, isLoading, error } = useCategories(categoryId);
 
     const categories = data?.pages.flat() ?? [];
@@ -38,5 +38,3 @@ const styles = StyleSheet.create({
         marginHorizontal: 0,
     },
 });
-
-export default CategoryTree;

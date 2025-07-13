@@ -4,16 +4,16 @@ import { Button, View } from "react-native";
 import CategoryListItem from "./CategoryListItem";
 
 export type CategoryProps = {
-    categoryId: number;
+    categoryId?: number;
     limit?: number;
     header?: ReactNode;
     empty?: ReactNode;
 };
 
-export default function CategoryList({ ...props }: CategoryProps) {
+export const CategoryList = ({ ...props }: CategoryProps) => {
 
     const { categoryId, header, empty, limit } = props;
-    const { data } = useCategories(categoryId);
+    const { data } = useCategories(categoryId ?? 0);
     const [showAll, setShowAll] = useState(false);
 
     const categories = data?.pages.flat() ?? [];
