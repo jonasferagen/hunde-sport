@@ -1,4 +1,4 @@
-import { BreadcrumbProvider } from "@/hooks/BreadCrumb/BreadcrumbProvider";
+import { BreadcrumbProvider } from '@/hooks/BreadCrumb/BreadcrumbProvider';
 import { CartProvider } from '@/hooks/Cart/CartProvider';
 import { StatusProvider, useStatus } from '@/hooks/Status/StatusProvider';
 import { AppStyles } from "@/styles/AppStyles";

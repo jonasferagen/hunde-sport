@@ -1,4 +1,5 @@
 import { Loader } from '@/components/ui';
+import { Crumb } from '@/hooks/BreadCrumb/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category/Category';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -7,9 +8,10 @@ import CategoryTreeItem from './CategoryTreeItem';
 type CategoryTreeProps = {
     categoryId: number;
     level?: number;
+    trail?: Crumb[];
 };
 
-const CategoryTree = ({ categoryId, level = 0 }: CategoryTreeProps) => {
+const CategoryTree = ({ categoryId = 0, level = 0, trail = [] }: CategoryTreeProps) => {
     const { data, isLoading, error } = useCategories(categoryId);
 
     const categories = data?.pages.flat() ?? [];
@@ -25,7 +27,7 @@ const CategoryTree = ({ categoryId, level = 0 }: CategoryTreeProps) => {
     return (
         <View style={styles.container}>
             {categories.map((category) => (
-                <CategoryTreeItem key={category.id} category={category} level={level} />
+                <CategoryTreeItem key={category.id} category={category} level={level} trail={trail} />
             ))}
         </View>
     );

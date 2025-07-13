@@ -1,34 +1,46 @@
 import { Category } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { SvgUri } from 'react-native-svg';
 import CategoryTree from './CategoryTree';
 
-import { Loader } from '@/components/ui';
+import { Crumb, useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
 import useCategories from '@/hooks/Category/Category';
 import { SPACING } from '@/styles/Dimensions';
-import { useRouter } from 'expo-router';
 
 type CategoryTreeItemProps = {
     category: Category;
     level: number;
+    trail: Crumb[];
 };
 
-const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
+export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemProps) => {
     const { data, isFetching } = useCategories(category.id);
     const subcategories = data?.pages.flat() ?? [];
     const hasChildren = subcategories.length > 0;
 
-    const [isExpanded, setIsExpanded] = useState(false);
-    const router = useRouter();
+    const { breadcrumbs, setTrail } = useBreadcrumbs();
+    const isActive = breadcrumbs.some(crumb => crumb.id === category.id);
+
+    const [isExpanded, setIsExpanded] = useState(isActive);
+
+    useEffect(() => {
+        if (isActive) {
+            setIsExpanded(true);
+        }
+    }, [isActive]);
+
+    const newTrail = [...trail, { id: category.id, name: category.name, type: 'category' as const }];
 
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
     };
 
     const handleNavigate = () => {
+        setTrail(newTrail);
         router.push({
             pathname: '/category',
             params: {
@@ -39,9 +51,6 @@ const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
     };
 
     const renderExpandIcon = () => {
-        if (isFetching && !isExpanded) {
-            return <Loader size="small" />;
-        }
         if (hasChildren) {
             return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down-outline'} size={24} color="black" />;
         }
@@ -57,11 +66,11 @@ const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <View style={[level === 0 ? styles.mainCategory : styles.subCategory]}>
+            <View style={[isActive ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={styles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
                         {renderCategoryIcon()}
-                        <Text>{category.name} ({category.count})</Text>
+                        <Text style={isActive ? styles.activeText : null}>{category.name} ({category.count})</Text>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
                         {renderExpandIcon()}
@@ -72,6 +81,7 @@ const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
                         <CategoryTree
                             categoryId={category.id}
                             level={level + 1}
+                            trail={newTrail}
                         />
                     </Animated.View>
                 )}
@@ -81,18 +91,13 @@ const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
 };
 
 const styles = StyleSheet.create({
-    mainCategory: {
-        padding: SPACING.sm,
-    },
-    subCategory: {
-        paddingVertical: SPACING.sm,
-        marginLeft: SPACING.md,
-    },
+
     itemContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 8,
+        paddingHorizontal: SPACING.sm,
     },
     categoryInfo: {
         flexDirection: 'row',
@@ -100,6 +105,15 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: SPACING.sm,
+    },
+    activeCategory: {
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+        borderRadius: 8,
+    },
+    activeText: {
+        fontWeight: 'bold',
     },
 });
 

@@ -1,62 +1,44 @@
-import type { Breadcrumb } from '@/types';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { Crumb } from '@/hooks/BreadCrumb/BreadcrumbProvider';
+import { SPACING } from '@/styles/Dimensions';
 
 interface BreadcrumbsProps {
-  trail: Breadcrumb[];
-  onNavigate: (crumb: Breadcrumb) => void;
+    trail: Crumb[];
+    onNavigate: (crumb: Crumb) => void;
 }
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, onNavigate }) => {
-  // Add the 'Home' breadcrumb to the beginning of the trail
-  const fullTrail: Breadcrumb[] = [{ id: null, name: 'Hjem', type: 'category' }, ...trail];
-
-  return (
-    <View style={styles.container}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {fullTrail.map((breadcrumb, index) => (
-          <View key={`${breadcrumb.type}-${breadcrumb.id}`} style={styles.breadcrumbItem}>
-            {breadcrumb.type === 'product' ? (
-              <Text style={[styles.breadcrumbText, styles.breadcrumbProductText]}>{breadcrumb.name}</Text>
-            ) : (
-              <TouchableOpacity onPress={() => onNavigate(breadcrumb)}>
-                <Text style={styles.breadcrumbText}>{breadcrumb.name}</Text>
-              </TouchableOpacity>
-            )}
-            {index < fullTrail.length - 1 && <Text style={[styles.breadcrumbText, styles.separator]}>{' < '}</Text>}
-          </View>
-        ))}
-      </ScrollView>
-    </View>
-  );
+const Breadcrumbs = ({ trail, onNavigate }: BreadcrumbsProps) => {
+    return (
+        <View style={styles.container}>
+            {trail.map((crumb, index) => (
+                <React.Fragment key={crumb.id}>
+                    <Pressable onPress={() => onNavigate(crumb)}>
+                        <Text style={styles.crumbText}>{crumb.name}</Text>
+                    </Pressable>
+                    {index < trail.length - 1 && (
+                        <Ionicons name="chevron-forward" size={16} color="black" style={styles.separator} />
+                    )}
+                </React.Fragment>
+            ))}
+        </View>
+    );
 };
 
-import { COLORS } from '@/styles/Colors';
-import { SPACING } from '@/styles/Dimensions';
-import { FONT_SIZES } from '@/styles/Typography';
-
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.backgroundSecondary,
-  },
-  breadcrumbItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  breadcrumbText: {
-    fontSize: FONT_SIZES.md,
-    color: COLORS.textPrimary,
-  },
-
-  breadcrumbProductText: {
-    color: COLORS.textSecondary,
-  },
-
-  separator: {
-    marginHorizontal: SPACING.xs
-  },
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: SPACING.sm,
+    },
+    crumbText: {
+        fontSize: 14,
+    },
+    separator: {
+        marginHorizontal: SPACING.xs,
+    },
 });
 
 export default Breadcrumbs;
