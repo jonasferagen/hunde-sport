@@ -14,8 +14,6 @@ const CategoryScreen = memo(() => {
     const categoryId = Number(id);
     const image = imageString ? JSON.parse(imageString) : undefined;
 
-    console.log(categoryId, name, image)
-
     return (
         <PageView>
             <PageContent>

@@ -3,7 +3,7 @@ import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category/Category';
 import { Breadcrumb } from '@/types';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import CategoryTreeItem from './CategoryTreeItem';
 
 interface CategoryTreeProps {
@@ -14,14 +14,12 @@ interface CategoryTreeProps {
 
 export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTreeProps) => {
 
-    const { data, isFetching, fetchNextPage, hasNextPage } = useCategories(categoryId);
+    const { categories, isFetching } = useCategories(categoryId);
     const { init, breadcrumbs } = useBreadcrumbs();
 
     if (!trail.length) {
         trail = init();
     }
-
-    const categories = data?.pages.flat() ?? [];
 
     const activeChild = categories.find(c => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);
@@ -34,9 +32,6 @@ export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTree
         return <Loader size="small" />;
     }
 
-    if (!data) {
-        return <Text>Error: Unable to fetch categories</Text>;
-    }
 
     return (
         <View style={styles.container}>
@@ -66,7 +61,5 @@ const styles = StyleSheet.create({
     container: {
         marginHorizontal: 0,
     },
-    categoryList: {
-        // Add styles for categoryList if needed
-    },
+
 });

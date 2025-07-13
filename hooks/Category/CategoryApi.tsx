@@ -11,7 +11,7 @@ const mapToCategory = (item: any): Category => ({
 });
 
 export async function fetchCategoryByCategory(page: number, categoryId: number) {
-    console.log('loading ' + categoryId);
+
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.CATEGORIES.LIST(page, 'parent=' + categoryId)
     );
@@ -21,7 +21,6 @@ export async function fetchCategoryByCategory(page: number, categoryId: number) 
 }
 
 export async function fetchCategory(id: number) {
-    console.log('single loading ' + id)
     const { data, error } = await apiClient.get<any>(
         ENDPOINTS.CATEGORIES.GET(id)
     );

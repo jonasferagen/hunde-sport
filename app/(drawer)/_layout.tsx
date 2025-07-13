@@ -38,11 +38,11 @@ export default function DrawerLayout() {
             }}
         >
             <Drawer.Screen name="index" options={{ title: 'Hjem' }} />
-            <Drawer.Screen name="cart" options={{ drawerItemStyle: { display: 'flex' } }} />
+            <Drawer.Screen name="shoppingCart" options={{ drawerItemStyle: { display: 'flex' } }} />
             <Drawer.Screen name="category" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="product" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />
-            <Drawer.Screen name="tag" options={{ drawerItemStyle: { display: 'none' } }} />
+
         </Drawer>
     );
 }

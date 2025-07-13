@@ -25,7 +25,7 @@ export const CategoryListItem = memo<CategoryListItemProps>(
       <Chip
         label={category.name}
         onPress={handlePress}
-        variant="primary"
+        variant="secondary"
         style={style}
       />
     );

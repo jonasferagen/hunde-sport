@@ -14,22 +14,32 @@ export const useCategories = (categoryId: number) => {
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
             // Assuming a page size of 10, if the last page has 10 items, there might be more.
-
             return lastPage.length === 10 ? allPages.length + 1 : undefined;
         },
     });
 
+    const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+
     useEffect(() => {
-        if (queryResult.data) {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+    useEffect(() => {
+        if (data) {
             // When we fetch the list of products, we can populate the cache for each individual product.
-            queryResult.data.pages.forEach(page => {
+            data.pages.forEach(page => {
                 page.forEach(item => {
                     queryClient.setQueryData(['category', item.id], item);
                 });
             });
         }
-    }, [queryResult.data, queryClient]);
-    return queryResult;
+    }, [data, queryClient]);
+
+    const categories = data?.pages.flat() ?? [];
+
+    return { ...queryResult, categories };
 };
 
 export const useCategory = (categoryId: number) => {

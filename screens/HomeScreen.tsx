@@ -15,7 +15,7 @@ export default function Index() {
                 </PageSection>
 
                 <PageSection type="secondary" scrollable>
-                    <CategoryList header={<Heading title="Våre kategorier" size="lg" />} />
+                    <CategoryList />
                 </PageSection>
             </PageContent>
         </PageView>

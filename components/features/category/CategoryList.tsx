@@ -2,7 +2,7 @@ import Chip from "@/components/ui/Chip";
 import { useCategories } from "@/hooks/Category/Category";
 import { SPACING } from "@/styles/Dimensions";
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import CategoryListItem from "./CategoryListItem";
 
 export type CategoryProps = {
@@ -13,11 +13,8 @@ export type CategoryProps = {
 export const CategoryList = ({ ...props }: CategoryProps) => {
 
     const { categoryId, limit } = props;
-    const { data } = useCategories(categoryId ?? 0);
+    const { categories, isFetchingNextPage } = useCategories(categoryId ?? 0);
     const [showAll, setShowAll] = useState(false);
-
-
-    const categories = data?.pages.flat() ?? [];
 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
@@ -30,12 +27,26 @@ export const CategoryList = ({ ...props }: CategoryProps) => {
                     {displayedCategories.map((category) => (
                         <CategoryListItem key={category.id} category={category} />
                     ))}
-                    {limit && categories.length > limit && (
+                    {isFetchingNextPage && <ActivityIndicator />}
+                    {!showAll && limit && categories.length > limit && (
                         <Chip
-                            label={showAll ? "Skjul.." : `Mer..(${categories.length - limit})`}
-                            onPress={() => setShowAll(!showAll)}
+                            label={`Mer..(${categories.length - limit})`}
+                            onPress={() => setShowAll(true)}
                             variant="accent"
                         />
+                    )}
+
+                    {showAll && (
+                        <>
+
+                            {limit && (
+                                <Chip
+                                    label={"Skjul.."}
+                                    onPress={() => setShowAll(false)}
+                                    variant="accent"
+                                />
+                            )}
+                        </>
                     )}
                 </View>
             )}
