@@ -83,7 +83,9 @@ const styles = StyleSheet.create({
         padding: SPACING.sm,
     },
     subCategory: {
-        padding: SPACING.sm,
+
+        paddingVertical: SPACING.md,
+        marginLeft: SPACING.md,
     },
     itemContainer: {
         flexDirection: 'row',
