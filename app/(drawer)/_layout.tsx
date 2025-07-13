@@ -8,7 +8,7 @@ import { Drawer } from 'expo-router/drawer';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { SPACING } from '@/styles/Dimensions';
+import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
@@ -27,7 +27,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                     <Icon name="close" size={30} color="white" />
                 </Pressable>
             </View>
-            <DrawerContentScrollView {...props} >
+            <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
 
                 <View style={styles.drawerItemsContainer}>
                     <DrawerItemList {...props} />
@@ -92,6 +92,7 @@ export default function DrawerLayout() {
 const styles = StyleSheet.create({
     drawerContent: {
         flex: 1,
+        borderRadius: BORDER_RADIUS.md,
     },
     headerContainer: {
         padding: SPACING.lg,
