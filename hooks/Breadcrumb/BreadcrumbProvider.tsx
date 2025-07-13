@@ -25,11 +25,6 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         setBreadcrumbs(newTrail);
     }, [setBreadcrumbs]);
 
-    const navigateToCrumb = useCallback((crumb: Crumb) => {
-        const newTrail = [...breadcrumbs, crumb];
-        handleNavigation(newTrail);
-    }, [breadcrumbs, handleNavigation]);
-
     const handleNavigation = useCallback((newTrail: Crumb[]) => {
         setBreadcrumbs(newTrail);
 
@@ -48,6 +43,11 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
             });
         }
     }, [setBreadcrumbs]);
+
+    const navigateToCrumb = useCallback((crumb: Crumb) => {
+        const newTrail = [...breadcrumbs, crumb];
+        handleNavigation(newTrail);
+    }, [breadcrumbs, handleNavigation]);
 
     return (
         <BreadcrumbContext.Provider value={{ breadcrumbs, handleNavigation, setTrail, navigateToCrumb }}>
