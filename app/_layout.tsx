@@ -28,19 +28,11 @@ function StatusMessage() {
   const [fadeAnim] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    if (message) {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    }
+    Animated.timing(fadeAnim, {
+      toValue: message ? 1 : 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
   }, [message]);
 
   if (!message) {

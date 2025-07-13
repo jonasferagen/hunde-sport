@@ -1,11 +1,11 @@
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation, useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Heading } from '../ui';
+import Icon from '../ui/Icon';
 
 const Badge = ({ count }: { count: number }) => {
     if (count === 0) return null;
@@ -25,13 +25,13 @@ export function TopMenu() {
     return (
         <View style={styles.container}>
             <Pressable onPress={() => navigation.toggleDrawer()}>
-                <MaterialCommunityIcons name="menu" size={24} style={styles.content} />
+                <Icon name="bars" size={24} style={styles.content} />
             </Pressable>
             <Pressable onPress={() => router.push('/')}>
                 <Heading title="hunde-sport.no" size="lg" style={styles.content} />
             </Pressable>
             <Pressable onPress={() => router.push('/shoppingCart')}>
-                <MaterialCommunityIcons name="cart-outline" size={24} style={styles.content} />
+                <Icon name="shopping-cart" size={24} style={styles.content} />
                 <Badge count={cartItemCount} />
             </Pressable>
         </View>

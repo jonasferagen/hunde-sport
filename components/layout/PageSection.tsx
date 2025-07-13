@@ -4,12 +4,14 @@ import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
 type PageSectionProps = {
   children: React.ReactNode;
-  type?: 'primary' | 'secondary';
+  primary?: boolean;
   style?: ViewStyle;
   scrollable?: boolean;
 };
 
-export function PageSection({ children, type = 'primary', style, scrollable }: PageSectionProps) {
+export function PageSection({ children, primary = false, style, scrollable }: PageSectionProps) {
+
+  const type = primary ? 'primary' : 'secondary';
 
   if (scrollable) {
     return (

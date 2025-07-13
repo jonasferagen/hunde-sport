@@ -18,10 +18,10 @@ export default function SearchScreen() {
     return (
         <PageView>
             <PageContent>
-                <PageSection type='primary'>
+                <PageSection primary>
                     <Heading title={`Søkeresultater for "${query}"`} size="lg" />
                 </PageSection>
-                <PageSection type='secondary' style={{ flex: 1 }}>
+                <PageSection style={{ flex: 1 }}>
                     <ProductList
                         products={products}
                         loadMore={fetchNextPage}

@@ -7,3 +7,4 @@ export { default as Breadcrumbs } from './breadcrumbs/Breadcrumbs';
 export { default as SearchBar } from './searchBar/Searchbar';
 
 
+export { default as Icon } from './Icon';

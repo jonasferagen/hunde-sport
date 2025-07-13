@@ -16,6 +16,7 @@ export const useCategories = (categoryId: number) => {
             // Assuming a page size of 10, if the last page has 10 items, there might be more.
             return lastPage.length === 10 ? allPages.length + 1 : undefined;
         },
+
     });
 
     const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
