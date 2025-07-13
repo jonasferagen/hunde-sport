@@ -34,6 +34,8 @@ export default function ProductList({ products, loadMore, loadingMore, HeaderCom
         router.push({ pathname: '/product', params: { id: id.toString() } });
     }, []);
 
+    console.log("productlist rendered");
+
     const renderItem = useCallback(({ item }: { item: Product }) => (
         <RenderProduct item={item} onPress={handleProductPress} />
     ), [handleProductPress]);

@@ -13,7 +13,6 @@ export const Breadcrumbs = () => {
     const { breadcrumbs, setTrail } = useBreadcrumbs();
 
     const onNavigate = (trail: Breadcrumb[]) => {
-
         setTrail(trail, true);
     };
 

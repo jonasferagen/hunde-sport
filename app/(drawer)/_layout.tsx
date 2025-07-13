@@ -41,7 +41,6 @@ function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTr
 }
 
 export default function DrawerLayout() {
-    const { cartItemCount } = useShoppingCart();
     const [isCategoryTreeVisible, setCategoryTreeVisible] = React.useState(true);
 
     return (
@@ -60,16 +59,15 @@ export default function DrawerLayout() {
                 name="shoppingCart"
                 options={{
                     title: 'Handlekurv',
-                    drawerIcon: ({ color, size }) => (
-                        <Icon name="shoppingCart" size={size} color={color} badge={cartItemCount} />
-                    ),
+                    drawerIcon: ({ color, size }) => {
+                        const { cartItemCount } = useShoppingCart();
+                        return <Icon name="shoppingCart" size={size} color={color} badge={cartItemCount} />;
+                    },
                 }}
             />
             <Drawer.Screen name="category" options={{
                 title: 'Produkter',
                 drawerIcon: ({ color }) => <Icon name="categories" size={24} color={color} />,
-                header: () => <TopMenu />,
-                headerShown: true,
                 drawerLabel: ({ focused, color }) => (
                     <View style={styles.productsLabelContainer}>
                         <Text style={{ color, fontSize: FONT_SIZES.md }}>Produkter</Text>
@@ -114,8 +112,8 @@ const styles = StyleSheet.create({
     customDrawerItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: SPACING.md, // Adjust as needed
-        paddingVertical: SPACING.md,   // Adjust as needed
+        paddingHorizontal: SPACING.md,
+        paddingVertical: SPACING.md,
     },
     customDrawerIcon: {
         marginRight: -SPACING.md,
@@ -132,22 +130,7 @@ const styles = StyleSheet.create({
         marginLeft: 0,
     },
 
-    badge: {
-        position: 'absolute',
-        right: -10,
-        top: -5,
-        backgroundColor: 'red',
-        borderRadius: 10,
-        width: 20,
-        height: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    badgeText: {
-        color: 'white',
-        fontSize: 12,
-        fontWeight: 'bold',
-    },
+
     categoryContainer: {
         marginLeft: SPACING.lg,
     },

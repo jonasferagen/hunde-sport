@@ -12,7 +12,7 @@ export default function ShoppingCartScreen() {
     const { items, updateQuantity, removeFromCart } = useShoppingCart();
 
     const totalPrice = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-
+    console.log('shoppingCartScreen rendered')
 
     return (
         <View style={styles.container}>

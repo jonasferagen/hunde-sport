@@ -13,6 +13,7 @@ const CategoryScreen = memo(() => {
     const { id, name, image: imageString } = useLocalSearchParams<{ id: string; name: string, image?: string }>();
     const categoryId = Number(id);
     const image = imageString ? JSON.parse(imageString) : undefined;
+    console.log('aaa' + id);
 
     return (
         <PageView>

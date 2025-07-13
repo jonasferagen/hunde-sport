@@ -15,7 +15,7 @@ export default function Index() {
                 </PageSection>
 
                 <PageSection scrollable>
-                    <CategoryList />
+                    <CategoryList categoryId={0} />
                 </PageSection>
             </PageContent>
         </PageView>

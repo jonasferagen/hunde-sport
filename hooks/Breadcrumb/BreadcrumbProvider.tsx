@@ -21,7 +21,6 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
 
     const setTrail = useCallback((trail: Breadcrumb[], navigate = false) => {
 
-        console.log("setTrail: ", trail);
         setBreadcrumbs(trail);
         if (navigate) {
             handleNavigation(trail);

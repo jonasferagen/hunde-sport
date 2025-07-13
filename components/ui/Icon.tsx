@@ -21,20 +21,21 @@ export const ValidIcon = {
 // Get the type of all props that FontAwesome accepts
 type IconProps = Omit<React.ComponentProps<typeof FontAwesome>, 'name'> & {
     name: keyof typeof ValidIcon;
-    badge?: string | number;
+    badge?: number;
 };
 
 /**
  * A wrapper around the FontAwesome icon set.
  * This component forwards all props to the FontAwesome component.
  */
-const Icon = ({ name, badge, ...rest }: IconProps) => {
+const Icon = ({ name, badge = 0, ...rest }: IconProps) => {
+
     return (
         <View>
             <FontAwesome name={ValidIcon[name]} {...rest} />
-            {badge && (
+            {badge > 0 && (
                 <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{badge.toString()}</Text>
+                    <Text style={styles.badgeText}>{badge}</Text>
                 </View>
             )}
         </View>

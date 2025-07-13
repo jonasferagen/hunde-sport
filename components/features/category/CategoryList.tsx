@@ -5,20 +5,21 @@ import { useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import CategoryListItem from "./CategoryListItem";
 
-export type CategoryProps = {
-    categoryId?: number;
+export interface CategoryProps {
+    categoryId: number;
     limit?: number;
 };
 
 export const CategoryList = ({ ...props }: CategoryProps) => {
 
     const { categoryId, limit } = props;
-    const { categories, isFetchingNextPage } = useCategories(categoryId ?? 0);
+    const { categories, isFetchingNextPage } = useCategories(categoryId);
     const [showAll, setShowAll] = useState(false);
 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
 
+    console.log("category list rendered for", categoryId);
     return (
         <View style={styles.container}>
             {categories.length > 0 && (
