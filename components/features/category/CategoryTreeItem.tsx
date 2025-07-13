@@ -2,7 +2,7 @@ import { Category } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { SvgUri } from 'react-native-svg';
 import CategoryTree from './CategoryTree';
 
@@ -43,7 +43,7 @@ const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
             return <Loader size="small" />;
         }
         if (hasChildren) {
-            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={24} color="black" />;
+            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down-outline'} size={24} color="black" />;
         }
         return <View style={{ width: 24 }} />; // Placeholder for alignment
     };
@@ -68,10 +68,12 @@ const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
                     </Pressable>
                 </View>
                 {isExpanded && (
-                    <CategoryTree
-                        categoryId={category.id}
-                        level={level + 1}
-                    />
+                    <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
+                        <CategoryTree
+                            categoryId={category.id}
+                            level={level + 1}
+                        />
+                    </Animated.View>
                 )}
             </View>
         </Animated.View >
@@ -83,8 +85,7 @@ const styles = StyleSheet.create({
         padding: SPACING.sm,
     },
     subCategory: {
-
-        paddingVertical: SPACING.md,
+        paddingVertical: SPACING.sm,
         marginLeft: SPACING.md,
     },
     itemContainer: {
