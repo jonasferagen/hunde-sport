@@ -13,7 +13,6 @@ export default function ShoppingCartScreen() {
 
     const totalPrice = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
-    console.log("ShoppingCartScreen rendered")
 
     return (
         <View style={styles.container}>
@@ -33,15 +32,15 @@ export default function ShoppingCartScreen() {
                         </View>
                         <View style={styles.quantityContainer}>
                             <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
-                                <Icon name="minus" size={24} color="#666" />
+                                <Icon name="removeFromCart" size={24} color="#666" />
                             </Pressable>
                             <Text style={styles.quantity}>{item.quantity}</Text>
                             <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                <Icon name="plus" size={24} color="#666" />
+                                <Icon name="addToCart" size={24} color="#666" />
                             </Pressable>
                         </View>
                         <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: 15 }}>
-                            <Icon name="trash" size={24} color="#f00" />
+                            <Icon name="emptyCart" size={24} color="#f00" />
                         </Pressable>
                     </View>
                 )}

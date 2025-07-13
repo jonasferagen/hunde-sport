@@ -12,14 +12,13 @@ interface CategoryTreeProps {
     trail?: Breadcrumb[];
 };
 
-export const CategoryTree = ({ categoryId, level = 0, trail = [] }: CategoryTreeProps) => {
+export const CategoryTree = ({ categoryId, level = 0, trail: trailProp = [] }: CategoryTreeProps) => {
+
 
     const { categories, isFetching } = useCategories(categoryId);
     const { init, breadcrumbs } = useBreadcrumbs();
 
-    if (!trail.length) {
-        trail = init();
-    }
+    const trail = trailProp.length ? trailProp : init();
 
     const activeChild = categories.find(c => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);

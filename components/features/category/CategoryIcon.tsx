@@ -11,9 +11,11 @@ interface CategoryIconProps {
     style?: StyleProp<ViewStyle> | StyleProp<TextStyle>;
 }
 
+const TAG_ICON_NAME = 'tag';
+
 export const CategoryIcon = ({ image, size, style }: CategoryIconProps) => {
     if (image?.src?.endsWith('.svg')) {
         return <SvgUri width={size} height={size} uri={image.src} style={style as StyleProp<ViewStyle>} color="white" />;
     }
-    return <Icon name="tag" size={size} color="white" style={style as StyleProp<TextStyle>} />
+    return <Icon name={TAG_ICON_NAME} size={size} color="white" style={style as StyleProp<TextStyle>} />
 };

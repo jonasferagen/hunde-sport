@@ -1,7 +1,6 @@
 import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
 import Icon from '@/components/ui/Icon';
-import IconBadge from '@/components/ui/IconBadge';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -62,19 +61,19 @@ export default function DrawerLayout() {
                 options={{
                     title: 'Handlekurv',
                     drawerIcon: ({ color, size }) => (
-                        <IconBadge name="shopping-cart" size={size} color={color} count={cartItemCount} />
+                        <Icon name="shoppingCart" size={size} color={color} badge={cartItemCount} />
                     ),
                 }}
             />
             <Drawer.Screen name="category" options={{
                 title: 'Produkter',
-                drawerIcon: ({ color }) => <Icon name="tags" size={24} color={color} />,
+                drawerIcon: ({ color }) => <Icon name="categories" size={24} color={color} />,
                 header: () => <TopMenu />,
                 headerShown: true,
                 drawerLabel: ({ focused, color }) => (
                     <View style={styles.productsLabelContainer}>
                         <Text style={{ color, fontSize: FONT_SIZES.md }}>Produkter</Text>
-                        <Icon style={styles.customDrawerIcon} name={isCategoryTreeVisible ? "chevron-up" : "chevron-down"} size={16} color={color} />
+                        <Icon style={styles.customDrawerIcon} name={isCategoryTreeVisible ? "expand" : "collapse"} size={16} color={color} />
                     </View>
                 ),
             }} listeners={{

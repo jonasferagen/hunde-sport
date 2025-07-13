@@ -1,15 +1,63 @@
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+
+export const ValidIcon = {
+    addToCart: 'plus',
+    removeFromCart: 'minus',
+    shoppingCart: 'shopping-cart',
+    menu: 'bars',
+    tag: 'tag',
+    emptyCart: 'trash',
+    close: 'times',
+    collapse: 'chevron-up',
+    expand: 'chevron-down',
+    category: 'tag',
+    categories: 'tags',
+    home: 'home',
+
+} as const;
 
 // Get the type of all props that FontAwesome accepts
-type IconProps = React.ComponentProps<typeof FontAwesome>;
+type IconProps = Omit<React.ComponentProps<typeof FontAwesome>, 'name'> & {
+    name: keyof typeof ValidIcon;
+    badge?: string | number;
+};
 
 /**
  * A wrapper around the FontAwesome icon set.
  * This component forwards all props to the FontAwesome component.
  */
-const Icon = (props: IconProps) => {
-    return <FontAwesome {...props} />;
+const Icon = ({ name, badge, ...rest }: IconProps) => {
+    return (
+        <View>
+            <FontAwesome name={ValidIcon[name]} {...rest} />
+            {badge && (
+                <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{badge.toString()}</Text>
+                </View>
+            )}
+        </View>
+    );
 };
+
+const styles = StyleSheet.create({
+    badge: {
+        position: 'absolute',
+        right: -10,
+        top: -5,
+        backgroundColor: 'red',
+        borderRadius: 10,
+        width: 20,
+        height: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    badgeText: {
+        color: 'white',
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
+});
 
 export default Icon;
