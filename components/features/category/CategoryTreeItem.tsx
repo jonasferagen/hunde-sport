@@ -1,4 +1,4 @@
-import { Category } from '@/types';
+import { Breadcrumb, Category } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -15,16 +15,17 @@ import { rgba } from '@/utils/helpers';
 interface CategoryTreeItemProps {
     category: Category;
     level: number;
+    trail: Breadcrumb[];
 };
 
-export const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
+export const CategoryTreeItem = ({ category, level, trail }: CategoryTreeItemProps) => {
     const { data, isFetching } = useCategories(category.id);
+    const { breadcrumbs, setTrail } = useBreadcrumbs();
+
+
     const subcategories = data?.pages.flat() ?? [];
     const hasChildren = subcategories.length > 0;
-
-    const { breadcrumbs, handleNavigation, setTrail, navigateToCrumb } = useBreadcrumbs();
     const isActive = breadcrumbs.some(crumb => crumb.id === category.id);
-
     const [isExpanded, setIsExpanded] = useState(isActive);
 
     useEffect(() => {
@@ -32,14 +33,13 @@ export const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => 
     }, [isActive]);
 
     const handleNavigate = useCallback(() => {
-        navigateToCrumb({ id: category.id, name: category.name, type: 'category' as const });
-    }, [navigateToCrumb, category]);
+
+        setTrail(trail, true);
+    }, [setTrail, trail]);
 
     const handleExpand = useCallback(() => {
-        const newTrail = [...breadcrumbs, { id: category.id, name: category.name, type: 'category' as const }];
-        setTrail(newTrail);
         setIsExpanded(!isExpanded);
-    }, [setTrail, breadcrumbs, category, isExpanded]);
+    }, [isExpanded]);
 
     const renderExpandIcon = () => {
         if (hasChildren) {
@@ -50,7 +50,7 @@ export const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => 
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <View style={[isActive ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
+            <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={styles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
                         <CategoryIcon image={category.image} size={24} style={styles.icon} />
@@ -65,6 +65,7 @@ export const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => 
                         <CategoryTree
                             categoryId={category.id}
                             level={level + 1}
+                            trail={[...trail]}
                         />
                     </Animated.View>
                 )}

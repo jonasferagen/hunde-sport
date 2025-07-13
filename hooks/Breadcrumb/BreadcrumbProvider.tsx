@@ -1,56 +1,52 @@
+import { Breadcrumb } from '@/types';
 import { router } from 'expo-router';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
-export interface Crumb {
-    id: number | null;
-    name: string;
-    type: 'category' | 'product' | 'home';
-}
-
 interface BreadcrumbContextType {
-    breadcrumbs: Crumb[];
-    handleNavigation: (trail: Crumb[]) => void;
-    setTrail: (trail: Crumb[]) => void;
-    navigateToCrumb: (crumb: Crumb) => void;
+    init: () => Breadcrumb[];
+    breadcrumbs: Breadcrumb[];
+    handleNavigation: (trail: Breadcrumb[]) => void;
+    setTrail: (trail: Breadcrumb[], navigate?: boolean) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
-const HOME_CRUMB: Crumb = { id: null, name: 'Hjem', type: 'home' };
+const HOME_CRUMB: Breadcrumb = { id: null, name: 'Hjem', type: 'home' };
 
 export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
-    const [breadcrumbs, setBreadcrumbs] = useState<Crumb[]>([HOME_CRUMB]);
 
-    const setTrail = useCallback((newTrail: Crumb[]) => {
-        setBreadcrumbs(newTrail);
+    const init = () => [HOME_CRUMB];
+
+    const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>(init());
+
+    const setTrail = useCallback((trail: Breadcrumb[], navigate = false) => {
+
+        console.log("setTrail: ", trail);
+        setBreadcrumbs(trail);
+        if (navigate) {
+            handleNavigation(trail);
+        }
     }, [setBreadcrumbs]);
 
-    const handleNavigation = useCallback((newTrail: Crumb[]) => {
-        setBreadcrumbs(newTrail);
+    const handleNavigation = useCallback((trail: Breadcrumb[]) => {
 
-        const destination = newTrail[newTrail.length - 1];
-        if (!destination) return;
-
+        console.log("Breadcrumbs: ", trail);
+        const destination = trail[trail.length - 1];
+        console.log("Navigering til: ", destination)
         if (destination.type === 'home') {
             router.replace('/');
         } else {
             router.push({
                 pathname: '/(drawer)/category',
                 params: {
-                    id: destination.id?.toString(),
-                    name: destination.name,
+                    id: destination.id,
                 },
             });
         }
-    }, [setBreadcrumbs]);
-
-    const navigateToCrumb = useCallback((crumb: Crumb) => {
-        const newTrail = [...breadcrumbs, crumb];
-        handleNavigation(newTrail);
-    }, [breadcrumbs, handleNavigation]);
+    }, []);
 
     return (
-        <BreadcrumbContext.Provider value={{ breadcrumbs, handleNavigation, setTrail, navigateToCrumb }}>
+        <BreadcrumbContext.Provider value={{ breadcrumbs, init, handleNavigation, setTrail }}>
             {children}
         </BreadcrumbContext.Provider>
     );

@@ -16,10 +16,14 @@ interface CategoryListItemProps {
 // Memoized list item component with areEqual comparison
 export const CategoryListItem = memo<CategoryListItemProps>(
   ({ category, style, compact = false }) => {
-    const { navigateToCrumb } = useBreadcrumbs();
+    const { breadcrumbs, setTrail } = useBreadcrumbs();
 
     const handlePress = () => {
-      navigateToCrumb({ id: category.id, name: category.name, type: 'category' as const });
+      const newTrail = [...breadcrumbs];
+      newTrail.push({ id: category.id, name: category.name, type: "category" as const });
+      console.log("Breadcrumbs: ", breadcrumbs)
+      console.log(newTrail);
+      setTrail(newTrail, true);
     };
 
     return (

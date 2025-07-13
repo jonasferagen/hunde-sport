@@ -16,6 +16,7 @@ export const CategoryList = ({ ...props }: CategoryProps) => {
     const { data } = useCategories(categoryId ?? 0);
     const [showAll, setShowAll] = useState(false);
 
+
     const categories = data?.pages.flat() ?? [];
 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;

@@ -4,7 +4,6 @@ import { CategoryProducts } from '@/components/features/category/CategoryProduct
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Heading } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
-import { useCategory } from '@/hooks/Category/Category';
 import { SPACING } from '@/styles/Dimensions';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
@@ -15,13 +14,10 @@ const CategoryScreen = memo(() => {
     const categoryId = Number(id);
     const image = imageString ? JSON.parse(imageString) : undefined;
 
-    const category = useCategory(categoryId);
-    console.log(category);
-
     return (
         <PageView>
-            <Stack.Screen options={{ title: name }} />
             <PageContent>
+                <Stack.Screen options={{ title: name }} />
                 <Breadcrumbs />
                 <PageSection key={`products-${categoryId}`}>
                     <View style={styles.headingContainer}>
@@ -30,7 +26,7 @@ const CategoryScreen = memo(() => {
                     </View>
                     <CategoryList categoryId={categoryId} limit={3} />
                 </PageSection>
-                <PageSection key={`categories-${categoryId}`}>
+                <PageSection key={`categories-${categoryId}`} style={{ flex: 1 }} scrollable>
                     <CategoryProducts categoryId={categoryId} />
                 </PageSection>
             </PageContent>

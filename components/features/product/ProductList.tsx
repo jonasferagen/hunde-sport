@@ -41,6 +41,7 @@ export default function ProductList({ products, loadMore, loadingMore, HeaderCom
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 
     return (
+
         <FlashList style={styles.listStyle}
             data={products}
             renderItem={renderItem}
@@ -52,9 +53,9 @@ export default function ProductList({ products, loadMore, loadingMore, HeaderCom
             ListFooterComponent={() =>
                 loadingMore ? <Loader /> : null
             }
-            contentContainerStyle={styles.listContainer}
             estimatedItemSize={50}
         />
+
     );
 }
 
@@ -63,9 +64,7 @@ const styles = StyleSheet.create({
     listStyle: {
         flex: 1,
     },
-    listContainer: {
 
-    },
     itemContainer: {
         flex: 1,
         marginBottom: 8,

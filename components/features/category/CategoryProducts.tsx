@@ -8,6 +8,7 @@ export function CategoryProducts({ categoryId }: { categoryId: number }) {
     const { data, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByCategory(categoryId);
     const products = useMemo(() => data?.pages.flat() ?? [], [data]);
 
+    console.log(products.length);
     if (isLoading) {
         return <Loader />;
     }
