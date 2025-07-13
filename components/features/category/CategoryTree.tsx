@@ -1,31 +1,25 @@
+import { Loader } from '@/components/ui';
 import { useCategories } from '@/hooks/Category/Category';
-import React, { useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import CategoryTreeItem from './CategoryTreeItem';
 
 type CategoryTreeProps = {
     categoryId: number;
     level?: number;
-    onLoad?: (hasChildren: boolean) => void;
 };
 
-const CategoryTree = ({ categoryId, level = 0, onLoad }: CategoryTreeProps) => {
-    const { data, isLoading, error, isSuccess } = useCategories(categoryId);
+const CategoryTree = ({ categoryId, level = 0 }: CategoryTreeProps) => {
+    const { data, isLoading, error } = useCategories(categoryId);
 
     const categories = data?.pages.flat() ?? [];
 
-    useEffect(() => {
-        if (isSuccess && onLoad) {
-            onLoad(categories.length > 0);
-        }
-    }, [isSuccess, onLoad, categories.length]);
-
-    if (isLoading) {
-        return <ActivityIndicator />;
+    if (isLoading && level === 0) {
+        return <Loader size="small" />;
     }
 
     if (error) {
-        return <Text>Error loading categories</Text>;
+        return <Text>Error: {error.message}</Text>;
     }
 
     return (

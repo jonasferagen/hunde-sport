@@ -1,12 +1,15 @@
 import { Category } from '@/types';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { SvgUri } from 'react-native-svg';
 import CategoryTree from './CategoryTree';
 
+import { Loader } from '@/components/ui';
+import useCategories from '@/hooks/Category/Category';
 import { SPACING } from '@/styles/Dimensions';
+import { useRouter } from 'expo-router';
 
 type CategoryTreeItemProps = {
     category: Category;
@@ -14,57 +17,60 @@ type CategoryTreeItemProps = {
 };
 
 const CategoryTreeItem = ({ category, level }: CategoryTreeItemProps) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [hasChildren, setHasChildren] = useState<boolean | undefined>(undefined);
-    const [isFetching, setIsFetching] = useState(false);
+    const { data, isFetching } = useCategories(category.id);
+    const subcategories = data?.pages.flat() ?? [];
+    const hasChildren = subcategories.length > 0;
 
-    const handlePress = () => {
-        if (hasChildren === undefined) {
-            setIsFetching(true);
-        }
+    const [isExpanded, setIsExpanded] = useState(false);
+    const router = useRouter();
+
+    const handleExpand = () => {
         setIsExpanded(!isExpanded);
     };
 
-    const handleLoad = (childrenExist: boolean) => {
-        setHasChildren(childrenExist);
-        setIsFetching(false);
-        if (!childrenExist) {
-            setIsExpanded(false); // Collapse if no children are found
-        }
+    const handleNavigate = () => {
+        router.push({
+            pathname: '/category',
+            params: {
+                id: category.id.toString(),
+                name: category.name,
+            },
+        });
     };
 
     const renderExpandIcon = () => {
-        if (isFetching) {
-            return <ActivityIndicator size="small" />;
+        if (isFetching && !isExpanded) {
+            return <Loader size="small" />;
         }
         if (hasChildren) {
-            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={20} color="black" />;
+            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={24} color="black" />;
         }
-        return <View style={{ width: 20 }} />; // Placeholder for alignment
+        return <View style={{ width: 24 }} />; // Placeholder for alignment
     };
 
     const renderCategoryIcon = () => {
         if (category.image?.src?.endsWith('.svg')) {
             return <SvgUri width={24} height={24} uri={category.image.src} style={styles.icon} />;
         }
-        return <MaterialCommunityIcons name="tag-outline" size={24} color="black" style={styles.icon} />;
+        return <Ionicons name="pricetag-outline" size={24} color="black" style={styles.icon} />;
     };
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
             <View style={[level === 0 ? styles.mainCategory : styles.subCategory]}>
-                <Pressable onPress={handlePress} style={styles.itemContainer}>
-                    <View style={styles.categoryInfo}>
+                <View style={styles.itemContainer}>
+                    <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
                         {renderCategoryIcon()}
                         <Text>{category.name} ({category.count})</Text>
-                    </View>
-                    {renderExpandIcon()}
-                </Pressable>
+                    </Pressable>
+                    <Pressable onPress={handleExpand}>
+                        {renderExpandIcon()}
+                    </Pressable>
+                </View>
                 {isExpanded && (
                     <CategoryTree
                         categoryId={category.id}
                         level={level + 1}
-                        onLoad={handleLoad}
                     />
                 )}
             </View>

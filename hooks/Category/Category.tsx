@@ -1,4 +1,3 @@
-
 import { Category } from '@/types';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -30,7 +29,6 @@ export const useCategories = (categoryId: number) => {
             });
         }
     }, [queryResult.data, queryClient]);
-
     return queryResult;
 };
 
