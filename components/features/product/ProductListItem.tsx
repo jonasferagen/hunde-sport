@@ -1,4 +1,4 @@
-import { useCart } from '@/hooks/Cart/CartProvider';
+import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import type { Product } from '@/types';
@@ -12,7 +12,7 @@ interface ProductListItemProps {
 }
 
 const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
-  const { addToCart } = useCart();
+  const { addToCart } = useShoppingCart();
 
   return (
     <View key={product.id} style={styles.container}>

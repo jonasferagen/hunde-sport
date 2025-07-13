@@ -2,22 +2,22 @@ import type { Product } from '@/types';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { useStatus } from '../Status/StatusProvider';
 
-export interface CartItem {
+export interface ShoppingCartItem {
     product: Product;
     quantity: number;
 }
 
-interface CartContextType {
-    items: CartItem[];
+interface ShoppingCartContextType {
+    items: ShoppingCartItem[];
     addToCart: (product: Product) => void;
     removeFromCart: (productId: number) => void;
     updateQuantity: (productId: number, quantity: number) => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [items, setItems] = useState<CartItem[]>([]);
+export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const { showMessage } = useStatus();
 
     const addToCart = useCallback((product: Product) => {
@@ -50,7 +50,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     return (
-        <CartContext.Provider
+        <ShoppingCartContext.Provider
             value={{
                 items,
                 addToCart,
@@ -59,14 +59,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }}
         >
             {children}
-        </CartContext.Provider>
+        </ShoppingCartContext.Provider>
     );
 };
 
-export const useCart = () => {
-    const context = useContext(CartContext);
+export const useShoppingCart = () => {
+    const context = useContext(ShoppingCartContext);
     if (context === undefined) {
-        throw new Error('useCart must be used within a CartProvider');
+        throw new Error('useShoppingCart must be used within a ShoppingCartProvider');
     }
     return context;
 };

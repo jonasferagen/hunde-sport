@@ -1,11 +1,11 @@
+import Loader from "@/components/ui/Loader";
 import ProductTile from "@/components/ui/ProductTile";
 import { useFeaturedProducts } from "@/hooks/Product/Product";
 import { ScrollView } from "react-native";
-import Loader from "../../ui/Loader";
 
 export default function FeaturedProducts() {
 
-    const { data, isLoading, fetchNextPage, isFetchingNextPage } = useFeaturedProducts();
+    const { data, isLoading } = useFeaturedProducts();
 
     if (isLoading) {
         return <Loader />;
@@ -18,5 +18,6 @@ export default function FeaturedProducts() {
             <ProductTile key={product.id} product={product} width={200} height={150} />
         ))}
     </ScrollView>
+
 
 }

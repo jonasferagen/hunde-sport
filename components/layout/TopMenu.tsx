@@ -1,4 +1,4 @@
-import { useCart } from '@/hooks/Cart/CartProvider';
+import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -17,7 +17,7 @@ const Badge = ({ count }: { count: number }) => {
 };
 
 export function TopMenu() {
-    const { items } = useCart();
+    const { items } = useShoppingCart();
     const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
     const router = useRouter();
     const navigation = useNavigation<DrawerNavigationProp<{}>>();
@@ -30,7 +30,7 @@ export function TopMenu() {
             <Pressable onPress={() => router.push('/')}>
                 <Heading title="hunde-sport.no" size="lg" />
             </Pressable>
-            <Pressable onPress={() => router.push('/cart')}>
+            <Pressable onPress={() => router.push('/shoppingCart')}>
                 <MaterialCommunityIcons name="cart-outline" size={24} />
                 <Badge count={cartItemCount} />
             </Pressable>

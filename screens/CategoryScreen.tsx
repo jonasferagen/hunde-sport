@@ -3,7 +3,7 @@ import CategoryProducts from '@/components/features/product/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Heading } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
-import { useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';

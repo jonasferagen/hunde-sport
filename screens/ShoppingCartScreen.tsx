@@ -1,6 +1,6 @@
 import { PageSection } from '@/components/layout';
 import { Heading } from '@/components/ui';
-import { useCart } from '@/hooks/Cart/CartProvider';
+import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
 import { FONT_SIZES } from '@/styles/Typography';
 import { formatPrice } from '@/utils/helpers';
@@ -9,8 +9,8 @@ import { Stack } from 'expo-router';
 import React from 'react';
 import { Button, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
-export default function CartScreen() {
-    const { items, updateQuantity, removeFromCart } = useCart();
+export default function ShoppingCartScreen() {
+    const { items, updateQuantity, removeFromCart } = useShoppingCart();
 
     const totalPrice = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 

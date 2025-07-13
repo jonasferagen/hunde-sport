@@ -6,7 +6,7 @@ import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanim
 import { CategoryIcon } from './CategoryIcon';
 import { CategoryTree } from './CategoryTree';
 
-import { Crumb, useBreadcrumbs } from '@/hooks/BreadCrumb/BreadcrumbProvider';
+import { Crumb, useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import useCategories from '@/hooks/Category/Category';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';

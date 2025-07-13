@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { Crumb } from '@/hooks/BreadCrumb/BreadcrumbProvider';
+import { Crumb } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category/Category';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';

@@ -1,5 +1,5 @@
-import { BreadcrumbProvider } from '@/hooks/BreadCrumb/BreadcrumbProvider';
-import { CartProvider } from '@/hooks/Cart/CartProvider';
+import { BreadcrumbProvider } from '@/hooks/Breadcrumb/BreadcrumbProvider';
+import { ShoppingCartProvider } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { StatusProvider, useStatus } from '@/hooks/Status/StatusProvider';
 import { AppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -70,9 +70,9 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <StatusProvider>
             <BreadcrumbProvider>
-              <CartProvider>
+              <ShoppingCartProvider>
                 <Layout />
-              </CartProvider>
+              </ShoppingCartProvider>
             </BreadcrumbProvider>
             <StatusMessage />
           </StatusProvider>
