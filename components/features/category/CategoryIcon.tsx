@@ -5,9 +5,10 @@ import { Category } from '@/types';
 
 
 import React, { useEffect, useState } from 'react';
+import { StyleProp, View, ViewStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
-const ColoredSvg = ({ uri, size, color }: { uri: string; size: number; color: string }) => {
+const ColoredSvg = ({ uri, size, color, style }: { uri: string; size: number; color: string; style?: StyleProp<ViewStyle> }) => {
     const [xml, setXml] = useState<string | null>(null);
 
     useEffect(() => {
@@ -39,18 +40,19 @@ interface CategoryIconProps {
     image: Category['image'];
     size: number;
     color: string;
+    style?: StyleProp<ViewStyle>;
 }
 
 const TAG_ICON_NAME = 'tag';
 
 
-export const CategoryIcon = ({ image, size, color }: CategoryIconProps) => {
+export const CategoryIcon = ({ image, size, color, style }: CategoryIconProps) => {
 
-    if (image?.src?.endsWith('.svg')) {
-        return <ColoredSvg uri={image.src} size={size} color={color} />;
-        //        return <SvgUri width={size} height={size} uri={image.src />;
-
-    }
-
-    return <Icon name={TAG_ICON_NAME} size={size} color={color} />
+    return <View style={style}>
+        {
+            (image?.src?.endsWith('.svg')) ?
+                <ColoredSvg uri={image.src} size={size} color={color} /> :
+                <Icon name={TAG_ICON_NAME} size={size} color={color} />
+        }
+    </View>;
 };

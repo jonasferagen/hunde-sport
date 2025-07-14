@@ -76,7 +76,7 @@ export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: Category
 
 
     const { categories, isFetching } = useCategories(categoryId);
-    const { breadcrumbs } = useBreadcrumbs();
+    const { categories: breadcrumbs } = useBreadcrumbs();
 
     const activeChild = categories.find(c => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);

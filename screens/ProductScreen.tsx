@@ -5,7 +5,7 @@ import { VariationSelector } from '@/components/features/product/VariationSelect
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
 import { Breadcrumbs, Button, Heading } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
-import { useBreadcrumbs, useProductBreadcrumb } from '@/hooks/Breadcrumb/BreadcrumbProvider';
+import { useProductBreadcrumb } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { useProduct, useProductVariations } from '@/hooks/Product/Product';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
@@ -34,7 +34,6 @@ export const ProductScreen = () => {
   const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
 
   useProductBreadcrumb(product!);
-  const { breadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
     const allOptionsSelected = product?.attributes
@@ -78,10 +77,15 @@ export const ProductScreen = () => {
 
   return (
     <PageView>
-      <PageContent scrollable>
-        <Breadcrumbs />
+      <PageContent>
         <PageSection primary>
+          <Breadcrumbs />
+        </PageSection>
+      </PageContent>
+      <PageContent scrollable>
+        <PageSection>
           <VerticalStack spacing="md">
+
             <Heading title={displayProduct.name + ' ' + displayProduct.id} size="xxl" />
             <View style={styles.mainImageWrapper}>
               <TouchableOpacity onPress={() => openImageViewer(0)}>

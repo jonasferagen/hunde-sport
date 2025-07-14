@@ -29,7 +29,7 @@ export const PageContent = ({ children, scrollable }: PageContentProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
   },
   scrollContentContainer: {
     paddingBottom: 20, // Add some padding at the bottom

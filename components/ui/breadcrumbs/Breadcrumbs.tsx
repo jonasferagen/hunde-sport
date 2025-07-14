@@ -2,66 +2,54 @@ import { Icon } from '@/components/ui';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { CategoryIcon } from '@/components/features/category';
 import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
-import { COLORS, FONT_SIZES, SPACING } from '@/styles';
-
-const Crumb = ({ crumb }: { crumb: any }) => {
-    const { navigate } = useBreadcrumbs();
-
-    if (crumb.type === 'product') {
-        return <Text style={styles.productText}>{crumb.name}</Text>;
-    }
-
-    return (
-        <Pressable onPress={() => navigate(crumb)}>
-            <Text style={[styles.crumbText]}>{crumb.name}</Text>
-        </Pressable>
-    );
-};
+import { FONT_SIZES, SPACING } from '@/styles';
 
 export const Breadcrumbs = () => {
 
-    const { breadcrumbs, navigate } = useBreadcrumbs();
+    const { categories, product, navigateToCategory } = useBreadcrumbs();
 
     return (
         <View style={styles.container}>
-            {
-                breadcrumbs.map((crumb, index) => (
-                    <React.Fragment key={`${crumb.type}-${crumb.id}`}>
-                        <View style={styles.crumbContainer}>
-                            <Crumb crumb={crumb} />
-                        </View>
-                        {index < breadcrumbs.length - 1 && (
-                            <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={FONT_SIZES.xs} style={styles.crumbSeparator} />
-                        )}
-                    </React.Fragment>
-                ))
-            }
-        </View >
+            {categories.map((category, index) => (
+                <React.Fragment key={category.id}>
+                    <Pressable onPress={() => navigateToCategory(category)} style={styles.crumbContainer}>
+                        {category.parent >= 0 && <CategoryIcon image={category.image} size={FONT_SIZES.xl} color="black" style={{ marginRight: SPACING.sm }} />}
+                        <Text style={styles.crumbText}>{category.name}</Text>
+                    </Pressable>
+                    {(index < categories.length - 1 || product) && (
+                        <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={FONT_SIZES.sm} style={styles.crumbSeparator} />
+                    )}
+                </React.Fragment>
+            ))}
+
+            {product && (
+                <View style={styles.crumbContainer}>
+                    <Text style={styles.productText}>{product.name}</Text>
+                </View>
+            )}
+
+        </View>
+
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: COLORS.secondary,
-        borderBottomColor: COLORS.secondary,
-        shadowColor: COLORS.secondary,
-        borderBottomWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: SPACING.sm,
-        paddingHorizontal: SPACING.xs,
     },
     crumbContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     crumbText: {
-        fontSize: FONT_SIZES.sm,
-        color: COLORS.textOnSecondary,
+        fontSize: FONT_SIZES.md,
+        color: 'black'
     },
     crumbSeparator: {
-        marginHorizontal: SPACING.xs,
+        marginHorizontal: SPACING.sm,
         top: 1
     },
     productText: {

@@ -1,15 +1,14 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { CategoryIcon } from '@/components/features/category/CategoryIcon';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { Heading, Loader } from '@/components/ui';
+import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import useCategories, { useCategory } from '@/hooks/Category/Category';
 import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 
 const CategoryListArea = ({ category }: { category: Category }) => {
@@ -22,25 +21,26 @@ const CategoryListArea = ({ category }: { category: Category }) => {
 
 export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
-    const { data, isLoading } = useCategory(id);
+    const { category, isLoading } = useCategory(id);
 
     if (isLoading) {
         return <Loader />;
     }
-    const category = data!;
+
+    if (!category) {
+        return <Loader />;
+    }
 
     return (
         <PageView>
             <PageContent>
                 <Stack.Screen options={{ title: category.name }} />
-                <Breadcrumbs />
                 <PageSection primary key={`products-${category.id}`}>
-                    <View style={styles.headingContainer}>
-                        <CategoryIcon image={category.image} size={24} color="black" />
-                        <Heading title={category.name} size="lg" style={{ marginLeft: SPACING.sm }} />
-                    </View>
+                    <Breadcrumbs />
                     <CategoryListArea category={category} />
                 </PageSection>
+            </PageContent>
+            <PageContent scrollable>
                 <PageSection key={`categories-${category.id}`} style={{ flex: 1 }} scrollable>
                     <CategoryProducts category={category} />
                 </PageSection>

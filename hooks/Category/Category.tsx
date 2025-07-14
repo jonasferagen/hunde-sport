@@ -45,10 +45,12 @@ export const useCategories = (categoryId: number) => {
 
 export const useCategory = (categoryId: number | string) => {
     const id = Number(categoryId);
-    return useQuery<Category>({
+    const result = useQuery<Category>({
         queryKey: ['category', id],
         queryFn: () => fetchCategory(id)
     });
+
+    return { ...result, category: result.data };
 };
 
 
