@@ -16,7 +16,7 @@ export const ValidIcon = {
     categories: 'tags',
     home: 'home',
     checkout: 'arrow-right',
-    breadcrumbSeparator: 'chevron-left',
+    breadcrumbSeparator: 'chevron-right',
 
 } as const;
 

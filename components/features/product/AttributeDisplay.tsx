@@ -3,11 +3,15 @@ import { FONT_SIZES } from '@/styles/Typography';
 import { Attribute } from '@/types';
 import { StyleSheet, Text, View } from 'react-native';
 
-type AttributeDisplayProps = {
+interface AttributeDisplayProps {
     attribute: Attribute;
 };
 
 export const AttributeDisplay = ({ attribute }: AttributeDisplayProps) => {
+
+    if (!attribute.options.length) {
+        return null;
+    }
     return (
         <View style={styles.container}>
             <Text style={styles.name}>{attribute.name}:</Text>

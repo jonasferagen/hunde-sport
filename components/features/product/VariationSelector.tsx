@@ -3,13 +3,18 @@ import { SPACING } from '@/styles';
 import { Attribute } from '@/types';
 import { StyleSheet, View } from 'react-native';
 
-type VariationSelectorProps = {
+interface VariationSelectorProps {
     attribute: Attribute;
     onSelectOption: (option: string) => void;
     selectedOption: string | null;
 };
 
 export const VariationSelector = ({ attribute, onSelectOption, selectedOption }: VariationSelectorProps) => {
+
+    if (!attribute.options.length) {
+        return null;
+    }
+
     return (
         <View style={styles.container}>
             <Heading title={attribute.name} size="md" />
@@ -30,8 +35,6 @@ export const VariationSelector = ({ attribute, onSelectOption, selectedOption }:
 const styles = StyleSheet.create({
     container: {
         marginVertical: SPACING.md,
-        borderWidth: 1,
-        borderColor: 'red',
     },
     chipsContainer: {
         flexDirection: 'row',

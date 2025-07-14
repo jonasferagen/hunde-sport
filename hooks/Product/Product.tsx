@@ -24,6 +24,20 @@ export const useProductVariations = (productIds: number[]) => {
     return queries;
 };
 
+export const useRelatedProducts = (productIds: number[]) => {
+    const queries = useQueries({
+        queries: (productIds || []).map(id => {
+            return {
+                queryKey: ['product', id],
+                queryFn: () => fetchProduct(id),
+                enabled: !!id,
+            }
+        })
+    });
+
+    return queries;
+};
+
 export const useProductsByCategory = (categoryId: number) => {
 
     const queryClient = useQueryClient();

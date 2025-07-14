@@ -1,8 +1,9 @@
 import { Loader } from '@/components/ui';
 import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
-import useCategories, { useCategories as useSubCategories } from '@/hooks/Category/Category';
+import { useCategories } from '@/hooks/Category/Category';
+import { FONT_SIZES } from '@/styles';
 import { SPACING } from '@/styles/Dimensions';
-import { Breadcrumb, Category } from '@/types';
+import { Category } from '@/types';
 import { rgba } from '@/utils/helpers';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useState } from 'react';
@@ -13,27 +14,26 @@ import { CategoryIcon } from './CategoryIcon';
 interface CategoryTreeProps {
     categoryId: number;
     level?: number;
-    trail?: Breadcrumb[];
+    ancestors?: Category[];
 };
 
 interface CategoryTreeItemProps {
     category: Category;
     level: number;
-    trail: Breadcrumb[];
+    ancestors: Category[];
     isExpanded: boolean;
     onExpand: (categoryId: number) => void;
 };
 
-const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: CategoryTreeItemProps) => {
-    const { data } = useSubCategories(category.id);
-    const { handleNavigation } = useBreadcrumbs();
+const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: CategoryTreeItemProps) => {
+    const { categories } = useCategories(category.id);
+    const { setCategories } = useBreadcrumbs();
 
-    const subcategories = data?.pages.flat() ?? [];
-    const hasChildren = subcategories.length > 0;
+    const hasChildren = categories.length > 0; // subcategories
 
     const handleNavigate = useCallback(() => {
-        handleNavigation(trail);
-    }, [handleNavigation, trail]);
+        setCategories(ancestors);
+    }, [setCategories, ancestors]);
 
     const handleExpand = useCallback(() => {
         onExpand(category.id);
@@ -41,9 +41,9 @@ const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: Cate
 
     const renderExpandIcon = () => {
         if (hasChildren) {
-            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down-outline'} size={24} color={itemStyles.categoryText.color} />;
+            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down-outline'} size={FONT_SIZES.xxl} color={itemStyles.categoryText.color} />;
         }
-        return <View style={{ width: 24 }} />; // Placeholder for alignment
+        return <View style={{ width: FONT_SIZES.xxl }} />; // Placeholder for alignment
     };
 
     return (
@@ -51,7 +51,7 @@ const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: Cate
             <View style={[isExpanded ? itemStyles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={itemStyles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={itemStyles.categoryInfo}>
-                        <CategoryIcon image={category.image} size={24} color={itemStyles.categoryText.color} />
+                        <CategoryIcon image={category.image} size={FONT_SIZES.xxl} color={itemStyles.categoryText.color} />
                         <Text style={[itemStyles.categoryText, isExpanded ? itemStyles.activeText : null]}>{category.name} ({category.count})</Text>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
@@ -63,7 +63,7 @@ const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: Cate
                         <CategoryTree
                             categoryId={category.id}
                             level={level + 1}
-                            trail={[...trail]}
+                            ancestors={[...ancestors]}
                         />
                     </Animated.View>
                 )}
@@ -72,13 +72,11 @@ const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: Cate
     );
 };
 
-export const CategoryTree = ({ categoryId, level = 0, trail: trailProp = [] }: CategoryTreeProps) => {
+export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: CategoryTreeProps) => {
 
 
     const { categories, isFetching } = useCategories(categoryId);
-    const { init, breadcrumbs } = useBreadcrumbs();
-
-    const trail = trailProp.length ? trailProp : init();
+    const { breadcrumbs } = useBreadcrumbs();
 
     const activeChild = categories.find(c => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);
@@ -96,15 +94,12 @@ export const CategoryTree = ({ categoryId, level = 0, trail: trailProp = [] }: C
             <View>
                 {categories.map((category) => {
 
-                    const newTrail = [...trail];
-                    newTrail.push({ ...category, type: "category" as const });
-
                     return (
                         <CategoryTreeItem
                             key={category.id}
                             category={category}
                             level={level}
-                            trail={newTrail}
+                            ancestors={[...ancestors, category]}
                             isExpanded={expandedItemId === category.id}
                             onExpand={handleToggleExpand}
                         />
@@ -137,7 +132,7 @@ const itemStyles = StyleSheet.create({
         color: 'white',
     },
     categoryText: {
-        color: '#ccc',
+        color: '#333',
         marginLeft: SPACING.sm,
     },
     icon: {

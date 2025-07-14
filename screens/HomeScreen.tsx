@@ -10,13 +10,23 @@ import { View } from 'react-native';
 
 const CategorySection = () => {
     const { categories } = useCategories(0);
-    const { setTrail, init } = useBreadcrumbs();
+    const { addCategory } = useBreadcrumbs();
 
-    return categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund').map((category, index) => (
-        <View key={index}>
-            <CategoryTile category={category} key={index} height={200} width={"100%"} style={{ marginBottom: SPACING.lg }} onPress={() => setTrail(init().concat([{ id: category.id, name: category.name, type: 'category' }]), true)} />
-        </View>
-    ));
+    return categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund').map((category, index) => {
+
+        return (
+            <View key={index}>
+                <CategoryTile
+                    category={category}
+                    key={index}
+                    height={200}
+                    width={"100%"}
+                    style={{ marginBottom: SPACING.lg }}
+                    onPress={() => addCategory(category)}
+                />
+            </View>
+        );
+    });
 }
 
 

@@ -1,28 +1,29 @@
 
-import { darken, lighten } from '@/utils/helpers';
+import { darken } from '@/utils/helpers';
 
-const primary = 'rgb(119, 131, 161)';
-const secondary = 'rgb(247, 177, 163)';
-const accent = 'rgb(161, 138, 117)';
+
+const primary = '#d5a5d7';
+const secondary = '#d7d5a5';
+const accent = '#a5d7d5';
 
 const backgroundPrimary = 'rgb(246, 246, 246)';
 const backgroundSecondary = 'rgb(255, 255, 255)';
 
-const gradientPrimary = ['#4c669f', '#3b5998', '#192f6a'] as const;
+const gradientPrimary = [primary, secondary, accent] as const;
 
 export const COLORS = {
   // Primary palette
-  primary: darken(primary, 10),
-  secondary: darken(secondary, 10),
-  accent: accent,
+  primary,
+  secondary,
+  accent,
 
   // Text colors
   textPrimary: 'rgb(35,35,35)',
   textSecondary: 'rgb(117,117,117)',
 
-  textOnPrimary: lighten(primary, 40),
-  textOnSecondary: lighten(secondary, 40),
-  textOnAccent: lighten(accent, 40),
+  textOnPrimary: darken(primary, 50),
+  textOnSecondary: darken(secondary, 50),
+  textOnAccent: darken(accent, 50),
 
   // Backgrounds
   backgroundPrimary: backgroundPrimary,

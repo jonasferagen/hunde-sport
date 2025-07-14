@@ -1,4 +1,6 @@
-export { PageContent } from './PageContent';
-export { PageSection } from './PageSection';
-export { PageView } from './PageView';
-export { TopMenu } from './TopMenu';
+export * from './PageContent';
+export * from './PageSection';
+export * from './PageView';
+export * from './TopMenu';
+export * from './VerticalStack';
+

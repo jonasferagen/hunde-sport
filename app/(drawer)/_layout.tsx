@@ -19,7 +19,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTr
         >
             <View style={styles.headerContainer}>
                 <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
-                    <Icon name="close" size={24} color="white" />
+                    <Icon name="close" size={FONT_SIZES.xxl} color="black" />
                 </Pressable>
                 <Text style={styles.headerText}>hunde-sport.no</Text>
                 <SearchBar />
@@ -47,8 +47,8 @@ export default function DrawerLayout() {
             screenOptions={{
                 header: () => <TopMenu />,
                 headerShown: true,
-                drawerActiveTintColor: '#fff',
-                drawerInactiveTintColor: '#ccc',
+                drawerActiveTintColor: '#000',
+                drawerInactiveTintColor: '#000',
                 drawerLabelStyle: styles.drawerLabel,
             }}
         >
@@ -88,7 +88,8 @@ export default function DrawerLayout() {
 const styles = StyleSheet.create({
     drawerContent: {
         flex: 1,
-        borderRadius: BORDER_RADIUS.md,
+        borderTopRightRadius: BORDER_RADIUS.md,
+        borderBottomRightRadius: BORDER_RADIUS.md,
     },
     headerContainer: {
         padding: SPACING.lg,
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
 
     },
     headerText: {
-        color: 'white',
+        color: 'black',
         fontSize: 18,
         fontWeight: 'bold',
     },
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     drawerLabel: {
-        color: '#ccc',
+        color: 'black',
         fontSize: FONT_SIZES.md,
         marginLeft: 0,
     },

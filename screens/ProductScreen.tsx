@@ -1,21 +1,21 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { AttributeDisplay } from '@/components/features/product/AttributeDisplay';
+import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { VariationSelector } from '@/components/features/product/VariationSelector';
-import { PageContent, PageSection, PageView } from '@/components/layout';
-import { Button, Heading } from '@/components/ui';
+import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
+import { Breadcrumbs, Button, Heading } from '@/components/ui';
+import { Loader } from '@/components/ui/Loader';
+import { useBreadcrumbs, useProductBreadcrumb } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { useProduct, useProductVariations } from '@/hooks/Product/Product';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
-
-import { Loader } from '@/components/ui/Loader';
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { FONT_SIZES } from '@/styles/Typography';
-import { Product } from '@/types';
 
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -27,11 +27,14 @@ export const ProductScreen = () => {
   const { data: product, isLoading, error } = useProduct(Number(id));
   const { addToCart } = useShoppingCart();
 
+
   const variationQueries = useProductVariations(product?.variations || []);
   const variations = useMemo(() => variationQueries.map(query => query.data).filter(Boolean) as Product[], [variationQueries]);
 
   const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
 
+  useProductBreadcrumb(product!);
+  const { breadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
     const allOptionsSelected = product?.attributes
@@ -75,45 +78,47 @@ export const ProductScreen = () => {
 
   return (
     <PageView>
-      <Stack.Screen options={{ title: displayProduct.name }} />
-
       <PageContent scrollable>
+        <Breadcrumbs />
         <PageSection primary>
-          <Heading title={displayProduct.name} size="xxl" style={styles.heading} />
-
-          <View style={styles.mainImageWrapper}>
-            <TouchableOpacity onPress={() => openImageViewer(0)}>
-              <Image
-                source={{ uri: mainImage.src }}
-                style={styles.mainImage}
-              />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.price}>{formatPrice(displayProduct.price)}</Text>
-          <View style={styles.productInfoContainer}>
-            {product.attributes.filter(attr => attr.variation).map(attribute => (
-              <VariationSelector
-                key={attribute.id}
-                attribute={attribute}
-                selectedOption={selectedOptions[attribute.slug] || null}
-                onSelectOption={(option) => handleSelectOption(attribute.slug, option)}
-              />
-            ))}
-
-            <Text style={styles.shortDescription}>{displayProduct.short_description}</Text>
-
-            <Button title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
-          </View>
+          <VerticalStack spacing="md">
+            <Heading title={displayProduct.name + ' ' + displayProduct.id} size="xxl" />
+            <View style={styles.mainImageWrapper}>
+              <TouchableOpacity onPress={() => openImageViewer(0)}>
+                <Image
+                  source={{ uri: mainImage.src }}
+                  style={styles.mainImage}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.price}>{formatPrice(displayProduct.price)}</Text>
+            <VerticalStack spacing="md">
+              {product.attributes.filter(attr => attr.variation).map(attribute => {
+                return (
+                  < VariationSelector
+                    key={attribute.id}
+                    attribute={attribute}
+                    selectedOption={selectedOptions[attribute.slug] || null}
+                    onSelectOption={(option) => handleSelectOption(attribute.slug, option)}
+                  />
+                )
+              })}
+              {!!product.short_description && <Text style={styles.shortDescription}>{displayProduct.short_description}</Text>}
+              <Button title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
+            </VerticalStack>
+          </VerticalStack>
         </PageSection>
 
-        <PageSection primary>
-          <Text style={styles.description}>{product.description}</Text>
-          <View style={styles.attributeContainer}>
-            {product.attributes.filter(attr => !attr.variation).map(attribute => (
-              <AttributeDisplay key={attribute.id} attribute={attribute} />
-            ))}
-          </View>
-          <CategoryChips categories={product.categories} />
+        <PageSection >
+          <VerticalStack spacing="lg">
+            {!!product.description && <Text style={styles.description}>{product.description}</Text>}
+            <VerticalStack spacing="sm">
+              {product.attributes.filter(attr => !attr.variation).map(attribute => (
+                <AttributeDisplay key={attribute.id} attribute={attribute} />
+              ))}
+            </VerticalStack>
+            <CategoryChips categories={product.categories} />
+          </VerticalStack>
         </PageSection>
 
         <PageSection>
@@ -131,6 +136,10 @@ export const ProductScreen = () => {
           </View>
         </PageSection>
 
+        <PageSection>
+          <RelatedProducts productIds={product.related_ids} />
+        </PageSection>
+
       </PageContent>
       <ImageViewing
         images={allImages}
@@ -139,7 +148,7 @@ export const ProductScreen = () => {
         onRequestClose={() => { setImageViewerVisible(false) }}
         animationType='slide'
       />
-    </PageView>
+    </PageView >
   );
 };
 
@@ -147,16 +156,6 @@ const styles = StyleSheet.create({
   content: {
     padding: SPACING.md,
   },
-  attributeContainer: {
-    marginVertical: SPACING.md,
-  },
-  productInfoContainer: {
-    paddingVertical: 0,
-  },
-  heading: {
-    marginBottom: SPACING.md,
-  },
-
   mainImageWrapper: {
     width: '100%',
     height: 300,
@@ -175,14 +174,10 @@ const styles = StyleSheet.create({
   description: {
     fontSize: FONT_SIZES.sm,
     lineHeight: FONT_SIZES.lg,
-    marginTop: SPACING.sm,
-    marginBottom: SPACING.sm,
   },
   shortDescription: {
     fontSize: FONT_SIZES.md,
-    lineHeight: FONT_SIZES.xl,
-    marginTop: SPACING.sm,
-    marginBottom: SPACING.sm,
+    lineHeight: FONT_SIZES.lg,
   },
 
   imageGalleryContainer: {

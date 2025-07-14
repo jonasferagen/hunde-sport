@@ -5,7 +5,7 @@ export { CategoryTile } from './tile/CategoryTile';
 export { ProductTile } from './tile/ProductTile';
 
 export { Breadcrumbs } from './breadcrumbs/Breadcrumbs';
-export { Button } from './Button';
+export { Button } from './button/Button';
 export { SearchBar } from './searchBar/Searchbar';
 
 export { CategoryChip } from './chips/CategoryChip';

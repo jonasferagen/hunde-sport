@@ -1,7 +1,7 @@
 import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Icon, ValidIcon } from './Icon';
+import { Icon, ValidIcon } from '../Icon';
 
 export interface ButtonProps {
     onPress: () => void;
