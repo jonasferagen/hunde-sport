@@ -1,7 +1,7 @@
 import { ProductTile } from "@/components/ui/";
 import { Loader } from "@/components/ui/Loader";
-import { useBreadcrumbs } from "@/hooks/Breadcrumb/BreadcrumbProvider";
-import { buildCategoryTrail } from "@/hooks/Category/Category";
+import { useBreadcrumbs } from "@/contexts/BreadcrumbContext";
+import { buildCategoryTrail } from "@/hooks/Category";
 import { useFeaturedProducts } from "@/hooks/Product/Product";
 import { Product } from "@/types";
 import { useQueryClient } from '@tanstack/react-query';

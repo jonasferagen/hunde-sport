@@ -1,5 +1,5 @@
 
-import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/contexts/BreadcrumbContext';
 import { Category } from '@/types';
 import { Chip } from './Chip';
 

@@ -1,7 +1,7 @@
 import { Category } from '@/types';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { fetchCategoryByCategory, fetchCategoryById } from './CategoryApi';
+import { fetchCategoryByCategory, fetchCategoryById } from './api';
 
 export const buildCategoryTrail = async (queryClient: any, categoryId: number): Promise<Category[]> => {
     const trail: Category[] = [];

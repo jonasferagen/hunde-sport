@@ -1,6 +1,6 @@
 import { Loader } from '@/components/ui';
-import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
-import { useCategories } from '@/hooks/Category/Category';
+import { useBreadcrumbs } from '@/contexts/BreadcrumbContext';
+import { useCategories } from '@/hooks/Category';
 import { FONT_SIZES } from '@/styles';
 import { SPACING } from '@/styles/Dimensions';
 import { Category } from '@/types';
@@ -78,7 +78,7 @@ export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: Category
     const { categories, isFetching } = useCategories(categoryId);
     const { categories: breadcrumbs } = useBreadcrumbs();
 
-    const activeChild = categories.find(c => breadcrumbs.some(b => b.id === c.id));
+        const activeChild = categories.find((c: Category) => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);
 
     const handleToggleExpand = (itemId: number) => {
@@ -92,7 +92,7 @@ export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: Category
     return (
         <View style={styles.container}>
             <View>
-                {categories.map((category) => {
+                                {categories.map((category: Category) => {
 
                     return (
                         <CategoryTreeItem

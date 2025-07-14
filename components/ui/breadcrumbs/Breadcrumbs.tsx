@@ -1,6 +1,6 @@
 import { CategoryIcon } from '@/components/features/category';
 import { Icon } from '@/components/ui';
-import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/contexts/BreadcrumbContext';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { Product } from '@/types';
 import React from 'react';

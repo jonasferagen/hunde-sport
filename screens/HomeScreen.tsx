@@ -2,21 +2,24 @@
 import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { CategoryTile, SearchBar } from '@/components/ui';
-import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
-import { useCategories } from '@/hooks/Category/Category';
+import { useBreadcrumbs } from '@/contexts/BreadcrumbContext';
+import { useCategories } from '@/hooks/Category';
+import { Category } from '@/types';
 import { SPACING } from '@/styles';
 import { View } from 'react-native';
-
 
 const CategorySection = () => {
     const { categories } = useCategories(0);
     const { addCategory } = useBreadcrumbs();
 
-    const filteredCategories = categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund')
-    filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
+        const filteredCategories = categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund')
+        filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
 
+        const onSelectCategory = (category: Category) => {
+        addCategory(category);
+    }
 
-    return filteredCategories.map((category, index) => {
+        return filteredCategories.map((category, index) => {
 
         return (
             <View key={index}>
