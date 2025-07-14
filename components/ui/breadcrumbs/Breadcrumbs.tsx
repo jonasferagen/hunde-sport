@@ -1,15 +1,19 @@
+import { CategoryIcon } from '@/components/features/category';
 import { Icon } from '@/components/ui';
+import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
+import { FONT_SIZES, SPACING } from '@/styles';
+import { Product } from '@/types';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { CategoryIcon } from '@/components/features/category';
-import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
-import { FONT_SIZES, SPACING } from '@/styles';
 
-export const Breadcrumbs = () => {
+interface BreadcrumbsProps {
+    product?: Product;
+};
 
-    const { categories, product, navigateToCategory } = useBreadcrumbs();
+export const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
 
+    const { categories, navigateToCategory } = useBreadcrumbs();
     return (
         <View style={styles.container}>
             {categories.map((category, index) => (
@@ -18,20 +22,18 @@ export const Breadcrumbs = () => {
                         {category.parent >= 0 && <CategoryIcon image={category.image} size={FONT_SIZES.xl} color="black" style={{ marginRight: SPACING.sm }} />}
                         <Text style={styles.crumbText}>{category.name}</Text>
                     </Pressable>
-                    {(index < categories.length - 1 || product) && (
+                    {(index < categories.length - 1) && (
                         <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={FONT_SIZES.sm} style={styles.crumbSeparator} />
                     )}
                 </React.Fragment>
             ))}
-
             {product && (
-                <View style={styles.crumbContainer}>
-                    <Text style={styles.productText}>{product.name}</Text>
-                </View>
+                <React.Fragment>
+                    <Icon name="breadcrumbSeparator" size={FONT_SIZES.sm} style={styles.crumbSeparator} />
+                    <Text style={[styles.crumbText, styles.productText]}>{product.name}</Text>
+                </React.Fragment>
             )}
-
         </View>
-
     );
 };
 
@@ -39,6 +41,8 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: SPACING.sm
     },
     crumbContainer: {
         flexDirection: 'row',
@@ -53,10 +57,9 @@ const styles = StyleSheet.create({
         top: 1
     },
     productText: {
-        fontSize: FONT_SIZES.sm,
         fontWeight: 'bold',
-        color: 'black',
-    },
+        fontSize: FONT_SIZES.lg,
+    }
 });
 
 export default Breadcrumbs;

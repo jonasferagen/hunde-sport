@@ -1,13 +1,11 @@
-import { Category, Product } from '@/types';
+import { Category } from '@/types';
 import { router } from 'expo-router';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 interface BreadcrumbContextType {
     categories: Category[];
-    product: Product | null;
     setCategories: (categories: Category[], go?: boolean) => void;
     addCategory: (category: Category) => void;
-    setProduct: (product: Product | null) => void;
     navigateToCategory: (category: Category) => void;
 }
 
@@ -16,7 +14,6 @@ const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undef
 export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [categories, setCategoriesState] = useState<Category[]>([]);
-    const [product, setProduct] = useState<Product | null>(null);
 
     const navigateToCategory = useCallback((category: Category) => {
         const categoryIndex = categories.findIndex(c => c.id === category.id);
@@ -27,7 +24,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     }, [categories]);
 
     const setCategories = useCallback((newCategories: Category[], go = true) => {
-        setProduct(null);
+
         setCategoriesState(newCategories);
 
         if (go && newCategories.length > 0) {
@@ -36,7 +33,6 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     }, [navigateToCategory]);
 
     const addCategory = useCallback((category: Category) => {
-        setProduct(null);
 
         const lastCategory = categories[categories.length - 1];
 
@@ -56,7 +52,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     }, [categories]);
 
     return (
-        <BreadcrumbContext.Provider value={{ categories, product, setCategories, addCategory, setProduct, navigateToCategory }}>
+        <BreadcrumbContext.Provider value={{ categories, setCategories, addCategory, navigateToCategory }}>
             {children}
         </BreadcrumbContext.Provider>
     );
@@ -70,11 +66,3 @@ export const useBreadcrumbs = () => {
     return context;
 };
 
-export const useProductBreadcrumb = (product: Product | null) => {
-    const { setProduct } = useBreadcrumbs();
-    useEffect(() => {
-        if (product) {
-            setProduct(product);
-        }
-    }, [product, setProduct]);
-};

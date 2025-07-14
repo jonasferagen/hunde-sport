@@ -5,7 +5,6 @@ import { VariationSelector } from '@/components/features/product/VariationSelect
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
 import { Breadcrumbs, Button, Heading } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
-import { useProductBreadcrumb } from '@/hooks/Breadcrumb/BreadcrumbProvider';
 import { useProduct, useProductVariations } from '@/hooks/Product/Product';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
@@ -13,7 +12,7 @@ import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
@@ -32,8 +31,6 @@ export const ProductScreen = () => {
   const variations = useMemo(() => variationQueries.map(query => query.data).filter(Boolean) as Product[], [variationQueries]);
 
   const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
-
-  useProductBreadcrumb(product!);
 
   useEffect(() => {
     const allOptionsSelected = product?.attributes
@@ -79,14 +76,17 @@ export const ProductScreen = () => {
     <PageView>
       <PageContent>
         <PageSection primary>
-          <Breadcrumbs />
+          <VerticalStack spacing="md">
+            <Breadcrumbs product={displayProduct} />
+
+          </VerticalStack>
         </PageSection>
       </PageContent>
       <PageContent scrollable>
         <PageSection>
           <VerticalStack spacing="md">
 
-            <Heading title={displayProduct.name + ' ' + displayProduct.id} size="xxl" />
+            <Heading title={displayProduct.name} size="xxl" />
             <View style={styles.mainImageWrapper}>
               <TouchableOpacity onPress={() => openImageViewer(0)}>
                 <Image

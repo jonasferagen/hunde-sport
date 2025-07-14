@@ -7,7 +7,7 @@ import { ScrollView } from "react-native";
 export const FeaturedProducts = () => {
 
     const { products, isLoading } = useFeaturedProducts();
-    const { setTrail, init } = useBreadcrumbs();
+    const { addCategory } = useBreadcrumbs();
 
     if (isLoading) {
         return <Loader />;
@@ -15,7 +15,7 @@ export const FeaturedProducts = () => {
 
     return <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {products.map((product) => (
-            <ProductTile key={product.id} product={product} width={200} height={150} mainColor={'#777'} onPress={() => setTrail(init().concat([{ id: product.id, name: product.name, type: 'product' }]), true)} />
+            <ProductTile key={product.id} product={product} width={200} height={150} mainColor={'#777'} />
         ))}
     </ScrollView>
 

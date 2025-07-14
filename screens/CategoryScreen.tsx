@@ -3,7 +3,7 @@ import { CategoryProducts } from '@/components/features/category/CategoryProduct
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
-import useCategories, { useCategory } from '@/hooks/Category/Category';
+import { useCategories, useCategory } from '@/hooks/Category/Category';
 import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';

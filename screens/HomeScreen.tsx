@@ -12,7 +12,11 @@ const CategorySection = () => {
     const { categories } = useCategories(0);
     const { addCategory } = useBreadcrumbs();
 
-    return categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund').map((category, index) => {
+    const filteredCategories = categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund')
+    filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
+
+
+    return filteredCategories.map((category, index) => {
 
         return (
             <View key={index}>
