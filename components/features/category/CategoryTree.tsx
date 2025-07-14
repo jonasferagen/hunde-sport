@@ -26,11 +26,10 @@ interface CategoryTreeItemProps {
 
 const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: CategoryTreeItemProps) => {
     const { data } = useSubCategories(category.id);
-    const { breadcrumbs, setTrail } = useBreadcrumbs();
+    const { setTrail } = useBreadcrumbs();
 
     const subcategories = data?.pages.flat() ?? [];
     const hasChildren = subcategories.length > 0;
-    const isActive = breadcrumbs.some(crumb => crumb.id === category.id);
 
     const handleNavigate = useCallback(() => {
         setTrail(trail, true);
@@ -42,7 +41,7 @@ const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: Cate
 
     const renderExpandIcon = () => {
         if (hasChildren) {
-            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down-outline'} size={24} color="black" />;
+            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down-outline'} size={24} color={itemStyles.categoryText.color} />;
         }
         return <View style={{ width: 24 }} />; // Placeholder for alignment
     };
@@ -52,7 +51,7 @@ const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: Cate
             <View style={[isExpanded ? itemStyles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={itemStyles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={itemStyles.categoryInfo}>
-                        <CategoryIcon image={category.image} size={24} style={[itemStyles.categoryText, itemStyles.icon]} />
+                        <CategoryIcon image={category.image} size={24} color={itemStyles.categoryText.color} />
                         <Text style={[itemStyles.categoryText, isExpanded ? itemStyles.activeText : null]}>{category.name} ({category.count})</Text>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
@@ -124,7 +123,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const itemBackgroundColor = rgba('white', 0.3);
+const itemBackgroundColor = rgba('black', 0.2);
 
 const itemStyles = StyleSheet.create({
     itemContainer: {
@@ -140,7 +139,8 @@ const itemStyles = StyleSheet.create({
         color: 'white',
     },
     categoryText: {
-        color: 'white',
+        color: '#ccc',
+        marginLeft: SPACING.sm,
     },
     icon: {
         marginRight: SPACING.sm,
