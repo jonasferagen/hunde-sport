@@ -3,25 +3,29 @@ import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-quer
 import { useEffect } from 'react';
 import { fetchCategoryByCategory, fetchCategoryById } from './api';
 
-export const buildCategoryTrail = async (queryClient: any, categoryId: number): Promise<Category[]> => {
-    const trail: Category[] = [];
-    let currentCategoryId: number | null = categoryId;
+export const useCategoryTrail = (categoryId: number | null) => {
+    const queryClient = useQueryClient();
 
-    while (currentCategoryId !== null && currentCategoryId !== 0) {
-        try {
-            const category: Category = await queryClient.fetchQuery({
-                queryKey: ['category', currentCategoryId],
-                queryFn: () => fetchCategoryById(currentCategoryId!),
-            });
-            trail.unshift(category); // Add to the beginning of the array
-            currentCategoryId = category.parent;
-        } catch (error) {
-            console.error('Failed to fetch category trail:', error);
-            break;
-        }
-    }
+    return useQuery<Category[], Error>({
+        queryKey: ['categoryTrail', categoryId],
+        queryFn: async () => {
+            if (!categoryId) return [];
 
-    return trail;
+            const trail: Category[] = [];
+            let currentCategoryId: number | null = categoryId;
+
+            while (currentCategoryId !== null && currentCategoryId !== 0) {
+                const category: Category = await queryClient.fetchQuery({
+                    queryKey: ['category', currentCategoryId],
+                    queryFn: () => fetchCategoryById(currentCategoryId!),
+                });
+                trail.unshift(category);
+                currentCategoryId = category.parent;
+            }
+            return trail;
+        },
+        enabled: !!categoryId, // Only run the query if categoryId is not null or 0
+    });
 };
 
 export const useCategories = (categoryId: number) => {

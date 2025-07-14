@@ -1,38 +1,30 @@
-import { VerticalStack } from '@/components/layout';
-import { Heading, Loader, ProductTile } from '@/components/ui';
-import { useBreadcrumbs } from '@/contexts/BreadcrumbContext';
+import { Heading } from '@/components/ui';
+import { Loader } from '@/components/ui/Loader';
 import { useRelatedProducts } from '@/hooks/Product/Product';
 import { SPACING } from '@/styles';
-import { Product } from '@/types';
 import { useMemo } from 'react';
 import { ScrollView } from 'react-native';
+import { VerticalStack } from '../../layout';
+import { ProductCard } from './ProductCard';
 
 interface RelatedProductsProps {
     productIds: number[];
 }
 
 export const RelatedProducts = ({ productIds }: RelatedProductsProps) => {
-    const { setCategories } = useBreadcrumbs();
     const relatedProductQueries = useRelatedProducts(productIds);
     const relatedProducts = useMemo(() =>
         relatedProductQueries
             .map(query => query.data)
-            .filter(Boolean) as Product[]
-        , [relatedProductQueries]);
+            .filter(product => product !== undefined),
+        [relatedProductQueries]
+    );
 
-    const isLoading = useMemo(() =>
-        relatedProductQueries.some(query => query.isLoading)
-        , [relatedProductQueries]);
-
-    if (!productIds || productIds.length === 0) {
-        return null;
-    }
-
-    if (isLoading) {
+    if (relatedProductQueries.some(query => query.isLoading)) {
         return <Loader />;
     }
 
-    if (!relatedProducts.length) {
+    if (relatedProducts.length === 0) {
         return null;
     }
 
@@ -41,7 +33,7 @@ export const RelatedProducts = ({ productIds }: RelatedProductsProps) => {
             <Heading title="Relaterte Produkter" size="lg" />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: SPACING.md }}>
                 {relatedProducts.map((product) => (
-                    <ProductTile key={product.id} product={product} width={200} height={150} onPress={() => { }} />
+                    <ProductCard key={product.id} product={product} />
                 ))}
             </ScrollView>
         </VerticalStack>
