@@ -3,7 +3,7 @@ import { AttributeDisplay } from '@/components/features/product/AttributeDisplay
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { VariationSelector } from '@/components/features/product/VariationSelector';
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
-import { Breadcrumbs, Button, Heading } from '@/components/ui';
+import { Breadcrumbs, Button } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
 import { useProduct, useProductVariations } from '@/hooks/Product/Product';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
@@ -84,7 +84,6 @@ export const ProductScreen = () => {
       <PageContent scrollable>
         <PageSection>
           <VerticalStack spacing="md">
-            <Heading title={displayProduct.name} size="xxl" />
             <View style={styles.mainImageWrapper}>
               <TouchableOpacity onPress={() => openImageViewer(0)}>
                 <Image
