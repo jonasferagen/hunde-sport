@@ -1,8 +1,22 @@
 
-import { CategoryList } from '@/components/features/category';
 import FeaturedProducts from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { Heading, SearchBar } from '@/components/ui';
+import { CategoryTile, Heading, SearchBar } from '@/components/ui';
+import { useCategories } from '@/hooks/Category/Category';
+import { SPACING } from '@/styles/Dimensions';
+import { View } from 'react-native';
+
+
+const CategorySection = () => {
+    const { categories } = useCategories(0);
+
+    return categories.filter((category) => category.name === 'Hund' || category.name === 'Katt').map((category, index) => (
+        <View key={index}>
+            <CategoryTile category={category} key={index} height={200} width={"100%"} style={{ marginVertical: SPACING.md }} />
+        </View>
+    ));
+}
+
 
 export default function Index() {
     return (
@@ -13,9 +27,8 @@ export default function Index() {
                     <SearchBar />
                     <FeaturedProducts />
                 </PageSection>
-
                 <PageSection scrollable>
-                    <CategoryList categoryId={0} />
+                    <CategorySection />
                 </PageSection>
             </PageContent>
         </PageView>

@@ -1,18 +1,18 @@
 import { PageSection } from '@/components/layout';
-import { Heading, Icon } from '@/components/ui';
+import { Button, Heading, Icon } from '@/components/ui';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
+import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { formatPrice } from '@/utils/helpers';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { Button, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function ShoppingCartScreen() {
-    const { items, updateQuantity, removeFromCart } = useShoppingCart();
+    const { items, updateQuantity, removeFromCart, cartTotal, cartItemCount } = useShoppingCart();
 
-    const totalPrice = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-    console.log('shoppingCartScreen rendered')
+    const textColor = COLORS.accent;
 
     return (
         <View style={styles.container}>
@@ -32,15 +32,15 @@ export default function ShoppingCartScreen() {
                         </View>
                         <View style={styles.quantityContainer}>
                             <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
-                                <Icon name="removeFromCart" size={24} color="#666" />
+                                <Icon name="removeFromCart" size={24} color={textColor} />
                             </Pressable>
                             <Text style={styles.quantity}>{item.quantity}</Text>
                             <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                <Icon name="addToCart" size={24} color="#666" />
+                                <Icon name="addToCart" size={24} color={textColor} />
                             </Pressable>
                         </View>
-                        <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: 15 }}>
-                            <Icon name="emptyCart" size={24} color="#f00" />
+                        <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: SPACING.md }}>
+                            <Icon name="emptyCart" size={24} color={textColor} />
                         </Pressable>
                     </View>
                 )}
@@ -48,8 +48,18 @@ export default function ShoppingCartScreen() {
             />
             {items.length > 0 && (
                 <View style={styles.summaryContainer}>
-                    <Text style={styles.totalText}>Total: {formatPrice(totalPrice)}</Text>
-                    <Button title="Gå til kassen" onPress={() => { /* TODO: Implement checkout */ }} />
+                    <View style={
+                        {
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }
+                    }
+                    >
+                        <Text style={styles.totalText}>Antall: {cartItemCount}</Text>
+                        <Text style={styles.totalText}>Total: {formatPrice(cartTotal)}</Text>
+                    </View>
+                    <Button title="Gå til kassen" icon="checkout" onPress={() => { /* TODO: Implement checkout */ }} />
                 </View>
             )}
         </View>
@@ -68,6 +78,9 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
+    textColor: {
+        color: COLORS.textOnSecondary,
+    },
     productImage: {
         width: 60,
         height: 60,
@@ -79,7 +92,7 @@ const styles = StyleSheet.create({
     },
     productName: {
         fontSize: FONT_SIZES.md,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     productPrice: {
         fontSize: FONT_SIZES.sm,
@@ -92,6 +105,7 @@ const styles = StyleSheet.create({
     },
     quantity: {
         fontSize: FONT_SIZES.md,
+        fontWeight: 'bold',
         marginHorizontal: 10,
     },
     summaryContainer: {

@@ -49,7 +49,7 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
                 <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
                 <Text style={styles.price}>{formatPrice(product.price)}</Text>
             </View>
-            <Pressable onPress={() => addToCart(product)}>
+            <Pressable onPress={() => addToCart(product)} style={styles.addToCartButton}    >
                 <View className="justify-center">
                     <Icon name="addToCart" size={24} color="black" />
                 </View>
@@ -115,6 +115,9 @@ const styles = StyleSheet.create({
     image: {
         width: 50,
         height: 50,
+    },
+    addToCartButton: {
+        marginRight: SPACING.md,
     },
     name: {
         fontWeight: '600',

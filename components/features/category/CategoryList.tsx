@@ -52,7 +52,6 @@ export const CategoryList = ({ categoryId, limit, style }: CategoryProps) => {
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
 
-    console.log("category list rendered for", categoryId);
     return (
         categories.length > 0 ? (
             <View style={[styles.container, style]}>

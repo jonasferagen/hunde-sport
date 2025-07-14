@@ -22,7 +22,6 @@ export const useProductsByCategory = (categoryId: number) => {
         if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasNextPage, isFetchingNextPage]);
 
     useEffect(() => {
