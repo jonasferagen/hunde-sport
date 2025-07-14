@@ -1,10 +1,14 @@
-import { Loader } from '@/components/ui';
+import { Icon, Loader } from '@/components/ui';
+import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
+import { SPACING } from '@/styles/Dimensions';
+import { FONT_SIZES } from '@/styles/Typography';
 import { Product } from '@/types';
+import { formatPrice } from '@/utils/helpers';
 import { FlashList } from "@shopify/flash-list";
 import { router } from 'expo-router';
 import React, { memo, useCallback } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import ProductListItem from './ProductListItem';
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 
 interface RenderProductProps {
     item: Product;
@@ -26,6 +30,32 @@ interface ProductListProps {
     HeaderComponent?: React.ReactElement;
     EmptyComponent?: React.ReactElement;
 }
+
+
+interface ProductListItemProps {
+    product: Product;
+}
+
+const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
+    const { addToCart } = useShoppingCart();
+
+    console.log(product.id + ' ' + product.name + ' rendered');
+
+    return (
+        <View key={product.id} style={styles.container}>
+            <Image source={{ uri: product.images[0].src }} style={styles.image} />
+            <View style={{ flex: 1, marginHorizontal: SPACING.md }}>
+                <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
+                <Text style={styles.price}>{formatPrice(product.price)}</Text>
+            </View>
+            <Pressable onPress={() => addToCart(product)}>
+                <View className="justify-center">
+                    <Icon name="addToCart" size={24} color="black" />
+                </View>
+            </Pressable>
+        </View>
+    );
+};
 
 export default function ProductList({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) {
 
@@ -70,5 +100,25 @@ const styles = StyleSheet.create({
     itemContainer: {
         flex: 1,
         marginBottom: 8,
+    },
+
+    container: {
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    image: {
+        width: 50,
+        height: 50,
+    },
+    name: {
+        fontWeight: '600',
+        fontSize: FONT_SIZES.md,
+    },
+    price: {
+        color: 'gray',
+        marginTop: 5,
     },
 });

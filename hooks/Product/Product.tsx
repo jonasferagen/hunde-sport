@@ -16,9 +16,16 @@ export const useProductsByCategory = (categoryId: number) => {
         },
     });
 
-    const data = queryResult.data;
+    const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
 
     useEffect(() => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+    useEffect(() => {
+
         if (data) {
             const lastPage = data.pages[data.pages.length - 1];
             lastPage.forEach((product: Product) => {
@@ -64,7 +71,7 @@ export const useFeaturedProducts = () => {
                 queryClient.setQueryData(['product', product.id], product);
             });
         }
-    }, [data, queryClient]);
+    }, [data?.pages.length, queryClient]);
 
     const products = data?.pages.flat() ?? [];
 
@@ -95,7 +102,7 @@ export const useSearchProducts = (query: string) => {
                 queryClient.setQueryData(['product', product.id], product);
             });
         }
-    }, [data, queryClient]);
+    }, [data?.pages.length, queryClient]);
 
     const products = data?.pages.flat() ?? [];
 
