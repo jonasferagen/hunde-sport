@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { SPACING } from '@/styles/Dimensions';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 const CategoryScreen = memo(() => {
     const { id, name, image: imageString } = useLocalSearchParams<{ id: string; name: string, image?: string }>();
@@ -28,6 +28,7 @@ const CategoryScreen = memo(() => {
                     <CategoryList categoryId={categoryId} limit={4} />
                 </PageSection>
                 <PageSection key={`categories-${categoryId}`} style={{ flex: 1 }} scrollable>
+                    <Text>{categoryId}</Text>
                     <CategoryProducts categoryId={categoryId} />
                 </PageSection>
             </PageContent>

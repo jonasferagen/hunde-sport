@@ -16,23 +16,16 @@ export const useProductsByCategory = (categoryId: number) => {
         },
     });
 
-    const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+    const { data } = queryResult;
 
     useEffect(() => {
-        if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-        }
-    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-    useEffect(() => {
-
         if (data) {
             const lastPage = data.pages[data.pages.length - 1];
             lastPage.forEach((product: Product) => {
                 queryClient.setQueryData(['product', product.id], product);
             });
         }
-    }, [data, queryClient]);
+    }, [data?.pages.length, queryClient]);
 
     const products = data?.pages.flat() ?? [];
 

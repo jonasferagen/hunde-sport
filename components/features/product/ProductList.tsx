@@ -57,7 +57,7 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
     );
 };
 
-export default function ProductList({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) {
+const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) => {
 
 
     const handleProductPress = useCallback((id: number) => {
@@ -89,7 +89,9 @@ export default function ProductList({ products, loadMore, loadingMore, HeaderCom
         />
 
     );
-}
+});
+
+export default ProductList;
 
 const styles = StyleSheet.create({
 
