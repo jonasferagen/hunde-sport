@@ -78,14 +78,12 @@ export const ProductScreen = () => {
         <PageSection primary>
           <VerticalStack spacing="md">
             <Breadcrumbs product={displayProduct} />
-
           </VerticalStack>
         </PageSection>
       </PageContent>
       <PageContent scrollable>
         <PageSection>
           <VerticalStack spacing="md">
-
             <Heading title={displayProduct.name} size="xxl" />
             <View style={styles.mainImageWrapper}>
               <TouchableOpacity onPress={() => openImageViewer(0)}>
@@ -108,7 +106,7 @@ export const ProductScreen = () => {
                 )
               })}
               {!!product.short_description && <Text style={styles.shortDescription}>{displayProduct.short_description}</Text>}
-              <Button title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
+              <Button variant="primary" title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
             </VerticalStack>
           </VerticalStack>
         </PageSection>

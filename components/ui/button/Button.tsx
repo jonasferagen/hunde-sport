@@ -1,3 +1,4 @@
+import { FONT_SIZES } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -7,15 +8,32 @@ export interface ButtonProps {
     onPress: () => void;
     title: string;
     icon?: keyof typeof ValidIcon;
-
+    variant?: 'primary' | 'secondary' | 'accent';
 };
 
-export const Button = ({ onPress, title, icon }: ButtonProps) => {
+const variantStyles = {
+    primary: {
+        backgroundColor: COLORS.primary,
+        color: COLORS.textOnPrimary,
+    },
+    secondary: {
+        backgroundColor: COLORS.secondary,
+        color: COLORS.textOnSecondary,
+    },
+    accent: {
+        backgroundColor: COLORS.accent,
+        color: COLORS.textOnAccent,
+    },
+};
+
+export const Button = ({ onPress, title, icon, variant = 'primary' }: ButtonProps) => {
+    const stylesForVariant = variantStyles[variant];
+
     return (
-        <Pressable onPress={onPress} style={styles.button}>
+        <Pressable onPress={onPress} style={[styles.button, { backgroundColor: stylesForVariant.backgroundColor }]}>
             <View style={styles.content}>
-                <Text style={styles.text}>{title}</Text>
-                {icon && <Icon name={icon} color="white" size={'xl'} style={styles.icon} />}
+                <Text style={[styles.text, { color: stylesForVariant.color }]}>{title}</Text>
+                {icon && <Icon name={icon} color={stylesForVariant.color} size={'xl'} style={styles.icon} />}
             </View>
         </Pressable>
     );
@@ -23,7 +41,6 @@ export const Button = ({ onPress, title, icon }: ButtonProps) => {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: COLORS.secondary,
         paddingVertical: SPACING.md,
         paddingHorizontal: SPACING.lg,
         borderRadius: BORDER_RADIUS.md,
@@ -38,8 +55,7 @@ const styles = StyleSheet.create({
         marginLeft: SPACING.md,
     },
     text: {
-        color: 'white',
-        fontSize: 16,
+        fontSize: FONT_SIZES.lg,
         fontWeight: '600',
     },
 });
