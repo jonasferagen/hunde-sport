@@ -1,13 +1,17 @@
 
-import { darken } from '@/utils/helpers';
-
+import { darken, lighten } from '@/utils/helpers';
 
 const primary = '#d5a5d7';
 const secondary = '#d7d5a5';
 const accent = '#a5d7d5';
 
-const backgroundPrimary = 'rgb(246, 246, 246)';
-const backgroundSecondary = 'rgb(255, 255, 255)';
+const backgroundPrimary = lighten(primary, 20)
+const backgroundSecondary = lighten(secondary, 20)
+const backgroundAccent = lighten(accent, 20);
+
+const backgroundPrimaryBorder = darken(backgroundPrimary, 10)
+const backgroundSecondaryBorder = darken(backgroundSecondary, 10)
+const backgroundAccentBorder = darken(backgroundAccent, 10)
 
 const gradientPrimary = [primary, secondary, accent] as const;
 
@@ -16,7 +20,6 @@ export const COLORS = {
   primary,
   secondary,
   accent,
-
   // Text colors
   textPrimary: 'rgb(35,35,35)',
   textSecondary: 'rgb(117,117,117)',
@@ -26,8 +29,14 @@ export const COLORS = {
   textOnAccent: darken(accent, 50),
 
   // Backgrounds
-  backgroundPrimary: backgroundPrimary,
-  backgroundSecondary: backgroundSecondary,
+  backgroundPrimary,
+  backgroundSecondary,
+  backgroundAccent,
+
+  // Background borders
+  backgroundPrimaryBorder,
+  backgroundSecondaryBorder,
+  backgroundAccentBorder,
 
   // Borders and outlines
   border: darken(backgroundSecondary, 10),

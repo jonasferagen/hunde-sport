@@ -7,7 +7,7 @@ import { Breadcrumbs, Button } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
 import { useProduct, useProductVariations } from '@/hooks/Product/Product';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
@@ -82,7 +82,7 @@ export const ProductScreen = () => {
         </PageSection>
       </PageContent>
       <PageContent scrollable>
-        <PageSection>
+        <PageSection secondary>
           <VerticalStack spacing="md">
             <View style={styles.mainImageWrapper}>
               <TouchableOpacity onPress={() => openImageViewer(0)}>
@@ -110,7 +110,7 @@ export const ProductScreen = () => {
           </VerticalStack>
         </PageSection>
 
-        <PageSection >
+        <PageSection accent style={{ backgroundColor: COLORS.backgroundAccent }}>
           <VerticalStack spacing="lg">
             {!!product.description && <Text style={styles.description}>{product.description}</Text>}
             <VerticalStack spacing="sm">
@@ -122,7 +122,7 @@ export const ProductScreen = () => {
           </VerticalStack>
         </PageSection>
 
-        <PageSection>
+        <PageSection primary>
           <View style={styles.imageGalleryContainer}>
             {product.images.map((image, index) => (
               <View key={'imageGalleryItem-' + index} style={styles.imageThumbnailWrapper}>
@@ -136,11 +136,9 @@ export const ProductScreen = () => {
             ))}
           </View>
         </PageSection>
-
-        <PageSection>
+        <PageSection secondary>
           <RelatedProducts productIds={product.related_ids} />
         </PageSection>
-
       </PageContent>
       <ImageViewing
         images={allImages}
@@ -162,7 +160,7 @@ const styles = StyleSheet.create({
     height: 300,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: COLORS.backgroundPrimaryBorder,
     borderRadius: BORDER_RADIUS.md,
   },
   mainImage: {
