@@ -1,4 +1,3 @@
-
 import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { CategoryTile, SearchBar } from '@/components/ui';
@@ -50,5 +49,3 @@ export const HomeScreen = () => {
         </PageView>
     );
 }
-
-

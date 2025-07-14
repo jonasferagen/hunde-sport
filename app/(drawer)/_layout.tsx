@@ -1,6 +1,5 @@
 import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
-import { SearchBar } from '@/components/ui';
 import { Icon } from '@/components/ui/Icon';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
@@ -22,7 +21,6 @@ function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTr
                     <Icon name="close" size={FONT_SIZES.xxl} color="black" />
                 </Pressable>
                 <Text style={styles.headerText}>hunde-sport.no</Text>
-                <SearchBar />
             </View>
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
                 <DrawerItemList {...props} />

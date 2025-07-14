@@ -1,9 +1,8 @@
-import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
+import { FONT_SIZES } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Heading, Icon } from '../ui/';
@@ -14,36 +13,22 @@ export const TopMenu = React.memo(() => {
         const navigation = useNavigation<DrawerNavigationProp<{}>>();
         return (
             <Pressable onPress={() => navigation.toggleDrawer()}>
-                <Icon name="menu" size={24} style={styles.content} />
+                <Icon name="menu" size={FONT_SIZES.xxl} style={styles.content} />
             </Pressable>
         );
     };
 
-    const TitleButton = () => {
-        const router = useRouter();
+    const Title = () => {
         return (
-            <Pressable onPress={() => router.push('/')}>
-                <Heading title="hunde-sport.no" size="lg" style={styles.content} />
-            </Pressable >
-        );
-    };
-
-    const ShoppingCartButton = () => {
-        const { cartItemCount } = useShoppingCart();
-        const router = useRouter();
-        console.log("shoppingCartButton rendered" + cartItemCount);
-        return (
-            <Pressable onPress={() => router.push('/shoppingCart')}>
-                <Icon name="shoppingCart" size={24} color={styles.content.color} badge={cartItemCount ? cartItemCount : undefined} />
-            </Pressable>
+            <Heading title="hunde-sport.no" size="lg" style={styles.content} />
         );
     };
 
     return (
         <View style={styles.container}>
             <DrawerToggleButton />
-            <TitleButton />
-            <ShoppingCartButton />
+            <Title />
+            <View style={{ width: FONT_SIZES.xxl }} />
         </View>
     );
 });

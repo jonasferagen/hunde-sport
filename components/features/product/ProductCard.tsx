@@ -1,7 +1,7 @@
 import { ProductTile } from "@/components/ui/";
 import { useBreadcrumbs } from "@/hooks/Breadcrumbs/BreadcrumbContext";
+import { routes } from '@/lib/routing';
 import { Product } from "@/types";
-import { router } from "expo-router";
 import React from 'react';
 
 interface ProductCardProps {
@@ -15,7 +15,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         if (product.categories.length > 0) {
             buildTrail(product.categories[0].id);
         }
-        router.push(`/product?id=${product.id}&name=${product.name}`);
+        routes.product(product.id.toString(), product.name);
     };
 
     return (

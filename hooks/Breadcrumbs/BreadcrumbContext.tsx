@@ -1,6 +1,6 @@
 import { useCategoryTrail } from '@/hooks/Category';
+import { routes } from '@/lib/routing';
 import { Category } from '@/types';
-import { router } from 'expo-router';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 // A new hook to manage the trail fetching logic
@@ -36,20 +36,20 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         if (categoryIndex !== -1) {
             setCategoriesState(categories.slice(0, categoryIndex + 1));
         }
-        router.push(`/category?id=${category.id}&name=${category.name}`);
+        routes.category(category.id, category.name);
     }, [categories]);
 
     const setCategories = useCallback((newCategories: Category[], go = true) => {
         setCategoriesState(newCategories);
         if (go && newCategories.length > 0) {
             const lastCategory = newCategories[newCategories.length - 1];
-            router.push(`/category?id=${lastCategory.id}&name=${lastCategory.name}`);
+            routes.category(lastCategory.id, lastCategory.name);
         }
     }, []);
 
     const addCategory = useCallback((category: Category) => {
         setCategoriesState(prev => [...prev, category]);
-        router.push(`/category?id=${category.id}&name=${category.name}`);
+        routes.category(category.id, category.name);
     }, []);
 
     const value = {

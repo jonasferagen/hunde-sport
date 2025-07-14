@@ -1,18 +1,25 @@
+import { routes } from '@/lib/routing';
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import { COLORS } from '@/styles/Colors';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Icon } from '../Icon';
 
+interface SearchBarProps {
+    placeholder?: string;
+    onSearch?: (query: string) => void;
+}
 
-
-export function SearchBar({ placeholder = 'Søk...' }: { placeholder?: string }) {
+export const SearchBar = ({ placeholder = 'Hva leter du etter?', onSearch }: SearchBarProps) => {
     const [query, setQuery] = useState('');
-    const router = useRouter();
 
     const handleSearch = () => {
         if (query.trim()) {
-            router.push(`/search?q=${query}`);
+            if (onSearch) {
+                onSearch(query);
+            } else {
+                routes.search(query);
+            }
         }
     };
 
@@ -26,7 +33,7 @@ export function SearchBar({ placeholder = 'Søk...' }: { placeholder?: string })
                 onSubmitEditing={handleSearch}
             />
             <Pressable onPress={handleSearch} style={styles.button}>
-                <Ionicons name="search" size={24} color="#fff" />
+                <Icon name="search" size={FONT_SIZES.xl} color="#fff" />
             </Pressable>
         </View>
     );
@@ -35,20 +42,20 @@ export function SearchBar({ placeholder = 'Søk...' }: { placeholder?: string })
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        padding: 10,
-        borderRadius: 5,
+        padding: SPACING.sm,
+        borderRadius: BORDER_RADIUS.lg,
     },
     input: {
         flex: 1,
-        padding: 10,
+        padding: SPACING.sm,
         backgroundColor: 'rgb(255, 255, 255)',
-        borderRadius: 5,
+        borderRadius: BORDER_RADIUS.lg,
     },
     button: {
-        padding: 10,
-        marginLeft: 10,
-        backgroundColor: COLORS.primary,
-        borderRadius: 5,
+        padding: SPACING.sm,
+        marginLeft: SPACING.md,
+        backgroundColor: COLORS.secondary,
+        borderRadius: BORDER_RADIUS.lg,
         justifyContent: 'center',
     },
 });

@@ -1,5 +1,4 @@
 // components/ui/PageContent.tsx
-import { SPACING } from '@/styles';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface PageContentProps {
@@ -36,8 +35,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContentContainer: {
-    paddingBottom: SPACING.md, // Add some padding at the bottom
-    borderWidth: 1,
-    borderColor: 'red',
+
   },
 });

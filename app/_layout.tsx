@@ -1,3 +1,4 @@
+import BottomMenu from '@/components/layout/BottomMenu';
 import { BreadcrumbProvider } from '@/hooks/Breadcrumbs/BreadcrumbContext';
 import { ShoppingCartProvider } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { StatusProvider, useStatus } from '@/hooks/Status/StatusProvider';
@@ -12,13 +13,14 @@ import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-cont
 function Layout() {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[AppStyles.appContainer, { marginTop: insets.top }]}>
+    <View style={[AppStyles.appContainer, { marginTop: insets.top, justifyContent: 'space-between', flex: 1 }]}>
       <Stack
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: 'transparent' },
         }}
       />
+      <BottomMenu />
     </View>
   );
 }

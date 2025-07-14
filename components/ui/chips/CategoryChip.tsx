@@ -1,6 +1,6 @@
 import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbContext';
+import { routes } from '@/lib/routing';
 import { Category } from '@/types';
-import { router } from 'expo-router';
 import React from 'react';
 import { Chip } from './Chip';
 
@@ -13,7 +13,7 @@ export const CategoryChip = ({ category }: CategoryChipProps) => {
 
     const handlePress = () => {
         buildTrail(category.id);
-        router.push(`/category?id=${category.id}&name=${category.name}`);
+        routes.category(category.id, category.name);
     };
 
     return (

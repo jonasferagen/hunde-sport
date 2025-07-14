@@ -1,41 +1,50 @@
 import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { Heading } from '@/components/ui';
+import { Heading, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
 import { useSearchProducts } from '@/hooks/Product/Product';
-import { useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 export const SearchScreen = () => {
-    const { q: query } = useLocalSearchParams<{ q: string }>();
-    const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(query || '');
+    const [query, setQuery] = useState('');
+    const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(query);
 
+    const handleSearch = (searchQuery: string) => {
+        setQuery(searchQuery);
+    };
 
-    if (isLoading) {
-        return <Loader />;
-    }
 
     return (
         <PageView>
             <PageContent>
+                <PageSection>
+                    <SearchBar onSearch={handleSearch} />
+                </PageSection>
                 <PageSection primary>
                     <Heading title={`Søkeresultater for "${query}"`} size="lg" />
                 </PageSection>
             </PageContent>
             <PageContent flex>
                 <PageSection flex>
-                    <ProductList
-                        products={products}
-                        loadMore={fetchNextPage}
-                        loadingMore={isFetchingNextPage}
-                        EmptyComponent={
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>Ingen produkter funnet.</Text>
-                            </View>
-                        }
-                    />
+                    {isLoading && <Loader />}
+
+                    {query ? (
+                        <ProductList
+                            products={products}
+                            loadMore={fetchNextPage}
+                            loadingMore={isFetchingNextPage}
+                            EmptyComponent={
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text>Ingen produkter funnet.</Text>
+                                </View>
+                            }
+                        />
+                    ) : (
+                        <Text>koko.</Text>
+                    )}
                 </PageSection>
-            </PageContent>
-        </PageView>
+            </PageContent >
+        </PageView >
     );
 }

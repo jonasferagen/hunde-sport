@@ -1,11 +1,11 @@
 import { Icon, Loader } from '@/components/ui';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
+import { routes } from '@/lib/routing';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { FlashList } from "@shopify/flash-list";
-import { router } from 'expo-router';
 import React, { memo, useCallback } from 'react';
 import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -62,7 +62,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
 
 
     const handleProductPress = useCallback((id: number) => {
-        router.push({ pathname: '/product', params: { id: id.toString() } });
+        routes.productSimple(id);
     }, []);
 
     const renderItem = useCallback(({ item }: { item: Product }) => (
