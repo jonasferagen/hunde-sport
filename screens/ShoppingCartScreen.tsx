@@ -1,4 +1,4 @@
-import { PageSection } from '@/components/layout';
+import { PageSection, PageView } from '@/components/layout';
 import { Button, Heading, Icon } from '@/components/ui';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
@@ -15,54 +15,57 @@ export const ShoppingCartScreen = () => {
     const textColor = COLORS.accent;
 
     return (
-        <View style={styles.container}>
+        <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageSection primary>
                 <Heading title="Handlekurv" size="lg" />
             </PageSection>
-            <FlatList
-                data={items}
-                keyExtractor={(item) => item.product.id.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.cartItem}>
-                        <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
-                        <View style={styles.productInfo}>
-                            <Text style={styles.productName}>{item.product.name}</Text>
-                            <Text style={styles.productPrice}>{formatPrice(item.product.price)}</Text>
-                        </View>
-                        <View style={styles.quantityContainer}>
-                            <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
-                                <Icon name="removeFromCart" size={24} color={textColor} />
+            <PageSection>
+                <FlatList
+                    data={items}
+                    keyExtractor={(item) => item.product.id.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.cartItem}>
+                            <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
+                            <View style={styles.productInfo}>
+                                <Text style={styles.productName}>{item.product.name}</Text>
+                                <Text style={styles.productPrice}>{formatPrice(item.product.price)}</Text>
+                            </View>
+                            <View style={styles.quantityContainer}>
+                                <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
+                                    <Icon name="removeFromCart" size={24} color={textColor} />
+                                </Pressable>
+                                <Text style={styles.quantity}>{item.quantity}</Text>
+                                <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
+                                    <Icon name="addToCart" size={24} color={textColor} />
+                                </Pressable>
+                            </View>
+                            <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: SPACING.md }}>
+                                <Icon name="emptyCart" size={24} color={textColor} />
                             </Pressable>
-                            <Text style={styles.quantity}>{item.quantity}</Text>
-                            <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                <Icon name="addToCart" size={24} color={textColor} />
-                            </Pressable>
                         </View>
-                        <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: SPACING.md }}>
-                            <Icon name="emptyCart" size={24} color={textColor} />
-                        </Pressable>
+                    )}
+                    ListEmptyComponent={<Text style={styles.emptyText}>Handlekurven er tom.</Text>}
+                />
+                {items.length > 0 && (
+                    <View style={styles.summaryContainer}>
+                        <View style={
+                            {
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }
+                        }
+                        >
+                            <Text style={styles.totalText}>Antall: {cartItemCount}</Text>
+                            <Text style={styles.totalText}>Total: {formatPrice(cartTotal)}</Text>
+                        </View>
+                        <Button title="Gå til kassen" icon="checkout" onPress={() => { /* TODO: Implement checkout */ }} />
                     </View>
                 )}
-                ListEmptyComponent={<Text style={styles.emptyText}>Handlekurven er tom.</Text>}
-            />
-            {items.length > 0 && (
-                <View style={styles.summaryContainer}>
-                    <View style={
-                        {
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }
-                    }
-                    >
-                        <Text style={styles.totalText}>Antall: {cartItemCount}</Text>
-                        <Text style={styles.totalText}>Total: {formatPrice(cartTotal)}</Text>
-                    </View>
-                    <Button title="Gå til kassen" icon="checkout" onPress={() => { /* TODO: Implement checkout */ }} />
-                </View>
-            )}
-        </View>
+            </PageSection>
+
+        </PageView>
     );
 }
 

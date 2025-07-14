@@ -1,7 +1,7 @@
 import { routes } from '@/lib/routing';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import { COLORS } from '@/styles/Colors';
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Icon } from '../Icon';
 
@@ -10,7 +10,7 @@ interface SearchBarProps {
     onSearch?: (query: string) => void;
 }
 
-export const SearchBar = ({ placeholder = 'Hva leter du etter?', onSearch }: SearchBarProps) => {
+export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', onSearch }, ref) => {
     const [query, setQuery] = useState('');
 
     const handleSearch = () => {
@@ -26,6 +26,7 @@ export const SearchBar = ({ placeholder = 'Hva leter du etter?', onSearch }: Sea
     return (
         <View style={styles.container}>
             <TextInput
+                ref={ref}
                 style={styles.input}
                 placeholder={placeholder}
                 value={query}
@@ -37,7 +38,7 @@ export const SearchBar = ({ placeholder = 'Hva leter du etter?', onSearch }: Sea
             </Pressable>
         </View>
     );
-}
+});
 
 const styles = StyleSheet.create({
     container: {
