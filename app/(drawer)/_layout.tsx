@@ -1,15 +1,14 @@
 import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
-import Icon from '@/components/ui/Icon';
+import { SearchBar } from '@/components/ui';
+import { Icon } from '@/components/ui/Icon';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { FONT_SIZES } from '@/styles/Typography';
 
 function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTreeVisible: boolean }) {
 
@@ -23,8 +22,9 @@ function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTr
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>hunde-sport.no</Text>
                 <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
-                    <Icon name="close" size={30} color="white" />
+                    <Icon name="close" size={24} color="white" />
                 </Pressable>
+                <SearchBar />
             </View>
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
                 <DrawerItemList {...props} />

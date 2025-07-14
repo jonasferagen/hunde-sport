@@ -10,7 +10,7 @@ interface HeadingProps {
     style?: StyleProp<TextStyle>;
 }
 
-export default function Heading({ title, size, style }: HeadingProps) {
+export function Heading({ title, size, style }: HeadingProps) {
     const styles = createStyles(size);
     return <Text style={[styles.title, style]}>{title}</Text>
 

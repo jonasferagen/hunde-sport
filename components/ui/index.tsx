@@ -1,12 +1,13 @@
-export { default as CategoryTile } from './CategoryTile';
-export { default as Heading } from './Heading';
-export { default as Loader } from './Loader';
-export { default as ProductTile } from './ProductTile';
-export { default as RetryView } from './RetryView';
+export { CategoryTile } from './CategoryTile';
+export { Heading } from './Heading';
+export { Loader } from './Loader';
+export { ProductTile } from './ProductTile';
+export { RetryView } from './RetryView';
 
-export { default as Breadcrumbs } from './breadcrumbs/Breadcrumbs';
-export { default as Button } from './Button';
-export { default as SearchBar } from './searchBar/Searchbar';
+export { Breadcrumbs } from './breadcrumbs/Breadcrumbs';
+export { Button } from './Button';
+export { SearchBar } from './searchBar/Searchbar';
 
-export { default as Icon } from './Icon';
+export { Chip } from './Chip';
+export { Icon } from './Icon';
 

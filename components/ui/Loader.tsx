@@ -8,7 +8,7 @@ interface LoaderProps {
   color?: string,
 }
 
-const Loader = ({ size = 'large', color = COLORS.textOnPrimary }: LoaderProps) => {
+export const Loader = ({ size = 'large', color = COLORS.textOnPrimary }: LoaderProps) => {
   return (
     <View style={styles.container}>
       <ActivityIndicator size={size} color={color} />
@@ -24,4 +24,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Loader;

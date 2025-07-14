@@ -9,7 +9,7 @@ export const ValidIcon = {
     menu: 'bars',
     tag: 'tag',
     emptyCart: 'trash',
-    close: 'times',
+    close: 'reply',
     collapse: 'chevron-up',
     expand: 'chevron-down',
     category: 'tag',
@@ -25,11 +25,8 @@ type IconProps = Omit<React.ComponentProps<typeof FontAwesome>, 'name'> & {
     badge?: number;
 };
 
-/**
- * A wrapper around the FontAwesome icon set.
- * This component forwards all props to the FontAwesome component.
- */
-const Icon = ({ name, badge = 0, ...rest }: IconProps) => {
+
+export const Icon = ({ name, badge = 0, ...rest }: IconProps) => {
 
     return (
         <View>
@@ -61,5 +58,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default Icon;

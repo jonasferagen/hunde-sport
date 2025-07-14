@@ -16,7 +16,7 @@ export interface BaseTileProps {
     style?: StyleProp<ViewStyle>;
 }
 
-export default function BaseTile({
+export function BaseTile({
     name,
     imageUrl,
     topRightText,

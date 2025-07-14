@@ -1,12 +1,12 @@
 import { COLORS } from '@/styles/Colors';
 import type { Category } from '@/types';
-import BaseTile, { type BaseTileProps } from './BaseTile';
+import { BaseTile, type BaseTileProps } from './BaseTile';
 
 interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 'topRightText'> {
     category: Category;
 }
 
-export default function CategoryTile({ category, ...rest }: CategoryTileProps) {
+export function CategoryTile({ category, ...rest }: CategoryTileProps) {
 
     if (!category.image) {
         return null;

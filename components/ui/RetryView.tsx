@@ -6,7 +6,7 @@ interface RetryViewProps {
   onRetry: () => void;
 }
 
-const RetryView: React.FC<RetryViewProps> = ({ error, onRetry }) => {
+export const RetryView: React.FC<RetryViewProps> = ({ error, onRetry }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.errorText}>{error}</Text>
@@ -30,4 +30,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RetryView;

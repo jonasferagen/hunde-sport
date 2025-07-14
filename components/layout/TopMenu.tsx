@@ -6,12 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Heading from '../ui/Heading';
-import Icon from '../ui/Icon';
-
+import { Heading, Icon } from '../ui/';
 
 export const TopMenu = React.memo(function TopMenu() {
-    console.log("topmenu rendered")
 
     const DrawerToggleButton = () => {
         const navigation = useNavigation<DrawerNavigationProp<{}>>();

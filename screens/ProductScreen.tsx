@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
-import Loader from '@/components/ui/Loader';
+import { Loader } from '@/components/ui/Loader';
 import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
@@ -46,7 +46,7 @@ export default function ProductScreen() {
       <Stack.Screen options={{ title: product.name }} />
 
       <PageContent scrollable>
-        <PageSection type="primary">
+        <PageSection primary>
           <Heading title={product.name} size="xxl" />
 
           <View style={styles.mainImageWrapper}>
@@ -65,7 +65,7 @@ export default function ProductScreen() {
 
         </PageSection>
 
-        <PageSection type="primary">
+        <PageSection primary>
           <Text style={styles.description}>{product.description}</Text>
           <View style={styles.categoryContainer}>
             {product.categories.map((category) => (
@@ -78,7 +78,7 @@ export default function ProductScreen() {
           </View>
         </PageSection>
 
-        <PageSection type="secondary">
+        <PageSection>
           <View style={styles.imageGalleryContainer}>
             {product.images.map((image, index) => (
               <View key={'imageGalleryItem-' + index} style={styles.imageThumbnailWrapper}>
@@ -89,18 +89,6 @@ export default function ProductScreen() {
                   />
                 </TouchableOpacity>
               </View>
-            ))}
-          </View>
-        </PageSection>
-
-        <PageSection type="primary">
-          <View style={styles.tagContainer}>
-            {product.tags.map((tag) => (
-              <TouchableOpacity key={tag.id} onPress={() => router.push(`/tag?id=${tag.id}&name=${tag.name}`)}>
-                <View style={styles.tag}>
-                  <Text style={styles.tagText}>{tag.name}</Text>
-                </View>
-              </TouchableOpacity>
             ))}
           </View>
         </PageSection>

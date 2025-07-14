@@ -25,7 +25,7 @@ export default function Index() {
         <PageView>
             <PageContent>
                 <PageSection primary>
-                    <SearchBar />
+                    <SearchBar placeholder="Jeg leter etter .." />
                 </PageSection>
                 <PageSection scrollable>
                     <View style={{ flex: 1, paddingVertical: SPACING.lg, borderColor: '#ccc', borderWidth: 1 }}>
@@ -39,7 +39,4 @@ export default function Index() {
     );
 }
 
-function useBreadcrumb(): { setTrail: any; } {
-    throw new Error('Function not implemented.');
-}
 

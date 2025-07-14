@@ -1,5 +1,4 @@
-import { Loader } from "@/components/ui";
-import Chip from "@/components/ui/Chip";
+import { Chip, Loader } from "@/components/ui";
 import { useBreadcrumbs } from "@/hooks/Breadcrumb/BreadcrumbProvider";
 import { useCategories } from "@/hooks/Category/Category";
 import { SPACING } from "@/styles/Dimensions";

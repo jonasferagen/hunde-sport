@@ -2,7 +2,7 @@ import { useProductsByCategory } from "@/hooks/Product/Product";
 import { SPACING } from "@/styles/Dimensions";
 import { Category } from "@/types";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-import Loader from "../../ui/Loader";
+import { Loader } from "../../ui";
 import ProductList from "../product/ProductList";
 
 interface CategoryProductsProps {

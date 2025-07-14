@@ -3,7 +3,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
-export default function SearchBar() {
+
+
+
+export function SearchBar({ placeholder = 'Søk...' }: { placeholder?: string }) {
     const [query, setQuery] = useState('');
     const router = useRouter();
 
@@ -17,7 +20,7 @@ export default function SearchBar() {
         <View style={styles.container}>
             <TextInput
                 style={styles.input}
-                placeholder="Søk etter produkter..."
+                placeholder={placeholder}
                 value={query}
                 onChangeText={setQuery}
                 onSubmitEditing={handleSearch}
