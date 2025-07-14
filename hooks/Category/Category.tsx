@@ -43,11 +43,11 @@ export const useCategories = (categoryId: number) => {
     return { ...queryResult, categories };
 };
 
-export const useCategory = (categoryId: number) => {
-
+export const useCategory = (categoryId: number | string) => {
+    const id = Number(categoryId);
     return useQuery<Category>({
-        queryKey: ['category', categoryId],
-        queryFn: () => fetchCategory(categoryId)
+        queryKey: ['category', id],
+        queryFn: () => fetchCategory(id)
     });
 };
 

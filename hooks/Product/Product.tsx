@@ -1,6 +1,6 @@
 import { Product } from '@/types';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, searchProducts } from './ProductApi';
 
 export const useProductsByCategory = (categoryId: number) => {
@@ -16,7 +16,14 @@ export const useProductsByCategory = (categoryId: number) => {
         },
     });
 
-    const { data } = queryResult;
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = queryResult;
+
+    const loadMore = useCallback(() => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasNextPage, isFetchingNextPage]);
 
     useEffect(() => {
         if (data) {
@@ -29,7 +36,7 @@ export const useProductsByCategory = (categoryId: number) => {
 
     const products = data?.pages.flat() ?? [];
 
-    return { ...queryResult, products };
+    return { ...queryResult, products, loadMore };
 };
 
 
@@ -48,14 +55,14 @@ export const useFeaturedProducts = () => {
         },
     });
 
-    const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = queryResult;
 
-    useEffect(() => {
+    const loadMore = useCallback(() => {
         if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
         }
-    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasNextPage, isFetchingNextPage]);
 
     useEffect(() => {
         if (data) {
@@ -68,7 +75,7 @@ export const useFeaturedProducts = () => {
 
     const products = data?.pages.flat() ?? [];
 
-    return { ...queryResult, products };
+    return { ...queryResult, products, loadMore };
 };
 
 export const useSearchProducts = (query: string) => {
@@ -85,7 +92,14 @@ export const useSearchProducts = (query: string) => {
         enabled: !!query, // Only run the query if there is a query string
     });
 
-    const data = queryResult.data;
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = queryResult;
+
+    const loadMore = useCallback(() => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasNextPage, isFetchingNextPage]);
 
     useEffect(() => {
 
@@ -99,7 +113,7 @@ export const useSearchProducts = (query: string) => {
 
     const products = data?.pages.flat() ?? [];
 
-    return { ...queryResult, products };
+    return { ...queryResult, products, loadMore };
 
 }
 

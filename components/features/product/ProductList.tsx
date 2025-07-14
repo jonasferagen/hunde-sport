@@ -29,6 +29,7 @@ interface ProductListProps {
     loadingMore: boolean;
     HeaderComponent?: React.ReactElement;
     EmptyComponent?: React.ReactElement;
+
 }
 
 
