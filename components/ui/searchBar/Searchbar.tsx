@@ -1,5 +1,5 @@
 import { routes } from '@/lib/routing';
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { BORDER_RADIUS, SPACING } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import React, { forwardRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
@@ -34,7 +34,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 onSubmitEditing={handleSearch}
             />
             <Pressable onPress={handleSearch} style={styles.button}>
-                <Icon name="search" size={FONT_SIZES.xl} color="#fff" />
+                <Icon name="search" size='xl' color="#fff" />
             </Pressable>
         </View>
     );

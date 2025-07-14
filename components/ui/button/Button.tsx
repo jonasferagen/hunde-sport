@@ -15,7 +15,7 @@ export const Button = ({ onPress, title, icon }: ButtonProps) => {
         <Pressable onPress={onPress} style={styles.button}>
             <View style={styles.content}>
                 <Text style={styles.text}>{title}</Text>
-                {icon && <Icon name={icon} color="white" size={20} style={styles.icon} />}
+                {icon && <Icon name={icon} color="white" size={'xl'} style={styles.icon} />}
             </View>
         </Pressable>
     );

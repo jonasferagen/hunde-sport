@@ -51,7 +51,7 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
             </View>
             <Pressable onPress={() => addToCart(product)} style={styles.addToCartButton}    >
                 <View className="justify-center">
-                    <Icon name="addToCart" size={24} color="black" />
+                    <Icon name="addToCart" color="black" />
                 </View>
             </Pressable>
         </View>

@@ -18,7 +18,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTr
         >
             <View style={styles.headerContainer}>
                 <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
-                    <Icon name="close" size={FONT_SIZES.xxl} color="black" />
+                    <Icon name="close" color="black" />
                 </Pressable>
                 <Text style={styles.headerText}>hunde-sport.no</Text>
             </View>
@@ -50,24 +50,24 @@ export default function DrawerLayout() {
                 drawerLabelStyle: styles.drawerLabel,
             }}
         >
-            <Drawer.Screen name="index" options={{ title: 'Hjem', drawerIcon: ({ color }) => <Icon name="home" size={24} color={color} /> }} />
+            <Drawer.Screen name="index" options={{ title: 'Hjem', drawerIcon: ({ color }) => <Icon name="home" color={color} /> }} />
             <Drawer.Screen
                 name="shoppingCart"
                 options={{
                     title: 'Handlekurv',
-                    drawerIcon: ({ color, size }) => {
+                    drawerIcon: ({ color }) => {
                         const { cartItemCount } = useShoppingCart();
-                        return <Icon name="shoppingCart" size={size} color={color} badge={cartItemCount} />;
+                        return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
                     },
                 }}
             />
             <Drawer.Screen name="category" options={{
                 title: 'Produkter',
-                drawerIcon: ({ color }) => <Icon name="categories" size={24} color={color} />,
+                drawerIcon: ({ color }) => <Icon name="categories" color={color} />,
                 drawerLabel: ({ focused, color }) => (
                     <View style={styles.productsLabelContainer}>
                         <Text style={{ color, fontSize: FONT_SIZES.md }}>Produkter</Text>
-                        <Icon style={styles.customDrawerIcon} name={isCategoryTreeVisible ? "expand" : "collapse"} size={16} color={color} />
+                        <Icon style={styles.customDrawerIcon} name={isCategoryTreeVisible ? "expand" : "collapse"} size={FONT_SIZES.md} color={color} />
                     </View>
                 ),
             }} listeners={{
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         color: 'black',
-        fontSize: 18,
+        fontSize: FONT_SIZES.lg,
         fontWeight: 'bold',
     },
     closeButton: {
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
         fontSize: FONT_SIZES.md,
         marginLeft: 0,
     },
-
 
     categoryContainer: {
         marginLeft: SPACING.lg,

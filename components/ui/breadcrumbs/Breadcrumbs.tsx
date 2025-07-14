@@ -23,13 +23,13 @@ export const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
                         <Text style={styles.crumbText}>{category.name}</Text>
                     </Pressable>
                     {(index < categories.length - 1) && (
-                        <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={FONT_SIZES.sm} style={styles.crumbSeparator} />
+                        <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={'sm'} style={styles.crumbSeparator} />
                     )}
                 </React.Fragment>
             ))}
             {product && (
                 <React.Fragment>
-                    <Icon name="breadcrumbSeparator" size={FONT_SIZES.sm} style={styles.crumbSeparator} />
+                    <Icon name="breadcrumbSeparator" size={'sm'} style={styles.crumbSeparator} />
                     <Text style={[styles.crumbText, styles.productText]}>{product.name}</Text>
                 </React.Fragment>
             )}

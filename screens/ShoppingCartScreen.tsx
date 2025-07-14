@@ -33,15 +33,15 @@ export const ShoppingCartScreen = () => {
                             </View>
                             <View style={styles.quantityContainer}>
                                 <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
-                                    <Icon name="removeFromCart" size={24} color={textColor} />
+                                    <Icon name="removeFromCart" color={textColor} />
                                 </Pressable>
                                 <Text style={styles.quantity}>{item.quantity}</Text>
                                 <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                    <Icon name="addToCart" size={24} color={textColor} />
+                                    <Icon name="addToCart" color={textColor} />
                                 </Pressable>
                             </View>
                             <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: SPACING.md }}>
-                                <Icon name="emptyCart" size={24} color={textColor} />
+                                <Icon name="emptyCart" color={textColor} />
                             </Pressable>
                         </View>
                     )}
