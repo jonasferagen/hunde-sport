@@ -21,9 +21,6 @@ export const COLORS = {
   secondary,
   accent,
   // Text colors
-  textPrimary: 'rgb(35,35,35)',
-  textSecondary: 'rgb(117,117,117)',
-
   textOnPrimary: darken(primary, 50),
   textOnSecondary: darken(secondary, 50),
   textOnAccent: darken(accent, 50),

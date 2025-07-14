@@ -14,12 +14,14 @@ interface PageSectionProps {
 
 export const PageSection = ({ children, primary = false, secondary = false, accent = false, style, flex, scrollable }: PageSectionProps) => {
 
-  const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'primary';
+  const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'secondary';
+
+  const mergedStyles = [styles[type], style];
 
   if (scrollable) {
     return (
       <ScrollView
-        contentContainerStyle={[styles.scrollContentContainer, styles[type], style]}
+        contentContainerStyle={[styles.scrollContentContainer, ...mergedStyles]}
         showsVerticalScrollIndicator={true}
         scrollEventThrottle={16}
         nestedScrollEnabled={true}
@@ -30,7 +32,7 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
   }
 
   return (
-    <View style={[flex && styles.flexContainer, styles.container, styles[type], style]}>
+    <View style={[flex && styles.flexContainer, styles.container, ...mergedStyles]}>
       {children}
     </View>
   );

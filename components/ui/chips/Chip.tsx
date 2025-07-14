@@ -22,7 +22,9 @@ export const Chip = ({ label, onPress, variant = 'secondary', style }: ChipProps
 
     const textStyle = [
         styles.chipText,
-        variant === 'secondary' ? styles.darkText : styles.lightText,
+        variant === 'primary' && styles.textPrimary,
+        variant === 'secondary' && styles.textSecondary,
+        variant === 'accent' && styles.textAccent,
     ];
 
     return (
@@ -42,6 +44,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    chipText: {
+        fontSize: FONT_SIZES.sm,
+        textAlign: 'center',
+    },
     primary: {
         backgroundColor: COLORS.primary,
     },
@@ -51,15 +57,14 @@ const styles = StyleSheet.create({
     accent: {
         backgroundColor: COLORS.accent,
     },
-    chipText: {
-        fontSize: FONT_SIZES.sm,
-        textAlign: 'center',
-    },
-    lightText: {
+    textPrimary: {
         color: COLORS.textOnPrimary, // Or a generic light text color
     },
-    darkText: {
+    textSecondary: {
         color: COLORS.textOnSecondary, // Or a generic dark text color
+    },
+    textAccent: {
+        color: COLORS.textOnAccent, // Or a generic dark text color
     },
 });
 

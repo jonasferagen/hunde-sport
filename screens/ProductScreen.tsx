@@ -110,7 +110,7 @@ export const ProductScreen = () => {
           </VerticalStack>
         </PageSection>
 
-        <PageSection accent style={{ backgroundColor: COLORS.backgroundAccent }}>
+        <PageSection primary>
           <VerticalStack spacing="lg">
             {!!product.description && <Text style={styles.description}>{product.description}</Text>}
             <VerticalStack spacing="sm">
@@ -122,7 +122,7 @@ export const ProductScreen = () => {
           </VerticalStack>
         </PageSection>
 
-        <PageSection primary>
+        <PageSection secondary>
           <View style={styles.imageGalleryContainer}>
             {product.images.map((image, index) => (
               <View key={'imageGalleryItem-' + index} style={styles.imageThumbnailWrapper}>
@@ -136,7 +136,7 @@ export const ProductScreen = () => {
             ))}
           </View>
         </PageSection>
-        <PageSection secondary>
+        <PageSection accent>
           <RelatedProducts productIds={product.related_ids} />
         </PageSection>
       </PageContent>
