@@ -7,6 +7,7 @@ interface BreadcrumbContextType {
     setCategories: (categories: Category[], go?: boolean) => void;
     addCategory: (category: Category) => void;
     navigateToCategory: (category: Category) => void;
+
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
@@ -46,6 +47,8 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         navigateToCategory(category);
 
     }, [categories, navigateToCategory]);
+
+
 
     useEffect(() => {
         console.log('categories updated', categories.map(category => category.name));

@@ -50,8 +50,10 @@ export const useCategory = (categoryId: number | string) => {
         queryFn: () => fetchCategory(id)
     });
 
-    return { ...result, category: result.data };
-};
+    const category = result.data;
 
+    return {
+        ...result, category
+    };
+}
 
-export default useCategories;
