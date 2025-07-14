@@ -1,20 +1,21 @@
-import { router } from 'expo-router';
 
+import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
+import { Category } from '@/types';
 import { Chip } from './Chip';
 
 
-type CategoryChipProps = {
-    category: {
-        id: number;
-        name: string;
-    };
+interface CategoryChipProps {
+    category: Category;
+
 };
 
 export const CategoryChip = ({ category }: CategoryChipProps) => {
+    const { addCategory } = useBreadcrumbs();
+
     return (
         <Chip
             label={category.name}
-            onPress={() => router.push(`/category?id=${category.id}&name=${category.name}`)}
+            onPress={() => addCategory(category)}
             variant="primary"
         />
     );

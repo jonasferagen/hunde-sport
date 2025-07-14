@@ -1,10 +1,8 @@
-import { Chip, Loader } from "@/components/ui";
-import { useBreadcrumbs } from "@/hooks/Breadcrumb/BreadcrumbProvider";
+import { CategoryChip, Chip } from "@/components/ui/";
 import { SPACING } from "@/styles/Dimensions";
 import { Category } from "@/types";
-import { memo, useState } from "react";
+import { useState } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-
 
 interface CategoryChipsProps {
     categories: Category[];
@@ -12,34 +10,6 @@ interface CategoryChipsProps {
     limit?: number;
     style?: StyleProp<ViewStyle>;
 };
-
-interface CategoryListItemProps {
-    category: Category;
-    style?: StyleProp<ViewStyle>;
-}
-
-// Memoized list item component with areEqual comparison
-export const CategoryListItem = memo<CategoryListItemProps>(
-    ({ category, style }) => {
-        const { addCategory } = useBreadcrumbs();
-
-        const handlePress = () => {
-            addCategory(category);
-        };
-
-        return (
-            <Chip
-                label={category.name}
-                onPress={handlePress}
-                variant="secondary"
-                style={style}
-            />
-        );
-    },
-    (prevProps, nextProps) => {
-        return prevProps.category.id === nextProps.category.id && prevProps.category.name === nextProps.category.name;
-    }
-);
 
 export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: CategoryChipsProps) => {
 
@@ -54,9 +24,9 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
                 <View style={styles.listContainer}>
 
                     {displayedCategories.map((category) => (
-                        <CategoryListItem key={category.id} category={category} />
+                        <CategoryChip key={category.id} category={category} />
                     ))}
-                    {isFetchingNextPage && <Loader size="small" />}
+                    {isFetchingNextPage && <Chip label="Laster..." />}
                     {!showAll && limit && categories.length > limit && (
                         <Chip
                             label={`Mer..(${categories.length - limit})`}

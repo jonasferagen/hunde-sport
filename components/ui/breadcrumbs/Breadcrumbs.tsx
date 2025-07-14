@@ -12,36 +12,32 @@ const Crumb = ({ crumb }: { crumb: any }) => {
         return <Text style={styles.productText}>{crumb.name}</Text>;
     }
 
-    const isHome = crumb.type === 'home';
-
     return (
         <Pressable onPress={() => navigate(crumb)}>
-            {isHome ? (
-                <Icon name="home" size={FONT_SIZES.xxl} color={COLORS.textOnSecondary} />
-            ) : (
-                <Text style={styles.crumbText}>{crumb.name}</Text>
-            )}
+            <Text style={[styles.crumbText]}>{crumb.name}</Text>
         </Pressable>
     );
 };
 
 export const Breadcrumbs = () => {
 
-    const { breadcrumbs } = useBreadcrumbs();
+    const { breadcrumbs, navigate } = useBreadcrumbs();
 
     return (
         <View style={styles.container}>
-            {breadcrumbs.map((crumb, index) => (
-                <React.Fragment key={crumb.type + '-' + crumb.id}>
-                    <View style={styles.crumbContainer}>
-                        <Crumb crumb={crumb} />
-                    </View>
-                    {index < breadcrumbs.length - 1 && (
-                        <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={FONT_SIZES.xs} style={styles.crumbSeparator} />
-                    )}
-                </React.Fragment>
-            ))}
-        </View>
+            {
+                breadcrumbs.map((crumb, index) => (
+                    <React.Fragment key={`${crumb.type}-${crumb.id}`}>
+                        <View style={styles.crumbContainer}>
+                            <Crumb crumb={crumb} />
+                        </View>
+                        {index < breadcrumbs.length - 1 && (
+                            <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={FONT_SIZES.xs} style={styles.crumbSeparator} />
+                        )}
+                    </React.Fragment>
+                ))
+            }
+        </View >
     );
 };
 
@@ -54,7 +50,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: SPACING.sm,
-        paddingHorizontal: SPACING.md,
+        paddingHorizontal: SPACING.xs,
     },
     crumbContainer: {
         flexDirection: 'row',

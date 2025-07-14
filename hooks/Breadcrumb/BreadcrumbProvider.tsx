@@ -5,18 +5,16 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 interface BreadcrumbContextType {
     breadcrumbs: Breadcrumb[];
     navigate: (crumb: Breadcrumb) => void;
-    setCategories: (categories: Category[], navigate?: boolean) => void;
+    setCategories: (categories: Category[], go?: boolean) => void;
     addCategory: (category: Category) => void;
     setProductCrumb: (product: Product | null) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
-const HOME_CRUMB: Breadcrumb = { id: null, name: 'Hjem', type: 'home' };
-
 export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
 
-    const [trail, setTrailState] = useState<Breadcrumb[]>([HOME_CRUMB]);
+    const [trail, setTrailState] = useState<Breadcrumb[]>([]);
     const [productCrumb, setProductCrumb] = useState<Breadcrumb | null>(null);
 
     const breadcrumbs = useMemo(() => {
@@ -38,6 +36,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         }
 
         if (crumb.type === 'home') {
+            setTrailState([]);
             return router.push('/');
         }
 
@@ -46,28 +45,30 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
 
     }, [trail]);
 
-    const setCategories = useCallback((categories: Category[]) => {
+    const setCategories = useCallback((categories: Category[], go = true) => {
         setProductCrumb(null);
 
         const categoryCrumbs: Breadcrumb[] = categories.map(category => ({
             id: category.id,
             name: category.name,
             type: 'category',
+            parent: category.parent,
         }));
 
-        const fullTrail = [HOME_CRUMB, ...categoryCrumbs];
-        setTrailState(fullTrail);
-        console.log('fullTrail', fullTrail.map(crumb => crumb.name));
-        navigate(fullTrail[fullTrail.length - 1]);
+        setTrailState(categoryCrumbs);
+
+        if (go && categoryCrumbs.length > 0) {
+            navigate(categoryCrumbs[categoryCrumbs.length - 1]);
+        }
     }, [navigate]);
 
     const addCategory = useCallback((category: Category) => {
         setProductCrumb(null);
 
         const lastCrumb = trail[trail.length - 1];
-        const newCrumb = { id: category.id, name: category.name, type: 'category' as const };
+        const newCrumb: Breadcrumb = { id: category.id, name: category.name, type: 'category' as const };
 
-        let newTrail = [HOME_CRUMB, newCrumb]; // Default to a new trail
+        let newTrail: Breadcrumb[] = [newCrumb]; // Default to a new trail
 
         if (lastCrumb && lastCrumb.type === 'category' && category.parent === lastCrumb.id) {
             newTrail = [...trail, newCrumb]; // Append to existing trail
