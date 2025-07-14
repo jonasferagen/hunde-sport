@@ -11,6 +11,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 interface CategoryProps {
     categoryId: number;
     limit?: number;
+    style?: StyleProp<ViewStyle>;
 };
 
 interface CategoryListItemProps {
@@ -43,9 +44,8 @@ export const CategoryListItem = memo<CategoryListItemProps>(
     }
 );
 
-export const CategoryList = ({ ...props }: CategoryProps) => {
+export const CategoryList = ({ categoryId, limit, style }: CategoryProps) => {
 
-    const { categoryId, limit } = props;
     const { categories, isFetchingNextPage } = useCategories(categoryId);
     const [showAll, setShowAll] = useState(false);
 
@@ -54,8 +54,8 @@ export const CategoryList = ({ ...props }: CategoryProps) => {
 
     console.log("category list rendered for", categoryId);
     return (
-        <View style={styles.container}>
-            {categories.length > 0 && (
+        categories.length > 0 ? (
+            <View style={[styles.container, style]}>
                 <View style={styles.listContainer}>
 
                     {displayedCategories.map((category) => (
@@ -83,19 +83,21 @@ export const CategoryList = ({ ...props }: CategoryProps) => {
                         </>
                     )}
                 </View>
-            )}
-        </View>
+            </View>
+        ) : null
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         alignItems: 'flex-start',
+
     },
     listContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
-        marginBottom: SPACING.sm,
+        gap: SPACING.xs,
+
     },
 });
