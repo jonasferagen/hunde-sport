@@ -1,3 +1,4 @@
+import { COLORS } from '@/styles/Colors';
 import type { Category } from '@/types';
 import BaseTile, { type BaseTileProps } from './BaseTile';
 
@@ -15,7 +16,7 @@ export default function CategoryTile({ category, ...rest }: CategoryTileProps) {
         <BaseTile
             name={category.name}
             imageUrl={category.image.src}
-            topRightText={category.name}
+            mainColor={COLORS.primary}
             {...rest}
         />
     );

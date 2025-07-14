@@ -44,7 +44,6 @@ export default function BaseTile({
                         <Text style={styles.topRightText}>{topRightText}</Text>
                     </View>
                 )}
-
                 <LinearGradient
                     colors={[rgba(mainColor, .7), rgba(mainColor, 1)]}
                     style={[styles.gradient, { minHeight: gradientMinHeight }]}
@@ -65,15 +64,17 @@ const styles = StyleSheet.create({
     },
     imageBackground: {
         flex: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
     },
     topRightContainer: {
+        position: 'absolute',
+        top: SPACING.sm,
+        right: SPACING.sm,
         alignSelf: 'flex-end',
         opacity: 0.9,
         borderRadius: BORDER_RADIUS.md,
         paddingVertical: SPACING.xs,
         paddingHorizontal: SPACING.sm,
-        margin: SPACING.sm,
     },
     topRightText: {
         color: 'white',
@@ -89,6 +90,10 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     gradient: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
         padding: SPACING.sm,
     },
     name: {
