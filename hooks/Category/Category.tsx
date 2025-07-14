@@ -1,8 +1,28 @@
 import { Category } from '@/types';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { fetchCategory, fetchCategoryByCategory } from './CategoryApi';
+import { fetchCategoryByCategory, fetchCategoryById } from './CategoryApi';
 
+export const buildCategoryTrail = async (queryClient: any, categoryId: number): Promise<Category[]> => {
+    const trail: Category[] = [];
+    let currentCategoryId: number | null = categoryId;
+
+    while (currentCategoryId !== null && currentCategoryId !== 0) {
+        try {
+            const category: Category = await queryClient.fetchQuery({
+                queryKey: ['category', currentCategoryId],
+                queryFn: () => fetchCategoryById(currentCategoryId!),
+            });
+            trail.unshift(category); // Add to the beginning of the array
+            currentCategoryId = category.parent;
+        } catch (error) {
+            console.error('Failed to fetch category trail:', error);
+            break;
+        }
+    }
+
+    return trail;
+};
 
 export const useCategories = (categoryId: number) => {
 
@@ -47,7 +67,7 @@ export const useCategory = (categoryId: number | string) => {
     const id = Number(categoryId);
     const result = useQuery<Category>({
         queryKey: ['category', id],
-        queryFn: () => fetchCategory(id)
+        queryFn: () => fetchCategoryById(id)
     });
 
     const category = result.data;
@@ -56,4 +76,3 @@ export const useCategory = (categoryId: number | string) => {
         ...result, category
     };
 }
-

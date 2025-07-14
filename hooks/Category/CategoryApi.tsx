@@ -20,7 +20,7 @@ export async function fetchCategoryByCategory(page: number, categoryId: number) 
     return (data ?? []).map(mapToCategory);
 }
 
-export async function fetchCategory(id: number) {
+export async function fetchCategoryById(id: number) {
     const { data, error } = await apiClient.get<any>(
         ENDPOINTS.CATEGORIES.GET(id)
     );
