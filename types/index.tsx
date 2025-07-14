@@ -46,12 +46,19 @@ export interface Product {
 export interface Attribute {
   id: number;
   name: string;
+  slug: string;
+  variation: boolean;
+  options: string[];
+  option?: string;
+  position: number;
+  visible: boolean;
 }
 
 export interface Tag {
   id: number;
   name: string;
 }
+
 export interface Breadcrumb {
   id: number | null;
   name: string;

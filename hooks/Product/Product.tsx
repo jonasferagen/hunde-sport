@@ -1,7 +1,28 @@
 import { Product } from '@/types';
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, searchProducts } from './ProductApi';
+
+export const useProduct = (productId: number) => {
+    return useQuery<Product>({
+        queryKey: ['product', productId],
+        queryFn: () => fetchProduct(productId)
+    });
+};
+
+export const useProductVariations = (productIds: number[]) => {
+    const queries = useQueries({
+        queries: productIds.map(id => {
+            return {
+                queryKey: ['product', id],
+                queryFn: () => fetchProduct(id),
+                enabled: !!id,
+            }
+        })
+    });
+
+    return queries;
+};
 
 export const useProductsByCategory = (categoryId: number) => {
 
@@ -115,10 +136,3 @@ export const useSearchProducts = (query: string) => {
     return { ...queryResult, products, loadMore };
 
 }
-
-export const useProduct = (productId: number) => {
-    return useQuery<Product>({
-        queryKey: ['product', productId],
-        queryFn: () => fetchProduct(productId)
-    });
-};

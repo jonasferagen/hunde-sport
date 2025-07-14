@@ -1,3 +1,3 @@
 
-import CategoryScreen from '@/screens/CategoryScreen';
+import { CategoryScreen } from '@/screens/CategoryScreen';
 export default CategoryScreen;

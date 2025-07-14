@@ -1,40 +1,72 @@
+import { CategoryChips } from '@/components/features/category/CategoryChips';
+import { AttributeDisplay } from '@/components/features/product/AttributeDisplay';
+import { VariationSelector } from '@/components/features/product/VariationSelector';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { Heading } from '@/components/ui';
-import { useProduct } from '@/hooks/Product/Product';
+import { Button, Heading } from '@/components/ui';
+import { useProduct, useProductVariations } from '@/hooks/Product/Product';
+import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
 import { Loader } from '@/components/ui/Loader';
-import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
+import { Product } from '@/types';
 
-
-export default function ProductScreen() {
-  const { id } = useLocalSearchParams<{ id: string; name: string }>();
+export const ProductScreen = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageViewerVisible, setImageViewerVisible] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
 
-  const { data, isLoading, error } = useProduct(Number(id));
+  const { data: product, isLoading, error } = useProduct(Number(id));
+  const { addToCart } = useShoppingCart();
+
+  const variationQueries = useProductVariations(product?.variations || []);
+  const variations = useMemo(() => variationQueries.map(query => query.data).filter(Boolean) as Product[], [variationQueries]);
+
+  const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
+
+
+  useEffect(() => {
+    const allOptionsSelected = product?.attributes
+      .filter(attr => attr.variation)
+      .every(attr => selectedOptions[attr.slug]);
+
+    if (allOptionsSelected) {
+      const foundVariation = variations.find(variation =>
+        variation.attributes.every(attr => selectedOptions[attr.slug] === attr.option)
+      );
+      setSelectedVariation(foundVariation || null);
+    } else {
+      setSelectedVariation(null);
+    }
+  }, [selectedOptions, variations, product?.attributes]);
+
+  const handleSelectOption = (attributeSlug: string, option: string) => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      [attributeSlug]: option,
+    }));
+  };
+
+  const displayProduct = useMemo(() => selectedVariation || product, [selectedVariation, product]);
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (error) {
+  if (error || !product || !displayProduct) {
     return <Loader />;
   }
 
-  const product = data!;
-
-
-  const mainImage = product.images[0];
-  const allImages = product.images.map(img => ({ uri: img.src }));
+  const mainImage = displayProduct.images[0];
+  const allImages = displayProduct.images.map(img => ({ uri: img.src }));
 
   const openImageViewer = (index: number) => {
     setCurrentImageIndex(index);
@@ -43,11 +75,11 @@ export default function ProductScreen() {
 
   return (
     <PageView>
-      <Stack.Screen options={{ title: product.name }} />
+      <Stack.Screen options={{ title: displayProduct.name }} />
 
       <PageContent scrollable>
         <PageSection primary>
-          <Heading title={product.name} size="xxl" />
+          <Heading title={displayProduct.name} size="xxl" style={styles.heading} />
 
           <View style={styles.mainImageWrapper}>
             <TouchableOpacity onPress={() => openImageViewer(0)}>
@@ -57,25 +89,31 @@ export default function ProductScreen() {
               />
             </TouchableOpacity>
           </View>
+          <Text style={styles.price}>{formatPrice(displayProduct.price)}</Text>
+          <View style={styles.productInfoContainer}>
+            {product.attributes.filter(attr => attr.variation).map(attribute => (
+              <VariationSelector
+                key={attribute.id}
+                attribute={attribute}
+                selectedOption={selectedOptions[attribute.slug] || null}
+                onSelectOption={(option) => handleSelectOption(attribute.slug, option)}
+              />
+            ))}
 
-          <Text style={styles.price}>{formatPrice(product.price)}</Text>
-          <Text style={styles.shortDescription}>{product.short_description}</Text>
+            <Text style={styles.shortDescription}>{displayProduct.short_description}</Text>
 
-          <Button color={COLORS.secondary} title="Legg til i handlekurv" onPress={() => { }} />
-
+            <Button title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
+          </View>
         </PageSection>
 
         <PageSection primary>
           <Text style={styles.description}>{product.description}</Text>
-          <View style={styles.categoryContainer}>
-            {product.categories.map((category) => (
-              <TouchableOpacity key={category.id} onPress={() => router.push(`/category?id=${category.id}&name=${category.name}`)}>
-                <View style={styles.category}>
-                  <Text style={styles.categoryText}>{category.name}</Text>
-                </View>
-              </TouchableOpacity>
+          <View style={styles.attributeContainer}>
+            {product.attributes.filter(attr => !attr.variation).map(attribute => (
+              <AttributeDisplay key={attribute.id} attribute={attribute} />
             ))}
           </View>
+          <CategoryChips categories={product.categories} />
         </PageSection>
 
         <PageSection>
@@ -103,11 +141,20 @@ export default function ProductScreen() {
       />
     </PageView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   content: {
     padding: SPACING.md,
+  },
+  attributeContainer: {
+    marginVertical: SPACING.md,
+  },
+  productInfoContainer: {
+    paddingVertical: 0,
+  },
+  heading: {
+    marginBottom: SPACING.md,
   },
 
   mainImageWrapper: {
@@ -121,7 +168,6 @@ const styles = StyleSheet.create({
   mainImage: {
     height: '100%',
   },
-
   price: {
     fontSize: FONT_SIZES.xxl,
     fontWeight: 'bold',
@@ -138,41 +184,7 @@ const styles = StyleSheet.create({
     marginTop: SPACING.sm,
     marginBottom: SPACING.sm,
   },
-  tagContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginVertical: SPACING.md,
-  },
-  categoryContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginVertical: SPACING.md,
-  },
-  category: {
-    backgroundColor: COLORS.primary,
-    borderRadius: BORDER_RADIUS.lg,
-    paddingVertical: SPACING.xs,
-    paddingHorizontal: SPACING.sm,
-    margin: SPACING.xs,
-  },
-  categoryText: {
-    color: COLORS.textOnPrimary,
-    fontSize: FONT_SIZES.sm,
-  },
 
-  tag: {
-    backgroundColor: COLORS.accent,
-    borderRadius: BORDER_RADIUS.lg,
-    paddingVertical: SPACING.xs,
-    paddingHorizontal: SPACING.sm,
-    margin: SPACING.xs,
-  },
-  tagText: {
-    color: COLORS.textOnAccent,
-    fontSize: FONT_SIZES.sm,
-  },
   imageGalleryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',

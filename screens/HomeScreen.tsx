@@ -20,7 +20,7 @@ const CategorySection = () => {
 }
 
 
-export default function Index() {
+export const HomeScreen = () => {
     return (
         <PageView>
             <PageContent>

@@ -7,6 +7,7 @@ export interface ButtonProps {
     onPress: () => void;
     title: string;
     icon?: keyof typeof ValidIcon;
+
 };
 
 export const Button = ({ onPress, title, icon }: ButtonProps) => {

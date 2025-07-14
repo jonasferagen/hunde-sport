@@ -8,6 +8,7 @@ export { Breadcrumbs } from './breadcrumbs/Breadcrumbs';
 export { Button } from './Button';
 export { SearchBar } from './searchBar/Searchbar';
 
-export { Chip } from './Chip';
+export { CategoryChip } from './chips/CategoryChip';
+export { Chip } from './chips/Chip';
 export { Icon } from './Icon';
 

@@ -6,7 +6,7 @@ import { useSearchProducts } from '@/hooks/Product/Product';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';
 
-export default function SearchScreen() {
+export const SearchScreen = () => {
     const { q: query } = useLocalSearchParams<{ q: string }>();
     const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(query || '');
 
