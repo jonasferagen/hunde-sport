@@ -16,7 +16,7 @@ export interface BaseTileProps {
     style?: StyleProp<ViewStyle>;
 }
 
-export function BaseTile({
+export const BaseTile = ({
     name,
     imageUrl,
     topRightText,
@@ -26,7 +26,7 @@ export function BaseTile({
     nameNumberOfLines = 1,
     gradientMinHeight = 40,
     mainColor = COLORS.secondary,
-    style }: BaseTileProps) {
+    style }: BaseTileProps) => {
 
     if (!imageUrl) {
         return null;

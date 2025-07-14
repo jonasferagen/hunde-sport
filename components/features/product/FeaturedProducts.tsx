@@ -1,9 +1,9 @@
+import { ProductTile } from "@/components/ui/";
 import { Loader } from "@/components/ui/Loader";
-import { ProductTile } from "@/components/ui/ProductTile";
 import { useFeaturedProducts } from "@/hooks/Product/Product";
 import { ScrollView } from "react-native";
 
-export default function FeaturedProducts() {
+export const FeaturedProducts = () => {
 
     const { products, isLoading } = useFeaturedProducts();
 

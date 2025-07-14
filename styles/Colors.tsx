@@ -5,9 +5,10 @@ const primary = 'rgb(119, 131, 161)';
 const secondary = 'rgb(247, 177, 163)';
 const accent = 'rgb(161, 138, 117)';
 
-
 const backgroundPrimary = 'rgb(246, 246, 246)';
 const backgroundSecondary = 'rgb(255, 255, 255)';
+
+const gradientPrimary = ['#4c669f', '#3b5998', '#192f6a'] as const;
 
 export const COLORS = {
   // Primary palette
@@ -29,4 +30,5 @@ export const COLORS = {
 
   // Borders and outlines
   border: darken(backgroundSecondary, 10),
+  gradientPrimary
 };

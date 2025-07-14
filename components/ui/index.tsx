@@ -1,8 +1,8 @@
-export { CategoryTile } from './CategoryTile';
 export { Heading } from './Heading';
 export { Loader } from './Loader';
-export { ProductTile } from './ProductTile';
 export { RetryView } from './RetryView';
+export { CategoryTile } from './tile/CategoryTile';
+export { ProductTile } from './tile/ProductTile';
 
 export { Breadcrumbs } from './breadcrumbs/Breadcrumbs';
 export { Button } from './Button';

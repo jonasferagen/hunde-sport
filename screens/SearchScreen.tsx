@@ -1,7 +1,7 @@
-import ProductList from '@/components/features/product/ProductList';
+import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Heading } from '@/components/ui';
-import Loader from '@/components/ui/Loader';
+import { Loader } from '@/components/ui/Loader';
 import { useSearchProducts } from '@/hooks/Product/Product';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from 'react-native';

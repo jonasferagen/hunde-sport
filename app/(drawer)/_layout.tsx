@@ -3,7 +3,7 @@ import { TopMenu } from '@/components/layout/TopMenu';
 import { SearchBar } from '@/components/ui';
 import { Icon } from '@/components/ui/Icon';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Drawer } from 'expo-router/drawer';
@@ -12,18 +12,16 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTreeVisible: boolean }) {
 
-    const gradientColors = ['#4c669f', '#3b5998', '#192f6a'] as const;
-
     return (
         <LinearGradient
-            colors={gradientColors}
+            colors={COLORS.gradientPrimary}
             style={styles.drawerContent}
         >
             <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>hunde-sport.no</Text>
                 <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
                     <Icon name="close" size={24} color="white" />
                 </Pressable>
+                <Text style={styles.headerText}>hunde-sport.no</Text>
                 <SearchBar />
             </View>
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
@@ -106,7 +104,7 @@ const styles = StyleSheet.create({
     closeButton: {
         position: 'absolute',
         top: SPACING.lg,
-        right: SPACING.lg,
+        left: SPACING.lg,
     },
 
     customDrawerItem: {

@@ -3,7 +3,7 @@ import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon, ValidIcon } from './Icon';
 
-export type ButtonProps = {
+export interface ButtonProps {
     onPress: () => void;
     title: string;
     icon?: keyof typeof ValidIcon;

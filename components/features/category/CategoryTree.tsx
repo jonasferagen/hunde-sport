@@ -26,14 +26,14 @@ interface CategoryTreeItemProps {
 
 const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: CategoryTreeItemProps) => {
     const { data } = useSubCategories(category.id);
-    const { setTrail } = useBreadcrumbs();
+    const { handleNavigation } = useBreadcrumbs();
 
     const subcategories = data?.pages.flat() ?? [];
     const hasChildren = subcategories.length > 0;
 
     const handleNavigate = useCallback(() => {
-        setTrail(trail, true);
-    }, [setTrail, trail]);
+        handleNavigation(trail);
+    }, [handleNavigation, trail]);
 
     const handleExpand = useCallback(() => {
         onExpand(category.id);
@@ -73,9 +73,7 @@ const CategoryTreeItem = ({ category, level, trail, isExpanded, onExpand }: Cate
 };
 
 export const CategoryTree = ({ categoryId, level = 0, trail: trailProp = [] }: CategoryTreeProps) => {
-    if (categoryId === 0) {
-        console.log("tree rendered for 0");
-    }
+
 
     const { categories, isFetching } = useCategories(categoryId);
     const { init, breadcrumbs } = useBreadcrumbs();
@@ -99,7 +97,7 @@ export const CategoryTree = ({ categoryId, level = 0, trail: trailProp = [] }: C
                 {categories.map((category) => {
 
                     const newTrail = [...trail];
-                    newTrail.push({ id: category.id, name: category.name, type: "category" as const });
+                    newTrail.push({ ...category, type: "category" as const });
 
                     return (
                         <CategoryTreeItem

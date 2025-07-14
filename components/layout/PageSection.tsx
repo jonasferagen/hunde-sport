@@ -9,7 +9,7 @@ type PageSectionProps = {
   scrollable?: boolean;
 };
 
-export function PageSection({ children, primary = false, style, scrollable }: PageSectionProps) {
+export const PageSection = ({ children, primary = false, style, scrollable }: PageSectionProps) => {
 
   const type = primary ? 'primary' : 'secondary';
 

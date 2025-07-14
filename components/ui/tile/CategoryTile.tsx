@@ -6,7 +6,7 @@ interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 't
     category: Category;
 }
 
-export function CategoryTile({ category, ...rest }: CategoryTileProps) {
+export const CategoryTile = ({ category, ...rest }: CategoryTileProps) => {
 
     if (!category.image) {
         return null;

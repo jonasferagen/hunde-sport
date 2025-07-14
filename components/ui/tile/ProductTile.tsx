@@ -6,7 +6,7 @@ interface ProductTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 'to
     product: Product;
 }
 
-export function ProductTile({ product, ...rest }: ProductTileProps) {
+export const ProductTile = ({ product, ...rest }: ProductTileProps) => {
     const { images, name, price } = product;
     const image = images[0];
 

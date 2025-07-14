@@ -8,7 +8,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Heading, Icon } from '../ui/';
 
-export const TopMenu = React.memo(function TopMenu() {
+export const TopMenu = React.memo(() => {
 
     const DrawerToggleButton = () => {
         const navigation = useNavigation<DrawerNavigationProp<{}>>();

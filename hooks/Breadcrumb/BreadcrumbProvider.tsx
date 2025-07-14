@@ -28,6 +28,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     }, [setBreadcrumbs]);
 
     const handleNavigation = useCallback((trail: Breadcrumb[]) => {
+        setBreadcrumbs(trail);
         const destination = trail[trail.length - 1];
         if (destination.type === 'home') {
             router.replace('/');

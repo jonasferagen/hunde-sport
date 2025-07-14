@@ -1,5 +1,5 @@
 
-import FeaturedProducts from '@/components/features/product/FeaturedProducts';
+import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { CategoryTile, SearchBar } from '@/components/ui';
 import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';

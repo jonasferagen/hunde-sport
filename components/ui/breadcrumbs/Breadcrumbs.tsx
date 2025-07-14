@@ -1,20 +1,15 @@
+import { Icon } from '@/components/ui';
 import { Breadcrumb } from '@/types';
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useBreadcrumbs } from '@/hooks/Breadcrumb/BreadcrumbProvider';
-import { COLORS } from '@/styles/Colors';
-import { SPACING } from '@/styles/Dimensions';
+import { COLORS, FONT_SIZES, SPACING } from '@/styles';
 import { lighten } from '@/utils/helpers';
 
 export const Breadcrumbs = () => {
 
-    const { breadcrumbs, setTrail } = useBreadcrumbs();
-
-    const onNavigate = (trail: Breadcrumb[]) => {
-        setTrail(trail, true);
-    };
+    const { breadcrumbs, handleNavigation } = useBreadcrumbs();
 
     const trail: Breadcrumb[] = [];
 
@@ -23,16 +18,15 @@ export const Breadcrumbs = () => {
             {breadcrumbs.map((crumb, index) => {
                 trail.push(crumb);
                 const currentTrail = [...trail];
-
                 return (
-                    <React.Fragment key={crumb.id ?? 'home'}>
-                        <Pressable onPress={() => onNavigate(currentTrail)}>
+                    <View key={crumb.id ?? 'home'} style={styles.crumbContainer}>
+                        <Pressable onPress={() => handleNavigation(currentTrail)}>
                             <Text style={styles.crumbText}>{crumb.name}</Text>
                         </Pressable>
                         {index < breadcrumbs.length - 1 && (
-                            <Ionicons name="chevron-forward" size={16} color="black" style={[styles.crumbText, styles.separator]} />
+                            <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={FONT_SIZES.xs} style={styles.crumbSeparator} />
                         )}
-                    </React.Fragment>
+                    </View>
                 );
             })}
         </View>
@@ -50,12 +44,17 @@ const styles = StyleSheet.create({
         paddingVertical: SPACING.sm,
         paddingHorizontal: SPACING.md,
     },
+    crumbContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     crumbText: {
-        fontSize: 14,
+        fontSize: FONT_SIZES.sm,
         color: COLORS.textOnSecondary,
     },
-    separator: {
+    crumbSeparator: {
         marginHorizontal: SPACING.xs,
+        top: 1
     },
 });
 
