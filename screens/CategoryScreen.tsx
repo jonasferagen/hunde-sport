@@ -1,9 +1,10 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { CategoryProducts } from '@/components/features/category/CategoryProducts';
+import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
+import { useProductsByCategory } from '@/hooks/Product/Product';
 import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -21,13 +22,10 @@ const CategoryListArea = ({ category }: { category: Category }) => {
 
 export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
-    const { category, isLoading } = useCategory(id);
+    const { category } = useCategory(id);
+    const { products, isLoading, isFetchingNextPage, loadMore } = useProductsByCategory(Number(id));
 
-    if (isLoading) {
-        return <Loader />;
-    }
-
-    if (!category) {
+    if (!category || isLoading) {
         return <Loader />;
     }
 
@@ -40,9 +38,9 @@ export const CategoryScreen = memo(() => {
                     <CategoryListArea category={category} />
                 </PageSection>
             </PageContent>
-            <PageContent scrollable>
-                <PageSection key={`categories-${category.id}`} style={{ flex: 1 }} scrollable>
-                    <CategoryProducts category={category} />
+            <PageContent flex>
+                <PageSection key={`categories-${category.id}`} flex>
+                    <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={loadMore} />
                 </PageSection>
             </PageContent>
         </PageView>

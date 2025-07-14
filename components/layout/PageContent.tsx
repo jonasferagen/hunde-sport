@@ -1,12 +1,15 @@
 // components/ui/PageContent.tsx
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { SPACING } from '@/styles';
+import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface PageContentProps {
   children: React.ReactNode;
   scrollable?: boolean;
+  flex?: boolean;
+  style?: ViewStyle;
 }
 
-export const PageContent = ({ children, scrollable }: PageContentProps) => {
+export const PageContent = ({ children, scrollable, flex, style }: PageContentProps) => {
   if (scrollable) {
     return (
       <ScrollView
@@ -21,17 +24,20 @@ export const PageContent = ({ children, scrollable }: PageContentProps) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, flex && styles.flexContainer, style]}>
       {children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 0,
+  container: {},
+  flexContainer: {
+    flex: 1,
   },
   scrollContentContainer: {
-    paddingBottom: 20, // Add some padding at the bottom
+    paddingBottom: SPACING.md, // Add some padding at the bottom
+    borderWidth: 1,
+    borderColor: 'red',
   },
 });

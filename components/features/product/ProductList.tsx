@@ -65,8 +65,6 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
         router.push({ pathname: '/product', params: { id: id.toString() } });
     }, []);
 
-    console.log("productlist rendered");
-
     const renderItem = useCallback(({ item }: { item: Product }) => (
         <RenderProduct item={item} onPress={handleProductPress} />
     ), [handleProductPress]);

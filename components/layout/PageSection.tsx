@@ -6,10 +6,11 @@ type PageSectionProps = {
   children: React.ReactNode;
   primary?: boolean;
   style?: ViewStyle;
+  flex?: boolean;
   scrollable?: boolean;
 };
 
-export const PageSection = ({ children, primary = false, style, scrollable }: PageSectionProps) => {
+export const PageSection = ({ children, primary = false, style, flex, scrollable }: PageSectionProps) => {
 
   const type = primary ? 'primary' : 'secondary';
 
@@ -27,7 +28,7 @@ export const PageSection = ({ children, primary = false, style, scrollable }: Pa
   }
 
   return (
-    <View style={[styles.container, styles[type], style]}>
+    <View style={[styles.container, flex && styles.flexContainer, style]}>
       {children}
     </View>
   );
@@ -36,6 +37,9 @@ export const PageSection = ({ children, primary = false, style, scrollable }: Pa
 const styles = StyleSheet.create({
   container: {
     padding: SPACING.md,
+  },
+  flexContainer: {
+    flex: 1,
   },
   scrollContentContainer: {
     paddingBottom: SPACING.lg, // Add some padding at the bottom

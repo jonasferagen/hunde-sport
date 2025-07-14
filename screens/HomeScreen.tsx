@@ -5,7 +5,6 @@ import { CategoryTile, SearchBar } from '@/components/ui';
 import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbContext';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
-import { Category } from '@/types';
 import { View } from 'react-native';
 
 const CategorySection = () => {
@@ -14,10 +13,6 @@ const CategorySection = () => {
 
     const filteredCategories = categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund')
     filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
-
-    const onSelectCategory = (category: Category) => {
-        addCategory(category);
-    }
 
     return filteredCategories.map((category, index) => {
 

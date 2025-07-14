@@ -21,7 +21,9 @@ export const SearchScreen = () => {
                 <PageSection primary>
                     <Heading title={`Søkeresultater for "${query}"`} size="lg" />
                 </PageSection>
-                <PageSection style={{ flex: 1 }}>
+            </PageContent>
+            <PageContent flex>
+                <PageSection flex>
                     <ProductList
                         products={products}
                         loadMore={fetchNextPage}
@@ -32,7 +34,6 @@ export const SearchScreen = () => {
                             </View>
                         }
                     />
-
                 </PageSection>
             </PageContent>
         </PageView>
