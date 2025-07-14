@@ -1,3 +1,4 @@
+import { FONT_SIZES } from '@/styles';
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -22,17 +23,17 @@ export const ValidIcon = {
 } as const;
 
 // Get the type of all props that FontAwesome accepts
-type IconProps = Omit<React.ComponentProps<typeof FontAwesome>, 'name'> & {
+interface IconProps extends Omit<React.ComponentProps<typeof FontAwesome>, 'name' | 'size'> {
     name: keyof typeof ValidIcon;
     badge?: number;
+    size?: number | keyof typeof FONT_SIZES;
 };
 
-
-export const Icon = ({ name, badge = 0, ...rest }: IconProps) => {
-
+export const Icon = ({ name, badge = 0, size = 'xxl', ...rest }: IconProps) => {
+    const fontSize = typeof size === 'string' ? FONT_SIZES[size as keyof typeof FONT_SIZES] : size;
     return (
         <View>
-            <FontAwesome name={ValidIcon[name]} {...rest} />
+            <FontAwesome name={ValidIcon[name]} size={fontSize} {...rest} />
             {badge > 0 && (
                 <View style={styles.badge}>
                     <Text style={styles.badgeText}>{badge}</Text>

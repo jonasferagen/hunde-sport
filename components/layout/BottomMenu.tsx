@@ -1,23 +1,25 @@
+import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { paths } from '@/lib/routing';
 import { COLORS } from '@/styles/Colors';
-import { FontAwesome } from '@expo/vector-icons';
 import { Href, Link, useSegments } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Icon, ValidIcon } from '../ui/Icon';
 
 const BottomMenu = () => {
     const insets = useSafeAreaInsets();
     const segments = useSegments();
+    const { cartItemCount } = useShoppingCart();
     const currentPath = `/${segments.join('/')}`;
 
-    const TabButton = ({ href, iconName, label }: { href: Href; iconName: React.ComponentProps<typeof FontAwesome>['name']; label: string }) => {
+    const TabButton = ({ href, iconName, label, badge }: { href: Href; iconName: keyof typeof ValidIcon, label: string, badge?: number }) => {
         const isActive = href === currentPath || (href === paths.home && currentPath === '/(drawer)/index');
         const color = isActive ? COLORS.primary : '#333';
 
         return (
             <Link href={href} asChild>
                 <TouchableOpacity style={styles.tabButton}>
-                    <FontAwesome name={iconName} size={24} color={color} />
+                    <Icon name={iconName} color={color} badge={badge} />
                     <Text style={[styles.tabLabel, { color }]}>{label}</Text>
                 </TouchableOpacity>
             </Link>
@@ -28,8 +30,7 @@ const BottomMenu = () => {
         <View style={[styles.container, { paddingBottom: insets.bottom, height: 60 + insets.bottom }]}>
             <TabButton href={paths.home} iconName="home" label="Hjem" />
             <TabButton href={paths.search} iconName="search" label="Søk" />
-            <TabButton href={paths.shoppingCart} iconName="shopping-cart" label="Handlekurv" />
-
+            <TabButton href={paths.shoppingCart} iconName="shoppingCart" label="Handlekurv" badge={cartItemCount} />
         </View>
     );
 };
