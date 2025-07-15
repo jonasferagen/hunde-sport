@@ -10,7 +10,6 @@ export type ApiError = {
   status: number;
 };
 
-
 export interface Image {
   src: string;
 }
@@ -61,4 +60,34 @@ export interface Breadcrumb {
   id: number | null;
   name: string;
   type: 'category' | 'product' | 'home';
+}
+
+export interface Theme {
+  readonly colors: {
+    readonly primary: string;
+    readonly secondary: string;
+    readonly accent: string;
+    readonly background: string;
+    readonly card: string;
+    readonly text: string;
+    readonly textSecondary: string;
+    readonly border: string;
+    readonly error: string;
+    readonly success: string;
+    readonly info: string;
+  };
+  readonly gradients: {
+    readonly primary: readonly [string, string, ...string[]];
+    readonly secondary: readonly [string, string, ...string[]];
+    readonly accent: readonly [string, string, ...string[]];
+  };
+  readonly tabs: {
+    readonly active: string;
+    readonly inactive: string;
+  };
+  readonly textOnColor: {
+    readonly primary: string;
+    readonly secondary: string;
+    readonly accent: string;
+  };
 }

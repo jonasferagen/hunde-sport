@@ -4,8 +4,8 @@ import { routes } from '@/config/routing';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { SPACING } from '@/styles/Dimensions';
-import { Theme } from '@/styles/Theme';
 import { FONT_SIZES } from '@/styles/Typography';
+import { Theme } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Stack } from 'expo-router';
 import React from 'react';
@@ -28,7 +28,7 @@ export const ShoppingCartScreen = () => {
                     keyExtractor={(item) => item.product.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.cartItem}>
-                            <Pressable onPress={() => routes.product(item.product.id, item.product.name)} style={styles.productPressable}>
+                            <Pressable onPress={() => routes.product(item.product)} style={styles.productPressable}>
                                 <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
                                 <View style={styles.productInfo}>
                                     <CustomText bold>{item.product.name}</CustomText>

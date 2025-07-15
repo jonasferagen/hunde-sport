@@ -1,3 +1,4 @@
+import { Theme } from '@/types';
 import { darken } from '@/utils/helpers';
 
 const palette = {
@@ -20,7 +21,7 @@ const palette = {
   info: '#1976D2', // A standard info blue
 };
 
-export const lightTheme = {
+export const lightTheme: Theme = {
   colors: {
     primary: palette.primary,
     secondary: palette.secondary,
@@ -79,5 +80,3 @@ export const darkTheme: Theme = {
     accent: palette.white,
   },
 } as const;
-
-export type Theme = typeof lightTheme;

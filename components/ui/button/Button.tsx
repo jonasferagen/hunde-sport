@@ -1,7 +1,7 @@
 import { useTheme } from '@/contexts/ThemeProvider';
 import { FONT_SIZES } from '@/styles';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { Theme } from '@/styles/Theme';
+import { Theme } from '@/types';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { CustomText } from '../customtext/CustomText';
 import { Icon, ValidIcon } from '../icon/Icon';

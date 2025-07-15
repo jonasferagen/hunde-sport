@@ -1,7 +1,7 @@
 import { routes } from '@/config/routing';
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
-import { Theme } from '@/styles/Theme';
+import { Theme } from '@/types';
 import React, { forwardRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Icon } from '../icon/Icon';

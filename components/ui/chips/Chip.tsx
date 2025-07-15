@@ -1,6 +1,6 @@
 import { useTheme } from '@/contexts/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
-import { Theme } from '@/styles/Theme';
+import { Theme } from '@/types';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { CustomText, CustomTextProps } from '../customtext/CustomText';

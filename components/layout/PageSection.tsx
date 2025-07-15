@@ -1,7 +1,7 @@
 import { useTheme } from '@/contexts';
 import { PageSectionProvider } from '@/contexts/PageSectionContext';
 import { SPACING } from '@/styles/Dimensions';
-import { Theme } from '@/styles/Theme';
+import { Theme } from '@/types';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface PageSectionProps {
