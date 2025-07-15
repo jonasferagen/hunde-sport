@@ -25,9 +25,11 @@ export const routes = {
         router.push({ pathname: paths.category, params: { id: category.id.toString(), name: category.name } });
     },
     product: (product: Product) => {
-        if (product.categories && product.categories.length > 0) {
-            breadcrumbHelper.buildTrail(product.categories[0].id);
+        if (product.categories.length === 0) {
+            throw new Error('Product has no categories');
         }
+
+        breadcrumbHelper.buildTrail(product.categories[0].id);
         router.push({ pathname: paths.product, params: { id: product.id.toString(), name: product.name } });
     },
 };
