@@ -5,16 +5,13 @@ import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProv
 import { AppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from "expo-router";
-import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useState } from "react";
+import { JSX, useState } from "react";
 import { View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
 
-const Layout = () => {
+const Layout = (): JSX.Element => {
   const { insets } = useLayout();
   return (
     <View style={[AppStyles.appContainer, { marginTop: insets.top, justifyContent: 'space-between', flex: 1 }]}>
@@ -29,28 +26,22 @@ const Layout = () => {
   );
 }
 
-const AppContent = () => {
+const AppContent = (): JSX.Element => {
   const { appIsReady } = usePreloader();
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
 
   if (!appIsReady) {
     return <Preloader />;
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+    <GestureHandlerRootView style={{ flex: 1 }} >
       <Layout />
       <StatusMessage />
     </GestureHandlerRootView>
   );
 }
 
-export const RootLayout = () => {
+const AppProviders = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -68,7 +59,7 @@ export const RootLayout = () => {
             <ShoppingCartProvider>
               <PreloaderProvider>
                 <LayoutProvider>
-                  <AppContent />
+                  {children}
                 </LayoutProvider>
               </PreloaderProvider>
             </ShoppingCartProvider>
@@ -76,6 +67,14 @@ export const RootLayout = () => {
         </StatusProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
+  );
+}
+
+export const RootLayout = () => {
+  return (
+    <AppProviders>
+      <AppContent />
+    </AppProviders>
   );
 }
 

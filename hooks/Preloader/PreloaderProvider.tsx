@@ -1,5 +1,6 @@
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface PreloaderContextType {
@@ -7,7 +8,8 @@ interface PreloaderContextType {
 }
 
 const PreloaderContext = createContext<PreloaderContextType | undefined>(undefined);
-
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 export const PreloaderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [appIsReady, setAppIsReady] = useState(false);
 
@@ -18,9 +20,11 @@ export const PreloaderProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                     Montserrat_400Regular,
                     Montserrat_700Bold,
                 });
+
             } catch (e) {
                 console.warn(e);
             } finally {
+                await SplashScreen.hideAsync();
                 setAppIsReady(true);
             }
         }
