@@ -4,7 +4,6 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
-import { View } from 'react-native';
 
 const CategorySection = () => {
     const { categories, isLoading } = useCategories(0, { fetchAll: true });
@@ -30,12 +29,11 @@ const CategorySection = () => {
 export const HomeScreen = () => {
     return (
         <PageView>
-            <PageContent>
-                <PageSection scrollable>
-                    <View style={{ flex: 1, paddingVertical: SPACING.lg, borderColor: '#ccc', borderWidth: 1 }}>
-                        <FeaturedProducts />
-                    </View>
-                    <View style={{ height: SPACING.lg }} />
+            <PageContent scrollable>
+                <PageSection primary>
+                    <FeaturedProducts />
+                </PageSection>
+                <PageSection secondary>
                     <CategorySection />
                 </PageSection>
             </PageContent>

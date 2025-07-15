@@ -96,11 +96,10 @@ export const ShoppingCartScreen = () => {
         />
     ), [updateQuantity, removeFromCart]);
 
-
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
-            <PageSection accent>
+            <PageSection>
                 <CustomText size="lg">Handlekurv</CustomText>
             </PageSection>
             <PageSection flex style={styles.cartSection}>
