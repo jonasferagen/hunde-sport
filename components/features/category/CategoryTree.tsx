@@ -5,16 +5,11 @@ import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category, Theme } from '@/types';
 import { rgba } from '@/utils/helpers';
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
 
-interface CategoryTreeProps {
-    categoryId: number;
-    level?: number;
-    ancestors?: Category[];
-};
 
 interface CategoryTreeItemProps {
     category: Category;
@@ -24,7 +19,7 @@ interface CategoryTreeItemProps {
     onExpand: (categoryId: number) => void;
 };
 
-const CategoryTreeItem = memo(({ category, level, ancestors, isExpanded, onExpand }: CategoryTreeItemProps) => {
+const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: CategoryTreeItemProps) => {
     const { categories } = useCategories(category.id);
     const { theme } = useTheme();
     const styles = useMemo(() => createStyles(theme), [theme]);
@@ -58,7 +53,7 @@ const CategoryTreeItem = memo(({ category, level, ancestors, isExpanded, onExpan
                 </View>
                 {isExpanded && (
                     <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
-                        <CategoryTree
+                        <CategorySubTree
                             categoryId={category.id}
                             level={level + 1}
                             ancestors={ancestors}
@@ -68,9 +63,15 @@ const CategoryTreeItem = memo(({ category, level, ancestors, isExpanded, onExpan
             </View>
         </Animated.View >
     );
-});
+};
 
-export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: CategoryTreeProps) => {
+interface CategorySubTreeProps {
+    categoryId: number;
+    level?: number;
+    ancestors?: Category[];
+};
+
+const CategorySubTree = ({ categoryId, level = 0, ancestors = [] }: CategorySubTreeProps) => {
     const { categories, isFetchingNextPage } = useCategories(categoryId, { fetchAll: true });
     const { categories: breadcrumbs } = useBreadcrumbs();
 
@@ -104,6 +105,9 @@ export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: Category
     );
 };
 
+export const CategoryTree = React.memo(() => {
+    return <CategorySubTree categoryId={0} />;
+});
 
 const createStyles = (theme: Theme) => StyleSheet.create({
 

@@ -1,6 +1,5 @@
 import { paths } from '@/config/routing';
-import { useLayout, useTheme } from '@/contexts';
-import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { useLayout, useShoppingCart, useTheme } from '@/contexts';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { Theme } from '@/types';
 import { Href, Link, useSegments } from 'expo-router';
@@ -9,6 +8,7 @@ import { Icon, ValidIcon } from '../ui/icon/Icon';
 
 const BottomMenu = () => {
     const { insets, setBottomMenuHeight } = useLayout();
+    console.log("bottommenu rendered");
     const segments = useSegments();
     const { cartItemCount } = useShoppingCart();
     const currentPath = `/${segments.join('/')}`;

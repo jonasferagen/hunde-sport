@@ -2,7 +2,6 @@ import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
 import { CustomText } from '@/components/ui';
 import { Icon } from '@/components/ui/icon/Icon';
-import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { useTheme } from '@/contexts/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import { FONT_FAMILY } from '@/styles/Typography';
@@ -10,12 +9,14 @@ import { Theme } from '@/types';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Drawer } from 'expo-router/drawer';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+
+
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { theme } = useTheme();
-    const styles = createStyles(theme);
+    const styles = useMemo(() => createStyles(theme), [theme]);
 
     return (
         <LinearGradient
@@ -32,7 +33,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 <DrawerItemList {...props} />
 
                 <View style={styles.categoryContainer}>
-                    <CategoryTree categoryId={0} />
+                    <CategoryTree />
                 </View>
             </DrawerContentScrollView>
 
@@ -52,8 +53,9 @@ const screenOptions = (theme: Theme) => {
 
 
 const ShoppingCartIcon = React.memo(({ color }: { color: string }) => {
-    const { cartItemCount } = useShoppingCart();
-    return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
+    return null;
+    //    const { cartItemCount } = useShoppingCart();
+    //   return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
 });
 
 
@@ -67,7 +69,13 @@ const DrawerNavigator = () => {
             drawerContent={(props) => <CustomDrawerContent {...props} />}
             screenOptions={screenOptions(theme)}
         >
-            <Drawer.Screen name="index" options={{ title: 'Hjem', drawerIcon: ({ color }) => <Icon name="home" color={color} /> }} />
+            <Drawer.Screen
+                name="index"
+                options={{
+                    title: 'Hjem',
+                    drawerIcon: ({ color }) => <Icon name="home" color={color} />,
+                }}
+            />
             <Drawer.Screen
                 name="shoppingCart"
                 options={{
