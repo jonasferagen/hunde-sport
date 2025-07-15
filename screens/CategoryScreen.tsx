@@ -21,8 +21,10 @@ const CategoryListArea = ({ category }: { category: Category }) => {
 
 export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
-    const { category } = useCategory(id);
-    const { products, isLoading, isFetchingNextPage, loadMore } = useProductsByCategory(Number(id));
+    const categoryId = Number(id);
+    const { category } = useCategory(categoryId);
+    const { products, isLoading, isFetchingNextPage, fetchNextPage } = useProductsByCategory(categoryId);
+
 
     if (!category || isLoading) {
         return <Loader />;
@@ -39,7 +41,7 @@ export const CategoryScreen = memo(() => {
             </PageContent>
             <PageContent flex>
                 <PageSection accent key={`categories-${category.id}`} flex>
-                    <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={loadMore} />
+                    <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={fetchNextPage} />
                 </PageSection>
             </PageContent>
         </PageView>
