@@ -107,7 +107,7 @@ export const ProductScreen = () => {
                   />
                 )
               })}
-              {!!product.short_description && <CustomText style={styles.shortDescription}>{displayProduct.short_description}</CustomText>}
+              <CustomText style={styles.shortDescription}>{displayProduct.short_description}</CustomText>
               <Button variant="primary" title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
             </VerticalStack>
           </VerticalStack>
