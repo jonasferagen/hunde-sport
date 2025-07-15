@@ -31,7 +31,7 @@ const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: Shoppin
     };
 
     return (
-        <Animated.View style={[styles.cartItem, { opacity }]}>
+        <Animated.View style={[styles.cartItem, { opacity }]} >
             <View style={styles.quantityContainer}>
                 <VerticalStack spacing="xs" style={styles.quantityStack}>
                     <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
@@ -124,9 +124,9 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: theme.colors.card,
-        padding: SPACING.md,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.border,
+        paddingHorizontal: SPACING.md,
+        gap: SPACING.md
+
     },
     productPressable: {
         flexDirection: 'row',
@@ -134,7 +134,7 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         flex: 1,
     },
     cartSection: {
-        paddingHorizontal: 0
+        paddingHorizontal: 0,
     },
     productImage: {
         width: 60,
@@ -149,6 +149,7 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     },
     productInfo: {
         flex: 1,
+        justifyContent: 'center',
     },
 
     productPrice: {
@@ -157,13 +158,12 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     quantityContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: SPACING.md,
+
     },
     quantityStack: {
         alignItems: 'center',
     },
     quantity: {
-        width: 30, // Set a fixed width for the quantity
         textAlign: 'center', // Center the text within the fixed width
     },
     removeButton: {
