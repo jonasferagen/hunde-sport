@@ -3,15 +3,21 @@ import { BORDER_RADIUS, SPACING } from '@/styles';
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
 
+// Define colors locally to avoid theme dependency issues during startup
+const statusColors = {
+    info: '#1976D2', // Blue
+    success: '#388E3C', // Green
+};
+
 const StatusMessage = () => {
-    const { message } = useStatus();
+    const { message, type } = useStatus();
     const { bottomMenuHeight } = useLayout();
     const [fadeAnim] = useState(new Animated.Value(0));
 
     useEffect(() => {
         Animated.timing(fadeAnim, {
-            toValue: message ? .8 : 0,
-            duration: 500,
+            toValue: message ? 1 : 0,
+            duration: 300,
             useNativeDriver: true,
         }).start();
     }, [message]);
@@ -20,30 +26,37 @@ const StatusMessage = () => {
         return null;
     }
 
+    const containerStyle = {
+        backgroundColor: statusColors[type] || statusColors.info,
+    };
+
     return (
-        <Animated.View style={[styles.statusContainer, { opacity: fadeAnim, bottom: bottomMenuHeight + SPACING.sm }]}>
-            <Text style={styles.statusText}>{message}</Text>
+        <Animated.View
+            style={[
+                styles.statusContainer,
+                containerStyle,
+                { opacity: fadeAnim, bottom: bottomMenuHeight + SPACING.sm },
+            ]}
+        >
+            <Text style={styles.text}>{message}</Text>
         </Animated.View>
     );
 };
 
 const styles = StyleSheet.create({
     statusContainer: {
-        borderColor: 'red',
-        borderWidth: 2,
         position: 'absolute',
         left: SPACING.md,
         right: SPACING.md,
-        backgroundColor: 'red',
         borderRadius: BORDER_RADIUS.md,
         padding: SPACING.lg,
         alignItems: 'center',
         justifyContent: 'center',
-
     },
-    statusText: {
+    text: {
         color: 'white',
         fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

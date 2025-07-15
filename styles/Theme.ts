@@ -13,6 +13,11 @@ const palette = {
 
   activeRed: '#F47272',
   inactiveBlue: '#9DB2CE',
+
+  // Status colors
+  error: '#D32F2F', // A standard error red
+  success: '#388E3C', // A standard success green
+  info: '#1976D2', // A standard info blue
 };
 
 export const lightTheme = {
@@ -25,6 +30,9 @@ export const lightTheme = {
     text: palette.black,
     textSecondary: palette.darkGrey,
     border: palette.grey,
+    error: palette.error,
+    success: palette.success,
+    info: palette.info,
   },
   gradients: {
     primary: [darken(palette.primary, 10), palette.primary],
@@ -52,6 +60,9 @@ export const darkTheme: Theme = {
     text: palette.white,
     textSecondary: palette.lightGrey,
     border: darken(palette.black, -20),
+    error: palette.error,
+    success: palette.success,
+    info: palette.info,
   },
   gradients: {
     primary: [darken(palette.primary, 10), palette.primary],

@@ -5,7 +5,7 @@ import { FONT_SIZES } from '@/styles';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category } from '@/types';
 import { rgba } from '@/utils/helpers';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
@@ -72,27 +72,27 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
 };
 
 export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: CategoryTreeProps) => {
-
-
-    const { categories, isFetching } = useCategories(categoryId);
+    const { categories, isFetching, hasNextPage, isFetchingNextPage, fetchNextPage } = useCategories(categoryId);
     const { categories: breadcrumbs } = useBreadcrumbs();
 
     const activeChild = categories.find((c: Category) => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);
 
+    useEffect(() => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage, categories]);
+
     const handleToggleExpand = (itemId: number) => {
         setExpandedItemId(prevId => (prevId === itemId ? null : itemId));
     };
 
-    if (isFetching && level === 0) {
-        return <Loader size="small" />;
-    }
 
     return (
         <View style={styles.container}>
             <View>
                 {categories.map((category: Category) => {
-
                     return (
                         <CategoryTreeItem
                             key={category.id}
@@ -104,6 +104,9 @@ export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: Category
                         />
                     );
                 })}
+                {isFetchingNextPage && (
+                    <Loader size="small" />
+                )}
             </View>
         </View>
     );
@@ -139,5 +142,4 @@ const itemStyles = StyleSheet.create({
         backgroundColor: itemBackgroundColor,
         borderRadius: BORDER_RADIUS.sm,
     },
-
 });

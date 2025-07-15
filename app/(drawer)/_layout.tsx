@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/icon/Icon';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { useTheme } from '@/hooks/Theme/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
-import { Theme } from '@/styles/Colors';
+import { Theme } from '@/styles/Theme';
 import { FONT_FAMILY } from '@/styles/Typography';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';

@@ -36,7 +36,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 return [...prevItems, { product, quantity: 1 }];
             }
         });
-        showMessage(`${product.name} er lagt til i handlekurven`, 2000);
+        showMessage({ text: `${product.name} er lagt til i handlekurven`, type: 'info' });
     }, [showMessage]);
 
     const removeFromCart = useCallback((productId: number) => {

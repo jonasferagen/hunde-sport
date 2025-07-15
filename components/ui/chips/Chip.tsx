@@ -1,6 +1,6 @@
 import { useTheme } from '@/hooks/Theme/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
-import { Theme } from '@/styles/Colors';
+import { Theme } from '@/styles/Theme';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { CustomText, CustomTextProps } from '../customtext/CustomText';

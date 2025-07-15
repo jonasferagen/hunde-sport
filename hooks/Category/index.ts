@@ -1,13 +1,43 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useStatus } from '../Status/StatusProvider';
 import { categoriesQueryOptions, categoryQueryOptions, categoryTrailQueryOptions } from './queries';
+
+
 
 export const useCategoryTrail = (categoryId: number | null) => {
     return useQuery(categoryTrailQueryOptions(categoryId));
 };
 
-export const useCategories = (categoryId: number) => {
+export const useCategories = (categoryId: number, options?: { fetchAll?: boolean }) => {
     const query = useInfiniteQuery(categoriesQueryOptions(categoryId));
-    const categories = query.data?.pages.flat() ?? [];
+    const { isError, refetch, data, fetchNextPage, hasNextPage, isFetchingNextPage } = query;
+    const { showMessage } = useStatus();
+
+    useEffect(() => {
+        if (isError) {
+            showMessage({
+                text: 'Could not load categories.',
+                type: 'error',
+                action: {
+                    label: 'Retry',
+                    onPress: () => refetch(),
+                },
+            });
+        }
+    }, [isError, refetch, showMessage]);
+
+    useEffect(() => {
+        const fetchAllPages = async () => {
+            if (options?.fetchAll && hasNextPage && !isFetchingNextPage) {
+                await fetchNextPage();
+            }
+        };
+        fetchAllPages();
+    }, [options?.fetchAll, hasNextPage, fetchNextPage, isFetchingNextPage, data]);
+
+
+    const categories = data?.pages.flat() ?? [];
     return { ...query, categories };
 };
 

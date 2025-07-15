@@ -8,7 +8,7 @@ import { Loader } from '@/components/ui/loader/Loader';
 import { useShoppingCart, useTheme } from '@/hooks';
 import { useProduct, useProductVariations } from '@/hooks/Product';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
-import { Theme } from '@/styles/Colors';
+import { Theme } from '@/styles/Theme';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';

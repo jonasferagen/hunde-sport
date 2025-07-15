@@ -2,7 +2,7 @@ import { paths } from '@/config/routing';
 import { useLayout, useTheme } from '@/hooks';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { FONT_SIZES, SPACING } from '@/styles';
-import { Theme } from '@/styles/Colors';
+import { Theme } from '@/styles/Theme';
 import { Href, Link, useSegments } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Icon, ValidIcon } from '../ui/icon/Icon';

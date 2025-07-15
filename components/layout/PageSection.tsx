@@ -1,6 +1,6 @@
 import { useTheme } from '@/hooks';
-import { Theme } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
+import { Theme } from '@/styles/Theme';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface PageSectionProps {

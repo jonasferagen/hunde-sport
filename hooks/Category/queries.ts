@@ -2,13 +2,15 @@ import { Category } from '@/types';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { fetchCategoryByCategory, fetchCategoryById } from './api';
 
+import { PAGE_SIZE } from '@/config/api';
+
 export const categoriesQueryOptions = (categoryId: number) =>
     infiniteQueryOptions({
         queryKey: ['categoriesByCategory', categoryId],
         queryFn: ({ pageParam = 1 }) => fetchCategoryByCategory(pageParam, categoryId),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
-            return lastPage.length === 10 ? allPages.length + 1 : undefined;
+            return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
         },
     });
 
