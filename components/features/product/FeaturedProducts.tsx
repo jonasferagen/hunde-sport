@@ -1,5 +1,5 @@
 import { Loader } from "@/components/ui/loader/Loader";
-import { useFeaturedProducts } from "@/hooks/Product/Product";
+import { useFeaturedProducts } from "@/hooks/Product/ProductProvider";
 import { ScrollView } from "react-native";
 import { ProductCard } from "./ProductCard";
 

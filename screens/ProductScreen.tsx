@@ -5,9 +5,7 @@ import { VariationSelector } from '@/components/features/product/VariationSelect
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
 import { Breadcrumbs, Button, CustomText } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
-import { useProduct, useProductVariations } from '@/hooks/Product/Product';
-import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { useTheme } from '@/hooks/Theme/ThemeProvider';
+import { useProduct, useProductVariations, useShoppingCart, useTheme } from '@/hooks'; // Corrected import path
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import { Theme } from '@/styles/Colors';
 import { Product } from '@/types';

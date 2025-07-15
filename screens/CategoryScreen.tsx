@@ -4,7 +4,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
-import { useProductsByCategory } from '@/hooks/Product/Product';
+import { useProductsByCategory } from '@/hooks/Product/ProductProvider';
 import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';

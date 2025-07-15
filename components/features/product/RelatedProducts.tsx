@@ -1,6 +1,6 @@
 import { CustomText } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
-import { useRelatedProducts } from '@/hooks/Product/Product';
+import { useRelatedProducts } from '@/hooks/Product/ProductProvider';
 import { SPACING } from '@/styles';
 import { useMemo } from 'react';
 import { ScrollView } from 'react-native';

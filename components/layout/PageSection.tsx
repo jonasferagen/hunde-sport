@@ -45,9 +45,7 @@ const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
   },
-  scrollContentContainer: {
-    paddingBottom: SPACING.lg, // Add some padding at the bottom
-  },
+
   primary: {
     backgroundColor: COLORS.backgroundPrimary,
     borderColor: COLORS.backgroundPrimaryBorder,
