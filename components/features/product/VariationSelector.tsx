@@ -1,4 +1,4 @@
-import { Chip, CustomText } from '@/components/ui';
+import { Chip } from '@/components/ui';
 import { SPACING } from '@/styles';
 import { Attribute } from '@/types';
 import { StyleSheet, View } from 'react-native';
@@ -16,18 +16,15 @@ export const VariationSelector = ({ attribute, onSelectOption, selectedOption }:
     }
 
     return (
-        <View >
-            <CustomText bold size="md">{attribute.name}</CustomText>
-            <View style={styles.chipsContainer}>
-                {attribute.options.map(option => (
-                    <Chip
-                        key={option}
-                        label={option}
-                        onPress={() => onSelectOption(option)}
-                        variant={selectedOption === option ? 'primary' : 'default'}
-                    />
-                ))}
-            </View>
+        <View style={styles.chipsContainer}>
+            {attribute.options.map(option => (
+                <Chip
+                    key={option}
+                    label={option}
+                    onPress={() => onSelectOption(option)}
+                    variant={selectedOption === option ? 'primary' : 'default'}
+                />
+            ))}
         </View>
     );
 };
