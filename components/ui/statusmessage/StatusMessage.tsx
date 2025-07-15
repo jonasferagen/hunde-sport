@@ -1,4 +1,4 @@
-import { useLayout, useStatus } from '@/hooks';
+import { useLayout, useStatus } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';

@@ -1,10 +1,10 @@
+import { categoriesQueryOptions } from '@/hooks/Category/queries';
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { useQueryClient } from '@tanstack/react-query';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
-import { categoriesQueryOptions } from '../Category/queries';
 
 interface PreloaderContextType {
     appIsReady: boolean;

@@ -1,6 +1,6 @@
-import { useTheme } from '@/hooks';
+import { useTheme } from '@/contexts';
 import type { Category } from '@/types';
-import { BaseTile, type BaseTileProps } from './BaseTile';
+import { BaseTile, type BaseTileProps } from '../../ui/tile/BaseTile';
 
 interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 'topRightText'> {
     category: Category;

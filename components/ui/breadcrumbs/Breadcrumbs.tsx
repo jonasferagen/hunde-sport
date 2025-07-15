@@ -1,7 +1,7 @@
 import { CustomText } from '../customtext/CustomText';
 import { Icon } from '../icon/Icon';
 
-import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/contexts';
 import { SPACING } from '@/styles';
 import { Product } from '@/types';
 import React from 'react';
@@ -13,7 +13,9 @@ interface BreadcrumbsProps {
 
 export const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
 
+
     const { categories, navigateToCategory } = useBreadcrumbs();
+
     return (
         <View style={styles.container}>
             <View style={styles.categoryContainer}>

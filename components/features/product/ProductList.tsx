@@ -1,8 +1,7 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
 import { routes } from '@/config/routing';
-import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { SPACING } from '@/styles/Dimensions';
-import { FONT_SIZES } from '@/styles/Typography';
+import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { FONT_SIZES, SPACING } from '@/styles';
 import { Product } from '@/types';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { FlashList } from "@shopify/flash-list";

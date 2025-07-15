@@ -66,6 +66,8 @@ export const ProductScreen = () => {
     return <Loader />;
   }
 
+  console.log("product screen loading");
+
   return (
     <PageView>
       <PageContent>

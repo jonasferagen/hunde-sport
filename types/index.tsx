@@ -10,9 +10,7 @@ export type ApiError = {
   status: number;
 };
 
-/**
- * Image interface
- */
+
 export interface Image {
   src: string;
 }

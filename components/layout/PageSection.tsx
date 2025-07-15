@@ -1,4 +1,4 @@
-import { useTheme } from '@/hooks';
+import { useTheme } from '@/contexts';
 import { SPACING } from '@/styles/Dimensions';
 import { Theme } from '@/styles/Theme';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';

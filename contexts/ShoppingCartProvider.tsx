@@ -1,6 +1,6 @@
 import type { Product } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { useStatus } from '../Status/StatusProvider';
+import { useStatus } from './StatusProvider';
 
 export interface ShoppingCartItem {
     product: Product;

@@ -1,10 +1,9 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { ProductList } from '@/components/features/product/ProductList';
+import { CategoryProducts } from '@/components/features/product/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
-import { useProductsByCategory } from '@/hooks/Product';
 import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -21,12 +20,10 @@ const CategoryListArea = ({ category }: { category: Category }) => {
 
 export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
-    const categoryId = Number(id);
-    const { category } = useCategory(categoryId);
-    const { products, isLoading, isFetchingNextPage, fetchNextPage } = useProductsByCategory(categoryId);
+    const { category, isLoading } = useCategory(Number(id));
 
 
-    if (!category || isLoading) {
+    if (isLoading || !category) {
         return <Loader />;
     }
 
@@ -34,17 +31,16 @@ export const CategoryScreen = memo(() => {
         <PageView>
             <PageContent>
                 <Stack.Screen options={{ title: category.name }} />
-                <PageSection secondary key={`products-${category.id}`}>
+                <PageSection secondary key={category.id}>
                     <Breadcrumbs />
                     <CategoryListArea category={category} />
                 </PageSection>
             </PageContent>
             <PageContent flex>
-                <PageSection accent key={`categories-${category.id}`} flex>
-                    <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={fetchNextPage} />
+                <PageSection accent key={category.id} flex>
+                    <CategoryProducts category={category} />
                 </PageSection>
             </PageContent>
         </PageView>
     );
 });
-

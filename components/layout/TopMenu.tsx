@@ -1,8 +1,7 @@
 import { CustomText, Icon, SearchBar } from '@/components/ui';
 import { paths } from '@/config/routing';
-import { useTheme } from '@/hooks';
-import { SPACING } from '@/styles/Dimensions';
-import { Theme } from '@/styles/Theme';
+import { useTheme } from '@/contexts';
+import { SPACING, Theme } from '@/styles';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';

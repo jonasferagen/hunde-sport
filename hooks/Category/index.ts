@@ -1,6 +1,6 @@
+import { useStatus } from '@/contexts';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { useStatus } from '../Status/StatusProvider';
+import { useEffect, useMemo } from 'react';
 import { categoriesQueryOptions, categoryQueryOptions, categoryTrailQueryOptions } from './queries';
 
 
@@ -37,7 +37,7 @@ export const useCategories = (categoryId: number, options?: { fetchAll?: boolean
     }, [options?.fetchAll, hasNextPage, fetchNextPage, isFetchingNextPage, data]);
 
 
-    const categories = data?.pages.flat() ?? [];
+    const categories = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);
     return { ...query, categories };
 };
 

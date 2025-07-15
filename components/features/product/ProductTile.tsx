@@ -1,6 +1,6 @@
 import type { Product } from '@/types';
 import { formatPrice } from "@/utils/helpers";
-import { BaseTile, BaseTileProps } from './BaseTile';
+import { BaseTile, BaseTileProps } from '../../ui/tile/BaseTile';
 
 interface ProductTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 'topRightText'> {
     product: Product;

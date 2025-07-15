@@ -1,6 +1,6 @@
 import { paths } from '@/config/routing';
-import { useLayout, useTheme } from '@/hooks';
-import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
+import { useLayout, useTheme } from '@/contexts';
+import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { Theme } from '@/styles/Theme';
 import { Href, Link, useSegments } from 'expo-router';

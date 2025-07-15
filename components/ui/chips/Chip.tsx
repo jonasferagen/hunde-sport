@@ -1,4 +1,4 @@
-import { useTheme } from '@/hooks/Theme/ThemeProvider';
+import { useTheme } from '@/contexts/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import { Theme } from '@/styles/Theme';
 import React from 'react';

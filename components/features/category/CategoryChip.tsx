@@ -1,8 +1,8 @@
 import { routes } from '@/config/routing';
-import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
+import { useBreadcrumbs } from '@/contexts';
 import { Category } from '@/types';
 import React from 'react';
-import { Chip } from './Chip';
+import { Chip } from '../../ui/chips/Chip';
 
 interface CategoryChipProps {
     category: Category;

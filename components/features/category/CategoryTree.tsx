@@ -1,6 +1,5 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
-import { useTheme } from '@/hooks';
-import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
+import { useBreadcrumbs, useTheme } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { Theme } from '@/styles';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
