@@ -1,9 +1,10 @@
-export * from './Breadcrumbs/BreadcrumbProvider';
-export * from './Category';
-export * from './Layout/LayoutProvider';
-export * from './Preloader/PreloaderProvider';
-export * from './Product/ProductProvider';
-export * from './ShoppingCart/ShoppingCartProvider';
-export * from './Status/StatusProvider';
-export * from './Theme/ThemeProvider';
+export { BreadcrumbProvider, useBreadcrumbs } from './Breadcrumbs/BreadcrumbProvider';
+export { useCategories, useCategoryTrail } from './Category';
+export { LayoutProvider, useLayout } from './Layout/LayoutProvider';
+export { PreloaderProvider, usePreloader } from './Preloader/PreloaderProvider';
+export { useFeaturedProducts, useProduct, useProductsByCategory, useProductVariations, useRelatedProducts, useSearchProducts } from './Product';
+
+export { ShoppingCartProvider, useShoppingCart } from './ShoppingCart/ShoppingCartProvider';
+export { StatusProvider, useStatus } from './Status/StatusProvider';
+export { ThemeProvider, useTheme } from './Theme/ThemeProvider';
 

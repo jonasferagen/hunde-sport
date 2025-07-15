@@ -2,7 +2,7 @@ import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
 import { CustomText, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
-import { useSearchProducts } from '@/hooks/Product/ProductProvider';
+import { useSearchProducts } from '@/hooks/Product';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';

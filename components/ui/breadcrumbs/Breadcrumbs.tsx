@@ -1,4 +1,6 @@
-import { CustomText, Icon } from '@/components/ui';
+import { CustomText } from '../customtext/CustomText';
+import { Icon } from '../icon/Icon';
+
 import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
 import { SPACING } from '@/styles';
 import { Product } from '@/types';
