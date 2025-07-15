@@ -1,20 +1,24 @@
-import { Loader } from "@/components/ui/loader/Loader";
-import { useFeaturedProducts } from "@/hooks/Product";
-import { ScrollView } from "react-native";
-import { ProductCard } from "./ProductCard";
+import { PageSectionHorizontal } from '@/components/layout/PageSectionHorizontal';
+import { Loader } from '@/components/ui';
+import { useFeaturedProducts } from '@/hooks/Product';
+import { ProductCard } from './ProductCard';
 
 export const FeaturedProducts = () => {
-
     const { products, isLoading } = useFeaturedProducts();
 
     if (isLoading) {
         return <Loader />;
     }
 
-    return <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-        ))}
-    </ScrollView>
+    if (!products || products.length === 0) {
+        return null;
+    }
 
-}
+    return (
+        <PageSectionHorizontal>
+            {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+            ))}
+        </PageSectionHorizontal>
+    );
+};

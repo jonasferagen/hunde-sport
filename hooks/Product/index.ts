@@ -1,4 +1,6 @@
+import { Product } from '@/types';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import {
     featuredProductsQueryOptions,
     productQueryOptions,
@@ -6,20 +8,23 @@ import {
     searchProductsQueryOptions,
 } from './queries';
 
-export const useProduct = (productId: number) => {
-    return useQuery(productQueryOptions(productId));
+export const useProduct = (id: number) => {
+    return useQuery(productQueryOptions(id));
 };
 
-export const useProductVariations = (productIds: number[]) => {
-    return useQueries({
-        queries: productIds.map(id => productQueryOptions(id)),
-    });
-};
-
-export const useRelatedProducts = (productIds: number[]) => {
-    return useQueries({
+export const useProducts = (productIds: number[]) => {
+    const queries = useQueries({
         queries: (productIds || []).map(id => productQueryOptions(id)),
     });
+
+    const products = useMemo(
+        () => queries.map(query => query.data).filter((p): p is Product => Boolean(p)),
+        [queries]
+    );
+
+    const isLoading = useMemo(() => queries.some(query => query.isLoading), [queries]);
+
+    return { products, isLoading };
 };
 
 export const useProductsByCategory = (categoryId: number) => {

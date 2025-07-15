@@ -51,7 +51,8 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
 
 const createStyles = (theme: Theme) => StyleSheet.create({
   container: {
-    padding: SPACING.md,
+    paddingVertical: SPACING.md,
+
   },
   flexContainer: {
     flex: 1,

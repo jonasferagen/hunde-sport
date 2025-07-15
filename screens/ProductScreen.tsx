@@ -6,10 +6,10 @@ import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
 import { Breadcrumbs, CustomText } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
-import { useProduct, useProductVariations } from '@/hooks/Product';
+import { useProduct, useProducts } from '@/hooks/Product';
 import { Product } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,8 +20,7 @@ export const ProductScreen = () => {
 
   const { data: product, isLoading, error } = useProduct(Number(id));
 
-  const variationQueries = useProductVariations(product?.variations || []);
-  const variations = useMemo(() => variationQueries.map(query => query.data).filter(Boolean) as Product[], [variationQueries]);
+  const { products: variations } = useProducts(product?.variations || []);
 
   const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
 
@@ -56,7 +55,7 @@ export const ProductScreen = () => {
     setImageViewerVisible(false);
   };
 
-  const displayProduct = useMemo(() => selectedVariation || product, [selectedVariation, product]);
+  const displayProduct = selectedVariation || product;
 
   if (isLoading) {
     return <Loader />;

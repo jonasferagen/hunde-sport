@@ -1,9 +1,6 @@
-import { CustomText } from '@/components/ui';
-import { Loader } from '@/components/ui/loader/Loader';
-import { useRelatedProducts } from '@/hooks/Product';
-import { SPACING } from '@/styles';
-import { useMemo } from 'react';
-import { ScrollView } from 'react-native';
+import { PageSectionHorizontal } from '@/components/layout/PageSectionHorizontal';
+import { CustomText, Loader } from '@/components/ui';
+import { useProducts } from '@/hooks/Product';
 import { VerticalStack } from '../../layout';
 import { ProductCard } from './ProductCard';
 
@@ -12,30 +9,24 @@ interface RelatedProductsProps {
 }
 
 export const RelatedProducts = ({ productIds }: RelatedProductsProps) => {
-    const relatedProductQueries = useRelatedProducts(productIds);
-    const relatedProducts = useMemo(() =>
-        relatedProductQueries
-            .map(query => query.data)
-            .filter(product => product !== undefined),
-        [relatedProductQueries]
-    );
+    const { products: relatedProducts, isLoading } = useProducts(productIds);
 
-    if (relatedProductQueries.some(query => query.isLoading)) {
+    if (isLoading) {
         return <Loader />;
     }
 
-    if (relatedProducts.length === 0) {
+    if (!relatedProducts || relatedProducts.length === 0) {
         return null;
     }
 
     return (
         <VerticalStack spacing="md">
             <CustomText bold>Relaterte Produkter</CustomText>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: SPACING.md }}>
+            <PageSectionHorizontal>
                 {relatedProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 ))}
-            </ScrollView>
+            </PageSectionHorizontal>
         </VerticalStack>
     );
 };
