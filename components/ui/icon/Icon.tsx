@@ -1,7 +1,8 @@
 import { FONT_SIZES } from '@/styles';
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { CustomText } from '../customtext/CustomText';
 
 export const ValidIcon = {
     addToCart: 'plus',
@@ -36,7 +37,7 @@ export const Icon = ({ name, badge = 0, size = 'xl', ...rest }: IconProps) => {
             <FontAwesome name={ValidIcon[name]} size={fontSize} {...rest} />
             {badge > 0 && (
                 <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{badge}</Text>
+                    <CustomText style={styles.badgeText}>{badge}</CustomText>
                 </View>
             )}
         </View>

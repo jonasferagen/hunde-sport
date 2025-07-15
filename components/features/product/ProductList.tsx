@@ -4,11 +4,10 @@ import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { Product } from '@/types';
-import { formatPrice } from '@/utils/helpers';
+import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { FlashList } from "@shopify/flash-list";
-import React, { memo, useCallback } from 'react';
-import { Image, Pressable, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-
+import React, { memo, useCallback, useState } from 'react';
+import { Image, LayoutChangeEvent, Pressable, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface RenderProductProps {
     item: Product;
@@ -38,10 +37,20 @@ interface ProductListItemProps {
 
 const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
     const { addToCart } = useShoppingCart();
+    const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+
+    const handleLayout = (event: LayoutChangeEvent) => {
+        const { width, height } = event.nativeEvent.layout;
+        setImageDimensions({ width: Math.round(width), height: Math.round(height) });
+    };
+
+    const imageUrl = getScaledImageUrl(product.images[0]?.src, imageDimensions.width, imageDimensions.height);
 
     return (
         <View key={product.id} style={styles.container}>
-            <Image source={{ uri: product.images[0].src }} style={styles.image} />
+            <View onLayout={handleLayout} style={styles.imageContainer}>
+                {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
+            </View>
             <View style={{ flex: 1, marginHorizontal: SPACING.md }}>
                 <CustomText style={styles.name} numberOfLines={1}>{product.name}</CustomText>
                 <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>
@@ -56,7 +65,6 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
 };
 
 export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
-
 
     const handleProductPress = useCallback((id: number) => {
         routes.productSimple(id);
@@ -88,7 +96,6 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
     );
 });
 
-
 const styles = StyleSheet.create({
 
     listStyle: {
@@ -106,9 +113,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    image: {
+    imageContainer: {
         width: 50,
         height: 50,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
     },
     addToCartButton: {
         marginRight: SPACING.md,

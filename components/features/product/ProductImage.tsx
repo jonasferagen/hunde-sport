@@ -31,7 +31,7 @@ const createStyles = (theme: Theme) =>
             height: 300,
             overflow: 'hidden',
             borderWidth: 1,
-            borderColor: theme.gradients.primary[0],
+            borderColor: theme.colors.border,
             borderRadius: BORDER_RADIUS.md,
         },
         mainImage: {
