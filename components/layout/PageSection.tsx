@@ -35,7 +35,7 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
   }
 
   return (
-    <View style={[flex && styles.flexContainer, styles.container, ...mergedStyles]}>
+    <View style={[flex ? styles.flexContainer : styles.container, ...mergedStyles]}>
       {children}
     </View>
   );

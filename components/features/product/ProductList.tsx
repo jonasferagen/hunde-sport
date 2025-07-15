@@ -1,4 +1,4 @@
-import { Icon, Loader } from '@/components/ui';
+import { CustomText, Icon, Loader } from '@/components/ui';
 import { routes } from '@/config/routing';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { SPACING } from '@/styles/Dimensions';
@@ -7,7 +7,7 @@ import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback } from 'react';
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 
 interface RenderProductProps {
@@ -29,6 +29,7 @@ interface ProductListProps {
     loadingMore: boolean;
     HeaderComponent?: React.ReactElement;
     EmptyComponent?: React.ReactElement;
+    contentContainerStyle?: ViewStyle;
 
 }
 
@@ -44,8 +45,8 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
         <View key={product.id} style={styles.container}>
             <Image source={{ uri: product.images[0].src }} style={styles.image} />
             <View style={{ flex: 1, marginHorizontal: SPACING.md }}>
-                <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
-                <Text style={styles.price}>{formatPrice(product.price)}</Text>
+                <CustomText style={styles.name} numberOfLines={1}>{product.name}</CustomText>
+                <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>
             </View>
             <Pressable onPress={() => addToCart(product)} style={styles.addToCartButton}    >
                 <View className="justify-center">
@@ -56,7 +57,7 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
     );
 };
 
-export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent }: ProductListProps) => {
+export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
 
 
     const handleProductPress = useCallback((id: number) => {
@@ -79,6 +80,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
             onEndReachedThreshold={0.5}
             ListHeaderComponent={HeaderComponent}
             ListEmptyComponent={EmptyComponent}
+            contentContainerStyle={contentContainerStyle}
             ListFooterComponent={() =>
                 loadingMore ? <Loader /> : null
             }
@@ -97,13 +99,12 @@ const styles = StyleSheet.create({
 
     itemContainer: {
         flex: 1,
-        marginBottom: 8,
+        marginTop: SPACING.sm,
     },
 
     container: {
         backgroundColor: 'white',
-        padding: 10,
-        borderRadius: 10,
+        padding: SPACING.md,
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -120,6 +121,6 @@ const styles = StyleSheet.create({
     },
     price: {
         color: 'gray',
-        marginTop: 5,
+        marginTop: SPACING.xs,
     },
 });
