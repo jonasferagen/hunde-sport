@@ -40,7 +40,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     );
 }
 
-const DrawerLayout = () => {
+const DrawerNavigator = () => {
     const { theme } = useTheme();
     const styles = createStyles(theme);
 
@@ -71,6 +71,10 @@ const DrawerLayout = () => {
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />
         </Drawer>
     );
+}
+
+const DrawerLayout = () => {
+    return <DrawerNavigator />;
 }
 
 const createStyles = (theme: Theme) => StyleSheet.create({

@@ -1,5 +1,5 @@
 import { useLayout, useStatus } from '@/hooks';
-import { BORDER_RADIUS, COLORS, SPACING } from '@/styles';
+import { BORDER_RADIUS, SPACING } from '@/styles';
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
 
@@ -29,12 +29,12 @@ const StatusMessage = () => {
 
 const styles = StyleSheet.create({
     statusContainer: {
-        borderColor: COLORS.accentDark,
+        borderColor: 'red',
         borderWidth: 2,
         position: 'absolute',
         left: SPACING.md,
         right: SPACING.md,
-        backgroundColor: COLORS.accentDark,
+        backgroundColor: 'red',
         borderRadius: BORDER_RADIUS.md,
         padding: SPACING.lg,
         alignItems: 'center',
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 
     },
     statusText: {
-        color: COLORS.white,
+        color: 'white',
         fontWeight: 'bold',
     },
 });

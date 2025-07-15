@@ -1,8 +1,8 @@
 import { PageSection, PageView } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routing';
+import { useTheme } from '@/hooks';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { useTheme } from '@/hooks/Theme/ThemeProvider';
 import { Theme } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';

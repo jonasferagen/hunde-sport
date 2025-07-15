@@ -1,6 +1,7 @@
 import { CustomText, Icon, SearchBar } from '@/components/ui';
 import { paths } from '@/config/routing';
-import { COLORS } from '@/styles/Colors';
+import { useTheme } from '@/hooks';
+import { Theme } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
@@ -10,6 +11,8 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 export const TopMenu = React.memo(() => {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const DrawerToggleButton = () => {
         const navigation = useNavigation<DrawerNavigationProp<{}>>();
@@ -21,7 +24,7 @@ export const TopMenu = React.memo(() => {
     };
 
     return (
-        <LinearGradient colors={COLORS.gradientPrimary}>
+        <LinearGradient colors={theme.gradients.primary}>
             <View style={styles.container}>
                 <View style={styles.headerTopRow}>
                     <DrawerToggleButton />
@@ -33,12 +36,12 @@ export const TopMenu = React.memo(() => {
     );
 });
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => StyleSheet.create({
     container: {
         padding: SPACING.lg,
     },
     content: {
-        color: COLORS.textOnPrimary,
+        color: theme.textOnColor.primary,
 
     },
     headerTopRow: {

@@ -1,14 +1,11 @@
 import { StyleSheet } from 'react-native';
-import { COLORS } from './Colors';
+import { Theme } from './Colors';
 import { SPACING } from './Dimensions';
 
-export const AppStyles = StyleSheet.create({
+export const createAppStyles = (theme: Theme) => StyleSheet.create({
     appContainer: {
         flex: 1,
-        backgroundColor: COLORS.backgroundPrimary,
+        backgroundColor: theme.colors.background,
         marginVertical: SPACING.md,
     },
-
 });
-
-export default AppStyles;

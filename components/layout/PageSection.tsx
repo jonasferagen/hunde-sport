@@ -1,4 +1,5 @@
-import { COLORS } from '@/styles/Colors';
+import { useTheme } from '@/hooks';
+import { Theme } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -13,6 +14,8 @@ interface PageSectionProps {
 };
 
 export const PageSection = ({ children, primary = false, secondary = false, accent = false, style, flex, scrollable }: PageSectionProps) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'secondary';
 
@@ -38,29 +41,31 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => StyleSheet.create({
   container: {
     padding: SPACING.md,
   },
   flexContainer: {
     flex: 1,
   },
-
+  scrollContentContainer: {
+    // Add any specific styles for scrollable content here
+  },
   primary: {
-    backgroundColor: COLORS.backgroundPrimary,
-    borderColor: COLORS.backgroundPrimaryBorder,
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.gradients.primary[0],
     borderBottomWidth: 1,
     borderTopWidth: 1
   },
   secondary: {
-    backgroundColor: COLORS.backgroundSecondary,
-    borderColor: COLORS.backgroundSecondaryBorder,
+    backgroundColor: theme.colors.secondary,
+    borderColor: theme.gradients.secondary[0],
     borderBottomWidth: 1,
     borderTopWidth: 1
   },
   accent: {
-    backgroundColor: COLORS.accent,
-    borderColor: COLORS.backgroundAccentBorder,
+    backgroundColor: theme.colors.accent,
+    borderColor: theme.gradients.accent[0],
     borderBottomWidth: 1,
     borderTopWidth: 1
   },

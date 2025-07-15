@@ -1,6 +1,7 @@
 import { routes } from '@/config/routing';
+import { useTheme } from '@/hooks';
 import { BORDER_RADIUS, SPACING } from '@/styles';
-import { COLORS } from '@/styles/Colors';
+import { Theme } from '@/styles/Colors';
 import React, { forwardRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Icon } from '../icon/Icon';
@@ -12,6 +13,8 @@ interface SearchBarProps {
 
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', onSearch }, ref) => {
     const [query, setQuery] = useState('');
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const handleSearch = () => {
         if (query.trim()) {
@@ -29,18 +32,19 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 ref={ref}
                 style={styles.input}
                 placeholder={placeholder}
+                placeholderTextColor={theme.colors.textSecondary}
                 value={query}
                 onChangeText={setQuery}
                 onSubmitEditing={handleSearch}
             />
             <Pressable onPress={handleSearch} style={styles.button}>
-                <Icon name="search" size='xl' color="#fff" />
+                <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
             </Pressable>
         </View>
     );
 });
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flexDirection: 'row',
         padding: SPACING.sm,
@@ -49,13 +53,14 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         padding: SPACING.sm,
-        backgroundColor: 'rgb(255, 255, 255)',
+        backgroundColor: theme.colors.card,
         borderRadius: BORDER_RADIUS.lg,
+        color: theme.colors.text,
     },
     button: {
         padding: SPACING.sm,
         marginLeft: SPACING.md,
-        backgroundColor: COLORS.secondary,
+        backgroundColor: theme.colors.secondary,
         borderRadius: BORDER_RADIUS.lg,
         justifyContent: 'center',
     },

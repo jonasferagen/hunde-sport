@@ -1,4 +1,4 @@
-import { COLORS } from '@/styles/Colors';
+import { useTheme } from '@/hooks';
 import type { Category } from '@/types';
 import { BaseTile, type BaseTileProps } from './BaseTile';
 
@@ -7,6 +7,7 @@ interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 't
 }
 
 export const CategoryTile = ({ category, ...rest }: CategoryTileProps) => {
+    const { theme } = useTheme();
 
     if (!category.image) {
         return null;
@@ -16,7 +17,7 @@ export const CategoryTile = ({ category, ...rest }: CategoryTileProps) => {
         <BaseTile
             name={category.name}
             imageUrl={category.image.src}
-            mainColor={COLORS.primary}
+            mainColor={theme.colors.primary}
             {...rest}
         />
     );

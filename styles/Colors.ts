@@ -70,31 +70,3 @@ export const darkTheme: Theme = {
 } as const;
 
 export type Theme = typeof lightTheme;
-
-// We will eventually remove this `COLORS` export
-// For now, we keep it for a smoother transition.
-export const COLORS = {
-  ...lightTheme.colors,
-  ...lightTheme.gradients,
-  ...lightTheme.tabs,
-  textOnPrimary: lightTheme.textOnColor.primary,
-  textOnSecondary: lightTheme.textOnColor.secondary,
-  textOnAccent: lightTheme.textOnColor.accent,
-  gradientPrimary: lightTheme.gradients.primary,
-  gradientSecondary: lightTheme.gradients.secondary,
-  gradientAccent: lightTheme.gradients.accent,
-  headerBackground: lightTheme.colors.primary,
-  searchBarBackground: lightTheme.colors.card,
-  categoryCardBackground: lightTheme.colors.secondary,
-  productCardBackground: lightTheme.colors.accent,
-  activeTab: lightTheme.tabs.active,
-  inactiveTab: lightTheme.tabs.inactive,
-  text: lightTheme.colors.text,
-  textLight: lightTheme.colors.textSecondary,
-  border: lightTheme.colors.border,
-  white: palette.white,
-  black: palette.black,
-  grey: palette.grey,
-  lightGrey: palette.lightGrey,
-  darkGrey: palette.darkGrey,
-};
