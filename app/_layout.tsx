@@ -1,14 +1,21 @@
 import BottomMenu from '@/components/layout/BottomMenu';
+import Preloader from '@/components/preloader/Preloader';
+import StatusMessage from '@/components/ui/StatusMessage';
 import { BreadcrumbProvider } from '@/hooks/Breadcrumbs/BreadcrumbContext';
+import { PreloaderProvider, usePreloader } from '@/hooks/Preloader/PreloaderProvider';
 import { ShoppingCartProvider } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { StatusProvider, useStatus } from '@/hooks/Status/StatusProvider';
+import { StatusProvider } from '@/hooks/Status/StatusProvider';
 import { AppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from "expo-router";
-import { useEffect, useState } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import * as SplashScreen from 'expo-splash-screen';
+import { useCallback, useState } from "react";
+import { View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 
 function Layout() {
   const insets = useSafeAreaInsets();
@@ -25,30 +32,28 @@ function Layout() {
   );
 }
 
-function StatusMessage() {
-  const { message } = useStatus();
-  const [fadeAnim] = useState(new Animated.Value(0));
+function AppContent() {
+  const { appIsReady } = usePreloader();
 
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: message ? 1 : 0,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  }, [message]);
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
 
-  if (!message) {
-    return null;
+  if (!appIsReady) {
+    return <Preloader />;
   }
 
   return (
-    <Animated.View style={[styles.statusContainer, { opacity: fadeAnim }]}>
-      <Text style={styles.statusText}>{message}</Text>
-    </Animated.View>
+    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <Layout />
+      <StatusMessage />
+    </GestureHandlerRootView>
   );
 }
 
-export default function RootLayout() {
+export const RootLayout = () => {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -59,37 +64,20 @@ export default function RootLayout() {
   }));
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <StatusProvider>
-            <BreadcrumbProvider>
-              <ShoppingCartProvider>
-                <Layout />
-              </ShoppingCartProvider>
-            </BreadcrumbProvider>
-            <StatusMessage />
-          </StatusProvider>
-        </QueryClientProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView >
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <StatusProvider>
+          <BreadcrumbProvider>
+            <ShoppingCartProvider>
+              <PreloaderProvider>
+                <AppContent />
+              </PreloaderProvider>
+            </ShoppingCartProvider>
+          </BreadcrumbProvider>
+        </StatusProvider>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  statusContainer: {
-    position: 'absolute',
-    bottom: 50,
-    left: 20,
-    right: 20,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    borderRadius: 10,
-    padding: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statusText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});
+export default RootLayout;

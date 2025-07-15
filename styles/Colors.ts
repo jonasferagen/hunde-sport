@@ -23,7 +23,9 @@ const backgroundPrimaryBorder = darken(backgroundPrimary, 10);
 const backgroundSecondaryBorder = darken(backgroundSecondary, 10);
 const backgroundAccentBorder = darken(backgroundAccent, 10);
 
-const gradientPrimary = [primary, secondary, accent] as const;
+const gradientPrimary = [darken(primary, 10), secondary] as const;
+const gradientSecondary = [accent, darken(secondary, 10)] as const;
+const gradientAccent = [darken(accent, 10), accent] as const;
 
 export const COLORS = {
   // Primary palette
@@ -41,7 +43,7 @@ export const COLORS = {
 
   // Text colors
   text: black,
-  textOnPrimary: white,
+  textOnPrimary: lighten(primary, 10),
   textOnSecondary: darken(secondary, 50),
   textOnAccent: darken(accent, 50),
   textLight: darkGrey,
@@ -59,6 +61,8 @@ export const COLORS = {
   // Borders and outlines
   border: grey,
   gradientPrimary,
+  gradientSecondary,
+  gradientAccent,
 
   // Base Colors
   white,

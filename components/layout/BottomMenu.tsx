@@ -1,5 +1,5 @@
+import { paths } from '@/config/routing';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { paths } from '@/lib/routing';
 import { COLORS } from '@/styles/Colors';
 import { Href, Link, useSegments } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';

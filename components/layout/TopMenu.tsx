@@ -1,8 +1,8 @@
-import { FONT_SIZES } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Heading, Icon, SearchBar } from '../ui/';
@@ -13,59 +13,39 @@ export const TopMenu = React.memo(() => {
         const navigation = useNavigation<DrawerNavigationProp<{}>>();
         return (
             <Pressable onPress={() => navigation.toggleDrawer()}>
-                <Icon name="menu" size={FONT_SIZES.xxl} style={styles.content} />
+                <Icon name="menu" size="xxl" style={styles.content} />
             </Pressable>
         );
     };
 
-    const Title = () => {
-        return (
-            <Heading title="hunde-sport.no" size="lg" style={styles.content} />
-        );
-    };
-
     return (
-        <View style={styles.homeHeaderContainer}>
-            <View style={styles.homeHeaderTopRow}>
-                <DrawerToggleButton />
-                <Title />
+        <LinearGradient colors={COLORS.gradientPrimary}>
+            <View style={styles.container}>
+                <View style={styles.headerTopRow}>
+                    <DrawerToggleButton />
+                    <Heading title="hunde-sport.no" size="lg" style={styles.content} />
+                </View>
+                <SearchBar placeholder="Hva leter du etter?" />
             </View>
-            <SearchBar placeholder="Hva leter du etter?" />
-        </View>
+        </LinearGradient>
     );
 });
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: SPACING.md,
-        backgroundColor: COLORS.primary,
+        padding: SPACING.lg,
     },
     content: {
         color: COLORS.textOnPrimary,
+        textShadowColor: COLORS.textOnSecondary,
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 1,
     },
-    homeHeaderContainer: {
-        backgroundColor: COLORS.headerBackground,
-        padding: SPACING.lg
-    },
-    homeHeaderTopRow: {
+    headerTopRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: SPACING.md,
     },
-    greetingContainer: {
-        marginBottom: SPACING.lg,
-    },
-    greetingText: {
-        fontSize: FONT_SIZES.lg,
-        color: COLORS.textOnPrimary,
-    },
-    userName: {
-        fontSize: FONT_SIZES.xxl,
-        fontWeight: 'bold',
-        color: COLORS.textOnPrimary,
-    },
+
 });

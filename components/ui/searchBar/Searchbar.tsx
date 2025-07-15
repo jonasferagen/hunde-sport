@@ -1,4 +1,4 @@
-import { routes } from '@/lib/routing';
+import { routes } from '@/config/routing';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import React, { forwardRef, useState } from 'react';

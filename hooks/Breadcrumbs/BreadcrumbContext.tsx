@@ -1,5 +1,5 @@
+import { routes } from '@/config/routing';
 import { useCategoryTrail } from '@/hooks/Category';
-import { routes } from '@/lib/routing';
 import { Category } from '@/types';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 

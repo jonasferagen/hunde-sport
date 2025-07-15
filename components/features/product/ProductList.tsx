@@ -1,6 +1,6 @@
 import { Icon, Loader } from '@/components/ui';
+import { routes } from '@/config/routing';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { routes } from '@/lib/routing';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { Product } from '@/types';

@@ -1,0 +1,49 @@
+import { useStatus } from '@/hooks/Status/StatusProvider';
+import React, { useEffect, useState } from 'react';
+import { Animated, StyleSheet, Text } from 'react-native';
+
+import { BORDER_RADIUS, COLORS, SPACING } from '@/styles';
+
+
+const StatusMessage = () => {
+    const { message } = useStatus();
+    const [fadeAnim] = useState(new Animated.Value(0));
+
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: message ? 1 : 0,
+            duration: 500,
+            useNativeDriver: true,
+        }).start();
+    }, [message]);
+
+    if (!message) {
+        return null;
+    }
+
+    return (
+        <Animated.View style={[styles.statusContainer, { opacity: fadeAnim }]}>
+            <Text style={styles.statusText}>{message}</Text>
+        </Animated.View>
+    );
+};
+
+const styles = StyleSheet.create({
+    statusContainer: {
+        position: 'absolute',
+        bottom: SPACING.xl,
+        left: SPACING.md,
+        right: SPACING.md,
+        backgroundColor: COLORS.backgroundPrimary,
+        borderRadius: BORDER_RADIUS.md,
+        padding: SPACING.lg,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    statusText: {
+        color: COLORS.text,
+        fontWeight: 'bold',
+    },
+});
+
+export default StatusMessage;
