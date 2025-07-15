@@ -21,6 +21,8 @@ export const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
         routes.category(category);
     };
 
+    console.log('breadcrumbs rendered');
+
     return (
         <View style={styles.container}>
             <View style={styles.categoryContainer}>

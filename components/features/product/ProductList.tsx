@@ -1,5 +1,7 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
 import { routes } from '@/config/routing';
+import { useTheme } from '@/contexts';
+import { usePageSection } from '@/contexts/PageSectionContext';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { Product } from '@/types';
@@ -64,6 +66,8 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
 };
 
 export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
+    const { theme } = useTheme();
+    const { sectionType } = usePageSection();
 
     const handleProductPress = useCallback((product: Product) => {
         routes.product(product);
@@ -87,7 +91,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
             ListEmptyComponent={EmptyComponent}
             contentContainerStyle={contentContainerStyle}
             ListFooterComponent={() =>
-                loadingMore ? <Loader /> : null
+                loadingMore ? <Loader color={theme.textOnColor[sectionType]} style={styles.loader} /> : null
             }
             estimatedItemSize={50}
         />
@@ -130,5 +134,8 @@ const styles = StyleSheet.create({
     price: {
         color: 'gray',
         marginTop: SPACING.xs,
+    },
+    loader: {
+        marginVertical: SPACING.md,
     },
 });

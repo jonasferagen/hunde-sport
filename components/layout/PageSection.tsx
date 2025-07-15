@@ -1,4 +1,5 @@
 import { useTheme } from '@/contexts';
+import { PageSectionProvider } from '@/contexts/PageSectionContext';
 import { SPACING } from '@/styles/Dimensions';
 import { Theme } from '@/styles/Theme';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
@@ -21,6 +22,12 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
 
   const mergedStyles = [styles[type], style];
 
+  const content = (
+    <PageSectionProvider value={{ sectionType: type }}>
+      {children}
+    </PageSectionProvider>
+  );
+
   if (scrollable) {
     return (
       <ScrollView
@@ -30,14 +37,14 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
         nestedScrollEnabled={true}
         scrollsToTop={true}
       >
-        {children}
+        {content}
       </ScrollView>
     );
   }
 
   return (
     <View style={[flex ? styles.flexContainer : styles.container, ...mergedStyles]}>
-      {children}
+      {content}
     </View>
   );
 }

@@ -81,7 +81,7 @@ export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: Category
     const handleToggleExpand = (itemId: number) => {
         setExpandedItemId(prevId => (prevId === itemId ? null : itemId));
     };
-
+    console.log('cat tree rendered');
     return (
         <View style={{ marginHorizontal: 0 }}>
             <View>

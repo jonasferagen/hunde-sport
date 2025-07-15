@@ -44,6 +44,8 @@ const DrawerNavigator = () => {
     const { theme } = useTheme();
     const styles = createStyles(theme);
 
+    console.log('drawer rendering');
+
     return (
         <Drawer
             drawerContent={(props) => <CustomDrawerContent {...props} />}
