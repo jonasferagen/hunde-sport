@@ -1,17 +1,27 @@
-
 import { darken, lighten } from '@/utils/helpers';
 
-const primary = '#d5a5d7';
-const secondary = '#d7d5a5';
-const accent = '#a5d7d5';
+const purple = '#D7C8E7'; // Header background from image
+const olive = '#DDE2C3'; // Category card background from image
+const teal = '#C8E6E5'; // Product card background from image
+const white = '#FFFFFF';
+const black = '#000000';
+const lightGrey = '#F6F6F6'; // Search bar background
+const grey = '#E8E8E8';
+const darkGrey = '#8A8A8A';
+const activeRed = '#F47272';
+const inactiveBlue = '#9DB2CE';
 
-const backgroundPrimary = lighten(primary, 20)
-const backgroundSecondary = lighten(secondary, 20)
-const backgroundAccent = lighten(accent, 20);
+const primary = purple;
+const secondary = olive;
+const accent = teal;
 
-const backgroundPrimaryBorder = darken(backgroundPrimary, 10)
-const backgroundSecondaryBorder = darken(backgroundSecondary, 10)
-const backgroundAccentBorder = darken(backgroundAccent, 10)
+const backgroundPrimary = lighten(primary, 5); // Lighter shade for backgrounds
+const backgroundSecondary = white;
+const backgroundAccent = lighten(accent, 5);
+
+const backgroundPrimaryBorder = darken(backgroundPrimary, 10);
+const backgroundSecondaryBorder = darken(backgroundSecondary, 10);
+const backgroundAccentBorder = darken(backgroundAccent, 10);
 
 const gradientPrimary = [primary, secondary, accent] as const;
 
@@ -20,10 +30,21 @@ export const COLORS = {
   primary,
   secondary,
   accent,
+
+  // Specific UI elements
+  headerBackground: primary,
+  searchBarBackground: lightGrey,
+  categoryCardBackground: secondary,
+  productCardBackground: accent,
+  activeTab: activeRed,
+  inactiveTab: inactiveBlue,
+
   // Text colors
-  textOnPrimary: darken(primary, 50),
+  text: black,
+  textOnPrimary: white,
   textOnSecondary: darken(secondary, 50),
   textOnAccent: darken(accent, 50),
+  textLight: darkGrey,
 
   // Backgrounds
   backgroundPrimary,
@@ -36,6 +57,13 @@ export const COLORS = {
   backgroundAccentBorder,
 
   // Borders and outlines
-  border: darken(backgroundSecondary, 10),
-  gradientPrimary
+  border: grey,
+  gradientPrimary,
+
+  // Base Colors
+  white,
+  black,
+  grey,
+  lightGrey,
+  darkGrey,
 };

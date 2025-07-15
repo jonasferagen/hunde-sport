@@ -1,6 +1,6 @@
 import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { CategoryTile, SearchBar } from '@/components/ui';
+import { CategoryTile } from '@/components/ui';
 import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbContext';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
@@ -35,9 +35,6 @@ export const HomeScreen = () => {
     return (
         <PageView>
             <PageContent>
-                <PageSection primary>
-                    <SearchBar placeholder="Jeg leter etter .." />
-                </PageSection>
                 <PageSection scrollable>
                     <View style={{ flex: 1, paddingVertical: SPACING.lg, borderColor: '#ccc', borderWidth: 1 }}>
                         <FeaturedProducts />

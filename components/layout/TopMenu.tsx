@@ -5,7 +5,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Heading, Icon } from '../ui/';
+import { Heading, Icon, SearchBar } from '../ui/';
 
 export const TopMenu = React.memo(() => {
 
@@ -25,10 +25,12 @@ export const TopMenu = React.memo(() => {
     };
 
     return (
-        <View style={styles.container}>
-            <DrawerToggleButton />
-            <Title />
-            <View style={{ width: FONT_SIZES.xxl }} />
+        <View style={styles.homeHeaderContainer}>
+            <View style={styles.homeHeaderTopRow}>
+                <DrawerToggleButton />
+                <Title />
+            </View>
+            <SearchBar placeholder="Hva leter du etter?" />
         </View>
     );
 });
@@ -42,6 +44,28 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.primary,
     },
     content: {
+        color: COLORS.textOnPrimary,
+    },
+    homeHeaderContainer: {
+        backgroundColor: COLORS.headerBackground,
+        padding: SPACING.lg
+    },
+    homeHeaderTopRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: SPACING.md,
+    },
+    greetingContainer: {
+        marginBottom: SPACING.lg,
+    },
+    greetingText: {
+        fontSize: FONT_SIZES.lg,
+        color: COLORS.textOnPrimary,
+    },
+    userName: {
+        fontSize: FONT_SIZES.xxl,
+        fontWeight: 'bold',
         color: COLORS.textOnPrimary,
     },
 });
