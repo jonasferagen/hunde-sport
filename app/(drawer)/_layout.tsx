@@ -1,52 +1,57 @@
 import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
+import { CustomText } from '@/components/ui';
 import { Icon } from '@/components/ui/icon/Icon';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
+import { useTheme } from '@/hooks/Theme/ThemeProvider';
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { Theme } from '@/styles/Colors';
+import { FONT_FAMILY } from '@/styles/Typography';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-function CustomDrawerContent(props: DrawerContentComponentProps & { isCategoryTreeVisible: boolean }) {
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     return (
         <LinearGradient
-            colors={COLORS.gradientPrimary}
+            colors={theme.gradients.primary}
             style={styles.drawerContent}
         >
             <View style={styles.headerContainer}>
                 <Pressable onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
-                    <Icon name="close" color="black" />
+                    <Icon name="close" color={theme.textOnColor.primary} />
                 </Pressable>
-                <Text style={styles.headerText}>hunde-sport.no</Text>
+                <CustomText size='lg' style={styles.headerText}>hunde-sport.no</CustomText>
             </View>
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
                 <DrawerItemList {...props} />
 
-                {props.isCategoryTreeVisible && (
-                    <View style={styles.categoryContainer}>
-                        <CategoryTree categoryId={0} />
-                    </View>
-                )}
+                <View style={styles.categoryContainer}>
+                    <CategoryTree categoryId={0} />
+                </View>
             </DrawerContentScrollView>
 
         </LinearGradient>
     );
 }
 
-export default function DrawerLayout() {
-    const [isCategoryTreeVisible, setCategoryTreeVisible] = React.useState(true);
+const DrawerLayout = () => {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     return (
         <Drawer
-            drawerContent={(props) => <CustomDrawerContent {...props} isCategoryTreeVisible={isCategoryTreeVisible} />}
+            drawerContent={(props) => <CustomDrawerContent {...props} />}
             screenOptions={{
                 header: () => <TopMenu />,
                 headerShown: true,
-                drawerActiveTintColor: '#000',
-                drawerInactiveTintColor: '#000',
+                drawerActiveTintColor: theme.textOnColor.primary,
+                drawerInactiveTintColor: theme.textOnColor.primary,
                 drawerLabelStyle: styles.drawerLabel,
             }}
         >
@@ -61,29 +66,14 @@ export default function DrawerLayout() {
                     },
                 }}
             />
-            <Drawer.Screen name="category" options={{
-                title: 'Produkter',
-                drawerIcon: ({ color }) => <Icon name="categories" color={color} />,
-                drawerLabel: ({ focused, color }) => (
-                    <View style={styles.productsLabelContainer}>
-                        <Text style={{ color, fontSize: FONT_SIZES.md }}>Produkter</Text>
-                        <Icon style={styles.customDrawerIcon} name={isCategoryTreeVisible ? "expand" : "collapse"} size={FONT_SIZES.md} color={color} />
-                    </View>
-                ),
-            }} listeners={{
-                drawerItemPress: (e) => {
-                    e.preventDefault();
-                    setCategoryTreeVisible(!isCategoryTreeVisible);
-                }
-            }} />
+            <Drawer.Screen name="category" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="product" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />
-
         </Drawer>
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => StyleSheet.create({
     drawerContent: {
         flex: 1,
         borderTopRightRadius: BORDER_RADIUS.md,
@@ -96,9 +86,7 @@ const styles = StyleSheet.create({
 
     },
     headerText: {
-        color: 'black',
-        fontSize: FONT_SIZES.lg,
-        fontWeight: 'bold',
+        color: theme.textOnColor.primary,
     },
     closeButton: {
         position: 'absolute',
@@ -122,13 +110,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     drawerLabel: {
-        color: 'black',
+        color: theme.textOnColor.primary,
         fontSize: FONT_SIZES.md,
+        fontFamily: FONT_FAMILY.regular,
         marginLeft: 0,
     },
 
     categoryContainer: {
-        marginLeft: SPACING.lg,
+        marginLeft: SPACING.sm,
     },
 
 });
+
+export default DrawerLayout;

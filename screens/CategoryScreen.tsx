@@ -9,13 +9,12 @@ import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
-import { StyleSheet } from 'react-native';
 
 
 const CategoryListArea = ({ category }: { category: Category }) => {
     const { categories, isFetchingNextPage } = useCategories(category.id);
     return (
-        <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} style={styles.listContainer} />
+        <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} style={{ marginTop: SPACING.md }} />
     );
 }
 
@@ -33,13 +32,13 @@ export const CategoryScreen = memo(() => {
         <PageView>
             <PageContent>
                 <Stack.Screen options={{ title: category.name }} />
-                <PageSection primary key={`products-${category.id}`}>
+                <PageSection secondary key={`products-${category.id}`}>
                     <Breadcrumbs />
                     <CategoryListArea category={category} />
                 </PageSection>
             </PageContent>
             <PageContent flex>
-                <PageSection key={`categories-${category.id}`} flex>
+                <PageSection accent key={`categories-${category.id}`} flex>
                     <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={loadMore} />
                 </PageSection>
             </PageContent>
@@ -47,11 +46,3 @@ export const CategoryScreen = memo(() => {
     );
 });
 
-const styles = StyleSheet.create({
-
-
-    listContainer: {
-        marginTop: SPACING.md,
-    },
-
-});

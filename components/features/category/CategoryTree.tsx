@@ -40,7 +40,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
 
     const renderExpandIcon = () => {
         if (hasChildren) {
-            return <Icon name={isExpanded ? 'expand' : 'collapse'} size={FONT_SIZES.lg} color={itemStyles.categoryText.color} />;
+            return <Icon name={isExpanded ? 'expand' : 'collapse'} size={FONT_SIZES.md} color={itemStyles.categoryText.color} />;
         }
         return <View style={{ width: FONT_SIZES.xxl }} />; // Placeholder for alignment
     };
@@ -51,7 +51,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
                 <View style={itemStyles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={itemStyles.categoryInfo}>
                         <CategoryIcon image={category.image} size={FONT_SIZES.xl} color={itemStyles.categoryText.color} />
-                        <CustomText bold={isExpanded} style={[itemStyles.categoryText]}>{category.name} ({category.count})</CustomText>
+                        <CustomText style={[itemStyles.categoryText]}>{category.name} ({category.count})</CustomText>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
                         {renderExpandIcon()}
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const itemBackgroundColor = rgba('black', 0.2);
+const itemBackgroundColor = rgba('white', 0.3);
 
 const itemStyles = StyleSheet.create({
     itemContainer: {
@@ -127,10 +127,9 @@ const itemStyles = StyleSheet.create({
     categoryInfo: {
         flexDirection: 'row',
         alignItems: 'center',
-        color: 'white',
     },
     categoryText: {
-        color: '#333',
+        color: 'black',
         marginLeft: SPACING.sm,
     },
     icon: {

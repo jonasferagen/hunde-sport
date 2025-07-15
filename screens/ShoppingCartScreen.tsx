@@ -2,7 +2,8 @@ import { PageSection, PageView } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routing';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { COLORS } from '@/styles/Colors';
+import { useTheme } from '@/hooks/Theme/ThemeProvider';
+import { Theme } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { formatPrice } from '@/utils/helpers';
@@ -12,8 +13,8 @@ import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 
 export const ShoppingCartScreen = () => {
     const { items, updateQuantity, removeFromCart, cartTotal, cartItemCount } = useShoppingCart();
-
-    const textColor = COLORS.accent;
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     return (
         <PageView>
@@ -37,15 +38,15 @@ export const ShoppingCartScreen = () => {
 
                             <View style={styles.quantityContainer}>
                                 <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
-                                    <Icon name="removeFromCart" color={textColor} />
+                                    <Icon name="removeFromCart" color={theme.colors.accent} />
                                 </Pressable>
                                 <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
                                 <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                    <Icon name="addToCart" color={textColor} />
+                                    <Icon name="addToCart" color={theme.colors.accent} />
                                 </Pressable>
                             </View>
                             <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: SPACING.md }}>
-                                <Icon name="emptyCart" color={textColor} />
+                                <Icon name="emptyCart" color={theme.colors.accent} />
                             </Pressable>
                         </View>
                     )}
@@ -66,14 +67,14 @@ export const ShoppingCartScreen = () => {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => StyleSheet.create({
     cartItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: theme.colors.card,
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: COLORS.border,
+        borderBottomColor: theme.colors.border,
     },
     productPressable: {
         flexDirection: 'row',
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
 
     productPrice: {
 
-        color: '#666',
+        color: theme.colors.textSecondary,
         marginTop: 5,
     },
     quantityContainer: {
@@ -105,8 +106,8 @@ const styles = StyleSheet.create({
     summaryContainer: {
         padding: SPACING.md,
         borderTopWidth: 1,
-        borderTopColor: COLORS.border,
-        backgroundColor: 'white',
+        borderTopColor: theme.colors.border,
+        backgroundColor: theme.colors.card,
     },
     summaryRow: {
         flexDirection: 'row',
@@ -121,6 +122,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 50,
         fontSize: FONT_SIZES.md,
-        color: '#666',
+        color: theme.colors.textSecondary,
     },
 });

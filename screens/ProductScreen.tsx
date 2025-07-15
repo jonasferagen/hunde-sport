@@ -7,7 +7,9 @@ import { Breadcrumbs, Button, CustomText } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useProduct, useProductVariations } from '@/hooks/Product/Product';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
+import { useTheme } from '@/hooks/Theme/ThemeProvider';
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { Theme } from '@/styles/Colors';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
@@ -18,6 +20,8 @@ import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageViewerVisible, setImageViewerVisible] = useState(false);
@@ -151,7 +155,7 @@ export const ProductScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => StyleSheet.create({
   content: {
     padding: SPACING.md,
   },
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
     height: 300,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: COLORS.backgroundPrimaryBorder,
+    borderColor: theme.gradients.primary[0],
     borderRadius: BORDER_RADIUS.md,
   },
   mainImage: {
@@ -169,14 +173,17 @@ const styles = StyleSheet.create({
   price: {
     fontSize: FONT_SIZES.xxl,
     fontWeight: 'bold',
+    color: theme.colors.text,
   },
   description: {
     fontSize: FONT_SIZES.sm,
     lineHeight: FONT_SIZES.lg,
+    color: theme.colors.text,
   },
   shortDescription: {
     fontSize: FONT_SIZES.md,
     lineHeight: FONT_SIZES.lg,
+    color: theme.colors.text,
   },
 
   imageGalleryContainer: {
@@ -190,7 +197,7 @@ const styles = StyleSheet.create({
     margin: '1%',
     height: 120,
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: theme.colors.border,
     borderRadius: BORDER_RADIUS.sm,
     overflow: 'hidden', // Ensures the image respects the border radius
   },

@@ -1,4 +1,6 @@
-import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
+import { useTheme } from '@/hooks/Theme/ThemeProvider';
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { Theme } from '@/styles/Colors';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { CustomText, CustomTextProps } from '../customtext/CustomText';
@@ -12,19 +14,18 @@ interface ChipProps {
 }
 
 export const Chip = ({ label, onPress, variant = 'secondary', style, textProps }: ChipProps) => {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
+
     const chipStyle = [
         styles.chip,
-        variant === 'primary' && styles.primary,
-        variant === 'secondary' && styles.secondary,
-        variant === 'accent' && styles.accent,
+        styles[variant],
         style,
     ];
 
     const textStyle = [
         styles.chipText,
-        variant === 'primary' && styles.textPrimary,
-        variant === 'secondary' && styles.textSecondary,
-        variant === 'accent' && styles.textAccent,
+        styles[`text${variant.charAt(0).toUpperCase() + variant.slice(1)}` as keyof typeof styles]
     ];
 
     return (
@@ -36,7 +37,7 @@ export const Chip = ({ label, onPress, variant = 'secondary', style, textProps }
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => StyleSheet.create({
     chip: {
         paddingVertical: SPACING.xs,
         paddingHorizontal: SPACING.sm,
@@ -49,21 +50,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     primary: {
-        backgroundColor: COLORS.darkPrimary,
+        backgroundColor: theme.colors.primary,
     },
     secondary: {
-        backgroundColor: COLORS.darkSecondary,
+        backgroundColor: theme.colors.secondary,
     },
     accent: {
-        backgroundColor: COLORS.darkAccent,
+        backgroundColor: theme.colors.accent,
     },
     textPrimary: {
-        color: COLORS.white, // Or a generic light text color
+        color: theme.textOnColor.primary,
     },
     textSecondary: {
-        color: COLORS.white, // Or a generic dark text color
+        color: theme.textOnColor.secondary,
     },
     textAccent: {
-        color: COLORS.white, // Or a generic dark text color
+        color: theme.textOnColor.accent,
     },
 });

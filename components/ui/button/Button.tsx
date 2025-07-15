@@ -1,6 +1,7 @@
 import { CustomText } from '@/components/ui';
+import { useTheme } from '@/hooks/Theme/ThemeProvider';
 import { FONT_SIZES } from '@/styles';
-import { COLORS } from '@/styles/Colors';
+import { Theme } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Icon, ValidIcon } from '../icon/Icon';
@@ -12,22 +13,24 @@ export interface ButtonProps {
     variant?: 'primary' | 'secondary' | 'accent';
 };
 
-const variantStyles = {
+const createVariantStyles = (theme: Theme) => ({
     primary: {
-        backgroundColor: COLORS.primary,
-        color: COLORS.textOnPrimary,
+        backgroundColor: theme.colors.primary,
+        color: theme.textOnColor.primary,
     },
     secondary: {
-        backgroundColor: COLORS.secondary,
-        color: COLORS.textOnSecondary,
+        backgroundColor: theme.colors.secondary,
+        color: theme.textOnColor.secondary,
     },
     accent: {
-        backgroundColor: COLORS.accent,
-        color: COLORS.textOnAccent,
+        backgroundColor: theme.colors.accent,
+        color: theme.textOnColor.accent,
     },
-};
+});
 
 export const Button = ({ onPress, title, icon, variant = 'primary' }: ButtonProps) => {
+    const { theme } = useTheme();
+    const variantStyles = createVariantStyles(theme);
     const stylesForVariant = variantStyles[variant];
 
     return (
