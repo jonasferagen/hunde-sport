@@ -1,8 +1,8 @@
 import { darken, lighten } from '@/utils/helpers';
 
-const purple = '#D7C8E7'; // Header background from image
-const olive = '#DDE2C3'; // Category card background from image
-const teal = '#C8E6E5'; // Product card background from image
+const primary = '#D7C8E7'; // Header background from image
+const secondary = '#DDE2C3'; // Category card background from image
+const accent = '#C8E6E5'; // Product card background from image
 const white = '#FFFFFF';
 const black = '#000000';
 const lightGrey = '#F6F6F6'; // Search bar background
@@ -11,13 +11,14 @@ const darkGrey = '#8A8A8A';
 const activeRed = '#F47272';
 const inactiveBlue = '#9DB2CE';
 
-const primary = purple;
-const secondary = olive;
-const accent = teal;
+const primaryDark = darken(primary, 50);
+const secondaryDark = darken(secondary, 50);
+const accentDark = darken(accent, 50);
 
-const backgroundPrimary = lighten(primary, 5); // Lighter shade for backgrounds
-const backgroundSecondary = white;
-const backgroundAccent = lighten(accent, 5);
+
+const backgroundPrimary = primary;
+const backgroundSecondary = secondary;
+const backgroundAccent = accent;
 
 const backgroundPrimaryBorder = darken(backgroundPrimary, 10);
 const backgroundSecondaryBorder = darken(backgroundSecondary, 10);
@@ -26,6 +27,7 @@ const backgroundAccentBorder = darken(backgroundAccent, 10);
 const gradientPrimary = [darken(primary, 10), secondary] as const;
 const gradientSecondary = [accent, darken(secondary, 10)] as const;
 const gradientAccent = [darken(accent, 10), accent] as const;
+
 
 export const COLORS = {
   // Primary palette
@@ -57,6 +59,11 @@ export const COLORS = {
   backgroundPrimaryBorder,
   backgroundSecondaryBorder,
   backgroundAccentBorder,
+
+  // Dark colors
+  primaryDark,
+  secondaryDark,
+  accentDark,
 
   // Borders and outlines
   border: grey,

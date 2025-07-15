@@ -1,6 +1,7 @@
 import { paths } from '@/config/routing';
 import { useLayout } from '@/hooks/Layout/LayoutProvider';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
+import { FONT_SIZES, SPACING } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import { Href, Link, useSegments } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -54,11 +55,11 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 8,
+        paddingTop: SPACING.md,
     },
     tabLabel: {
-        fontSize: 10,
-        marginTop: 4,
+        fontSize: FONT_SIZES.xs,
+        marginTop: SPACING.xs
     },
 });
 

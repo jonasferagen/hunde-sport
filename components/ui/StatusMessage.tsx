@@ -10,7 +10,7 @@ const StatusMessage = () => {
 
     useEffect(() => {
         Animated.timing(fadeAnim, {
-            toValue: message ? 1 : 0,
+            toValue: message ? .8 : 0,
             duration: 500,
             useNativeDriver: true,
         }).start();
@@ -29,19 +29,20 @@ const StatusMessage = () => {
 
 const styles = StyleSheet.create({
     statusContainer: {
-        borderColor: COLORS.black,
-        borderWidth: 1,
+        borderColor: COLORS.accentDark,
+        borderWidth: 2,
         position: 'absolute',
         left: SPACING.md,
         right: SPACING.md,
-        backgroundColor: COLORS.backgroundPrimary,
+        backgroundColor: COLORS.accentDark,
         borderRadius: BORDER_RADIUS.md,
         padding: SPACING.lg,
         alignItems: 'center',
         justifyContent: 'center',
+
     },
     statusText: {
-        color: COLORS.text,
+        color: COLORS.white,
         fontWeight: 'bold',
     },
 });
