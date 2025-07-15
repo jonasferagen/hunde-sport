@@ -30,9 +30,7 @@ interface ProductListProps {
     HeaderComponent?: React.ReactElement;
     EmptyComponent?: React.ReactElement;
     contentContainerStyle?: ViewStyle;
-
 }
-
 
 interface ProductListItemProps {
     product: Product;

@@ -1,7 +1,7 @@
 import { decode } from 'he';
 import tinycolor from 'tinycolor2';
 
-export const cleanHtml = (html: string) => extractPlainText(decode(html));
+export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
 
 export const cleanNumber = (value: string) => {
     if (value == null || value === '') return 0;
@@ -13,7 +13,6 @@ export const cleanNumber = (value: string) => {
 export const formatPrice = (price: number): string =>
     price.toFixed(0).replace('.', ',') + ',-';
 
-
 export const lighten = (color: string, amount: number) =>
     tinycolor(color).lighten(amount).toString();
 
@@ -23,19 +22,41 @@ export const darken = (color: string, amount: number) =>
 export const rgba = (color: string, alpha: number): string =>
     tinycolor(color).setAlpha(alpha).toString();
 
-
 import { parseDocument } from 'htmlparser2';
 
-export const extractPlainText = (html: string) => {
+const isAllWhitespace = (str: string) => /^\s*$/.test(str);
+
+export const htmlToPlainText = (html: string): string => {
     const dom = parseDocument(html);
+
     const walk = (nodes: any[]): string => {
-        return nodes.map(node => {
-            if (node.type === 'text') return node.data;
-            if (node.name === 'br') return '\n';
-            if (node.name === 'p') return walk(node.children) + '\n\n';
-            if (node.name === 'strong' || node.name === 'b') return '**' + walk(node.children) + '**';
-            return walk(node.children || []);
-        }).join('');
+        let text = '';
+        nodes.forEach((node, index) => {
+            if (node.type === 'text') {
+                if (!isAllWhitespace(node.data)) {
+                    text += node.data;
+                }
+            } else if (node.type === 'tag') {
+                let childrenText = walk(node.children || []);
+                if (node.name === 'p' || node.name === 'div') {
+                    // Add double newline after paragraphs or divs, but only if they contain non-whitespace text.
+                    if (!isAllWhitespace(childrenText)) {
+                        text += childrenText + '\n\n';
+                    }
+                } else if (node.name === 'br') {
+                    text += '\n';
+                } else if (node.name === 'strong' || node.name === 'b') {
+                    text += `**${childrenText}**`;
+                } else {
+                    text += childrenText;
+                }
+            }
+        });
+        return text;
     };
-    return walk(dom.children).trim();
+
+    // Process and clean up the final text
+    let result = walk(dom.children);
+    // Trim leading/trailing whitespace and collapse multiple newlines into a maximum of two
+    return result.replace(/\n{3,}/g, '\n\n').trim();
 };

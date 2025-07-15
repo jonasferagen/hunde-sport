@@ -30,7 +30,7 @@ export const RelatedProducts = ({ productIds }: RelatedProductsProps) => {
 
     return (
         <VerticalStack spacing="md">
-            <CustomText bold size="lg">Relaterte Produkter</CustomText>
+            <CustomText bold>Relaterte Produkter</CustomText>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: SPACING.md }}>
                 {relatedProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
