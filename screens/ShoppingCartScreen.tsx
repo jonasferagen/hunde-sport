@@ -16,13 +16,15 @@ export const ShoppingCartScreen = () => {
     const { theme } = useTheme();
     const styles = createStyles(theme);
 
+    console.log("shopping cart screen rendered");
+
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageSection primary>
                 <CustomText size="lg">Handlekurv</CustomText>
             </PageSection>
-            <PageSection>
+            <PageSection flex style={styles.cartSection}>
                 <FlatList
                     data={items}
                     keyExtractor={(item) => item.product.id.toString()}
@@ -37,16 +39,19 @@ export const ShoppingCartScreen = () => {
                             </Pressable>
 
                             <View style={styles.quantityContainer}>
-                                <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
-                                    <Icon name="removeFromCart" color={theme.colors.accent} />
+                                <Pressable
+                                    onPress={() => item.quantity > 1 && updateQuantity(item.product.id, item.quantity - 1)}
+                                    style={item.quantity === 1 ? theme.styles.disabled : undefined}
+                                >
+                                    <Icon name="removeFromCart" color={theme.textOnColor.accent} />
                                 </Pressable>
                                 <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
                                 <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                    <Icon name="addToCart" color={theme.colors.accent} />
+                                    <Icon name="addToCart" color={theme.textOnColor.accent} />
                                 </Pressable>
                             </View>
                             <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: SPACING.md }}>
-                                <Icon name="emptyCart" color={theme.colors.accent} />
+                                <Icon name="emptyCart" color={theme.textOnColor.accent} />
                             </Pressable>
                         </View>
                     )}
@@ -81,6 +86,9 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         alignItems: 'center',
         flex: 1,
     },
+    cartSection: {
+        paddingHorizontal: 0
+    },
     productImage: {
         width: 60,
         height: 60,
@@ -92,7 +100,6 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     },
 
     productPrice: {
-
         color: theme.colors.textSecondary,
         marginTop: 5,
     },

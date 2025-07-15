@@ -49,6 +49,11 @@ export const lightTheme: Theme = {
     secondary: darken(palette.secondary, 50),
     accent: darken(palette.accent, 50),
   },
+  styles: {
+    disabled: {
+      opacity: 0.5,
+    },
+  },
 } as const;
 
 export const darkTheme: Theme = {
@@ -78,5 +83,10 @@ export const darkTheme: Theme = {
     primary: palette.white,
     secondary: palette.white,
     accent: palette.white,
+  },
+  styles: {
+    disabled: {
+      opacity: 0.5,
+    },
   },
 } as const;

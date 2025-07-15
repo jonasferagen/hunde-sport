@@ -1,3 +1,5 @@
+import { ViewStyle } from 'react-native';
+
 export type ApiResponse<T> = {
   data: T | null;
   error: string | null;
@@ -89,5 +91,8 @@ export interface Theme {
     readonly primary: string;
     readonly secondary: string;
     readonly accent: string;
+  };
+  readonly styles: {
+    readonly disabled: ViewStyle;
   };
 }
