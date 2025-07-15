@@ -40,32 +40,39 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     );
 }
 
+const screenOptions = (theme: Theme) => {
+    return {
+        header: () => <TopMenu />,
+        headerShown: true,
+        drawerActiveTintColor: theme.textOnColor.primary,
+        drawerInactiveTintColor: theme.textOnColor.primary,
+        drawerLabelStyle: createStyles(theme).drawerLabel,
+    };
+};
+
+
+const ShoppingCartIcon = React.memo(({ color }: { color: string }) => {
+    const { cartItemCount } = useShoppingCart();
+    return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
+});
+
+
 const DrawerNavigator = () => {
     const { theme } = useTheme();
-    const styles = createStyles(theme);
 
     console.log('drawer rendering');
 
     return (
         <Drawer
             drawerContent={(props) => <CustomDrawerContent {...props} />}
-            screenOptions={{
-                header: () => <TopMenu />,
-                headerShown: true,
-                drawerActiveTintColor: theme.textOnColor.primary,
-                drawerInactiveTintColor: theme.textOnColor.primary,
-                drawerLabelStyle: styles.drawerLabel,
-            }}
+            screenOptions={screenOptions(theme)}
         >
             <Drawer.Screen name="index" options={{ title: 'Hjem', drawerIcon: ({ color }) => <Icon name="home" color={color} /> }} />
             <Drawer.Screen
                 name="shoppingCart"
                 options={{
                     title: 'Handlekurv',
-                    drawerIcon: ({ color }) => {
-                        const { cartItemCount } = useShoppingCart();
-                        return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
-                    },
+                    drawerIcon: (props) => <ShoppingCartIcon {...props} />,
                 }}
             />
             <Drawer.Screen name="category" options={{ drawerItemStyle: { display: 'none' } }} />
