@@ -1,10 +1,7 @@
 import BottomMenu from '@/components/layout/BottomMenu';
 import Preloader from '@/components/preloader/Preloader';
 import StatusMessage from '@/components/ui/StatusMessage';
-import { BreadcrumbProvider } from '@/hooks/Breadcrumbs/BreadcrumbContext';
-import { PreloaderProvider, usePreloader } from '@/hooks/Preloader/PreloaderProvider';
-import { ShoppingCartProvider } from '@/hooks/ShoppingCart/ShoppingCartProvider';
-import { StatusProvider } from '@/hooks/Status/StatusProvider';
+import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, useLayout, usePreloader } from '@/hooks';
 import { AppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from "expo-router";
@@ -12,13 +9,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useState } from "react";
 import { View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-function Layout() {
-  const insets = useSafeAreaInsets();
+const Layout = () => {
+  const { insets } = useLayout();
   return (
     <View style={[AppStyles.appContainer, { marginTop: insets.top, justifyContent: 'space-between', flex: 1 }]}>
       <Stack
@@ -32,7 +29,7 @@ function Layout() {
   );
 }
 
-function AppContent() {
+const AppContent = () => {
   const { appIsReady } = usePreloader();
 
   const onLayoutRootView = useCallback(async () => {
@@ -70,7 +67,9 @@ export const RootLayout = () => {
           <BreadcrumbProvider>
             <ShoppingCartProvider>
               <PreloaderProvider>
-                <AppContent />
+                <LayoutProvider>
+                  <AppContent />
+                </LayoutProvider>
               </PreloaderProvider>
             </ShoppingCartProvider>
           </BreadcrumbProvider>

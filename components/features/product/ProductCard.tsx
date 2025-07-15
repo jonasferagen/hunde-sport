@@ -1,6 +1,6 @@
 import { ProductTile } from "@/components/ui/";
 import { routes } from '@/config/routing';
-import { useBreadcrumbs } from "@/hooks/Breadcrumbs/BreadcrumbContext";
+import { useBreadcrumbs } from "@/hooks/Breadcrumbs/BreadcrumbProvider";
 import { Product } from "@/types";
 import React from 'react';
 

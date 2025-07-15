@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbContext';
+import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category';
 import { FONT_SIZES } from '@/styles';
 import { SPACING } from '@/styles/Dimensions';

@@ -1,5 +1,5 @@
 import { routes } from '@/config/routing';
-import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbContext';
+import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
 import { Category } from '@/types';
 import React from 'react';
 import { Chip } from './Chip';

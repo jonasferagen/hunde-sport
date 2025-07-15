@@ -1,13 +1,13 @@
 import { paths } from '@/config/routing';
+import { useLayout } from '@/hooks/Layout/LayoutProvider';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
 import { Href, Link, useSegments } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon, ValidIcon } from '../ui/Icon';
 
 const BottomMenu = () => {
-    const insets = useSafeAreaInsets();
+    const { insets, setBottomMenuHeight } = useLayout();
     const segments = useSegments();
     const { cartItemCount } = useShoppingCart();
     const currentPath = `/${segments.join('/')}`;
@@ -27,7 +27,14 @@ const BottomMenu = () => {
     }
 
     return (
-        <View style={[styles.container, { paddingBottom: insets.bottom, height: 60 + insets.bottom }]}>
+        <View
+            style={[styles.container, { paddingBottom: insets.bottom }]}
+            onLayout={(event) => {
+                const { height } = event.nativeEvent.layout;
+                console.log(height + insets.bottom);
+                setBottomMenuHeight(height + insets.bottom);
+            }}
+        >
             <TabButton href={paths.home} iconName="home" label="Hjem" />
             <TabButton href={paths.search} iconName="search" label="Søk" />
             <TabButton href={paths.shoppingCart} iconName="shoppingCart" label="Handlekurv" badge={cartItemCount} />

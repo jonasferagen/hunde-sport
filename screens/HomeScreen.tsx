@@ -1,7 +1,7 @@
 import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { CategoryTile } from '@/components/ui';
-import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbContext';
+import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
 import { View } from 'react-native';

@@ -1,12 +1,11 @@
-import { useStatus } from '@/hooks/Status/StatusProvider';
+import { useLayout, useStatus } from '@/hooks';
+import { BORDER_RADIUS, COLORS, SPACING } from '@/styles';
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
 
-import { BORDER_RADIUS, COLORS, SPACING } from '@/styles';
-
-
 const StatusMessage = () => {
     const { message } = useStatus();
+    const { bottomMenuHeight } = useLayout();
     const [fadeAnim] = useState(new Animated.Value(0));
 
     useEffect(() => {
@@ -22,7 +21,7 @@ const StatusMessage = () => {
     }
 
     return (
-        <Animated.View style={[styles.statusContainer, { opacity: fadeAnim }]}>
+        <Animated.View style={[styles.statusContainer, { opacity: fadeAnim, bottom: bottomMenuHeight + SPACING.sm }]}>
             <Text style={styles.statusText}>{message}</Text>
         </Animated.View>
     );
@@ -30,8 +29,9 @@ const StatusMessage = () => {
 
 const styles = StyleSheet.create({
     statusContainer: {
+        borderColor: COLORS.black,
+        borderWidth: 1,
         position: 'absolute',
-        bottom: SPACING.xl,
         left: SPACING.md,
         right: SPACING.md,
         backgroundColor: COLORS.backgroundPrimary,
