@@ -12,6 +12,10 @@ export interface CustomTextProps extends TextProps {
 export const CustomText = (props: CustomTextProps) => {
     const { size = 'md', bold = false, style, children, ...rest } = props;
 
+    if (!children) {
+        return null;
+    }
+
     const textStyle = React.useMemo(() => ({
         fontSize: FONT_SIZES[size],
         fontFamily: bold ? FONT_FAMILY.bold : FONT_FAMILY.regular,

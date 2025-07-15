@@ -28,6 +28,7 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
         showsVerticalScrollIndicator={true}
         scrollEventThrottle={16}
         nestedScrollEnabled={true}
+        scrollsToTop={true}
       >
         {children}
       </ScrollView>

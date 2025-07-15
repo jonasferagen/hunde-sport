@@ -6,16 +6,19 @@ interface PageContentProps {
   scrollable?: boolean;
   flex?: boolean;
   style?: ViewStyle;
+  ref?: React.RefObject<ScrollView>;
 }
 
-export const PageContent = ({ children, scrollable, flex, style }: PageContentProps) => {
+export const PageContent = ({ children, scrollable, flex, style, ref }: PageContentProps) => {
   if (scrollable) {
     return (
       <ScrollView
+        ref={ref}
         contentContainerStyle={styles.scrollContentContainer}
         showsVerticalScrollIndicator={true}
         scrollEventThrottle={16}
         nestedScrollEnabled={true}
+        scrollsToTop={true}
       >
         {children}
       </ScrollView>

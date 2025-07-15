@@ -7,7 +7,7 @@ import { Breadcrumbs, Button, CustomText } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useShoppingCart, useTheme } from '@/hooks';
 import { useProduct, useProductVariations } from '@/hooks/Product';
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/styles/Theme';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
@@ -95,32 +95,28 @@ export const ProductScreen = () => {
                 />
               </TouchableOpacity>
             </View>
-            <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
-            <VerticalStack spacing="md">
-              {product.attributes.filter(attr => attr.variation).map(attribute => {
-                return (
-                  < VariationSelector
-                    key={attribute.id}
-                    attribute={attribute}
-                    selectedOption={selectedOptions[attribute.slug] || null}
-                    onSelectOption={(option) => handleSelectOption(attribute.slug, option)}
-                  />
-                )
-              })}
-              <CustomText style={styles.shortDescription}>{displayProduct.short_description}-</CustomText>
-              <Button variant="primary" title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
-            </VerticalStack>
+            <CustomText size='xxl' bold>{formatPrice(displayProduct.price)}</CustomText>
+            {product.attributes.filter(attr => attr.variation).map(attribute => {
+              return (
+                < VariationSelector
+                  key={attribute.id}
+                  attribute={attribute}
+                  selectedOption={selectedOptions[attribute.slug] || null}
+                  onSelectOption={(option) => handleSelectOption(attribute.slug, option)}
+                />
+              )
+            })}
+            <CustomText size='sm'>{product.short_description}</CustomText>
+            <Button variant="primary" title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
           </VerticalStack>
         </PageSection>
 
         <PageSection primary>
-          <VerticalStack spacing="lg">
-            {!!product.description && <CustomText style={styles.description}>{product.description}</CustomText>}
-            <VerticalStack spacing="sm">
-              {product.attributes.filter(attr => !attr.variation).map(attribute => (
-                <AttributeDisplay key={attribute.id} attribute={attribute} />
-              ))}
-            </VerticalStack>
+          <VerticalStack spacing="md">
+            <CustomText>{product.description}</CustomText>
+            {product.attributes.filter(attr => !attr.variation).map(attribute => (
+              <AttributeDisplay key={attribute.id} attribute={attribute} />
+            ))}
             <CategoryChips categories={product.categories} />
           </VerticalStack>
         </PageSection>
@@ -169,21 +165,7 @@ const createStyles = (theme: Theme) => StyleSheet.create({
   mainImage: {
     height: '100%',
   },
-  price: {
-    fontSize: FONT_SIZES.xxl,
-    fontWeight: 'bold',
-    color: theme.colors.text,
-  },
-  description: {
-    fontSize: FONT_SIZES.sm,
-    lineHeight: FONT_SIZES.lg,
-    color: theme.colors.text,
-  },
-  shortDescription: {
-    fontSize: FONT_SIZES.md,
-    lineHeight: FONT_SIZES.lg,
-    color: theme.colors.text,
-  },
+
 
   imageGalleryContainer: {
     flexDirection: 'row',
