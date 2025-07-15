@@ -1,4 +1,4 @@
-import { PageSection, PageView, VerticalStack } from '@/components/layout';
+import { PageSection, PageView } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routing';
 import { useTheme } from '@/contexts';
@@ -32,20 +32,7 @@ const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: Shoppin
 
     return (
         <Animated.View style={[styles.cartItem, { opacity }]} >
-            <View style={styles.quantityContainer}>
-                <VerticalStack spacing="xs" style={styles.quantityStack}>
-                    <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
-                        <Icon name="addToCart" color={theme.textOnColor.accent} />
-                    </Pressable>
-                    <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
-                    <Pressable
-                        onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
-                        style={item.quantity === 1 ? theme.styles.disabled : undefined}
-                    >
-                        <Icon name="removeFromCart" color={theme.textOnColor.accent} />
-                    </Pressable>
-                </VerticalStack>
-            </View>
+
             <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
 
             <Pressable onPress={() => routes.product(item.product)} style={styles.productInfoContainer}>
@@ -54,7 +41,18 @@ const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: Shoppin
                     <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
                 </View>
             </Pressable>
-
+            <View style={styles.quantityContainer}>
+                <Pressable
+                    onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
+                    style={item.quantity === 1 ? theme.styles.disabled : undefined}
+                >
+                    <Icon name="removeFromCart" color={theme.textOnColor.accent} />
+                </Pressable>
+                <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
+                <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
+                    <Icon name="addToCart" color={theme.textOnColor.accent} />
+                </Pressable>
+            </View>
             <Pressable onPress={handleRemove} style={styles.removeButton}>
                 <Icon name="emptyCart" color={theme.textOnColor.accent} />
             </Pressable>
@@ -123,9 +121,8 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: theme.colors.card,
-        paddingHorizontal: SPACING.md,
+        padding: SPACING.sm,
         gap: SPACING.md
-
     },
     productPressable: {
         flexDirection: 'row',
@@ -144,7 +141,7 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     },
     productInfoContainer: {
         flex: 1,
-        marginLeft: SPACING.md,
+
     },
     productInfo: {
         flex: 1,
@@ -157,17 +154,14 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     quantityContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-
-    },
-    quantityStack: {
-        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: 70,
     },
     quantity: {
-        textAlign: 'center', // Center the text within the fixed width
+        textAlign: 'center',
     },
     removeButton: {
-        marginLeft: 'auto',
-        paddingLeft: SPACING.md, // Add some space before the button
+        paddingRight: SPACING.md, // Add some space before the button
     },
     summaryContainer: {
         padding: SPACING.md,
