@@ -16,7 +16,7 @@ export const VariationSelector = ({ attribute, onSelectOption, selectedOption }:
     }
 
     return (
-        <View style={styles.container}>
+        <View >
             <CustomText bold size="md">{attribute.name}</CustomText>
             <View style={styles.chipsContainer}>
                 {attribute.options.map(option => (
@@ -24,7 +24,7 @@ export const VariationSelector = ({ attribute, onSelectOption, selectedOption }:
                         key={option}
                         label={option}
                         onPress={() => onSelectOption(option)}
-                        variant={selectedOption === option ? 'primary' : 'secondary'}
+                        variant={selectedOption === option ? 'primary' : 'default'}
                     />
                 ))}
             </View>
@@ -33,9 +33,7 @@ export const VariationSelector = ({ attribute, onSelectOption, selectedOption }:
 };
 
 const styles = StyleSheet.create({
-    container: {
-        marginVertical: SPACING.md,
-    },
+
     chipsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',

@@ -24,13 +24,13 @@ export const TopMenu = React.memo(() => {
     };
 
     return (
-        <LinearGradient colors={theme.gradients.primary}>
+        <LinearGradient colors={theme.gradients.primary} style={{ height: 'auto' }}>
             <View style={styles.container}>
                 <View style={styles.headerTopRow}>
                     <DrawerToggleButton />
                     <CustomText bold size="lg" style={styles.content}>hunde-sport.no</CustomText>
                 </View>
-                {usePathname() === paths.home && <SearchBar placeholder="Hva leter du etter?" />}
+                {usePathname() === paths.home && <View style={{ marginTop: SPACING.md }}><SearchBar placeholder="Hva leter du etter?" /></View>}
             </View>
         </LinearGradient>
     );
@@ -38,17 +38,17 @@ export const TopMenu = React.memo(() => {
 
 const createStyles = (theme: Theme) => StyleSheet.create({
     container: {
-        padding: SPACING.lg,
+        padding: SPACING.md,
+
     },
     content: {
         color: theme.textOnColor.primary,
-
     },
     headerTopRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: SPACING.md,
+
     },
 
 });

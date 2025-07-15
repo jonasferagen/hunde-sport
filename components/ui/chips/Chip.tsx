@@ -8,63 +8,51 @@ import { CustomText, CustomTextProps } from '../customtext/CustomText';
 interface ChipProps {
     label: string;
     onPress?: () => void;
-    variant?: 'primary' | 'secondary' | 'accent';
+    variant?: 'primary' | 'secondary' | 'accent' | 'default';
     style?: StyleProp<ViewStyle>;
     textProps?: CustomTextProps;
 }
 
-export const Chip = ({ label, onPress, variant = 'secondary', style, textProps }: ChipProps) => {
+export const Chip = ({ label, onPress, variant = 'default', style, textProps }: ChipProps) => {
     const { theme } = useTheme();
-    const styles = createStyles(theme);
+    const styles = createStyles(theme, variant);
 
     const chipStyle = [
         styles.chip,
-        styles[variant],
         style,
     ];
 
     const textStyle = [
-        styles.chipText,
-        styles[`text${variant.charAt(0).toUpperCase() + variant.slice(1)}` as keyof typeof styles]
+        styles.text,
+        textProps,
     ];
 
     return (
         <TouchableOpacity onPress={onPress} style={chipStyle} disabled={!onPress}>
-            <CustomText style={textStyle} numberOfLines={1} ellipsizeMode="tail" {...textProps}>
+            <CustomText style={textStyle} numberOfLines={1} ellipsizeMode="tail">
                 {label}
             </CustomText>
         </TouchableOpacity>
     );
 };
 
-const createStyles = (theme: Theme) => StyleSheet.create({
-    chip: {
-        paddingVertical: SPACING.xs,
-        paddingHorizontal: SPACING.sm,
-        borderRadius: BORDER_RADIUS.sm,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    chipText: {
-        fontSize: FONT_SIZES.sm,
-        textAlign: 'center',
-    },
-    primary: {
-        backgroundColor: theme.colors.primary,
-    },
-    secondary: {
-        backgroundColor: theme.colors.secondary,
-    },
-    accent: {
-        backgroundColor: theme.colors.accent,
-    },
-    textPrimary: {
-        color: theme.textOnColor.primary,
-    },
-    textSecondary: {
-        color: theme.textOnColor.secondary,
-    },
-    textAccent: {
-        color: theme.textOnColor.accent,
-    },
-});
+const createStyles = (theme: Theme, variant: ChipProps['variant']) => {
+    const backgroundColor = variant === 'default' ? theme.colors.card : theme.colors[variant!];
+    const textColor = variant === 'default' ? theme.colors.text : theme.textOnColor[variant!];
+
+    return StyleSheet.create({
+        chip: {
+            backgroundColor: backgroundColor,
+            paddingVertical: SPACING.xs,
+            paddingHorizontal: SPACING.sm,
+            borderRadius: BORDER_RADIUS.sm,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        text: {
+            color: textColor,
+            fontSize: FONT_SIZES.sm,
+            textAlign: 'center',
+        },
+    });
+};

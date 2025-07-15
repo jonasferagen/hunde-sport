@@ -20,7 +20,7 @@ export const CategoryChip = ({ category }: CategoryChipProps) => {
         <Chip
             label={category.name}
             onPress={handlePress}
-            variant="primary"
+            variant="default"
         />
     );
 };
