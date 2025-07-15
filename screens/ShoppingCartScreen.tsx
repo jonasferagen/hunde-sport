@@ -63,9 +63,10 @@ const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: Shoppin
 interface ShoppingCartSummaryProps {
     cartItemCount: number;
     cartTotal: number;
+    onClearCart: () => void;
 }
 
-const ShoppingCartSummary = memo(({ cartItemCount, cartTotal }: ShoppingCartSummaryProps) => {
+const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: ShoppingCartSummaryProps) => {
     const { theme } = useTheme();
     const styles = createStyles(theme);
 
@@ -75,14 +76,17 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal }: ShoppingCartSumm
                 <CustomText bold size='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
                 <CustomText bold size='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
             </View>
-            <Button title="Gå til kassen" icon="checkout" onPress={() => { /* TODO: Implement checkout */ }} />
+            <View style={styles.buttonContainer}>
+                <Button title="Tøm handlekurv" icon="emptyCart" variant="secondary" onPress={onClearCart} />
+                <Button title="Gå til kassen" icon="checkout" variant="primary" onPress={routes.checkout} />
+            </View>
         </View>
     );
 });
 
 
 export const ShoppingCartScreen = () => {
-    const { items, updateQuantity, removeFromCart, cartTotal, cartItemCount } = useShoppingCart();
+    const { items, updateQuantity, removeFromCart, cartTotal, cartItemCount, clearCart } = useShoppingCart();
     const { theme } = useTheme();
     const styles = createStyles(theme);
 
@@ -108,7 +112,7 @@ export const ShoppingCartScreen = () => {
                     ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
                 />
                 {items.length > 0 && (
-                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} />
+                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
                 )}
             </PageSection>
 
@@ -173,6 +177,11 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: SPACING.md,
     },
     totalText: {
         textAlign: 'right',

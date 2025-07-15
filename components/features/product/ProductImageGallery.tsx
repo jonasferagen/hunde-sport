@@ -1,7 +1,6 @@
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
-import { Theme } from '@/styles/Theme';
-import { Image as ProductImage } from '@/types';
+import { Image as ProductImage, Theme } from '@/types';
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -60,14 +59,13 @@ const createStyles = (theme: Theme) =>
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
-            marginTop: SPACING.md,
+            gap: SPACING.sm,
+            borderColor: 'black',
+            borderWidth: 1,
         },
         imageThumbnailWrapper: {
             width: '31%', // Creates a 3-column grid with spacing
-            margin: '1%',
             height: 120,
-            borderWidth: 1,
-            borderColor: theme.colors.border,
             borderRadius: BORDER_RADIUS.sm,
             overflow: 'hidden', // Ensures the image respects the border radius
         },

@@ -8,6 +8,7 @@ export const paths = {
     search: '/search',
     category: '/category',
     product: '/product',
+    checkout: '/checkout',
 } as const;
 
 export const routes = {
@@ -17,8 +18,8 @@ export const routes = {
     shoppingCart: () => {
         router.push(paths.shoppingCart);
     },
-    search: (query: string) => {
-        router.push({ pathname: paths.search, params: { q: query } });
+    search: (query?: string) => {
+        router.push(query ? `/search?query=${query}` : '/search');
     },
     category: (category: Category) => {
         breadcrumbHelper.buildTrail(category.id);
@@ -32,4 +33,7 @@ export const routes = {
         breadcrumbHelper.buildTrail(product.categories[0].id);
         router.push({ pathname: paths.product, params: { id: product.id.toString(), name: product.name } });
     },
+    checkout: () => {
+        router.push(paths.checkout);
+    }
 };

@@ -1,8 +1,8 @@
+import { routes } from '@/config/routing';
 import type { Product, ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { Alert } from 'react-native';
 import { useStatus } from './StatusProvider';
-
-
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
@@ -11,6 +11,7 @@ interface ShoppingCartContextType {
     addToCart: (product: Product) => void;
     removeFromCart: (productId: number) => void;
     updateQuantity: (productId: number, quantity: number) => void;
+    clearCart: () => void;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
@@ -48,6 +49,28 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         );
     }, []);
 
+    const clearCart = useCallback(() => {
+        Alert.alert(
+            'Tøm handlekurv',
+            'Er du sikker på at du vil tømme handlekurven?',
+            [
+                {
+                    text: 'Avbryt',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Tøm',
+                    style: 'destructive',
+                    onPress: () => {
+                        setItems([]);
+                        showMessage({ text: 'Handlekurven er tømt', type: 'info' });
+                        routes.home();
+                    },
+                },
+            ]
+        );
+    }, [showMessage]);
+
     const cartItemCount = useMemo(() => {
         return items.reduce((sum, item) => sum + item.quantity, 0);
     }, [items]);
@@ -65,6 +88,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 addToCart,
                 removeFromCart,
                 updateQuantity,
+                clearCart,
             }}
         >
             {children}
