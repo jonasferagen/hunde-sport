@@ -1,11 +1,12 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
+import { useTheme } from '@/hooks';
 import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category';
-import { FONT_SIZES } from '@/styles';
+import { FONT_SIZES, Theme } from '@/styles';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category } from '@/types';
 import { rgba } from '@/utils/helpers';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
@@ -27,7 +28,8 @@ interface CategoryTreeItemProps {
 const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: CategoryTreeItemProps) => {
     const { categories } = useCategories(category.id);
     const { setCategories } = useBreadcrumbs();
-
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
     const hasChildren = categories.length > 0; // subcategories
 
     const handleNavigate = useCallback(() => {
@@ -38,24 +40,22 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
         onExpand(category.id);
     }, [onExpand, category.id]);
 
-    const renderExpandIcon = () => {
-        if (hasChildren) {
-            return <Icon name={isExpanded ? 'expand' : 'collapse'} size={FONT_SIZES.md} color={itemStyles.categoryText.color} />;
-        }
-        return <View style={{ width: FONT_SIZES.xxl }} />; // Placeholder for alignment
-    };
+
+    const color = theme.textOnColor.primary;
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <View style={[isExpanded ? itemStyles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
-                <View style={itemStyles.itemContainer}>
-                    <Pressable onPress={handleNavigate} style={itemStyles.categoryInfo}>
-                        <CategoryIcon image={category.image} size={FONT_SIZES.xl} color={itemStyles.categoryText.color} />
-                        <CustomText style={[itemStyles.categoryText]}>{category.name} ({category.count})</CustomText>
+            <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
+                <View style={styles.itemContainer}>
+                    <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
+                        <CategoryIcon image={category.image} size={FONT_SIZES.xl} color={color} />
+                        <CustomText style={[styles.categoryText, { color }]}>{category.name} ({category.count})</CustomText>
                     </Pressable>
-                    <Pressable onPress={handleExpand}>
-                        {renderExpandIcon()}
-                    </Pressable>
+                    {hasChildren && (
+                        <Pressable onPress={handleExpand}>
+                            <Icon name={isExpanded ? 'collapse' : 'expand'} size={FONT_SIZES.md} color={color} />
+                        </Pressable>
+                    )}
                 </View>
                 {isExpanded && (
                     <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
@@ -72,25 +72,18 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
 };
 
 export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: CategoryTreeProps) => {
-    const { categories, isFetching, hasNextPage, isFetchingNextPage, fetchNextPage } = useCategories(categoryId);
+    const { categories, isFetchingNextPage } = useCategories(categoryId, { fetchAll: true });
     const { categories: breadcrumbs } = useBreadcrumbs();
 
     const activeChild = categories.find((c: Category) => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);
 
-    useEffect(() => {
-        if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-        }
-    }, [hasNextPage, isFetchingNextPage, fetchNextPage, categories]);
-
     const handleToggleExpand = (itemId: number) => {
         setExpandedItemId(prevId => (prevId === itemId ? null : itemId));
     };
 
-
     return (
-        <View style={styles.container}>
+        <View style={{ marginHorizontal: 0 }}>
             <View>
                 {categories.map((category: Category) => {
                     return (
@@ -105,22 +98,16 @@ export const CategoryTree = ({ categoryId, level = 0, ancestors = [] }: Category
                     );
                 })}
                 {isFetchingNextPage && (
-                    <Loader size="small" />
+                    <Loader size="small" style={{ marginVertical: SPACING.sm }} />
                 )}
             </View>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        marginHorizontal: 0,
-    },
-});
 
-const itemBackgroundColor = rgba('white', 0.3);
+const createStyles = (theme: Theme) => StyleSheet.create({
 
-const itemStyles = StyleSheet.create({
     itemContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -132,14 +119,13 @@ const itemStyles = StyleSheet.create({
         alignItems: 'center',
     },
     categoryText: {
-        color: 'black',
         marginLeft: SPACING.sm,
     },
     icon: {
         marginRight: SPACING.sm,
     },
     activeCategory: {
-        backgroundColor: itemBackgroundColor,
+        backgroundColor: rgba('white', 0.3),
         borderRadius: BORDER_RADIUS.sm,
     },
 });
