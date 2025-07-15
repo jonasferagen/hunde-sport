@@ -5,18 +5,86 @@ import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
-import { Theme } from '@/types';
+import { ShoppingCartItem, Theme } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Stack } from 'expo-router';
-import React from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
+
+interface ShoppingCartListItemProps {
+    item: ShoppingCartItem;
+    onUpdateQuantity: (productId: number, quantity: number) => void;
+    onRemove: (productId: number) => void;
+}
+
+const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: ShoppingCartListItemProps) => {
+    const { theme } = useTheme();
+    const styles = useMemo(() => createStyles(theme), [theme]);
+
+
+    return (
+        <View style={styles.cartItem}>
+            <Pressable onPress={() => routes.product(item.product)} style={styles.productPressable}>
+                <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
+                <View style={styles.productInfo}>
+                    <CustomText bold>{item.product.name}</CustomText>
+                    <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
+                </View>
+            </Pressable>
+
+            <View style={styles.quantityContainer}>
+                <Pressable
+                    onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
+                    style={item.quantity === 1 ? theme.styles.disabled : undefined}
+                >
+                    <Icon name="removeFromCart" color={theme.textOnColor.accent} />
+                </Pressable>
+                <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
+                <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
+                    <Icon name="addToCart" color={theme.textOnColor.accent} />
+                </Pressable>
+            </View>
+            <Pressable onPress={() => onRemove(item.product.id)} style={{ marginLeft: SPACING.md }}>
+                <Icon name="emptyCart" color={theme.textOnColor.accent} />
+            </Pressable>
+        </View>
+    );
+});
+
+interface ShoppingCartSummaryProps {
+    cartItemCount: number;
+    cartTotal: number;
+}
+
+const ShoppingCartSummary = memo(({ cartItemCount, cartTotal }: ShoppingCartSummaryProps) => {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
+
+    return (
+        <View style={styles.summaryContainer}>
+            <View style={styles.summaryRow}>
+                <CustomText bold size='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
+                <CustomText bold size='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
+            </View>
+            <Button title="Gå til kassen" icon="checkout" onPress={() => { /* TODO: Implement checkout */ }} />
+        </View>
+    );
+});
+
 
 export const ShoppingCartScreen = () => {
     const { items, updateQuantity, removeFromCart, cartTotal, cartItemCount } = useShoppingCart();
     const { theme } = useTheme();
     const styles = createStyles(theme);
 
-    console.log("shopping cart screen rendered");
+    const renderItem = useCallback(({ item }: { item: ShoppingCartItem }) => (
+        <ShoppingCartListItem
+            item={item}
+            onUpdateQuantity={updateQuantity}
+            onRemove={removeFromCart}
+        />
+    ), [updateQuantity, removeFromCart]);
+
 
     return (
         <PageView>
@@ -28,43 +96,11 @@ export const ShoppingCartScreen = () => {
                 <FlatList
                     data={items}
                     keyExtractor={(item) => item.product.id.toString()}
-                    renderItem={({ item }) => (
-                        <View style={styles.cartItem}>
-                            <Pressable onPress={() => routes.product(item.product)} style={styles.productPressable}>
-                                <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
-                                <View style={styles.productInfo}>
-                                    <CustomText bold>{item.product.name}</CustomText>
-                                    <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
-                                </View>
-                            </Pressable>
-
-                            <View style={styles.quantityContainer}>
-                                <Pressable
-                                    onPress={() => item.quantity > 1 && updateQuantity(item.product.id, item.quantity - 1)}
-                                    style={item.quantity === 1 ? theme.styles.disabled : undefined}
-                                >
-                                    <Icon name="removeFromCart" color={theme.textOnColor.accent} />
-                                </Pressable>
-                                <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
-                                <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
-                                    <Icon name="addToCart" color={theme.textOnColor.accent} />
-                                </Pressable>
-                            </View>
-                            <Pressable onPress={() => removeFromCart(item.product.id)} style={{ marginLeft: SPACING.md }}>
-                                <Icon name="emptyCart" color={theme.textOnColor.accent} />
-                            </Pressable>
-                        </View>
-                    )}
+                    renderItem={renderItem}
                     ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
                 />
                 {items.length > 0 && (
-                    <View style={styles.summaryContainer}>
-                        <View style={styles.summaryRow}>
-                            <CustomText bold size='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
-                            <CustomText bold size='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
-                        </View>
-                        <Button title="Gå til kassen" icon="checkout" onPress={() => { /* TODO: Implement checkout */ }} />
-                    </View>
+                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} />
                 )}
             </PageSection>
 

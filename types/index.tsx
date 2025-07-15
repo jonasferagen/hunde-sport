@@ -64,6 +64,11 @@ export interface Breadcrumb {
   type: 'category' | 'product' | 'home';
 }
 
+export interface ShoppingCartItem {
+  product: Product;
+  quantity: number;
+}
+
 export interface Theme {
   readonly colors: {
     readonly primary: string;

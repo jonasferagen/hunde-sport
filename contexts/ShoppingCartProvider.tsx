@@ -1,11 +1,8 @@
-import type { Product } from '@/types';
+import type { Product, ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { useStatus } from './StatusProvider';
 
-export interface ShoppingCartItem {
-    product: Product;
-    quantity: number;
-}
+
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
