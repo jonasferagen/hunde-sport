@@ -2,7 +2,7 @@ import { CustomText, Icon, Loader } from '@/components/ui';
 import { useTheme } from '@/hooks';
 import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category';
-import { FONT_SIZES, Theme } from '@/styles';
+import { Theme } from '@/styles';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category } from '@/types';
 import { rgba } from '@/utils/helpers';
@@ -48,12 +48,12 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
             <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={styles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={styles.categoryInfo}>
-                        <CategoryIcon image={category.image} size={FONT_SIZES.xl} color={color} />
+                        <CategoryIcon image={category.image} size='xl' color={color} />
                         <CustomText style={[styles.categoryText, { color }]}>{category.name} ({category.count})</CustomText>
                     </Pressable>
                     {hasChildren && (
                         <Pressable onPress={handleExpand}>
-                            <Icon name={isExpanded ? 'collapse' : 'expand'} size={FONT_SIZES.md} color={color} />
+                            <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
                         </Pressable>
                     )}
                 </View>

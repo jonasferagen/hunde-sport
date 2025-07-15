@@ -26,11 +26,11 @@ export const ValidIcon = {
 interface IconProps extends Omit<React.ComponentProps<typeof FontAwesome>, 'name' | 'size'> {
     name: keyof typeof ValidIcon;
     badge?: number;
-    size?: number | keyof typeof FONT_SIZES;
+    size?: string;
 };
 
-export const Icon = ({ name, badge = 0, size = 'xxl', ...rest }: IconProps) => {
-    const fontSize = typeof size === 'string' ? FONT_SIZES[size as keyof typeof FONT_SIZES] : size;
+export const Icon = ({ name, badge = 0, size = 'xl', ...rest }: IconProps) => {
+    const fontSize = FONT_SIZES[size as keyof typeof FONT_SIZES];
     return (
         <View>
             <FontAwesome name={ValidIcon[name]} size={fontSize} {...rest} />
