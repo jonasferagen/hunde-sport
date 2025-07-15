@@ -1,13 +1,12 @@
-import { Loader } from '@/components/ui';
+import { CustomText, Icon, Loader } from '@/components/ui';
 import { useBreadcrumbs } from '@/hooks/Breadcrumbs/BreadcrumbProvider';
 import { useCategories } from '@/hooks/Category';
 import { FONT_SIZES } from '@/styles';
-import { SPACING } from '@/styles/Dimensions';
+import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category } from '@/types';
 import { rgba } from '@/utils/helpers';
-import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
 
@@ -41,7 +40,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
 
     const renderExpandIcon = () => {
         if (hasChildren) {
-            return <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down-outline'} size={FONT_SIZES.xxl} color={itemStyles.categoryText.color} />;
+            return <Icon name={isExpanded ? 'expand' : 'collapse'} size={FONT_SIZES.lg} color={itemStyles.categoryText.color} />;
         }
         return <View style={{ width: FONT_SIZES.xxl }} />; // Placeholder for alignment
     };
@@ -51,8 +50,8 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
             <View style={[isExpanded ? itemStyles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={itemStyles.itemContainer}>
                     <Pressable onPress={handleNavigate} style={itemStyles.categoryInfo}>
-                        <CategoryIcon image={category.image} size={FONT_SIZES.xxl} color={itemStyles.categoryText.color} />
-                        <Text style={[itemStyles.categoryText, isExpanded ? itemStyles.activeText : null]}>{category.name} ({category.count})</Text>
+                        <CategoryIcon image={category.image} size={FONT_SIZES.xl} color={itemStyles.categoryText.color} />
+                        <CustomText bold={isExpanded} style={[itemStyles.categoryText]}>{category.name} ({category.count})</CustomText>
                     </Pressable>
                     <Pressable onPress={handleExpand}>
                         {renderExpandIcon()}
@@ -123,8 +122,7 @@ const itemStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: SPACING.sm,
+        padding: SPACING.sm,
     },
     categoryInfo: {
         flexDirection: 'row',
@@ -140,9 +138,7 @@ const itemStyles = StyleSheet.create({
     },
     activeCategory: {
         backgroundColor: itemBackgroundColor,
-        borderRadius: 8,
+        borderRadius: BORDER_RADIUS.sm,
     },
-    activeText: {
-        fontWeight: 'bold',
-    },
+
 });

@@ -1,8 +1,9 @@
+import { CustomText } from '@/components/ui';
 import { FONT_SIZES } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Icon, ValidIcon } from '../Icon';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Icon, ValidIcon } from '../icon/Icon';
 
 export interface ButtonProps {
     onPress: () => void;
@@ -32,7 +33,7 @@ export const Button = ({ onPress, title, icon, variant = 'primary' }: ButtonProp
     return (
         <Pressable onPress={onPress} style={[styles.button, { backgroundColor: stylesForVariant.backgroundColor }]}>
             <View style={styles.content}>
-                <Text style={[styles.text, { color: stylesForVariant.color }]}>{title}</Text>
+                <CustomText style={[styles.text, { color: stylesForVariant.color }]}>{title}</CustomText>
                 {icon && <Icon name={icon} color={stylesForVariant.color} size={'xl'} style={styles.icon} />}
             </View>
         </Pressable>

@@ -1,11 +1,13 @@
+import { CustomText, Icon, SearchBar } from '@/components/ui';
+import { paths } from '@/config/routing';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { usePathname } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Heading, Icon, SearchBar } from '../ui/';
 
 export const TopMenu = React.memo(() => {
 
@@ -23,9 +25,9 @@ export const TopMenu = React.memo(() => {
             <View style={styles.container}>
                 <View style={styles.headerTopRow}>
                     <DrawerToggleButton />
-                    <Heading title="hunde-sport.no" size="lg" style={styles.content} />
+                    <CustomText bold size="lg" style={styles.content}>hunde-sport.no</CustomText>
                 </View>
-                <SearchBar placeholder="Hva leter du etter?" />
+                {usePathname() === paths.home && <SearchBar placeholder="Hva leter du etter?" />}
             </View>
         </LinearGradient>
     );
@@ -37,9 +39,7 @@ const styles = StyleSheet.create({
     },
     content: {
         color: COLORS.textOnPrimary,
-        textShadowColor: COLORS.textOnSecondary,
-        textShadowOffset: { width: 0, height: 1 },
-        textShadowRadius: 1,
+
     },
     headerTopRow: {
         flexDirection: 'row',

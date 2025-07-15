@@ -3,7 +3,7 @@ import { BORDER_RADIUS, SPACING } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import React, { forwardRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
-import { Icon } from '../Icon';
+import { Icon } from '../icon/Icon';
 
 interface SearchBarProps {
     placeholder?: string;

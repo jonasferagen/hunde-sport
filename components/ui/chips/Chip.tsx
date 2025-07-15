@@ -1,17 +1,17 @@
-import { COLORS } from '@/styles/Colors';
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { FONT_SIZES } from '@/styles/Typography';
+import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
 import React from 'react';
-import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { CustomText, CustomTextProps } from '../customtext/CustomText';
 
 interface ChipProps {
     label: string;
     onPress?: () => void;
     variant?: 'primary' | 'secondary' | 'accent';
     style?: StyleProp<ViewStyle>;
+    textProps?: CustomTextProps;
 }
 
-export const Chip = ({ label, onPress, variant = 'secondary', style }: ChipProps) => {
+export const Chip = ({ label, onPress, variant = 'secondary', style, textProps }: ChipProps) => {
     const chipStyle = [
         styles.chip,
         variant === 'primary' && styles.primary,
@@ -29,9 +29,9 @@ export const Chip = ({ label, onPress, variant = 'secondary', style }: ChipProps
 
     return (
         <TouchableOpacity onPress={onPress} style={chipStyle} disabled={!onPress}>
-            <Text style={textStyle} numberOfLines={1} ellipsizeMode="tail">
+            <CustomText style={textStyle} numberOfLines={1} ellipsizeMode="tail" {...textProps}>
                 {label}
-            </Text>
+            </CustomText>
         </TouchableOpacity>
     );
 };
@@ -49,22 +49,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     primary: {
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.darkPrimary,
     },
     secondary: {
-        backgroundColor: COLORS.secondary,
+        backgroundColor: COLORS.darkSecondary,
     },
     accent: {
-        backgroundColor: COLORS.accent,
+        backgroundColor: COLORS.darkAccent,
     },
     textPrimary: {
-        color: COLORS.textOnPrimary, // Or a generic light text color
+        color: COLORS.white, // Or a generic light text color
     },
     textSecondary: {
-        color: COLORS.textOnSecondary, // Or a generic dark text color
+        color: COLORS.white, // Or a generic dark text color
     },
     textAccent: {
-        color: COLORS.textOnAccent, // Or a generic dark text color
+        color: COLORS.white, // Or a generic dark text color
     },
 });
-

@@ -3,8 +3,8 @@ import { AttributeDisplay } from '@/components/features/product/AttributeDisplay
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { VariationSelector } from '@/components/features/product/VariationSelector';
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
-import { Breadcrumbs, Button } from '@/components/ui';
-import { Loader } from '@/components/ui/Loader';
+import { Breadcrumbs, Button, CustomText } from '@/components/ui';
+import { Loader } from '@/components/ui/loader/Loader';
 import { useProduct, useProductVariations } from '@/hooks/Product/Product';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
@@ -13,7 +13,7 @@ import { formatPrice } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
@@ -92,7 +92,7 @@ export const ProductScreen = () => {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={styles.price}>{formatPrice(displayProduct.price)}</Text>
+            <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
             <VerticalStack spacing="md">
               {product.attributes.filter(attr => attr.variation).map(attribute => {
                 return (
@@ -104,7 +104,7 @@ export const ProductScreen = () => {
                   />
                 )
               })}
-              {!!product.short_description && <Text style={styles.shortDescription}>{displayProduct.short_description}</Text>}
+              {!!product.short_description && <CustomText style={styles.shortDescription}>{displayProduct.short_description}</CustomText>}
               <Button variant="primary" title="Legg til i handlekurv" onPress={() => addToCart(displayProduct)} />
             </VerticalStack>
           </VerticalStack>
@@ -112,7 +112,7 @@ export const ProductScreen = () => {
 
         <PageSection primary>
           <VerticalStack spacing="lg">
-            {!!product.description && <Text style={styles.description}>{product.description}</Text>}
+            {!!product.description && <CustomText style={styles.description}>{product.description}</CustomText>}
             <VerticalStack spacing="sm">
               {product.attributes.filter(attr => !attr.variation).map(attribute => (
                 <AttributeDisplay key={attribute.id} attribute={attribute} />

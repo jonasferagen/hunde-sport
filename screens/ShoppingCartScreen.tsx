@@ -1,5 +1,6 @@
 import { PageSection, PageView } from '@/components/layout';
-import { Button, Heading, Icon } from '@/components/ui';
+import { Button, CustomText, Icon } from '@/components/ui';
+import { routes } from '@/config/routing';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { COLORS } from '@/styles/Colors';
 import { SPACING } from '@/styles/Dimensions';
@@ -7,7 +8,7 @@ import { FONT_SIZES } from '@/styles/Typography';
 import { formatPrice } from '@/utils/helpers';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 
 export const ShoppingCartScreen = () => {
     const { items, updateQuantity, removeFromCart, cartTotal, cartItemCount } = useShoppingCart();
@@ -18,7 +19,7 @@ export const ShoppingCartScreen = () => {
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageSection primary>
-                <Heading title="Handlekurv" size="lg" />
+                <CustomText size="lg">Handlekurv</CustomText>
             </PageSection>
             <PageSection>
                 <FlatList
@@ -26,16 +27,19 @@ export const ShoppingCartScreen = () => {
                     keyExtractor={(item) => item.product.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.cartItem}>
-                            <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
-                            <View style={styles.productInfo}>
-                                <Text style={styles.productName}>{item.product.name}</Text>
-                                <Text style={styles.productPrice}>{formatPrice(item.product.price)}</Text>
-                            </View>
+                            <Pressable onPress={() => routes.productSimple(item.product.id)} style={styles.productPressable}>
+                                <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
+                                <View style={styles.productInfo}>
+                                    <CustomText bold>{item.product.name}</CustomText>
+                                    <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
+                                </View>
+                            </Pressable>
+
                             <View style={styles.quantityContainer}>
                                 <Pressable onPress={() => updateQuantity(item.product.id, item.quantity - 1)}>
                                     <Icon name="removeFromCart" color={textColor} />
                                 </Pressable>
-                                <Text style={styles.quantity}>{item.quantity}</Text>
+                                <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
                                 <Pressable onPress={() => updateQuantity(item.product.id, item.quantity + 1)}>
                                     <Icon name="addToCart" color={textColor} />
                                 </Pressable>
@@ -45,34 +49,24 @@ export const ShoppingCartScreen = () => {
                             </Pressable>
                         </View>
                     )}
-                    ListEmptyComponent={<Text style={styles.emptyText}>Handlekurven er tom.</Text>}
+                    ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
                 />
                 {items.length > 0 && (
                     <View style={styles.summaryContainer}>
-                        <View style={
-                            {
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }
-                        }
-                        >
-                            <Text style={styles.totalText}>Antall: {cartItemCount}</Text>
-                            <Text style={styles.totalText}>Total: {formatPrice(cartTotal)}</Text>
+                        <View style={styles.summaryRow}>
+                            <CustomText bold size='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
+                            <CustomText bold size='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
                         </View>
                         <Button title="Gå til kassen" icon="checkout" onPress={() => { /* TODO: Implement checkout */ }} />
                     </View>
                 )}
             </PageSection>
 
-        </PageView>
+        </PageView >
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     cartItem: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -81,8 +75,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
-    textColor: {
-        color: COLORS.textOnSecondary,
+    productPressable: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
     },
     productImage: {
         width: 60,
@@ -93,12 +89,9 @@ const styles = StyleSheet.create({
         flex: 1,
         marginLeft: 10,
     },
-    productName: {
-        fontSize: FONT_SIZES.md,
-        fontWeight: 'bold'
-    },
+
     productPrice: {
-        fontSize: FONT_SIZES.sm,
+
         color: '#666',
         marginTop: 5,
     },
@@ -107,19 +100,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     quantity: {
-        fontSize: FONT_SIZES.md,
-        fontWeight: 'bold',
-        marginHorizontal: 10,
+        marginHorizontal: SPACING.md,
     },
     summaryContainer: {
-        padding: 20,
+        padding: SPACING.md,
         borderTopWidth: 1,
         borderTopColor: COLORS.border,
         backgroundColor: 'white',
     },
+    summaryRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     totalText: {
-        fontSize: FONT_SIZES.lg,
-        fontWeight: 'bold',
         textAlign: 'right',
         marginBottom: 10,
     },

@@ -40,8 +40,6 @@ interface ProductListItemProps {
 const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
     const { addToCart } = useShoppingCart();
 
-    console.log(product.id + ' ' + product.name + ' rendered');
-
     return (
         <View key={product.id} style={styles.container}>
             <Image source={{ uri: product.images[0].src }} style={styles.image} />

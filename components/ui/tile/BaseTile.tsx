@@ -1,7 +1,8 @@
-import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
+import { BORDER_RADIUS, COLORS, SPACING } from '@/styles';
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
-import { DimensionValue, ImageBackground, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { DimensionValue, ImageBackground, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import { CustomText } from '../customtext/CustomText';
 
 export interface BaseTileProps {
     name: string;
@@ -41,14 +42,14 @@ export const BaseTile = ({
             >
                 {topRightText && (
                     <View style={[styles.topRightContainer, { backgroundColor: mainColor }]}>
-                        <Text style={styles.topRightText}>{topRightText}</Text>
+                        <CustomText size="sm" style={styles.topRightText}>{topRightText}</CustomText>
                     </View>
                 )}
                 <LinearGradient
                     colors={[rgba(mainColor, .7), rgba(mainColor, 1)]}
                     style={[styles.gradient, { minHeight: gradientMinHeight }]}
                 >
-                    <Text style={styles.name} numberOfLines={nameNumberOfLines}>{name}</Text>
+                    <CustomText size="sm" style={styles.name} numberOfLines={nameNumberOfLines}>{name}</CustomText>
                 </LinearGradient>
             </ImageBackground>
         </TouchableOpacity>
@@ -78,8 +79,6 @@ const styles = StyleSheet.create({
     },
     topRightText: {
         color: 'white',
-        fontWeight: 'bold',
-        fontSize: FONT_SIZES.md,
     },
     imageStyle: {
         resizeMode: 'cover',
@@ -98,8 +97,6 @@ const styles = StyleSheet.create({
     },
     name: {
         color: 'white',
-        fontWeight: 'bold',
-        fontSize: FONT_SIZES.sm,
         textAlign: 'center',
     },
 });

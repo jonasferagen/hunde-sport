@@ -1,4 +1,4 @@
-import { Chip, Heading } from '@/components/ui';
+import { Chip, CustomText } from '@/components/ui';
 import { SPACING } from '@/styles';
 import { Attribute } from '@/types';
 import { StyleSheet, View } from 'react-native';
@@ -17,7 +17,7 @@ export const VariationSelector = ({ attribute, onSelectOption, selectedOption }:
 
     return (
         <View style={styles.container}>
-            <Heading title={attribute.name} size="md" />
+            <CustomText bold size="md">{attribute.name}</CustomText>
             <View style={styles.chipsContainer}>
                 {attribute.options.map(option => (
                     <Chip

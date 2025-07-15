@@ -49,10 +49,7 @@ export const CategoryScreen = memo(() => {
 
 const styles = StyleSheet.create({
 
-    headingContainer: {
-        width: '100%',
-        flexDirection: 'row',
-    },
+
     listContainer: {
         marginTop: SPACING.md,
     },

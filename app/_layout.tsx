@@ -1,6 +1,6 @@
 import BottomMenu from '@/components/layout/BottomMenu';
 import Preloader from '@/components/preloader/Preloader';
-import StatusMessage from '@/components/ui/StatusMessage';
+import StatusMessage from '@/components/ui/statusmessage/StatusMessage';
 import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, useLayout, usePreloader } from '@/hooks';
 import { AppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

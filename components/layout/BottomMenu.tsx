@@ -5,7 +5,7 @@ import { FONT_SIZES, SPACING } from '@/styles';
 import { COLORS } from '@/styles/Colors';
 import { Href, Link, useSegments } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Icon, ValidIcon } from '../ui/Icon';
+import { Icon, ValidIcon } from '../ui/icon/Icon';
 
 const BottomMenu = () => {
     const { insets, setBottomMenuHeight } = useLayout();

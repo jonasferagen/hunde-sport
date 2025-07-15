@@ -17,4 +17,7 @@ export const FONT_WEIGHTS = {
   bold: 'bold',
 };
 
-
+export const FONT_FAMILY = {
+  regular: 'Montserrat_400Regular',
+  bold: 'Montserrat_700Bold',
+};

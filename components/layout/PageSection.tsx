@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   primary: {
     backgroundColor: COLORS.backgroundPrimary,
-    borderColor: COLORS.backgroundSecondaryBorder,
+    borderColor: COLORS.backgroundPrimaryBorder,
     borderBottomWidth: 1,
     borderTopWidth: 1
   },

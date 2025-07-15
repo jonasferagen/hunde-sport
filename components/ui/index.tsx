@@ -1,6 +1,6 @@
-export { Heading } from './Heading';
-export { Loader } from './Loader';
-export { RetryView } from './RetryView';
+
+export { Loader } from './loader/Loader';
+
 export { CategoryTile } from './tile/CategoryTile';
 export { ProductTile } from './tile/ProductTile';
 
@@ -10,5 +10,6 @@ export { SearchBar } from './searchBar/Searchbar';
 
 export { CategoryChip } from './chips/CategoryChip';
 export { Chip } from './chips/Chip';
-export { Icon } from './Icon';
+export { Icon } from './icon/Icon';
 
+export { CustomText } from './customtext/CustomText';

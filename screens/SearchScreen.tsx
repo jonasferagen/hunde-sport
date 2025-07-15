@@ -1,11 +1,11 @@
 import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
-import { Heading, SearchBar } from '@/components/ui';
-import { Loader } from '@/components/ui/Loader';
+import { CustomText, SearchBar } from '@/components/ui';
+import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product/Product';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 
 export const SearchScreen = () => {
     const [query, setQuery] = useState('');
@@ -30,7 +30,7 @@ export const SearchScreen = () => {
                     <VerticalStack>
                         <SearchBar ref={searchInputRef} onSearch={handleSearch} />
                         {query && (
-                            <Heading title={`Søkeresultater for "${query}"`} size="lg" />
+                            <CustomText size="lg">{`Søkeresultater for "${query}"`}</CustomText>
                         )}
                     </VerticalStack>
                 </PageSection>
@@ -45,7 +45,7 @@ export const SearchScreen = () => {
                             loadingMore={isFetchingNextPage}
                             EmptyComponent={
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text>Ingen produkter funnet.</Text>
+                                    <CustomText>Ingen produkter funnet.</CustomText>
                                 </View>
                             }
                         />

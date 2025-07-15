@@ -1,4 +1,4 @@
-import { darken, lighten } from '@/utils/helpers';
+import { darken } from '@/utils/helpers';
 
 const primary = '#D7C8E7'; // Header background from image
 const secondary = '#DDE2C3'; // Category card background from image
@@ -11,10 +11,9 @@ const darkGrey = '#8A8A8A';
 const activeRed = '#F47272';
 const inactiveBlue = '#9DB2CE';
 
-const primaryDark = darken(primary, 50);
-const secondaryDark = darken(secondary, 50);
-const accentDark = darken(accent, 50);
-
+const darkPrimary = darken(primary, 50);
+const darkSecondary = darken(secondary, 50);
+const darkAccent = darken(accent, 50);
 
 const backgroundPrimary = primary;
 const backgroundSecondary = secondary;
@@ -24,7 +23,7 @@ const backgroundPrimaryBorder = darken(backgroundPrimary, 10);
 const backgroundSecondaryBorder = darken(backgroundSecondary, 10);
 const backgroundAccentBorder = darken(backgroundAccent, 10);
 
-const gradientPrimary = [darken(primary, 10), secondary] as const;
+const gradientPrimary = [darken(primary, 10), primary] as const;
 const gradientSecondary = [accent, darken(secondary, 10)] as const;
 const gradientAccent = [darken(accent, 10), accent] as const;
 
@@ -45,9 +44,9 @@ export const COLORS = {
 
   // Text colors
   text: black,
-  textOnPrimary: lighten(primary, 10),
-  textOnSecondary: darken(secondary, 50),
-  textOnAccent: darken(accent, 50),
+  textOnPrimary: darkPrimary,
+  textOnSecondary: darkSecondary,
+  textOnAccent: darkAccent,
   textLight: darkGrey,
 
   // Backgrounds
@@ -61,9 +60,9 @@ export const COLORS = {
   backgroundAccentBorder,
 
   // Dark colors
-  primaryDark,
-  secondaryDark,
-  accentDark,
+  darkPrimary,
+  darkSecondary,
+  darkAccent,
 
   // Borders and outlines
   border: grey,

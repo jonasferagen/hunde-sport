@@ -1,6 +1,6 @@
 import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
-import { Icon } from '@/components/ui/Icon';
+import { Icon } from '@/components/ui/icon/Icon';
 import { useShoppingCart } from '@/hooks/ShoppingCart/ShoppingCartProvider';
 import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '@/styles';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
