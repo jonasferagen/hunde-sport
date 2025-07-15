@@ -1,15 +1,15 @@
-import { PageSection, PageView } from '@/components/layout';
+import { PageSection, PageView, VerticalStack } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routing';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { SPACING } from '@/styles/Dimensions';
+import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { ShoppingCartItem, Theme } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Stack } from 'expo-router';
-import React, { memo, useCallback, useMemo } from 'react';
-import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
+import React, { memo, useCallback, useMemo, useRef } from 'react';
+import { Animated, FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 
 interface ShoppingCartListItemProps {
     item: ShoppingCartItem;
@@ -20,34 +20,45 @@ interface ShoppingCartListItemProps {
 const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: ShoppingCartListItemProps) => {
     const { theme } = useTheme();
     const styles = useMemo(() => createStyles(theme), [theme]);
+    const opacity = useRef(new Animated.Value(1)).current;
 
+    const handleRemove = () => {
+        Animated.timing(opacity, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+        }).start(() => onRemove(item.product.id));
+    };
 
     return (
-        <View style={styles.cartItem}>
-            <Pressable onPress={() => routes.product(item.product)} style={styles.productPressable}>
-                <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
+        <Animated.View style={[styles.cartItem, { opacity }]}>
+            <View style={styles.quantityContainer}>
+                <VerticalStack spacing="xs" style={styles.quantityStack}>
+                    <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
+                        <Icon name="addToCart" color={theme.textOnColor.accent} />
+                    </Pressable>
+                    <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
+                    <Pressable
+                        onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
+                        style={item.quantity === 1 ? theme.styles.disabled : undefined}
+                    >
+                        <Icon name="removeFromCart" color={theme.textOnColor.accent} />
+                    </Pressable>
+                </VerticalStack>
+            </View>
+            <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
+
+            <Pressable onPress={() => routes.product(item.product)} style={styles.productInfoContainer}>
                 <View style={styles.productInfo}>
                     <CustomText bold>{item.product.name}</CustomText>
                     <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
                 </View>
             </Pressable>
 
-            <View style={styles.quantityContainer}>
-                <Pressable
-                    onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
-                    style={item.quantity === 1 ? theme.styles.disabled : undefined}
-                >
-                    <Icon name="removeFromCart" color={theme.textOnColor.accent} />
-                </Pressable>
-                <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
-                <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
-                    <Icon name="addToCart" color={theme.textOnColor.accent} />
-                </Pressable>
-            </View>
-            <Pressable onPress={() => onRemove(item.product.id)} style={{ marginLeft: SPACING.md }}>
+            <Pressable onPress={handleRemove} style={styles.removeButton}>
                 <Icon name="emptyCart" color={theme.textOnColor.accent} />
             </Pressable>
-        </View>
+        </Animated.View>
     );
 });
 
@@ -89,7 +100,7 @@ export const ShoppingCartScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
-            <PageSection primary>
+            <PageSection accent>
                 <CustomText size="lg">Handlekurv</CustomText>
             </PageSection>
             <PageSection flex style={styles.cartSection}>
@@ -113,7 +124,7 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: theme.colors.card,
-        padding: 10,
+        padding: SPACING.md,
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.border,
     },
@@ -128,23 +139,36 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     productImage: {
         width: 60,
         height: 60,
-        borderRadius: 5,
+        borderRadius: BORDER_RADIUS.sm,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+    },
+    productInfoContainer: {
+        flex: 1,
+        marginLeft: SPACING.md,
     },
     productInfo: {
         flex: 1,
-        marginLeft: 10,
     },
 
     productPrice: {
         color: theme.colors.textSecondary,
-        marginTop: 5,
     },
     quantityContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginHorizontal: SPACING.md,
+    },
+    quantityStack: {
+        alignItems: 'center',
     },
     quantity: {
-        marginHorizontal: SPACING.md,
+        width: 30, // Set a fixed width for the quantity
+        textAlign: 'center', // Center the text within the fixed width
+    },
+    removeButton: {
+        marginLeft: 'auto',
+        paddingLeft: SPACING.md, // Add some space before the button
     },
     summaryContainer: {
         padding: SPACING.md,
