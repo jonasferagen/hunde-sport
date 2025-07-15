@@ -1,6 +1,5 @@
 import { ProductTile } from "@/components/ui/";
 import { routes } from '@/config/routing';
-import { useBreadcrumbs } from "@/contexts";
 import { Product } from "@/types";
 import React from 'react';
 
@@ -9,13 +8,9 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-    const { buildTrail } = useBreadcrumbs();
 
     const handlePress = () => {
-        if (product.categories.length > 0) {
-            buildTrail(product.categories[0].id);
-        }
-        routes.product(product.id.toString(), product.name);
+        routes.product(product);
     };
 
     return (

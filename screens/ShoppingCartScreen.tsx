@@ -28,7 +28,7 @@ export const ShoppingCartScreen = () => {
                     keyExtractor={(item) => item.product.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.cartItem}>
-                            <Pressable onPress={() => routes.productSimple(item.product.id)} style={styles.productPressable}>
+                            <Pressable onPress={() => routes.product(item.product.id, item.product.name)} style={styles.productPressable}>
                                 <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
                                 <View style={styles.productInfo}>
                                     <CustomText bold>{item.product.name}</CustomText>

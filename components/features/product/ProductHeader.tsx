@@ -1,7 +1,7 @@
 import { VariationSelector } from '@/components/features/product/VariationSelector';
 import { VerticalStack } from '@/components/layout';
 import { Button, CustomText } from '@/components/ui';
-import { useShoppingCart } from '@/hooks';
+import { useShoppingCart } from '@/contexts';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';

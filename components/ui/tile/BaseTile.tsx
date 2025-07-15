@@ -1,4 +1,4 @@
-import { BORDER_RADIUS, COLORS, SPACING } from '@/styles';
+import { BORDER_RADIUS, SPACING } from '@/styles';
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import { DimensionValue, ImageBackground, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
@@ -26,7 +26,7 @@ export const BaseTile = ({
     onPress,
     nameNumberOfLines = 1,
     gradientMinHeight = 40,
-    mainColor = COLORS.secondary,
+    mainColor = '#000',
     style }: BaseTileProps) => {
 
     if (!imageUrl) {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: SPACING.sm,
     },
     topRightText: {
-        color: 'white',
+        color: '#fff',
     },
     imageStyle: {
         resizeMode: 'cover',

@@ -1,9 +1,10 @@
+import { routes } from '@/config/routing';
 import { CustomText } from '../customtext/CustomText';
 import { Icon } from '../icon/Icon';
 
 import { useBreadcrumbs } from '@/contexts';
 import { SPACING } from '@/styles';
-import { Product } from '@/types';
+import { Category, Product } from '@/types';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -14,14 +15,18 @@ interface BreadcrumbsProps {
 export const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
 
 
-    const { categories, navigateToCategory } = useBreadcrumbs();
+    const { categories } = useBreadcrumbs();
+
+    const handleNavigate = (category: Category) => {
+        routes.category(category);
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.categoryContainer}>
                 {categories.map((category, index) => (
                     <React.Fragment key={category.id}>
-                        <Pressable onPress={() => navigateToCategory(category)} style={styles.crumbContainer}>
+                        <Pressable onPress={() => handleNavigate(category)} style={styles.crumbContainer}>
                             <CustomText style={styles.crumbText}>{category.name}</CustomText>
                         </Pressable>
                         {(index < categories.length - 1) && (

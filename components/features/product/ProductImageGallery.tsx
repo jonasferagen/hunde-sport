@@ -1,4 +1,4 @@
-import { useTheme } from '@/hooks';
+import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/styles/Theme';
 import { Image as ProductImage } from '@/types';

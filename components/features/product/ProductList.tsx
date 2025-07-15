@@ -10,12 +10,12 @@ import { Image, LayoutChangeEvent, Pressable, StyleSheet, TouchableOpacity, View
 
 interface RenderProductProps {
     item: Product;
-    onPress: (id: number) => void;
+    onPress: (product: Product) => void;
 }
 
 const RenderProduct = memo(({ item, onPress }: RenderProductProps) => (
     <TouchableOpacity key={item.id}
-        onPress={() => onPress(item.id)}
+        onPress={() => onPress(item)}
         style={styles.itemContainer}>
         <ProductListItem product={item} />
     </TouchableOpacity>
@@ -65,8 +65,8 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
 
 export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
 
-    const handleProductPress = useCallback((id: number) => {
-        routes.productSimple(id);
+    const handleProductPress = useCallback((product: Product) => {
+        routes.product(product);
     }, []);
 
     const renderItem = useCallback(({ item }: { item: Product }) => (

@@ -1,14 +1,13 @@
+import { CategoryCard } from '@/components/features/category/CategoryCard';
 import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { CategoryTile, Loader } from '@/components/ui';
-import { useBreadcrumbs } from '@/contexts';
+import { Loader } from '@/components/ui';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
 import { View } from 'react-native';
 
 const CategorySection = () => {
     const { categories, isLoading } = useCategories(0, { fetchAll: true });
-    const { addCategory } = useBreadcrumbs();
 
     if (isLoading) {
         return <Loader />;
@@ -18,22 +17,15 @@ const CategorySection = () => {
     filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
 
     return filteredCategories.map((category, index) => {
-
         return (
-            <View key={index}>
-                <CategoryTile
-                    category={category}
-                    key={index}
-                    height={200}
-                    width={"100%"}
-                    style={{ marginBottom: SPACING.lg }}
-                    onPress={() => addCategory(category)}
-                />
-            </View>
+            <CategoryCard
+                category={category}
+                key={index}
+                style={{ marginBottom: SPACING.lg }}
+            />
         );
     });
 }
-
 
 export const HomeScreen = () => {
     return (

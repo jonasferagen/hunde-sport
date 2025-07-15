@@ -1,4 +1,5 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
+import { routes } from '@/config/routing';
 import { useBreadcrumbs, useTheme } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { Theme } from '@/styles';
@@ -26,14 +27,13 @@ interface CategoryTreeItemProps {
 
 const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: CategoryTreeItemProps) => {
     const { categories } = useCategories(category.id);
-    const { setCategories } = useBreadcrumbs();
     const { theme } = useTheme();
     const styles = createStyles(theme);
     const hasChildren = categories.length > 0; // subcategories
 
     const handleNavigate = useCallback(() => {
-        setCategories(ancestors);
-    }, [setCategories, ancestors]);
+        routes.category(category);
+    }, [category]);
 
     const handleExpand = useCallback(() => {
         onExpand(category.id);
@@ -41,6 +41,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand }: 
 
 
     const color = theme.textOnColor.primary;
+
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>

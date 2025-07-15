@@ -1,4 +1,4 @@
-import { routes } from '@/config/routing';
+import { breadcrumbHelper } from '@/config/navigation';
 import { useCategoryTrail } from '@/hooks/Category';
 import { Category } from '@/types';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
@@ -12,10 +12,7 @@ const useBuildTrail = () => {
 
 interface BreadcrumbContextType {
     categories: Category[];
-    setCategories: (categories: Category[], go?: boolean) => void;
-    addCategory: (category: Category) => void;
-    navigateToCategory: (category: Category) => void;
-    buildTrail: (categoryId: number) => void; // New function to trigger trail building
+    setCategories: (categories: Category[]) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
@@ -24,6 +21,10 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     const [categories, setCategoriesState] = useState<Category[]>([]);
     const { trail, build } = useBuildTrail();
 
+    useEffect(() => {
+        breadcrumbHelper.register(build);
+    }, [build]);
+
     // When the trail is fetched, update the context state
     useEffect(() => {
         if (trail) {
@@ -31,33 +32,13 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, [trail]);
 
-    const navigateToCategory = useCallback((category: Category) => {
-        const categoryIndex = categories.findIndex(c => c.id === category.id);
-        if (categoryIndex !== -1) {
-            setCategoriesState(categories.slice(0, categoryIndex + 1));
-        }
-        routes.category(category.id, category.name);
-    }, [categories]);
-
-    const setCategories = useCallback((newCategories: Category[], go = true) => {
+    const setCategories = useCallback((newCategories: Category[]) => {
         setCategoriesState(newCategories);
-        if (go && newCategories.length > 0) {
-            const lastCategory = newCategories[newCategories.length - 1];
-            routes.category(lastCategory.id, lastCategory.name);
-        }
-    }, []);
-
-    const addCategory = useCallback((category: Category) => {
-        setCategoriesState(prev => [...prev, category]);
-        routes.category(category.id, category.name);
     }, []);
 
     const value = {
         categories,
         setCategories,
-        addCategory,
-        navigateToCategory,
-        buildTrail: build, // Expose the build function
     };
 
     useEffect(() => {
