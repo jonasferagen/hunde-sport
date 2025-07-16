@@ -10,7 +10,7 @@ import { Drawer } from 'expo-router/drawer';
 import React, { useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-
+import { CustomText } from '@/components/ui/customtext/CustomText';
 
 
 const headerOptions = (theme: Theme) => ({
@@ -55,6 +55,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
                 <DrawerItemList {...props} />
+                <CustomText style={[styles.drawerLabel, { marginVertical: SPACING.md }]}>Våre produkter</CustomText>
                 <View style={styles.categoryContainer}>
                     <CategoryTree />
                 </View>
@@ -73,13 +74,14 @@ const DrawerLayout = () => {
             drawerContent={(props) => <CustomDrawerContent {...props} />}
             screenOptions={screenOptions}
         >
-            <Drawer.Screen
-                name="index"
+
+            <Drawer.Screen name="index"
                 options={{
                     title: 'Hjem',
-                    drawerIcon: ({ color }) => <Icon name="home" color={color} />,
+                    drawerIcon: (props) => <Icon name="home" color={props.color} />,
                 }}
             />
+
             <Drawer.Screen
                 name="shoppingCart"
                 options={{
@@ -87,15 +89,14 @@ const DrawerLayout = () => {
                     drawerIcon: (props) => <ShoppingCartIcon {...props} />,
                 }}
             />
-            <Drawer.Screen
-                name="category"
-                options={{
-                    drawerLabel: 'Kategorier',
-                    drawerIcon: ({ color }) => <Icon name="categories" color={color} />
-                }}
-            />
+
+
+
+
             <Drawer.Screen name="product" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />
+            <Drawer.Screen name="category" options={{ drawerItemStyle: { display: 'none' } }} />
+            <Drawer.Screen name="checkout" options={{ drawerItemStyle: { display: 'none' } }} />
 
         </Drawer>
     );
