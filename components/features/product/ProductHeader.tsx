@@ -13,13 +13,26 @@ interface ProductHeaderProps {
     onSelectOption: (attributeSlug: string, option: string) => void;
 }
 
+
+const AddProductToShoppingCartButton = ({ product, displayProduct }: { product: Product; displayProduct: Product }) => {
+    const { addToCart } = useShoppingCart();
+    console.log("add to cart button loading", product.id, displayProduct.id)
+    return (
+        <Button
+            variant="primary"
+            title="Legg til i handlekurv"
+            onPress={() => addToCart(displayProduct)}
+        />
+    );
+};
+
 export const ProductHeader = ({
     product,
     displayProduct,
     selectedOptions,
     onSelectOption,
 }: ProductHeaderProps) => {
-    const { addToCart } = useShoppingCart();
+
 
     return (
         <VerticalStack spacing="md">
@@ -39,11 +52,7 @@ export const ProductHeader = ({
                     );
                 })}
             <CustomText size="sm">{product.short_description}</CustomText>
-            <Button
-                variant="primary"
-                title="Legg til i handlekurv"
-                onPress={() => addToCart(displayProduct)}
-            />
+            <AddProductToShoppingCartButton product={product} displayProduct={displayProduct} />
         </VerticalStack>
     );
 };

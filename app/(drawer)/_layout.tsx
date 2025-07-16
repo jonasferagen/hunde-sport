@@ -2,6 +2,7 @@ import { CategoryTree } from '@/components/features/category';
 import { TopMenu } from '@/components/layout/TopMenu';
 import { CustomText } from '@/components/ui';
 import { Icon } from '@/components/ui/icon/Icon';
+import { useShoppingCart } from '@/contexts';
 import { useTheme } from '@/contexts/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import { FONT_FAMILY } from '@/styles/Typography';
@@ -53,9 +54,8 @@ const screenOptions = (theme: Theme) => {
 
 
 const ShoppingCartIcon = React.memo(({ color }: { color: string }) => {
-    return null;
-    //    const { cartItemCount } = useShoppingCart();
-    //   return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
+    const { cartItemCount } = useShoppingCart();
+    return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
 });
 
 
