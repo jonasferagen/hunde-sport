@@ -26,6 +26,7 @@ trigger: always_on
     interface MyProps {}
     const MyComponent = (props: MyProps): JSX.Element => { ... }
     ```
+  - Remove unused styles
  
 ### Example Component Structure:
 ```tsx

@@ -21,7 +21,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         >
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
                 <DrawerItemList {...props} />
-                <View style={{ marginLeft: 20 }}>
+                <View style={styles.categoryContainer}>
                     <CategoryTree />
                 </View>
             </DrawerContentScrollView>
@@ -36,7 +36,12 @@ const screenOptions = (theme: Theme) => {
         headerShown: true,
         drawerActiveTintColor: theme.textOnColor.primary,
         drawerInactiveTintColor: theme.textOnColor.primary,
-        drawerLabelStyle: createStyles(theme).drawerLabel,
+        drawerLabelStyle: {
+            color: theme.textOnColor.primary,
+            fontSize: FONT_SIZES.md,
+            fontFamily: FONT_FAMILY.regular,
+            marginLeft: 0,
+        },
     };
 };
 
@@ -47,10 +52,8 @@ const ShoppingCartIcon = React.memo(({ color }: { color: string }) => {
 });
 
 
-const DrawerNavigator = () => {
+const DrawerLayout = () => {
     const { theme } = useTheme();
-
-    console.log('drawer rendering');
 
     return (
         <Drawer
@@ -71,16 +74,18 @@ const DrawerNavigator = () => {
                     drawerIcon: (props) => <ShoppingCartIcon {...props} />,
                 }}
             />
-            <Drawer.Screen name="category" options={{ drawerLabel: 'Kategorier', drawerIcon: ({ color }) => <Icon name="categories" color={color} /> }} />
+            <Drawer.Screen
+                name="category"
+                options={{
+                    drawerLabel: 'Kategorier',
+                    drawerIcon: ({ color }) => <Icon name="categories" color={color} />
+                }}
+            />
             <Drawer.Screen name="product" options={{ drawerItemStyle: { display: 'none' } }} />
             <Drawer.Screen name="search" options={{ drawerItemStyle: { display: 'none' } }} />
 
         </Drawer>
     );
-}
-
-const DrawerLayout = () => {
-    return <DrawerNavigator />;
 }
 
 const createStyles = (theme: Theme) => StyleSheet.create({
@@ -125,7 +130,7 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     },
 
     categoryContainer: {
-        marginLeft: SPACING.sm,
+        marginLeft: SPACING.lg,
     },
 
 });
