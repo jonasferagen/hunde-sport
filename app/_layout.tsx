@@ -4,27 +4,31 @@ import { StatusMessage } from '@/components/ui/statusmessage/StatusMessage';
 import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, ThemeProvider, useLayout, usePreloader, useTheme } from '@/contexts';
 import { createAppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { JSX, useState } from "react";
 import { View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+
+const AppContainer = ({ insets, theme, children }: any) => (
+  <View style={[createAppStyles(theme).appContainer, { marginTop: insets.top }]}>
+    {children}
+  </View>
+);
+
+
 const Layout = (): JSX.Element => {
   const { insets } = useLayout();
   const { theme } = useTheme();
   return (
-    <View style={[createAppStyles(theme).appContainer, { marginTop: insets.top, justifyContent: 'space-between', flex: 1 }]}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: 'transparent' },
-        }}
-      />
+    <AppContainer insets={insets} theme={theme}>
+      <Slot />
       <BottomMenu />
-    </View>
+    </AppContainer>
   );
 }
+
 
 const AppContent = (): JSX.Element => {
   const { appIsReady } = usePreloader();

@@ -1,5 +1,4 @@
 import { CategoryTree } from '@/components/features/category';
-import { TopMenu } from '@/components/layout/TopMenu';
 import { Icon } from '@/components/ui/icon/Icon';
 import { useShoppingCart } from '@/contexts';
 import { useTheme } from '@/contexts/ThemeProvider';
@@ -9,7 +8,36 @@ import { Theme } from '@/types';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { Drawer } from 'expo-router/drawer';
 import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+
+
+
+
+const headerOptions = (theme: Theme) => ({
+    title: 'hunde-sport.no',
+    headerStyle: { backgroundColor: theme.colors.primary },
+    headerTintColor: theme.textOnColor.primary,
+    headerTitleStyle: {
+        color: theme.textOnColor.primary,
+        fontFamily: FONT_FAMILY.bold,
+    },
+});
+
+const drawerOptions = (theme: Theme) => ({
+    drawerActiveTintColor: theme.textOnColor.primary,
+    drawerInactiveTintColor: theme.textOnColor.primary,
+    drawerLabelStyle: {
+        color: theme.textOnColor.primary,
+        fontSize: FONT_SIZES.md,
+        fontFamily: FONT_FAMILY.regular,
+        marginLeft: 0,
+    },
+});
+
+const ShoppingCartIcon = ({ color }: { color: string }) => {
+    const { cartItemCount } = useShoppingCart();
+    return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
+};
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { theme } = useTheme();
@@ -19,6 +47,12 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <View
             style={styles.drawerContent}
         >
+            <View style={{ alignItems: 'flex-end', padding: SPACING.lg }}>
+                <Pressable onPress={() => props.navigation.closeDrawer()}>
+                    <Icon name="close" size="xl" color={theme.textOnColor.primary} />
+                </Pressable>
+            </View>
+
             <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
                 <DrawerItemList {...props} />
                 <View style={styles.categoryContainer}>
@@ -30,35 +64,14 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     );
 }
 
-const screenOptions = (theme: Theme) => {
-    return {
-        header: () => <TopMenu />,
-        headerShown: true,
-        drawerActiveTintColor: theme.textOnColor.primary,
-        drawerInactiveTintColor: theme.textOnColor.primary,
-        drawerLabelStyle: {
-            color: theme.textOnColor.primary,
-            fontSize: FONT_SIZES.md,
-            fontFamily: FONT_FAMILY.regular,
-            marginLeft: 0,
-        },
-    };
-};
-
-
-const ShoppingCartIcon = React.memo(({ color }: { color: string }) => {
-    const { cartItemCount } = useShoppingCart();
-    return <Icon name="shoppingCart" color={color} badge={cartItemCount} />;
-});
-
-
 const DrawerLayout = () => {
     const { theme } = useTheme();
+    const screenOptions = { ...headerOptions(theme), ...drawerOptions(theme) };
 
     return (
         <Drawer
             drawerContent={(props) => <CustomDrawerContent {...props} />}
-            screenOptions={screenOptions(theme)}
+            screenOptions={screenOptions}
         >
             <Drawer.Screen
                 name="index"

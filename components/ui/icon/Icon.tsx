@@ -11,7 +11,7 @@ export const ValidIcon = {
     menu: 'bars',
     tag: 'tag',
     emptyCart: 'trash',
-    close: 'reply',
+    close: 'times',
     collapse: 'chevron-up',
     expand: 'chevron-down',
     category: 'tag',
