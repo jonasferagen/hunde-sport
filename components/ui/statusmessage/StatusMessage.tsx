@@ -9,7 +9,7 @@ const statusColors = {
     success: '#388E3C', // Green
 };
 
-const StatusMessage = () => {
+export const StatusMessage = () => {
     const { message, type } = useStatus();
     const { bottomMenuHeight } = useLayout();
     const [fadeAnim] = useState(new Animated.Value(0));
@@ -59,5 +59,3 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
-
-export default StatusMessage;

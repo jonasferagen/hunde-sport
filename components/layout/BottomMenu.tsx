@@ -6,7 +6,7 @@ import { Href, Link, useSegments } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Icon, ValidIcon } from '../ui/icon/Icon';
 
-const BottomMenu = () => {
+export const BottomMenu = () => {
     const { insets, setBottomMenuHeight } = useLayout();
     console.log("bottommenu rendered");
     const segments = useSegments();
@@ -64,4 +64,3 @@ const createStyles = (theme: Theme) => StyleSheet.create({
     },
 });
 
-export default BottomMenu;

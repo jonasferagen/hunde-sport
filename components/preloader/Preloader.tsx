@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 
-const Preloader = () => {
+export const Preloader = () => {
     const scaleAnim = useRef(new Animated.Value(0.8)).current;
     const opacityAnim = useRef(new Animated.Value(0)).current;
 
@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Preloader;
+

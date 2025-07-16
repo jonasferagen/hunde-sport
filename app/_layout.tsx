@@ -1,7 +1,7 @@
-import BottomMenu from '@/components/layout/BottomMenu';
-import Preloader from '@/components/preloader/Preloader';
-import StatusMessage from '@/components/ui/statusmessage/StatusMessage';
-import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, useLayout, usePreloader, ThemeProvider, useTheme } from '@/contexts';
+import { BottomMenu } from '@/components/layout/BottomMenu';
+import { Preloader } from '@/components/preloader/Preloader';
+import { StatusMessage } from '@/components/ui/statusmessage/StatusMessage';
+import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, ThemeProvider, useLayout, usePreloader, useTheme } from '@/contexts';
 import { createAppStyles } from "@/styles/AppStyles";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from "expo-router";
