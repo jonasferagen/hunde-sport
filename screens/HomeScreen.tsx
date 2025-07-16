@@ -28,6 +28,7 @@ const CategorySection = () => {
 
 export const HomeScreen = () => {
     return (
+
         <PageView>
             <PageContent scrollable>
                 <PageSection primary>
@@ -38,5 +39,6 @@ export const HomeScreen = () => {
                 </PageSection>
             </PageContent>
         </PageView>
+
     );
 }

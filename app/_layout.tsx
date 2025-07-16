@@ -1,31 +1,28 @@
-import { BottomMenu } from '@/components/layout/BottomMenu';
+import { Header, Sidebar, Tabs } from '@/components/layout';
 import { Preloader } from '@/components/preloader/Preloader';
 import { StatusMessage } from '@/components/ui/statusmessage/StatusMessage';
-import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, ThemeProvider, useLayout, usePreloader, useTheme } from '@/contexts';
-import { createAppStyles } from "@/styles/AppStyles";
+import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, ThemeProvider, useLayout, usePreloader } from '@/contexts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Slot } from "expo-router";
+import { Stack } from 'expo-router';
 import { JSX, useState } from "react";
 import { View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
-const AppContainer = ({ insets, theme, children }: any) => (
-  <View style={[createAppStyles(theme).appContainer, { marginTop: insets.top }]}>
-    {children}
-  </View>
-);
 
 
 const Layout = (): JSX.Element => {
   const { insets } = useLayout();
-  const { theme } = useTheme();
+
   return (
-    <AppContainer insets={insets} theme={theme}>
-      <Slot />
-      <BottomMenu />
-    </AppContainer>
+    <View style={{ flex: 1, marginTop: insets.top, marginBottom: insets.bottom }}>
+      <Stack screenOptions={{ header: () => <Header title="hunde-sport.no" /> }}>
+        <Stack.Screen name="index" />
+      </Stack>
+      <Sidebar />
+      <Tabs />
+    </View>
   );
 }
 

@@ -5,6 +5,8 @@ interface LayoutContextType {
     insets: EdgeInsets;
     bottomMenuHeight: number;
     setBottomMenuHeight: (height: number) => void;
+    isSidebarVisible: boolean;
+    toggleSidebar: () => void;
 }
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
@@ -12,9 +14,14 @@ const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 export const LayoutProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const insets = useSafeAreaInsets();
     const [bottomMenuHeight, setBottomMenuHeight] = useState(60); // Default height
+    const [isSidebarVisible, setSidebarVisible] = useState(false);
+
+    const toggleSidebar = () => {
+        setSidebarVisible(!isSidebarVisible);
+    };
 
     return (
-        <LayoutContext.Provider value={{ insets, bottomMenuHeight, setBottomMenuHeight }}>
+        <LayoutContext.Provider value={{ insets, bottomMenuHeight, setBottomMenuHeight, isSidebarVisible, toggleSidebar }}>
             {children}
         </LayoutContext.Provider>
     );
