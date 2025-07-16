@@ -33,10 +33,11 @@ export const HomeScreen = () => {
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageSection scrollable>
-                <PageContent>
+                <PageContent secondary horizontal>
+                    <Loader />
                     <FeaturedProducts />
                 </PageContent>
-                <PageContent margin="none">
+                <PageContent paddingHorizontal="none">
                     <CategorySection />
                 </PageContent>
             </PageSection>

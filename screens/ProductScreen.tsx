@@ -100,7 +100,7 @@ export const ProductScreen = () => {
           <ProductDetails product={product} />
         </PageContent>
 
-        <PageContent>
+        <PageContent horizontal accent>
           <RelatedProducts productIds={product.related_ids} />
         </PageContent>
       </PageSection>

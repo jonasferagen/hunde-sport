@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts';
+import { usePageContent, useTheme } from '@/contexts';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -10,7 +10,9 @@ interface LoaderProps {
 
 export const Loader = ({ size = 'large', color, style }: LoaderProps) => {
   const { theme } = useTheme();
-  const loaderColor = color || theme.textOnColor.primary;
+  const { type } = usePageContent();
+  const loaderColor = theme.textOnColor[type];
+
 
   return (
     <View style={[styles.container, style]}>

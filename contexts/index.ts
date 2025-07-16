@@ -4,3 +4,4 @@ export { PreloaderProvider, usePreloader } from './PreloaderProvider';
 export { ShoppingCartProvider, useShoppingCart } from './ShoppingCartProvider';
 export { StatusProvider, useStatus } from './StatusProvider';
 export { ThemeProvider, useTheme } from './ThemeProvider';
+export { PageContentProvider, usePageContent } from './PageContentContext';

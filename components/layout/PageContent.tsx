@@ -1,23 +1,66 @@
+import { PageContentProvider, useTheme } from '@/contexts';
 import { SPACING } from '@/styles';
-import React, { Children } from 'react';
-import { View, ViewProps } from 'react-native';
+import { Theme } from '@/types';
+import React from 'react';
+import { StyleSheet, ViewProps } from 'react-native';
+import { PageContentHorizontal } from './_partials/PageContentHorizontal';
+import { PageContentVertical } from './_partials/PageContentVertical';
 
 interface PageContentProps extends ViewProps {
   children: React.ReactNode;
   flex?: boolean;
-  spacing?: keyof typeof SPACING;
-  margin?: keyof typeof SPACING;
+  gap?: keyof typeof SPACING;
+  paddingVertical?: keyof typeof SPACING;
+  paddingHorizontal?: keyof typeof SPACING;
+  horizontal?: boolean;
+  primary?: boolean;
+  secondary?: boolean;
+  accent?: boolean;
 }
 
-export const PageContent = ({ children, flex, spacing = 'md', margin = 'md', style, ...props }: PageContentProps) => {
+export const PageContent = ({ children, flex, gap = 'md', paddingVertical = 'md', paddingHorizontal = 'md', style, horizontal, primary = false, secondary = false, accent = false, ...props }: PageContentProps) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+  const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
 
-  const marginStyle = {
-    marginHorizontal: margin ? SPACING[margin] : 0,
-  };
+  const computedStyle = [
+    { paddingHorizontal: paddingHorizontal ? SPACING[paddingHorizontal] : 0 },
+    { paddingVertical: paddingVertical ? SPACING[paddingVertical] : 0 },
+    styles[type],
+    style
+  ];
+
+  const content = (
+    <PageContentProvider value={{ type }}>
+      {children}
+    </PageContentProvider>
+  );
+
+  if (horizontal) {
+    return (
+      <PageContentHorizontal style={computedStyle} {...props}>
+        {content}
+      </PageContentHorizontal>
+    );
+  }
 
   return (
-    <View style={[{ gap: SPACING[spacing], flex: flex ? 1 : 0 }, marginStyle, style]} {...props}>
-      {Children.toArray(children).filter(child => Boolean(child))}
-    </View>
+    <PageContentVertical style={[{ gap: SPACING[gap], flex: flex ? 1 : 0 }, ...computedStyle]} {...props}>
+      {content}
+    </PageContentVertical>
   );
 };
+
+const createStyles = (theme: Theme) => StyleSheet.create({
+  primary: {
+    backgroundColor: theme.colors.primary,
+  },
+  secondary: {
+    backgroundColor: theme.colors.secondary,
+  },
+  accent: {
+    backgroundColor: theme.colors.accent,
+  },
+  default: {},
+});
+

@@ -1,6 +1,6 @@
-import { PageSectionHorizontal } from '@/components/layout/PageSectionHorizontal';
 import { Loader } from '@/components/ui';
 import { useFeaturedProducts } from '@/hooks/Product';
+import React from 'react';
 import { ProductCard } from './ProductCard';
 
 export const FeaturedProducts = () => {
@@ -15,10 +15,8 @@ export const FeaturedProducts = () => {
     }
 
     return (
-        <PageSectionHorizontal>
-            {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-            ))}
-        </PageSectionHorizontal>
+        products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+        ))
     );
 };

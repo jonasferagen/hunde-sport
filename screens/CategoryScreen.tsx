@@ -7,7 +7,6 @@ import { useCategories, useCategory } from '@/hooks/Category';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
-import { View } from 'react-native';
 
 
 const CategoryListArea = ({ category }: { category: Category }) => {
@@ -30,16 +29,14 @@ export const CategoryScreen = memo(() => {
     return (
         <PageView>
             <Stack.Screen options={{ title: category.name }} />
-            <PageSection secondary>
-                <PageContent key={category.id}>
+            <PageSection>
+                <PageContent key={category.id} secondary>
                     <Breadcrumbs />
-                    <View style={{ borderWidth: 1, borderColor: 'red' }}>
-                        <CategoryListArea category={category} />
-                    </View>
+                    <CategoryListArea category={category} />
                 </PageContent>
             </PageSection>
             <PageSection flex>
-                <PageContent flex margin="none" key={category.id} style={{ borderWidth: 1, borderColor: 'red' }}>
+                <PageContent flex paddingHorizontal="none" key={category.id}>
                     <CategoryProducts category={category} />
                 </PageContent>
             </PageSection>

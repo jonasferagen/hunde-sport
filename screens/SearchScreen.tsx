@@ -1,5 +1,5 @@
 import { ProductList } from '@/components/features/product/ProductList';
-import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
+import { PageContent, PageSection, PageView } from '@/components/layout';
 import { CustomText, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product';
@@ -25,18 +25,16 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageContent>
-                <PageSection primary>
-                    <VerticalStack>
-                        <SearchBar ref={searchInputRef} onSearch={handleSearch} />
-                        {query && (
-                            <CustomText size="lg">{`Søkeresultater for "${query}"`}</CustomText>
-                        )}
-                    </VerticalStack>
-                </PageSection>
-            </PageContent>
-            <PageContent flex>
-                <PageSection flex>
+            <PageSection >
+                <PageContent primary >
+                    <SearchBar ref={searchInputRef} onSearch={handleSearch} />
+                    {query && (
+                        <CustomText size="md">{`Søkeresultater for "${query}"`}</CustomText>
+                    )}
+                </PageContent>
+            </PageSection>
+            <PageSection flex>
+                <PageContent flex paddingHorizontal="none" paddingVertical="none">
                     {isLoading && <Loader />}
                     {query && !isLoading && (
                         <ProductList
@@ -50,8 +48,8 @@ export const SearchScreen = () => {
                             }
                         />
                     )}
-                </PageSection>
-            </PageContent >
+                </PageContent>
+            </PageSection>
         </PageView >
     );
 }
