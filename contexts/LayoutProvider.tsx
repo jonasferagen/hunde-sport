@@ -8,6 +8,7 @@ interface LayoutContextType {
     setBottomMenuHeight: (height: number) => void;
     isSidebarVisible: boolean;
     toggleSidebar: () => void;
+    closeSidebar: () => void;
 }
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
@@ -27,8 +28,13 @@ export const LayoutProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setSidebarVisible(!isSidebarVisible);
     };
 
+    const closeSidebar = () => {
+        setSidebarVisible(false);
+    };
+
+
     return (
-        <LayoutContext.Provider value={{ insets, bottomMenuHeight, setBottomMenuHeight, isSidebarVisible, toggleSidebar }}>
+        <LayoutContext.Provider value={{ insets, bottomMenuHeight, setBottomMenuHeight, isSidebarVisible, toggleSidebar, closeSidebar }}>
             {children}
         </LayoutContext.Provider>
     );

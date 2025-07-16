@@ -1,9 +1,9 @@
 // components/layout/Sidebar.tsx
-import { routes } from '@/config/routes';
 import { useLayout, useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/types';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Link } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, ScrollView, StyleSheet, ViewStyle, useWindowDimensions } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -14,22 +14,21 @@ interface SidebarProps {
     style?: ViewStyle;
 }
 
-
 const menuItems = [
     {
         label: 'Hjem',
         icon: 'home',
-        onPress: () => routes.home(),
+        href: '/',
     },
     {
         label: 'Handlekurv',
         icon: 'shoppingCart',
-        onPress: () => routes.shoppingCart(),
+        href: '/shopping-cart',
     },
     {
         label: 'Søk',
         icon: 'search',
-        onPress: () => routes.search(),
+        href: '/search',
     },
 ];
 
@@ -37,7 +36,7 @@ export const Sidebar = ({ style }: SidebarProps) => {
 
     const { width } = useWindowDimensions();
     const { theme } = useTheme();
-    const { isSidebarVisible, bottomMenuHeight } = useLayout();
+    const { isSidebarVisible, bottomMenuHeight, closeSidebar } = useLayout();
     const styles = createStyles(theme);
 
     const sidebarWidth = width * 0.9;
@@ -45,7 +44,6 @@ export const Sidebar = ({ style }: SidebarProps) => {
 
     const translateX = useSharedValue(-sidebarWidth); // Initial position off-screen
     const opacity = useSharedValue(0);
-
 
     useEffect(() => {
         translateX.value = withTiming(isSidebarVisible ? 0 : -sidebarWidth, { duration });
@@ -74,10 +72,12 @@ export const Sidebar = ({ style }: SidebarProps) => {
                 <CustomText style={styles.header}>hunde-sport.no</CustomText>
                 <ScrollView>
                     {menuItems.map((item, index) => (
-                        <Pressable key={index} style={styles.menuItem} onPress={item.onPress}>
-                            <Icon name={item.icon} color={theme.textOnColor.primary} />
-                            <CustomText bold style={{ color: theme.textOnColor.primary }}>{item.label}</CustomText>
-                        </Pressable>
+                        <Link key={index} href={item.href as any} asChild onPress={closeSidebar}>
+                            <Pressable style={styles.menuItem}>
+                                <Icon name={item.icon} color={theme.textOnColor.primary} />
+                                <CustomText bold style={{ color: theme.textOnColor.primary }}>{item.label}</CustomText>
+                            </Pressable>
+                        </Link>
                     ))}
 
                     <CustomText style={{ color: theme.textOnColor.primary }}>Produkter</CustomText>
