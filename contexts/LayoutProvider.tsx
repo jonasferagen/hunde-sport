@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import { usePathname } from 'expo-router';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface LayoutContextType {
@@ -15,6 +16,12 @@ export const LayoutProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const insets = useSafeAreaInsets();
     const [bottomMenuHeight, setBottomMenuHeight] = useState(60); // Default height
     const [isSidebarVisible, setSidebarVisible] = useState(false);
+    const pathname = usePathname();
+
+
+    useEffect(() => {
+        setSidebarVisible(false);
+    }, [pathname]);
 
     const toggleSidebar = () => {
         setSidebarVisible(!isSidebarVisible);

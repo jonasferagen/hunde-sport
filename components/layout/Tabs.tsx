@@ -1,5 +1,5 @@
 // BottomMenu.tsx
-import { paths } from '@/config/routing';
+import { paths } from '@/config/routes';
 import { useLayout, useShoppingCart, useTheme } from '@/contexts';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { Theme } from '@/types';
@@ -52,9 +52,9 @@ export const Tabs = () => {
 
     const menuItems = useMemo(() => [
         { id: 'home', href: paths.home, iconName: 'home', label: 'Hjem' },
+        { id: 'menu', action: toggleSidebar, iconName: 'menu', label: 'Meny' },
         { id: 'search', href: paths.search, iconName: 'search', label: 'Søk' },
         { id: 'cart', href: paths.shoppingCart, iconName: 'shoppingCart', label: 'Handlekurv', badge: cartItemCount },
-        { id: 'menu', action: toggleSidebar, iconName: 'menu', label: 'Meny' },
     ], [cartItemCount, toggleSidebar]);
 
     return (
@@ -113,11 +113,8 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         backgroundColor: theme.colors.card,
         borderTopWidth: 1,
         borderTopColor: theme.colors.border,
-        elevation: 10, // Android shadow
-        shadowColor: '#000', // iOS shadow
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        ...theme.styles.shadow,
+        zIndex: 200,
     },
     tabButton: {
         flex: 1,

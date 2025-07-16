@@ -1,5 +1,5 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { usePageSection } from '@/contexts/PageSectionContext';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';

@@ -1,4 +1,4 @@
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import type { Product, ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { Alert } from 'react-native';

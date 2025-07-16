@@ -74,7 +74,8 @@ export interface Theme {
     readonly primary: string;
     readonly secondary: string;
     readonly accent: string;
-    readonly background: string;
+    readonly default: string;
+
     readonly card: string;
     readonly text: string;
     readonly textSecondary: string;
@@ -87,6 +88,7 @@ export interface Theme {
     readonly primary: readonly [string, string, ...string[]];
     readonly secondary: readonly [string, string, ...string[]];
     readonly accent: readonly [string, string, ...string[]];
+    readonly default: readonly [string, string, ...string[]];
   };
   readonly tabs: {
     readonly active: string;
@@ -96,8 +98,10 @@ export interface Theme {
     readonly primary: string;
     readonly secondary: string;
     readonly accent: string;
+    readonly default: string;
   };
   readonly styles: {
     readonly disabled: ViewStyle;
+    readonly shadow: ViewStyle;
   };
 }

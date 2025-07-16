@@ -3,12 +3,12 @@ import { ProductHeader } from '@/components/features/product/ProductHeader';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
-import { PageContent, PageSection, PageView, VerticalStack } from '@/components/layout';
+import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs, CustomText } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useProduct, useProducts } from '@/hooks/Product';
 import { Product } from '@/types';
-import { useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 
 export const ProductScreen = () => {
@@ -69,43 +69,41 @@ export const ProductScreen = () => {
 
   return (
     <PageView>
-      <PageContent>
-        <PageSection primary>
-          <VerticalStack spacing="md">
-            <Breadcrumbs product={displayProduct} />
-          </VerticalStack>
-        </PageSection>
-      </PageContent>
-      <PageContent scrollable>
-        <PageSection secondary>
-          <VerticalStack spacing="md">
-            <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
-            <ProductHeader
-              product={product}
-              displayProduct={displayProduct}
-              selectedOptions={selectedOptions}
-              onSelectOption={handleSelectOption}
-            />
-            <CustomText bold>Bilder</CustomText>
+      <Stack.Screen options={{ title: displayProduct.name }} />
+      <PageSection>
+        <PageContent>
+          <Breadcrumbs product={displayProduct} />
+        </PageContent>
+      </PageSection>
+      <PageSection scrollable>
+        <PageContent>
 
-            <ProductImageGallery
-              images={displayProduct.images}
-              onImagePress={openImageViewer}
-              isImageViewerVisible={isImageViewerVisible}
-              closeImageViewer={closeImageViewer}
-              currentImageIndex={currentImageIndex}
-            />
-          </VerticalStack>
-        </PageSection>
+          <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
+          <ProductHeader
+            product={product}
+            displayProduct={displayProduct}
+            selectedOptions={selectedOptions}
+            onSelectOption={handleSelectOption}
+          />
+          <CustomText bold>Bilder</CustomText>
 
-        <PageSection primary>
+          <ProductImageGallery
+            images={displayProduct.images}
+            onImagePress={openImageViewer}
+            isImageViewerVisible={isImageViewerVisible}
+            closeImageViewer={closeImageViewer}
+            currentImageIndex={currentImageIndex}
+          />
+        </PageContent>
+
+        <PageContent>
           <ProductDetails product={product} />
-        </PageSection>
+        </PageContent>
 
-        <PageSection secondary>
+        <PageContent>
           <RelatedProducts productIds={product.related_ids} />
-        </PageSection>
-      </PageContent>
+        </PageContent>
+      </PageSection>
     </PageView >
   );
 };

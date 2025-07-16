@@ -1,5 +1,5 @@
 import { CategoryTile } from '@/components/ui';
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { Category } from '@/types';
 import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';

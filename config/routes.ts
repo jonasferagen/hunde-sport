@@ -11,6 +11,7 @@ export const paths = {
     checkout: '/checkout',
 } as const;
 
+
 export const routes = {
     home: () => {
         router.push(paths.home);

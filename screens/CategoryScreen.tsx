@@ -4,16 +4,16 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
-import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
+import { View } from 'react-native';
 
 
 const CategoryListArea = ({ category }: { category: Category }) => {
     const { categories, isFetchingNextPage } = useCategories(category.id);
     return (
-        <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} style={{ marginTop: SPACING.md }} />
+        <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} />
     );
 }
 
@@ -29,18 +29,20 @@ export const CategoryScreen = memo(() => {
 
     return (
         <PageView>
-            <PageContent>
-                <Stack.Screen options={{ title: category.name }} />
-                <PageSection secondary key={category.id}>
+            <Stack.Screen options={{ title: category.name }} />
+            <PageSection secondary>
+                <PageContent key={category.id}>
                     <Breadcrumbs />
-                    <CategoryListArea category={category} />
-                </PageSection>
-            </PageContent>
-            <PageContent flex>
-                <PageSection accent key={category.id} flex>
+                    <View style={{ borderWidth: 1, borderColor: 'red' }}>
+                        <CategoryListArea category={category} />
+                    </View>
+                </PageContent>
+            </PageSection>
+            <PageSection flex>
+                <PageContent flex margin="none" key={category.id} style={{ borderWidth: 1, borderColor: 'red' }}>
                     <CategoryProducts category={category} />
-                </PageSection>
-            </PageContent>
+                </PageContent>
+            </PageSection>
         </PageView>
     );
 });

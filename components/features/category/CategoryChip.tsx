@@ -1,4 +1,4 @@
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { Category } from '@/types';
 import React from 'react';
 import { Chip } from '../../ui/chips/Chip';

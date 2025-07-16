@@ -1,3 +1,7 @@
+import { createNavigationContainerRef } from '@react-navigation/native';
+
+export const navigationRef = createNavigationContainerRef();
+
 class BreadcrumbHelper {
     private _buildTrail: (categoryId: number) => void = () => { };
 

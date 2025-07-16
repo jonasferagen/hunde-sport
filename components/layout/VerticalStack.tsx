@@ -9,7 +9,7 @@ interface VerticalStackProps extends ViewProps {
 
 export const VerticalStack = ({ children, spacing = 'md', style, ...props }: VerticalStackProps) => {
     return (
-        <View style={[{ gap: SPACING[spacing] }, style]} {...props}>
+        <View style={style} {...props}>
             {Children.toArray(children).filter(child => Boolean(child))}
         </View>
     );

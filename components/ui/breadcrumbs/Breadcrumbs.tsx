@@ -1,4 +1,4 @@
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { CustomText } from '../customtext/CustomText';
 import { Icon } from '../icon/Icon';
 
@@ -25,7 +25,7 @@ export const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.categoryContainer}>
+            <View style={styles.itemContainer}>
                 {categories.map((category, index) => (
                     <React.Fragment key={category.id}>
                         <Pressable onPress={() => handleNavigate(category)} style={styles.crumbContainer}>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
-    categoryContainer: {
+    itemContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         flexWrap: 'wrap',

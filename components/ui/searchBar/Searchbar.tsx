@@ -1,4 +1,4 @@
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/types';

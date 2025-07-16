@@ -1,5 +1,5 @@
 import { ProductTile } from "@/components/ui/";
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { Product } from "@/types";
 import React from 'react';
 

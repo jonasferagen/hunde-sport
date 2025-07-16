@@ -3,7 +3,6 @@ import { PageSectionProvider } from '@/contexts/PageSectionContext';
 import { SPACING } from '@/styles/Dimensions';
 import { Theme } from '@/types';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
-
 interface PageSectionProps {
   children: React.ReactNode;
   primary?: boolean;
@@ -18,7 +17,7 @@ export const PageSection = ({ children, primary = false, secondary = false, acce
   const { theme } = useTheme();
   const styles = createStyles(theme);
 
-  const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'secondary';
+  const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default' as const;
 
   const mergedStyles = [styles[type], style];
 

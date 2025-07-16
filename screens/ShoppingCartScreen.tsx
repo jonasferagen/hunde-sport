@@ -1,6 +1,6 @@
 import { PageSection, PageView } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';

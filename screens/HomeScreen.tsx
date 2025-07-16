@@ -4,6 +4,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
+import { Stack } from 'expo-router';
 
 const CategorySection = () => {
     const { categories, isLoading } = useCategories(0, { fetchAll: true });
@@ -30,14 +31,15 @@ export const HomeScreen = () => {
     return (
 
         <PageView>
-            <PageContent scrollable>
-                <PageSection primary>
+            <Stack.Screen options={{ title: 'Hjem' }} />
+            <PageSection scrollable>
+                <PageContent>
                     <FeaturedProducts />
-                </PageSection>
-                <PageSection secondary>
+                </PageContent>
+                <PageContent margin="none">
                     <CategorySection />
-                </PageSection>
-            </PageContent>
+                </PageContent>
+            </PageSection>
         </PageView>
 
     );

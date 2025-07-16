@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-export type PageSectionType = 'primary' | 'secondary' | 'accent';
+export type PageSectionType = 'primary' | 'secondary' | 'accent' | 'default';
 
 interface PageSectionContextProps {
     sectionType: PageSectionType;

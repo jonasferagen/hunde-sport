@@ -1,5 +1,5 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
-import { routes } from '@/config/routing';
+import { routes } from '@/config/routes';
 import { useBreadcrumbs, useTheme } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
