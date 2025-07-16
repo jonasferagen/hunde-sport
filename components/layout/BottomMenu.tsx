@@ -3,14 +3,11 @@ import { paths } from '@/config/routing';
 import { useLayout, useShoppingCart, useTheme } from '@/contexts';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { Theme } from '@/types';
-import { Href, Link, useSegments } from 'expo-router';
+import { Href, Link, usePathname } from 'expo-router';
 import { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Icon, ValidIcon } from '../ui/icon/Icon';
 
-const getIsActive = (href: Href, currentPath: string) => {
-    return href === currentPath || (href === paths.home && currentPath === '/(drawer)/index');
-};
 
 
 interface TabButtonProps {
@@ -23,7 +20,6 @@ interface TabButtonProps {
     styles: ReturnType<typeof createStyles>;
 }
 
-
 const TabButton = ({ href, iconName, label, badge, isActive, color, styles }: TabButtonProps) => (
     <Link href={href} asChild>
         <TouchableOpacity style={styles.tabButton}>
@@ -33,14 +29,12 @@ const TabButton = ({ href, iconName, label, badge, isActive, color, styles }: Ta
     </Link>
 );
 
-
 export const BottomMenu = () => {
     const { insets, setBottomMenuHeight } = useLayout();
     const { cartItemCount } = useShoppingCart();
     const { theme } = useTheme();
     const styles = useMemo(() => createStyles(theme), [theme]);
-    const segments = useSegments();
-    const currentPath = `/${segments.join('/')}`;
+    const currentPath = usePathname();
 
     const menuItems = useMemo(() => [
         { href: paths.home, iconName: 'home', label: 'Hjem' },
@@ -57,7 +51,7 @@ export const BottomMenu = () => {
             }}
         >
             {menuItems.map(({ href, iconName, label, badge }) => {
-                const isActive = getIsActive(href, currentPath);
+                const isActive = href === currentPath;
                 const color = isActive ? theme.colors.primary : theme.colors.textSecondary;
                 const name = iconName as keyof typeof ValidIcon;
                 return (
