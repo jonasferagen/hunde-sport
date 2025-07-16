@@ -21,6 +21,7 @@ const productInfiniteQueryOptions = (
         queryFn,
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
+            //return undefined;
             return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
         },
         ...options,
