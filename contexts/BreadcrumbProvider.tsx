@@ -28,17 +28,19 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     }, [trail]);
 
     const setBreadcrumb = useCallback((category: Category) => {
-        const lastCrumb = categories[categories.length - 1];
+        setCategoriesState(prevCategories => {
+            const lastCrumb = prevCategories[prevCategories.length - 1];
 
-        // If the new category is a child of the last one, just append it.
-        if (lastCrumb && category.parent === lastCrumb.id) {
-            setCategoriesState([...categories, category]);
-            return;
-        }
+            // If the new category is a child of the last one, just append it.
+            if (lastCrumb && category.parent === lastCrumb.id) {
+                return [...prevCategories, category];
+            }
 
-        // Otherwise, rebuild the whole trail.
-        build(category.id);
-    }, [categories, build]);
+            // Otherwise, rebuild the whole trail.
+            build(category.id);
+            return prevCategories; // Return previous state while new trail is building
+        });
+    }, [build]);
 
     const value = {
         categories,

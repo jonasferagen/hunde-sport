@@ -6,7 +6,7 @@ import { useBreadcrumbs } from '@/contexts';
 import { SPACING } from '@/styles';
 import { Category, Product } from '@/types';
 import { Link } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 interface BreadcrumbsProps {
@@ -14,16 +14,22 @@ interface BreadcrumbsProps {
     product?: Product;
 };
 
-export const Breadcrumbs = ({ category, product }: BreadcrumbsProps) => {
+export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) => {
 
     const { categories, setBreadcrumb } = useBreadcrumbs();
 
+    const categoryForTrail = useMemo(() => category || product?.categories?.[0], [category, product]);
+
     useEffect(() => {
-        const categoryForTrail = category || product?.categories?.[0];
+        console.log('categoryForTrail: ' + categoryForTrail?.name);
+
         if (categoryForTrail) {
             setBreadcrumb(categoryForTrail);
         }
-    }, [category, product, setBreadcrumb]);
+    }, [categoryForTrail, setBreadcrumb]);
+
+
+    console.log("category: " + category?.name + ' ' + "breadcrumbs set: " + categories.map((category) => category.name))
 
 
     return (
@@ -50,7 +56,7 @@ export const Breadcrumbs = ({ category, product }: BreadcrumbsProps) => {
             )}
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     container: {
