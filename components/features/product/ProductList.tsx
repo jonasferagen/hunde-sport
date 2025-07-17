@@ -9,18 +9,14 @@ import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { FlashList } from "@shopify/flash-list";
 import { Link } from 'expo-router';
 import React, { memo, useCallback, useState } from 'react';
-import { Image, LayoutChangeEvent, Pressable, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Image, LayoutChangeEvent, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface RenderProductProps {
     item: Product;
 }
 
 const RenderProduct = memo(({ item }: RenderProductProps) => (
-    <Link href={routes.product(item)} key={item.id} asChild>
-        <TouchableOpacity style={styles.itemContainer}>
-            <ProductListItem product={item} />
-        </TouchableOpacity>
-    </Link>
+    <ProductListItem product={item} />
 ));
 
 interface ProductListProps {
@@ -41,24 +37,26 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
     const handleLayout = (event: LayoutChangeEvent) => {
-        const { width, height } = event.nativeEvent.layout;
-        setImageDimensions({ width: Math.round(width), height: Math.round(height) });
+        const { width } = event.nativeEvent.layout;
+        setImageDimensions({ width: Math.round(width), height: Math.round(width) });
     };
 
     const imageUrl = getScaledImageUrl(product.images[0]?.src, imageDimensions.width, imageDimensions.height);
 
     return (
-        <View key={product.id} style={styles.container}>
-            <View onLayout={handleLayout} style={styles.imageContainer}>
-                {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
-            </View>
-            <View style={{ flex: 1, marginHorizontal: SPACING.md }}>
-                <CustomText style={styles.name} numberOfLines={1}>{product.name}</CustomText>
-                <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>
-            </View>
-            <Pressable onPress={() => addToCart(product)} style={styles.addToCartButton}>
-                <Button variant="secondary" icon="addToCart" size="md" />
-            </Pressable>
+        <View style={styles.itemContainer}>
+            <Link href={routes.product(product)} asChild>
+                <TouchableOpacity style={styles.pressableContent}>
+                    <View onLayout={handleLayout} style={styles.imageContainer}>
+                        {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <CustomText style={styles.name} numberOfLines={1}>{product.name}{product.name}</CustomText>
+                        <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>
+                    </View>
+                </TouchableOpacity>
+            </Link>
+            <Button onPress={() => addToCart(product)} variant="accent" icon="addToCart" size="md" />
         </View>
     );
 };
@@ -102,14 +100,23 @@ const styles = StyleSheet.create({
     itemContainer: {
         flex: 1,
         marginTop: SPACING.sm,
-    },
-
-    container: {
         backgroundColor: 'white',
-        padding: SPACING.md,
         flexDirection: 'row',
         alignItems: 'center',
+        padding: SPACING.md,
     },
+
+    pressableContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flexShrink: 1,
+    },
+
+    infoContainer: {
+        flex: 1,
+        marginHorizontal: SPACING.md
+    },
+
     imageContainer: {
         width: 50,
         height: 50,
@@ -118,9 +125,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
-    addToCartButton: {
-        marginRight: SPACING.md,
-    },
+
     name: {
         fontWeight: '600',
         fontSize: FONT_SIZES.md,
@@ -132,4 +137,5 @@ const styles = StyleSheet.create({
     loader: {
         marginVertical: SPACING.md,
     },
+
 });
