@@ -3,9 +3,10 @@ import { FeaturedProducts } from '@/components/features/product/FeaturedProducts
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
+import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
-import { Stack, useFocusEffect } from 'expo-router';
+import { router, Stack, useFocusEffect } from 'expo-router';
 import { useCallback, useRef } from 'react';
 import { TextInput } from 'react-native';
 
@@ -40,12 +41,18 @@ export const HomeScreen = () => {
         }, [])
     );
 
+    const handleSearch = (query: string) => {
+        if (query.trim()) {
+            router.push(routes.search(query));
+        }
+    };
+
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageSection>
                 <PageContent>
-                    <SearchBar ref={searchInputRef} initialQuery="" />
+                    <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
                 </PageContent>
             </PageSection>
             <PageSection scrollable>

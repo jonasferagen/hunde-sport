@@ -3,7 +3,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { CustomText, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useRef } from 'react';
 import { TextInput, View } from 'react-native';
 
@@ -19,8 +19,10 @@ export const SearchScreen = () => {
         }, [])
     );
 
-    const handleQueryChange = (query: string) => {
-        console.log('Query changed:', query);
+    const handleSearch = (newQuery: string) => {
+        if (newQuery.trim()) {
+            router.setParams({ query: newQuery });
+        }
     };
 
     return (
@@ -30,8 +32,7 @@ export const SearchScreen = () => {
                     <SearchBar
                         ref={searchInputRef}
                         initialQuery={query}
-                        clearOnSearch={false}
-                        onQueryChange={handleQueryChange}
+                        onSubmit={handleSearch}
                     />
                     {query ? (
                         <CustomText size="md">{`Søkeresultater for "${query}"`}</CustomText>

@@ -1,8 +1,6 @@
-import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/types';
-import { router } from 'expo-router';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Icon } from '../icon/Icon';
@@ -10,11 +8,11 @@ import { Icon } from '../icon/Icon';
 export interface SearchBarProps {
     placeholder?: string;
     initialQuery?: string;
-    clearOnSearch?: boolean;
     onQueryChange?: (query: string) => void;
+    onSubmit?: (query: string) => void;
 }
 
-export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, clearOnSearch = true, onQueryChange }, ref) => {
+export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onQueryChange, onSubmit }, ref) => {
     const [query, setQuery] = useState(initialQuery || '');
     const { theme } = useTheme();
     const styles = createStyles(theme);
@@ -26,10 +24,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
     }, [initialQuery]);
 
     const handleSearch = () => {
-        if (clearOnSearch) {
-            setQuery('');
-        }
-        router.push(routes.search(query));
+        onSubmit?.(query);
     };
 
     return (
