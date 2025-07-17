@@ -56,8 +56,8 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
                 <CustomText style={styles.name} numberOfLines={1}>{product.name}</CustomText>
                 <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>
             </View>
-            <Pressable onPress={() => addToCart(product)} style={styles.addToCartButton}    >
-                <View className="justify-center">
+            <Pressable onPress={() => addToCart(product)} style={styles.addToCartButton}>
+                <View className="justify-center" style={{ borderWidth: 1, borderColor: 'red' }}>
                     <Icon name="addToCart" color="black" />
                 </View>
             </Pressable>

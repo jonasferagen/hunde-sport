@@ -5,8 +5,9 @@ import { StyleSheet, View } from 'react-native';
 import { CustomText } from '../customtext/CustomText';
 
 export const ValidIcon = {
-    addToCart: 'plus',
-    removeFromCart: 'minus',
+    add: 'plus',
+    remove: 'minus',
+    addToCart: 'shopping-cart',
     shoppingCart: 'shopping-cart',
     menu: 'bars',
     tag: 'tag',

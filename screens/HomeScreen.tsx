@@ -5,9 +5,9 @@ import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/Category';
+import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
-import { router, Stack, useFocusEffect } from 'expo-router';
-import { useCallback, useRef } from 'react';
+import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
 
 const CategorySection = () => {
@@ -32,14 +32,7 @@ const CategorySection = () => {
 }
 
 export const HomeScreen = () => {
-    const searchInputRef = useRef<TextInput>(null);
-
-    useFocusEffect(
-        useCallback(() => {
-            const timer = setTimeout(() => searchInputRef.current?.focus(), 100);
-            return () => clearTimeout(timer);
-        }, [])
-    );
+    const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
 
     const handleSearch = (query: string) => {
         if (query.trim()) {

@@ -46,11 +46,11 @@ const ShoppingCartListItem = React.memo(({ item, onUpdateQuantity, onRemove }: S
                     onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
                     style={item.quantity === 1 ? theme.styles.disabled : undefined}
                 >
-                    <Icon name="removeFromCart" color={theme.textOnColor.accent} />
+                    <Icon name="remove" color={theme.textOnColor.accent} />
                 </Pressable>
                 <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
                 <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
-                    <Icon name="addToCart" color={theme.textOnColor.accent} />
+                    <Icon name="add" color={theme.textOnColor.accent} />
                 </Pressable>
             </View>
             <Pressable onPress={handleRemove} style={styles.removeButton}>
