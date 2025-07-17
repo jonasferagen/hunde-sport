@@ -105,3 +105,26 @@ export interface Theme {
     readonly shadow: ViewStyle;
   };
 }
+
+export interface _Theme {
+  primary: {
+    backgroundColor: string;
+    color: string;
+    borderColor: string;
+  },
+  secondary: {
+    backgroundColor: string;
+    color: string;
+    borderColor: string;
+  },
+  accent: {
+    backgroundColor: string;
+    color: string;
+    borderColor: string;
+  },
+  default: {
+    backgroundColor: string;
+    color: string;
+    borderColor: string;
+  },
+}

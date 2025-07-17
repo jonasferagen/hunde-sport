@@ -1,9 +1,10 @@
-import { darkTheme, lightTheme } from '@/styles/Theme';
-import { Theme } from '@/types';
+import { _theme, darkTheme, lightTheme } from '@/styles/Theme';
+import { _Theme, Theme } from '@/types';
 import React, { createContext, useContext, useState } from 'react';
 
 type ThemeContextType = {
     theme: Theme;
+    _theme: _Theme;
     isDarkMode: boolean;
     toggleTheme: () => void;
 };
@@ -20,7 +21,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const theme = isDarkMode ? darkTheme : lightTheme;
 
     return (
-        <ThemeContext.Provider value={{ theme, isDarkMode, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme, _theme, isDarkMode, toggleTheme }}>
             {children}
         </ThemeContext.Provider>
     );

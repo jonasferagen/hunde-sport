@@ -1,6 +1,5 @@
 import { useTheme } from '@/contexts';
-import { BORDER_RADIUS, SPACING } from '@/styles';
-import { Theme } from '@/types';
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Icon } from '../icon/Icon';
@@ -14,8 +13,10 @@ export interface SearchBarProps {
 
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onQueryChange, onSubmit }, ref) => {
     const [query, setQuery] = useState(initialQuery || '');
-    const { theme } = useTheme();
-    const styles = createStyles(theme);
+    const { theme, _theme } = useTheme();
+
+    const _themeVariant = _theme.default;
+    const styles = createStyles(_themeVariant);
 
     useEffect(() => {
         if (initialQuery !== undefined) {
@@ -42,26 +43,24 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 onSubmitEditing={handleSearch}
             />
             <Pressable onPress={handleSearch} style={styles.button} disabled={!query.trim()}>
-                <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
+                <Icon name="search" size='xl' color={_themeVariant.color} />
             </Pressable>
         </View>
     );
 });
 
-const createStyles = (theme: Theme) => StyleSheet.create({
+const createStyles = (_themeVariant: any) => StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: theme.colors.secondary,
+        backgroundColor: _themeVariant.backgroundColor,
         borderRadius: BORDER_RADIUS.md,
         paddingHorizontal: SPACING.md,
         marginVertical: SPACING.md,
     },
     input: {
         flex: 1,
-        height: 50,
-        color: theme.colors.text,
-        fontSize: 16,
+        fontSize: FONT_SIZES.md,
     },
     button: {
         padding: SPACING.sm,

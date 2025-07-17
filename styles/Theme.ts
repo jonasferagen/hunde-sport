@@ -1,4 +1,4 @@
-import { Theme } from '@/types';
+import { _Theme, Theme } from '@/types';
 import { darken, lighten } from '@/utils/helpers';
 
 const palette = {
@@ -115,3 +115,27 @@ export const darkTheme: Theme = {
     },
   },
 } as const;
+
+
+export const _theme: _Theme = {
+  primary: {
+    backgroundColor: palette.primary,
+    color: darken(palette.primary, 50),
+    borderColor: darken(palette.primary, 10),
+  },
+  secondary: {
+    backgroundColor: palette.secondary,
+    color: darken(palette.secondary, 50),
+    borderColor: darken(palette.secondary, 10),
+  },
+  accent: {
+    backgroundColor: palette.accent,
+    color: darken(palette.accent, 50),
+    borderColor: darken(palette.accent, 10),
+  },
+  default: {
+    backgroundColor: palette.white,
+    color: palette.black,
+    borderColor: darken(palette.grey, 10),
+  },
+}

@@ -183,7 +183,8 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         alignItems: 'center',
     },
     buttonContainer: {
-        flexDirection: 'row',
+
+        flexDirection: 'column',
         justifyContent: 'space-between',
         gap: SPACING.md,
     },
