@@ -16,7 +16,6 @@ const allowedKeys: (keyof Product)[] = [
     'short_description',
     'categories',
     'images',
-    'tags',
     'attributes',
     'variations',
     'related_ids',
@@ -36,8 +35,10 @@ const mapToProduct = (item: any): Product => {
     product.short_description = cleanHtml(item.short_description);
     product.categories = item.categories || [];
     product.images = item.images || [];
-    product.tags = item.tags || [];
-    product.attributes = item.attributes || [];
+    product.attributes = (item.attributes || []).map((attr: any) => ({
+        ...attr,
+        options: (attr.options || []).map(cleanHtml),
+    }));
     product.variations = item.variations || [];
     product.related_ids = item.related_ids || [];
 

@@ -35,6 +35,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 style={styles.input}
                 placeholder={placeholder}
                 placeholderTextColor={theme.colors.textSecondary}
+                selectionColor={theme.colors.textSecondary}
                 value={query}
                 onChangeText={(text) => {
                     setQuery(text);

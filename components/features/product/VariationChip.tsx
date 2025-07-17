@@ -7,11 +7,12 @@ interface VariationChipProps {
     isSelected: boolean;
 }
 
-export const VariationChip = ({ option, onPress, isSelected }: VariationChipProps) => {
+export const VariationChip = ({ option, onPress, isSelected = false }: VariationChipProps) => {
     return (
         <Chip
             label={option}
             onPress={onPress}
+            isSelected={isSelected}
             variant={isSelected ? 'primary' : 'default'}
         />
     );

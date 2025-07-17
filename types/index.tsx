@@ -36,7 +36,6 @@ export interface Product {
   short_description: string;
   categories: Category[];
   images: Image[];
-  tags: Tag[];
   attributes: ProductAttribute[];
   variations: number[];
   related_ids: number[];
@@ -51,11 +50,6 @@ export interface ProductAttribute {
   option?: string;
   position: number;
   visible: boolean;
-}
-
-export interface Tag {
-  id: number;
-  name: string;
 }
 
 export interface Breadcrumb {

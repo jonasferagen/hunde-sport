@@ -10,9 +10,10 @@ interface ChipProps {
     variant?: 'primary' | 'secondary' | 'accent' | 'default';
     style?: StyleProp<ViewStyle>;
     textProps?: CustomTextProps;
+    isSelected?: boolean;
 }
 
-export const Chip = ({ label, onPress, variant = 'default', style, textProps }: ChipProps) => {
+export const Chip = ({ label, onPress, variant = 'default', style, textProps, isSelected = false }: ChipProps) => {
     const { theme, _theme } = useTheme();
     const _themeVariant = _theme[variant];
     const styles = createStyles(_themeVariant);

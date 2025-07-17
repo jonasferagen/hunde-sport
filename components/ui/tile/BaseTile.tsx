@@ -14,6 +14,8 @@ export interface BaseTileProps {
     nameNumberOfLines?: number;
     gradientMinHeight?: number;
     mainColor?: string;
+    textSize?: string;
+    textColor?: string;
     style?: StyleProp<ViewStyle>;
 }
 
@@ -27,6 +29,8 @@ export const BaseTile = ({
     nameNumberOfLines = 1,
     gradientMinHeight = 40,
     mainColor = '#000',
+    textColor = '#fff',
+    textSize = 'sm',
     style }: BaseTileProps) => {
 
     if (!imageUrl) {
@@ -49,7 +53,7 @@ export const BaseTile = ({
                     colors={[rgba(mainColor, .7), rgba(mainColor, 1)]}
                     style={[styles.gradient, { minHeight: gradientMinHeight }]}
                 >
-                    <CustomText size="sm" style={styles.name} numberOfLines={nameNumberOfLines}>{name}</CustomText>
+                    <CustomText size={textSize as any} style={[styles.name, { color: textColor }]} numberOfLines={nameNumberOfLines}>{name}</CustomText>
                 </LinearGradient>
             </ImageBackground>
         </TouchableOpacity>
@@ -96,7 +100,6 @@ const styles = StyleSheet.create({
         padding: SPACING.sm,
     },
     name: {
-        color: 'white',
         textAlign: 'center',
     },
 });
