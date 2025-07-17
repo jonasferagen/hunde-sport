@@ -1,36 +1,44 @@
-import { routes } from '@/config/routes';
+import { _routes } from '@/config/routes';
 import { CustomText } from '../customtext/CustomText';
 import { Icon } from '../icon/Icon';
 
 import { useBreadcrumbs } from '@/contexts';
 import { SPACING } from '@/styles';
 import { Category, Product } from '@/types';
-import React from 'react';
+import { Link } from 'expo-router';
+import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 interface BreadcrumbsProps {
+    category?: Category;
     product?: Product;
 };
 
-export const Breadcrumbs = ({ product }: BreadcrumbsProps) => {
+export const Breadcrumbs = ({ category, product }: BreadcrumbsProps) => {
 
+    const { categories, setBreadcrumb } = useBreadcrumbs();
 
-    const { categories } = useBreadcrumbs();
+    useEffect(() => {
+        const categoryForTrail = category || product?.categories?.[0];
+        if (categoryForTrail) {
+            setBreadcrumb(categoryForTrail);
+        }
+    }, [category, product, setBreadcrumb]);
 
-    const handleNavigate = (category: Category) => {
-        routes.category(category);
-    };
-
-    console.log('breadcrumbs rendered');
 
     return (
         <View style={styles.container}>
             <View style={styles.itemContainer}>
                 {categories.map((category, index) => (
                     <React.Fragment key={category.id}>
-                        <Pressable onPress={() => handleNavigate(category)} style={styles.crumbContainer}>
-                            <CustomText style={styles.crumbText}>{category.name}</CustomText>
-                        </Pressable>
+                        <Link
+                            href={_routes.category(category)}
+                            asChild
+                        >
+                            <Pressable style={styles.crumbContainer}>
+                                <CustomText style={styles.crumbText}>{category.name}</CustomText>
+                            </Pressable>
+                        </Link>
                         {(index < categories.length - 1) && (
                             <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={'sm'} style={styles.crumbSeparator} />
                         )}

@@ -1,15 +1,14 @@
 // components/layout/Sidebar.tsx
+import { _routes } from '@/config/routes';
 import { useLayout, useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/types';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
-import { useEffect } from 'react';
 import { Pressable, ScrollView, StyleSheet, ViewStyle, useWindowDimensions } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { CategoryTree } from '../features/category';
 import { CustomText, Icon } from '../ui';
-
 interface SidebarProps {
     style?: ViewStyle;
 }
@@ -18,17 +17,17 @@ const menuItems = [
     {
         label: 'Hjem',
         icon: 'home',
-        href: '/',
+        href: _routes.home(),
     },
     {
         label: 'Handlekurv',
         icon: 'shoppingCart',
-        href: '/shopping-cart',
+        href: _routes.shoppingCart(),
     },
     {
         label: 'Søk',
         icon: 'search',
-        href: '/search',
+        href: _routes.search(),
     },
 ];
 
@@ -36,34 +35,17 @@ export const Sidebar = ({ style }: SidebarProps) => {
 
     const { width } = useWindowDimensions();
     const { theme } = useTheme();
-    const { isSidebarVisible, bottomMenuHeight, closeSidebar } = useLayout();
+    const { bottomMenuHeight, closeSidebar, sidebarAnimatedStyle } = useLayout();
     const styles = createStyles(theme);
 
     const sidebarWidth = width * 0.9;
-    const duration = 300;
-
-    const translateX = useSharedValue(-sidebarWidth); // Initial position off-screen
-    const opacity = useSharedValue(0);
-
-    useEffect(() => {
-        translateX.value = withTiming(isSidebarVisible ? 0 : -sidebarWidth, { duration });
-        opacity.value = withTiming(isSidebarVisible ? 1 : 0, { duration });
-
-    }, [isSidebarVisible, translateX, opacity, sidebarWidth]);
-
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ translateX: translateX.value }],
-            opacity: opacity.value,
-        };
-    });
 
     return (
         <Animated.View style={[
             styles.container,
             { bottom: bottomMenuHeight, width: sidebarWidth },
             style,
-            animatedStyle
+            sidebarAnimatedStyle
         ]}>
             <LinearGradient
                 colors={theme.gradients.primary}
@@ -82,8 +64,8 @@ export const Sidebar = ({ style }: SidebarProps) => {
 
                     <CustomText style={{ color: theme.textOnColor.primary }}>Produkter</CustomText>
 
-                    <CategoryTree />
-                    <CategoryTree />
+                    <CategoryTree onSelect={closeSidebar} />
+
                 </ScrollView>
             </LinearGradient>
         </Animated.View>

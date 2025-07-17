@@ -24,6 +24,7 @@ export const ProductScreen = () => {
 
   const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
 
+
   useEffect(() => {
     const allOptionsSelected = product?.attributes
       .filter(attr => attr.variation)
@@ -65,7 +66,7 @@ export const ProductScreen = () => {
     return <Loader />;
   }
 
-  console.log("product screen loading");
+
 
   return (
     <PageView>

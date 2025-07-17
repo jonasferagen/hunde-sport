@@ -31,7 +31,7 @@ export const CategoryScreen = memo(() => {
             <Stack.Screen options={{ title: category.name }} />
             <PageSection>
                 <PageContent key={category.id} secondary>
-                    <Breadcrumbs />
+                    <Breadcrumbs category={category} />
                     <CategoryListArea category={category} />
                 </PageContent>
             </PageSection>

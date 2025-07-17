@@ -1,6 +1,5 @@
 import { Category, Product } from '@/types';
 import { router } from 'expo-router';
-import { breadcrumbHelper } from './navigation';
 
 export const paths = {
     home: '/',
@@ -23,18 +22,43 @@ export const routes = {
         router.push(query ? `/search?query=${query}` : '/search');
     },
     category: (category: Category) => {
-        breadcrumbHelper.buildTrail(category.id);
+        //breadcrumbHelper.buildTrail(category.id);
         router.push({ pathname: paths.category, params: { id: category.id.toString(), name: category.name } });
     },
     product: (product: Product) => {
         if (product.categories.length === 0) {
             throw new Error('Product has no categories');
         }
-
-        breadcrumbHelper.buildTrail(product.categories[0].id);
         router.push({ pathname: paths.product, params: { id: product.id.toString(), name: product.name } });
     },
     checkout: () => {
         router.push(paths.checkout);
     }
 };
+
+
+export const _routes = {
+    home: () => {
+        return paths.home;
+    },
+    shoppingCart: () => {
+        return paths.shoppingCart;
+    },
+    search: (query?: string) => {
+        return query ? `/search?query=${query}` : '/search';
+    },
+    category: (category: Category) => {
+        //breadcrumbHelper.buildTrail(category.id);
+        return { pathname: paths.category, params: { id: category.id.toString(), name: category.name } };
+    },
+    product: (product: Product) => {
+        if (product.categories.length === 0) {
+            throw new Error('Product has no categories');
+        }
+        return { pathname: paths.product, params: { id: product.id.toString(), name: product.name } };
+    },
+    checkout: () => {
+        return paths.checkout;
+    }
+};
+

@@ -1,4 +1,3 @@
-import { breadcrumbHelper } from '@/config/navigation';
 import { useCategoryTrail } from '@/hooks/Category';
 import { Category } from '@/types';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
@@ -12,7 +11,7 @@ const useBuildTrail = () => {
 
 interface BreadcrumbContextType {
     categories: Category[];
-    setCategories: (categories: Category[]) => void;
+    setBreadcrumb: (category: Category) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
@@ -21,10 +20,6 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     const [categories, setCategoriesState] = useState<Category[]>([]);
     const { trail, build } = useBuildTrail();
 
-    useEffect(() => {
-        breadcrumbHelper.register(build);
-    }, [build]);
-
     // When the trail is fetched, update the context state
     useEffect(() => {
         if (trail) {
@@ -32,13 +27,22 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, [trail]);
 
-    const setCategories = useCallback((newCategories: Category[]) => {
-        setCategoriesState(newCategories);
-    }, []);
+    const setBreadcrumb = useCallback((category: Category) => {
+        const lastCrumb = categories[categories.length - 1];
+
+        // If the new category is a child of the last one, just append it.
+        if (lastCrumb && category.parent === lastCrumb.id) {
+            setCategoriesState([...categories, category]);
+            return;
+        }
+
+        // Otherwise, rebuild the whole trail.
+        build(category.id);
+    }, [categories, build]);
 
     const value = {
         categories,
-        setCategories,
+        setBreadcrumb,
     };
 
     useEffect(() => {
