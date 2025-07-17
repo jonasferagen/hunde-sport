@@ -1,5 +1,4 @@
 import { Preloader } from '@/components/preloader/Preloader';
-import { StatusMessage } from '@/components/ui/statusmessage/StatusMessage';
 import {
   BreadcrumbProvider,
   LayoutProvider,
@@ -25,7 +24,6 @@ const AppContent = (): JSX.Element => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }} >
       <Slot />
-      <StatusMessage />
     </GestureHandlerRootView>
   );
 }

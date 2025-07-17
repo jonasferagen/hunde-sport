@@ -1,8 +1,8 @@
-import { useLayout, useStatus } from '@/contexts';
+import { useStatus } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
+
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
-
 // Define colors locally to avoid theme dependency issues during startup
 const statusColors = {
     info: '#1976D2', // Blue
@@ -11,7 +11,6 @@ const statusColors = {
 
 export const StatusMessage = () => {
     const { message, type } = useStatus();
-    const { bottomMenuHeight } = useLayout();
     const [fadeAnim] = useState(new Animated.Value(0));
 
     useEffect(() => {
@@ -35,7 +34,7 @@ export const StatusMessage = () => {
             style={[
                 styles.statusContainer,
                 containerStyle,
-                { opacity: fadeAnim, bottom: bottomMenuHeight + SPACING.sm },
+                { opacity: fadeAnim, bottom: SPACING.sm },
             ]}
         >
             <Text style={styles.text}>{message}</Text>
@@ -48,14 +47,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: SPACING.md,
         right: SPACING.md,
+        padding: SPACING.md,
         borderRadius: BORDER_RADIUS.md,
-        padding: SPACING.lg,
-        alignItems: 'center',
-        justifyContent: 'center',
+        zIndex: 1000, // Ensure it's on top
     },
     text: {
         color: 'white',
-        fontWeight: 'bold',
         textAlign: 'center',
     },
 });

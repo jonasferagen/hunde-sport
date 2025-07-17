@@ -1,4 +1,4 @@
-import { useStatus } from '@/contexts';
+import { useStatus } from '@/contexts/StatusProvider';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { categoriesQueryOptions, categoryQueryOptions, categoryTrailQueryOptions } from './queries';

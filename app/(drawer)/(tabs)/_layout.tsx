@@ -10,6 +10,7 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
+                    title: 'Hjem',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons name="home" size={size} color={color} />
                     ),
@@ -33,8 +34,6 @@ export default function TabsLayout() {
                     ),
                 }}
             />
-
-            {/* The following screens are part of the tab navigator but not visible in the tab bar */}
             <Tabs.Screen name="category" options={{ href: null }} />
             <Tabs.Screen name="product" options={{ href: null }} />
             <Tabs.Screen name="checkout" options={{ href: null }} />
