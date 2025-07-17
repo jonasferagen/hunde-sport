@@ -17,12 +17,12 @@ interface PageContentProps extends ViewProps {
   secondary?: boolean;
   accent?: boolean;
   style?: any;
-  type?: string;
 }
 
-export const PageContent: React.FC<PageContentProps> = ({ children, flex, paddingVertical = 'md', paddingHorizontal = 'md', horizontal, primary = false, secondary = false, accent = false, style, type = 'default', ...props }: PageContentProps) => {
+export const PageContent: React.FC<PageContentProps> = ({ children, flex, paddingVertical = 'md', paddingHorizontal = 'md', horizontal, primary = false, secondary = false, accent = false, style, ...props }: PageContentProps) => {
   const { themeManager } = useTheme();
 
+  const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
   const variant = themeManager.getVariant(type);
   const containerStyle = {
     backgroundColor: variant.backgroundColor,

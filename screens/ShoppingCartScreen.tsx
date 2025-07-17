@@ -1,5 +1,5 @@
 import { ShoppingCartListItem } from '@/components/features/shoppingCart/ShoppingCartListItem';
-import { PageContent, PageSection } from '@/components/layout';
+import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, CustomText } from '@/components/ui';
 import { routes } from '@/config/routes';
@@ -24,7 +24,7 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
     const styles = createStyles(themeVariant);
 
     return (
-        <View style={styles.summaryContainer}>
+        <>
             <View style={styles.summaryRow}>
                 <CustomText bold fontSize='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
                 <CustomText bold fontSize='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
@@ -35,12 +35,12 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
                     <Button title="Gå til kassen" icon="checkout" variant="primary" />
                 </Link>
             </View>
-        </View>
+        </>
     );
 });
 
 export const ShoppingCartScreen = () => {
-    const { items, cartTotal, updateQuantity, removeFromCart, clearCart } = useShoppingCart();
+    const { items, cartTotal, cartItemCount, updateQuantity, removeFromCart, clearCart } = useShoppingCart();
     const { themeManager } = useTheme();
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
@@ -55,34 +55,30 @@ export const ShoppingCartScreen = () => {
 
 
     return (
-        <PageContent>
+        <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageHeader title="Handlekurv" />
-            <PageSection flex style={styles.cartSection}>
-                <FlatList
-                    data={items}
-                    keyExtractor={(item) => item.product.id.toString()}
-                    renderItem={renderItem}
-                    ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
-                />
-                {items.length > 0 && (
-                    <ShoppingCartSummary cartItemCount={items.length} cartTotal={cartTotal} onClearCart={clearCart} />
-                )}
-            </PageSection>
-        </PageContent >
+            <PageSection flex>
+                <PageContent paddingHorizontal="none" flex >
+                    <FlatList
+                        data={items}
+                        keyExtractor={(item) => item.product.id.toString()}
+                        renderItem={renderItem}
+                        ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
+                    />
+                </PageContent>
+                <PageContent secondary>
+                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
+                </PageContent>
+            </PageSection >
+        </PageView>
+
     );
 }
 
 const createStyles = (themeVariant: StyleVariant) => StyleSheet.create({
-    cartSection: {
-        paddingHorizontal: 0,
-    },
-    summaryContainer: {
-        padding: SPACING.md,
-        borderTopWidth: 1,
-        borderTopColor: themeVariant.borderColor,
-        backgroundColor: themeVariant.backgroundColor,
-    },
+
+
     summaryRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -96,7 +92,6 @@ const createStyles = (themeVariant: StyleVariant) => StyleSheet.create({
     },
     totalText: {
         textAlign: 'right',
-        marginBottom: 10,
     },
     emptyText: {
         textAlign: 'center',
