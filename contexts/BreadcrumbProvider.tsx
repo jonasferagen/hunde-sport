@@ -38,7 +38,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
 
             // Otherwise, rebuild the whole trail.
             build(category.id);
-            return prevCategories; // Return previous state while new trail is building
+            return []; // Immediately clear breadcrumbs for a clean transition
         });
     }, [build]);
 
