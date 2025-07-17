@@ -1,5 +1,5 @@
 import { _Theme, Theme } from '@/types';
-import { darken, lighten } from '@/utils/helpers';
+import { darken } from '@/utils/helpers';
 
 const palette = {
   primary: '#D7C8E7',
@@ -21,7 +21,7 @@ const palette = {
   info: '#1976D2', // A standard info blue
 };
 
-export const lightTheme: Theme = {
+export const theme: Theme = {
   colors: {
     primary: palette.primary,
     secondary: palette.secondary,
@@ -57,54 +57,6 @@ export const lightTheme: Theme = {
     },
     shadow: {
       shadowColor: palette.black,
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
-  },
-} as const;
-
-export const darkTheme: Theme = {
-  colors: {
-    primary: palette.primary,
-    secondary: palette.secondary,
-    accent: palette.accent,
-    default: palette.black,
-
-    card: darken(palette.black, -10), // A slightly lighter black
-    text: palette.white,
-    textSecondary: palette.lightGrey,
-    border: darken(palette.black, -20),
-    error: palette.error,
-    success: palette.success,
-    info: palette.info,
-  },
-  gradients: {
-    primary: [lighten(palette.primary, 10), palette.primary],
-    secondary: [lighten(palette.secondary, 10), palette.secondary],
-    accent: [lighten(palette.accent, 10), palette.accent],
-    default: [lighten(palette.black, 10), palette.black],
-  },
-  tabs: {
-    active: palette.activeRed,
-    inactive: palette.inactiveBlue,
-  },
-  textOnColor: {
-    primary: palette.white,
-    secondary: palette.white,
-    accent: palette.white,
-    default: palette.white,
-  },
-  styles: {
-    disabled: {
-      opacity: 0.5,
-    },
-    shadow: {
-      shadowColor: palette.white,
       shadowOffset: {
         width: 0,
         height: 2,
