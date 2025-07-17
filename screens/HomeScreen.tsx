@@ -2,6 +2,7 @@ import { CategoryCard } from '@/components/features/category/CategoryCard';
 import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Loader } from '@/components/ui';
+import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
 import { Stack } from 'expo-router';
@@ -29,9 +30,12 @@ const CategorySection = () => {
 
 export const HomeScreen = () => {
     return (
-
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
+            <PageSection>
+                <SearchBar initialQuery="" />
+
+            </PageSection>
             <PageSection scrollable>
                 <PageContent secondary horizontal>
                     <FeaturedProducts />

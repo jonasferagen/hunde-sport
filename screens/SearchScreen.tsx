@@ -3,18 +3,14 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { CustomText, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product';
-import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useRef, useState } from 'react';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import React, { useCallback, useRef } from 'react';
 import { TextInput, View } from 'react-native';
 
 export const SearchScreen = () => {
-    const [query, setQuery] = useState('');
+    const { query } = useLocalSearchParams<{ query: string }>();
     const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(query);
     const searchInputRef = useRef<TextInput>(null);
-
-    const handleSearch = (searchQuery: string) => {
-        setQuery(searchQuery);
-    };
 
     useFocusEffect(
         useCallback(() => {
@@ -22,34 +18,31 @@ export const SearchScreen = () => {
         }, [])
     );
 
-
     return (
         <PageView>
             <PageSection >
                 <PageContent primary >
-                    <SearchBar ref={searchInputRef} onSearch={handleSearch} />
-                    {query && (
+                    <SearchBar ref={searchInputRef} initialQuery={query} />
+                    {query ? (
                         <CustomText size="md">{`Søkeresultater for "${query}"`}</CustomText>
-                    )}
+                    ) : null}
                 </PageContent>
             </PageSection>
             <PageSection flex>
                 <PageContent flex paddingHorizontal="none" paddingVertical="none">
                     {isLoading && <Loader />}
-                    {query && !isLoading && (
-                        <ProductList
-                            products={products}
-                            loadMore={fetchNextPage}
-                            loadingMore={isFetchingNextPage}
-                            EmptyComponent={
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <CustomText>Ingen produkter funnet.</CustomText>
-                                </View>
-                            }
-                        />
+                    {!isLoading && products.length === 0 && query && (
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <CustomText>Ingen resultater funnet for "{query}"</CustomText>
+                        </View>
                     )}
+                    <ProductList
+                        products={products}
+                        loadMore={fetchNextPage}
+                        loadingMore={isFetchingNextPage}
+                    />
                 </PageContent>
             </PageSection>
-        </PageView >
+        </PageView>
     );
-}
+};
