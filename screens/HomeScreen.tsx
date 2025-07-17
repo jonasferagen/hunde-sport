@@ -47,12 +47,11 @@ export const HomeScreen = () => {
                 <PageContent secondary>
                     <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
                 </PageContent>
-            </PageSection>
-            <PageSection scrollable>
-
-                <PageContent accent horizontal>
+                <PageContent accent horizontal title="Populære produkter">
                     <FeaturedProducts />
                 </PageContent>
+            </PageSection>
+            <PageSection scrollable>
                 <PageContent paddingHorizontal="none">
                     <CategorySection />
                 </PageContent>

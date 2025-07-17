@@ -13,10 +13,11 @@ import {
 } from 'react-native';
 
 interface PageContentHorizontalProps extends ViewProps {
+  title?: string;
   children: React.ReactNode;
 }
 
-export const PageContentHorizontal = ({ children, style, ...props }: PageContentHorizontalProps) => {
+export const PageContentHorizontal = ({ title = undefined, children, style, ...props }: PageContentHorizontalProps) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [contentWidth, setContentWidth] = useState(0);
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
@@ -32,57 +33,59 @@ export const PageContentHorizontal = ({ children, style, ...props }: PageContent
 
   return (
     <View style={[styles.horizontalContainer, style]}>
-      <CustomText>Populære produkter</CustomText>
-      <AnimatePresence>
-        {showLeftGradient && (
-          <MotiView
-            from={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={[styles.gradient, styles.leftGradient]}
-            pointerEvents="none"
-          >
-            <LinearGradient
-              colors={['rgba(240, 240, 230, 1)', 'rgba(240, 240, 230, 0)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientInner}
-            />
-          </MotiView>
-        )}
-      </AnimatePresence>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        onContentSizeChange={setContentWidth}
-        onLayout={(event) =>
-          setScrollViewWidth(event.nativeEvent.layout.width)
-        }
-        contentContainerStyle={styles.scrollViewContent}
-        {...props}
-      >
-        {Children.toArray(children).filter(child => Boolean(child))}
-      </ScrollView>
-      <AnimatePresence>
-        {showRightGradient && (
-          <MotiView
-            from={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={[styles.gradient, styles.rightGradient]}
-            pointerEvents="none"
-          >
-            <LinearGradient
-              colors={['rgba(240, 240, 230, 0)', 'rgba(240, 240, 230, 1)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientInner}
-            />
-          </MotiView>
-        )}
-      </AnimatePresence>
+      {title && <CustomText style={{ marginBottom: SPACING.sm }}>{title}</CustomText>}
+      <View>
+        <AnimatePresence>
+          {showLeftGradient && (
+            <MotiView
+              from={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={[styles.gradient, styles.leftGradient]}
+              pointerEvents="none"
+            >
+              <LinearGradient
+                colors={['rgba(240, 240, 230, 1)', 'rgba(240, 240, 230, 0)']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradientInner}
+              />
+            </MotiView>
+          )}
+        </AnimatePresence>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          onContentSizeChange={setContentWidth}
+          onLayout={(event) =>
+            setScrollViewWidth(event.nativeEvent.layout.width)
+          }
+          contentContainerStyle={styles.scrollViewContent}
+          {...props}
+        >
+          {Children.toArray(children).filter(child => Boolean(child))}
+        </ScrollView>
+        <AnimatePresence>
+          {showRightGradient && (
+            <MotiView
+              from={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={[styles.gradient, styles.rightGradient]}
+              pointerEvents="none"
+            >
+              <LinearGradient
+                colors={['rgba(240, 240, 230, 0)', 'rgba(240, 240, 230, 1)']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradientInner}
+              />
+            </MotiView>
+          )}
+        </AnimatePresence>
+      </View>
     </View>
   );
 };

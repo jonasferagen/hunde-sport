@@ -89,7 +89,7 @@ export const ProductScreen = () => {
 
         </PageContent>
 
-        <PageContent horizontal secondary>
+        <PageContent horizontal secondary title="Bilder">
 
           <ProductImageGallery
             images={displayProduct.images}
@@ -104,7 +104,7 @@ export const ProductScreen = () => {
           <ProductDetails product={product} />
         </PageContent>
 
-        <PageContent horizontal accent>
+        <PageContent horizontal accent title="Relaterte produkter">
           <RelatedProducts productIds={product.related_ids} />
         </PageContent>
       </PageSection>

@@ -11,7 +11,7 @@ export default function TabsLayout() {
         <Tabs
             screenOptions={{
                 headerStyle: {
-                    backgroundColor: theme.colors.card,
+                    backgroundColor: 'theme.colors.card',
                 },
                 headerTintColor: theme.colors.text,
                 tabBarStyle: {
@@ -31,6 +31,7 @@ export default function TabsLayout() {
                     tabBarIcon: ({ color }) => (
                         <Icon name="home" color={color} size="xl" />
                     ),
+                    headerShown: false,
                 }}
             />
             <Tabs.Screen

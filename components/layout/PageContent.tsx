@@ -9,6 +9,7 @@ interface PageContentProps extends ViewProps {
   children: React.ReactNode;
   flex?: boolean;
   gap?: keyof typeof SPACING;
+  title?: string;
   paddingVertical?: keyof typeof SPACING;
   paddingHorizontal?: keyof typeof SPACING;
   horizontal?: boolean;
@@ -18,7 +19,7 @@ interface PageContentProps extends ViewProps {
 }
 
 export const PageContent = ({ children, flex, gap = 'md', paddingVertical = 'md', paddingHorizontal = 'md', horizontal, primary = false, secondary = false, accent = false, ...props }: PageContentProps) => {
-  const { theme, _theme } = useTheme();
+  const { _theme } = useTheme();
 
   const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
   const variant = _theme[type];
