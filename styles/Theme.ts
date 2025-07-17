@@ -27,7 +27,7 @@ export const lightTheme: Theme = {
     secondary: palette.secondary,
     accent: palette.accent,
     default: palette.white,
-    card: palette.lightGrey,
+    card: palette.darkGrey,
     text: palette.black,
     textSecondary: palette.darkGrey,
     border: palette.grey,

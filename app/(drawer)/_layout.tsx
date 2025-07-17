@@ -1,7 +1,8 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
+import { Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
+import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { FONT_FAMILY, FONT_SIZES } from '@/styles';
-import { MaterialIcons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -11,20 +12,26 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 const CustomDrawerContent = (props: any) => {
     const { theme } = useTheme();
     return (
-        <DrawerContentScrollView {...props}>
-            <View style={{ alignItems: 'flex-end', paddingRight: 15, paddingTop: 15, paddingBottom: 10 }}>
-                <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
-                    <MaterialIcons name="close" size={30} color={theme.colors.text} />
-                </TouchableOpacity>
-            </View>
-            <DrawerItemList {...props} />
-            <CategoryTree />
-        </DrawerContentScrollView>
+        <LinearGradient
+            colors={theme.gradients.primary}
+            style={StyleSheet.absoluteFill}
+        >
+            <DrawerContentScrollView {...props}>
+                <View style={{ alignItems: 'flex-end', paddingRight: 15, paddingTop: 15, paddingBottom: 10 }}>
+                    <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
+                        <Icon name="close" size='xl' color={theme.colors.text} />
+                    </TouchableOpacity>
+                </View>
+                <DrawerItemList {...props} />
+                <CategoryTree />
+            </DrawerContentScrollView>
+        </LinearGradient>
     );
 }
 
 export default function DrawerLayout() {
     const { theme } = useTheme();
+    const { cartItemCount } = useShoppingCart();
 
     return (
         <Drawer
@@ -54,6 +61,9 @@ export default function DrawerLayout() {
                     fontFamily: FONT_FAMILY.regular,
                     fontSize: FONT_SIZES.md,
                 },
+                drawerStyle: {
+                    backgroundColor: 'transparent',
+                }
             }}>
 
             <Drawer.Screen
@@ -65,7 +75,7 @@ export default function DrawerLayout() {
                 name="_home" // This is a dummy screen for the drawer item
                 options={{
                     title: 'Hjem',
-                    drawerIcon: ({ color, size }) => <MaterialIcons name="home" color={color} size={size} />
+                    drawerIcon: ({ color }) => <Icon name="home" color={color} size='md' />
                 }}
                 listeners={{
                     drawerItemPress: (e) => {
@@ -78,7 +88,7 @@ export default function DrawerLayout() {
                 name="_shoppingCart" // This is a dummy screen for the drawer item
                 options={{
                     title: 'Handlekurv',
-                    drawerIcon: ({ color, size }) => <MaterialIcons name="shopping-cart" color={color} size={size} />
+                    drawerIcon: ({ color }) => <Icon name="shoppingCart" color={color} size='md' badge={cartItemCount} />
                 }}
                 listeners={{
                     drawerItemPress: (e) => {

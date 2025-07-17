@@ -1,18 +1,31 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { Icon } from '@/components/ui';
+import { useTheme } from '@/contexts';
+import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
+    const { theme } = useTheme();
+    const { cartItemCount } = useShoppingCart();
     return (
         <Tabs
             screenOptions={{
+                headerStyle: {
+                    backgroundColor: theme.colors.card,
+                },
+                headerTintColor: theme.colors.text,
+                tabBarStyle: {
+                    backgroundColor: theme.colors.primary,
+                },
+                tabBarActiveTintColor: theme.colors.text,
+                tabBarInactiveTintColor: theme.colors.textSecondary,
                 tabBarShowLabel: true,
             }}>
             <Tabs.Screen
                 name="index"
                 options={{
                     title: 'Hjem',
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="home" size={size} color={color} />
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="home" color={color} size="xl" />
                     ),
                 }}
             />
@@ -20,8 +33,8 @@ export default function TabsLayout() {
                 name="search"
                 options={{
                     title: 'Søk',
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="search" size={size} color={color} />
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="search" color={color} size="xl" />
                     ),
                 }}
             />
@@ -29,8 +42,8 @@ export default function TabsLayout() {
                 name="shoppingCart"
                 options={{
                     title: 'Handlekurv',
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="shopping-cart" size={size} color={color} />
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />
                     ),
                 }}
             />
