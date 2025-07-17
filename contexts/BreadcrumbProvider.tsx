@@ -13,13 +13,14 @@ interface BreadcrumbContextType {
     categories: Category[];
     setBreadcrumb: (category: Category) => void;
     build: (categoryId: number) => void;
+    isLoading: boolean;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
 export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
     const [categories, setCategoriesState] = useState<Category[]>([]);
-    const { trail, build } = useBuildTrail();
+    const { trail, isLoading, build } = useBuildTrail();
 
     // When the trail is fetched, update the context state
     useEffect(() => {
@@ -47,6 +48,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         categories,
         setBreadcrumb,
         build,
+        isLoading,
     };
 
     useEffect(() => {
