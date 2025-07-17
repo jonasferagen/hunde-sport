@@ -1,13 +1,13 @@
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
-import { routes } from '@/config/routes';
+import { _routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { ShoppingCartItem, Theme } from '@/types';
 import { formatPrice } from '@/utils/helpers';
-import { Stack } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 import React, { memo, useCallback, useMemo, useRef } from 'react';
 import { Animated, FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 
@@ -17,7 +17,7 @@ interface ShoppingCartListItemProps {
     onRemove: (productId: number) => void;
 }
 
-const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: ShoppingCartListItemProps) => {
+const ShoppingCartListItem = React.memo(({ item, onUpdateQuantity, onRemove }: ShoppingCartListItemProps) => {
     const { theme } = useTheme();
     const styles = useMemo(() => createStyles(theme), [theme]);
     const opacity = useRef(new Animated.Value(1)).current;
@@ -35,12 +35,12 @@ const ShoppingCartListItem = memo(({ item, onUpdateQuantity, onRemove }: Shoppin
 
             <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
 
-            <Pressable onPress={() => routes.product(item.product)} style={styles.productInfoContainer}>
+            <Link href={_routes.product(item.product)} asChild style={styles.productInfoContainer}>
                 <View style={styles.productInfo}>
                     <CustomText bold>{item.product.name}</CustomText>
                     <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
                 </View>
-            </Pressable>
+            </Link>
             <View style={styles.quantityContainer}>
                 <Pressable
                     onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
@@ -78,7 +78,9 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
             </View>
             <View style={styles.buttonContainer}>
                 <Button title="Tøm handlekurv" icon="emptyCart" variant="secondary" onPress={onClearCart} />
-                <Button title="Gå til kassen" icon="checkout" variant="primary" onPress={routes.checkout} />
+                <Link href={_routes.checkout()} asChild>
+                    <Button title="Gå til kassen" icon="checkout" variant="primary" />
+                </Link>
             </View>
         </View>
     );

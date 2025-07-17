@@ -1,7 +1,8 @@
-import { routes } from '@/config/routes';
+import { _routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/types';
+import { Link } from 'expo-router';
 import React, { forwardRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Icon } from '../icon/Icon';
@@ -17,12 +18,8 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
     const styles = createStyles(theme);
 
     const handleSearch = () => {
-        if (query.trim()) {
-            if (onSearch) {
-                onSearch(query);
-            } else {
-                routes.search(query);
-            }
+        if (query.trim() && onSearch) {
+            onSearch(query);
         }
     };
 
@@ -37,9 +34,17 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 onChangeText={setQuery}
                 onSubmitEditing={handleSearch}
             />
-            <Pressable onPress={handleSearch} style={styles.button}>
-                <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
-            </Pressable>
+            {onSearch ? (
+                <Pressable onPress={handleSearch} style={styles.button}>
+                    <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
+                </Pressable>
+            ) : (
+                <Link href={_routes.search(query)} asChild disabled={!query.trim()}>
+                    <Pressable style={styles.button}>
+                        <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
+                    </Pressable>
+                </Link>
+            )}
         </View>
     );
 });

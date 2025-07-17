@@ -1,6 +1,7 @@
 import { CategoryTile } from '@/components/ui';
-import { routes } from '@/config/routes';
+import { _routes } from '@/config/routes';
 import { Category } from '@/types';
+import { Link } from 'expo-router';
 import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 
@@ -10,17 +11,14 @@ interface CategoryCardProps {
 }
 
 export const CategoryCard = ({ category, style }: CategoryCardProps) => {
-    const handlePress = () => {
-        routes.category(category);
-    };
-
     return (
-        <CategoryTile
-            category={category}
-            height={200}
-            width={'100%'}
-            style={style}
-            onPress={handlePress}
-        />
+        <Link href={_routes.category(category)} asChild>
+            <CategoryTile
+                category={category}
+                height={200}
+                width={'100%'}
+                style={style}
+            />
+        </Link>
     );
 };

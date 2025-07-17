@@ -7,7 +7,7 @@ import { CustomText } from '../customtext/CustomText';
 import { Icon, ValidIcon } from '../icon/Icon';
 
 export interface ButtonProps {
-    onPress: () => void;
+    onPress?: () => void;
     title: string;
     icon?: keyof typeof ValidIcon;
     variant?: 'primary' | 'secondary' | 'accent';

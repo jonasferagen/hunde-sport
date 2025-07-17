@@ -1,5 +1,5 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
-import { routes } from '@/config/routes';
+import { _routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { usePageContent } from '@/contexts/PageContentContext';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
@@ -7,20 +7,20 @@ import { FONT_SIZES, SPACING } from '@/styles';
 import { Product } from '@/types';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { FlashList } from "@shopify/flash-list";
+import { Link } from 'expo-router';
 import React, { memo, useCallback, useState } from 'react';
 import { Image, LayoutChangeEvent, Pressable, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface RenderProductProps {
     item: Product;
-    onPress: (product: Product) => void;
 }
 
-const RenderProduct = memo(({ item, onPress }: RenderProductProps) => (
-    <TouchableOpacity key={item.id}
-        onPress={() => onPress(item)}
-        style={styles.itemContainer}>
-        <ProductListItem product={item} />
-    </TouchableOpacity>
+const RenderProduct = memo(({ item }: RenderProductProps) => (
+    <Link href={_routes.product(item)} key={item.id} asChild>
+        <TouchableOpacity style={styles.itemContainer}>
+            <ProductListItem product={item} />
+        </TouchableOpacity>
+    </Link>
 ));
 
 interface ProductListProps {
@@ -69,13 +69,9 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
     const { theme } = useTheme();
     const { type } = usePageContent();
 
-    const handleProductPress = useCallback((product: Product) => {
-        routes.product(product);
-    }, []);
-
     const renderItem = useCallback(({ item }: { item: Product }) => (
-        <RenderProduct item={item} onPress={handleProductPress} />
-    ), [handleProductPress]);
+        <RenderProduct item={item} />
+    ), []);
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 

@@ -1,6 +1,7 @@
 import { ProductTile } from "@/components/ui/";
-import { routes } from '@/config/routes';
+import { _routes } from '@/config/routes';
 import { Product } from "@/types";
+import { Link } from 'expo-router';
 import React from 'react';
 
 interface ProductCardProps {
@@ -9,17 +10,14 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
 
-    const handlePress = () => {
-        routes.product(product);
-    };
-
     return (
-        <ProductTile
-            product={product}
-            width={200}
-            height={150}
-            mainColor={'#777'}
-            onPress={handlePress}
-        />
+        <Link href={_routes.product(product)} asChild>
+            <ProductTile
+                product={product}
+                width={200}
+                height={150}
+                mainColor={'#777'}
+            />
+        </Link>
     );
 };
