@@ -25,17 +25,19 @@ export const ValidIcon = {
 } as const;
 
 // Get the type of all props that FontAwesome accepts
-interface IconProps extends Omit<React.ComponentProps<typeof FontAwesome>, 'name' | 'size'> {
+interface IconProps extends Omit<React.ComponentProps<typeof FontAwesome>, 'name' | 'size' | 'color'> {
     name: keyof typeof ValidIcon;
     badge?: number;
     size?: string;
+    color?: string;
 };
 
-export const Icon = ({ name, badge = 0, size = 'xl', ...rest }: IconProps) => {
+export const Icon = ({ name, badge = 0, size = 'xl', color = 'black', ...rest }: IconProps) => {
     const fontSize = FONT_SIZES[size as keyof typeof FONT_SIZES];
+
     return (
         <View>
-            <FontAwesome name={ValidIcon[name]} size={fontSize} {...rest} />
+            <FontAwesome name={ValidIcon[name]} size={fontSize} color={color} {...rest} />
             {badge > 0 && (
                 <View style={styles.badge}>
                     <CustomText style={styles.badgeText}>{badge}</CustomText>

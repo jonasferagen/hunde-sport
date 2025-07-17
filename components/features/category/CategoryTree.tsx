@@ -3,7 +3,7 @@ import { routes } from '@/config/routes';
 import { useBreadcrumbs, useTheme } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { Category } from '@/types';
+import { Category, Theme } from '@/types';
 import { rgba } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
@@ -18,9 +18,10 @@ interface CategoryTreeItemProps {
     isExpanded: boolean;
     onExpand: (categoryId: number) => void;
     isActive: boolean;
+    variant: keyof Theme['textOnColor'];
 };
 
-const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive }: CategoryTreeItemProps) => {
+const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive, variant }: CategoryTreeItemProps) => {
     const { categories } = useCategories(category.id);
     const { theme } = useTheme();
     const styles = createStyles();
@@ -30,8 +31,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
         onExpand(category.id);
     }, [onExpand, category.id]);
 
-    const color = theme.textOnColor.primary;
-
+    const color = theme.textOnColor[variant];
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
@@ -55,6 +55,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
                             categoryId={category.id}
                             level={level + 1}
                             ancestors={ancestors}
+                            variant={variant}
                         />
                     </Animated.View>
                 )}
@@ -67,9 +68,10 @@ interface CategorySubTreeProps {
     categoryId: number;
     level?: number;
     ancestors?: Category[];
+    variant: keyof Theme['textOnColor'];
 };
 
-const CategorySubTree = ({ categoryId, level = 0, ancestors = [] }: CategorySubTreeProps) => {
+const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: CategorySubTreeProps) => {
     const { categories, isFetchingNextPage } = useCategories(categoryId, { fetchAll: true });
     const { categories: breadcrumbs } = useBreadcrumbs();
 
@@ -93,6 +95,7 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [] }: CategorySubT
                             isExpanded={expandedItemId === category.id}
                             onExpand={handleToggleExpand}
                             isActive={breadcrumbs.some(b => b.id === category.id)}
+                            variant={variant}
                         />
                     );
                 })}
@@ -104,8 +107,12 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [] }: CategorySubT
     );
 };
 
-export const CategoryTree = React.memo(() => {
-    return <CategorySubTree categoryId={0} />;
+interface CategoryTreeProps {
+    variant?: keyof Theme['textOnColor'];
+}
+
+export const CategoryTree = React.memo(({ variant = 'primary' }: CategoryTreeProps) => {
+    return <CategorySubTree categoryId={0} variant={variant} />;
 });
 
 const createStyles = () => StyleSheet.create({

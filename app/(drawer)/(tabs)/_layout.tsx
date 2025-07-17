@@ -1,6 +1,7 @@
 import { Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { darken } from '@/utils/helpers';
 import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
@@ -15,11 +16,14 @@ export default function TabsLayout() {
                 headerTintColor: theme.colors.text,
                 tabBarStyle: {
                     backgroundColor: theme.colors.primary,
+                    borderTopWidth: 2,
+                    borderTopColor: darken(theme.colors.primary, 10),
                 },
-                tabBarActiveTintColor: theme.colors.text,
-                tabBarInactiveTintColor: theme.colors.textSecondary,
+                tabBarActiveTintColor: theme.textOnColor.primary,
+                tabBarInactiveTintColor: theme.textOnColor.primary,
                 tabBarShowLabel: true,
             }}>
+
             <Tabs.Screen
                 name="index"
                 options={{

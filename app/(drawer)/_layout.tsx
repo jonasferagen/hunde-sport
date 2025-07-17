@@ -13,7 +13,7 @@ const CustomDrawerContent = (props: any) => {
     const { theme } = useTheme();
     return (
         <LinearGradient
-            colors={theme.gradients.primary}
+            colors={theme.gradients.secondary}
             style={StyleSheet.absoluteFill}
         >
             <DrawerContentScrollView {...props}>
@@ -23,7 +23,7 @@ const CustomDrawerContent = (props: any) => {
                     </TouchableOpacity>
                 </View>
                 <DrawerItemList {...props} />
-                <CategoryTree />
+                <CategoryTree variant="secondary" />
             </DrawerContentScrollView>
         </LinearGradient>
     );
@@ -55,8 +55,8 @@ export default function DrawerLayout() {
                 headerShadowVisible: false,
                 headerTitle: 'HundeSport.no',
                 drawerActiveBackgroundColor: theme.colors.secondary,
-                drawerActiveTintColor: theme.colors.primary,
-                drawerInactiveTintColor: theme.colors.text,
+                drawerActiveTintColor: theme.textOnColor.secondary,
+                drawerInactiveTintColor: theme.textOnColor.secondary,
                 drawerLabelStyle: {
                     fontFamily: FONT_FAMILY.regular,
                     fontSize: FONT_SIZES.md,
@@ -75,7 +75,7 @@ export default function DrawerLayout() {
                 name="_home" // This is a dummy screen for the drawer item
                 options={{
                     title: 'Hjem',
-                    drawerIcon: ({ color }) => <Icon name="home" color={color} size='md' />
+                    drawerIcon: ({ color }) => <Icon name="home" color={color} size="xl" />
                 }}
                 listeners={{
                     drawerItemPress: (e) => {
@@ -88,7 +88,7 @@ export default function DrawerLayout() {
                 name="_shoppingCart" // This is a dummy screen for the drawer item
                 options={{
                     title: 'Handlekurv',
-                    drawerIcon: ({ color }) => <Icon name="shoppingCart" color={color} size='md' badge={cartItemCount} />
+                    drawerIcon: ({ color }) => <Icon name="shoppingCart" color={color} size='xl' badge={cartItemCount} />
                 }}
                 listeners={{
                     drawerItemPress: (e) => {
