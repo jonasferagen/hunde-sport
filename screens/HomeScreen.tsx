@@ -29,12 +29,14 @@ const CategorySection = () => {
 }
 
 export const HomeScreen = () => {
+
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageSection>
-                <SearchBar initialQuery="" />
-
+                <PageContent>
+                    <SearchBar initialQuery="" />
+                </PageContent>
             </PageSection>
             <PageSection scrollable>
                 <PageContent secondary horizontal>

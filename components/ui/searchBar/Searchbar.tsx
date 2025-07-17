@@ -4,12 +4,14 @@ import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/types';
 import { router } from 'expo-router';
 import React, { forwardRef, useEffect, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Icon } from '../icon/Icon';
 
 export interface SearchBarProps {
     placeholder?: string;
     initialQuery?: string;
     onQueryChange?: (query: string) => void;
+    onSearch?: (query: string) => void;
 }
 
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onQueryChange }, ref) => {
@@ -23,16 +25,9 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
         }
     }, [initialQuery]);
 
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            if (query !== initialQuery) {
-                router.push(routes.search(query));
-            }
-        }, 500);
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [query, initialQuery, router]);
+    const handleSearch = () => {
+        router.push(routes.search(query));
+    };
 
     return (
         <View style={styles.container}>
@@ -46,7 +41,11 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                     setQuery(text);
                     onQueryChange?.(text);
                 }}
+                onSubmitEditing={handleSearch}
             />
+            <Pressable onPress={handleSearch} style={styles.button} disabled={!query.trim()}>
+                <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
+            </Pressable>
         </View>
     );
 });
@@ -54,14 +53,19 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
 const createStyles = (theme: Theme) => StyleSheet.create({
     container: {
         flexDirection: 'row',
-        padding: SPACING.sm,
-        borderRadius: BORDER_RADIUS.lg,
+        alignItems: 'center',
+        backgroundColor: theme.colors.secondary,
+        borderRadius: BORDER_RADIUS.md,
+        paddingHorizontal: SPACING.md,
+        marginVertical: SPACING.md,
     },
     input: {
         flex: 1,
-        padding: SPACING.sm,
-        backgroundColor: theme.colors.card,
-        borderRadius: BORDER_RADIUS.lg,
+        height: 50,
         color: theme.colors.text,
+        fontSize: 16,
+    },
+    button: {
+        padding: SPACING.sm,
     },
 });

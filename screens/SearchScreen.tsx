@@ -4,13 +4,27 @@ import { CustomText, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 
 export const SearchScreen = () => {
     const { query } = useLocalSearchParams<{ query: string }>();
     const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(query);
     const searchInputRef = useRef<TextInput>(null);
+
+    const [inputText, setInputText] = useState(query || '');
+
+    /*useEffect(() => {
+        const handler = setTimeout(() => {
+            if (inputText !== query) {
+                router.push(routes.search(inputText));
+            }
+        }, 500);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [inputText, query]); */
 
     useFocusEffect(
         useCallback(() => {
@@ -22,7 +36,12 @@ export const SearchScreen = () => {
         <PageView>
             <PageSection >
                 <PageContent primary >
-                    <SearchBar ref={searchInputRef} initialQuery={query} />
+                    <SearchBar
+                        ref={searchInputRef}
+                        initialQuery={query}
+                        onQueryChange={setInputText}
+
+                    />
                     {query ? (
                         <CustomText size="md">{`Søkeresultater for "${query}"`}</CustomText>
                     ) : null}
