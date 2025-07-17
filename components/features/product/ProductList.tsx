@@ -1,7 +1,5 @@
 import { Button, CustomText, Loader } from '@/components/ui';
 import { routes } from '@/config/routes';
-import { useTheme } from '@/contexts';
-import { usePageContent } from '@/contexts/PageContentContext';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { Product } from '@/types';
@@ -62,9 +60,6 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
 };
 
 export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
-    const { theme } = useTheme();
-    const { type } = usePageContent();
-
     const renderItem = useCallback(({ item }: { item: Product }) => (
         <RenderProduct item={item} />
     ), []);
@@ -83,7 +78,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
             ListEmptyComponent={EmptyComponent}
             contentContainerStyle={contentContainerStyle}
             ListFooterComponent={() =>
-                loadingMore ? <Loader color={theme.textOnColor[type]} style={styles.loader} /> : null
+                loadingMore ? <Loader /> : null
             }
             estimatedItemSize={50}
         />
@@ -133,9 +128,6 @@ const styles = StyleSheet.create({
     price: {
         color: 'gray',
         marginTop: SPACING.xs,
-    },
-    loader: {
-        marginVertical: SPACING.md,
     },
 
 });
