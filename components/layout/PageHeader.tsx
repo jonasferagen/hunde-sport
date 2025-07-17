@@ -1,8 +1,8 @@
 import { useTheme } from '@/contexts';
-import { FONT_SIZES, SPACING } from '@/styles';
+import { SPACING } from '@/styles';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { CustomText } from '../ui';
+import { Heading } from '../ui';
 
 interface PageHeaderProps {
     title?: string;
@@ -15,7 +15,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, children }) => {
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.card }]}>
             <View style={styles.innerContainer}>
-                {title && <CustomText style={[styles.title, { color: theme.colors.text }]}>{title}</CustomText>}
+                <Heading title={title} />
                 {children}
             </View>
         </View>
@@ -31,9 +31,5 @@ const styles = StyleSheet.create({
     innerContainer: {
         gap: SPACING.sm,
     },
-    title: {
-        fontSize: FONT_SIZES.xl,
-        fontWeight: 'bold',
-        marginBottom: SPACING.md,
-    },
+
 });

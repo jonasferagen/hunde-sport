@@ -2,7 +2,7 @@ import { BORDER_RADIUS, SPACING } from '@/styles';
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import { DimensionValue, ImageBackground, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
-import { CustomText } from '../customtext/CustomText';
+import { CustomText } from '../text/CustomText';
 
 export interface BaseTileProps {
     name: string;

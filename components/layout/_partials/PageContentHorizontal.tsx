@@ -1,3 +1,4 @@
+import { Heading } from '@/components/ui';
 import { SPACING } from '@/styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatePresence, View as MotiView } from 'moti';
@@ -10,7 +11,7 @@ import {
   View,
   ViewProps
 } from 'react-native';
-import { PageContentTitle } from './PageContentTitle';
+
 
 interface PageContentHorizontalProps extends ViewProps {
   title?: string;
@@ -33,7 +34,7 @@ export const PageContentHorizontal = ({ title = undefined, children, style, ...p
 
   return (
     <View style={[styles.horizontalContainer, style]}>
-      <PageContentTitle title={title} />
+      <Heading title={title} style={{ marginBottom: SPACING.md }} />
       <View>
         <AnimatePresence>
           {showLeftGradient && (

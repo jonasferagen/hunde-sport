@@ -3,7 +3,6 @@ import { Text, TextProps } from 'react-native';
 
 import { FONT_FAMILY, FONT_SIZES } from '@/styles/Typography';
 
-
 export interface CustomTextProps extends TextProps {
     size?: keyof typeof FONT_SIZES;
     bold?: boolean;

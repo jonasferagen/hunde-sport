@@ -37,12 +37,12 @@ export interface Product {
   categories: Category[];
   images: Image[];
   tags: Tag[];
-  attributes: Attribute[];
+  attributes: ProductAttribute[];
   variations: number[];
   related_ids: number[];
 }
 
-export interface Attribute {
+export interface ProductAttribute {
   id: number;
   name: string;
   slug: string;

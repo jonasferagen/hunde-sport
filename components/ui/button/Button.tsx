@@ -2,8 +2,8 @@ import { useTheme } from '@/contexts/ThemeProvider';
 import { FONT_SIZES } from '@/styles';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { CustomText } from '../customtext/CustomText';
 import { Icon, ValidIcon } from '../icon/Icon';
+import { CustomText } from '../text/CustomText';
 
 export interface ButtonProps {
     onPress?: () => void;

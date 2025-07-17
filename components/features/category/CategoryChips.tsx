@@ -1,5 +1,5 @@
 import { CategoryChip, Chip } from "@/components/ui/";
-import { SPACING } from "@/styles/Dimensions";
+import { ChipContainer } from "@/components/ui/chips/ChipContainer";
 import { Category } from "@/types";
 import { useState } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
@@ -18,14 +18,10 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
 
-
-    console.log("fetching", isFetchingNextPage);
-
     return (
         categories.length > 0 ? (
             <View style={[styles.container, style]}>
-                <View style={styles.listContainer}>
-
+                <ChipContainer gap='xs'>
                     {displayedCategories.map((category) => (
                         <CategoryChip key={category.id} category={category} />
                     ))}
@@ -50,7 +46,7 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
                             )}
                         </>
                     )}
-                </View>
+                </ChipContainer>
             </View>
         ) : null
     );
@@ -59,12 +55,5 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
 const styles = StyleSheet.create({
     container: {
         alignItems: 'flex-start',
-    },
-    listContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'flex-start',
-        gap: SPACING.xs,
-
     },
 });

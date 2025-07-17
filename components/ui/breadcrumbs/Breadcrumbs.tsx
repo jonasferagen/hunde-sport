@@ -1,6 +1,6 @@
 import { routes } from '@/config/routes';
-import { CustomText } from '../customtext/CustomText';
 import { Icon } from '../icon/Icon';
+import { CustomText } from '../text/CustomText';
 
 import { useBreadcrumbs } from '@/contexts';
 import { SPACING } from '@/styles';

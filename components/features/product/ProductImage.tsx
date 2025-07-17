@@ -1,7 +1,6 @@
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS } from '@/styles';
-import { Theme } from '@/styles/Theme';
-import { Image as ProductImageType } from '@/types';
+import { Image as ProductImageType, Theme } from '@/types';
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';

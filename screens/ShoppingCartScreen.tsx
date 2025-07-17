@@ -117,7 +117,6 @@ export const ShoppingCartScreen = () => {
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
                 )}
             </PageSection>
-
         </PageView >
     );
 }

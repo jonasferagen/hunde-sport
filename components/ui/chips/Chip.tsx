@@ -2,7 +2,7 @@ import { useTheme } from '@/contexts/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
-import { CustomText, CustomTextProps } from '../customtext/CustomText';
+import { CustomText, CustomTextProps } from '../text/CustomText';
 
 interface ChipProps {
     label: string;

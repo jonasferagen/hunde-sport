@@ -2,7 +2,7 @@ import { FONT_SIZES } from '@/styles';
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { CustomText } from '../customtext/CustomText';
+import { CustomText } from '../text/CustomText';
 
 export const ValidIcon = {
     add: 'plus',
