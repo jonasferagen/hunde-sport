@@ -4,11 +4,10 @@ import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface LoaderProps {
   size?: 'small' | 'large';
-  color?: string;
   style?: ViewStyle;
 }
 
-export const Loader = ({ size = 'large', color, style }: LoaderProps) => {
+export const Loader = ({ size = 'small', style }: LoaderProps) => {
   const { theme } = useTheme();
   const { type } = usePageContent();
   const loaderColor = theme.textOnColor[type];
@@ -23,7 +22,6 @@ export const Loader = ({ size = 'large', color, style }: LoaderProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

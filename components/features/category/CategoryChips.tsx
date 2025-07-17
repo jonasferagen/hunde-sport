@@ -1,4 +1,4 @@
-import { CategoryChip, Chip } from "@/components/ui/";
+import { CategoryChip, Chip, Loader } from "@/components/ui/";
 import { ChipContainer } from "@/components/ui/chips/ChipContainer";
 import { Category } from "@/types";
 import { useState } from "react";
@@ -18,6 +18,8 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
 
+
+
     return (
         categories.length > 0 ? (
             <View style={[styles.container, style]}>
@@ -25,7 +27,7 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
                     {displayedCategories.map((category) => (
                         <CategoryChip key={category.id} category={category} />
                     ))}
-                    {isFetchingNextPage && <Chip label="Laster..." />}
+                    {isFetchingNextPage && <Loader />}
                     {!showAll && limit && categories.length > limit && (
                         <Chip
                             label={`Mer..(${categories.length - limit})`}
@@ -36,7 +38,6 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
 
                     {showAll && (
                         <>
-
                             {limit && (
                                 <Chip
                                     label={"Skjul.."}
