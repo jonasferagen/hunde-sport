@@ -1,6 +1,5 @@
 import { PageContentProvider, useTheme } from '@/contexts';
 import { SPACING } from '@/styles';
-import { Theme } from '@/types';
 import React from 'react';
 import { StyleSheet, ViewProps } from 'react-native';
 import { PageContentHorizontal } from './_partials/PageContentHorizontal';
@@ -18,16 +17,19 @@ interface PageContentProps extends ViewProps {
   accent?: boolean;
 }
 
-export const PageContent = ({ children, flex, gap = 'md', paddingVertical = 'md', paddingHorizontal = 'md', style, horizontal, primary = false, secondary = false, accent = false, ...props }: PageContentProps) => {
-  const { theme } = useTheme();
-  const styles = createStyles(theme);
+export const PageContent = ({ children, flex, gap = 'md', paddingVertical = 'md', paddingHorizontal = 'md', horizontal, primary = false, secondary = false, accent = false, ...props }: PageContentProps) => {
+  const { theme, _theme } = useTheme();
+
   const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
+  const variant = _theme[type];
+  const styles = createStyles(variant);
+
+
 
   const computedStyle = [
     { paddingHorizontal: paddingHorizontal ? SPACING[paddingHorizontal] : 0 },
     { paddingVertical: paddingVertical ? SPACING[paddingVertical] : 0 },
-    styles[type],
-    style
+    styles.container,
   ];
 
   const content = (
@@ -51,16 +53,11 @@ export const PageContent = ({ children, flex, gap = 'md', paddingVertical = 'md'
   );
 };
 
-const createStyles = (theme: Theme) => StyleSheet.create({
-  primary: {
-    backgroundColor: theme.colors.primary,
+const createStyles = (variant: any) => StyleSheet.create({
+  container: {
+    backgroundColor: variant.backgroundColor,
+    borderColor: variant.borderColor,
+    borderWidth: 1,
   },
-  secondary: {
-    backgroundColor: theme.colors.secondary,
-  },
-  accent: {
-    backgroundColor: theme.colors.accent,
-  },
-  default: {},
 });
 

@@ -1,4 +1,4 @@
-import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageSection, PageView } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
@@ -32,15 +32,16 @@ const ShoppingCartListItem = React.memo(({ item, onUpdateQuantity, onRemove }: S
 
     return (
         <Animated.View style={[styles.cartItem, { opacity }]} >
-
-            <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
-
-            <Link href={routes.product(item.product)} asChild style={styles.productInfoContainer}>
-                <View style={styles.productInfo}>
-                    <CustomText bold>{item.product.name}</CustomText>
-                    <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
-                </View>
+            <Link href={routes.product(item.product)} asChild>
+                <Pressable style={styles.productLink}>
+                    <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
+                    <View style={styles.productInfo}>
+                        <CustomText bold>{item.product.name}</CustomText>
+                        <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
+                    </View>
+                </Pressable>
             </Link>
+
             <View style={styles.quantityContainer}>
                 <Pressable
                     onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
@@ -103,11 +104,7 @@ export const ShoppingCartScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
-            <PageSection>
-                <PageContent secondary paddingVertical='sm'>
-                    <CustomText size="lg">Handlekurv</CustomText>
-                </PageContent>
-            </PageSection>
+
             <PageSection flex style={styles.cartSection}>
                 <FlatList
                     data={items}
@@ -132,10 +129,11 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         padding: SPACING.sm,
         gap: SPACING.md
     },
-    productPressable: {
+    productLink: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        flex: 1,
+        gap: SPACING.md,
     },
     cartSection: {
         paddingHorizontal: 0,
@@ -147,15 +145,10 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         borderWidth: 1,
         borderColor: theme.colors.border,
     },
-    productInfoContainer: {
-        flex: 1,
-
-    },
     productInfo: {
         flex: 1,
         justifyContent: 'center',
     },
-
     productPrice: {
         color: theme.colors.textSecondary,
     },
@@ -163,14 +156,16 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: 70,
+        width: 70
     },
     quantity: {
         textAlign: 'center',
     },
     removeButton: {
-        paddingRight: SPACING.md, // Add some space before the button
+        justifyContent: 'center',
+        alignItems: 'center',
     },
+
     summaryContainer: {
         padding: SPACING.md,
         borderTopWidth: 1,

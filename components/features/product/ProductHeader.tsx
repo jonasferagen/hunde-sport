@@ -20,6 +20,7 @@ const AddProductToShoppingCartButton = ({ product, displayProduct }: { product: 
     return (
         <Button
             variant="primary"
+            icon="addToCart"
             title="Legg til i handlekurv"
             onPress={() => addToCart(displayProduct)}
         />

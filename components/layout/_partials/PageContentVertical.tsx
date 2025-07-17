@@ -6,8 +6,10 @@ interface PageContentVerticalProps extends ViewProps {
 }
 
 export const PageContentVertical = ({ children, style, ...props }: PageContentVerticalProps) => {
+
+
   return (
-    <View style={style} {...props}>
+    <View style={[style]} {...props}>
       {Children.toArray(children).filter(child => Boolean(child))}
     </View>
   );
