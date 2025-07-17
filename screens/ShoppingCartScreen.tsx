@@ -1,4 +1,4 @@
-import { ShoppingCartListItem } from '@/components/features/cart/ShoppingCartListItem';
+import { ShoppingCartListItem } from '@/components/features/shoppingCart/ShoppingCartListItem';
 import { PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, CustomText } from '@/components/ui';
@@ -26,8 +26,8 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
     return (
         <View style={styles.summaryContainer}>
             <View style={styles.summaryRow}>
-                <CustomText bold size='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
-                <CustomText bold size='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
+                <CustomText bold fontSize='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
+                <CustomText bold fontSize='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
             </View>
             <View style={styles.buttonContainer}>
                 <Button title="Tøm handlekurv" icon="emptyCart" variant="secondary" onPress={onClearCart} />

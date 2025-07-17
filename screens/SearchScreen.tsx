@@ -54,7 +54,7 @@ export const SearchScreen = () => {
 
                 />
                 {initialQuery ? (
-                    <CustomText size="md" style={{ marginTop: SPACING.md }}>{`Søkeresultater for "${initialQuery}"`}</CustomText>
+                    <CustomText fontSize="md" style={{ marginTop: SPACING.md }}>{`Søkeresultater for "${initialQuery}"`}</CustomText>
                 ) : null}
             </PageHeader>
             <PageSection flex>

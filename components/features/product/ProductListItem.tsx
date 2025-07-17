@@ -6,7 +6,7 @@ import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { LayoutChangeEvent } from 'react-native';
-import { QuantityControl } from '../cart/QuantityControl';
+import { QuantityControl } from '../shoppingCart/QuantityControl';
 
 interface ProductListItemProps {
     product: Product;

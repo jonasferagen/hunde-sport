@@ -11,7 +11,7 @@ interface ProductDetailsProps {
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
     return (
         <>
-            <CustomText size="sm">{product.description}</CustomText>
+            <CustomText fontSize="sm">{product.description}</CustomText>
             {product.attributes
                 .filter(attr => !attr.variation)
                 .map(attribute => (

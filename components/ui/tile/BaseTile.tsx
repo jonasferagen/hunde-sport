@@ -46,14 +46,14 @@ export const BaseTile = ({
             >
                 {topRightText && (
                     <View style={[styles.topRightContainer, { backgroundColor: mainColor }]}>
-                        <CustomText size="sm" style={styles.topRightText}>{topRightText}</CustomText>
+                        <CustomText fontSize="sm" style={styles.topRightText}>{topRightText}</CustomText>
                     </View>
                 )}
                 <LinearGradient
                     colors={[rgba(mainColor, .7), rgba(mainColor, 1)]}
                     style={[styles.gradient, { minHeight: gradientMinHeight }]}
                 >
-                    <CustomText size={textSize as any} style={[styles.name, { color: textColor }]} numberOfLines={nameNumberOfLines}>{name}</CustomText>
+                    <CustomText fontSize={textSize as any} style={[styles.name, { color: textColor }]} numberOfLines={nameNumberOfLines}>{name}</CustomText>
                 </LinearGradient>
             </ImageBackground>
         </TouchableOpacity>

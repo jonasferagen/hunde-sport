@@ -4,12 +4,13 @@ import { Text, TextProps } from 'react-native';
 import { FONT_FAMILY, FONT_SIZES } from '@/styles/Typography';
 
 export interface CustomTextProps extends TextProps {
-    size?: keyof typeof FONT_SIZES;
+    fontSize?: keyof typeof FONT_SIZES;
     bold?: boolean;
+    color?: string;
 }
 
 export const CustomText = (props: CustomTextProps) => {
-    const { size = 'md', bold = false, style, children, ...rest } = props;
+    const { fontSize: size = 'md', bold = false, color, style, children, ...rest } = props;
 
     if (!children) {
         return null;
@@ -18,7 +19,8 @@ export const CustomText = (props: CustomTextProps) => {
     const textStyle = React.useMemo(() => ({
         fontSize: FONT_SIZES[size],
         fontFamily: bold ? FONT_FAMILY.bold : FONT_FAMILY.regular,
-    }), [size, bold]);
+        color: color || 'black',
+    }), [size, bold, color]);
 
     return <Text style={[textStyle, style]} {...rest}>{children}</Text>
 }

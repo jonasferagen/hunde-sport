@@ -1,5 +1,4 @@
 import { useTheme } from '@/contexts/ThemeProvider';
-import { FONT_SIZES } from '@/styles';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Icon, ValidIcon } from '../icon/Icon';
@@ -16,14 +15,14 @@ export interface ButtonProps {
 
 export const Button = ({ onPress, title = '', icon, variant = 'primary', size = 'md' }: ButtonProps) => {
     const { _theme } = useTheme();
-    const _themeVariant = _theme[variant];
+    const themeVariant = _theme[variant];
     const styles = createStyles(size);
 
     return (
-        <Pressable onPress={onPress} style={[styles.button, { backgroundColor: _themeVariant.backgroundColor, borderColor: _themeVariant.borderColor }]}>
+        <Pressable onPress={onPress} style={[styles.button, { backgroundColor: themeVariant.backgroundColor, borderColor: themeVariant.borderColor }]}>
             <View style={styles.content}>
-                {title && <CustomText style={[styles.text, { color: _themeVariant.color, marginRight: SPACING.sm }]}>{title}</CustomText>}
-                {icon && <Icon name={icon} color={_themeVariant.color} size={'xl'} style={styles.icon} />}
+                {title && <CustomText color={themeVariant.color} style={[{ marginRight: SPACING.sm }]}>{title}</CustomText>}
+                {icon && <Icon name={icon} color={themeVariant.color} size={'xl'} />}
             </View>
         </Pressable>
     );
@@ -31,11 +30,11 @@ export const Button = ({ onPress, title = '', icon, variant = 'primary', size = 
 
 const createStyles = (size: 'sm' | 'md' | 'lg') => StyleSheet.create({
     button: {
-        padding: SPACING[size as keyof typeof SPACING],
-        borderRadius: BORDER_RADIUS[size as keyof typeof BORDER_RADIUS],
+        padding: SPACING[size],
+        borderRadius: BORDER_RADIUS[size],
         alignItems: 'center',
         justifyContent: 'center',
-
+        borderWidth: 1,
     },
     content: {
         flexDirection: 'row',
@@ -43,13 +42,7 @@ const createStyles = (size: 'sm' | 'md' | 'lg') => StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%'
     },
-    icon: {
 
-    },
-    text: {
-        fontSize: FONT_SIZES[size as keyof typeof FONT_SIZES],
-        fontWeight: '600',
-    },
 });
 
 export default Button;

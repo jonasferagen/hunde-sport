@@ -10,17 +10,14 @@ export default function TabsLayout() {
     return (
         <Tabs
             screenOptions={{
-                headerStyle: {
-                    backgroundColor: 'theme.colors.card',
-                },
-                headerTintColor: theme.colors.text,
+
                 tabBarStyle: {
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.secondary,
                     borderTopWidth: 2,
-                    borderTopColor: darken(theme.colors.primary, 10),
+                    borderTopColor: darken(theme.colors.secondary, 10),
                 },
-                tabBarActiveTintColor: theme.textOnColor.primary,
-                tabBarInactiveTintColor: theme.textOnColor.primary,
+                tabBarActiveTintColor: theme.colors.text,
+                tabBarInactiveTintColor: theme.textOnColor.secondary,
                 tabBarShowLabel: true,
                 headerShown: false,
             }}>

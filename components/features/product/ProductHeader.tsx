@@ -35,7 +35,7 @@ export const ProductHeader = ({
 
     return (
         <>
-            <CustomText size="xxl" bold>
+            <CustomText fontSize="xxl" bold>
                 {formatPrice(displayProduct.price)}
             </CustomText>
             {product.attributes
@@ -50,7 +50,7 @@ export const ProductHeader = ({
                         />
                     );
                 })}
-            <CustomText size="sm" >{product.short_description}</CustomText>
+            <CustomText fontSize="sm" >{product.short_description}</CustomText>
             <AddProductToShoppingCartButton product={product} displayProduct={displayProduct} />
 
         </>
