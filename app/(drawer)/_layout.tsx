@@ -4,6 +4,7 @@ import { FONT_FAMILY, FONT_SIZES } from '@/styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -46,17 +47,44 @@ export default function DrawerLayout() {
                 headerTintColor: theme.colors.text,
                 headerShadowVisible: false,
                 headerTitle: 'HundeSport.no',
+                drawerActiveBackgroundColor: theme.colors.secondary,
+                drawerActiveTintColor: theme.colors.primary,
+                drawerInactiveTintColor: theme.colors.text,
+                drawerLabelStyle: {
+                    fontFamily: FONT_FAMILY.regular,
+                    fontSize: FONT_SIZES.md,
+                },
             }}>
+
             <Drawer.Screen
-                name="(tabs)"
+                name="(tabs)" // This is the actual navigator, now hidden
+                options={{ drawerItemStyle: { display: 'none' } }}
+            />
+
+            <Drawer.Screen
+                name="_home" // This is a dummy screen for the drawer item
                 options={{
                     title: 'Hjem',
+                    drawerIcon: ({ color, size }) => <MaterialIcons name="home" color={color} size={size} />
+                }}
+                listeners={{
+                    drawerItemPress: (e) => {
+                        e.preventDefault();
+                        router.push('/(drawer)/(tabs)');
+                    }
                 }}
             />
             <Drawer.Screen
-                name="_shoppingCart"
+                name="_shoppingCart" // This is a dummy screen for the drawer item
                 options={{
                     title: 'Handlekurv',
+                    drawerIcon: ({ color, size }) => <MaterialIcons name="shopping-cart" color={color} size={size} />
+                }}
+                listeners={{
+                    drawerItemPress: (e) => {
+                        e.preventDefault();
+                        router.push('/(drawer)/(tabs)/shoppingCart');
+                    }
                 }}
             />
         </Drawer>
