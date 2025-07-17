@@ -8,9 +8,10 @@ import { Icon, ValidIcon } from '../icon/Icon';
 
 export interface ButtonProps {
     onPress?: () => void;
-    title: string;
+    title?: string;
     icon?: keyof typeof ValidIcon;
     variant?: 'primary' | 'secondary' | 'accent';
+    size?: 'sm' | 'md' | 'lg';
 };
 
 const createVariantStyles = (theme: Theme) => ({
@@ -28,26 +29,26 @@ const createVariantStyles = (theme: Theme) => ({
     },
 });
 
-export const Button = ({ onPress, title, icon, variant = 'primary' }: ButtonProps) => {
+export const Button = ({ onPress, title = '', icon, variant = 'primary', size = 'md' }: ButtonProps) => {
     const { theme } = useTheme();
     const variantStyles = createVariantStyles(theme);
     const stylesForVariant = variantStyles[variant];
+    const styles = createStyles(size);
 
     return (
         <Pressable onPress={onPress} style={[styles.button, { backgroundColor: stylesForVariant.backgroundColor }]}>
             <View style={styles.content}>
-                <CustomText style={[styles.text, { color: stylesForVariant.color }]}>{title}</CustomText>
+                {title && <CustomText style={[styles.text, { color: stylesForVariant.color }]}>{title}</CustomText>}
                 {icon && <Icon name={icon} color={stylesForVariant.color} size={'xl'} style={styles.icon} />}
             </View>
         </Pressable>
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (size: 'sm' | 'md' | 'lg') => StyleSheet.create({
     button: {
-        paddingVertical: SPACING.md,
-        paddingHorizontal: SPACING.lg,
-        borderRadius: BORDER_RADIUS.md,
+        padding: SPACING[size as keyof typeof SPACING],
+        borderRadius: BORDER_RADIUS[size as keyof typeof BORDER_RADIUS],
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -56,10 +57,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     icon: {
-        marginLeft: SPACING.md,
+
     },
     text: {
-        fontSize: FONT_SIZES.lg,
+        fontSize: FONT_SIZES[size as keyof typeof FONT_SIZES],
         fontWeight: '600',
     },
 });

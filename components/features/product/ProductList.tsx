@@ -1,4 +1,4 @@
-import { CustomText, Icon, Loader } from '@/components/ui';
+import { Button, CustomText, Loader } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { usePageContent } from '@/contexts/PageContentContext';
@@ -57,9 +57,7 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
                 <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>
             </View>
             <Pressable onPress={() => addToCart(product)} style={styles.addToCartButton}>
-                <View className="justify-center" style={{ borderWidth: 1, borderColor: 'red' }}>
-                    <Icon name="addToCart" color="black" />
-                </View>
+                <Button variant="secondary" icon="addToCart" size="md" />
             </Pressable>
         </View>
     );
