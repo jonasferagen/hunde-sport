@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#E0E0E0', // A light separator line
     },
     innerContainer: {
-
+        gap: SPACING.sm,
     },
     title: {
         fontSize: FONT_SIZES.xl,

@@ -1,6 +1,5 @@
 import { useTheme } from '@/contexts/ThemeProvider';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
-import { Theme } from '@/types';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { CustomText, CustomTextProps } from '../customtext/CustomText';
@@ -14,8 +13,9 @@ interface ChipProps {
 }
 
 export const Chip = ({ label, onPress, variant = 'default', style, textProps }: ChipProps) => {
-    const { theme } = useTheme();
-    const styles = createStyles(theme, variant);
+    const { theme, _theme } = useTheme();
+    const _themeVariant = _theme[variant];
+    const styles = createStyles(_themeVariant);
 
     const chipStyle = [
         styles.chip,
@@ -36,13 +36,14 @@ export const Chip = ({ label, onPress, variant = 'default', style, textProps }: 
     );
 };
 
-const createStyles = (theme: Theme, variant: ChipProps['variant']) => {
-    const backgroundColor = variant === 'default' ? theme.colors.card : theme.colors[variant!];
-    const textColor = variant === 'default' ? theme.colors.text : theme.textOnColor[variant!];
+const createStyles = (themeVariant: any) => {
+
 
     return StyleSheet.create({
         chip: {
-            backgroundColor: backgroundColor,
+            backgroundColor: themeVariant.backgroundColor,
+            borderColor: themeVariant.borderColor,
+            borderWidth: 1,
             paddingVertical: SPACING.xs,
             paddingHorizontal: SPACING.sm,
             borderRadius: BORDER_RADIUS.sm,
@@ -50,7 +51,7 @@ const createStyles = (theme: Theme, variant: ChipProps['variant']) => {
             alignItems: 'center',
         },
         text: {
-            color: textColor,
+            color: themeVariant.color,
             fontSize: FONT_SIZES.sm,
             textAlign: 'center',
         },

@@ -14,7 +14,7 @@ export const CategoryChip = ({ category }: CategoryChipProps) => {
         <Link href={routes.category(category)} asChild>
             <Chip
                 label={category.name}
-                variant="default"
+                variant="secondary"
             />
         </Link>
     );
