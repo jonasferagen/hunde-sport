@@ -63,6 +63,12 @@ export interface ShoppingCartItem {
   quantity: number;
 }
 
+export interface StyleVariant {
+  backgroundColor: string;
+  color: string;
+  borderColor: string;
+}
+
 export interface Theme {
   readonly colors: {
     readonly primary: string;
@@ -100,25 +106,6 @@ export interface Theme {
   };
 }
 
-export interface _Theme {
-  primary: {
-    backgroundColor: string;
-    color: string;
-    borderColor: string;
-  },
-  secondary: {
-    backgroundColor: string;
-    color: string;
-    borderColor: string;
-  },
-  accent: {
-    backgroundColor: string;
-    color: string;
-    borderColor: string;
-  },
-  default: {
-    backgroundColor: string;
-    color: string;
-    borderColor: string;
-  },
+export class ThemeManager {
+  // Add implementation here
 }

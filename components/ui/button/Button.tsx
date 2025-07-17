@@ -8,14 +8,14 @@ export interface ButtonProps {
     onPress?: () => void;
     title?: string;
     icon?: keyof typeof ValidIcon;
-    variant?: 'primary' | 'secondary' | 'accent';
+    variant?: 'primary' | 'secondary' | 'accent' | 'default';
     size?: 'sm' | 'md' | 'lg';
 };
 
 
-export const Button = ({ onPress, title = '', icon, variant = 'primary', size = 'md' }: ButtonProps) => {
-    const { _theme } = useTheme();
-    const themeVariant = _theme[variant];
+export const Button = ({ onPress, title = undefined, icon, variant = 'primary', size = 'md' }: ButtonProps) => {
+    const { themeManager } = useTheme();
+    const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(size);
 
     return (

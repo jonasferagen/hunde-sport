@@ -1,5 +1,4 @@
-
 export * from './Dimensions';
-export { darkTheme, lightTheme } from './Theme';
+export { palette, theme, themeManager, ThemeManager } from './Theme';
 export * from './Typography';
 

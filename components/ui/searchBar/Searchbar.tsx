@@ -13,10 +13,10 @@ export interface SearchBarProps {
 
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onQueryChange, onSubmit }, ref) => {
     const [query, setQuery] = useState(initialQuery || '');
-    const { theme, _theme } = useTheme();
+    const { theme, themeManager } = useTheme();
 
-    const _themeVariant = _theme.default;
-    const styles = createStyles(_themeVariant);
+    const themeVariant = themeManager.getVariant('default');
+    const styles = createStyles(themeVariant);
 
     useEffect(() => {
         if (initialQuery !== undefined) {
@@ -44,17 +44,17 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 onSubmitEditing={handleSearch}
             />
             <Pressable onPress={handleSearch} style={styles.button} disabled={!query.trim()}>
-                <Icon name="search" size='xl' color={_themeVariant.color} />
+                <Icon name="search" size='xl' color={themeVariant.color} />
             </Pressable>
         </View>
     );
 });
 
-const createStyles = (_themeVariant: any) => StyleSheet.create({
+const createStyles = (themeVariant: { backgroundColor: string; color: string; borderColor: string; }) => StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: _themeVariant.backgroundColor,
+        backgroundColor: themeVariant.backgroundColor,
         borderRadius: BORDER_RADIUS.sm,
         paddingHorizontal: SPACING.sm,
     },

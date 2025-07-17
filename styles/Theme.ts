@@ -1,7 +1,7 @@
-import { _Theme, Theme } from '@/types';
+import { StyleVariant, Theme } from '@/types';
 import { darken } from '@/utils/helpers';
 
-const palette = {
+export const palette = {
   primary: '#D7C8E7',
   secondary: '#DDE2C3',
   accent: '#C8E6E5',
@@ -68,26 +68,32 @@ export const theme: Theme = {
   },
 } as const;
 
+export class ThemeManager {
+  public static palette = palette;
+  public static theme = theme;
 
-export const _theme: _Theme = {
-  primary: {
-    backgroundColor: palette.primary,
-    color: darken(palette.primary, 50),
-    borderColor: darken(palette.primary, 10),
-  },
-  secondary: {
-    backgroundColor: palette.secondary,
-    color: darken(palette.secondary, 50),
-    borderColor: darken(palette.secondary, 10),
-  },
-  accent: {
-    backgroundColor: palette.accent,
-    color: darken(palette.accent, 50),
-    borderColor: darken(palette.accent, 10),
-  },
-  default: {
-    backgroundColor: palette.white,
-    color: palette.black,
-    borderColor: darken(palette.grey, 10),
-  },
+  public getVariant(variant: 'primary' | 'secondary' | 'accent' | 'default'): StyleVariant {
+    if (variant === 'default') {
+      return {
+        backgroundColor: ThemeManager.palette.white,
+        color: ThemeManager.palette.black,
+        borderColor: darken(ThemeManager.palette.grey, 10),
+      };
+    }
+    return {
+      backgroundColor: ThemeManager.palette[variant],
+      color: darken(ThemeManager.palette[variant], 50),
+      borderColor: darken(ThemeManager.palette[variant], 10),
+    };
+  }
+
+  public getAlert(variant: 'info' | 'success' | 'error'): StyleVariant {
+    return {
+      backgroundColor: ThemeManager.palette[variant],
+      color: palette.white,
+      borderColor: darken(ThemeManager.palette[variant], 10),
+    };
+  }
 }
+
+export const themeManager = new ThemeManager();

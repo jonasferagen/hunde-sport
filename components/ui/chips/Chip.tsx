@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts/ThemeProvider';
+import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
@@ -14,9 +14,9 @@ interface ChipProps {
 }
 
 export const Chip = ({ label, onPress, variant = 'default', style, textProps, isSelected = false }: ChipProps) => {
-    const { theme, _theme } = useTheme();
-    const _themeVariant = _theme[variant];
-    const styles = createStyles(_themeVariant);
+    const { themeManager } = useTheme();
+    const themeVariant = themeManager.getVariant(variant);
+    const styles = createStyles(themeVariant);
 
     const chipStyle = [
         styles.chip,
@@ -25,7 +25,7 @@ export const Chip = ({ label, onPress, variant = 'default', style, textProps, is
 
     const textStyle = [
         styles.text,
-        textProps,
+        textProps?.style,
     ];
 
     return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextProps } from 'react-native';
+import { StyleProp, Text, TextProps, TextStyle } from 'react-native';
 
 import { FONT_FAMILY, FONT_SIZES } from '@/styles/Typography';
 
@@ -7,6 +7,7 @@ export interface CustomTextProps extends TextProps {
     fontSize?: keyof typeof FONT_SIZES;
     bold?: boolean;
     color?: string;
+    style?: StyleProp<TextStyle>;
 }
 
 export const CustomText = (props: CustomTextProps) => {

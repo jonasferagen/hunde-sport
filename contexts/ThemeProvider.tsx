@@ -1,10 +1,10 @@
-import { _theme, theme } from '@/styles/Theme';
-import { _Theme, Theme } from '@/types';
+import { theme, themeManager, ThemeManager } from '@/styles/Theme';
+import { Theme } from '@/types';
 import React, { createContext, useContext } from 'react';
 
 type ThemeContextType = {
     theme: Theme;
-    _theme: _Theme;
+    themeManager: ThemeManager;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -13,7 +13,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 
     return (
-        <ThemeContext.Provider value={{ theme, _theme }}>
+        <ThemeContext.Provider value={{ theme, themeManager }}>
             {children}
         </ThemeContext.Provider>
     );

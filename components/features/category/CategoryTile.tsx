@@ -7,17 +7,19 @@ interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 't
 }
 
 export const CategoryTile = ({ category, ...rest }: CategoryTileProps) => {
-    const { theme } = useTheme();
+    const { themeManager } = useTheme();
 
     if (!category.image) {
         return null;
     }
 
+    const themeVariant = themeManager.getVariant('primary');
+
     return (
         <BaseTile
             name={category.name}
             imageUrl={category.image.src}
-            mainColor={theme.colors.primary}
+            mainColor={themeVariant.backgroundColor}
             {...rest}
         />
     );
