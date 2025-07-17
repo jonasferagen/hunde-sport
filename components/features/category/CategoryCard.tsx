@@ -1,5 +1,5 @@
 import { CategoryTile } from '@/components/ui';
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { Category } from '@/types';
 import { Link } from 'expo-router';
 import React from 'react';
@@ -12,7 +12,7 @@ interface CategoryCardProps {
 
 export const CategoryCard = ({ category, style }: CategoryCardProps) => {
     return (
-        <Link href={_routes.category(category)} asChild>
+        <Link href={routes.category(category)} asChild>
             <CategoryTile
                 category={category}
                 height={200}

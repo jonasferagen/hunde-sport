@@ -1,6 +1,6 @@
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { Button, CustomText, Icon } from '@/components/ui';
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
@@ -35,7 +35,7 @@ const ShoppingCartListItem = React.memo(({ item, onUpdateQuantity, onRemove }: S
 
             <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
 
-            <Link href={_routes.product(item.product)} asChild style={styles.productInfoContainer}>
+            <Link href={routes.product(item.product)} asChild style={styles.productInfoContainer}>
                 <View style={styles.productInfo}>
                     <CustomText bold>{item.product.name}</CustomText>
                     <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
@@ -78,7 +78,7 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
             </View>
             <View style={styles.buttonContainer}>
                 <Button title="Tøm handlekurv" icon="emptyCart" variant="secondary" onPress={onClearCart} />
-                <Link href={_routes.checkout()} asChild>
+                <Link href={routes.checkout()} asChild>
                     <Button title="Gå til kassen" icon="checkout" variant="primary" />
                 </Link>
             </View>

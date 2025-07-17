@@ -1,6 +1,6 @@
 import { Category, Product } from '@/types';
 
-export const paths = {
+const paths = {
     home: '/',
     shoppingCart: '/shoppingCart',
     search: '/search',
@@ -11,7 +11,7 @@ export const paths = {
 
 
 
-export const _routes = {
+export const routes = {
     home: () => {
         return paths.home;
     },

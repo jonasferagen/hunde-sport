@@ -1,5 +1,5 @@
 import { ProductTile } from "@/components/ui/";
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { Product } from "@/types";
 import { Link } from 'expo-router';
 import React from 'react';
@@ -11,7 +11,7 @@ interface ProductCardProps {
 export const ProductCard = ({ product }: ProductCardProps) => {
 
     return (
-        <Link href={_routes.product(product)} asChild>
+        <Link href={routes.product(product)} asChild>
             <ProductTile
                 product={product}
                 width={200}

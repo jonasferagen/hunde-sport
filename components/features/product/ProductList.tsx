@@ -1,5 +1,5 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { usePageContent } from '@/contexts/PageContentContext';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
@@ -16,7 +16,7 @@ interface RenderProductProps {
 }
 
 const RenderProduct = memo(({ item }: RenderProductProps) => (
-    <Link href={_routes.product(item)} key={item.id} asChild>
+    <Link href={routes.product(item)} key={item.id} asChild>
         <TouchableOpacity style={styles.itemContainer}>
             <ProductListItem product={item} />
         </TouchableOpacity>

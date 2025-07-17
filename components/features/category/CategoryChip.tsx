@@ -1,4 +1,4 @@
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { Category } from '@/types';
 import { Link } from 'expo-router';
 import React from 'react';
@@ -11,7 +11,7 @@ interface CategoryChipProps {
 export const CategoryChip = ({ category }: CategoryChipProps) => {
 
     return (
-        <Link href={_routes.category(category)} asChild>
+        <Link href={routes.category(category)} asChild>
             <Chip
                 label={category.name}
                 variant="default"

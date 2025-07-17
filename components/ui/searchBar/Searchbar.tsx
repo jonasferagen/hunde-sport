@@ -1,4 +1,4 @@
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { Theme } from '@/types';
@@ -39,7 +39,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                     <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
                 </Pressable>
             ) : (
-                <Link href={_routes.search(query)} asChild disabled={!query.trim()}>
+                <Link href={routes.search(query)} asChild disabled={!query.trim()}>
                     <Pressable style={styles.button}>
                         <Icon name="search" size='xl' color={theme.textOnColor.secondary} />
                     </Pressable>

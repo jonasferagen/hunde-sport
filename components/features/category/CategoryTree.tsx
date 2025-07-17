@@ -1,5 +1,5 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { useBreadcrumbs, useTheme } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
@@ -37,7 +37,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
             <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
                 <View style={styles.itemContainer}>
-                    <Link href={_routes.category(category)} asChild>
+                    <Link href={routes.category(category)} asChild>
                         <Pressable style={styles.categoryInfo}>
                             <CategoryIcon image={category.image} size='xl' color={color} />
                             <CustomText style={[styles.categoryText, { color }, isActive && styles.activeCategoryText]}>{category.name} ({category.count})</CustomText>

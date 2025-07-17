@@ -1,4 +1,4 @@
-import { _routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { CustomText } from '../customtext/CustomText';
 import { Icon } from '../icon/Icon';
 
@@ -32,7 +32,7 @@ export const Breadcrumbs = ({ category, product }: BreadcrumbsProps) => {
                 {categories.map((category, index) => (
                     <React.Fragment key={category.id}>
                         <Link
-                            href={_routes.category(category)}
+                            href={routes.category(category)}
                             asChild
                         >
                             <Pressable style={styles.crumbContainer}>
