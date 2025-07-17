@@ -4,10 +4,11 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
+import { useBreadcrumbs } from '@/contexts';
 import { useCategories, useCategory } from '@/hooks/Category';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 
 
 const CategoryListArea = ({ category }: { category: Category }) => {
@@ -21,6 +22,13 @@ const CategoryListArea = ({ category }: { category: Category }) => {
 export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
     const { category, isLoading } = useCategory(Number(id));
+    const { build } = useBreadcrumbs();
+
+    useEffect(() => {
+        if (category) {
+            build(category.id);
+        }
+    }, [category, build]);
 
 
     if (isLoading || !category) {
@@ -31,7 +39,7 @@ export const CategoryScreen = memo(() => {
         <PageView>
             <Stack.Screen options={{ title: category.name }} />
             <PageHeader key={category.id}>
-                <Breadcrumbs category={category} />
+                <Breadcrumbs />
                 <CategoryListArea category={category} />
             </PageHeader>
             <PageSection flex>

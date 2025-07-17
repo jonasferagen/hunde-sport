@@ -4,33 +4,20 @@ import { Icon } from '../icon/Icon';
 
 import { useBreadcrumbs } from '@/contexts';
 import { SPACING } from '@/styles';
-import { Category, Product } from '@/types';
 import { Link } from 'expo-router';
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 interface BreadcrumbsProps {
-    category?: Category;
-    product?: Product;
 };
 
-export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) => {
+export const Breadcrumbs = React.memo(() => {
 
-    const { categories, setBreadcrumb } = useBreadcrumbs();
+    const { categories } = useBreadcrumbs();
 
-    const categoryForTrail = useMemo(() => category || product?.categories?.[0], [category, product]);
-
-    useEffect(() => {
-        console.log('categoryForTrail: ' + categoryForTrail?.name);
-
-        if (categoryForTrail) {
-            setBreadcrumb(categoryForTrail);
-        }
-    }, [categoryForTrail, setBreadcrumb]);
-
-
-    console.log("category: " + category?.name + ' ' + "breadcrumbs set: " + categories.map((category) => category.name))
-
+    if (!categories.length) {
+        return null;
+    }
 
     return (
         <View style={styles.container}>
@@ -51,9 +38,6 @@ export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) 
                     </React.Fragment>
                 ))}
             </View>
-            {product && (
-                <CustomText bold style={[styles.crumbText, styles.productText]}>{product.name}</CustomText>
-            )}
         </View>
     );
 });
@@ -80,9 +64,6 @@ const styles = StyleSheet.create({
         marginHorizontal: SPACING.xs,
         top: 0,
     },
-    productText: {
-        marginTop: SPACING.sm,
-    }
 });
 
 export default Breadcrumbs;

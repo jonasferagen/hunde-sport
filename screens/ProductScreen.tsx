@@ -5,8 +5,8 @@ import { ProductImageGallery } from '@/components/features/product/ProductImageG
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Breadcrumbs } from '@/components/ui';
-import { Loader } from '@/components/ui/loader/Loader';
+import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
+import { useBreadcrumbs } from '@/contexts';
 import { useProduct, useProducts } from '@/hooks/Product';
 import { Product } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -23,8 +23,15 @@ export const ProductScreen = () => {
 
   const { products: variations } = useProducts(product?.variations || []);
 
+  const { build } = useBreadcrumbs();
+
   const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
 
+  useEffect(() => {
+    if (product?.categories?.[0]) {
+      build(product.categories[0].id);
+    }
+  }, [product, build]);
 
   useEffect(() => {
     const allOptionsSelected = product?.attributes
@@ -67,13 +74,12 @@ export const ProductScreen = () => {
     return <Loader />;
   }
 
-
-
   return (
     <PageView>
       <Stack.Screen options={{ title: displayProduct.name }} />
       <PageHeader>
-        <Breadcrumbs product={displayProduct} />
+        <Breadcrumbs />
+        <CustomText bold>{displayProduct.name}</CustomText>
       </PageHeader>
       <PageSection scrollable>
         <PageContent>

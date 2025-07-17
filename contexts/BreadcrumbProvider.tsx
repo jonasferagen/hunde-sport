@@ -12,6 +12,7 @@ const useBuildTrail = () => {
 interface BreadcrumbContextType {
     categories: Category[];
     setBreadcrumb: (category: Category) => void;
+    build: (categoryId: number) => void;
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
@@ -45,6 +46,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     const value = {
         categories,
         setBreadcrumb,
+        build,
     };
 
     useEffect(() => {
