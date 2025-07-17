@@ -11,10 +11,10 @@ interface PageHeaderProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children }) => {
     const { themeManager } = useTheme();
-    const themeVariant = themeManager.getVariant('default');
-
+    const themeVariant = themeManager.getVariant('card');
+    const { backgroundColor, borderColor } = themeVariant;
     return (
-        <View style={[styles.container, { backgroundColor: themeVariant.backgroundColor, borderBottomColor: themeVariant.borderColor }]}>
+        <View style={[styles.container, { backgroundColor, borderColor }]}>
             <View style={styles.innerContainer}>
                 <Heading title={title} />
                 {children}

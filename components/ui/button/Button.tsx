@@ -15,9 +15,10 @@ export interface ButtonProps {
 
 export const Button = ({ onPress, title = undefined, icon, variant = 'primary', size = 'md' }: ButtonProps) => {
     const { themeManager } = useTheme();
+
     const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(size);
-    const { backgroundColor, borderColor, text } = themeVariant;
+    let { backgroundColor, borderColor, text } = themeVariant;
 
     return (
         <Pressable onPress={onPress} style={[styles.button, { backgroundColor, borderColor }]}>

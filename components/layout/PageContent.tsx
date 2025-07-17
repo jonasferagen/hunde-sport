@@ -22,8 +22,8 @@ interface PageContentProps extends ViewProps {
 export const PageContent: React.FC<PageContentProps> = ({ children, flex, paddingVertical = 'md', paddingHorizontal = 'md', horizontal, primary = false, secondary = false, accent = false, style, ...props }: PageContentProps) => {
   const { themeManager } = useTheme();
 
-  const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
-  const variant = themeManager.getVariant(type);
+  const styleVariantName = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
+  const variant = themeManager.getVariant(styleVariantName);
   const containerStyle = {
     backgroundColor: variant.backgroundColor,
     borderColor: variant.borderColor,
@@ -38,7 +38,7 @@ export const PageContent: React.FC<PageContentProps> = ({ children, flex, paddin
   ];
 
   const content = (
-    <PageContentProvider value={{ type }}>
+    <PageContentProvider value={{ styleVariantName }}>
       {children}
     </PageContentProvider>
   );

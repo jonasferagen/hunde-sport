@@ -1,4 +1,3 @@
-import { ViewStyle } from 'react-native';
 
 export type ApiResponse<T> = {
   data: T | null;
@@ -72,42 +71,6 @@ export interface StyleVariant {
   readonly borderColor: string;
 }
 
-export interface Theme {
-  readonly colors: {
-    readonly primary: string;
-    readonly secondary: string;
-    readonly accent: string;
-    readonly default: string;
-
-    readonly card: string;
-    readonly text: string;
-    readonly textSecondary: string;
-    readonly border: string;
-    readonly error: string;
-    readonly success: string;
-    readonly info: string;
-  };
-  readonly gradients: {
-    readonly primary: readonly [string, string, ...string[]];
-    readonly secondary: readonly [string, string, ...string[]];
-    readonly accent: readonly [string, string, ...string[]];
-    readonly default: readonly [string, string, ...string[]];
-  };
-  readonly tabs: {
-    readonly active: string;
-    readonly inactive: string;
-  };
-  readonly textOnColor: {
-    readonly primary: string;
-    readonly secondary: string;
-    readonly accent: string;
-    readonly default: string;
-  };
-  readonly styles: {
-    readonly disabled: ViewStyle;
-    readonly shadow: ViewStyle;
-  };
-}
 
 export class ThemeManager {
   // Add implementation here

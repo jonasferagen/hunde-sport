@@ -21,49 +21,12 @@ export const palette = {
   info: '#1976D2', // A standard info blue
 };
 
-export const _theme = {
-  primary: {
-    backgroundColor: palette.primary,
-    text: {
-      primary: darken(palette.primary, 50),
-      secondary: darken(palette.primary, 30),
-    },
-    borderColor: darken(palette.primary, 10),
-  },
-  secondary: {
-    backgroundColor: palette.secondary,
-    text: {
-      primary: darken(palette.secondary, 50),
-      secondary: darken(palette.secondary, 30),
-    },
-    borderColor: darken(palette.secondary, 10),
-  },
-  accent: {
-    backgroundColor: palette.accent,
-    text: {
-      primary: darken(palette.accent, 50),
-      secondary: darken(palette.accent, 30),
-    },
-    borderColor: darken(palette.accent, 10),
-  },
-  default: {
-    backgroundColor: palette.white,
-    text: {
-      primary: palette.black,
-      secondary: palette.darkGrey,
-    },
-    borderColor: darken(palette.grey, 10),
-  },
-  info: {
-    backgroundColor: palette.info,
-    color: palette.white,
-  },
-};
+
 
 export class ThemeManager {
   public static palette = palette;
 
-  private readonly variants: Record<'primary' | 'secondary' | 'accent' | 'default', StyleVariant>;
+  private readonly variants: Record<'primary' | 'secondary' | 'accent' | 'default' | 'card', StyleVariant>;
   private readonly alerts: Record<'info' | 'success' | 'error', StyleVariant>;
 
   constructor() {
@@ -99,6 +62,14 @@ export class ThemeManager {
           secondary: ThemeManager.palette.darkGrey,
         },
         borderColor: darken(ThemeManager.palette.grey, 20),
+      },
+      card: {
+        backgroundColor: ThemeManager.palette.grey,
+        text: {
+          primary: ThemeManager.palette.darkGrey,
+          secondary: ThemeManager.palette.grey,
+        },
+        borderColor: ThemeManager.palette.grey,
       },
     };
 

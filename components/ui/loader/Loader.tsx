@@ -9,8 +9,8 @@ interface LoaderProps {
 
 export const Loader = ({ size = 'small', style }: LoaderProps) => {
   const { themeManager } = useTheme();
-  const { type } = usePageContent();
-  const themeVariant = themeManager.getVariant(type);
+  const { styleVariantName } = usePageContent();
+  const themeVariant = themeManager.getVariant(styleVariantName);
 
   return (
     <View style={[styles.container, style]}>
