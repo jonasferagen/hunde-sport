@@ -1,4 +1,5 @@
 import { PageSection, PageView } from '@/components/layout';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
@@ -104,7 +105,7 @@ export const ShoppingCartScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
-
+            <PageHeader title="Handlekurv" />
             <PageSection flex style={styles.cartSection}>
                 <FlatList
                     data={items}

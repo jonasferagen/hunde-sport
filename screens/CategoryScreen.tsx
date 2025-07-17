@@ -1,6 +1,7 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/product/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
@@ -29,12 +30,10 @@ export const CategoryScreen = memo(() => {
     return (
         <PageView>
             <Stack.Screen options={{ title: category.name }} />
-            <PageSection>
-                <PageContent key={category.id} secondary>
-                    <Breadcrumbs category={category} />
-                    <CategoryListArea category={category} />
-                </PageContent>
-            </PageSection>
+            <PageHeader key={category.id}>
+                <Breadcrumbs category={category} />
+                <CategoryListArea category={category} />
+            </PageHeader>
             <PageSection flex>
                 <PageContent flex paddingHorizontal="none" key={category.id}>
                     <CategoryProducts category={category} />

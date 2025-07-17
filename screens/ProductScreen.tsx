@@ -4,6 +4,7 @@ import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useProduct, useProducts } from '@/hooks/Product';
@@ -71,11 +72,9 @@ export const ProductScreen = () => {
   return (
     <PageView>
       <Stack.Screen options={{ title: displayProduct.name }} />
-      <PageSection>
-        <PageContent>
-          <Breadcrumbs product={displayProduct} />
-        </PageContent>
-      </PageSection>
+      <PageHeader>
+        <Breadcrumbs product={displayProduct} />
+      </PageHeader>
       <PageSection scrollable>
         <PageContent>
 

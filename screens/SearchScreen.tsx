@@ -1,10 +1,12 @@
 import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { CustomText, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
+import { SPACING } from '@/styles';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
@@ -43,19 +45,18 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageSection >
-                <PageContent primary >
-                    <SearchBar
-                        ref={searchInputRef}
-                        initialQuery={initialQuery}
-                        onQueryChange={setLiveQuery}
-                        onSubmit={handleSearch}
-                    />
-                    {initialQuery ? (
-                        <CustomText size="md">{`Søkeresultater for "${initialQuery}"`}</CustomText>
-                    ) : null}
-                </PageContent>
-            </PageSection>
+            <PageHeader title='Produktsøk'>
+                <SearchBar
+                    ref={searchInputRef}
+                    initialQuery={initialQuery}
+                    onQueryChange={setLiveQuery}
+                    onSubmit={handleSearch}
+
+                />
+                {initialQuery ? (
+                    <CustomText size="md" style={{ marginTop: SPACING.md }}>{`Søkeresultater for "${initialQuery}"`}</CustomText>
+                ) : null}
+            </PageHeader>
             <PageSection flex>
                 {initialQuery && <PageContent flex paddingHorizontal="none" paddingVertical="none">
                     {isLoading && <Loader />}

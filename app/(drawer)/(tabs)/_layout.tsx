@@ -22,6 +22,7 @@ export default function TabsLayout() {
                 tabBarActiveTintColor: theme.textOnColor.primary,
                 tabBarInactiveTintColor: theme.textOnColor.primary,
                 tabBarShowLabel: true,
+                headerShown: false,
             }}>
 
             <Tabs.Screen
@@ -52,8 +53,8 @@ export default function TabsLayout() {
                     ),
                 }}
             />
-            <Tabs.Screen name="category" options={{ href: null }} />
-            <Tabs.Screen name="product" options={{ href: null }} />
+            <Tabs.Screen name="category" options={{ href: null, headerShown: false }} />
+            <Tabs.Screen name="product" options={{ href: null, headerShown: false }} />
             <Tabs.Screen name="checkout" options={{ href: null }} />
         </Tabs>
     );

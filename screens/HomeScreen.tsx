@@ -1,6 +1,7 @@
 import { CategoryCard } from '@/components/features/category/CategoryCard';
 import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { routes } from '@/config/routes';
@@ -43,10 +44,10 @@ export const HomeScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
+            <PageHeader>
+                <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
+            </PageHeader>
             <PageSection>
-                <PageContent secondary>
-                    <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
-                </PageContent>
                 <PageContent accent horizontal title="Populære produkter">
                     <FeaturedProducts />
                 </PageContent>
