@@ -15,7 +15,8 @@ interface ShoppingCartListItemProps {
 }
 
 export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item, onUpdateQuantity, onRemove }) => {
-    const { theme } = useTheme();
+    const { themeManager } = useTheme();
+    const accentVariant = themeManager.getVariant('accent');
 
     const handleIncrease = () => {
         onUpdateQuantity(item.product.id, item.quantity + 1);
@@ -41,7 +42,7 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
                 onDecrease={handleDecrease}
             />
             <Pressable onPress={handleRemove} style={styles.removeButton}>
-                <Icon name="emptyCart" color={theme.textOnColor.accent} />
+                <Icon name="emptyCart" color={accentVariant.text.primary} />
             </Pressable>
         </View>
     );

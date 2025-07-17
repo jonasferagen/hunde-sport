@@ -22,8 +22,6 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const addToCart = useCallback((product: Product) => {
 
-        console.log("adding to cart");
-
         setItems(prevItems => {
             const existingItem = prevItems.find(item => item.product.id === product.id);
 

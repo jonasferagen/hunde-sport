@@ -8,14 +8,13 @@ interface LoaderProps {
 }
 
 export const Loader = ({ size = 'small', style }: LoaderProps) => {
-  const { theme } = useTheme();
+  const { themeManager } = useTheme();
   const { type } = usePageContent();
-  const loaderColor = theme.textOnColor[type];
-
+  const themeVariant = themeManager.getVariant(type);
 
   return (
     <View style={[styles.container, style]}>
-      <ActivityIndicator size={size} color={loaderColor} />
+      <ActivityIndicator size={size} color={themeVariant.text.primary} />
     </View>
   );
 };

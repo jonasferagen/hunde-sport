@@ -3,7 +3,7 @@ import { routes } from '@/config/routes';
 import { useBreadcrumbs, useTheme } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { Category, Theme } from '@/types';
+import { Category, StyleVariant } from '@/types';
 import { rgba } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
@@ -18,12 +18,12 @@ interface CategoryTreeItemProps {
     isExpanded: boolean;
     onExpand: (categoryId: number) => void;
     isActive: boolean;
-    variant: keyof Theme['textOnColor'];
+    variant: keyof StyleVariant['text'];
 };
 
 const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive, variant }: CategoryTreeItemProps) => {
     const { categories } = useCategories(category.id);
-    const { theme } = useTheme();
+    const { themeManager } = useTheme();
     const styles = createStyles();
     const hasChildren = categories.length > 0; // subcategories
 
@@ -31,7 +31,8 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
         onExpand(category.id);
     }, [onExpand, category.id]);
 
-    const color = theme.textOnColor[variant];
+    const themeVariant = themeManager.getVariant(variant);
+    const color = themeVariant.text.primary;
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
@@ -68,7 +69,7 @@ interface CategorySubTreeProps {
     categoryId: number;
     level?: number;
     ancestors?: Category[];
-    variant: keyof Theme['textOnColor'];
+    variant: keyof StyleVariant['text'];
 };
 
 const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: CategorySubTreeProps) => {
@@ -108,7 +109,7 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: Cat
 };
 
 interface CategoryTreeProps {
-    variant?: keyof Theme['textOnColor'];
+    variant?: keyof StyleVariant['text'];
     style?: StyleProp<ViewStyle>;
 }
 

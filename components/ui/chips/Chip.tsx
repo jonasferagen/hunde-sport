@@ -52,7 +52,7 @@ const createStyles = (themeVariant: any) => {
             alignItems: 'center',
         },
         text: {
-            color: themeVariant.color,
+            color: themeVariant.text.primary,
             fontSize: FONT_SIZES.sm,
             textAlign: 'center',
         },

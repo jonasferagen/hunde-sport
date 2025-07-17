@@ -21,8 +21,8 @@ export const Button = ({ onPress, title = undefined, icon, variant = 'primary', 
     return (
         <Pressable onPress={onPress} style={[styles.button, { backgroundColor: themeVariant.backgroundColor, borderColor: themeVariant.borderColor }]}>
             <View style={styles.content}>
-                {title && <CustomText color={themeVariant.color} style={[{ marginRight: SPACING.sm }]}>{title}</CustomText>}
-                {icon && <Icon name={icon} color={themeVariant.color} size={'xl'} />}
+                {title && <CustomText color={themeVariant.text.primary} style={[{ marginRight: SPACING.sm }]}>{title}</CustomText>}
+                {icon && <Icon name={icon} color={themeVariant.text.primary} size={'xl'} />}
             </View>
         </Pressable>
     );

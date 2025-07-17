@@ -64,9 +64,12 @@ export interface ShoppingCartItem {
 }
 
 export interface StyleVariant {
-  backgroundColor: string;
-  color: string;
-  borderColor: string;
+  readonly backgroundColor: string;
+  readonly text: {
+    readonly primary: string;
+    readonly secondary: string;
+  };
+  readonly borderColor: string;
 }
 
 export interface Theme {

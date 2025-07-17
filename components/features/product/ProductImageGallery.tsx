@@ -1,6 +1,6 @@
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
-import { Image as ProductImage, Theme } from '@/types';
+import { Image as ProductImage, StyleVariant } from '@/types';
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -21,8 +21,9 @@ export const ProductImageGallery = ({
     closeImageViewer,
     currentImageIndex,
 }: ProductImageGalleryProps) => {
-    const { theme } = useTheme();
-    const styles = createStyles(theme);
+    const { themeManager } = useTheme();
+    const themeVariant = themeManager.getVariant('default');
+    const styles = createStyles(themeVariant);
 
     if (!images || images.length === 0) {
         return null;
@@ -53,7 +54,7 @@ export const ProductImageGallery = ({
     );
 };
 
-const createStyles = (theme: Theme) =>
+const createStyles = (themeVariant: StyleVariant) =>
     StyleSheet.create({
         imageGalleryContainer: {
             flexDirection: 'row',
@@ -64,7 +65,7 @@ const createStyles = (theme: Theme) =>
             height: 100,
             borderRadius: BORDER_RADIUS.sm,
             borderWidth: 1,
-            borderColor: theme.colors.border,
+            borderColor: themeVariant.borderColor,
             overflow: 'hidden', // Ensures the image respects the border radius
         },
         imageThumbnail: {

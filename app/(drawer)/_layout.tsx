@@ -10,17 +10,18 @@ import { Drawer } from 'expo-router/drawer';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const CustomDrawerContent = (props: any) => {
-    const { theme } = useTheme();
+    const { themeManager } = useTheme();
+    const secondaryVariant = themeManager.getVariant('secondary');
     return (
         <LinearGradient
-            colors={theme.gradients.secondary}
+            colors={[secondaryVariant.borderColor, secondaryVariant.backgroundColor]}
             style={StyleSheet.absoluteFill}
         >
             <DrawerContentScrollView {...props}>
 
                 <View style={{ alignItems: 'flex-end' }}>
                     <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
-                        <Icon name="close" size='xl' color={theme.colors.text} style={{ padding: SPACING.md }} />
+                        <Icon name="close" size='xl' color={secondaryVariant.text.primary} style={{ padding: SPACING.md }} />
                     </TouchableOpacity>
                 </View>
                 <Heading title="HundeSport.no" />
@@ -33,33 +34,44 @@ const CustomDrawerContent = (props: any) => {
 }
 
 export default function DrawerLayout() {
-    const { theme } = useTheme();
+    const { themeManager } = useTheme();
     const { cartItemCount } = useShoppingCart();
+    const primaryVariant = themeManager.getVariant('primary');
+    const secondaryVariant = themeManager.getVariant('secondary');
 
     return (
         <Drawer
             drawerContent={(props) => <CustomDrawerContent {...props} />}
             screenOptions={{
                 headerTitleAlign: 'center',
+                headerStyle: {
+                    elevation: 5, // Add elevation for Android shadow
+                    shadowOpacity: 0.1, // iOS shadow
+                    shadowRadius: 5,
+                    shadowOffset: {
+                        height: 2,
+                        width: 0,
+                    }
+                },
                 headerBackground: () => (
                     <LinearGradient
-                        colors={theme.gradients.primary}
+                        colors={[primaryVariant.borderColor, primaryVariant.backgroundColor]}
                         style={StyleSheet.absoluteFill}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                     />
                 ),
                 headerTitleStyle: {
-                    color: theme.colors.text,
+                    color: primaryVariant.text.primary,
                     fontFamily: FONT_FAMILY.bold,
                     fontSize: FONT_SIZES.lg,
                 },
-                headerTintColor: theme.colors.text,
-                headerShadowVisible: false,
+                headerTintColor: primaryVariant.text.primary,
+                headerShadowVisible: true,
                 headerTitle: 'HundeSport.no',
-                drawerActiveBackgroundColor: theme.colors.secondary,
-                drawerActiveTintColor: theme.textOnColor.secondary,
-                drawerInactiveTintColor: theme.textOnColor.secondary,
+                drawerActiveBackgroundColor: secondaryVariant.backgroundColor,
+                drawerActiveTintColor: secondaryVariant.text.primary,
+                drawerInactiveTintColor: secondaryVariant.text.primary,
                 drawerLabelStyle: {
                     fontFamily: FONT_FAMILY.regular,
                     fontSize: FONT_SIZES.md,

@@ -1,23 +1,23 @@
 import { Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { darken } from '@/utils/helpers';
 import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
-    const { theme } = useTheme();
+    const { themeManager } = useTheme();
     const { cartItemCount } = useShoppingCart();
+    const secondaryVariant = themeManager.getVariant('secondary');
     return (
         <Tabs
             screenOptions={{
 
                 tabBarStyle: {
-                    backgroundColor: theme.colors.secondary,
+                    backgroundColor: secondaryVariant.backgroundColor,
                     borderTopWidth: 2,
-                    borderTopColor: darken(theme.colors.secondary, 10),
+                    borderTopColor: secondaryVariant.borderColor,
                 },
-                tabBarActiveTintColor: theme.colors.text,
-                tabBarInactiveTintColor: theme.textOnColor.secondary,
+                tabBarActiveTintColor: secondaryVariant.text.primary,
+                tabBarInactiveTintColor: secondaryVariant.text.secondary,
                 tabBarShowLabel: true,
                 headerShown: false,
             }}>

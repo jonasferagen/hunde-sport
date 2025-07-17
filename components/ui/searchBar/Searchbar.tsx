@@ -13,7 +13,7 @@ export interface SearchBarProps {
 
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onQueryChange, onSubmit }, ref) => {
     const [query, setQuery] = useState(initialQuery || '');
-    const { theme, themeManager } = useTheme();
+    const { themeManager } = useTheme();
 
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
@@ -34,8 +34,8 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 ref={ref}
                 style={styles.input}
                 placeholder={placeholder}
-                placeholderTextColor={theme.colors.textSecondary}
-                selectionColor={theme.colors.textSecondary}
+                placeholderTextColor={themeVariant.text.secondary}
+                selectionColor={themeVariant.text.secondary}
                 value={query}
                 onChangeText={(text) => {
                     setQuery(text);
@@ -44,13 +44,13 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
                 onSubmitEditing={handleSearch}
             />
             <Pressable onPress={handleSearch} style={styles.button} disabled={!query.trim()}>
-                <Icon name="search" size='xl' color={themeVariant.color} />
+                <Icon name="search" size='xl' color={themeVariant.text.primary} />
             </Pressable>
         </View>
     );
 });
 
-const createStyles = (themeVariant: { backgroundColor: string; color: string; borderColor: string; }) => StyleSheet.create({
+const createStyles = (themeVariant: { backgroundColor: string; text: { primary: string; secondary: string; }; borderColor: string; }) => StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',

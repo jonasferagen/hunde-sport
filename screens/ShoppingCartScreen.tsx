@@ -1,15 +1,14 @@
 import { ShoppingCartListItem } from '@/components/features/shoppingCart/ShoppingCartListItem';
-import { PageSection, PageView } from '@/components/layout';
+import { PageContent, PageSection } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, CustomText } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { SPACING } from '@/styles/Dimensions';
-import { FONT_SIZES } from '@/styles/Typography';
-import { ShoppingCartItem, Theme } from '@/types';
+import { FONT_SIZES, SPACING } from '@/styles';
+import { StyleVariant } from '@/types';
 import { formatPrice } from '@/utils/helpers';
-import { Link, Stack } from 'expo-router';
+import { Link, Stack, useRouter } from 'expo-router';
 import React, { memo, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
@@ -20,8 +19,9 @@ interface ShoppingCartSummaryProps {
 }
 
 const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: ShoppingCartSummaryProps) => {
-    const { theme } = useTheme();
-    const styles = createStyles(theme);
+    const { themeManager } = useTheme();
+    const themeVariant = themeManager.getVariant('default');
+    const styles = createStyles(themeVariant);
 
     return (
         <View style={styles.summaryContainer}>
@@ -39,13 +39,14 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
     );
 });
 
-
 export const ShoppingCartScreen = () => {
-    const { items, updateQuantity, removeFromCart, cartTotal, cartItemCount, clearCart } = useShoppingCart();
-    const { theme } = useTheme();
-    const styles = createStyles(theme);
+    const { items, cartTotal, updateQuantity, removeFromCart, clearCart } = useShoppingCart();
+    const router = useRouter();
+    const { themeManager } = useTheme();
+    const themeVariant = themeManager.getVariant('default');
+    const styles = createStyles(themeVariant);
 
-    const renderItem = useCallback(({ item }: { item: ShoppingCartItem }) => (
+    const renderItem = useCallback(({ item }: { item: any }) => (
         <ShoppingCartListItem
             item={item}
             onUpdateQuantity={updateQuantity}
@@ -53,8 +54,10 @@ export const ShoppingCartScreen = () => {
         />
     ), [updateQuantity, removeFromCart]);
 
+    const handleCheckout = () => { }
+
     return (
-        <PageView>
+        <PageContent>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageHeader title="Handlekurv" />
             <PageSection flex style={styles.cartSection}>
@@ -65,22 +68,22 @@ export const ShoppingCartScreen = () => {
                     ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
                 />
                 {items.length > 0 && (
-                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
+                    <ShoppingCartSummary cartItemCount={items.length} cartTotal={cartTotal} onClearCart={clearCart} />
                 )}
             </PageSection>
-        </PageView >
+        </PageContent >
     );
 }
 
-const createStyles = (theme: Theme) => StyleSheet.create({
+const createStyles = (themeVariant: StyleVariant) => StyleSheet.create({
     cartSection: {
         paddingHorizontal: 0,
     },
     summaryContainer: {
         padding: SPACING.md,
         borderTopWidth: 1,
-        borderTopColor: theme.colors.border,
-        backgroundColor: theme.colors.card,
+        borderTopColor: themeVariant.borderColor,
+        backgroundColor: themeVariant.backgroundColor,
     },
     summaryRow: {
         flexDirection: 'row',
@@ -101,6 +104,6 @@ const createStyles = (theme: Theme) => StyleSheet.create({
         textAlign: 'center',
         marginTop: 50,
         fontSize: FONT_SIZES.md,
-        color: theme.colors.textSecondary,
+        color: themeVariant.text.secondary,
     },
 });

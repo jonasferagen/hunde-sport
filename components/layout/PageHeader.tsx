@@ -10,10 +10,11 @@ interface PageHeaderProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children }) => {
-    const { theme } = useTheme();
+    const { themeManager } = useTheme();
+    const themeVariant = themeManager.getVariant('default');
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.card }]}>
+        <View style={[styles.container, { backgroundColor: themeVariant.backgroundColor, borderBottomColor: themeVariant.borderColor }]}>
             <View style={styles.innerContainer}>
                 <Heading title={title} />
                 {children}
@@ -27,7 +28,6 @@ const styles = StyleSheet.create({
 
         padding: SPACING.md,
         borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0', // A light separator line
     },
     innerContainer: {
         gap: SPACING.sm,

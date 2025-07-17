@@ -1,4 +1,4 @@
-import { StyleVariant, Theme } from '@/types';
+import { StyleVariant } from '@/types';
 import { darken } from '@/utils/helpers';
 
 export const palette = {
@@ -21,78 +21,121 @@ export const palette = {
   info: '#1976D2', // A standard info blue
 };
 
-export const theme: Theme = {
-  colors: {
-    primary: palette.primary,
-    secondary: palette.secondary,
-    accent: palette.accent,
-    default: palette.white,
-    card: darken(palette.white, 10),
-    text: palette.black,
-    textSecondary: palette.darkGrey,
-    border: palette.grey,
-    error: palette.error,
-    success: palette.success,
-    info: palette.info,
-  },
-  gradients: {
-    primary: [darken(palette.primary, 10), palette.primary],
-    secondary: [darken(palette.secondary, 10), palette.secondary],
-    accent: [darken(palette.accent, 10), palette.accent],
-    default: [darken(palette.white, 10), palette.white],
-  },
-  tabs: {
-    active: palette.activeRed,
-    inactive: palette.inactiveBlue,
-  },
-  textOnColor: {
-    primary: darken(palette.primary, 50),
-    secondary: darken(palette.secondary, 50),
-    accent: darken(palette.accent, 50),
-    default: palette.darkGrey,
-  },
-  styles: {
-    disabled: {
-      opacity: 0.5,
+export const _theme = {
+  primary: {
+    backgroundColor: palette.primary,
+    text: {
+      primary: darken(palette.primary, 50),
+      secondary: darken(palette.primary, 30),
     },
-    shadow: {
-      shadowColor: palette.black,
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
+    borderColor: darken(palette.primary, 10),
   },
-} as const;
+  secondary: {
+    backgroundColor: palette.secondary,
+    text: {
+      primary: darken(palette.secondary, 50),
+      secondary: darken(palette.secondary, 30),
+    },
+    borderColor: darken(palette.secondary, 10),
+  },
+  accent: {
+    backgroundColor: palette.accent,
+    text: {
+      primary: darken(palette.accent, 50),
+      secondary: darken(palette.accent, 30),
+    },
+    borderColor: darken(palette.accent, 10),
+  },
+  default: {
+    backgroundColor: palette.white,
+    text: {
+      primary: palette.black,
+      secondary: palette.darkGrey,
+    },
+    borderColor: darken(palette.grey, 10),
+  },
+  info: {
+    backgroundColor: palette.info,
+    color: palette.white,
+  },
+};
 
 export class ThemeManager {
   public static palette = palette;
-  public static theme = theme;
 
-  public getVariant(variant: 'primary' | 'secondary' | 'accent' | 'default'): StyleVariant {
-    if (variant === 'default') {
-      return {
+  private readonly variants: Record<'primary' | 'secondary' | 'accent' | 'default', StyleVariant>;
+  private readonly alerts: Record<'info' | 'success' | 'error', StyleVariant>;
+
+  constructor() {
+    this.variants = {
+      primary: {
+        backgroundColor: ThemeManager.palette.primary,
+        text: {
+          primary: darken(ThemeManager.palette.primary, 50),
+          secondary: darken(ThemeManager.palette.primary, 30),
+        },
+        borderColor: darken(ThemeManager.palette.primary, 20),
+      },
+      secondary: {
+        backgroundColor: ThemeManager.palette.secondary,
+        text: {
+          primary: darken(ThemeManager.palette.secondary, 50),
+          secondary: darken(ThemeManager.palette.secondary, 30),
+        },
+        borderColor: darken(ThemeManager.palette.secondary, 20),
+      },
+      accent: {
+        backgroundColor: ThemeManager.palette.accent,
+        text: {
+          primary: darken(ThemeManager.palette.accent, 50),
+          secondary: darken(ThemeManager.palette.accent, 30),
+        },
+        borderColor: darken(ThemeManager.palette.accent, 20),
+      },
+      default: {
         backgroundColor: ThemeManager.palette.white,
-        color: ThemeManager.palette.black,
-        borderColor: darken(ThemeManager.palette.grey, 10),
-      };
-    }
-    return {
-      backgroundColor: ThemeManager.palette[variant],
-      color: darken(ThemeManager.palette[variant], 50),
-      borderColor: darken(ThemeManager.palette[variant], 10),
+        text: {
+          primary: ThemeManager.palette.black,
+          secondary: ThemeManager.palette.darkGrey,
+        },
+        borderColor: darken(ThemeManager.palette.grey, 20),
+      },
+    };
+
+    this.alerts = {
+      info: {
+        backgroundColor: ThemeManager.palette.info,
+        text: {
+          primary: palette.white,
+          secondary: darken(palette.white, 20),
+        },
+        borderColor: darken(ThemeManager.palette.info, 20),
+      },
+      success: {
+        backgroundColor: ThemeManager.palette.success,
+        text: {
+          primary: palette.white,
+          secondary: darken(palette.white, 20),
+        },
+        borderColor: darken(ThemeManager.palette.success, 20),
+      },
+      error: {
+        backgroundColor: ThemeManager.palette.error,
+        text: {
+          primary: palette.white,
+          secondary: darken(palette.white, 20),
+        },
+        borderColor: darken(ThemeManager.palette.error, 20),
+      },
     };
   }
 
-  public getAlert(variant: 'info' | 'success' | 'error'): StyleVariant {
-    return {
-      backgroundColor: ThemeManager.palette[variant],
-      color: palette.white,
-      borderColor: darken(ThemeManager.palette[variant], 10),
-    };
+  public getVariant(variant: keyof typeof this.variants): StyleVariant {
+    return this.variants[variant];
+  }
+
+  public getAlert(variant: keyof typeof this.alerts): StyleVariant {
+    return this.alerts[variant];
   }
 }
 

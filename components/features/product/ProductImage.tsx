@@ -1,6 +1,6 @@
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS } from '@/styles';
-import { Image as ProductImageType, Theme } from '@/types';
+import { Image as ProductImageType, StyleVariant } from '@/types';
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -11,8 +11,9 @@ interface ProductImageProps {
 }
 
 export const ProductImage = ({ image, onPress }: ProductImageProps) => {
-    const { theme } = useTheme();
-    const styles = createStyles(theme);
+    const { themeManager } = useTheme();
+    const themeVariant = themeManager.getVariant('default');
+    const styles = createStyles(themeVariant);
 
     return (
         <View style={styles.mainImageWrapper}>
@@ -23,14 +24,14 @@ export const ProductImage = ({ image, onPress }: ProductImageProps) => {
     );
 };
 
-const createStyles = (theme: Theme) =>
+const createStyles = (themeVariant: StyleVariant) =>
     StyleSheet.create({
         mainImageWrapper: {
             width: '100%',
             height: 300,
             overflow: 'hidden',
             borderWidth: 1,
-            borderColor: theme.colors.border,
+            borderColor: themeVariant.borderColor,
             borderRadius: BORDER_RADIUS.md,
         },
         mainImage: {
