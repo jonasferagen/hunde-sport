@@ -1,66 +1,17 @@
+import { ShoppingCartListItem } from '@/components/features/cart/ShoppingCartListItem';
 import { PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Button, CustomText, Icon } from '@/components/ui';
+import { Button, CustomText } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
+import { SPACING } from '@/styles/Dimensions';
 import { FONT_SIZES } from '@/styles/Typography';
 import { ShoppingCartItem, Theme } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Link, Stack } from 'expo-router';
-import React, { memo, useCallback, useMemo, useRef } from 'react';
-import { Animated, FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
-
-interface ShoppingCartListItemProps {
-    item: ShoppingCartItem;
-    onUpdateQuantity: (productId: number, quantity: number) => void;
-    onRemove: (productId: number) => void;
-}
-
-const ShoppingCartListItem = React.memo(({ item, onUpdateQuantity, onRemove }: ShoppingCartListItemProps) => {
-    const { theme } = useTheme();
-    const styles = useMemo(() => createStyles(theme), [theme]);
-    const opacity = useRef(new Animated.Value(1)).current;
-
-    const handleRemove = () => {
-        Animated.timing(opacity, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
-        }).start(() => onRemove(item.product.id));
-    };
-
-    return (
-        <Animated.View style={[styles.cartItem, { opacity }]} >
-            <Link href={routes.product(item.product)} asChild>
-                <Pressable style={styles.productLink}>
-                    <Image source={{ uri: item.product.images[0].src }} style={styles.productImage} />
-                    <View style={styles.productInfo}>
-                        <CustomText bold>{item.product.name}</CustomText>
-                        <CustomText size="sm" style={styles.productPrice}>{formatPrice(item.product.price)}</CustomText>
-                    </View>
-                </Pressable>
-            </Link>
-
-            <View style={styles.quantityContainer}>
-                <Pressable
-                    onPress={() => item.quantity > 1 && onUpdateQuantity(item.product.id, item.quantity - 1)}
-                    style={item.quantity === 1 ? theme.styles.disabled : undefined}
-                >
-                    <Icon name="remove" color={theme.textOnColor.accent} />
-                </Pressable>
-                <CustomText bold style={styles.quantity}>{item.quantity}</CustomText>
-                <Pressable onPress={() => onUpdateQuantity(item.product.id, item.quantity + 1)}>
-                    <Icon name="add" color={theme.textOnColor.accent} />
-                </Pressable>
-            </View>
-            <Pressable onPress={handleRemove} style={styles.removeButton}>
-                <Icon name="emptyCart" color={theme.textOnColor.accent} />
-            </Pressable>
-        </Animated.View>
-    );
-});
+import React, { memo, useCallback } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 interface ShoppingCartSummaryProps {
     cartItemCount: number;
@@ -122,50 +73,9 @@ export const ShoppingCartScreen = () => {
 }
 
 const createStyles = (theme: Theme) => StyleSheet.create({
-    cartItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: theme.colors.card,
-        padding: SPACING.sm,
-        gap: SPACING.md
-    },
-    productLink: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: SPACING.md,
-    },
     cartSection: {
         paddingHorizontal: 0,
     },
-    productImage: {
-        width: 60,
-        height: 60,
-        borderRadius: BORDER_RADIUS.sm,
-        borderWidth: 1,
-        borderColor: theme.colors.border,
-    },
-    productInfo: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    productPrice: {
-        color: theme.colors.textSecondary,
-    },
-    quantityContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: 70
-    },
-    quantity: {
-        textAlign: 'center',
-    },
-    removeButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
     summaryContainer: {
         padding: SPACING.md,
         borderTopWidth: 1,

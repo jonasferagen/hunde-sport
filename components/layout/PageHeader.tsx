@@ -24,6 +24,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, children }) => {
 
 const styles = StyleSheet.create({
     container: {
+
         padding: SPACING.md,
         borderBottomWidth: 1,
         borderBottomColor: '#E0E0E0', // A light separator line
