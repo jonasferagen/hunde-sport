@@ -11,8 +11,9 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo, useEffect } from 'react';
 
 
-const CategoryListArea = ({ category }: { category: Category }) => {
+const CategoryChipsContainer = ({ category }: { category: Category }) => {
     const { categories, isFetchingNextPage } = useCategories(category.id);
+
     return (
         <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} />
     );
@@ -40,7 +41,7 @@ export const CategoryScreen = memo(() => {
             <Stack.Screen options={{ title: category.name }} />
             <PageHeader key={category.id}>
                 <Breadcrumbs />
-                <CategoryListArea category={category} />
+                <CategoryChipsContainer category={category} />
             </PageHeader>
             <PageSection flex>
                 <PageContent flex paddingHorizontal="none" key={category.id}>

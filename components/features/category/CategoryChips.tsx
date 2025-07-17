@@ -18,6 +18,9 @@ export const CategoryChips = ({ categories, isFetchingNextPage, limit, style }: 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
 
+
+    console.log("fetching", isFetchingNextPage);
+
     return (
         categories.length > 0 ? (
             <View style={[styles.container, style]}>

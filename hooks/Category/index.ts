@@ -9,7 +9,7 @@ export const useCategoryTrail = (categoryId: number | null) => {
     return useQuery(categoryTrailQueryOptions(categoryId));
 };
 
-export const useCategories = (categoryId: number, options?: { fetchAll?: boolean }) => {
+export const useCategories = (categoryId: number) => {
     const query = useInfiniteQuery(categoriesQueryOptions(categoryId));
     const { isError, refetch, data, fetchNextPage, hasNextPage, isFetchingNextPage } = query;
     const { showMessage } = useStatus();
@@ -29,12 +29,12 @@ export const useCategories = (categoryId: number, options?: { fetchAll?: boolean
 
     useEffect(() => {
         const fetchAllPages = async () => {
-            if (options?.fetchAll && hasNextPage && !isFetchingNextPage) {
+            if (hasNextPage && !isFetchingNextPage) {
                 await fetchNextPage();
             }
         };
         fetchAllPages();
-    }, [options?.fetchAll, hasNextPage, fetchNextPage, isFetchingNextPage, data]);
+    }, [hasNextPage, fetchNextPage, isFetchingNextPage, data]);
 
 
     const categories = useMemo(() => data?.pages.flat() ?? [], [data?.pages]);

@@ -12,7 +12,7 @@ import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
 
 const CategorySection = () => {
-    const { categories, isLoading } = useCategories(0, { fetchAll: true });
+    const { categories, isLoading } = useCategories(0);
 
     if (isLoading) {
         return <Loader />;

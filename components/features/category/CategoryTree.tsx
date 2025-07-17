@@ -72,7 +72,7 @@ interface CategorySubTreeProps {
 };
 
 const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: CategorySubTreeProps) => {
-    const { categories, isFetchingNextPage } = useCategories(categoryId, { fetchAll: true });
+    const { categories, isFetchingNextPage } = useCategories(categoryId);
     const { categories: breadcrumbs } = useBreadcrumbs();
 
     const activeChild = categories.find((c: Category) => breadcrumbs.some(b => b.id === c.id));
