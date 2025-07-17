@@ -105,11 +105,11 @@ export const ProductScreen = () => {
           />
         </PageContent>
 
-        <PageContent>
+        <PageContent title="Produktinformasjon">
           <ProductDetails product={product} />
         </PageContent>
 
-        <PageContent horizontal accent title="Relaterte produkter">
+        <PageContent horizontal accent title="Relaterte produkter" >
           <RelatedProducts productIds={product.related_ids} />
         </PageContent>
       </PageSection>

@@ -1,4 +1,3 @@
-import { CustomText } from '@/components/ui';
 import { SPACING } from '@/styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatePresence, View as MotiView } from 'moti';
@@ -11,6 +10,7 @@ import {
   View,
   ViewProps
 } from 'react-native';
+import { PageContentTitle } from './PageContentTitle';
 
 interface PageContentHorizontalProps extends ViewProps {
   title?: string;
@@ -33,7 +33,7 @@ export const PageContentHorizontal = ({ title = undefined, children, style, ...p
 
   return (
     <View style={[styles.horizontalContainer, style]}>
-      {title && <CustomText style={{ marginBottom: SPACING.sm }}>{title}</CustomText>}
+      <PageContentTitle title={title} />
       <View>
         <AnimatePresence>
           {showLeftGradient && (

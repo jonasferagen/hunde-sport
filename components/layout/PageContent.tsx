@@ -16,21 +16,21 @@ interface PageContentProps extends ViewProps {
   primary?: boolean;
   secondary?: boolean;
   accent?: boolean;
+  style?: any;
 }
 
-export const PageContent = ({ children, flex, gap = 'md', paddingVertical = 'md', paddingHorizontal = 'md', horizontal, primary = false, secondary = false, accent = false, ...props }: PageContentProps) => {
+export const PageContent = ({ children, flex, paddingVertical = 'md', paddingHorizontal = 'md', horizontal, primary = false, secondary = false, accent = false, style, ...props }: PageContentProps) => {
   const { _theme } = useTheme();
 
   const type = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
   const variant = _theme[type];
   const styles = createStyles(variant);
 
-
-
   const computedStyle = [
     { paddingHorizontal: paddingHorizontal ? SPACING[paddingHorizontal] : 0 },
     { paddingVertical: paddingVertical ? SPACING[paddingVertical] : 0 },
     styles.container,
+    style,
   ];
 
   const content = (
@@ -48,7 +48,7 @@ export const PageContent = ({ children, flex, gap = 'md', paddingVertical = 'md'
   }
 
   return (
-    <PageContentVertical style={[{ gap: SPACING[gap], flex: flex ? 1 : 0 }, ...computedStyle]} {...props}>
+    <PageContentVertical style={[{ flex: flex ? 1 : 0 }, ...computedStyle]} {...props}>
       {content}
     </PageContentVertical>
   );
@@ -61,4 +61,3 @@ const createStyles = (variant: any) => StyleSheet.create({
     borderWidth: 1,
   },
 });
-
