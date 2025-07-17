@@ -4,7 +4,7 @@ import { CustomText, SearchBar } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { TextInput, View } from 'react-native';
 
 export const SearchScreen = () => {
@@ -12,25 +12,16 @@ export const SearchScreen = () => {
     const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(query);
     const searchInputRef = useRef<TextInput>(null);
 
-    const [inputText, setInputText] = useState(query || '');
-
-    /*useEffect(() => {
-        const handler = setTimeout(() => {
-            if (inputText !== query) {
-                router.push(routes.search(inputText));
-            }
-        }, 500);
-
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [inputText, query]); */
-
     useFocusEffect(
         useCallback(() => {
-            searchInputRef.current?.focus();
+            const timer = setTimeout(() => searchInputRef.current?.focus(), 100);
+            return () => clearTimeout(timer);
         }, [])
     );
+
+    const handleQueryChange = (query: string) => {
+        console.log('Query changed:', query);
+    };
 
     return (
         <PageView>
@@ -39,8 +30,8 @@ export const SearchScreen = () => {
                     <SearchBar
                         ref={searchInputRef}
                         initialQuery={query}
-                        onQueryChange={setInputText}
-
+                        clearOnSearch={false}
+                        onQueryChange={handleQueryChange}
                     />
                     {query ? (
                         <CustomText size="md">{`Søkeresultater for "${query}"`}</CustomText>
@@ -48,7 +39,7 @@ export const SearchScreen = () => {
                 </PageContent>
             </PageSection>
             <PageSection flex>
-                <PageContent flex paddingHorizontal="none" paddingVertical="none">
+                {query && <PageContent flex paddingHorizontal="none" paddingVertical="none">
                     {isLoading && <Loader />}
                     {!isLoading && products.length === 0 && query && (
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -61,6 +52,7 @@ export const SearchScreen = () => {
                         loadingMore={isFetchingNextPage}
                     />
                 </PageContent>
+                }
             </PageSection>
         </PageView>
     );

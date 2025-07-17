@@ -10,11 +10,11 @@ import { Icon } from '../icon/Icon';
 export interface SearchBarProps {
     placeholder?: string;
     initialQuery?: string;
+    clearOnSearch?: boolean;
     onQueryChange?: (query: string) => void;
-    onSearch?: (query: string) => void;
 }
 
-export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onQueryChange }, ref) => {
+export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, clearOnSearch = true, onQueryChange }, ref) => {
     const [query, setQuery] = useState(initialQuery || '');
     const { theme } = useTheme();
     const styles = createStyles(theme);
@@ -26,6 +26,9 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 
     }, [initialQuery]);
 
     const handleSearch = () => {
+        if (clearOnSearch) {
+            setQuery('');
+        }
         router.push(routes.search(query));
     };
 

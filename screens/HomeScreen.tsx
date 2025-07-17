@@ -5,7 +5,9 @@ import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { useCategories } from '@/hooks/Category';
 import { SPACING } from '@/styles';
-import { Stack } from 'expo-router';
+import { Stack, useFocusEffect } from 'expo-router';
+import { useCallback, useRef } from 'react';
+import { TextInput } from 'react-native';
 
 const CategorySection = () => {
     const { categories, isLoading } = useCategories(0, { fetchAll: true });
@@ -29,13 +31,21 @@ const CategorySection = () => {
 }
 
 export const HomeScreen = () => {
+    const searchInputRef = useRef<TextInput>(null);
+
+    useFocusEffect(
+        useCallback(() => {
+            const timer = setTimeout(() => searchInputRef.current?.focus(), 100);
+            return () => clearTimeout(timer);
+        }, [])
+    );
 
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageSection>
                 <PageContent>
-                    <SearchBar initialQuery="" />
+                    <SearchBar ref={searchInputRef} initialQuery="" />
                 </PageContent>
             </PageSection>
             <PageSection scrollable>
