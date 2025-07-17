@@ -1,101 +1,83 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
-import { Header, Sidebar } from '@/components/layout';
 import { Preloader } from '@/components/preloader/Preloader';
 import { StatusMessage } from '@/components/ui/statusmessage/StatusMessage';
-import { BreadcrumbProvider, LayoutProvider, PreloaderProvider, ShoppingCartProvider, StatusProvider, ThemeProvider, usePreloader } from '@/contexts';
+import {
+  BreadcrumbProvider,
+  LayoutProvider,
+  PreloaderProvider,
+  ShoppingCartProvider,
+  StatusProvider,
+  ThemeProvider,
+  usePreloader,
+  useTheme
+} from '@/contexts';
+import { FONT_FAMILY, FONT_SIZES } from '@/styles';
 import { MaterialIcons } from '@expo/vector-icons';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { DrawerActions, NavigationContainer, NavigationIndependentTree, useNavigation } from '@react-navigation/native';
+import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Tabs } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Drawer } from 'expo-router/drawer';
 import { JSX, useState } from "react";
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-const Drawer = createDrawerNavigator();
-
-const TabsLayout = () => (
-  <Tabs
-    screenOptions={{
-      headerShown: false,
-      tabBarShowLabel: false,
-    }}>
-    <Tabs.Screen
-      name="index"
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="home" size={size} color={color} />
-        ),
-      }}
-    />
-    <Tabs.Screen
-      name="search"
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="search" size={size} color={color} />
-        ),
-      }}
-    />
-    <Tabs.Screen
-      name="shoppingCart"
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="shopping-cart" size={size} color={color} />
-        ),
-      }}
-    />
-    <Tabs.Screen
-      name="menu"
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="menu" size={size} color={color} />
-        ),
-      }}
-      listeners={({ navigation }) => ({
-        tabPress: (e) => {
-          e.preventDefault();
-          navigation.getParent()?.dispatch(DrawerActions.toggleDrawer());
-        },
-      })}
-    />
-    <Tabs.Screen name="product" options={{ href: null }} />
-    <Tabs.Screen name="category" options={{ href: null }} />
-    <Tabs.Screen name="checkout" options={{ href: null }} />
-  </Tabs>
-);
-
-const CustomDrawerContent = (props) => {
-  const navigation = useNavigation();
-
-  const handleSelectCategory = (category) => {
-    navigation.navigate('category', { id: category.id, name: category.name });
-  };
+const CustomDrawerContent = (props: any) => {
+  const { theme } = useTheme();
 
   return (
     <DrawerContentScrollView {...props}>
+      <View style={{ alignItems: 'flex-end', paddingRight: 15, paddingTop: 15, paddingBottom: 10 }}>
+        <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
+          <MaterialIcons name="close" size={30} color={theme.colors.text} />
+        </TouchableOpacity>
+      </View>
       <DrawerItemList {...props} />
-      <CategoryTree onSelect={handleSelectCategory} />
+      <CategoryTree />
     </DrawerContentScrollView>
   );
 }
 
-const DrawerLayout = () => (
-  <Drawer.Navigator
-    drawerContent={(props) => <CustomDrawerContent {...props} />}
-    screenOptions={{
-      header: () => <Header title="hunde-sport.no" />,
-    }}>
-    <Drawer.Screen name="Hjem" component={TabsLayout} />
-    <Drawer.Screen
-      name="ShoppingCart"
-      component={TabsLayout}
-      initialParams={{ screen: 'shoppingCart' }}
-    />
-    {/* The following screens are for navigation purposes and won't appear in the drawer */}
-    <Drawer.Screen name="category" component={TabsLayout} options={{ drawerItemStyle: { height: 0 } }} />
-    <Drawer.Screen name="product" component={TabsLayout} options={{ drawerItemStyle: { height: 0 } }} />
-  </Drawer.Navigator>
-);
+const DrawerLayout = () => {
+  const { theme } = useTheme();
+
+  return (
+    <Drawer
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerBackground: () => (
+          <LinearGradient
+            colors={theme.gradients.primary}
+            style={StyleSheet.absoluteFill}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          />
+        ),
+        headerTitleStyle: {
+          color: theme.colors.text,
+          fontFamily: FONT_FAMILY.bold,
+          fontSize: FONT_SIZES.lg,
+        },
+        headerTintColor: theme.colors.text,
+        headerShadowVisible: false,
+        headerTitle: 'HundeSport.no',
+      }}>
+      <Drawer.Screen
+        name="(tabs)"
+        options={{
+          title: 'Hjem',
+        }}
+      />
+      <Drawer.Screen
+        name="_shoppingCart"
+        options={{
+          title: 'Handlekurv',
+        }}
+      />
+    </Drawer>
+  );
+}
 
 const AppContent = (): JSX.Element => {
   const { appIsReady } = usePreloader();
@@ -106,12 +88,7 @@ const AppContent = (): JSX.Element => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }} >
-      <NavigationIndependentTree>
-        <NavigationContainer>
-          <DrawerLayout />
-        </NavigationContainer>
-      </NavigationIndependentTree>
-      <Sidebar />
+      <DrawerLayout />
       <StatusMessage />
     </GestureHandlerRootView>
   );
