@@ -4,7 +4,7 @@ import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { Breadcrumbs, CustomText } from '@/components/ui';
+import { Breadcrumbs } from '@/components/ui';
 import { Loader } from '@/components/ui/loader/Loader';
 import { useProduct, useProducts } from '@/hooks/Product';
 import { Product } from '@/types';
@@ -86,7 +86,10 @@ export const ProductScreen = () => {
             selectedOptions={selectedOptions}
             onSelectOption={handleSelectOption}
           />
-          <CustomText bold>Bilder</CustomText>
+
+        </PageContent>
+
+        <PageContent horizontal secondary>
 
           <ProductImageGallery
             images={displayProduct.images}

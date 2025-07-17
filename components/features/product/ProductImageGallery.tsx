@@ -57,16 +57,14 @@ const createStyles = (theme: Theme) =>
     StyleSheet.create({
         imageGalleryContainer: {
             flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
             gap: SPACING.sm,
-            borderColor: 'black',
-            borderWidth: 1,
         },
         imageThumbnailWrapper: {
-            width: '31%', // Creates a 3-column grid with spacing
-            height: 120,
+            width: 100, // Creates a 3-column grid with spacing
+            height: 100,
             borderRadius: BORDER_RADIUS.sm,
+            borderWidth: 1,
+            borderColor: theme.colors.border,
             overflow: 'hidden', // Ensures the image respects the border radius
         },
         imageThumbnail: {
