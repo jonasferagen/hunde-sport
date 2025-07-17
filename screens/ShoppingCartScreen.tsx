@@ -8,7 +8,7 @@ import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { StyleVariant } from '@/types';
 import { formatPrice } from '@/utils/helpers';
-import { Link, Stack, useRouter } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 import React, { memo, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
@@ -20,7 +20,7 @@ interface ShoppingCartSummaryProps {
 
 const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: ShoppingCartSummaryProps) => {
     const { themeManager } = useTheme();
-    const themeVariant = themeManager.getVariant('default');
+    const themeVariant = themeManager.getVariant('secondary');
     const styles = createStyles(themeVariant);
 
     return (
@@ -41,7 +41,6 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
 
 export const ShoppingCartScreen = () => {
     const { items, cartTotal, updateQuantity, removeFromCart, clearCart } = useShoppingCart();
-    const router = useRouter();
     const { themeManager } = useTheme();
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
@@ -54,7 +53,6 @@ export const ShoppingCartScreen = () => {
         />
     ), [updateQuantity, removeFromCart]);
 
-    const handleCheckout = () => { }
 
     return (
         <PageContent>

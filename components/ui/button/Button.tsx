@@ -17,12 +17,13 @@ export const Button = ({ onPress, title = undefined, icon, variant = 'primary', 
     const { themeManager } = useTheme();
     const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(size);
+    const { backgroundColor, borderColor, text } = themeVariant;
 
     return (
-        <Pressable onPress={onPress} style={[styles.button, { backgroundColor: themeVariant.backgroundColor, borderColor: themeVariant.borderColor }]}>
+        <Pressable onPress={onPress} style={[styles.button, { backgroundColor, borderColor }]}>
             <View style={styles.content}>
-                {title && <CustomText color={themeVariant.text.primary} style={[{ marginRight: SPACING.sm }]}>{title}</CustomText>}
-                {icon && <Icon name={icon} color={themeVariant.text.primary} size={'xl'} />}
+                {title && <CustomText color={text.primary} style={[{ marginRight: SPACING.sm }]}>{title}</CustomText>}
+                {icon && <Icon name={icon} color={text.primary} size={'xl'} />}
             </View>
         </Pressable>
     );
