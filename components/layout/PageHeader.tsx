@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     innerContainer: {
-        gap: SPACING.sm,
+        gap: SPACING.md,
     },
 
 });

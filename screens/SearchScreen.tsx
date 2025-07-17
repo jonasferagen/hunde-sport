@@ -2,11 +2,9 @@ import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { CustomText, SearchBar } from '@/components/ui';
-import { Loader } from '@/components/ui/loader/Loader';
 import { useSearchProducts } from '@/hooks/Product';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
-import { SPACING } from '@/styles';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
@@ -46,20 +44,19 @@ export const SearchScreen = () => {
     return (
         <PageView>
             <PageHeader title='Produktsøk'>
+
                 <SearchBar
                     ref={searchInputRef}
                     initialQuery={initialQuery}
                     onQueryChange={setLiveQuery}
                     onSubmit={handleSearch}
-
                 />
-                {initialQuery ? (
-                    <CustomText fontSize="md" style={{ marginTop: SPACING.md }}>{`Søkeresultater for "${initialQuery}"`}</CustomText>
-                ) : null}
+                <CustomText fontSize="md">{initialQuery ? `Søkeresultater for "${initialQuery}"` : ''}</CustomText>
+
             </PageHeader>
             <PageSection flex>
-                {initialQuery && <PageContent flex paddingHorizontal="none" paddingVertical="none">
-                    {isLoading && <Loader />}
+                <PageContent flex paddingHorizontal="none" paddingVertical="none">
+
                     {!isLoading && products.length === 0 && initialQuery && (
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <CustomText>Ingen resultater funnet for "{initialQuery}"</CustomText>
@@ -70,8 +67,8 @@ export const SearchScreen = () => {
                         loadMore={fetchNextPage}
                         loadingMore={isFetchingNextPage}
                     />
+
                 </PageContent>
-                }
             </PageSection>
         </PageView>
     );

@@ -57,6 +57,8 @@ const createStyles = (themeVariant: { backgroundColor: string; text: { primary: 
         backgroundColor: themeVariant.backgroundColor,
         borderRadius: BORDER_RADIUS.sm,
         paddingHorizontal: SPACING.sm,
+        borderWidth: 1,
+        borderColor: themeVariant.borderColor,
     },
     input: {
         flex: 1,
