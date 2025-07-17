@@ -44,12 +44,13 @@ export const HomeScreen = () => {
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageSection>
-                <PageContent>
+                <PageContent secondary>
                     <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
                 </PageContent>
             </PageSection>
             <PageSection scrollable>
-                <PageContent secondary horizontal>
+
+                <PageContent accent horizontal>
                     <FeaturedProducts />
                 </PageContent>
                 <PageContent paddingHorizontal="none">

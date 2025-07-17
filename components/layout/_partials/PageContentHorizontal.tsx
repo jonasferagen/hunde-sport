@@ -1,5 +1,7 @@
-import { AnimatePresence, View as MotiView } from 'moti';
+import { CustomText } from '@/components/ui';
+import { SPACING } from '@/styles';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AnimatePresence, View as MotiView } from 'moti';
 import React, { Children, useState } from 'react';
 import {
   NativeScrollEvent,
@@ -9,7 +11,6 @@ import {
   View,
   ViewProps
 } from 'react-native';
-import { SPACING } from '@/styles';
 
 interface PageContentHorizontalProps extends ViewProps {
   children: React.ReactNode;
@@ -31,6 +32,7 @@ export const PageContentHorizontal = ({ children, style, ...props }: PageContent
 
   return (
     <View style={[styles.horizontalContainer, style]}>
+      <CustomText>Populære produkter</CustomText>
       <AnimatePresence>
         {showLeftGradient && (
           <MotiView

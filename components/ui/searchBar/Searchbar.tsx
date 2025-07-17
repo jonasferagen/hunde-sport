@@ -54,9 +54,8 @@ const createStyles = (_themeVariant: any) => StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: _themeVariant.backgroundColor,
-        borderRadius: BORDER_RADIUS.md,
-        paddingHorizontal: SPACING.md,
-        marginVertical: SPACING.md,
+        borderRadius: BORDER_RADIUS.sm,
+        paddingHorizontal: SPACING.sm,
     },
     input: {
         flex: 1,
