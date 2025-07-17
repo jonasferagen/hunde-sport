@@ -1,8 +1,8 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
-import { Icon } from '@/components/ui';
+import { Heading, Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { FONT_FAMILY, FONT_SIZES } from '@/styles';
+import { FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -17,13 +17,16 @@ const CustomDrawerContent = (props: any) => {
             style={StyleSheet.absoluteFill}
         >
             <DrawerContentScrollView {...props}>
-                <View style={{ alignItems: 'flex-end', paddingRight: 15, paddingTop: 15, paddingBottom: 10 }}>
+
+                <View style={{ alignItems: 'flex-end' }}>
                     <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
-                        <Icon name="close" size='xl' color={theme.colors.text} />
+                        <Icon name="close" size='xl' color={theme.colors.text} style={{ padding: SPACING.md }} />
                     </TouchableOpacity>
                 </View>
+                <Heading title="HundeSport.no" />
                 <DrawerItemList {...props} />
-                <CategoryTree variant="secondary" />
+                <Heading title="Kategorier" />
+                <CategoryTree variant="secondary" style={{ marginHorizontal: 10 }} />
             </DrawerContentScrollView>
         </LinearGradient>
     );

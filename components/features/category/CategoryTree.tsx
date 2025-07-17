@@ -7,7 +7,7 @@ import { Category, Theme } from '@/types';
 import { rgba } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { CategoryIcon } from './CategoryIcon';
 
@@ -109,10 +109,14 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: Cat
 
 interface CategoryTreeProps {
     variant?: keyof Theme['textOnColor'];
+    style?: StyleProp<ViewStyle>;
 }
 
-export const CategoryTree = React.memo(({ variant = 'primary' }: CategoryTreeProps) => {
-    return <CategorySubTree categoryId={0} variant={variant} />;
+export const CategoryTree = React.memo(({ variant = 'primary', style }: CategoryTreeProps) => {
+
+    return <View style={style}>
+        <CategorySubTree categoryId={0} variant={variant} />
+    </View>;
 });
 
 const createStyles = () => StyleSheet.create({
