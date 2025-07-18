@@ -1,21 +1,28 @@
+import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Button } from '@/components/ui/button/Button';
-import { CustomText } from '@/components/ui/text/CustomText';
+import { Button, CustomText } from '@/components/ui';
+import { checkoutFlow, routes } from '@/config/routes';
 import { Stack, useRouter } from 'expo-router';
-import React, { JSX } from 'react';
+import React from 'react';
 
-const PaymentScreen = (): JSX.Element => {
+const PaymentScreen = () => {
     const router = useRouter();
     const title = 'Betaling';
+
+    const handleNext = () => {
+        router.push(routes.orderStatus());
+    };
 
     return (
         <PageView>
             <Stack.Screen options={{ title }} />
-            <PageHeader title={title} />
-            <PageSection>
+            <PageHeader title={title}>
+                <RouteTrail steps={checkoutFlow} currentStepName="payment" />
+            </PageHeader>
+            <PageSection flex>
                 <PageContent>
-                    <CustomText>Betalingsalternativer kommer her.</CustomText>
-                    <Button title="Fullfør bestilling" onPress={() => { }} />
+                    <CustomText>Betalingsinformasjon kommer her.</CustomText>
+                    <Button title="Fullfør Kjøp" onPress={handleNext} />
                 </PageContent>
             </PageSection>
         </PageView>

@@ -1,4 +1,5 @@
 import { Category, Product } from '@/types';
+import { Href } from 'expo-router';
 
 const paths = {
     home: '/',
@@ -47,3 +48,17 @@ export const routes = {
         return paths.orderStatus;
     },
 };
+
+
+export interface CheckoutStep {
+    name: string;
+    title: string;
+    route: Href<string>;
+}
+
+export const checkoutFlow: CheckoutStep[] = [
+    { name: 'checkout', title: 'Kasse', route: routes.checkout() },
+    { name: 'billing', title: 'Fakturering', route: routes.billing() },
+    { name: 'payment', title: 'Betaling', route: routes.payment() },
+    { name: 'order-status', title: 'Bekreftelse', route: routes.orderStatus() },
+];

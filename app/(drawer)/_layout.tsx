@@ -126,10 +126,6 @@ export default function DrawerLayout() {
                 name="(tabs)" // This is the actual navigator, now hidden
                 options={{ drawerItemStyle: { display: 'none' } }}
             />
-
-            <Drawer.Screen name="billing" options={{ drawerItemStyle: { display: 'none' }, title: 'Fakturering' }} />
-            <Drawer.Screen name="payment" options={{ drawerItemStyle: { display: 'none' }, title: 'Betaling' }} />
-            <Drawer.Screen name="order-status" options={{ drawerItemStyle: { display: 'none' }, title: 'Ordrestatus' }} />
         </Drawer>
     );
 }

@@ -1,7 +1,8 @@
 import { CheckoutList } from '@/components/features/checkout/CheckoutList';
+import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Button } from '@/components/ui/button/Button';
-import { routes } from '@/config/routes';
+import { checkoutFlow, routes } from '@/config/routes';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { Stack, useRouter } from 'expo-router';
 import React, { JSX } from 'react';
@@ -15,7 +16,9 @@ export const CheckoutScreen = (): JSX.Element => {
     return (
         <PageView>
             <Stack.Screen options={{ title }} />
-            <PageHeader title={title} />
+            <PageHeader title={title}>
+                <RouteTrail steps={checkoutFlow} currentStepName="checkout" />
+            </PageHeader>
             <PageSection flex>
                 <PageContent flex>
                     <CheckoutList items={items} cartTotal={cartTotal} />

@@ -53,7 +53,7 @@ export const HomeScreen = () => {
                 </PageContent>
             </PageSection>
             <PageSection scrollable>
-                <PageContent paddingHorizontal="none">
+                <PageContent padding="none">
                     <CategorySection />
                 </PageContent>
             </PageSection>

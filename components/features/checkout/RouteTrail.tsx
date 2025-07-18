@@ -1,0 +1,58 @@
+import { CustomText } from '@/components/ui';
+import { CheckoutStep } from '@/config/routes';
+import { useTheme } from '@/contexts';
+import { SPACING } from '@/styles';
+import { Link } from 'expo-router';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+
+interface RouteTrailProps {
+    steps: CheckoutStep[];
+    currentStepName: string;
+}
+
+export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps) => {
+    const { themeManager } = useTheme();
+    const currentStepIndex = steps.findIndex(step => step.name === currentStepName);
+
+    return (
+        <View style={styles.container}>
+            {steps.map((step, index) => {
+                const isCompleted = index < currentStepIndex;
+                const isCurrent = index === currentStepIndex;
+
+                const textStyle = {
+                    color: isCurrent ? themeManager.getVariant('primary').text.primary : themeManager.getVariant('default').text.secondary,
+                    fontWeight: isCurrent ? 'bold' : 'normal',
+                };
+
+                return (
+                    <React.Fragment key={step.name}>
+                        <Link href={step.route} disabled={!isCompleted} asChild>
+                            <View>
+                                <CustomText style={textStyle}>{step.title}</CustomText>
+                            </View>
+                        </Link>
+                        {index < steps.length - 1 && (
+                            <CustomText style={[styles.separator, { color: themeManager.getVariant('default').text.secondary }]}>
+                                &gt;
+                            </CustomText>
+                        )}
+                    </React.Fragment>
+                );
+            })}
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: SPACING.sm,
+    },
+    separator: {
+        marginHorizontal: SPACING.sm,
+    },
+});
