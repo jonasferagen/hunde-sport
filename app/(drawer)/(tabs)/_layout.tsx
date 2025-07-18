@@ -12,7 +12,7 @@ export default function TabsLayout() {
     const segments = useSegments() as string[];
 
     const isSearchActive = segments.includes('search');
-    const isCartActive = segments.includes('shoppingCart');
+    const isCartActive = segments.includes('shopping-cart');
     const isHomeActive = segments[2] === '(home)' && segments.length === 3;
 
     return (
@@ -72,7 +72,7 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="shoppingCart"
+                name="shopping-cart"
                 options={{
                     title: 'Handlekurv',
                     tabBarIcon: () => (
@@ -85,7 +85,7 @@ export default function TabsLayout() {
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
-                        router.push('/(drawer)/(tabs)/(home)/shoppingCart');
+                        router.push('/(drawer)/(tabs)/(home)/shopping-cart');
                     },
                 }}
             />

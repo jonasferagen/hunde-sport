@@ -20,8 +20,10 @@ const PaymentScreen = () => {
                 <RouteTrail steps={checkoutFlow} currentStepName="payment" />
             </PageHeader>
             <PageSection flex>
-                <PageContent>
+                <PageContent flex>
                     <CustomText>Betalingsinformasjon kommer her.</CustomText>
+                </PageContent>
+                <PageContent>
                     <Button title="Fullfør Kjøp" onPress={handleNext} />
                 </PageContent>
             </PageSection>

@@ -20,8 +20,10 @@ const OrderStatusScreen = () => {
                 <RouteTrail steps={checkoutFlow} currentStepName="order-status" />
             </PageHeader>
             <PageSection flex>
-                <PageContent>
+                <PageContent flex>
                     <CustomText>Takk for din bestilling!</CustomText>
+                </PageContent>
+                <PageContent>
                     <Button title="Tilbake til forsiden" onPress={handleNext} />
                 </PageContent>
             </PageSection>

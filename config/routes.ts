@@ -3,7 +3,7 @@ import { Href } from 'expo-router';
 
 const paths = {
     home: '/',
-    shoppingCart: '/shoppingCart',
+    shoppingCart: '/shopping-cart',
     search: '/search',
     category: '/category',
     product: '/product',
