@@ -46,8 +46,6 @@ export class StyleVariant implements IStyleVariant {
       throw new Error('2 amounts for gradient expected');
     }
 
-    console.log("aaaa");
-
     return [
       lighten(this.backgroundColor, amounts[0]) as ColorValue,
       lighten(this.backgroundColor, amounts[1]) as ColorValue,

@@ -3,7 +3,6 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { CustomText, SearchBar } from '@/components/ui';
 import { useSearchProducts } from '@/hooks/Product';
-import { useDebounce } from '@/hooks/useDebounce';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -12,34 +11,29 @@ import { TextInput, View } from 'react-native';
 export const SearchScreen = () => {
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
     const [liveQuery, setLiveQuery] = useState(initialQuery || '');
-    const debouncedQuery = useDebounce(liveQuery, 1000);
 
     const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(initialQuery);
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
 
-    // This effect handles the debounced search.
-    // It runs only when the user stops typing for a moment.
     useEffect(() => {
-        // We only want to trigger a search if the debounced query is not empty
-        // and is different from the query already in the URL.
-        if (debouncedQuery && debouncedQuery !== initialQuery) {
-            router.setParams({ query: debouncedQuery });
+        if (initialQuery !== undefined) {
+            setLiveQuery(initialQuery);
         }
-    }, [debouncedQuery]);
+    }, [initialQuery]);
 
-    // This effect handles the immediate clearing of the search.
-    // It runs instantly when the user clears the text input.
-    useEffect(() => {
-        if (liveQuery === '' && initialQuery !== '') {
-            router.setParams({ query: '' });
+    const handleQueryChange = (newQuery: string) => {
+        if (newQuery !== initialQuery) {
+            router.setParams({ query: newQuery });
         }
-    }, [liveQuery]);
-
-    // This function handles the explicit search (e.g., pressing the search button)
-    const handleSearch = (currentQuery: string) => {
-        // Update the param immediately, bypassing the debounce
-        router.setParams({ query: currentQuery });
     };
+
+    const handleSearchSubmit = (submittedQuery: string) => {
+        router.setParams({ query: submittedQuery });
+    };
+
+    const isWaiting = initialQuery !== liveQuery;
+
+    console.log("productsearch rendered", initialQuery, products.length, isLoading, isFetchingNextPage);
 
     return (
         <PageView>
@@ -48,10 +42,16 @@ export const SearchScreen = () => {
                 <SearchBar
                     ref={searchInputRef}
                     initialQuery={initialQuery}
-                    onQueryChange={setLiveQuery}
-                    onSubmit={handleSearch}
+                    onTextChange={setLiveQuery}
+                    onQueryChange={handleQueryChange}
+                    onSubmit={handleSearchSubmit}
+                    debounce={1000}
                 />
-                <CustomText fontSize="md">{initialQuery ? `Søkeresultater for "${initialQuery}"` : ''}</CustomText>
+                <CustomText fontSize="md">
+                    {isWaiting
+                        ? `Leter etter "${liveQuery}"...`
+                        : (initialQuery ? `Søkeresultater for "${initialQuery}"` : ' ')}
+                </CustomText>
 
             </PageHeader>
             <PageSection flex>
