@@ -32,7 +32,7 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
             <View style={styles.buttonContainer}>
                 <Button title="Tøm handlekurv" icon="emptyCart" variant="secondary" onPress={onClearCart} />
                 <Link href={routes.checkout()} asChild>
-                    <Button title="Gå til kassen" icon="checkout" variant="primary" />
+                    <Button title="Gå til kassen" icon="next" variant="primary" />
                 </Link>
             </View>
         </>

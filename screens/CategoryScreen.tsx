@@ -25,8 +25,6 @@ export const CategoryScreen = memo(() => {
     const { category, isLoading } = useCategory(Number(id));
     const { build } = useBreadcrumbActions();
 
-    console.log("category screen loaded");
-
 
     useEffect(() => {
         if (category) {

@@ -29,7 +29,6 @@ export const StatusMessage = () => {
         borderWidth: 1,
     };
 
-    console.log(elementRef);
 
     return (
         <Animated.View
