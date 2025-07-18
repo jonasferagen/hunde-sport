@@ -11,12 +11,13 @@ interface ProductDetailsProps {
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
     return (
         <>
-            <CustomText fontSize="sm">{product.description}</CustomText>
+            <CustomText fontSize="sm">{product.description || 'Ingen beskrivelse tilgjengelig'}</CustomText>
             {product.attributes
                 .filter(attr => !attr.variation)
                 .map(attribute => (
                     <AttributeDisplay key={attribute.id} attribute={attribute} />
                 ))}
+
             <CategoryChips categories={product.categories} />
         </>
     );

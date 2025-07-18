@@ -55,5 +55,6 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
 const styles = StyleSheet.create({
     container: {
         alignItems: 'flex-start',
+
     },
 });
