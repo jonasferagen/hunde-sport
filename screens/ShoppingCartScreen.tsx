@@ -6,7 +6,7 @@ import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { FONT_SIZES, SPACING } from '@/styles';
-import { StyleVariant } from '@/types';
+import { IStyleVariant } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Link, Stack } from 'expo-router';
 import React, { memo, useCallback } from 'react';
@@ -77,7 +77,7 @@ export const ShoppingCartScreen = () => {
     );
 }
 
-const createStyles = (themeVariant: StyleVariant) => StyleSheet.create({
+const createStyles = (themeVariant: IStyleVariant) => StyleSheet.create({
 
 
     summaryRow: {

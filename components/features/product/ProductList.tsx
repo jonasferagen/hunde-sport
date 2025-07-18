@@ -4,24 +4,12 @@ import { SPACING } from '@/styles';
 import { Product } from '@/types';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback, useState } from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
+import { ViewStyle } from 'react-native';
 import { ProductListItem } from './ProductListItem';
-
-interface RenderProductProps {
-    item: Product;
-    index: number;
-    onPress: (id: number) => void;
-    isExpanded: boolean;
-    expandedHeight: number;
-}
-
-const RenderProduct = memo(({ item, index, onPress, isExpanded, expandedHeight }: RenderProductProps) => (
-    <ProductListItem product={item} index={index} onPress={onPress} isExpanded={isExpanded} expandedHeight={expandedHeight} />
-));
 
 interface ProductListProps {
     products: Product[];
-    loadMore: () => void;
+    loadMore?: () => void;
     loadingMore: boolean;
     HeaderComponent?: React.ReactElement;
     EmptyComponent?: React.ReactElement;
@@ -39,7 +27,13 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
     const renderItem = useCallback(({ item, index }: { item: Product, index: number }) => {
         const expandedHeight = layout.height * 0.8;
         return (
-            <RenderProduct item={item} index={index} onPress={handleItemPress} isExpanded={expandedProductId === item.id} expandedHeight={expandedHeight} />
+            <ProductListItem
+                product={item}
+                index={index}
+                onPress={handleItemPress}
+                isExpanded={expandedProductId === item.id}
+                expandedHeight={expandedHeight}
+            />
         );
     }, [expandedProductId, handleItemPress, layout.height]);
 
@@ -47,7 +41,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
 
     return (
 
-        <FlashList style={styles.listStyle}
+        <FlashList style={{ flex: 1 }}
             data={products}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
@@ -64,12 +58,4 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
         />
 
     );
-});
-
-const styles = StyleSheet.create({
-
-    listStyle: {
-        flex: 1,
-    },
-
 });
