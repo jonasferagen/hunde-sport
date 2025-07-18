@@ -1,7 +1,7 @@
 import { CustomText } from '@/components/ui';
 import { CheckoutStep } from '@/config/routes';
 import { useTheme } from '@/contexts';
-import { FONT_FAMILY, SPACING } from '@/styles';
+import { SPACING } from '@/styles';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -22,8 +22,8 @@ export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Ele
                 const isCurrent = index === currentStepIndex;
 
                 const textStyle = {
-                    color: isCompleted ? themeManager.getVariant('primary').text.primary : themeManager.getVariant('default').text.secondary,
-                    fontFamily: isCurrent ? FONT_FAMILY.bold : FONT_FAMILY.regular,
+                    color: isCompleted || isCurrent ? themeManager.getVariant('default').text.primary : themeManager.getVariant('default').text.secondary,
+                    textDecorationLine: isCurrent ? 'underline' : 'none',
                 };
 
                 return (

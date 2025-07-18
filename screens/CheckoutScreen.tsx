@@ -16,7 +16,7 @@ export const CheckoutScreen = (): JSX.Element => {
     return (
         <PageView>
             <Stack.Screen options={{ title }} />
-            <PageHeader title={title}>
+            <PageHeader>
                 <RouteTrail steps={checkoutFlow} currentStepName="checkout" />
             </PageHeader>
             <PageSection flex>

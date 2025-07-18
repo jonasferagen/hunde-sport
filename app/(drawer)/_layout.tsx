@@ -1,12 +1,11 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
 import { Heading, Icon } from '@/components/ui';
-import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { BORDER_RADIUS, FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router, useSegments } from 'expo-router';
+import { useSegments } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -35,11 +34,13 @@ const getDrawerItemProps = (themeManager: any) => {
 }
 
 const CustomDrawerContent = (props: any) => {
+    const { navigation } = props;
     const segments = useSegments() as string[];
     const { themeManager } = useTheme();
     const secondaryVariant = themeManager.getVariant('secondary');
     const { cartItemCount } = useShoppingCart();
 
+    console.log(segments);
 
     return (
         <LinearGradient
@@ -57,15 +58,15 @@ const CustomDrawerContent = (props: any) => {
                 <DrawerItem
                     label="Hjem"
                     icon={({ color }) => <Icon name="home" color={color} size="xl" />}
-                    focused={segments[2] === '(home)' && segments.length === 3}
-                    onPress={() => router.push(routes.home())}
+                    focused={segments[3] === 'index'}
+                    onPress={() => navigation.navigate('_home')}
                     {...getDrawerItemProps(themeManager)}
                 />
                 <DrawerItem
                     label="Handlekurv"
                     icon={({ color }) => <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />}
-                    focused={segments[2] === 'shopping-cart'}
-                    onPress={() => router.push(routes.shoppingCart())}
+                    focused={segments[3] === 'shoppingCart'}
+                    onPress={() => navigation.navigate('_shoppingCart')}
                     {...getDrawerItemProps(themeManager)}
                 />
                 <Heading title="Kategorier" style={{ marginVertical: SPACING.md }} />
