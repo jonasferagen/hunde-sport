@@ -18,7 +18,14 @@ export const useProductVariations = (product: Product | null | undefined) => {
                     initialOptions[attr.slug] = attr.option;
                 }
             });
-            setSelectedOptions(initialOptions);
+
+            // Only update if the options have actually changed to prevent an infinite loop
+            setSelectedOptions(currentOptions => {
+                const hasChanged = Object.keys(initialOptions).some(
+                    key => initialOptions[key] !== currentOptions[key]
+                );
+                return hasChanged ? initialOptions : currentOptions;
+            });
         }
     }, [variations]);
 
@@ -46,7 +53,6 @@ export const useProductVariations = (product: Product | null | undefined) => {
             [attributeSlug]: option,
         }));
     };
-
     const displayProduct = selectedVariation || product;
 
     return {

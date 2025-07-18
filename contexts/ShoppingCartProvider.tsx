@@ -27,8 +27,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const addToCart = useCallback((product: Product) => {
         if (!canAddToCart(product)) {
-            showMessage({ text: 'Vennligst velg en variant.', type: 'warning' });
-            return;
+            throw new Error('Product ' + product.id + ' is not purchasable');
         }
 
         setItems(prevItems => {

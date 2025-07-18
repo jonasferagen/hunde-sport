@@ -1,4 +1,4 @@
-export { BreadcrumbProvider, useBreadcrumbs } from './BreadcrumbProvider';
+export { BreadcrumbProvider, useBreadcrumbActions, useBreadcrumbState } from './BreadcrumbProvider';
 export { LayoutProvider, useLayout } from './LayoutProvider';
 export { PageContentProvider, usePageContent } from './PageContentProvider';
 export { PreloaderProvider, usePreloader } from './PreloaderProvider';

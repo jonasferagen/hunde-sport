@@ -5,30 +5,25 @@ import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
-import { useBreadcrumbs } from '@/contexts';
 import { useProduct } from '@/hooks/Product';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ProductImageManager } from './product/ProductImageManager';
 
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
 
+  console.log("product screen loaded" + id);
+
   const scrollRef = useScrollToTop(id);
 
   const { data: product, isLoading, error } = useProduct(Number(id));
-
   const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
 
-  const { build } = useBreadcrumbs();
 
-  useEffect(() => {
-    if (product?.categories?.[0]) {
-      build(product.categories[0].id);
-    }
-  }, [product, build]);
+
 
   // Explicitly handle loading, error, and not-found states
   if (isLoading) {
@@ -56,7 +51,7 @@ export const ProductScreen = () => {
     <PageView>
       <Stack.Screen options={{ title: displayProduct!.name }} />
       <PageHeader>
-        <Breadcrumbs />
+        <Breadcrumbs product={displayProduct} />
         <CustomText bold>{displayProduct.name}</CustomText>
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
