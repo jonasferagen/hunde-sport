@@ -20,7 +20,6 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
 
 
-
     return (
         <ProductContext.Provider value={{ currentImageIndex, setImageIndex, isImageViewerVisible, setImageViewerVisible, displayProduct, setDisplayProduct }}>
             {children}
