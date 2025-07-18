@@ -1,0 +1,47 @@
+import { ProductImage } from '@/components/features/product/ProductImage';
+import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
+import { PageContent } from '@/components/layout';
+import { Product } from '@/types';
+import React, { useState } from 'react';
+
+interface ProductImageManagerProps {
+    product: Product;
+}
+
+export const ProductImageManager = ({ product }: ProductImageManagerProps) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isImageViewerVisible, setImageViewerVisible] = useState(false);
+
+    const openImageViewer = (index: number) => {
+        setCurrentImageIndex(index);
+        setImageViewerVisible(true);
+    };
+
+    const closeImageViewer = () => {
+        setImageViewerVisible(false);
+    };
+
+    if (!product.images || product.images.length === 0) {
+        return null; // Or a placeholder
+    }
+
+    return (
+        <>
+            <PageContent>
+                <ProductImage image={product.images[0]} onPress={() => openImageViewer(0)} />
+            </PageContent>
+
+            {product.images.length > 1 && (
+                <PageContent horizontal secondary title="Bilder">
+                    <ProductImageGallery
+                        images={product.images}
+                        onImagePress={openImageViewer}
+                        isImageViewerVisible={isImageViewerVisible}
+                        closeImageViewer={closeImageViewer}
+                        currentImageIndex={currentImageIndex}
+                    />
+                </PageContent>
+            )}
+        </>
+    );
+};
