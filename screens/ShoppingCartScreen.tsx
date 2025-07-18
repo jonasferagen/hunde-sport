@@ -45,9 +45,10 @@ export const ShoppingCartScreen = () => {
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
 
-    const renderItem = useCallback(({ item }: { item: any }) => (
+    const renderItem = useCallback(({ item, index }: { item: any, index: number }) => (
         <ShoppingCartListItem
             item={item}
+            index={index}
             onUpdateQuantity={updateQuantity}
             onRemove={removeFromCart}
         />
@@ -59,7 +60,7 @@ export const ShoppingCartScreen = () => {
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageHeader title="Handlekurv" />
             <PageSection flex>
-                <PageContent paddingHorizontal="none" flex >
+                <PageContent paddingHorizontal="none" paddingVertical="none" flex >
                     <FlatList
                         data={items}
                         keyExtractor={(item) => item.product.id.toString()}

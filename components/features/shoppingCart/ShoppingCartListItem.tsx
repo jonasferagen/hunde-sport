@@ -10,11 +10,12 @@ import { QuantityControl } from './QuantityControl';
 
 interface ShoppingCartListItemProps {
     item: ShoppingCartItem;
+    index: number;
     onUpdateQuantity: (productId: number, quantity: number) => void;
     onRemove: (productId: number) => void;
 }
 
-export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item, onUpdateQuantity, onRemove }) => {
+export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item, index, onUpdateQuantity, onRemove }) => {
     const { themeManager } = useTheme();
     const accentVariant = themeManager.getVariant('accent');
 
@@ -49,8 +50,9 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
 
     return (
         <ListItem
+            index={index}
             title={item.product.name}
-            subtitle={formatPrice(item.product.price)}
+            price={formatPrice(item.product.price)}
             imageUrl={item.product.images[0]?.src}
             onPress={handlePress}
             actionComponent={actionComponent}
