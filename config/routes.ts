@@ -53,7 +53,7 @@ export const routes = {
 export interface CheckoutStep {
     name: string;
     title: string;
-    route: Href<string>;
+    route: Href;
 }
 
 export const checkoutFlow: CheckoutStep[] = [

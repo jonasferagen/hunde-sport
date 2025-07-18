@@ -3,7 +3,7 @@ import { CheckoutStep } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { SPACING } from '@/styles';
 import { Link } from 'expo-router';
-import React from 'react';
+import React, { JSX } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 interface RouteTrailProps {
@@ -11,9 +11,11 @@ interface RouteTrailProps {
     currentStepName: string;
 }
 
-export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps) => {
+export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Element => {
     const { themeManager } = useTheme();
     const currentStepIndex = steps.findIndex(step => step.name === currentStepName);
+
+    console.log(currentStepIndex, currentStepName, steps);
 
     return (
         <View style={styles.container}>
@@ -22,16 +24,14 @@ export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps) => {
                 const isCurrent = index === currentStepIndex;
 
                 const textStyle = {
-                    color: isCurrent ? themeManager.getVariant('primary').text.primary : themeManager.getVariant('default').text.secondary,
+                    color: isCompleted ? themeManager.getVariant('primary').text.primary : themeManager.getVariant('default').text.secondary,
                     fontWeight: isCurrent ? 'bold' : 'normal',
                 };
 
                 return (
                     <React.Fragment key={step.name}>
-                        <Link href={step.route} disabled={!isCompleted} asChild>
-                            <View>
-                                <CustomText style={textStyle}>{step.title}</CustomText>
-                            </View>
+                        <Link href={step.route} disabled={!isCompleted && !isCurrent} asChild>
+                            <CustomText style={textStyle}>{step.title}</CustomText>
                         </Link>
                         {index < steps.length - 1 && (
                             <CustomText style={[styles.separator, { color: themeManager.getVariant('default').text.secondary }]}>
