@@ -10,7 +10,8 @@ export const useProductVariations = (product: Product | null | undefined) => {
 
     // Set initial variation when variations are loaded
     useEffect(() => {
-        if (variations && variations.length > 0) {
+        // Only set initial options if no options are selected yet
+        if (variations && variations.length > 0 && Object.keys(selectedOptions).length === 0) {
             const firstVariation = variations[0];
             const initialOptions: Record<string, string> = {};
             firstVariation.attributes.forEach(attr => {
@@ -19,15 +20,9 @@ export const useProductVariations = (product: Product | null | undefined) => {
                 }
             });
 
-            // Only update if the options have actually changed to prevent an infinite loop
-            setSelectedOptions(currentOptions => {
-                const hasChanged = Object.keys(initialOptions).some(
-                    key => initialOptions[key] !== currentOptions[key]
-                );
-                return hasChanged ? initialOptions : currentOptions;
-            });
+            setSelectedOptions(initialOptions);
         }
-    }, [variations]);
+    }, [variations, selectedOptions]);
 
     // Find the matching variation when selected options change
     useEffect(() => {
@@ -48,6 +43,9 @@ export const useProductVariations = (product: Product | null | undefined) => {
     }, [selectedOptions, variations, product]);
 
     const handleSelectOption = (attributeSlug: string, option: string) => {
+
+        console.log("selecting option " + attributeSlug + " " + option);
+
         setSelectedOptions(prev => ({
             ...prev,
             [attributeSlug]: option,

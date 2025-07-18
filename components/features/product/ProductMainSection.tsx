@@ -29,7 +29,7 @@ const AddProductToShoppingCartButton = ({ product, displayProduct }: { product: 
     );
 };
 
-export const ProductHeader = ({
+export const ProductMainSection = ({
     product,
     displayProduct,
     selectedOptions,

@@ -6,7 +6,7 @@ import { useBreadcrumbActions, useBreadcrumbState } from '@/contexts';
 import { SPACING } from '@/styles';
 import { Product } from '@/types';
 import { Link } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Loader } from '../loader/Loader';
 
@@ -15,16 +15,13 @@ export const Breadcrumbs = React.memo(({ product }: { product?: Product }) => {
     const { categories, isLoading } = useBreadcrumbState();
     const { setProductFallback } = useBreadcrumbActions();
 
-    console.log("crumbs");
-    /*
-        useEffect(() => {
-            if (product) {
-    
-                console.log("setting product fallback" + product.name + ' ' + product.id)
-    
-                // setProductFallback(product);
-            }
-        }, [product, setProductFallback]); */
+
+    useEffect(() => {
+        if (product) {
+            console.log("setting product fallback" + product.name + ' ' + product.id)
+            setProductFallback(product);
+        }
+    }, [product, setProductFallback]);
 
     return (
         <View style={styles.container}>

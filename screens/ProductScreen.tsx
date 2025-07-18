@@ -1,6 +1,6 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { ProductDetails } from '@/components/features/product/ProductDetails';
-import { ProductHeader } from '@/components/features/product/ProductHeader';
+import { ProductMainSection } from '@/components/features/product/ProductMainSection';
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -15,13 +15,10 @@ import { ProductImageManager } from './product/ProductImageManager';
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  console.log("product screen loaded" + id);
-
   const scrollRef = useScrollToTop(id);
 
   const { data: product, isLoading, error } = useProduct(Number(id));
   const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
-
 
 
 
@@ -51,14 +48,14 @@ export const ProductScreen = () => {
     <PageView>
       <Stack.Screen options={{ title: displayProduct!.name }} />
       <PageHeader>
-        <Breadcrumbs product={displayProduct} />
+        <Breadcrumbs product={product} />
         <CustomText bold>{displayProduct.name}</CustomText>
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
         <ProductImageManager product={displayProduct} />
 
         <PageContent>
-          <ProductHeader
+          <ProductMainSection
             product={product}
             displayProduct={displayProduct}
             selectedOptions={selectedOptions}
