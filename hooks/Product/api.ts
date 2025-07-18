@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import type { Product } from '@/types';
+import type { Product, ProductType } from '@/types';
 import apiClient from '@/utils/apiClient';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
 
@@ -41,6 +41,7 @@ const mapToProduct = (item: any): Product => {
     }));
     product.variations = item.variations || [];
     product.related_ids = item.related_ids || [];
+    product.type = item.type as ProductType;
 
     if (product.images!.length === 0) {
         product.images!.push({ src: 'https://placehold.co/600x400' });

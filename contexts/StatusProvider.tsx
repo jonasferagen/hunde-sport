@@ -8,14 +8,14 @@ interface StatusAction {
 
 interface ShowMessageParams {
     text: string;
-    type?: 'info' | 'success' | 'error';
+    type?: 'info' | 'success' | 'error' | 'warning';
     action?: StatusAction;
     duration?: number;
 }
 
 interface StatusContextType {
     message: string | null;
-    type: 'info' | 'success';
+    type: 'info' | 'success' | 'warning';
     action: StatusAction | null;
     showMessage: (params: ShowMessageParams) => void;
     hideMessage: () => void;
@@ -26,7 +26,7 @@ const StatusContext = createContext<StatusContextType | undefined>(undefined);
 export const StatusProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [message, setMessage] = useState<string | null>(null);
     const [action, setAction] = useState<StatusAction | null>(null);
-    const [type, setType] = useState<'info' | 'success'>('info');
+    const [type, setType] = useState<'info' | 'success' | 'warning'>('info');
 
     const hideMessage = useCallback(() => {
         setMessage(null);

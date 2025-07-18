@@ -24,6 +24,8 @@ export interface Category {
   count: number;
 }
 
+export type ProductType = 'simple' | 'variable' | 'variation';
+
 export interface Product {
   id: number;
   name: string;
@@ -39,6 +41,7 @@ export interface Product {
   attributes: ProductAttribute[];
   variations: number[];
   related_ids: number[];
+  type: ProductType
 }
 
 export interface ProductAttribute {

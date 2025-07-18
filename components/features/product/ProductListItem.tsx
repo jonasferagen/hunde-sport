@@ -1,4 +1,4 @@
-import { ListItem } from '@/components/ui';
+import { Button, ListItem } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { Product } from '@/types';
@@ -14,7 +14,7 @@ interface ProductListItemProps {
 }
 
 export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index }) => {
-    const { items, addToCart, updateQuantity } = useShoppingCart();
+        const { items, addToCart, updateQuantity, canAddToCart } = useShoppingCart();
     const [imageDimensions, setImageDimensions] = useState({ width: 60, height: 60 });
 
     const cartItem = items.find(item => item.product.id === product.id);
@@ -47,6 +47,8 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     const imageUrl = getScaledImageUrl(product.images[0]?.src, imageDimensions.width, imageDimensions.height);
 
+    const isPurchasable = canAddToCart(product);
+
     return (
         <ListItem
             index={index}
@@ -55,7 +57,13 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
             imageUrl={imageUrl}
             price={formatPrice(product.price)}
             onPress={handlePress}
-            actionComponent={<QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />}
+            actionComponent={
+                isPurchasable ? (
+                    <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
+                ) : (
+                    <Button variant="secondary" title="Vis" icon="checkout" onPress={handlePress} />
+                )
+            }
         />
     );
 };

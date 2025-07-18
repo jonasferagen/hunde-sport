@@ -14,13 +14,17 @@ interface ProductHeaderProps {
 
 
 const AddProductToShoppingCartButton = ({ product, displayProduct }: { product: Product; displayProduct: Product }) => {
-    const { addToCart } = useShoppingCart();
+    const { addToCart, canAddToCart } = useShoppingCart();
+
+    const isPurchasable = canAddToCart(displayProduct);
+
     return (
         <Button
             variant="primary"
             icon="addToCart"
-            title="Legg til i handlekurv"
+            title={isPurchasable ? 'Legg til i handlekurv' : 'Velg variant'}
             onPress={() => addToCart(displayProduct)}
+            disabled={!isPurchasable}
         />
     );
 };
