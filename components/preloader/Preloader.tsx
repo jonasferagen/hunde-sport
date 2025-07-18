@@ -41,7 +41,7 @@ export const Preloader = () => {
                     },
                 ]}
             />
-            <Text style={styles.loadingText}>Loading...</Text>
+            <Text style={styles.loadingText}>Laster...</Text>
         </View>
     );
 };

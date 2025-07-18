@@ -26,7 +26,6 @@ export const routes = {
         return { pathname: paths.search, params: { query } };
     },
     category: (category: Category) => {
-        //breadcrumbHelper.buildTrail(category.id);
         return { pathname: paths.category, params: { id: category.id.toString(), name: category.name } };
     },
     product: (product: Product) => {

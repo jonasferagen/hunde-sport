@@ -1,7 +1,7 @@
 import { CustomText } from '@/components/ui';
 import { CheckoutStep } from '@/config/routes';
 import { useTheme } from '@/contexts';
-import { SPACING } from '@/styles';
+import { FONT_FAMILY, SPACING } from '@/styles';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -15,8 +15,6 @@ export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Ele
     const { themeManager } = useTheme();
     const currentStepIndex = steps.findIndex(step => step.name === currentStepName);
 
-    console.log(currentStepIndex, currentStepName, steps);
-
     return (
         <View style={styles.container}>
             {steps.map((step, index) => {
@@ -25,7 +23,7 @@ export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Ele
 
                 const textStyle = {
                     color: isCompleted ? themeManager.getVariant('primary').text.primary : themeManager.getVariant('default').text.secondary,
-                    fontWeight: isCurrent ? 'bold' : 'normal',
+                    fontFamily: isCurrent ? FONT_FAMILY.bold : FONT_FAMILY.regular,
                 };
 
                 return (
