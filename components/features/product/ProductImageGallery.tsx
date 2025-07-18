@@ -1,3 +1,4 @@
+import { useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { IStyleVariant, Image as ProductImage } from '@/types';
 import { Image } from 'expo-image';

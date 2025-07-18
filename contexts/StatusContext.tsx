@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState, RefObject } from 'react';
 import { Alert } from 'react-native';
 
 interface StatusAction {
@@ -11,12 +11,14 @@ interface ShowMessageParams {
     type?: 'info' | 'success' | 'error' | 'warning';
     action?: StatusAction;
     duration?: number;
+    elementRef?: RefObject<any>;
 }
 
 interface StatusContextType {
     message: string | null;
     type: 'info' | 'success' | 'warning';
     action: StatusAction | null;
+    elementRef: RefObject<any> | null;
     showMessage: (params: ShowMessageParams) => void;
     hideMessage: () => void;
 }
@@ -27,14 +29,16 @@ export const StatusProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [message, setMessage] = useState<string | null>(null);
     const [action, setAction] = useState<StatusAction | null>(null);
     const [type, setType] = useState<'info' | 'success' | 'warning'>('info');
+    const [elementRef, setElementRef] = useState<RefObject<any> | null>(null);
 
     const hideMessage = useCallback(() => {
         setMessage(null);
         setAction(null);
+        setElementRef(null);
     }, []);
 
     const showMessage = useCallback(
-        ({ text, type = 'info', action: newAction, duration = 3000 }: ShowMessageParams) => {
+        ({ text, type = 'info', action: newAction, duration = 3000, elementRef: newElementRef }: ShowMessageParams) => {
             if (type === 'error') {
                 Alert.alert(
                     'Error',
@@ -51,6 +55,7 @@ export const StatusProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
             setMessage(text);
             setType(type);
+            setElementRef(newElementRef || null);
             if (newAction) {
                 setAction(newAction);
             } else {
@@ -64,7 +69,7 @@ export const StatusProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     );
 
     return (
-        <StatusContext.Provider value={{ message, type, action, showMessage, hideMessage }}>
+        <StatusContext.Provider value={{ message, type, action, elementRef, showMessage, hideMessage }}>
             {children}
         </StatusContext.Provider>
     );

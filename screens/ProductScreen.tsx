@@ -10,12 +10,19 @@ import { Breadcrumbs, Heading, Loader } from '@/components/ui';
 import { useProductContext } from '@/contexts/ProductContext';
 import { useProduct } from '@/hooks/Product';
 import { useProductVariations } from '@/hooks/useProductVariations';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useMemo } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
+
 export const ProductScreen = () => {
+
+
+
+  useRenderGuard('ProductScreen');
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: product, isLoading, error } = useProduct(Number(id));
   const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);

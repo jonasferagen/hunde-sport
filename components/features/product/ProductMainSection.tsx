@@ -37,6 +37,8 @@ export const ProductMainSection = ({
     onSelectOption,
 }: ProductHeaderProps) => {
 
+
+
     return <>
 
         {product.attributes
