@@ -1,3 +1,4 @@
+import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { ProductDetails } from '@/components/features/product/ProductDetails';
 import { ProductHeader } from '@/components/features/product/ProductHeader';
 import { ProductImage } from '@/components/features/product/ProductImage';
@@ -10,10 +11,13 @@ import { useBreadcrumbs } from '@/contexts';
 import { useProduct, useProducts } from '@/hooks/Product';
 import { Product } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView } from 'react-native';
 
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
+
+  const scrollRef = useRef<ScrollView>(null);
 
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -26,6 +30,10 @@ export const ProductScreen = () => {
   const { build } = useBreadcrumbs();
 
   const [selectedVariation, setSelectedVariation] = useState<Product | null>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ y: 0, animated: false });
+  }, [id]);
 
   useEffect(() => {
     if (product?.categories?.[0]) {
@@ -77,7 +85,7 @@ export const ProductScreen = () => {
         <Breadcrumbs />
         <CustomText bold>{displayProduct.name}</CustomText>
       </PageHeader>
-      <PageSection scrollable>
+      <PageSection scrollable ref={scrollRef}>
         <PageContent>
 
           <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
@@ -103,6 +111,10 @@ export const ProductScreen = () => {
 
         <PageContent title="Produktinformasjon">
           <ProductDetails product={product} />
+        </PageContent>
+
+        <PageContent title="Kategorier">
+          <CategoryChips categories={product.categories} />
         </PageContent>
 
         <PageContent horizontal accent title="Relaterte produkter" >

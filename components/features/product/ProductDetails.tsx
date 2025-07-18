@@ -1,4 +1,3 @@
-import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { AttributeDisplay } from '@/components/features/product/AttributeDisplay';
 import { CustomText } from '@/components/ui';
 import { Product } from '@/types';
@@ -17,8 +16,6 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
                 .map(attribute => (
                     <AttributeDisplay key={attribute.id} attribute={attribute} />
                 ))}
-
-            <CategoryChips categories={product.categories} />
         </>
     );
-}; 
+};

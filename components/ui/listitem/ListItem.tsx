@@ -1,4 +1,4 @@
-import { CustomText } from '@/components/ui/text';
+import { CustomText } from '@/components/ui/text/CustomText';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { getScaledImageUrl } from '@/utils/helpers';
 import React from 'react';

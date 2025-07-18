@@ -1,5 +1,6 @@
-
+import React from 'react';
 import { ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
+
 interface PageSectionProps {
   children: React.ReactNode;
   style?: ViewStyle;
@@ -7,13 +8,12 @@ interface PageSectionProps {
   scrollable?: boolean;
 };
 
-export const PageSection = ({ children, style, flex, scrollable }: PageSectionProps) => {
-
-
+export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ children, style, flex, scrollable }, ref) => {
 
   if (scrollable) {
     return (
       <ScrollView
+        ref={ref}
         contentContainerStyle={[styles.scrollContentContainer, style]}
         showsVerticalScrollIndicator={true}
         scrollEventThrottle={16}
@@ -30,7 +30,7 @@ export const PageSection = ({ children, style, flex, scrollable }: PageSectionPr
       {children}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {},

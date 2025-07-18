@@ -1,4 +1,4 @@
-import { CustomText } from '@/components/ui';
+import { CustomText } from '@/components/ui/text/CustomText';
 import { FONT_SIZES } from '@/styles';
 import React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
