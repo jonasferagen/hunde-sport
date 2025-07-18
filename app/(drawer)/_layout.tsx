@@ -41,7 +41,6 @@ const CustomDrawerContent = (props: any) => {
     const { cartItemCount } = useShoppingCart();
 
 
-    console.log(segments);
 
     return (
         <LinearGradient
