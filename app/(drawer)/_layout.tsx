@@ -3,15 +3,30 @@ import { Heading, Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
-import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+const getDrawerItemProps = (themeManager: any) => {
+    const secondaryVariant = themeManager.getVariant('secondary');
+    return {
+        activeTintColor: secondaryVariant.text.primary,
+        inactiveTintColor: secondaryVariant.text.secondary,
+        activeBackgroundColor: secondaryVariant.backgroundColor,
+        labelStyle: {
+            fontFamily: FONT_FAMILY.regular,
+            fontSize: FONT_SIZES.md,
+        }
+    }
+}
+
 const CustomDrawerContent = (props: any) => {
+    const segments = useSegments() as string[];
     const { themeManager } = useTheme();
     const secondaryVariant = themeManager.getVariant('secondary');
+    const { cartItemCount } = useShoppingCart();
     return (
         <LinearGradient
             colors={[secondaryVariant.borderColor, secondaryVariant.backgroundColor]}
@@ -25,7 +40,20 @@ const CustomDrawerContent = (props: any) => {
                     </TouchableOpacity>
                 </View>
                 <Heading title="HundeSport.no" />
-                <DrawerItemList {...props} />
+                <DrawerItem
+                    label="Hjem"
+                    icon={({ color }) => <Icon name="home" color={color} size="xl" />}
+                    focused={segments.includes('(home)') && !segments.includes('shoppingCart')}
+                    onPress={() => router.push('/(drawer)/_home')}
+                    {...getDrawerItemProps(themeManager)}
+                />
+                <DrawerItem
+                    label="Handlekurv"
+                    icon={({ color }) => <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />}
+                    focused={segments.includes('shoppingCart')}
+                    onPress={() => router.push('/(drawer)/_shoppingCart')}
+                    {...getDrawerItemProps(themeManager)}
+                />
                 <Heading title="Kategorier" />
                 <CategoryTree variant="secondary" style={{ marginHorizontal: 10 }} />
             </DrawerContentScrollView>
@@ -35,7 +63,7 @@ const CustomDrawerContent = (props: any) => {
 
 export default function DrawerLayout() {
     const { themeManager } = useTheme();
-    const { cartItemCount } = useShoppingCart();
+
     const primaryVariant = themeManager.getVariant('primary');
     const secondaryVariant = themeManager.getVariant('secondary');
 
@@ -71,7 +99,7 @@ export default function DrawerLayout() {
                 headerTitle: 'HundeSport.no',
                 drawerActiveBackgroundColor: secondaryVariant.backgroundColor,
                 drawerActiveTintColor: secondaryVariant.text.primary,
-                drawerInactiveTintColor: secondaryVariant.text.primary,
+                drawerInactiveTintColor: secondaryVariant.text.secondary,
                 drawerLabelStyle: {
                     fontFamily: FONT_FAMILY.regular,
                     fontSize: FONT_SIZES.md,
@@ -86,32 +114,8 @@ export default function DrawerLayout() {
                 options={{ drawerItemStyle: { display: 'none' } }}
             />
 
-            <Drawer.Screen
-                name="_home" // This is a dummy screen for the drawer item
-                options={{
-                    title: 'Hjem',
-                    drawerIcon: ({ color }) => <Icon name="home" color={color} size="xl" />
-                }}
-                listeners={{
-                    drawerItemPress: (e) => {
-                        e.preventDefault();
-                        router.push('/(drawer)/(tabs)');
-                    }
-                }}
-            />
-            <Drawer.Screen
-                name="_shoppingCart" // This is a dummy screen for the drawer item
-                options={{
-                    title: 'Handlekurv',
-                    drawerIcon: ({ color }) => <Icon name="shoppingCart" color={color} size='xl' badge={cartItemCount} />
-                }}
-                listeners={{
-                    drawerItemPress: (e) => {
-                        e.preventDefault();
-                        router.push('/(drawer)/(tabs)/shoppingCart');
-                    }
-                }}
-            />
+            <Drawer.Screen name="_home" options={{ title: 'Hjem' }} />
+            <Drawer.Screen name="_shoppingCart" options={{ title: 'Handlekurv' }} />
         </Drawer>
     );
 }

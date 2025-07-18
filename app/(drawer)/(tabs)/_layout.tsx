@@ -1,7 +1,7 @@
 import { Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 
 export default function TabsLayout() {
     const { themeManager } = useTheme();
@@ -23,7 +23,7 @@ export default function TabsLayout() {
             }}>
 
             <Tabs.Screen
-                name="index"
+                name="(home)"
                 options={{
                     title: 'Hjem',
                     tabBarIcon: ({ color }) => (
@@ -40,6 +40,12 @@ export default function TabsLayout() {
                         <Icon name="search" color={color} size="xl" />
                     ),
                 }}
+                listeners={{
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        router.push('/(drawer)/(tabs)/(home)/search');
+                    },
+                }}
             />
             <Tabs.Screen
                 name="shoppingCart"
@@ -49,9 +55,13 @@ export default function TabsLayout() {
                         <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />
                     ),
                 }}
+                listeners={{
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        router.push('/(drawer)/(tabs)/(home)/shoppingCart');
+                    },
+                }}
             />
-            <Tabs.Screen name="category" options={{ href: null, headerShown: false }} />
-            <Tabs.Screen name="product" options={{ href: null, headerShown: false }} />
             <Tabs.Screen name="checkout" options={{ href: null }} />
         </Tabs>
     );

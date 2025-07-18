@@ -1,5 +1,5 @@
 import { Redirect } from 'expo-router';
 
 export default function HomeRedirect() {
-    return <Redirect href="/(drawer)/(tabs)" />;
+    return <Redirect href="/(drawer)/(tabs)/(home)" />;
 }
