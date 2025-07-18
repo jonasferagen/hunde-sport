@@ -1,5 +1,5 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { CategoryProducts } from '@/components/features/product/CategoryProducts';
+import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';

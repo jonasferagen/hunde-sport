@@ -56,25 +56,29 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     return (
         <View style={containerStyles}>
-            <Pressable onPress={handlePress} style={styles.pressableContainer}>
-                <View style={styles.topRow}>
+            <View>
+                <Pressable onPress={handlePress} style={[styles.topRow, { borderWidth: 1, borderColor: 'red' }]}>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, imageDimensions]} />}
                     <View style={styles.infoContainer}>
                         <CustomText style={styles.name} numberOfLines={2}>{product.name}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct!.price)}</CustomText>
                     </View>
+                </Pressable>
+                <Pressable onPress={handlePress}>
+                    <Icon name="next" size="xxl" />
+                </Pressable>
+            </View>
+            <View style={styles.bottomRow}>
+                <CustomText style={styles.subtitle} numberOfLines={2}>{product.short_description}</CustomText>
+                <View style={styles.actionContainer}>
+                    {isPurchasable ? (
+                        <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
+                    ) : (
+                        <Icon name="next" size="xxl" />
+                    )}
                 </View>
-                <View style={styles.bottomRow}>
-                    <CustomText style={styles.subtitle} numberOfLines={2}>{product.short_description}</CustomText>
-                    <View style={styles.actionContainer}>
-                        {isPurchasable ? (
-                            <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
-                        ) : (
-                            <Icon name="next" size="xxl" />
-                        )}
-                    </View>
-                </View>
-            </Pressable>
+            </View>
+
             {isExpanded && (
                 <View style={styles.variationsContainer}>
                     {product.attributes
@@ -102,9 +106,7 @@ const styles = StyleSheet.create({
     expandedContainer: {
         justifyContent: 'flex-start',
     },
-    pressableContainer: {
-        //
-    },
+
     topRow: {
         flexDirection: 'row',
         alignItems: 'center',

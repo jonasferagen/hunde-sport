@@ -1,9 +1,9 @@
 import { Loader } from '@/components/ui';
 import { useFeaturedProducts } from '@/hooks/Product';
-import React from 'react';
+import React, { JSX } from 'react';
 import { ProductCard } from './ProductCard';
 
-export const FeaturedProducts = () => {
+export const FeaturedProducts = (): JSX.Element => {
     const { products, isLoading } = useFeaturedProducts();
 
     if (isLoading) {
@@ -11,12 +11,14 @@ export const FeaturedProducts = () => {
     }
 
     if (!products || products.length === 0) {
-        return null;
+        return <></>;
     }
 
     return (
-        products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-        ))
+        <>
+            {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+            ))}
+        </>
     );
 };

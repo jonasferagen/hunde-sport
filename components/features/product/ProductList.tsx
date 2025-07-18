@@ -39,23 +39,20 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 
-    return (
+    return <FlashList style={{ flex: 1 }}
+        data={products}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
+        ListHeaderComponent={HeaderComponent}
+        ListEmptyComponent={EmptyComponent}
+        contentContainerStyle={contentContainerStyle}
+        ListFooterComponent={() =>
+            loadingMore ? <Loader style={{ paddingVertical: SPACING.lg }} flex /> : null
+        }
+        estimatedItemSize={100}
+        extraData={expandedProductId}
+    />
 
-        <FlashList style={{ flex: 1 }}
-            data={products}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            onEndReached={loadMore}
-            onEndReachedThreshold={0.5}
-            ListHeaderComponent={HeaderComponent}
-            ListEmptyComponent={EmptyComponent}
-            contentContainerStyle={contentContainerStyle}
-            ListFooterComponent={() =>
-                loadingMore ? <Loader style={{ paddingVertical: SPACING.lg }} flex /> : null
-            }
-            estimatedItemSize={100}
-            extraData={expandedProductId}
-        />
-
-    );
 });
