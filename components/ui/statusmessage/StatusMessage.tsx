@@ -1,16 +1,13 @@
-import { useStatus } from '@/contexts';
+import { useStatus, useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
-// Define colors locally to avoid theme dependency issues during startup
-const statusColors = {
-    info: '#1976D2', // Blue
-    success: '#388E3C', // Green
-};
 
 export const StatusMessage = () => {
-    const { message, type } = useStatus();
+    const { message, type, elementRef } = useStatus();
+    const { themeManager } = useTheme();
+    const variant = themeManager.getAlert(type);
     const [fadeAnim] = useState(new Animated.Value(0));
 
     useEffect(() => {
@@ -26,15 +23,20 @@ export const StatusMessage = () => {
     }
 
     const containerStyle = {
-        backgroundColor: statusColors[type] || statusColors.info,
+        opacity: .8,
+        backgroundColor: variant.backgroundColor,
+        borderColor: variant.borderColor,
+        borderWidth: 1,
     };
+
+    console.log(elementRef);
 
     return (
         <Animated.View
             style={[
                 styles.statusContainer,
                 containerStyle,
-                { opacity: fadeAnim, bottom: SPACING.sm },
+                { opacity: fadeAnim, top: elementRef?.current?.offsetTop },
             ]}
         >
             <Text style={styles.text}>{message}</Text>

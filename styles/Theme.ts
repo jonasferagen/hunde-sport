@@ -1,10 +1,14 @@
 import { StyleVariant } from '@/types';
 import { darken } from '@/utils/helpers';
 
+const primary = '#D7C8E7';
+const secondary = '#DDE2C3';
+const accent = '#C8E6E5';
+
 export const palette = {
-  primary: '#D7C8E7',
-  secondary: '#DDE2C3',
-  accent: '#C8E6E5',
+  primary,
+  secondary,
+  accent,
 
   white: '#FFFFFF',
   black: '#000000',
@@ -18,7 +22,7 @@ export const palette = {
   // Status colors
   error: '#D32F2F', // A standard error red
   success: '#388E3C', // A standard success green
-  info: '#1976D2', // A standard info blue
+  info: darken(primary, 30), // A standard info blue
 };
 
 

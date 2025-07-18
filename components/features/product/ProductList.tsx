@@ -7,11 +7,11 @@ import { ProductListItem } from './ProductListItem';
 
 interface RenderProductProps {
     item: Product;
-    variant: string;
+    index: number;
 }
 
-const RenderProduct = memo(({ item, variant }: RenderProductProps) => (
-    <ProductListItem product={item} variant={variant} />
+const RenderProduct = memo(({ item, index }: RenderProductProps) => (
+    <ProductListItem product={item} index={index} />
 ));
 
 interface ProductListProps {
@@ -26,7 +26,7 @@ interface ProductListProps {
 export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
     const renderItem = useCallback(({ item, index }: { item: Product, index: number }) => {
         return (
-            <RenderProduct item={item} variant={index % 2 === 0 ? 'alternate' : 'default'} />
+            <RenderProduct item={item} index={index} />
         );
     }, []);
 

@@ -1,4 +1,5 @@
 import { CustomText, Icon } from '@/components/ui';
+import { useTheme } from '@/contexts';
 import { FONT_SIZES, SPACING } from '@/styles';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
@@ -11,6 +12,10 @@ interface QuantityControlProps {
 
 export const QuantityControl: React.FC<QuantityControlProps> = ({ quantity, onIncrease, onDecrease }) => {
     const animation = useRef(new Animated.Value(quantity > 0 ? 1 : 0)).current;
+
+    const { themeManager } = useTheme();
+    const variant = themeManager.getVariant('accent');
+
 
     useEffect(() => {
         Animated.timing(animation, {
@@ -36,13 +41,13 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({ quantity, onIn
         <View style={styles.quantityContainer}>
             <Animated.View style={[styles.minusContainer, animatedStyle]} pointerEvents={quantity > 0 ? 'auto' : 'none'}>
                 <Pressable onPress={onDecrease} style={styles.quantityButton}>
-                    <Icon name="remove" size="xl" color="#888" />
+                    <Icon name="remove" size="xxl" color={variant.text.secondary} />
                 </Pressable>
                 <CustomText style={styles.quantityText}>{quantity}</CustomText>
             </Animated.View>
 
             <Pressable onPress={onIncrease} style={styles.quantityButton}>
-                <Icon name="add" size="xl" color="#007AFF" />
+                <Icon name="add" size="xxl" color={variant.text.secondary} />
             </Pressable>
         </View>
     );

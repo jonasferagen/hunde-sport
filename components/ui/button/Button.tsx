@@ -1,5 +1,6 @@
 import { useTheme } from '@/contexts/ThemeProvider';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
+import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Icon, ValidIcon } from '../icon/Icon';
 import { CustomText } from '../text/CustomText';
@@ -13,7 +14,7 @@ export interface ButtonProps {
 };
 
 
-export const Button = ({ onPress, title = undefined, icon, variant = 'primary', size = 'md' }: ButtonProps) => {
+export const Button = React.forwardRef<View, ButtonProps>(({ onPress, title = undefined, icon, variant = 'primary', size = 'md' }, ref) => {
     const { themeManager } = useTheme();
 
     const themeVariant = themeManager.getVariant(variant);
@@ -21,14 +22,14 @@ export const Button = ({ onPress, title = undefined, icon, variant = 'primary', 
     let { backgroundColor, borderColor, text } = themeVariant;
 
     return (
-        <Pressable onPress={onPress} style={[styles.button, { backgroundColor, borderColor }]}>
+        <Pressable ref={ref} onPress={onPress} style={[styles.button, { backgroundColor, borderColor }]}>
             <View style={styles.content}>
                 {title && <CustomText color={text.primary} style={[{ marginRight: SPACING.sm }]}>{title}</CustomText>}
                 {icon && <Icon name={icon} color={text.primary} size={'xl'} />}
             </View>
         </Pressable>
     );
-};
+});
 
 const createStyles = (size: 'sm' | 'md' | 'lg') => StyleSheet.create({
     button: {

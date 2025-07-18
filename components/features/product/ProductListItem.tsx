@@ -10,10 +10,10 @@ import { QuantityControl } from '../shoppingCart/QuantityControl';
 
 interface ProductListItemProps {
     product: Product;
-    variant?: string;
+    index: number;
 }
 
-export const ProductListItem: React.FC<ProductListItemProps> = ({ product, variant }) => {
+export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index }) => {
     const { items, addToCart, updateQuantity } = useShoppingCart();
     const [imageDimensions, setImageDimensions] = useState({ width: 60, height: 60 });
 
@@ -25,7 +25,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, varia
         setImageDimensions({ width: Math.round(width), height: Math.round(width) });
     };
 
-    const imageUrl = getScaledImageUrl(product.images[0]?.src, imageDimensions.width, imageDimensions.height);
+
 
     const subtitle = product.short_description;
 
@@ -45,8 +45,11 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, varia
         router.push(routes.product(product));
     }
 
+    const imageUrl = getScaledImageUrl(product.images[0]?.src, imageDimensions.width, imageDimensions.height);
+
     return (
         <ListItem
+            index={index}
             title={product.name}
             subtitle={subtitle}
             imageUrl={imageUrl}

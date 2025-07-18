@@ -66,12 +66,8 @@ export const ProductScreen = () => {
 
   const displayProduct = selectedVariation || product;
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  if (error || !product || !displayProduct) {
-    return <Loader />;
+  if (isLoading || error || !product || !displayProduct) {
+    return <Loader size="large" flex />;
   }
 
   return (

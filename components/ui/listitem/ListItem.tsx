@@ -1,9 +1,11 @@
 import { CustomText } from '@/components/ui/text';
 import { FONT_SIZES, SPACING } from '@/styles';
+import { getScaledImageUrl } from '@/utils/helpers';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, ViewProps } from 'react-native';
 
 interface ListItemProps extends ViewProps {
+    index: number;
     title: string;
     subtitle?: string;
     imageUrl?: string;
@@ -14,6 +16,7 @@ interface ListItemProps extends ViewProps {
 }
 
 export const ListItem: React.FC<ListItemProps> = ({
+    index,
     title,
     subtitle,
     imageUrl,
@@ -25,13 +28,15 @@ export const ListItem: React.FC<ListItemProps> = ({
 }) => {
     const imageStyle = { width: imageSize, height: imageSize };
 
+    const styles = createStyles(index);
+
     return (
         <View style={styles.itemContainer} {...viewProps}>
             <View style={styles.infoWrapper}>
                 <View style={styles.topRow}>
                     <TouchableOpacity style={styles.pressableContent} onPress={onPress} disabled={!onPress}>
                         <View style={[styles.imageContainer, imageStyle]}>
-                            {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
+                            {imageUrl && <Image source={{ uri: getScaledImageUrl(imageUrl, imageSize, imageSize) }} style={styles.image} />}
                         </View>
                         <View style={styles.infoContainer}>
                             <CustomText style={styles.name} numberOfLines={1}>{title}</CustomText>
@@ -48,14 +53,17 @@ export const ListItem: React.FC<ListItemProps> = ({
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (index: number) => StyleSheet.create({
+
     itemContainer: {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-        backgroundColor: 'white',
+        backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0',
         padding: SPACING.md,
+        borderBottomWidth: 1,
+        borderColor: '#eee',
     },
     infoWrapper: {
         flex: 1,

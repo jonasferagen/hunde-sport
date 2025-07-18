@@ -33,7 +33,7 @@ export const CategoryScreen = memo(() => {
 
 
     if (isLoading || !category) {
-        return <Loader />;
+        return <Loader size="large" flex />;
     }
 
     return (
