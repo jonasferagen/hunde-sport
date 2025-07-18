@@ -2,7 +2,7 @@ import { CategoryTree } from '@/components/features/category/CategoryTree';
 import { Heading, Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
+import { BORDER_RADIUS, FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useSegments } from 'expo-router';
@@ -13,8 +13,19 @@ const getDrawerItemProps = (themeManager: any) => {
     const secondaryVariant = themeManager.getVariant('secondary');
     return {
         activeTintColor: secondaryVariant.text.primary,
-        inactiveTintColor: secondaryVariant.text.secondary,
-        activeBackgroundColor: secondaryVariant.backgroundColor,
+        inactiveTintColor: secondaryVariant.text.primary,
+        activeItemStyle: {
+            backgroundColor: secondaryVariant.backgroundColor,
+            borderRadius: BORDER_RADIUS.lg,
+            borderColor: 'red',
+            borderWidth: 1,
+        },
+        inactiveItemStyle: {
+            backgroundColor: secondaryVariant.backgroundColor,
+            borderRadius: BORDER_RADIUS.lg,
+            borderColor: 'red',
+            borderWidth: 1,
+        },
         labelStyle: {
             fontFamily: FONT_FAMILY.regular,
             fontSize: FONT_SIZES.md,
@@ -27,6 +38,7 @@ const CustomDrawerContent = (props: any) => {
     const { themeManager } = useTheme();
     const secondaryVariant = themeManager.getVariant('secondary');
     const { cartItemCount } = useShoppingCart();
+
     return (
         <LinearGradient
             colors={[secondaryVariant.borderColor, secondaryVariant.backgroundColor]}
@@ -39,22 +51,22 @@ const CustomDrawerContent = (props: any) => {
                         <Icon name="close" size='xl' color={secondaryVariant.text.primary} style={{ padding: SPACING.md }} />
                     </TouchableOpacity>
                 </View>
-                <Heading title="HundeSport.no" />
+                <Heading title="HundeSport.no" style={{ marginBottom: SPACING.md }} />
                 <DrawerItem
                     label="Hjem"
                     icon={({ color }) => <Icon name="home" color={color} size="xl" />}
-                    focused={segments.includes('(home)') && !segments.includes('shoppingCart')}
+                    focused={segments[2] === '(home)' && segments.length === 3}
                     onPress={() => router.push('/(drawer)/_home')}
                     {...getDrawerItemProps(themeManager)}
                 />
                 <DrawerItem
                     label="Handlekurv"
                     icon={({ color }) => <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />}
-                    focused={segments.includes('shoppingCart')}
+                    focused={segments[3] === 'shoppingCart'}
                     onPress={() => router.push('/(drawer)/_shoppingCart')}
                     {...getDrawerItemProps(themeManager)}
                 />
-                <Heading title="Kategorier" />
+                <Heading title="Kategorier" style={{ marginVertical: SPACING.md }} />
                 <CategoryTree variant="secondary" style={{ marginHorizontal: 10 }} />
             </DrawerContentScrollView>
         </LinearGradient>

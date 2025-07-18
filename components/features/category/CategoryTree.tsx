@@ -41,7 +41,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
                     <Link href={routes.category(category)} asChild>
                         <Pressable style={styles.categoryInfo}>
                             <CategoryIcon image={category.image} size='xl' color={color} />
-                            <CustomText style={[styles.categoryText, { color }, isActive && styles.activeCategoryText]}>{category.name} ({category.count})</CustomText>
+                            <CustomText style={[styles.categoryText, { color }]} >{category.name} ({category.count})</CustomText>
                         </Pressable>
                     </Link>
                     {hasChildren && (
@@ -135,14 +135,12 @@ const createStyles = () => StyleSheet.create({
     categoryText: {
         marginLeft: SPACING.sm,
     },
-    activeCategoryText: {
-        fontWeight: 'bold',
-    },
+
     icon: {
-        marginRight: SPACING.sm,
+        marginRight: SPACING.md,
     },
     activeCategory: {
         backgroundColor: rgba('white', 0.3),
-        borderRadius: BORDER_RADIUS.sm,
+        borderRadius: BORDER_RADIUS.lg,
     },
 });
