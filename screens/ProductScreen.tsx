@@ -7,13 +7,13 @@ import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, Heading, Loader } from '@/components/ui';
-import { useProductContext } from '@/contexts/ProductContext';
+import { useImageViewer } from '@/hooks/useImageViewer';
 import { useProduct } from '@/hooks/Product';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
 
@@ -30,21 +30,12 @@ export const ProductScreen = () => {
     handleSelectOption(attributeSlug, option);
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
-  const { currentImageIndex, setImageIndex, isImageViewerVisible, setImageViewerVisible } = useProductContext();
+  const { imageIndex, isViewerVisible, openImageViewer, closeImageViewer } = useImageViewer();
 
   const galleryImages = useMemo(
     () => (displayProduct?.images || []).map(img => ({ uri: img.src })),
     [displayProduct?.images]
   );
-
-  const openImageViewer = useCallback((index: number) => {
-    setImageIndex(index);
-    setImageViewerVisible(true);
-  }, []);
-
-  const closeImageViewer = useCallback(() => {
-    setImageViewerVisible(false);
-  }, []);
 
   console.log("product screen loaded" + displayProduct?.id);
 
@@ -71,7 +62,7 @@ export const ProductScreen = () => {
         <Heading title={displayProduct.name} size="md" />
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
-        <ProductImage image={product.images[0]} onPress={() => openImageViewer(0)} />
+        <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
         <PageContent>
           <ProductMainSection
             product={product}
@@ -87,8 +78,8 @@ export const ProductScreen = () => {
 
         <PageContent title="Produktbilder" horizontal>
           <ProductImageGallery
-            images={product.images}
-            onImagePress={openImageViewer}
+            images={displayProduct.images.slice(1)}
+            onImagePress={(index) => openImageViewer(index + 1)}
           />
         </PageContent>
 
@@ -101,9 +92,9 @@ export const ProductScreen = () => {
         </PageContent>
       </PageSection>
       <ImageViewing
-        images={galleryImages.slice(-1)}
-        imageIndex={currentImageIndex}
-        visible={isImageViewerVisible}
+        images={galleryImages}
+        imageIndex={imageIndex}
+        visible={isViewerVisible}
         onRequestClose={closeImageViewer}
         animationType="slide"
       />
