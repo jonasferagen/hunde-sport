@@ -1,7 +1,8 @@
 import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import React from 'react';
-import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { Row } from '../listitem/layout';
 import { CustomText, CustomTextProps } from '../text/CustomText';
 
 interface ChipProps {
@@ -11,9 +12,18 @@ interface ChipProps {
     style?: StyleProp<ViewStyle>;
     textProps?: CustomTextProps;
     isSelected?: boolean;
+    icon?: string;
 }
 
-export const Chip = ({ label, onPress, variant = 'default', style, textProps, isSelected = false }: ChipProps) => {
+export const Chip = ({
+    label,
+    onPress,
+    variant = 'default',
+    style,
+    textProps,
+    icon,
+    isSelected = false
+}: ChipProps) => {
     const { themeManager } = useTheme();
     const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(themeVariant);
@@ -29,11 +39,11 @@ export const Chip = ({ label, onPress, variant = 'default', style, textProps, is
     ];
 
     return (
-        <TouchableOpacity onPress={onPress} style={chipStyle} disabled={!onPress}>
+        <Row onPress={onPress} style={[chipStyle, { gap: 5 }]} alignItems="center" justifyContent="space-between">
             <CustomText style={textStyle} numberOfLines={1} ellipsizeMode="tail">
                 {label}
             </CustomText>
-        </TouchableOpacity>
+        </Row>
     );
 };
 

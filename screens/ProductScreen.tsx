@@ -1,29 +1,46 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { ProductDetails } from '@/components/features/product/ProductDetails';
-import { ProductImageManager } from '@/components/features/product/ProductImageManager';
+import { ProductImage } from '@/components/features/product/ProductImage';
+import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { ProductMainSection } from '@/components/features/product/ProductMainSection';
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
+import { Breadcrumbs, Heading, Loader } from '@/components/ui';
 import { useProduct } from '@/hooks/Product';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-
-  const scrollRef = useScrollToTop(id);
-
   const { data: product, isLoading, error } = useProduct(Number(id));
   const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
+
+  const scrollRef = useScrollToTop(id);
 
   const handleSelectOptionAndScroll = (attributeSlug: string, option: string) => {
     handleSelectOption(attributeSlug, option);
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
+  const [currentImageIndex, setImageIndex] = useState(0);
+  const [isImageViewerVisible, setImageViewerVisible] = useState(false);
+
+  const galleryImages = useMemo(
+    () => (displayProduct?.images || []).map(img => ({ uri: img.src })),
+    [displayProduct?.images]
+  );
+
+  const openImageViewer = useCallback((index: number) => {
+    setImageIndex(index);
+    setImageViewerVisible(true);
+  }, []);
+
+  const closeImageViewer = useCallback(() => {
+    setImageViewerVisible(false);
+  }, []);
 
   console.log("product screen loaded" + displayProduct?.id);
 
@@ -39,27 +56,19 @@ export const ProductScreen = () => {
 
   // If the product is not found after loading, show a message.
   if (!product || !displayProduct) {
-    return (
-      <PageView>
-        <PageHeader title="Produkt ikke funnet" />
-        <PageContent>
-          <CustomText>Beklager, vi fant ikke produktet du lette etter.</CustomText>
-        </PageContent>
-      </PageView>
-    );
+    throw new Error('Product not found: ' + id);
   }
 
   return (
     <PageView>
-      <Stack.Screen options={{ title: displayProduct!.name }} />
+      <Stack.Screen options={{ title: displayProduct.name }} />
       <PageHeader>
         <Breadcrumbs product={product} />
-        <CustomText bold>{displayProduct.name}</CustomText>
+        <Heading title={displayProduct.name} size="md" />
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
-
+        <ProductImage image={product.images[0]} onPress={() => openImageViewer(0)} />
         <PageContent>
-          <ProductImageManager product={displayProduct} />
           <ProductMainSection
             product={product}
             displayProduct={displayProduct}
@@ -68,18 +77,32 @@ export const ProductScreen = () => {
           />
         </PageContent>
 
-        <PageContent secondary title="Produktinformasjon">
+        <PageContent title="Produktinformasjon" secondary>
           <ProductDetails product={product} />
+        </PageContent>
+
+        <PageContent title="Produktbilder" horizontal>
+          <ProductImageGallery
+            images={product.images}
+            onImagePress={openImageViewer}
+          />
         </PageContent>
 
         <PageContent title="Kategorier">
           <CategoryChips categories={product.categories} />
         </PageContent>
 
-        <PageContent horizontal accent title="Relaterte produkter" >
+        <PageContent title="Relaterte produkter" horizontal accent>
           <RelatedProducts productIds={product.related_ids} />
         </PageContent>
       </PageSection>
+      <ImageViewing
+        images={galleryImages.slice(-1)}
+        imageIndex={currentImageIndex}
+        visible={isImageViewerVisible}
+        onRequestClose={closeImageViewer}
+        animationType="slide"
+      />
     </PageView >
   );
 };

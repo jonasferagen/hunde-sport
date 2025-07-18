@@ -1,6 +1,5 @@
 import { useTheme } from '@/contexts';
-import { BORDER_RADIUS } from '@/styles';
-import { Image as ProductImageType, StyleVariant } from '@/types';
+import { IStyleVariant, Image as ProductImageType } from '@/types';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import React from 'react';
@@ -29,15 +28,14 @@ export const ProductImage = ({ image, onPress }: ProductImageProps) => {
     );
 };
 
-const createStyles = (themeVariant: StyleVariant) =>
+const createStyles = (themeVariant: IStyleVariant) =>
     StyleSheet.create({
         mainImageWrapper: {
             width: '100%',
             height: IMAGE_HEIGHT,
             overflow: 'hidden',
-            borderWidth: 1,
+            borderBottomWidth: 1,
             borderColor: themeVariant.borderColor,
-            borderRadius: BORDER_RADIUS.md,
         },
         mainImage: {
             height: '100%',

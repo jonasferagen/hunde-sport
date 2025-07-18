@@ -25,6 +25,7 @@ export const ValidIcon = {
     breadcrumbSeparator: 'chevron-left',
     search: 'search',
     dot: 'circle',
+    link: 'link'
 
 } as const;
 

@@ -6,7 +6,7 @@ import { PageContentHorizontal } from './_partials/PageContentHorizontal';
 import { PageContentVertical } from './_partials/PageContentVertical';
 
 interface PageContentProps extends ViewProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   flex?: boolean;
   gap?: keyof typeof SPACING;
   title?: string;
@@ -20,7 +20,18 @@ interface PageContentProps extends ViewProps {
   style?: any;
 }
 
-export const PageContent: React.FC<PageContentProps> = ({ children, flex, horizontal, paddingHorizontal = 'md', paddingVertical = 'md', primary = false, secondary = false, accent = false, style, ...props }: PageContentProps) => {
+export const PageContent: React.FC<PageContentProps> = ({
+  children,
+  flex,
+  horizontal,
+  paddingHorizontal = 'md',
+  paddingVertical = 'md',
+  primary = false,
+  secondary = false,
+  accent = false,
+  style,
+  ...props }: PageContentProps) => {
+
   const { themeManager } = useTheme();
 
   const styleVariantName = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
@@ -34,10 +45,13 @@ export const PageContent: React.FC<PageContentProps> = ({ children, flex, horizo
   const computedStyle = [
     { paddingVertical: paddingVertical ? SPACING[paddingVertical] : 0 },
     { paddingHorizontal: paddingHorizontal ? SPACING[paddingHorizontal] : 0 },
-
     containerStyle,
     style,
   ];
+
+  if (!children) {
+    return null;
+  }
 
   const content = (
     <PageContentProvider value={{ styleVariantName }}>

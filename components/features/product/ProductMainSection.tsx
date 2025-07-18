@@ -1,5 +1,6 @@
 import { VariationChips } from '@/components/features/product/VariationChips';
-import { Button, CustomText } from '@/components/ui';
+import { Button, CustomText, Heading } from '@/components/ui';
+import { Row } from '@/components/ui/listitem/layout/Row';
 import { useShoppingCart } from '@/contexts';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
@@ -13,7 +14,7 @@ interface ProductHeaderProps {
 }
 
 
-const AddProductToShoppingCartButton = ({ product, displayProduct }: { product: Product; displayProduct: Product }) => {
+const AddToCartButton = ({ product, displayProduct }: { product: Product; displayProduct: Product }) => {
     const { addToCart, canAddToCart } = useShoppingCart();
 
     const isPurchasable = canAddToCart(displayProduct);
@@ -36,27 +37,29 @@ export const ProductMainSection = ({
     onSelectOption,
 }: ProductHeaderProps) => {
 
+    return <>
 
-    return (
-        <>
+        {product.attributes
+            .filter(attr => attr.variation)
+            .map(attribute => {
+                return (
+                    <VariationChips
+                        key={attribute.id}
+                        options={attribute.options}
+                        selectedOption={selectedOptions[attribute.slug] || null}
+                        onSelectOption={option => onSelectOption(attribute.slug, option)}
+                    />
+                );
+            })}
+        <Row alignItems="center" justifyContent="space-between">
+
+            <Heading title={displayProduct.name} size="md" />
             <CustomText fontSize="xxl" bold>
                 {formatPrice(displayProduct.price)}
             </CustomText>
-            {product.attributes
-                .filter(attr => attr.variation)
-                .map(attribute => {
-                    return (
-                        <VariationChips
-                            key={attribute.id}
-                            options={attribute.options}
-                            selectedOption={selectedOptions[attribute.slug] || null}
-                            onSelectOption={option => onSelectOption(attribute.slug, option)}
-                        />
-                    );
-                })}
-            <CustomText fontSize="sm" >{product.short_description}</CustomText>
-            <AddProductToShoppingCartButton product={product} displayProduct={displayProduct} />
+        </Row>
+        <CustomText fontSize="sm" >{product.short_description}</CustomText>
+        <AddToCartButton product={product} displayProduct={displayProduct} />
+    </>
 
-        </>
-    );
 };
