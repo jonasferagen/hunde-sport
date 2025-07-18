@@ -1,18 +1,26 @@
 import { Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { BottomTabBar } from '@react-navigation/bottom-tabs';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router, Tabs } from 'expo-router';
 
 export default function TabsLayout() {
     const { themeManager } = useTheme();
     const { cartItemCount } = useShoppingCart();
     const secondaryVariant = themeManager.getVariant('secondary');
+    const gradient = secondaryVariant.getGradient();
+
     return (
         <Tabs
+            tabBar={(props) => (
+                <LinearGradient colors={gradient as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+                    <BottomTabBar {...props} />
+                </LinearGradient>
+            )}
             screenOptions={{
-
                 tabBarStyle: {
-                    backgroundColor: secondaryVariant.backgroundColor,
+                    backgroundColor: 'transparent',
                     borderTopWidth: 2,
                     borderTopColor: secondaryVariant.borderColor,
                 },

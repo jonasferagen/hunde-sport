@@ -1,5 +1,5 @@
-import { StyleVariant } from '@/types';
-import { darken } from '@/utils/helpers';
+import { IStyleVariant } from '@/types';
+import { darken, lighten } from '@/utils/helpers';
 
 const primary = '#D7C8E7';
 const secondary = '#DDE2C3';
@@ -25,91 +25,112 @@ export const palette = {
   info: darken(primary, 30), // A standard info blue
 };
 
+export class StyleVariant implements IStyleVariant {
+  public readonly backgroundColor: string;
+  public readonly text: {
+    readonly primary: string;
+    readonly secondary: string;
+  };
+  public readonly borderColor: string;
+
+  constructor(backgroundColor: string, text: { primary: string; secondary: string }, borderColor: string) {
+    this.backgroundColor = backgroundColor;
+    this.text = text;
+    this.borderColor = borderColor;
+  }
+
+  getGradient(): string[] {
+    return [
+      darken(this.backgroundColor, 10),
+      lighten(this.borderColor, 10),
+    ];
+  }
+}
 
 
 export class ThemeManager {
   public static palette = palette;
 
-  private readonly variants: Record<'primary' | 'secondary' | 'accent' | 'default' | 'card', StyleVariant>;
-  private readonly alerts: Record<'info' | 'success' | 'error', StyleVariant>;
+  private readonly variants: Record<'primary' | 'secondary' | 'accent' | 'default' | 'card', IStyleVariant>;
+  private readonly alerts: Record<'info' | 'success' | 'error', IStyleVariant>;
 
   constructor() {
     this.variants = {
-      primary: {
-        backgroundColor: ThemeManager.palette.primary,
-        text: {
+      primary: new StyleVariant(
+        ThemeManager.palette.primary,
+        {
           primary: darken(ThemeManager.palette.primary, 50),
           secondary: darken(ThemeManager.palette.primary, 30),
         },
-        borderColor: darken(ThemeManager.palette.primary, 20),
-      },
-      secondary: {
-        backgroundColor: ThemeManager.palette.secondary,
-        text: {
+        darken(ThemeManager.palette.primary, 20)
+      ),
+      secondary: new StyleVariant(
+        ThemeManager.palette.secondary,
+        {
           primary: darken(ThemeManager.palette.secondary, 50),
           secondary: darken(ThemeManager.palette.secondary, 30),
         },
-        borderColor: darken(ThemeManager.palette.secondary, 20),
-      },
-      accent: {
-        backgroundColor: ThemeManager.palette.accent,
-        text: {
+        darken(ThemeManager.palette.secondary, 20)
+      ),
+      accent: new StyleVariant(
+        ThemeManager.palette.accent,
+        {
           primary: darken(ThemeManager.palette.accent, 50),
           secondary: darken(ThemeManager.palette.accent, 30),
         },
-        borderColor: darken(ThemeManager.palette.accent, 20),
-      },
-      default: {
-        backgroundColor: ThemeManager.palette.white,
-        text: {
+        darken(ThemeManager.palette.accent, 20)
+      ),
+      default: new StyleVariant(
+        ThemeManager.palette.white,
+        {
           primary: ThemeManager.palette.black,
           secondary: ThemeManager.palette.darkGrey,
         },
-        borderColor: darken(ThemeManager.palette.grey, 20),
-      },
-      card: {
-        backgroundColor: ThemeManager.palette.grey,
-        text: {
+        darken(ThemeManager.palette.grey, 20)
+      ),
+      card: new StyleVariant(
+        ThemeManager.palette.grey,
+        {
           primary: ThemeManager.palette.darkGrey,
           secondary: ThemeManager.palette.grey,
         },
-        borderColor: ThemeManager.palette.grey,
-      },
+        ThemeManager.palette.grey
+      ),
     };
 
     this.alerts = {
-      info: {
-        backgroundColor: ThemeManager.palette.info,
-        text: {
+      info: new StyleVariant(
+        ThemeManager.palette.info,
+        {
           primary: palette.white,
           secondary: darken(palette.white, 20),
         },
-        borderColor: darken(ThemeManager.palette.info, 20),
-      },
-      success: {
-        backgroundColor: ThemeManager.palette.success,
-        text: {
+        darken(ThemeManager.palette.info, 20)
+      ),
+      success: new StyleVariant(
+        ThemeManager.palette.success,
+        {
           primary: palette.white,
           secondary: darken(palette.white, 20),
         },
-        borderColor: darken(ThemeManager.palette.success, 20),
-      },
-      error: {
-        backgroundColor: ThemeManager.palette.error,
-        text: {
+        darken(ThemeManager.palette.success, 20)
+      ),
+      error: new StyleVariant(
+        ThemeManager.palette.error,
+        {
           primary: palette.white,
           secondary: darken(palette.white, 20),
         },
-        borderColor: darken(ThemeManager.palette.error, 20),
-      },
+        darken(ThemeManager.palette.error, 20)
+      ),
     };
   }
 
-  public getVariant(variant: keyof typeof this.variants): StyleVariant {
+  public getVariant(variant: keyof typeof this.variants): IStyleVariant {
     return this.variants[variant];
   }
 
-  public getAlert(variant: keyof typeof this.alerts): StyleVariant {
+  public getAlert(variant: keyof typeof this.alerts): IStyleVariant {
     return this.alerts[variant];
   }
 }

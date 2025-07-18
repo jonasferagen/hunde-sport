@@ -1,4 +1,3 @@
-
 export type ApiResponse<T> = {
   data: T | null;
   error: string | null;
@@ -62,16 +61,12 @@ export interface ShoppingCartItem {
   quantity: number;
 }
 
-export interface StyleVariant {
+export interface IStyleVariant {
   readonly backgroundColor: string;
   readonly text: {
     readonly primary: string;
     readonly secondary: string;
   };
   readonly borderColor: string;
-}
-
-
-export class ThemeManager {
-  // Add implementation here
+  getGradient(): string[];
 }

@@ -3,7 +3,7 @@ import { routes } from '@/config/routes';
 import { useBreadcrumbs, useTheme } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { Category, StyleVariant } from '@/types';
+import { Category, IStyleVariant } from '@/types';
 import { rgba } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
@@ -18,7 +18,7 @@ interface CategoryTreeItemProps {
     isExpanded: boolean;
     onExpand: (categoryId: number) => void;
     isActive: boolean;
-    variant: keyof StyleVariant['text'];
+    variant: keyof IStyleVariant['text'];
 };
 
 const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive, variant }: CategoryTreeItemProps) => {
@@ -69,7 +69,7 @@ interface CategorySubTreeProps {
     categoryId: number;
     level?: number;
     ancestors?: Category[];
-    variant: keyof StyleVariant['text'];
+    variant: keyof IStyleVariant['text'];
 };
 
 const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: CategorySubTreeProps) => {
@@ -109,7 +109,7 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: Cat
 };
 
 interface CategoryTreeProps {
-    variant?: keyof StyleVariant['text'];
+    variant?: keyof IStyleVariant['text'];
     style?: StyleProp<ViewStyle>;
 }
 
