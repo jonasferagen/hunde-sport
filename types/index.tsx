@@ -1,3 +1,5 @@
+import { ColorValue } from "react-native";
+
 export type ApiResponse<T> = {
   data: T | null;
   error: string | null;
@@ -68,5 +70,5 @@ export interface IStyleVariant {
     readonly secondary: string;
   };
   readonly borderColor: string;
-  getGradient(): string[];
+  getGradient(): [ColorValue, ColorValue];
 }

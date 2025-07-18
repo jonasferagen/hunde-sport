@@ -1,31 +1,33 @@
-import { Icon } from '@/components/ui';
+import { CustomText, Icon } from '@/components/ui';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
-import { BottomTabBar } from '@react-navigation/bottom-tabs';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router, Tabs } from 'expo-router';
+import { router, Tabs, useSegments } from 'expo-router';
 
 export default function TabsLayout() {
     const { themeManager } = useTheme();
     const { cartItemCount } = useShoppingCart();
-    const secondaryVariant = themeManager.getVariant('secondary');
-    const gradient = secondaryVariant.getGradient();
+    const variant = themeManager.getVariant('secondary');
+    const gradient = variant.getGradient();
+    const segments = useSegments() as string[];
+
+    const isSearchActive = segments.includes('search');
+    const isCartActive = segments.includes('shoppingCart');
+    const isHomeActive = segments.includes('home') && segments.length === 3;
 
     return (
         <Tabs
-            tabBar={(props) => (
-                <LinearGradient colors={gradient as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-                    <BottomTabBar {...props} />
-                </LinearGradient>
-            )}
             screenOptions={{
+                tabBarBackground: () => (
+                    <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1 }} />
+                ),
+
                 tabBarStyle: {
-                    backgroundColor: 'transparent',
-                    borderTopWidth: 2,
-                    borderTopColor: secondaryVariant.borderColor,
+                    borderTopWidth: 0,
                 },
-                tabBarActiveTintColor: secondaryVariant.text.primary,
-                tabBarInactiveTintColor: secondaryVariant.text.secondary,
+
+                tabBarActiveTintColor: variant.text.primary,
+                tabBarInactiveTintColor: variant.text.secondary,
                 tabBarShowLabel: true,
                 headerShown: false,
             }}>
@@ -35,9 +37,11 @@ export default function TabsLayout() {
                 options={{
                     title: 'Hjem',
                     tabBarIcon: ({ color }) => (
-                        <Icon name="home" color={color} size="xl" />
+                        <Icon name="home" color={isHomeActive ? variant.text.primary : variant.text.secondary} size="xl" />
                     ),
-                    headerShown: false,
+                    tabBarLabel: ({ children }) => (
+                        <CustomText fontSize='xs' style={{ color: isHomeActive ? variant.text.primary : variant.text.secondary }}>{children}</CustomText>
+                    ),
                 }}
             />
             <Tabs.Screen
@@ -45,9 +49,15 @@ export default function TabsLayout() {
                 options={{
                     title: 'Søk',
                     tabBarIcon: ({ color }) => (
-                        <Icon name="search" color={color} size="xl" />
+
+                        <Icon name="search" color={isSearchActive ? variant.text.primary : variant.text.secondary} size="xl" />
                     ),
+                    tabBarLabel: ({ children }) => (
+                        <CustomText fontSize='xs' style={{ color: isSearchActive ? variant.text.primary : variant.text.secondary }}>{children}</CustomText>
+                    ),
+
                 }}
+
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
@@ -60,7 +70,10 @@ export default function TabsLayout() {
                 options={{
                     title: 'Handlekurv',
                     tabBarIcon: ({ color }) => (
-                        <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />
+                        <Icon name="shoppingCart" color={isCartActive ? variant.text.primary : variant.text.secondary} size="xl" badge={cartItemCount} />
+                    ),
+                    tabBarLabel: ({ children }) => (
+                        <CustomText fontSize='xs' style={{ color: isCartActive ? variant.text.primary : variant.text.secondary }}>{children}</CustomText>
                     ),
                 }}
                 listeners={{

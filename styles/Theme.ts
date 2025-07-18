@@ -1,5 +1,6 @@
 import { IStyleVariant } from '@/types';
 import { darken, lighten } from '@/utils/helpers';
+import { ColorValue } from 'react-native';
 
 const primary = '#D7C8E7';
 const secondary = '#DDE2C3';
@@ -39,10 +40,10 @@ export class StyleVariant implements IStyleVariant {
     this.borderColor = borderColor;
   }
 
-  getGradient(): string[] {
+  getGradient(): [ColorValue, ColorValue] {
     return [
-      darken(this.backgroundColor, 10),
-      lighten(this.borderColor, 10),
+      darken(this.backgroundColor, 10) as ColorValue,
+      lighten(this.borderColor, 10) as ColorValue,
     ];
   }
 }
@@ -67,7 +68,7 @@ export class ThemeManager {
       secondary: new StyleVariant(
         ThemeManager.palette.secondary,
         {
-          primary: darken(ThemeManager.palette.secondary, 50),
+          primary: darken(ThemeManager.palette.secondary, 60),
           secondary: darken(ThemeManager.palette.secondary, 30),
         },
         darken(ThemeManager.palette.secondary, 20)
