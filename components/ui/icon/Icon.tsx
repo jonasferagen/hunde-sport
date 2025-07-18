@@ -18,7 +18,7 @@ export const ValidIcon = {
     category: 'tag',
     categories: 'tags',
     home: 'home',
-    checkout: 'arrow-right',
+    next: 'arrow-right',
     breadcrumbSeparator: 'chevron-left',
     search: 'search',
 

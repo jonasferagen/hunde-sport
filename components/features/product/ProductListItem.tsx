@@ -1,11 +1,11 @@
-import { Button, ListItem } from '@/components/ui';
+import { Icon, ListItem } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { Product } from '@/types';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { LayoutChangeEvent } from 'react-native';
+import { LayoutChangeEvent, Pressable } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 
 interface ProductListItemProps {
@@ -14,7 +14,7 @@ interface ProductListItemProps {
 }
 
 export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index }) => {
-        const { items, addToCart, updateQuantity, canAddToCart } = useShoppingCart();
+    const { items, addToCart, updateQuantity, canAddToCart } = useShoppingCart();
     const [imageDimensions, setImageDimensions] = useState({ width: 60, height: 60 });
 
     const cartItem = items.find(item => item.product.id === product.id);
@@ -61,7 +61,9 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                 isPurchasable ? (
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 ) : (
-                    <Button variant="secondary" title="Vis" icon="checkout" onPress={handlePress} />
+                    <Pressable onPress={handlePress}>
+                        <Icon name="next" size="xxl" />
+                    </Pressable>
                 )
             }
         />

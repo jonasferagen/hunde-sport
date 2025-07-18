@@ -70,7 +70,7 @@ const createStyles = (themeVariant: { backgroundColor: string; text: { primary: 
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: themeVariant.backgroundColor,
-        borderRadius: BORDER_RADIUS.sm,
+        borderRadius: BORDER_RADIUS.md,
         paddingHorizontal: SPACING.sm,
         borderWidth: 1,
         borderColor: themeVariant.borderColor,
