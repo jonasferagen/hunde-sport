@@ -21,6 +21,7 @@ export const ProductScreen = () => {
   const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
 
 
+  console.log(product?.id, displayProduct?.id)
 
   // Explicitly handle loading, error, and not-found states
   if (isLoading) {

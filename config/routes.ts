@@ -29,9 +29,6 @@ export const routes = {
         return { pathname: paths.category, params: { id: category.id.toString(), name: category.name } };
     },
     product: (product: Product) => {
-        if (product.categories.length === 0) {
-            throw new Error('Product has no categories');
-        }
         return { pathname: paths.product, params: { id: product.id.toString(), name: product.name } };
     },
     checkout: () => {

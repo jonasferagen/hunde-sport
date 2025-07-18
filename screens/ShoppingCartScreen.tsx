@@ -55,6 +55,7 @@ export const ShoppingCartScreen = () => {
     ), [updateQuantity, removeFromCart]);
 
 
+
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
