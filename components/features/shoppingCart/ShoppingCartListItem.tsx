@@ -1,6 +1,6 @@
 import { Icon, ListItem } from '@/components/ui/';
 import { routes } from '@/config/routes';
-import { useTheme } from '@/contexts';
+import { useThemeContext } from '@/contexts';
 import { ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { router } from 'expo-router';
@@ -16,7 +16,7 @@ interface ShoppingCartListItemProps {
 }
 
 export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item, index, onUpdateQuantity, onRemove }) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const accentVariant = themeManager.getVariant('accent');
 
     const handleIncrease = () => {

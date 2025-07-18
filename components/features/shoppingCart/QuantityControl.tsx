@@ -1,5 +1,5 @@
 import { CustomText, Icon } from '@/components/ui';
-import { useTheme } from '@/contexts';
+import { useThemeContext } from '@/contexts';
 import { FONT_SIZES, SPACING } from '@/styles';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
@@ -13,7 +13,7 @@ interface QuantityControlProps {
 export const QuantityControl: React.FC<QuantityControlProps> = ({ quantity, onIncrease, onDecrease }) => {
     const animation = useRef(new Animated.Value(quantity > 0 ? 1 : 0)).current;
 
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const variant = themeManager.getVariant('accent');
 
 

@@ -29,7 +29,7 @@ export const LayoutProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     );
 };
 
-export const useLayout = () => {
+export const useLayoutContext = () => {
     const context = useContext(LayoutContext);
     if (context === undefined) {
         throw new Error('useLayout must be used within a LayoutProvider');

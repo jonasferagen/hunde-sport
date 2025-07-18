@@ -1,5 +1,6 @@
 import { CategoryTile } from '@/components/ui';
 import { routes } from '@/config/routes';
+import { useThemeContext } from '@/contexts';
 import { Category } from '@/types';
 import { Link } from 'expo-router';
 import React from 'react';
@@ -11,6 +12,9 @@ interface CategoryCardProps {
 }
 
 export const CategoryCard = ({ category, style }: CategoryCardProps) => {
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant('card');
+
     return (
         <Link href={routes.category(category)} asChild>
             <CategoryTile
@@ -19,7 +23,7 @@ export const CategoryCard = ({ category, style }: CategoryCardProps) => {
                 width={'100%'}
                 style={style}
                 textSize="md"
-                textColor="#000"
+                textColor={theme.text.primary}
             />
         </Link>
     );

@@ -1,10 +1,9 @@
+import { CustomText } from '@/components/ui/text/CustomText';
+import { useThemeContext } from '@/contexts';
+import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import React, { JSX } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
-
-import { CustomText } from '@/components/ui/text/CustomText';
-import { useTheme } from '@/contexts/ThemeProvider';
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 
 interface FormFieldProps<T extends FieldValues> extends TextInputProps {
     name: Path<T>;
@@ -22,7 +21,7 @@ export const FormField = <T extends FieldValues>({
     containerStyle,
     ...textInputProps
 }: FormFieldProps<T>): JSX.Element => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('secondary');
     const errorColor = themeManager.getAlert('error').backgroundColor;
     const styles = createStyles(theme, errorColor);

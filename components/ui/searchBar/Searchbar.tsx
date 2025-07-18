@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts';
+import { useThemeContext } from '@/contexts';
 import { useDebounce } from '@/hooks/useDebounce';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import React, { forwardRef, useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ export interface SearchBarProps {
 
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onTextChange, onQueryChange, onSubmit, debounce = 0 }, ref) => {
     const [query, setQuery] = useState(initialQuery || '');
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const debouncedQuery = useDebounce(query, debounce);
 
     const themeVariant = themeManager.getVariant('default');

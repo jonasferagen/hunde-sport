@@ -7,11 +7,12 @@ import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, Heading, Loader } from '@/components/ui';
+import { useProductContext } from '@/contexts/ProductContext';
 import { useProduct } from '@/hooks/Product';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
@@ -25,8 +26,7 @@ export const ProductScreen = () => {
     handleSelectOption(attributeSlug, option);
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
-  const [currentImageIndex, setImageIndex] = useState(0);
-  const [isImageViewerVisible, setImageViewerVisible] = useState(false);
+  const { currentImageIndex, setImageIndex, isImageViewerVisible, setImageViewerVisible } = useProductContext();
 
   const galleryImages = useMemo(
     () => (displayProduct?.images || []).map(img => ({ uri: img.src })),

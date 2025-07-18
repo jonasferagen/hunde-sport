@@ -1,26 +1,31 @@
+import { CustomText } from '@/components/ui';
+import { useThemeContext } from '@/contexts';
 import { SPACING } from '@/styles';
 import { FONT_SIZES } from '@/styles/Typography';
-import { Attribute } from '@/types';
-import { StyleSheet, Text, View } from 'react-native';
+import { ProductAttribute as Attribute } from '@/types';
+import { StyleSheet, View } from 'react-native';
 
 interface AttributeDisplayProps {
     attribute: Attribute;
 };
 
 export const AttributeDisplay = ({ attribute }: AttributeDisplayProps) => {
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant('primary');
+    const styles = createStyles(theme);
 
     if (!attribute.options.length) {
         return null;
     }
     return (
         <View style={styles.container}>
-            <Text style={styles.name}>{attribute.name}:</Text>
-            <Text style={styles.value}>{attribute.options.join(', ')}</Text>
+            <CustomText style={styles.name}>{attribute.name}:</CustomText>
+            <CustomText style={styles.value}>{attribute.options.join(', ')}</CustomText>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flexDirection: 'row',
         marginBottom: SPACING.sm,
@@ -29,8 +34,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginRight: SPACING.sm,
         fontSize: FONT_SIZES.md,
+        color: theme.text.primary,
     },
     value: {
         fontSize: FONT_SIZES.md,
+        color: theme.text.primary,
     },
 });

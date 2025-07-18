@@ -1,4 +1,4 @@
-import { PageContentProvider, useTheme } from '@/contexts';
+import { PageContentProvider, useThemeContext } from '@/contexts';
 import { SPACING } from '@/styles';
 import React from 'react';
 import { ViewProps } from 'react-native';
@@ -32,7 +32,7 @@ export const PageContent: React.FC<PageContentProps> = ({
   style,
   ...props }: PageContentProps) => {
 
-  const { themeManager } = useTheme();
+  const { themeManager } = useThemeContext();
 
   const styleVariantName = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
   const variant = themeManager.getVariant(styleVariantName);

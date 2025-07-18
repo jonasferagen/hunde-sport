@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts/ThemeProvider';
+import { useThemeContext } from '@/contexts';
 import { FONT_SIZES } from '@/styles';
 import { IStyleVariant } from '@/types';
 import { FontAwesome } from '@expo/vector-icons';
@@ -37,9 +37,11 @@ interface IconProps extends Omit<React.ComponentProps<typeof FontAwesome>, 'name
     color?: string;
 };
 
-export const Icon = ({ name, badge = 0, size = 'xl', color = 'black', ...rest }: IconProps) => {
+export const Icon = ({ name, badge = 0, size = 'xl', color, ...rest }: IconProps) => {
 
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant('primary');
+    const finalColor = color || theme.text.primary;
 
     const alert = themeManager.getAlert('info');
     const styles = createStyles(alert);
@@ -54,7 +56,7 @@ export const Icon = ({ name, badge = 0, size = 'xl', color = 'black', ...rest }:
 
     return (
         <View>
-            <FontAwesome name={fontName} size={fontSize} color={color} {...rest} />
+            <FontAwesome name={fontName} size={fontSize} color={finalColor} {...rest} />
             {badge > 0 && (
                 <View style={styles.badge}>
                     <CustomText style={styles.badgeText}>{badge}</CustomText>

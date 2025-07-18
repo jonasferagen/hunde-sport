@@ -1,3 +1,4 @@
+import { useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,10 +29,15 @@ export const BaseTile = ({
     onPress,
     nameNumberOfLines = 1,
     gradientMinHeight = 40,
-    mainColor = '#000',
-    textColor = '#fff',
+    mainColor,
+    textColor,
     textSize = 'sm',
     style }: BaseTileProps) => {
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant('card');
+
+    const finalMainColor = mainColor || theme.backgroundColor;
+    const finalTextColor = textColor || theme.text.primary;
 
     if (!imageUrl) {
         return null;
@@ -45,15 +51,15 @@ export const BaseTile = ({
                 imageStyle={styles.imageStyle}
             >
                 {topRightText && (
-                    <View style={[styles.topRightContainer, { backgroundColor: mainColor }]}>
-                        <CustomText fontSize="sm" style={styles.topRightText}>{topRightText}</CustomText>
+                    <View style={[styles.topRightContainer, { backgroundColor: finalMainColor }]}>
+                        <CustomText fontSize="sm" style={{ color: finalTextColor }}>{topRightText}</CustomText>
                     </View>
                 )}
                 <LinearGradient
-                    colors={[rgba(mainColor, .7), rgba(mainColor, 1)]}
+                    colors={[rgba(finalMainColor, .7), rgba(finalMainColor, 1)]}
                     style={[styles.gradient, { minHeight: gradientMinHeight }]}
                 >
-                    <CustomText fontSize={textSize as any} style={[styles.name, { color: textColor }]} numberOfLines={nameNumberOfLines}>{name}</CustomText>
+                    <CustomText fontSize={textSize as any} style={[styles.name, { color: finalTextColor }]} numberOfLines={nameNumberOfLines}>{name}</CustomText>
                 </LinearGradient>
             </ImageBackground>
         </TouchableOpacity>
@@ -82,7 +88,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: SPACING.sm,
     },
     topRightText: {
-        color: '#fff',
     },
     imageStyle: {
         resizeMode: 'cover',

@@ -1,4 +1,3 @@
-import { useTheme } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { IStyleVariant, Image as ProductImage } from '@/types';
 import { Image } from 'expo-image';
@@ -14,7 +13,7 @@ export const ProductImageGallery = ({
     images,
     onImagePress,
 }: ProductImageGalleryProps) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
 

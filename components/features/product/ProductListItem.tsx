@@ -1,7 +1,8 @@
 import { CustomText, Icon } from '@/components/ui';
 import { Col, Row } from '@/components/ui/listitem/layout';
 import { routes } from '@/config/routes';
-import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { useThemeContext } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { Product } from '@/types';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
@@ -19,7 +20,10 @@ interface ProductListItemProps {
 }
 
 export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index, onPress, isExpanded, expandedHeight }) => {
-    const { items, addToCart, updateQuantity, canAddToCart } = useShoppingCart();
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant('card');
+    const styles = createStyles(theme);
+    const { items, addToCart, updateQuantity, canAddToCart } = useShoppingCartContext();
     const [imageDimensions, setImageDimensions] = useState({ width: 80, height: 80 });
     const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
 
@@ -67,7 +71,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     </Col>
                 </Row>
                 <Pressable onPress={() => router.push(routes.product(product))} style={{ marginRight: 6 }}>
-                    <Icon name="next" size="xxl" />
+                    <Icon name="next" size="xxl" color={theme.text.primary} />
                 </Pressable>
             </Row>
             <Row style={styles.bottomRow} justifyContent="space-between" alignItems="center">
@@ -76,7 +80,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     {isPurchasable ? (
                         <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                     ) : (
-                        <Icon name="next" size="xxl" />
+                        <Icon name="next" size="xxl" color={theme.text.primary} />
                     )}
                 </View>
             </Row>
@@ -99,11 +103,11 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         padding: 8,
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        borderBottomColor: theme.borderColor,
     },
     expandedContainer: {
         justifyContent: 'flex-start',
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         flex: 1,
-        color: '#666',
+        color: theme.text.secondary,
         fontSize: 14,
     },
     actionContainer: {

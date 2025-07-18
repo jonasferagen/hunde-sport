@@ -2,7 +2,7 @@ import { routes } from '@/config/routes';
 import type { Product, ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
-import { useStatus } from './StatusProvider';
+import { useStatusContext } from './StatusContext';
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
@@ -19,7 +19,7 @@ const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(u
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
-    const { showMessage } = useStatus();
+    const { showMessage } = useStatusContext();
 
     const canAddToCart = useCallback((product: Product): boolean => {
         return product.type !== 'variable';
@@ -106,10 +106,10 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     );
 };
 
-export const useShoppingCart = () => {
+export const useShoppingCartContext = () => {
     const context = useContext(ShoppingCartContext);
     if (context === undefined) {
-        throw new Error('useShoppingCart must be used within a ShoppingCartProvider');
+        throw new Error('useShoppingCartContext must be used within a ShoppingCartProvider');
     }
     return context;
 };

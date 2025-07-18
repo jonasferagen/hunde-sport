@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts';
+import { useThemeContext } from '@/contexts';
 import { SPACING } from '@/styles';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -10,7 +10,7 @@ interface PageHeaderProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children }) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant('card');
     const { backgroundColor, borderColor } = themeVariant;
     return (

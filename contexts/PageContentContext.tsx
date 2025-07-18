@@ -10,7 +10,7 @@ const PageContentContext = createContext<PageContentContextProps | undefined>(un
 
 export const PageContentProvider = PageContentContext.Provider;
 
-export const usePageContent = (): PageContentContextProps => {
+export const usePageContentContext = (): PageContentContextProps => {
     const context = useContext(PageContentContext);
     if (!context) {
         return { styleVariantName: 'default' }; // Default value

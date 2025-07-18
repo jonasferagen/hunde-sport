@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { useLayout } from '@/contexts';
+import { useLayoutContext } from '@/contexts';
 import { SPACING } from '@/styles';
 import { Product } from '@/types';
 import { FlashList } from "@shopify/flash-list";
@@ -18,7 +18,7 @@ interface ProductListProps {
 
 export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
     const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
-    const { layout } = useLayout();
+    const { layout } = useLayoutContext();
 
     const handleItemPress = useCallback((id: number) => {
         setExpandedProductId(prevId => (prevId === id ? null : id));

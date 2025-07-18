@@ -3,8 +3,8 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, CustomText } from '@/components/ui';
 import { routes } from '@/config/routes';
-import { useTheme } from '@/contexts';
-import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { useThemeContext } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { FONT_SIZES, SPACING } from '@/styles';
 import { IStyleVariant } from '@/types';
 import { formatPrice } from '@/utils/helpers';
@@ -19,7 +19,7 @@ interface ShoppingCartSummaryProps {
 }
 
 const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: ShoppingCartSummaryProps) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant('secondary');
     const styles = createStyles(themeVariant);
 
@@ -40,8 +40,8 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
 });
 
 export const ShoppingCartScreen = () => {
-    const { items, cartTotal, cartItemCount, updateQuantity, removeFromCart, clearCart } = useShoppingCart();
-    const { themeManager } = useTheme();
+    const { items, cartTotal, cartItemCount, updateQuantity, removeFromCart, clearCart } = useShoppingCartContext();
+    const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
 

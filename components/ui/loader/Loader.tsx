@@ -1,4 +1,4 @@
-import { usePageContent, useTheme } from '@/contexts';
+import { usePageContentContext, useThemeContext } from '@/contexts';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -9,8 +9,8 @@ interface LoaderProps {
 }
 
 export const Loader = ({ size = 'small', style, flex = false }: LoaderProps) => {
-  const { themeManager } = useTheme();
-  const { styleVariantName } = usePageContent();
+  const { themeManager } = useThemeContext();
+  const { styleVariantName } = usePageContentContext();
   const themeVariant = themeManager.getVariant(styleVariantName);
 
   return (

@@ -70,10 +70,10 @@ export const StatusProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     );
 };
 
-export const useStatus = () => {
+export const useStatusContext = () => {
     const context = useContext(StatusContext);
     if (context === undefined) {
-        throw new Error('useStatus must be used within a StatusProvider');
+        throw new Error('useStatusContext must be used within a StatusProvider');
     }
     return context;
 };

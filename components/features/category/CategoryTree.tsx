@@ -1,6 +1,6 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
 import { routes } from '@/config/routes';
-import { useBreadcrumbState, useTheme } from '@/contexts';
+import { useBreadcrumbState, useThemeContext } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category, IStyleVariant } from '@/types';
@@ -22,15 +22,15 @@ interface CategoryTreeItemProps {
 
 const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive, variant }: CategoryTreeItemProps) => {
     const { categories } = useCategories(category.id);
-    const { themeManager } = useTheme();
-    const styles = createStyles();
+    const { themeManager } = useThemeContext();
+    const themeVariant = themeManager.getVariant(variant);
+    const styles = createStyles(themeVariant);
     const hasChildren = categories.length > 0; // subcategories
 
     const handleExpand = useCallback(() => {
         onExpand(category.id);
     }, [onExpand, category.id]);
 
-    const themeVariant = themeManager.getVariant(variant);
     const color = themeVariant.text.primary;
 
     return (
@@ -119,7 +119,7 @@ export const CategoryTree = React.memo(({ variant = 'primary', style }: Category
     </View>;
 });
 
-const createStyles = () => StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
 
     itemContainer: {
         flexDirection: 'row',
@@ -139,7 +139,7 @@ const createStyles = () => StyleSheet.create({
         marginRight: SPACING.md,
     },
     activeCategory: {
-        backgroundColor: rgba('white', 0.3),
+        backgroundColor: rgba(theme.backgroundColor, 0.1),
         borderRadius: BORDER_RADIUS.lg,
     },
 });

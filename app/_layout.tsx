@@ -3,10 +3,11 @@ import {
   BreadcrumbProvider,
   LayoutProvider,
   PreloaderProvider,
+  ProductProvider,
   ShoppingCartProvider,
   StatusProvider,
   ThemeProvider,
-  usePreloader
+  usePreloaderContext
 } from '@/contexts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
@@ -15,7 +16,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const AppContent = (): JSX.Element => {
-  const { appIsReady } = usePreloader();
+  const { appIsReady } = usePreloaderContext();
 
   if (!appIsReady) {
     return <Preloader />;
@@ -43,15 +44,17 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <StatusProvider>
           <BreadcrumbProvider>
-            <ShoppingCartProvider>
-              <PreloaderProvider>
-                <LayoutProvider>
-                  <ThemeProvider>
-                    {children}
-                  </ThemeProvider>
-                </LayoutProvider>
-              </PreloaderProvider>
-            </ShoppingCartProvider>
+            <ProductProvider>
+              <ShoppingCartProvider>
+                <PreloaderProvider>
+                  <LayoutProvider>
+                    <ThemeProvider>
+                      {children}
+                    </ThemeProvider>
+                  </LayoutProvider>
+                </PreloaderProvider>
+              </ShoppingCartProvider>
+            </ProductProvider>
           </BreadcrumbProvider>
         </StatusProvider>
       </QueryClientProvider>

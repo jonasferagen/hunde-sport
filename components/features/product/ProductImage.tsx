@@ -1,4 +1,5 @@
-import { useTheme } from '@/contexts';
+
+import { useThemeContext } from '@/contexts';
 import { IStyleVariant, Image as ProductImageType } from '@/types';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Image } from 'expo-image';
@@ -14,7 +15,7 @@ const IMAGE_HEIGHT = 300;
 
 
 export const ProductImage = ({ image, onPress }: ProductImageProps) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
     const imageUrl = getScaledImageUrl(image.src, IMAGE_HEIGHT, IMAGE_HEIGHT);

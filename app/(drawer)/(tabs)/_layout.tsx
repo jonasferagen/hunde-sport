@@ -1,12 +1,12 @@
 import { CustomText, Icon } from '@/components/ui';
-import { useTheme } from '@/contexts';
-import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { useThemeContext } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, Tabs, useSegments } from 'expo-router';
 
 export default function TabsLayout() {
-    const { themeManager } = useTheme();
-    const { cartItemCount } = useShoppingCart();
+    const { themeManager } = useThemeContext();
+    const { cartItemCount } = useShoppingCartContext();
     const variant = themeManager.getVariant('secondary');
     const gradient = variant.getGradient();
     const segments = useSegments() as string[];

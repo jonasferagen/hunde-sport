@@ -1,4 +1,4 @@
-import { LayoutContext, useLayout } from '@/contexts/LayoutProvider';
+import { LayoutContext, useLayoutContext } from '@/contexts/LayoutContext';
 import React, { useState } from 'react';
 import { LayoutChangeEvent, ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -10,7 +10,7 @@ interface PageSectionProps {
 };
 
 export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ children, style, flex, scrollable }, ref) => {
-  const parentLayout = useLayout();
+  const parentLayout = useLayoutContext();
   const [layout, setLayout] = useState({ width: 0, height: 0 });
 
   const handleLayout = (event: LayoutChangeEvent) => {

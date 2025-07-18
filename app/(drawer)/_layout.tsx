@@ -1,7 +1,7 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
 import { Heading, Icon } from '@/components/ui';
-import { useTheme } from '@/contexts';
-import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { useThemeContext } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { BORDER_RADIUS, FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -36,9 +36,9 @@ const getDrawerItemProps = (themeManager: any) => {
 const CustomDrawerContent = (props: any) => {
     const { navigation } = props;
     const segments = useSegments() as string[];
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const secondaryVariant = themeManager.getVariant('secondary');
-    const { cartItemCount } = useShoppingCart();
+    const { cartItemCount } = useShoppingCartContext();
 
     console.log(segments);
 
@@ -77,7 +77,7 @@ const CustomDrawerContent = (props: any) => {
 }
 
 export default function DrawerLayout() {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
 
     const primaryVariant = themeManager.getVariant('primary');
     const secondaryVariant = themeManager.getVariant('secondary');

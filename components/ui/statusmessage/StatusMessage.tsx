@@ -1,12 +1,12 @@
-import { useStatus, useTheme } from '@/contexts';
+import { useStatusContext, useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
 
 export const StatusMessage = () => {
-    const { message, type, elementRef } = useStatus();
-    const { themeManager } = useTheme();
+    const { message, type, elementRef } = useStatusContext();
+    const { themeManager } = useThemeContext();
     const variant = themeManager.getAlert(type);
     const [fadeAnim] = useState(new Animated.Value(0));
 

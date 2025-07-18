@@ -1,7 +1,7 @@
 import { VariationChips } from '@/components/features/product/VariationChips';
 import { Button, CustomText, Heading } from '@/components/ui';
 import { Row } from '@/components/ui/listitem/layout/Row';
-import { useShoppingCart } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
@@ -15,7 +15,7 @@ interface ProductHeaderProps {
 
 
 const AddToCartButton = ({ product, displayProduct }: { product: Product; displayProduct: Product }) => {
-    const { addToCart, canAddToCart } = useShoppingCart();
+    const { addToCart, canAddToCart } = useShoppingCartContext();
 
     const isPurchasable = canAddToCart(displayProduct);
 

@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts';
+import { useThemeContext } from '@/contexts';
 import type { Category } from '@/types';
 import { BaseTile, type BaseTileProps } from '../../ui/tile/BaseTile';
 
@@ -7,7 +7,7 @@ interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 't
 }
 
 export const CategoryTile = ({ category, ...rest }: CategoryTileProps) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
 
     if (!category.image) {
         return null;

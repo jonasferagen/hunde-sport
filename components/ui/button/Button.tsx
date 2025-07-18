@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts/ThemeProvider';
+import { useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -16,7 +16,7 @@ export interface ButtonProps {
 
 
 export const Button = React.forwardRef<View, ButtonProps>(({ onPress, title = undefined, icon, variant = 'primary', size = 'md', disabled = false }, ref) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
 
     const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(size);

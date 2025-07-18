@@ -3,12 +3,12 @@ import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Button } from '@/components/ui/button/Button';
 import { checkoutFlow, routes } from '@/config/routes';
-import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { Stack, useRouter } from 'expo-router';
 import React, { JSX } from 'react';
 
 export const CheckoutScreen = (): JSX.Element => {
-    const { items, cartTotal } = useShoppingCart();
+    const { items, cartTotal } = useShoppingCartContext();
     const router = useRouter();
 
     const title = "Ordreoversikt";

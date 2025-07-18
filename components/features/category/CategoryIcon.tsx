@@ -1,6 +1,7 @@
 
 
 import { Icon } from '@/components/ui';
+import { useThemeContext } from '@/contexts';
 import { FONT_SIZES } from '@/styles';
 import { Category } from '@/types';
 
@@ -42,7 +43,7 @@ const ColoredSvg = ({ uri, size, color, style }: { uri: string; size: string; co
 interface CategoryIconProps {
     image: Category['image'];
     size?: string;
-    color: string;
+    color?: string;
     style?: StyleProp<ViewStyle>;
 }
 
@@ -50,12 +51,15 @@ const TAG_ICON_NAME = 'tag';
 
 
 export const CategoryIcon = ({ image, size = 'xl', color, style }: CategoryIconProps) => {
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant('primary');
+    const finalColor = color || theme.text.primary;
 
     return <View style={style}>
         {
             (image?.src?.endsWith('.svg')) ?
-                <ColoredSvg uri={image.src} size={size} color={color} /> :
-                <Icon name={TAG_ICON_NAME} size={size} color={color} />
+                <ColoredSvg uri={image.src} size={size} color={finalColor} /> :
+                <Icon name={TAG_ICON_NAME} size={size} color={finalColor} />
         }
     </View>;
 };

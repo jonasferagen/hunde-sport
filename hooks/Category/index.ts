@@ -1,4 +1,4 @@
-import { useStatus } from '@/contexts/StatusProvider';
+import { useStatusContext } from '@/contexts/StatusContext';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { categoriesQueryOptions, categoryQueryOptions, categoryTrailQueryOptions } from './queries';
@@ -12,8 +12,10 @@ export const useCategoryTrail = (categoryId: number | null) => {
 export const useCategories = (categoryId: number) => {
     const query = useInfiniteQuery(categoriesQueryOptions(categoryId));
     const { isError, refetch, data, fetchNextPage, hasNextPage, isFetchingNextPage } = query;
-    const { showMessage } = useStatus();
+    const { showMessage } = useStatusContext();
 
+
+    /* @TODO can this be thrown and caught at a higher level?*/
     useEffect(() => {
         if (isError) {
             showMessage({

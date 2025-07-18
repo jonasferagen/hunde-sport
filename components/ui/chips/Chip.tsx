@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts';
+import { useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import React from 'react';
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
@@ -24,7 +24,7 @@ export const Chip = ({
     icon,
     isSelected = false
 }: ChipProps) => {
-    const { themeManager } = useTheme();
+    const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(themeVariant);
 

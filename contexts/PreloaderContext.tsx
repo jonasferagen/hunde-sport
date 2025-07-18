@@ -59,7 +59,7 @@ export const PreloaderProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     );
 };
 
-export const usePreloader = () => {
+export const usePreloaderContext = () => {
     const context = useContext(PreloaderContext);
     if (context === undefined) {
         throw new Error('usePreloader must be used within a PreloaderProvider');
