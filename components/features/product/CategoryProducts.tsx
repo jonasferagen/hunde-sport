@@ -10,7 +10,5 @@ interface CategoryProductsProps {
 export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Element => {
     const { products, isFetchingNextPage, fetchNextPage } = useProductsByCategory(category.id);
 
-    console.log("products loading");
-
-    return <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={() => { }} />;
+    return <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={fetchNextPage} />;
 };

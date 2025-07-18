@@ -1,4 +1,5 @@
 import { Loader } from '@/components/ui';
+import { SPACING } from '@/styles';
 import { Product } from '@/types';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback } from 'react';
@@ -44,7 +45,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
             ListEmptyComponent={EmptyComponent}
             contentContainerStyle={contentContainerStyle}
             ListFooterComponent={() =>
-                loadingMore ? <Loader /> : null
+                loadingMore ? <Loader style={{ paddingVertical: SPACING.lg }} flex /> : null
             }
             estimatedItemSize={50}
         />
