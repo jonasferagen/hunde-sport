@@ -16,7 +16,7 @@ const PaymentScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title }} />
-            <PageHeader title={title}>
+            <PageHeader>
                 <RouteTrail steps={checkoutFlow} currentStepName="payment" />
             </PageHeader>
             <PageSection flex>

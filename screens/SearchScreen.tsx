@@ -34,7 +34,7 @@ export const SearchScreen = () => {
 
     const isWaiting = initialQuery !== liveQuery;
 
-    console.log("productsearch rendered", initialQuery, products.length, isLoading, isFetchingNextPage);
+    console.log("search screen rendered", initialQuery, products.length, isLoading, isFetchingNextPage);
 
     return (
         <PageView>

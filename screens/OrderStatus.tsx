@@ -16,7 +16,7 @@ const OrderStatusScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title }} />
-            <PageHeader title={title}>
+            <PageHeader>
                 <RouteTrail steps={checkoutFlow} currentStepName="order-status" />
             </PageHeader>
             <PageSection flex>

@@ -3,6 +3,7 @@ import { ProductImageGallery } from '@/components/features/product/ProductImageG
 import { PageContent } from '@/components/layout';
 import { Product } from '@/types';
 import React, { useState } from 'react';
+import ImageViewing from 'react-native-image-viewing';
 
 interface ProductImageManagerProps {
     product: Product;
@@ -25,6 +26,8 @@ export const ProductImageManager = ({ product }: ProductImageManagerProps) => {
         return null; // Or a placeholder
     }
 
+    const galleryImages = product.images.map(img => ({ uri: img.src }));
+
     return (
         <>
             <PageContent>
@@ -36,12 +39,17 @@ export const ProductImageManager = ({ product }: ProductImageManagerProps) => {
                     <ProductImageGallery
                         images={product.images}
                         onImagePress={openImageViewer}
-                        isImageViewerVisible={isImageViewerVisible}
-                        closeImageViewer={closeImageViewer}
-                        currentImageIndex={currentImageIndex}
                     />
                 </PageContent>
             )}
+
+            <ImageViewing
+                images={galleryImages}
+                imageIndex={currentImageIndex}
+                visible={isImageViewerVisible}
+                onRequestClose={closeImageViewer}
+                animationType="slide"
+            />
         </>
     );
 };

@@ -41,7 +41,6 @@ const CustomDrawerContent = (props: any) => {
     const { cartItemCount } = useShoppingCart();
 
 
-
     return (
         <LinearGradient
             colors={[secondaryVariant.borderColor, secondaryVariant.backgroundColor]}

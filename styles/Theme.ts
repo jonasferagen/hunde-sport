@@ -17,11 +17,9 @@ export const palette = {
   grey: '#E8E8E8',
   darkGrey: '#8A8A8A',
 
-  activeRed: '#F47272',
-  inactiveBlue: '#9DB2CE',
 
-  // Status colors
-  error: '#D32F2F', // A standard error red
+  // Status colors  // D32F2F
+  error: darken('#F47272', 10), // A standard error red
   success: '#388E3C', // A standard success green
   info: darken(primary, 30), // A standard info blue
 };

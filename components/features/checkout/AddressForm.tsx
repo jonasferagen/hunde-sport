@@ -1,15 +1,15 @@
 // AddressForm.tsx
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { useForm } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 import { PageContent, PageSection } from '@/components/layout';
 import { Button } from '@/components/ui/button/Button';
-import { CustomText } from '@/components/ui/text/CustomText';
-import { useTheme } from '@/contexts/ThemeProvider';
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
+import { FormField } from '@/components/ui/form/FormField';
+import { FormRow } from '@/components/ui/form/FormRow';
+import { SPACING } from '@/styles/Dimensions';
 
 const addressSchema = z.object({
     first_name: z.string().min(1, { message: 'Fornavn er påkrevd' }),
@@ -17,23 +17,11 @@ const addressSchema = z.object({
     address_1: z.string().min(1, { message: 'Adresse er påkrevd' }),
     city: z.string().min(1, { message: 'By er påkrevd' }),
     postcode: z.string().min(1, { message: 'Postnummer er påkrevd' }),
-    country: z.string().min(2, { message: 'Landskode er påkrevd (f.eks. NO)' }),
     email: z.string().email({ message: 'Ugyldig e-postadresse' }),
-    phone: z.string().min(5, { message: 'Telefonnummer er påkrevd' }),
+    phone: z.string().min(8, { message: 'Telefonnummer er påkrevd' }),
 });
 
 type AddressFormData = z.infer<typeof addressSchema>;
-
-const formFields: { name: keyof AddressFormData; label: string }[] = [
-    { name: 'first_name', label: 'Fornavn' },
-    { name: 'last_name', label: 'Etternavn' },
-    { name: 'address_1', label: 'Adresse' },
-    { name: 'city', label: 'By' },
-    { name: 'postcode', label: 'Postnummer' },
-    { name: 'country', label: 'Landskode (f.eks. NO)' },
-    { name: 'email', label: 'E-post' },
-    { name: 'phone', label: 'Telefon' },
-];
 
 export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) => void }) => {
     const {
@@ -42,62 +30,77 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
         formState: { errors },
     } = useForm<AddressFormData>({
         resolver: zodResolver(addressSchema),
-        defaultValues: {
-            country: 'NO',
-        },
     });
-    const { themeManager } = useTheme();
-    const theme = themeManager.getVariant('default');
-    const styles = createStyles(theme);
 
     return (
         <PageSection scrollable>
             <PageContent>
-                {formFields.map((field) => (
-                    <Controller
-                        key={field.name}
+                <FormRow>
+                    <FormField
+                        name="first_name"
+                        label="Fornavn"
                         control={control}
-                        name={field.name}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <View style={styles.inputContainer}>
-                                <CustomText style={styles.label}>{field.label}</CustomText>
-                                <TextInput
-                                    style={styles.input}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                />
-                                {errors[field.name] && (
-                                    <CustomText color={themeManager.getAlert('error').backgroundColor}>
-                                        {errors[field.name]?.message}
-                                    </CustomText>
-                                )}
-                            </View>
-                        )}
+                        errors={errors}
                     />
-                ))}
+                    <FormField
+                        name="last_name"
+                        label="Etternavn"
+                        control={control}
+                        errors={errors}
+                    />
+                </FormRow>
 
-                <Button title="Send inn" onPress={handleSubmit(onSubmit)} />
+                <FormField
+                    name="address_1"
+                    label="Adresse"
+                    control={control}
+                    errors={errors}
+                    containerStyle={styles.singleField}
+                />
+
+                <FormRow>
+                    <FormField name="city" label="By" control={control} errors={errors} />
+                    <FormField
+                        name="postcode"
+                        label="Postnummer"
+                        control={control}
+                        errors={errors}
+                        keyboardType="numeric"
+                    />
+                </FormRow>
+
+
+                <FormField
+                    name="email"
+                    label="E-post"
+                    control={control}
+                    errors={errors}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    containerStyle={styles.singleField}
+                />
+                <FormField
+                    name="phone"
+                    label="Telefon"
+                    control={control}
+                    errors={errors}
+                    keyboardType="phone-pad"
+                    containerStyle={styles.singleField}
+                />
+
+                <View style={styles.buttonContainer}>
+                    <Button title="Send inn" onPress={handleSubmit(onSubmit)} />
+                </View>
             </PageContent>
         </PageSection>
     );
 };
 
-const createStyles = (theme: any) =>
-    StyleSheet.create({
-        inputContainer: {
-            marginBottom: SPACING.md,
-        },
-        label: {
-            marginBottom: SPACING.sm,
-            color: theme.text.primary,
-        },
-        input: {
-            borderWidth: 1,
-            borderColor: theme.borderColor,
-            backgroundColor: theme.backgroundColor,
-            padding: SPACING.md,
-            borderRadius: BORDER_RADIUS.md,
-            color: theme.text.primary,
-        },
-    });
+const styles = StyleSheet.create({
+    singleField: {
+        marginBottom: SPACING.md,
+    },
+    buttonContainer: {
+        marginTop: SPACING.lg,
+    },
+});

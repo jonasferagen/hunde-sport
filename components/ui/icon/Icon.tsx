@@ -1,4 +1,6 @@
+import { useTheme } from '@/contexts/ThemeProvider';
 import { FONT_SIZES } from '@/styles';
+import { IStyleVariant } from '@/types';
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -34,6 +36,12 @@ interface IconProps extends Omit<React.ComponentProps<typeof FontAwesome>, 'name
 };
 
 export const Icon = ({ name, badge = 0, size = 'xl', color = 'black', ...rest }: IconProps) => {
+
+    const { themeManager } = useTheme();
+
+    const alert = themeManager.getAlert('info');
+    const styles = createStyles(alert);
+
     const fontSize = FONT_SIZES[size as keyof typeof FONT_SIZES];
     const fontName = ValidIcon[name as keyof typeof ValidIcon];
 
@@ -54,21 +62,21 @@ export const Icon = ({ name, badge = 0, size = 'xl', color = 'black', ...rest }:
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (alert: IStyleVariant) => StyleSheet.create({
     badge: {
         position: 'absolute',
         right: -10,
         top: -5,
-        backgroundColor: 'red',
+        backgroundColor: alert.backgroundColor,
         borderRadius: 10,
-        width: 20,
-        height: 20,
+        width: 15,
+        height: 15,
         justifyContent: 'center',
         alignItems: 'center',
     },
     badgeText: {
-        color: 'white',
-        fontSize: 12,
+        color: alert.text.primary,
+        fontSize: 10,
         fontWeight: 'bold',
     },
 });
