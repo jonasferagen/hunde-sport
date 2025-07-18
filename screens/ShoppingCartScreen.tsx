@@ -60,7 +60,7 @@ export const ShoppingCartScreen = () => {
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageHeader title="Handlekurv" />
             <PageSection flex>
-                <PageContent padding="none" flex >
+                <PageContent paddingHorizontal="none" paddingVertical="none" flex >
                     <FlatList
                         data={items}
                         keyExtractor={(item) => item.product.id.toString()}

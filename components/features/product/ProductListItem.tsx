@@ -1,13 +1,15 @@
 import { CustomText, Icon } from '@/components/ui';
+import { Col, Row } from '@/components/ui/listitem/layout';
+import { routes } from '@/config/routes';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { Product } from '@/types';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { VariationChips } from './VariationChips';
-
 interface ProductListItemProps {
     product: Product;
     index: number;
@@ -56,19 +58,19 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     return (
         <View style={containerStyles}>
-            <View>
-                <Pressable onPress={handlePress} style={[styles.topRow, { borderWidth: 1, borderColor: 'red' }]}>
+            <Row alignItems="center" justifyContent="space-between">
+                <Row alignItems="center" style={styles.pressableWrapper} onPress={handlePress}>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, imageDimensions]} />}
-                    <View style={styles.infoContainer}>
+                    <Col style={styles.infoContainer} justifyContent="center">
                         <CustomText style={styles.name} numberOfLines={2}>{product.name}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct!.price)}</CustomText>
-                    </View>
-                </Pressable>
-                <Pressable onPress={handlePress}>
+                    </Col>
+                </Row>
+                <Pressable onPress={() => router.push(routes.product(product))} style={{ marginRight: 6 }}>
                     <Icon name="next" size="xxl" />
                 </Pressable>
-            </View>
-            <View style={styles.bottomRow}>
+            </Row>
+            <Row style={styles.bottomRow} justifyContent="space-between" alignItems="center">
                 <CustomText style={styles.subtitle} numberOfLines={2}>{product.short_description}</CustomText>
                 <View style={styles.actionContainer}>
                     {isPurchasable ? (
@@ -77,7 +79,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                         <Icon name="next" size="xxl" />
                     )}
                 </View>
-            </View>
+            </Row>
 
             {isExpanded && (
                 <View style={styles.variationsContainer}>
@@ -106,16 +108,11 @@ const styles = StyleSheet.create({
     expandedContainer: {
         justifyContent: 'flex-start',
     },
-
-    topRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
+    pressableWrapper: {
+        flex: 1,
     },
     bottomRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        marginTop: 8,
     },
     image: {
         borderRadius: 8,
@@ -123,7 +120,6 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         flex: 1,
-        justifyContent: 'center',
     },
     name: {
         fontWeight: 'bold',

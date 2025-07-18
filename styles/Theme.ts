@@ -92,7 +92,7 @@ export class ThemeManager {
           primary: ThemeManager.palette.black,
           secondary: ThemeManager.palette.darkGrey,
         },
-        darken(ThemeManager.palette.grey, 20)
+        'transparent'
       ),
       card: new StyleVariant(
         ThemeManager.palette.grey,

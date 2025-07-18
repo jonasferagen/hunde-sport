@@ -25,7 +25,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
     }, []);
 
     const renderItem = useCallback(({ item, index }: { item: Product, index: number }) => {
-        const expandedHeight = layout.height * 0.8;
+        const expandedHeight = layout.height * 0.6;
         return (
             <ProductListItem
                 product={item}

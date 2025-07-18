@@ -59,10 +59,9 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
     return (
         <ListItem
             index={index}
-            title={item.product.name}
-            price={formatPrice(item.product.price)}
-            imageUrl={item.product.images[0]?.src}
+            product={item.product}
             actionComponent={actionComponent}
+            onPress={handlePress}
         />
     );
 };

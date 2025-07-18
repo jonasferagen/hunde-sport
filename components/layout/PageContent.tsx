@@ -11,7 +11,8 @@ interface PageContentProps extends ViewProps {
   gap?: keyof typeof SPACING;
   title?: string;
 
-  padding?: keyof typeof SPACING;
+  paddingVertical?: keyof typeof SPACING;
+  paddingHorizontal?: keyof typeof SPACING;
   horizontal?: boolean;
   primary?: boolean;
   secondary?: boolean;
@@ -19,7 +20,7 @@ interface PageContentProps extends ViewProps {
   style?: any;
 }
 
-export const PageContent: React.FC<PageContentProps> = ({ children, flex, horizontal, padding = 'md', primary = false, secondary = false, accent = false, style, ...props }: PageContentProps) => {
+export const PageContent: React.FC<PageContentProps> = ({ children, flex, horizontal, paddingHorizontal = 'md', paddingVertical = 'md', primary = false, secondary = false, accent = false, style, ...props }: PageContentProps) => {
   const { themeManager } = useTheme();
 
   const styleVariantName = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
@@ -31,7 +32,8 @@ export const PageContent: React.FC<PageContentProps> = ({ children, flex, horizo
   };
 
   const computedStyle = [
-    { padding: padding ? SPACING[padding] : 0 },
+    { paddingVertical: paddingVertical ? SPACING[paddingVertical] : 0 },
+    { paddingHorizontal: paddingHorizontal ? SPACING[paddingHorizontal] : 0 },
 
     containerStyle,
     style,

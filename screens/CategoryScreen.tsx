@@ -45,7 +45,7 @@ export const CategoryScreen = memo(() => {
                 <CategoryChipsContainer category={category} />
             </PageHeader>
             <PageSection flex>
-                <PageContent flex padding="none" key={category.id}>
+                <PageContent flex paddingHorizontal="none" paddingVertical="none" key={category.id}>
                     <CategoryProducts category={category} />
                 </PageContent>
             </PageSection>

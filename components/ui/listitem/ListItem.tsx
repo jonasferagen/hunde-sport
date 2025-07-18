@@ -1,32 +1,28 @@
 import { CustomText } from '@/components/ui/text/CustomText';
 import { FONT_SIZES, SPACING } from '@/styles';
-import { getScaledImageUrl } from '@/utils/helpers';
+import { Product } from '@/types';
+import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, ViewProps } from 'react-native';
 
 interface ListItemProps extends ViewProps {
+    product: Product;
     index: number;
-    title: string;
-    subtitle?: string;
-    imageUrl?: string;
-    price?: string;
     onPress?: () => void;
     actionComponent?: React.ReactNode;
     imageSize?: number;
 }
 
 export const ListItem: React.FC<ListItemProps> = ({
+    product,
     index,
-    title,
-    subtitle,
-    imageUrl,
-    price,
     onPress,
     actionComponent,
     imageSize = 60,
     ...viewProps
 }) => {
     const imageStyle = { width: imageSize, height: imageSize };
+    const imageUrl = product.images?.[0]?.src;
 
     const styles = createStyles(index);
 
@@ -39,14 +35,14 @@ export const ListItem: React.FC<ListItemProps> = ({
                             {imageUrl && <Image source={{ uri: getScaledImageUrl(imageUrl, imageSize, imageSize) }} style={styles.image} />}
                         </View>
                         <View style={styles.infoContainer}>
-                            <CustomText style={styles.name} numberOfLines={1}>{title}</CustomText>
+                            <CustomText style={styles.name} numberOfLines={1}>{product.name}</CustomText>
                         </View>
                     </TouchableOpacity>
-                    {price && <CustomText style={styles.price}>{price}</CustomText>}
+                    {product.price && <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>}
                 </View>
             </View>
             <View style={styles.bottomRow}>
-                {subtitle && <CustomText style={styles.subtitle} numberOfLines={2}>{subtitle}</CustomText>}
+                {product.short_description && <CustomText style={styles.subtitle} numberOfLines={2}>{product.short_description}</CustomText>}
                 {actionComponent}
             </View>
         </View>
