@@ -18,9 +18,6 @@ import ImageViewing from 'react-native-image-viewing';
 
 
 export const ProductScreen = () => {
-
-
-
   useRenderGuard('ProductScreen');
 
   const { id } = useLocalSearchParams<{ id: string }>();

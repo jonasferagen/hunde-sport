@@ -4,8 +4,9 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
-import { useBreadcrumbActions } from '@/contexts';
+import { useBreadcrumbContext } from '@/contexts';
 import { useCategories, useCategory } from '@/hooks/Category';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo, useEffect } from 'react';
@@ -21,9 +22,10 @@ const CategoryChipsContainer = ({ category }: { category: Category }) => {
 
 
 export const CategoryScreen = memo(() => {
+    useRenderGuard('CategoryScreen');
     const { id } = useLocalSearchParams<{ id: string; }>();
     const { category, isLoading } = useCategory(Number(id));
-    const { build } = useBreadcrumbActions();
+    const { build } = useBreadcrumbContext();
 
     console.log("category screen loaded");
     useEffect(() => {

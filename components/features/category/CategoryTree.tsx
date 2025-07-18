@@ -1,6 +1,6 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
 import { routes } from '@/config/routes';
-import { useBreadcrumbState, useThemeContext } from '@/contexts';
+import { useBreadcrumbContext, useThemeContext } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category, IStyleVariant } from '@/types';
@@ -73,7 +73,7 @@ interface CategorySubTreeProps {
 
 const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: CategorySubTreeProps) => {
     const { categories, isFetchingNextPage } = useCategories(categoryId);
-    const { categories: breadcrumbs } = useBreadcrumbState();
+    const { categories: breadcrumbs } = useBreadcrumbContext();
 
     const activeChild = categories.find((c: Category) => breadcrumbs.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);

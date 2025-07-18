@@ -9,21 +9,15 @@ const useBuildTrail = () => {
     return { trail, isLoading, build: setCategoryId };
 };
 
-// Separate interfaces for state and actions
-interface BreadcrumbState {
+interface BreadcrumbContextType {
     categories: Category[];
     isLoading: boolean;
-}
-
-interface BreadcrumbActions {
     setBreadcrumb: (category: Category) => void;
     build: (categoryId: number) => void;
     setProductFallback: (product: Product) => void;
 }
 
-// Create two separate contexts
-const BreadcrumbStateContext = createContext<BreadcrumbState | undefined>(undefined);
-const BreadcrumbActionsContext = createContext<BreadcrumbActions | undefined>(undefined);
+const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
 export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
     const [categories, setCategoriesState] = useState<Category[]>([]);
@@ -62,44 +56,30 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
             );
 
             if (!isCrumbInProductCategories) {
-                console.log("product fallback", productCategories[0].name);
-                console.log("last crumb", lastCrumb?.name);
-                console.log("product " + product.id + ' ' + product.name);
-                //  build(productCategories[0].id);
+                 build(productCategories[0].id);
             }
         }
     }, [categories, build]);
 
-    // Memoize context values to prevent unnecessary re-renders
-    const stateValue = useMemo(() => ({ categories, isLoading }), [categories, isLoading]);
-    const actionsValue = useMemo(() => ({ setBreadcrumb, build, setProductFallback }), [setBreadcrumb, build, setProductFallback]);
-
-    useEffect(() => {
-        console.log('categories updated', categories.map(category => category.name));
-    }, [categories]);
+    const contextValue = useMemo(() => ({
+        categories,
+        isLoading,
+        setBreadcrumb,
+        build,
+        setProductFallback
+    }), [categories, isLoading, setBreadcrumb, build, setProductFallback]);
 
     return (
-        <BreadcrumbStateContext.Provider value={stateValue}>
-            <BreadcrumbActionsContext.Provider value={actionsValue}>
-                {children}
-            </BreadcrumbActionsContext.Provider>
-        </BreadcrumbStateContext.Provider>
+        <BreadcrumbContext.Provider value={contextValue}>
+            {children}
+        </BreadcrumbContext.Provider>
     );
 };
 
-// New hooks to consume the separate contexts
-export const useBreadcrumbState = () => {
-    const context = useContext(BreadcrumbStateContext);
-    if (!context) {
-        throw new Error('useBreadcrumbState must be used within a BreadcrumbProvider');
-    }
-    return context;
-};
-
-export const useBreadcrumbActions = () => {
-    const context = useContext(BreadcrumbActionsContext);
-    if (!context) {
-        throw new Error('useBreadcrumbActions must be used within a BreadcrumbProvider');
+export const useBreadcrumbContext = () => {
+    const context = useContext(BreadcrumbContext);
+    if (context === undefined) {
+        throw new Error('useBreadcrumbContext must be used within a BreadcrumbProvider');
     }
     return context;
 };
