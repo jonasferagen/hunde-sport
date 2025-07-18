@@ -40,6 +40,9 @@ const CustomDrawerContent = (props: any) => {
     const secondaryVariant = themeManager.getVariant('secondary');
     const { cartItemCount } = useShoppingCart();
 
+
+    console.log(segments);
+
     return (
         <LinearGradient
             colors={[secondaryVariant.borderColor, secondaryVariant.backgroundColor]}
@@ -63,7 +66,7 @@ const CustomDrawerContent = (props: any) => {
                 <DrawerItem
                     label="Handlekurv"
                     icon={({ color }) => <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />}
-                    focused={segments[3] === 'shoppingCart'}
+                    focused={segments[2] === 'shopping-cart'}
                     onPress={() => router.push(routes.shoppingCart())}
                     {...getDrawerItemProps(themeManager)}
                 />

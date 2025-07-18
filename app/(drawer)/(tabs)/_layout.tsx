@@ -85,7 +85,7 @@ export default function TabsLayout() {
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
-                        router.push('/(drawer)/(tabs)/(home)/shopping-cart');
+                        router.push('/(drawer)/(tabs)/shopping-cart');
                     },
                 }}
             />
