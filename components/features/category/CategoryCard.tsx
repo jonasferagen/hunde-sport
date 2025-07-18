@@ -19,7 +19,7 @@ export const CategoryCard = ({ category, style }: CategoryCardProps) => {
                 width={'100%'}
                 style={style}
                 textSize="md"
-                textColor="#fff"
+                textColor="#000"
             />
         </Link>
     );
