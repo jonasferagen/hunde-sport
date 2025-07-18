@@ -12,7 +12,7 @@ const BillingScreen = (): JSX.Element => {
         router.push(routes.payment());
     };
 
-    const title = 'Fakturering';
+    const title = 'Levering';
 
     return (
         <PageView>

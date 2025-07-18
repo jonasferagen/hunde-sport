@@ -12,16 +12,16 @@ import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
 
 const CategorySection = () => {
-    const { categories, isLoading } = useCategories(0);
+    const { categories, isLoading, isFetchingNextPage } = useCategories(0);
 
     if (isLoading) {
         return <Loader />;
     }
 
-    const filteredCategories = categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund')
-    filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
+    //  const filteredCategories = categories.filter((category) => category.name === 'Marp' || category.name === 'Katt' || category.name === 'Hund')
+    //  filteredCategories.sort((a, b) => a.name.localeCompare(b.name));
 
-    return filteredCategories.map((category, index) => {
+    return categories.map((category, index) => {
         return (
             <CategoryCard
                 category={category}

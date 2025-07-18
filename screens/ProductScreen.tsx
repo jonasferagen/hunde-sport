@@ -25,7 +25,7 @@ export const ProductScreen = () => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  console.log("product screen loaded");
+  console.log("product screen loaded" + displayProduct?.id);
 
   // Explicitly handle loading, error, and not-found states
   if (isLoading) {

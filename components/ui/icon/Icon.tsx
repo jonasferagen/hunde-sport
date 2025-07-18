@@ -24,6 +24,7 @@ export const ValidIcon = {
     prev: 'arrow-left',
     breadcrumbSeparator: 'chevron-left',
     search: 'search',
+    dot: 'circle',
 
 } as const;
 

@@ -9,7 +9,6 @@ import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { CategoryIcon } from './CategoryIcon';
 
 interface CategoryTreeItemProps {
     category: Category;
@@ -40,8 +39,8 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
                 <View style={styles.itemContainer}>
                     <Link href={routes.category(category)} asChild>
                         <Pressable style={styles.categoryInfo}>
-                            <CategoryIcon image={category.image} size='xl' color={color} />
-                            <CustomText style={[styles.categoryText, { color }]} >{category.name} ({category.count})</CustomText>
+                            <Icon name='dot' size='xxs' color={color} />
+                            <CustomText style={[styles.categoryText, { color }]} >{category.name}- {category.id}</CustomText>
                         </Pressable>
                     </Link>
                     {hasChildren && (
