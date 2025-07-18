@@ -20,6 +20,10 @@ export const ProductScreen = () => {
   const { data: product, isLoading, error } = useProduct(Number(id));
   const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
 
+  const handleSelectOptionAndScroll = (attributeSlug: string, option: string) => {
+    handleSelectOption(attributeSlug, option);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  };
 
   console.log("product screen loaded");
 
@@ -53,14 +57,14 @@ export const ProductScreen = () => {
         <CustomText bold>{displayProduct.name}</CustomText>
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
-        <ProductImageManager product={displayProduct} />
 
         <PageContent>
+          <ProductImageManager product={displayProduct} />
           <ProductMainSection
             product={product}
             displayProduct={displayProduct}
             selectedOptions={selectedOptions}
-            onSelectOption={handleSelectOption}
+            onSelectOption={handleSelectOptionAndScroll}
           />
         </PageContent>
 

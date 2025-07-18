@@ -31,11 +31,13 @@ export class StyleVariant implements IStyleVariant {
     readonly secondary: string;
   };
   public readonly borderColor: string;
+  public readonly outlineColor: string;
 
   constructor(backgroundColor: string, text: { primary: string; secondary: string }, borderColor: string) {
     this.backgroundColor = backgroundColor;
     this.text = text;
     this.borderColor = borderColor;
+    this.outlineColor = borderColor;
   }
 
   getGradient(amounts: number[] = [-10, 10]): [ColorValue, ColorValue] {
@@ -90,7 +92,7 @@ export class ThemeManager {
           primary: ThemeManager.palette.black,
           secondary: ThemeManager.palette.darkGrey,
         },
-        'transparent'
+        ThemeManager.palette.grey
       ),
       card: new StyleVariant(
         ThemeManager.palette.grey,

@@ -50,6 +50,8 @@ const createStyles = (themeVariant: any) => {
             borderRadius: BORDER_RADIUS.sm,
             justifyContent: 'center',
             alignItems: 'center',
+            outlineColor: themeVariant.outlineColor,
+            outlineWidth: 1,
         },
         text: {
             color: themeVariant.text.primary,

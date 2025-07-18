@@ -30,9 +30,9 @@ export const ProductImageManager = ({ product }: ProductImageManagerProps) => {
 
     return (
         <>
-            <PageContent>
-                <ProductImage image={product.images[0]} onPress={() => openImageViewer(0)} />
-            </PageContent>
+
+            <ProductImage image={product.images[0]} onPress={() => openImageViewer(0)} />
+
 
             {product.images.length > 1 && (
                 <PageContent horizontal secondary title="Bilder">
