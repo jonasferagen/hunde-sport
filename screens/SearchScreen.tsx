@@ -1,7 +1,7 @@
 import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { CustomText, SearchBar } from '@/components/ui';
+import { CustomText, Loader, SearchBar } from '@/components/ui';
 import { useSearchProducts } from '@/hooks/Product';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -18,6 +18,7 @@ export const SearchScreen = () => {
     useEffect(() => {
         if (initialQuery !== undefined) {
             setLiveQuery(initialQuery);
+
         }
     }, [initialQuery]);
 
@@ -55,18 +56,23 @@ export const SearchScreen = () => {
 
             </PageHeader>
             <PageSection flex>
-                <PageContent flex paddingHorizontal="none" paddingVertical="none">
+                <PageContent flex paddingHorizontal="none" paddingVertical="none" >
 
-                    {!isLoading && products.length === 0 && initialQuery && (
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <CustomText>Ingen resultater funnet for "{initialQuery}"</CustomText>
-                        </View>
+                    {isLoading ? (
+                        <Loader size="large" flex />
+                    ) : (
+                        products.length === 0 && initialQuery ? (
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <CustomText>Ingen resultater funnet for "{initialQuery}"</CustomText>
+                            </View>
+                        ) : (
+                            <ProductList
+                                products={products}
+                                loadMore={fetchNextPage}
+                                loadingMore={isFetchingNextPage}
+                            />
+                        )
                     )}
-                    <ProductList
-                        products={products}
-                        loadMore={fetchNextPage}
-                        loadingMore={isFetchingNextPage}
-                    />
 
                 </PageContent>
             </PageSection>
