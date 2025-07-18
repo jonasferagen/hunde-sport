@@ -7,6 +7,9 @@ const paths = {
     category: '/category',
     product: '/product',
     checkout: '/checkout',
+    billing: '/billing',
+    payment: '/payment',
+    orderStatus: '/order-status',
 } as const;
 
 
@@ -33,5 +36,14 @@ export const routes = {
     },
     checkout: () => {
         return paths.checkout;
-    }
+    },
+    billing: () => {
+        return paths.billing;
+    },
+    payment: () => {
+        return paths.payment;
+    },
+    orderStatus: () => {
+        return paths.orderStatus;
+    },
 };

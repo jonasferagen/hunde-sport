@@ -5,7 +5,7 @@ import { ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Text as CustomText, Pressable, StyleSheet, View } from 'react-native';
 import { QuantityControl } from './QuantityControl';
 
 interface ShoppingCartListItemProps {
@@ -37,14 +37,22 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
 
     const actionComponent = (
         <View style={styles.actionContainer}>
-            <QuantityControl
-                quantity={item.quantity}
-                onIncrease={handleIncrease}
-                onDecrease={handleDecrease}
-            />
-            <Pressable onPress={handleRemove} style={styles.removeButton}>
-                <Icon name="emptyCart" color={accentVariant.text.primary} />
+            <Pressable onPress={handlePress} style={styles.backButton}>
+                <Icon name="prev" color={accentVariant.text.primary} />
             </Pressable>
+            <View style={styles.rightActions}>
+                <View style={styles.quantityAndRemove}>
+                    <QuantityControl
+                        quantity={item.quantity}
+                        onIncrease={handleIncrease}
+                        onDecrease={handleDecrease}
+                    />
+                    <Pressable onPress={handleRemove} style={styles.removeButton}>
+                        <Icon name="emptyCart" color={accentVariant.text.primary} />
+                    </Pressable>
+                </View>
+                <CustomText>Subtotal: {formatPrice(item.product.price * item.quantity)}</CustomText>
+            </View>
         </View>
     );
 
@@ -54,7 +62,6 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
             title={item.product.name}
             price={formatPrice(item.product.price)}
             imageUrl={item.product.images[0]?.src}
-            onPress={handlePress}
             actionComponent={actionComponent}
         />
     );
@@ -64,9 +71,21 @@ const styles = StyleSheet.create({
     actionContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
     },
     removeButton: {
         padding: 8,
         marginLeft: 8,
+    },
+    backButton: {
+        padding: 8,
+    },
+    rightActions: {
+        alignItems: 'flex-end',
+    },
+    quantityAndRemove: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 });

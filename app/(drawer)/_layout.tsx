@@ -1,5 +1,6 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
 import { Heading, Icon } from '@/components/ui';
+import { routes } from '@/config/routes';
 import { useTheme } from '@/contexts';
 import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
 import { BORDER_RADIUS, FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
@@ -56,14 +57,14 @@ const CustomDrawerContent = (props: any) => {
                     label="Hjem"
                     icon={({ color }) => <Icon name="home" color={color} size="xl" />}
                     focused={segments[2] === '(home)' && segments.length === 3}
-                    onPress={() => router.push('/(drawer)/_home')}
+                    onPress={() => router.push(routes.home())}
                     {...getDrawerItemProps(themeManager)}
                 />
                 <DrawerItem
                     label="Handlekurv"
                     icon={({ color }) => <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />}
                     focused={segments[3] === 'shoppingCart'}
-                    onPress={() => router.push('/(drawer)/_shoppingCart')}
+                    onPress={() => router.push(routes.shoppingCart())}
                     {...getDrawerItemProps(themeManager)}
                 />
                 <Heading title="Kategorier" style={{ marginVertical: SPACING.md }} />
@@ -126,8 +127,9 @@ export default function DrawerLayout() {
                 options={{ drawerItemStyle: { display: 'none' } }}
             />
 
-            <Drawer.Screen name="_home" options={{ title: 'Hjem' }} />
-            <Drawer.Screen name="_shoppingCart" options={{ title: 'Handlekurv' }} />
+            <Drawer.Screen name="billing" options={{ drawerItemStyle: { display: 'none' }, title: 'Fakturering' }} />
+            <Drawer.Screen name="payment" options={{ drawerItemStyle: { display: 'none' }, title: 'Betaling' }} />
+            <Drawer.Screen name="order-status" options={{ drawerItemStyle: { display: 'none' }, title: 'Ordrestatus' }} />
         </Drawer>
     );
 }

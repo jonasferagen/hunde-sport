@@ -1,13 +1,29 @@
-import { PageView } from '@/components/layout';
-import { CustomText } from '@/components/ui';
-import { Stack } from 'expo-router';
+import { CheckoutList } from '@/components/features/checkout/CheckoutList';
+import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
+import { Button } from '@/components/ui/button/Button';
+import { routes } from '@/config/routes';
+import { useShoppingCart } from '@/contexts/ShoppingCartProvider';
+import { Stack, useRouter } from 'expo-router';
 import React, { JSX } from 'react';
 
 export const CheckoutScreen = (): JSX.Element => {
+    const { items, cartTotal } = useShoppingCart();
+    const router = useRouter();
+
+    const title = "Ordreoversikt";
+
     return (
         <PageView>
-            <Stack.Screen options={{ title: 'Kasse' }} />
-            <CustomText>Checkout Screen</CustomText>
+            <Stack.Screen options={{ title }} />
+            <PageHeader title={title} />
+            <PageSection flex>
+                <PageContent flex>
+                    <CheckoutList items={items} cartTotal={cartTotal} />
+                </PageContent>
+                <PageContent>
+                    <Button title="Gå til fakturering" onPress={() => router.push(routes.billing())} />
+                </PageContent>
+            </PageSection>
         </PageView>
     );
 };

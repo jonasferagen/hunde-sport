@@ -1,5 +1,6 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { ProductDetails } from '@/components/features/product/ProductDetails';
+import { ProductImageManager } from '@/components/features/product/ProductImageManager';
 import { ProductMainSection } from '@/components/features/product/ProductMainSection';
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
@@ -10,7 +11,6 @@ import { useProductVariations } from '@/hooks/useProductVariations';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { ProductImageManager } from './product/ProductImageManager';
 
 export const ProductScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();

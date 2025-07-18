@@ -56,7 +56,7 @@ export const SearchScreen = () => {
 
             </PageHeader>
             <PageSection flex>
-                <PageContent flex paddingHorizontal="none" paddingVertical="none" >
+                <PageContent flex padding="none" >
 
                     {isLoading ? (
                         <Loader size="large" flex />

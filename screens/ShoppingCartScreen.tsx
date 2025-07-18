@@ -60,7 +60,7 @@ export const ShoppingCartScreen = () => {
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageHeader title="Handlekurv" />
             <PageSection flex>
-                <PageContent paddingHorizontal="none" paddingVertical="none" flex >
+                <PageContent padding="none" flex >
                     <FlatList
                         data={items}
                         keyExtractor={(item) => item.product.id.toString()}
@@ -78,7 +78,6 @@ export const ShoppingCartScreen = () => {
 }
 
 const createStyles = (themeVariant: IStyleVariant) => StyleSheet.create({
-
 
     summaryRow: {
         flexDirection: 'row',
