@@ -1,13 +1,10 @@
-import { Preloader } from '@/components/preloader/Preloader';
 import {
   BreadcrumbProvider,
   LayoutProvider,
-  PreloaderProvider,
   ProductProvider,
   ShoppingCartProvider,
   StatusProvider,
-  ThemeProvider,
-  usePreloaderContext
+  ThemeProvider
 } from '@/contexts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
@@ -16,12 +13,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const AppContent = (): JSX.Element => {
-  const { appIsReady } = usePreloaderContext();
-
-  if (!appIsReady) {
-    return <Preloader />;
-  }
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }} >
       <Slot />
@@ -46,13 +37,11 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => {
           <BreadcrumbProvider>
             <ProductProvider>
               <ShoppingCartProvider>
-                <PreloaderProvider>
                   <LayoutProvider>
                     <ThemeProvider>
                       {children}
                     </ThemeProvider>
                   </LayoutProvider>
-                </PreloaderProvider>
               </ShoppingCartProvider>
             </ProductProvider>
           </BreadcrumbProvider>
