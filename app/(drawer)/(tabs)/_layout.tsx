@@ -13,13 +13,13 @@ export default function TabsLayout() {
 
     const isSearchActive = segments.includes('search');
     const isCartActive = segments.includes('shoppingCart');
-    const isHomeActive = segments.includes('home') && segments.length === 3;
+    const isHomeActive = segments[2] === '(home)' && segments.length === 3;
 
     return (
         <Tabs
             screenOptions={{
                 tabBarBackground: () => (
-                    <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1 }} />
+                    <LinearGradient colors={gradient} start={{ x: 0, y: .3 }} end={{ x: 0, y: 1 }} style={{ flex: 1 }} />
                 ),
 
                 tabBarStyle: {
@@ -36,19 +36,25 @@ export default function TabsLayout() {
                 name="(home)"
                 options={{
                     title: 'Hjem',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: () => (
                         <Icon name="home" color={isHomeActive ? variant.text.primary : variant.text.secondary} size="xl" />
                     ),
                     tabBarLabel: ({ children }) => (
                         <CustomText fontSize='xs' style={{ color: isHomeActive ? variant.text.primary : variant.text.secondary }}>{children}</CustomText>
                     ),
                 }}
+                listeners={{
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        router.push('/(drawer)/(tabs)/(home)');
+                    },
+                }}
             />
             <Tabs.Screen
                 name="search"
                 options={{
                     title: 'Søk',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: () => (
 
                         <Icon name="search" color={isSearchActive ? variant.text.primary : variant.text.secondary} size="xl" />
                     ),
@@ -69,7 +75,7 @@ export default function TabsLayout() {
                 name="shoppingCart"
                 options={{
                     title: 'Handlekurv',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: () => (
                         <Icon name="shoppingCart" color={isCartActive ? variant.text.primary : variant.text.secondary} size="xl" badge={cartItemCount} />
                     ),
                     tabBarLabel: ({ children }) => (

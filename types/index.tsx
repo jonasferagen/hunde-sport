@@ -70,5 +70,5 @@ export interface IStyleVariant {
     readonly secondary: string;
   };
   readonly borderColor: string;
-  getGradient(): [ColorValue, ColorValue];
+  getGradient(amounts?: number[]): [ColorValue, ColorValue];
 }

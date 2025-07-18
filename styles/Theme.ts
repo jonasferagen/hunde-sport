@@ -40,10 +40,17 @@ export class StyleVariant implements IStyleVariant {
     this.borderColor = borderColor;
   }
 
-  getGradient(): [ColorValue, ColorValue] {
+  getGradient(amounts: number[] = [-10, 10]): [ColorValue, ColorValue] {
+
+    if (amounts.length !== 2) {
+      throw new Error('2 amounts for gradient expected');
+    }
+
+    console.log("aaaa");
+
     return [
-      darken(this.backgroundColor, 10) as ColorValue,
-      lighten(this.borderColor, 10) as ColorValue,
+      lighten(this.backgroundColor, amounts[0]) as ColorValue,
+      lighten(this.backgroundColor, amounts[1]) as ColorValue,
     ];
   }
 }
@@ -61,15 +68,15 @@ export class ThemeManager {
         ThemeManager.palette.primary,
         {
           primary: darken(ThemeManager.palette.primary, 50),
-          secondary: darken(ThemeManager.palette.primary, 30),
+          secondary: darken(ThemeManager.palette.primary, 40),
         },
         darken(ThemeManager.palette.primary, 20)
       ),
       secondary: new StyleVariant(
         ThemeManager.palette.secondary,
         {
-          primary: darken(ThemeManager.palette.secondary, 60),
-          secondary: darken(ThemeManager.palette.secondary, 30),
+          primary: darken(ThemeManager.palette.secondary, 70),
+          secondary: darken(ThemeManager.palette.secondary, 50),
         },
         darken(ThemeManager.palette.secondary, 20)
       ),
