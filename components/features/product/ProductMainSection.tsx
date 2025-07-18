@@ -1,10 +1,10 @@
 import { VariationChips } from '@/components/features/product/VariationChips';
 import { Button, CustomText, Heading } from '@/components/ui';
-import { Row } from '@/components/ui/listitem/layout/Row';
 import { useShoppingCartContext } from '@/contexts';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
+import { View } from 'react-native';
 
 interface ProductHeaderProps {
     product: Product;
@@ -53,13 +53,13 @@ export const ProductMainSection = ({
                     />
                 );
             })}
-        <Row alignItems="center" justifyContent="space-between">
+        <View style={{ alignItems: "center", justifyContent: "space-between" }}>
 
             <Heading title={displayProduct.name} size="md" />
             <CustomText fontSize="xxl" bold>
                 {formatPrice(displayProduct.price)}
             </CustomText>
-        </Row>
+        </View>
         <CustomText fontSize="sm" >{product.short_description}</CustomText>
         <AddToCartButton product={product} displayProduct={displayProduct} />
     </>
