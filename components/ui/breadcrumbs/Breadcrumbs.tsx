@@ -14,13 +14,11 @@ interface BreadcrumbsProps {
 
 export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) => {
     useRenderGuard('Breadcrumbs');
-    const { categories, isLoading, setCategory, setProductFallback } = useBreadcrumbContext();
+    const { categories, isLoading, setCategory } = useBreadcrumbContext();
 
     useEffect(() => {
         if (category) {
             setCategory(category);
-        } else if (product) {
-            setProductFallback(product);
         }
 
     }, [category, setCategory]);

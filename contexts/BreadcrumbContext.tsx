@@ -1,66 +1,64 @@
-
-import { Category, Product } from '@/types';
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-
+import { categoryQueryOptions } from '@/hooks/Category/queries';
+import { Category } from '@/types';
+import { useQueryClient } from '@tanstack/react-query';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface BreadcrumbContextType {
     categories: Category[];
-    setCategory: (category: Category) => void;
+    setCategory: (category: Category | null) => void;
     isLoading: boolean;
-    setProduct: (product: Product) => void;
-    setProductFallback: (product: Product) => void;
 }
 
+export const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(
+    undefined
+);
 
+export const BreadcrumbProvider = ({ children }: { children: ReactNode }) => {
+    const [leafCategory, setLeafCategory] = useState<Category | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [isLoading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
 
-
-const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
-
-export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
-    const [categories, setCategoriesState] = useState<Category[]>([]);
-    const setCategory = useCallback((category: Category) => {
-        const lastCrumb = categories[categories.length - 1] ?? null;
-
-        if (category.id === lastCrumb?.id) {
-            return;
-        }
-        // Append if parent matches last crumb
-        if (category.parent === lastCrumb?.id) {
-            setCategoriesState([...categories, category]);
-            return;
-        }
-
-        setCategoriesState([category]);
-
-    }, [categories]);
-
-    const setProductFallback = useCallback((product: Product) => {
-        /*
-        const productCategories = product.categories;
-        if (productCategories?.length > 0) {
-            const lastCrumb = categories[categories.length - 1];
-
-            // If the last breadcrumb is already part of the product's categories, do nothing.
-            const isCrumbInProductCategories = productCategories.some(
-                (cat) => cat.id === lastCrumb?.id
-            );
-
-            if (!isCrumbInProductCategories) {
-                build(productCategories[0].id);
+    useEffect(() => {
+        const fetchParents = async () => {
+            if (!leafCategory) {
+                setCategories([]);
+                return;
             }
-        } */
-    }, [categories]);
 
-    const contextValue = useMemo(() => ({
-        categories,
-        setCategory,
-        isLoading: false,
-        setProduct: () => { },
-        setProductFallback: () => { }
-    }), [categories, setCategory]);
+            setLoading(true);
+            const breadcrumbs: Category[] = [leafCategory];
+            let parentId = leafCategory.parent;
+
+            while (parentId && parentId !== 0) {
+                try {
+                    const parentCategory = await queryClient.fetchQuery(
+                        categoryQueryOptions(parentId)
+                    );
+                    if (parentCategory) {
+                        breadcrumbs.unshift(parentCategory);
+                        parentId = parentCategory.parent;
+                    } else {
+                        break; // Stop if a parent isn't found
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch parent category:', error);
+                    break; // Stop on error
+                }
+            }
+            setCategories(breadcrumbs);
+            setLoading(false);
+        };
+
+        fetchParents();
+    }, [leafCategory, queryClient]);
+
+    const setCategory = (category: Category | null) => {
+        setLeafCategory(category);
+    };
 
     return (
-        <BreadcrumbContext.Provider value={contextValue}>
+        <BreadcrumbContext.Provider value={{ categories, setCategory, isLoading }}>
             {children}
         </BreadcrumbContext.Provider>
     );
