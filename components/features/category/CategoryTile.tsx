@@ -9,9 +9,6 @@ interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 't
 export const CategoryTile = ({ category, ...rest }: CategoryTileProps) => {
     const { themeManager } = useThemeContext();
 
-    if (!category.image) {
-        return null;
-    }
 
     const themeVariant = themeManager.getVariant('primary');
 

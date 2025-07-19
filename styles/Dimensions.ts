@@ -22,4 +22,13 @@ export const BORDER_RADIUS = {
   xxl: 9999,
 };
 
-
+export const CARD_DIMENSIONS = {
+  product: {
+    width: 200,
+    height: 150,
+  },
+  category: {
+    width: 'auto' as const,
+    height: 200,
+  },
+};

@@ -1,6 +1,10 @@
 product_id: 32855
 product_name: Tre Ponti sele Mesh
 
+product_id 26458
+product_name: Car candle 26458 (attributes)
+
+
 Nyheter - sorter på dato. 5 nyeste.
  - 
 Tilbud - on_sale=true (nyeste) 

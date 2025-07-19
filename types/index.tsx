@@ -19,12 +19,28 @@ export interface Image {
   alt: string;
 }
 
-export interface Category {
+export interface CategoryData {
   id: number;
   name: string;
   parent: number;
   image: Image;
   count: number;
+}
+
+export class Category implements CategoryData {
+  id: number;
+  name: string;
+  parent: number;
+  image: Image;
+  count: number;
+
+  constructor(data: CategoryData) {
+    this.id = data.id;
+    this.name = data.name;
+    this.parent = data.parent;
+    this.image = data.image;
+    this.count = data.count;
+  }
 }
 
 export interface ProductData {
@@ -37,9 +53,9 @@ export interface ProductData {
   stock_status: string,
   description: string;
   short_description: string;
-  categories: Category[];
+  categories: CategoryData[];
   images: Image[];
-  attributes: ProductAttribute[];
+  attributes: ProductAttributeData[];
   variations: number[];
   related_ids: number[];
   type: ProductType
@@ -72,25 +88,10 @@ export class Product implements ProductData {
     this.stock_status = data.stock_status;
     this.description = data.description;
     this.short_description = data.short_description;
-    this.categories = data.categories;
+    this.categories = data.categories.map(category => new Category(category));
     this.variations = data.variations;
     this.related_ids = data.related_ids;
     this.type = data.type;
-
-    // Sort attributes and their options
-    this.attributes = (data.attributes || []).map(attr => ({
-      ...attr,
-      options: (attr.options || []).sort((a, b) => {
-        const numA = parseInt(a.match(/^\d+/)?.[0] || '0', 10);
-        const numB = parseInt(b.match(/^\d+/)?.[0] || '0', 10);
-
-        if (numA !== 0 && numB !== 0 && numA !== numB) {
-          return numA - numB;
-        }
-
-        return 0; //retain natural order of options
-      }),
-    }));
 
     // Add a placeholder image if none exist
     this.images = data.images || [];
@@ -102,12 +103,15 @@ export class Product implements ProductData {
         alt: 'placeholder image',
       });
     }
+
+    // Initialize attributes
+    this.attributes = (data.attributes || []).map(attr => new ProductAttribute(attr));
   }
 }
 
 export type ProductType = 'simple' | 'variable' | 'grouped' | 'external';
 
-export interface ProductAttribute {
+export interface ProductAttributeData {
   id: number;
   name: string;
   slug: string;
@@ -116,6 +120,40 @@ export interface ProductAttribute {
   option?: string;
   position: number;
   visible: boolean;
+}
+
+export class ProductAttribute implements ProductAttributeData {
+  id: number;
+  name: string;
+  slug: string;
+  variation: boolean;
+  options: string[];
+  option?: string;
+  position: number;
+  visible: boolean;
+
+  constructor(data: ProductAttributeData) {
+    this.id = data.id;
+    this.name = data.name;
+    this.slug = data.slug;
+    this.variation = data.variation;
+    this.option = data.option;
+    this.position = data.position;
+    this.visible = data.visible;
+
+    // Sort options with numeric priority
+    this.options = (data.options || []).sort((a, b) => {
+      const numA = parseInt(a.match(/^\d+/)?.[0] || '0', 10);
+      const numB = parseInt(b.match(/^\d+/)?.[0] || '0', 10);
+
+      if (numA !== 0 && numB !== 0 && numA !== numB) {
+        return numA - numB;
+      }
+
+      return 0; // Preserve original order for non-numeric options
+    }).map((option: string) => option.charAt(0).toUpperCase()
+      + option.slice(1).toLowerCase());
+  }
 }
 
 export interface Breadcrumb {

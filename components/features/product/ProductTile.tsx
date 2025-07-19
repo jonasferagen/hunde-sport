@@ -16,7 +16,7 @@ export const ProductTile = ({ product, ...rest }: ProductTileProps) => {
             imageUrl={image.src}
             topRightText={formatPrice(price)}
             nameNumberOfLines={2}
-            gradientMinHeight={60}
+            gradientMinHeight={40}
             {...rest}
         />
     );
