@@ -3,7 +3,6 @@ import { CategoryProducts } from '@/components/features/category/CategoryProduct
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
-import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useBreadcrumbContext } from '@/contexts';
 import { useCategories, useCategory } from '@/hooks/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
@@ -27,9 +26,10 @@ export const CategoryScreen = memo(() => {
     const { category, isLoading } = useCategory(Number(id));
     const { build } = useBreadcrumbContext();
 
-    console.log("category screen loaded");
+
     useEffect(() => {
         if (category) {
+            console.log("building breadcrumbs for category", category?.name);
             build(category.id);
         }
     }, [category, build]);
@@ -38,12 +38,13 @@ export const CategoryScreen = memo(() => {
     if (isLoading || !category) {
         return <Loader size="large" flex />;
     }
-
+    console.log("category screen loaded for category", category?.name);
+    //<Breadcrumbs activeCategory={category} />
     return (
         <PageView>
             <Stack.Screen options={{ title: category.name }} />
             <PageHeader key={category.id}>
-                <Breadcrumbs />
+
                 <CategoryChipsContainer category={category} />
             </PageHeader>
             <PageSection flex>

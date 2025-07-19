@@ -12,7 +12,7 @@ const useBuildTrail = () => {
 interface BreadcrumbContextType {
     categories: Category[];
     isLoading: boolean;
-    setBreadcrumb: (category: Category) => void;
+    setCategory: (category: Category) => void;
     build: (categoryId: number) => void;
     setProductFallback: (product: Product) => void;
 }
@@ -30,7 +30,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
         }
     }, [trail]);
 
-    const setBreadcrumb = useCallback((category: Category) => {
+    const setCategory = useCallback((category: Category) => {
         setCategoriesState(prevCategories => {
             const lastCrumb = prevCategories[prevCategories.length - 1];
 
@@ -56,7 +56,7 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
             );
 
             if (!isCrumbInProductCategories) {
-                 build(productCategories[0].id);
+                build(productCategories[0].id);
             }
         }
     }, [categories, build]);
@@ -64,10 +64,10 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
     const contextValue = useMemo(() => ({
         categories,
         isLoading,
-        setBreadcrumb,
+        setCategory,
         build,
         setProductFallback
-    }), [categories, isLoading, setBreadcrumb, build, setProductFallback]);
+    }), [categories, isLoading, setCategory, build, setProductFallback]);
 
     return (
         <BreadcrumbContext.Provider value={contextValue}>

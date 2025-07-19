@@ -11,12 +11,10 @@ interface ProductListProps {
     products: Product[];
     loadMore?: () => void;
     loadingMore: boolean;
-    HeaderComponent?: React.ReactElement;
-    EmptyComponent?: React.ReactElement;
     contentContainerStyle?: ViewStyle;
 }
 
-export const ProductList = memo(({ products, loadMore, loadingMore, HeaderComponent, EmptyComponent, contentContainerStyle }: ProductListProps) => {
+export const ProductList = memo(({ products, loadMore, loadingMore, contentContainerStyle }: ProductListProps) => {
     const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
     const { layout } = useLayoutContext();
 
@@ -39,14 +37,14 @@ export const ProductList = memo(({ products, loadMore, loadingMore, HeaderCompon
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 
+    console.log("product list rendered with", products.length, loadingMore);
+
     return <FlashList style={{ flex: 1 }}
         data={products}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        ListHeaderComponent={HeaderComponent}
-        ListEmptyComponent={EmptyComponent}
         contentContainerStyle={contentContainerStyle}
         ListFooterComponent={() =>
             loadingMore ? <Loader style={{ paddingVertical: SPACING.lg }} flex /> : null

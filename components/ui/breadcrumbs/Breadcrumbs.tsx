@@ -3,26 +3,36 @@ import { Icon } from '../icon/Icon';
 import { CustomText } from '../text/CustomText';
 
 import { useBreadcrumbContext } from '@/contexts';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { SPACING } from '@/styles';
-import { Product } from '@/types';
+import { Category } from '@/types';
 import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Loader } from '../loader/Loader';
 
-export const Breadcrumbs = React.memo(({ product }: { product?: Product }) => {
 
-    const { categories, isLoading, setProductFallback } = useBreadcrumbContext();
+interface BreadcrumbsProps {
+    activeCategory: Category;
+}
+
+export const Breadcrumbs = React.memo(({ activeCategory }: BreadcrumbsProps) => {
+    useRenderGuard('Breadcrumbs');
+    const { categories, isLoading, setCategory } = useBreadcrumbContext();
+
+
+    console.log("breadcrumbs rendered with categories", categories.map((category) => category.name));
 
     useEffect(() => {
-        if (product) {
-            setProductFallback(product);
+        if (activeCategory) {
+            setCategory(activeCategory);
         }
-    }, [product, setProductFallback]);
+    }, [activeCategory, setCategory]);
+
 
     return (
         <View style={styles.container}>
-            {isLoading ? (
+            {isLoading || categories.length === 0 ? (
                 <Loader size="small" />
             ) : (
                 categories.length > 0 && (

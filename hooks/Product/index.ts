@@ -29,15 +29,19 @@ export const useProducts = (productIds: number[]) => {
 
 export const useProductsByCategory = (categoryId: number) => {
     const query = useInfiniteQuery(productsByCategoryQueryOptions(categoryId));
-    return { ...query, products: query.data?.pages.flat() ?? [] };
+    const products = useMemo(() => query.data?.pages.flat() ?? [], [query.data]);
+
+    return { ...query, products };
 };
 
 export const useFeaturedProducts = () => {
     const query = useInfiniteQuery(featuredProductsQueryOptions());
-    return { ...query, products: query.data?.pages.flat() ?? [] };
+    const products = useMemo(() => query.data?.pages.flat() ?? [], [query.data]);
+    return { ...query, products };
 };
 
 export const useSearchProducts = (query: string) => {
     const searchQuery = useInfiniteQuery(searchProductsQueryOptions(query));
-    return { ...searchQuery, products: searchQuery.data?.pages.flat() ?? [] };
+    const products = useMemo(() => searchQuery.data?.pages.flat() ?? [], [searchQuery.data]);
+    return { ...searchQuery, products };
 };
