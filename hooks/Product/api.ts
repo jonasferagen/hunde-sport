@@ -1,53 +1,32 @@
 import { ENDPOINTS } from '@/config/api';
-import type { Product, ProductType } from '@/types';
+import { Product, ProductData, ProductType } from '@/types';
 import apiClient from '@/utils/apiClient';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
 
 
-const allowedKeys: (keyof Product)[] = [
-    'id',
-    'name',
-    'price',
-    'regular_price',
-    'sale_price',
-    'featured',
-    'stock_status',
-    'description',
-    'short_description',
-    'categories',
-    'images',
-    'attributes',
-    'variations',
-    'related_ids',
-];
-
 const mapToProduct = (item: any): Product => {
-    const product: Partial<Product> = {};
+    const productData: ProductData = {
+        id: item.id,
+        name: cleanHtml(item.name),
+        price: cleanNumber(item.price),
+        regular_price: cleanNumber(item.regular_price),
+        sale_price: cleanNumber(item.sale_price),
+        featured: item.featured,
+        stock_status: item.stock_status,
+        description: cleanHtml(item.description),
+        short_description: cleanHtml(item.short_description),
+        categories: item.categories || [],
+        images: item.images || [],
+        attributes: (item.attributes || []).map((attr: any) => ({
+            ...attr,
+            options: (attr.options || []).map(cleanHtml),
+        })),
+        variations: item.variations || [],
+        related_ids: item.related_ids || [],
+        type: item.type as ProductType,
+    };
 
-    product.id = item.id;
-    product.name = cleanHtml(item.name);
-    product.price = cleanNumber(item.price);
-    product.regular_price = cleanNumber(item.regular_price);
-    product.sale_price = cleanNumber(item.sale_price);
-    product.featured = item.featured;
-    product.stock_status = item.stock_status;
-    product.description = cleanHtml(item.description);
-    product.short_description = cleanHtml(item.short_description);
-    product.categories = item.categories || [];
-    product.images = item.images || [];
-    product.attributes = (item.attributes || []).map((attr: any) => ({
-        ...attr,
-        options: (attr.options || []).map(cleanHtml),
-    }));
-    product.variations = item.variations || [];
-    product.related_ids = item.related_ids || [];
-    product.type = item.type as ProductType;
-
-    if (product.images!.length === 0) {
-        product.images!.push({ src: 'https://placehold.co/600x400' });
-    }
-
-    return product as Product;
+    return new Product(productData);
 };
 
 export async function fetchFeaturedProducts(page: number): Promise<Product[]> {

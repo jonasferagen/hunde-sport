@@ -8,7 +8,7 @@ import { Product } from '@/types';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { VariationChips } from './VariationChips';
 interface ProductListItemProps {
@@ -60,21 +60,26 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
         isExpanded && { height: expandedHeight },
     ];
 
+
+    if (product.id === 35961) {
+        console.log(product.attributes);
+    }
+
     return (
         <View style={containerStyles}>
-            <Row alignItems="center" justifyContent="space-between">
-                <Row alignItems="center" style={styles.pressableWrapper} onPress={handlePress}>
+            <Row onPress={handlePress}>
+                <Row>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, imageDimensions]} />}
-                    <Col style={styles.infoContainer} justifyContent="center">
-                        <CustomText style={styles.name} numberOfLines={2}>{product.name}</CustomText>
+                    <Col style={styles.infoContainer}>
+                        <CustomText style={styles.name} numberOfLines={2}>{product.name} {product.id}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct!.price)}</CustomText>
                     </Col>
                 </Row>
-                <Pressable onPress={() => router.push(routes.product(product))} style={{ marginRight: 6 }}>
+                <Row onPress={() => router.push(routes.product(product))} flex={0}>
                     <Icon name="next" size="xxl" color={theme.text.primary} />
-                </Pressable>
+                </Row>
             </Row>
-            <Row style={styles.bottomRow} justifyContent="space-between" alignItems="center">
+            <Row>
                 <CustomText style={styles.subtitle} numberOfLines={2}>{product.short_description}</CustomText>
                 <View style={styles.actionContainer}>
                     {isPurchasable ? (
@@ -84,19 +89,21 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     )}
                 </View>
             </Row>
-
+            <View style={styles.variationsContainer}>
+                {product.attributes
+                    .filter(attr => attr.variation)
+                    .map(attribute => (
+                        <VariationChips
+                            key={attribute.id}
+                            options={attribute.options}
+                            selectedOption={selectedOptions[attribute.slug] || null}
+                            onSelectOption={option => handleSelectOption(attribute.slug, option)}
+                        />
+                    ))}
+            </View>
             {isExpanded && (
                 <View style={styles.variationsContainer}>
-                    {product.attributes
-                        .filter(attr => attr.variation)
-                        .map(attribute => (
-                            <VariationChips
-                                key={attribute.id}
-                                options={attribute.options}
-                                selectedOption={selectedOptions[attribute.slug] || null}
-                                onSelectOption={option => handleSelectOption(attribute.slug, option)}
-                            />
-                        ))}
+                    <CustomText>Hei</CustomText>
                 </View>
             )}
         </View>
@@ -111,12 +118,6 @@ const createStyles = (theme: any) => StyleSheet.create({
     },
     expandedContainer: {
         justifyContent: 'flex-start',
-    },
-    pressableWrapper: {
-        flex: 1,
-    },
-    bottomRow: {
-        marginTop: 8,
     },
     image: {
         borderRadius: 8,

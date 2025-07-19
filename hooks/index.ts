@@ -1,3 +1,3 @@
 export { useCategories, useCategoryTrail } from './Category';
-export { useFeaturedProducts, useProduct, useProductsByCategory, useProductVariations, useRelatedProducts, useSearchProducts } from './Product';
+export { useFeaturedProducts, useProduct, useProductsByCategory, useSearchProducts } from './Product';
 

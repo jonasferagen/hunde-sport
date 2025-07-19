@@ -46,6 +46,7 @@ export default function TabsLayout() {
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
+                        if (isHomeActive) return;
                         router.push('/(drawer)/(tabs)/(home)');
                     },
                 }}

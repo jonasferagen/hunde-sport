@@ -7,9 +7,10 @@ interface RowProps extends ContainerProps {
     justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
     alignItems?: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
     debug?: string;
+    flex?: number;
 }
 
-export const Row = ({ children, justifyContent, alignItems, style, debug, ...props }: RowProps): JSX.Element => {
+export const Row = ({ children, justifyContent = 'center', alignItems = 'center', style, debug, flex = 1, ...props }: RowProps): JSX.Element => {
     const dynamicStyles: ViewStyle = {
         justifyContent,
         alignItems,
@@ -17,11 +18,12 @@ export const Row = ({ children, justifyContent, alignItems, style, debug, ...pro
 
     const debugStyle: ViewStyle = debug ? { borderWidth: 1, borderColor: debug } : {};
 
-    return <Container {...props} style={[styles.container, dynamicStyles, debugStyle, style]}>{children}</Container>;
+    return <Container {...props} style={[styles.container, dynamicStyles, debugStyle, style, { flex }]}>{children}</Container>;
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         flexDirection: 'row',
     },
 });

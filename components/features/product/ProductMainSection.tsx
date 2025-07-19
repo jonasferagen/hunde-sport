@@ -36,11 +36,7 @@ export const ProductMainSection = ({
     selectedOptions,
     onSelectOption,
 }: ProductHeaderProps) => {
-
-
-
     return <>
-
         {product.attributes
             .filter(attr => attr.variation)
             .map(attribute => {
