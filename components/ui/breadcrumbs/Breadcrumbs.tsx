@@ -1,16 +1,11 @@
-import { routes } from '@/config/routes';
-import { Icon } from '../icon/Icon';
-import { CustomText } from '../text/CustomText';
-
 import { useBreadcrumbContext } from '@/contexts';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { SPACING } from '@/styles';
 import { Category, Product } from '@/types';
-import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Loader } from '../loader/Loader';
-
+import { Breadcrumb } from './Breadcrumb';
 
 interface BreadcrumbsProps {
     category?: Category;
@@ -23,16 +18,14 @@ export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) 
 
     useEffect(() => {
         if (category) {
-            console.log("setting breadcrumbs for category", category.name)
             setCategory(category);
         } else if (product) {
-            console.log("setting breadcrumbs for product", product.name)
             setProductFallback(product);
         }
 
     }, [category, setCategory]);
 
-    console.log("categories", categories.length);
+    //console.log("Breadcrumbs", categories.map(c => c.name).join(' > '));
 
     return (
         <View style={styles.container}>
@@ -42,20 +35,11 @@ export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) 
                 categories.length > 0 && (
                     <View style={styles.itemContainer}>
                         {categories.map((category, index) => (
-                            <React.Fragment key={category.id}>
-                                <Link
-                                    replace
-                                    href={routes.category(category)}
-                                    asChild
-                                >
-                                    <Pressable style={styles.crumbContainer}>
-                                        <CustomText style={styles.crumbText}>{category.name}</CustomText>
-                                    </Pressable>
-                                </Link>
-                                {(index < categories.length - 1) && (
-                                    <Icon name="breadcrumbSeparator" color={styles.crumbText.color} size={'sm'} style={styles.crumbSeparator} />
-                                )}
-                            </React.Fragment>
+                            <Breadcrumb
+                                key={category.id}
+                                category={category}
+                                isLast={index === categories.length - 1}
+                            />
                         ))}
                     </View>
                 )
@@ -77,17 +61,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         gap: SPACING.xs
     },
-    crumbContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    crumbText: {
-        color: 'black'
-    },
-    crumbSeparator: {
-        marginHorizontal: SPACING.xs,
-        top: 0,
-    },
+    // Styles moved to Breadcrumb component
 });
 
 export default Breadcrumbs;

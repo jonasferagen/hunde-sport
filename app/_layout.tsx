@@ -7,7 +7,7 @@ import {
   ThemeProvider
 } from '@/contexts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Slot } from 'expo-router';
+import { Slot, useNavigationContainerRef } from 'expo-router';
 import React, { JSX, memo, useState } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -52,6 +52,9 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
 });
 
 export default function RootLayout() {
+  const navigationRef = useNavigationContainerRef();
+  //  useNavigationLog(navigationRef);
+
   return (
     <AppProviders>
       <AppContent />

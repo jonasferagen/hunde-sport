@@ -1,4 +1,3 @@
-import { Category } from '@/types';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { fetchCategoryByCategory, fetchCategoryById } from './api';
 
@@ -14,30 +13,10 @@ export const categoriesQueryOptions = (categoryId: number) =>
         },
     });
 
-export const categoryQueryOptions = (id: number) =>
+export const categoryQueryOptions = (categoryId: number) =>
     queryOptions({
-        queryKey: ['category', id],
-        queryFn: () => fetchCategoryById(id),
-        enabled: !!id,
-    });
-
-export const categoryTrailQueryOptions = (categoryId: number | null) =>
-    queryOptions<Category[]>({
-        queryKey: ['categoryTrail', categoryId],
-        queryFn: async ({ client: queryClient }) => {
-            if (!categoryId) return [];
-
-            const trail: Category[] = [];
-            let currentCategoryId: number | null = categoryId;
-
-            while (currentCategoryId !== null && currentCategoryId !== 0) {
-                const category: Category = await queryClient.fetchQuery(
-                    categoryQueryOptions(currentCategoryId)
-                );
-                trail.unshift(category);
-                currentCategoryId = category.parent;
-            }
-            return trail;
-        },
+        queryKey: ['categoryId', categoryId],
+        queryFn: () => fetchCategoryById(categoryId),
         enabled: !!categoryId,
     });
+

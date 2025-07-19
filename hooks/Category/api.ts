@@ -2,7 +2,7 @@ import { ENDPOINTS } from '@/config/api';
 import { Category } from '@/types';
 import apiClient from '@/utils/apiClient';
 
-const mapToCategory = (item: any): Category => ({
+const mapToCategory = (item: any): Category => new Category({
     id: item.id,
     name: item.name,
     parent: item.parent,

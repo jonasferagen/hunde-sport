@@ -24,22 +24,17 @@ export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
     const { category, isLoading } = useCategory(Number(id));
 
-
-    if (isLoading || !category) {
-        return <Loader size="large" flex />;
-    }
-    console.log('catscreen', category);
-
     return (
         <PageView>
-            <Stack.Screen options={{ title: category.name }} />
-            <PageHeader key={category.id}>
-                <Breadcrumbs key={category.id} category={category} />
-                <CategoryChipsContainer category={category} />
+            <Stack.Screen options={{ title: category?.name }} />
+            <PageHeader>
+                <Breadcrumbs category={category} />
+                {category && <CategoryChipsContainer category={category} />}
             </PageHeader>
             <PageSection flex>
-                <PageContent flex paddingHorizontal="none" paddingVertical="none" key={category.id}>
-                    <CategoryProducts category={category} />
+                <PageContent flex paddingHorizontal="none" paddingVertical="none" >
+                    {isLoading && <Loader size="large" flex />}
+                    {!isLoading && category && <CategoryProducts category={category!} />}
                 </PageContent>
             </PageSection>
         </PageView>

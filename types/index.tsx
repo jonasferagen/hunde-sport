@@ -41,6 +41,10 @@ export class Category implements CategoryData {
     this.image = data.image;
     this.count = data.count;
   }
+
+  toString() {
+    return 'Category ' + this.id + ': ' + this.name;
+  }
 }
 
 export interface ProductData {
@@ -106,6 +110,10 @@ export class Product implements ProductData {
 
     // Initialize attributes
     this.attributes = (data.attributes || []).map(attr => new ProductAttribute(attr));
+  }
+
+  toString() {
+    return 'Product ' + this.id + ': ' + this.name;
   }
 }
 

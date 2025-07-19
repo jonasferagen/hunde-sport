@@ -1,51 +1,41 @@
-import { useCategoryTrail } from '@/hooks/Category';
-import { Category, Product } from '@/types';
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-// A new hook to manage the trail fetching logic
-const useBuildTrail = () => {
-    const [categoryId, setCategoryId] = useState<number | null>(null);
-    const { data: trail, isLoading } = useCategoryTrail(categoryId);
-    return { trail, isLoading, build: setCategoryId };
-};
+import { Category, Product } from '@/types';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+
 
 interface BreadcrumbContextType {
     categories: Category[];
-    isLoading: boolean;
     setCategory: (category: Category) => void;
-    build: (categoryId: number) => void;
+    isLoading: boolean;
+    setProduct: (product: Product) => void;
     setProductFallback: (product: Product) => void;
 }
+
+
+
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
 export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) => {
     const [categories, setCategoriesState] = useState<Category[]>([]);
-    const { trail, isLoading, build } = useBuildTrail();
-
-    // When the trail is fetched, update the context state
-    useEffect(() => {
-        if (trail) {
-            setCategoriesState(trail);
-        }
-    }, [trail]);
-
     const setCategory = useCallback((category: Category) => {
-        setCategoriesState(prevCategories => {
-            const lastCrumb = prevCategories[prevCategories.length - 1];
+        const lastCrumb = categories[categories.length - 1] ?? null;
 
-            // If the new category is a child of the last one, just append it.
-            if (lastCrumb && category.parent === lastCrumb.id) {
-                return [...prevCategories, category];
-            }
+        if (category.id === lastCrumb?.id) {
+            return;
+        }
+        // Append if parent matches last crumb
+        if (category.parent === lastCrumb?.id) {
+            setCategoriesState([...categories, category]);
+            return;
+        }
 
-            // Otherwise, rebuild the whole trail.
-            build(category.id);
-            return [category]; // Immediately clear breadcrumbs for a clean transition
-        });
-    }, [build]);
+        setCategoriesState([category]);
+
+    }, [categories]);
 
     const setProductFallback = useCallback((product: Product) => {
+        /*
         const productCategories = product.categories;
         if (productCategories?.length > 0) {
             const lastCrumb = categories[categories.length - 1];
@@ -58,16 +48,16 @@ export const BreadcrumbProvider = ({ children }: { children: React.ReactNode }) 
             if (!isCrumbInProductCategories) {
                 build(productCategories[0].id);
             }
-        }
-    }, [categories, build]);
+        } */
+    }, [categories]);
 
     const contextValue = useMemo(() => ({
         categories,
-        isLoading,
         setCategory,
-        build,
-        setProductFallback
-    }), [categories, isLoading, setCategory, build, setProductFallback]);
+        isLoading: false,
+        setProduct: () => { },
+        setProductFallback: () => { }
+    }), [categories, setCategory]);
 
     return (
         <BreadcrumbContext.Provider value={contextValue}>

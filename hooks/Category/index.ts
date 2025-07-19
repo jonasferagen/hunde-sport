@@ -1,13 +1,10 @@
 import { useStatusContext } from '@/contexts/StatusContext';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
-import { categoriesQueryOptions, categoryQueryOptions, categoryTrailQueryOptions } from './queries';
+import { categoriesQueryOptions, categoryQueryOptions } from './queries';
 
 
 
-export const useCategoryTrail = (categoryId: number | null) => {
-    return useQuery(categoryTrailQueryOptions(categoryId));
-};
 
 export const useCategories = (categoryId: number) => {
     const query = useInfiniteQuery(categoriesQueryOptions(categoryId));
@@ -45,9 +42,11 @@ export const useCategories = (categoryId: number) => {
 
 export const useCategory = (categoryId: number) => {
     const result = useQuery(categoryQueryOptions(categoryId));
+    const category = useMemo(() => result.data, [result.data]);
+
 
     return {
         ...result,
-        category: result.data,
+        category,
     };
 };
