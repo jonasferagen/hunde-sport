@@ -2,13 +2,12 @@ import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Loader } from '@/components/ui';
-import { useBreadcrumbContext } from '@/contexts';
+import { Breadcrumbs, Loader } from '@/components/ui';
 import { useCategories, useCategory } from '@/hooks/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 
 
 const CategoryChipsContainer = ({ category }: { category: Category }) => {
@@ -24,27 +23,17 @@ export const CategoryScreen = memo(() => {
     useRenderGuard('CategoryScreen');
     const { id } = useLocalSearchParams<{ id: string; }>();
     const { category, isLoading } = useCategory(Number(id));
-    const { build } = useBreadcrumbContext();
-
-
-    useEffect(() => {
-        if (category) {
-            console.log("building breadcrumbs for category", category?.name);
-            build(category.id);
-        }
-    }, [category, build]);
 
 
     if (isLoading || !category) {
         return <Loader size="large" flex />;
     }
     console.log("category screen loaded for category", category?.name);
-    //<Breadcrumbs activeCategory={category} />
     return (
         <PageView>
             <Stack.Screen options={{ title: category.name }} />
             <PageHeader key={category.id}>
-
+                <Breadcrumbs category={category} />
                 <CategoryChipsContainer category={category} />
             </PageHeader>
             <PageSection flex>

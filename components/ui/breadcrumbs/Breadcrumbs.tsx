@@ -5,7 +5,7 @@ import { CustomText } from '../text/CustomText';
 import { useBreadcrumbContext } from '@/contexts';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { SPACING } from '@/styles';
-import { Category } from '@/types';
+import { Category, Product } from '@/types';
 import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -13,21 +13,24 @@ import { Loader } from '../loader/Loader';
 
 
 interface BreadcrumbsProps {
-    activeCategory: Category;
+    category?: Category;
+    product?: Product;
 }
 
-export const Breadcrumbs = React.memo(({ activeCategory }: BreadcrumbsProps) => {
+export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) => {
     useRenderGuard('Breadcrumbs');
-    const { categories, isLoading, setCategory } = useBreadcrumbContext();
-
-
-    console.log("breadcrumbs rendered with categories", categories.map((category) => category.name));
+    const { categories, isLoading, setCategory, setProductFallback } = useBreadcrumbContext();
 
     useEffect(() => {
-        if (activeCategory) {
-            setCategory(activeCategory);
+        if (category) {
+            console.log("setting breadcrumbs for category")
+            setCategory(category);
+        } else if (product) {
+            console.log("setting breadcrumbs for product")
+            setProductFallback(product);
         }
-    }, [activeCategory, setCategory]);
+
+    }, [category, setCategory]);
 
 
     return (

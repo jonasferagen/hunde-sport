@@ -7,8 +7,8 @@ import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, Heading, Loader } from '@/components/ui';
-import { useImageViewer } from '@/hooks/useImageViewer';
 import { useProduct } from '@/hooks/Product';
+import { useImageViewer } from '@/hooks/useImageViewer';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
@@ -37,8 +37,6 @@ export const ProductScreen = () => {
     [displayProduct?.images]
   );
 
-  console.log("product screen loaded" + displayProduct?.id);
-
   // Explicitly handle loading, error, and not-found states
   if (isLoading) {
     return <Loader size="large" flex />;
@@ -53,6 +51,7 @@ export const ProductScreen = () => {
   if (!product || !displayProduct) {
     throw new Error('Product not found: ' + id);
   }
+
 
   return (
     <PageView>

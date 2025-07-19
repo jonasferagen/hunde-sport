@@ -37,8 +37,6 @@ export const ProductList = memo(({ products, loadMore, loadingMore, contentConta
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 
-    console.log("product list rendered with", products.length, loadingMore);
-
     return <FlashList style={{ flex: 1 }}
         data={products}
         renderItem={renderItem}

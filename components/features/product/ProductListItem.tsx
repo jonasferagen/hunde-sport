@@ -62,7 +62,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
 
     if (product.id === 35961) {
-        console.log(product.attributes);
+        console.log(product.id + ' rendered');
     }
 
     return (
