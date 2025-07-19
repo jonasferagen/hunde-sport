@@ -8,19 +8,19 @@ import {
 } from '@/contexts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
-import { JSX, useState } from "react";
+import React, { JSX, memo, useState } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-const AppContent = (): JSX.Element => {
+const AppContent = memo((): JSX.Element => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }} >
       <Slot />
     </GestureHandlerRootView>
   );
-}
+});
 
-const AppProviders = ({ children }: { children: React.ReactNode }) => {
+const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -37,11 +37,11 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => {
           <BreadcrumbProvider>
             <ProductProvider>
               <ShoppingCartProvider>
-                  <LayoutProvider>
-                    <ThemeProvider>
-                      {children}
-                    </ThemeProvider>
-                  </LayoutProvider>
+                <LayoutProvider>
+                  <ThemeProvider>
+                    {children}
+                  </ThemeProvider>
+                </LayoutProvider>
               </ShoppingCartProvider>
             </ProductProvider>
           </BreadcrumbProvider>
@@ -49,7 +49,7 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => {
       </QueryClientProvider>
     </SafeAreaProvider>
   );
-}
+});
 
 export default function RootLayout() {
   return (
