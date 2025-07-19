@@ -21,7 +21,5 @@ export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Eleme
         return <></>;
     }
 
-    console.log('product list for category ' + category.id + ' ' + products.length);
-
     return <ProductList products={products} loadingMore={isFetchingNextPage} loadMore={fetchNextPage} />;
 };

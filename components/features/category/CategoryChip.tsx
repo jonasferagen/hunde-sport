@@ -11,7 +11,7 @@ interface CategoryChipProps {
 export const CategoryChip = ({ category }: CategoryChipProps) => {
 
     return (
-        <Link href={routes.category(category)} asChild>
+        <Link replace href={routes.category(category)} asChild>
             <Chip
                 label={category.name}
                 variant="secondary"

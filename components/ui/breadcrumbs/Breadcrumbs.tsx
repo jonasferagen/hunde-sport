@@ -23,19 +23,20 @@ export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) 
 
     useEffect(() => {
         if (category) {
-            console.log("setting breadcrumbs for category")
+            console.log("setting breadcrumbs for category", category.name)
             setCategory(category);
         } else if (product) {
-            console.log("setting breadcrumbs for product")
+            console.log("setting breadcrumbs for product", product.name)
             setProductFallback(product);
         }
 
     }, [category, setCategory]);
 
+    console.log("categories", categories.length);
 
     return (
         <View style={styles.container}>
-            {isLoading || categories.length === 0 ? (
+            {isLoading ? (
                 <Loader size="small" />
             ) : (
                 categories.length > 0 && (
@@ -43,6 +44,7 @@ export const Breadcrumbs = React.memo(({ category, product }: BreadcrumbsProps) 
                         {categories.map((category, index) => (
                             <React.Fragment key={category.id}>
                                 <Link
+                                    replace
                                     href={routes.category(category)}
                                     asChild
                                 >

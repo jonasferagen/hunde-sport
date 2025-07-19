@@ -57,7 +57,7 @@ export const ProductScreen = () => {
     <PageView>
       <Stack.Screen options={{ title: displayProduct.name }} />
       <PageHeader>
-        <Breadcrumbs product={product} />
+        <Breadcrumbs key={product.id} product={product} />
         <Heading title={displayProduct.name} size="md" />
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>

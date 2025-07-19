@@ -23,6 +23,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('card');
     const styles = createStyles(theme);
+
     const { items, addToCart, updateQuantity, canAddToCart } = useShoppingCartContext();
     const [imageDimensions, setImageDimensions] = useState({ width: 80, height: 80 });
     const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
@@ -50,7 +51,6 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
         throw new Error("displayProduct is undefined" + product.id);
     }
 
-
     const imageUrl = getScaledImageUrl(displayProduct!.images[0]?.src, imageDimensions.width, imageDimensions.height);
     const isPurchasable = canAddToCart(displayProduct);
 
@@ -61,17 +61,13 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     ];
 
 
-    if (product.id === 35961) {
-        console.log(product.id + ' rendered');
-    }
-
     return (
         <View style={containerStyles}>
             <Row onPress={handlePress}>
                 <Row>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, imageDimensions]} />}
                     <Col style={styles.infoContainer}>
-                        <CustomText style={styles.name} numberOfLines={2}>{product.name} {product.id}</CustomText>
+                        <CustomText style={styles.name} numberOfLines={2}>{product.name} {product.id} {product.type}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct!.price)}</CustomText>
                     </Col>
                 </Row>

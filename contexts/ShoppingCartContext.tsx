@@ -22,7 +22,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const { showMessage } = useStatusContext();
 
     const canAddToCart = useCallback((product: Product): boolean => {
-        return product.type !== 'variable';
+        return product.type === 'variable' || product.type === 'simple';
     }, []);
 
     const addToCart = useCallback((product: Product) => {

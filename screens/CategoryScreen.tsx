@@ -28,12 +28,13 @@ export const CategoryScreen = memo(() => {
     if (isLoading || !category) {
         return <Loader size="large" flex />;
     }
-    console.log("category screen loaded for category", category?.name);
+    console.log('catscreen', category);
+
     return (
         <PageView>
             <Stack.Screen options={{ title: category.name }} />
             <PageHeader key={category.id}>
-                <Breadcrumbs category={category} />
+                <Breadcrumbs key={category.id} category={category} />
                 <CategoryChipsContainer category={category} />
             </PageHeader>
             <PageSection flex>
