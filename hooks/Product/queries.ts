@@ -1,4 +1,4 @@
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, searchProducts } from './api';
 

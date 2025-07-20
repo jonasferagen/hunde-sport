@@ -1,7 +1,7 @@
 import { Loader } from '@/components/ui';
 import { useProductsByCategory } from '@/hooks/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { Category } from '@/types';
+import { Category } from '@/models/Category';
 import React, { JSX } from 'react';
 import { ProductList } from '../product/ProductList';
 

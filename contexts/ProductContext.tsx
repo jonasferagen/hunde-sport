@@ -1,4 +1,4 @@
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import React, { createContext, useContext, useState } from 'react';
 
 interface ProductContextType {

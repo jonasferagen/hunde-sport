@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import { Category } from '@/types';
+import { Category } from '@/models/Category';
 import apiClient from '@/utils/apiClient';
 
 const mapToCategory = (item: any): Category => new Category({

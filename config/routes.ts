@@ -1,4 +1,5 @@
-import { Category, Product } from '@/types';
+import { Category } from '@/models/Category';
+import { Product } from '@/models/Product';
 import { Href } from 'expo-router';
 
 const paths = {

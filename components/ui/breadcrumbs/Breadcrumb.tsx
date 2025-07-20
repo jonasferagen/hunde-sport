@@ -7,7 +7,8 @@ import { CustomText } from '@/components/ui/text/CustomText';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts/ThemeContext';
 import { SPACING } from '@/styles';
-import { Category, IStyleVariant } from '@/types';
+import { Category } from '@/models/Category';
+import { IStyleVariant } from '@/types';
 import { StyleSheet } from 'react-native';
 
 interface BreadcrumbProps {

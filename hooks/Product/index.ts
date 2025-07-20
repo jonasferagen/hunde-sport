@@ -1,4 +1,4 @@
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import {

@@ -1,5 +1,5 @@
 import { ChipContainer } from '@/components/ui';
-import { ProductAttributeOption } from '@/types';
+import { ProductAttributeOption } from '@/models/ProductAttributeOption';
 import React from 'react';
 import { VariationChip } from './VariationChip';
 
@@ -20,7 +20,7 @@ export const VariationChips = ({ options, onSelectOption, selectedOption }: Vari
             {options.map(option => (
                 <VariationChip
                     key={option.name}
-                    option={option.name}
+                    label={option.label}
                     onPress={() => onSelectOption(option.name)}
                     isSelected={selectedOption === option.name}
                     disabled={!option.isAvailable}

@@ -1,6 +1,6 @@
 import { CustomText } from '@/components/ui/text/CustomText';
 import { FONT_SIZES, SPACING } from '@/styles';
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, ViewProps } from 'react-native';

@@ -2,7 +2,7 @@ import { CategoryTile } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { CARD_DIMENSIONS } from '@/styles/Dimensions';
-import { Category } from '@/types';
+import { Category } from '@/models/Category';
 import { Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue, StyleProp, ViewStyle } from 'react-native';

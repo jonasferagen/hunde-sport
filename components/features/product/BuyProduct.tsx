@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui';
 import { useShoppingCartContext } from '@/contexts';
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import React from 'react';
 
 interface BuyProductProps {

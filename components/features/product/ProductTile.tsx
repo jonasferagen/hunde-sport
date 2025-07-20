@@ -1,4 +1,4 @@
-import type { Product } from '@/types';
+import type { Product } from '@/models/Product';
 import { formatPrice } from "@/utils/helpers";
 import { BaseTile, BaseTileProps } from '../../ui/tile/BaseTile';
 

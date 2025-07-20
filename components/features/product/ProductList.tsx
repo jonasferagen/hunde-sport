@@ -1,7 +1,7 @@
 import { Loader } from '@/components/ui';
 import { useLayoutContext } from '@/contexts';
 import { SPACING } from '@/styles';
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback, useState } from 'react';
 import { ViewStyle } from 'react-native';

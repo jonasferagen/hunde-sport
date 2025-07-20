@@ -1,5 +1,5 @@
 import { routes } from '@/config/routes';
-import { Category } from '@/types';
+import { Category } from '@/models/Category';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Chip } from '../../ui/chips/Chip';

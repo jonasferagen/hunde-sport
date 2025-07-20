@@ -6,7 +6,7 @@ import { Loader } from '@/components/ui';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { Category } from '@/types';
+import { Category } from '@/models/Category';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
 

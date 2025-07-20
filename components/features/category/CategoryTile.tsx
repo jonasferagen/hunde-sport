@@ -1,5 +1,5 @@
 import { useThemeContext } from '@/contexts';
-import type { Category } from '@/types';
+import type { Category } from '@/models/Category';
 import { BaseTile, type BaseTileProps } from '../../ui/tile/BaseTile';
 
 interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 'topRightText'> {

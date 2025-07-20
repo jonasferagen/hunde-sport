@@ -1,6 +1,7 @@
 
 import { useThemeContext } from '@/contexts';
-import { IStyleVariant, Image as ProductImageType } from '@/types';
+import { IStyleVariant } from '@/types';
+import { Image as ProductImageType } from '@/models/Image';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import React from 'react';

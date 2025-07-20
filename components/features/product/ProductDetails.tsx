@@ -1,6 +1,6 @@
 import { AttributeDisplay } from '@/components/features/product/AttributeDisplay';
 import { CustomText } from '@/components/ui';
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import React from 'react';
 
 interface ProductDetailsProps {

@@ -3,7 +3,7 @@
 import { Icon } from '@/components/ui';
 import { useThemeContext } from '@/contexts';
 import { FONT_SIZES } from '@/styles';
-import { Category } from '@/types';
+import { Category } from '@/models/Category';
 
 
 import React, { useEffect, useState } from 'react';

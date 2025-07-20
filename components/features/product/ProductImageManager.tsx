@@ -1,7 +1,7 @@
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { PageContent } from '@/components/layout';
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import React, { useState } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 

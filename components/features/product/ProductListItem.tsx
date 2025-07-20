@@ -4,7 +4,7 @@ import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { useProductVariations } from '@/hooks/useProductVariations';
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React, { useState } from 'react';

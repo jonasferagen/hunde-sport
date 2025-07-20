@@ -1,6 +1,7 @@
 import { useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
-import { IStyleVariant, Image as ProductImage } from '@/types';
+import { IStyleVariant } from '@/types';
+import { Image as ProductImage } from '@/models/Image';
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';

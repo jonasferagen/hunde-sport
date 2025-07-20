@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import { Product, ProductData, ProductType } from '@/types';
+import { Product, ProductData, ProductType } from '@/models/Product';
 import apiClient from '@/utils/apiClient';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
 

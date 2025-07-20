@@ -1,6 +1,6 @@
 import { Col, Row } from '@/components/ui/listitem/layout';
 import { useProducts } from '@/hooks/Product';
-import { Product } from '@/types';
+import { Product } from '@/models/Product';
 import React from 'react';
 import { Text } from 'react-native';
 import { VariationChip } from './VariationChip';

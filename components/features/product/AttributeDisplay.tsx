@@ -2,7 +2,7 @@ import { CustomText } from '@/components/ui';
 import { useThemeContext } from '@/contexts';
 import { SPACING } from '@/styles';
 import { FONT_SIZES } from '@/styles/Typography';
-import { ProductAttribute as Attribute } from '@/types';
+import { ProductAttribute as Attribute } from '@/models/ProductAttribute';
 import { StyleSheet, View } from 'react-native';
 
 interface AttributeDisplayProps {
