@@ -117,34 +117,39 @@ export class Product {
     this.variationsData = variations;
   }
 
-  getAvailableOptions(attributeSlug: string, selectedOptions: Record<string, string>): string[] {
-    if (this.variationsData.length === 0) {
-      // If variations are not loaded, all options are considered available
-      const attribute = this.attributes.find(attr => attr.slug === attributeSlug);
-      return attribute ? attribute.options.map(opt => opt.name) : [];
-    }
-
-    const availableOptions = new Set<string>();
-
-    this.variationsData.forEach(variation => {
-      const isMatch = Object.entries(selectedOptions).every(([slug, option]) => {
-        if (slug === attributeSlug || !option) {
-          return true; // Ignore the current attribute and unselected ones
-        }
-        return variation.attributes.some(attr => attr.slug === slug && attr.option === option);
-      });
-
-      if (isMatch) {
-        const variationOption = variation.attributes.find(attr => attr.slug === attributeSlug);
-        if (variationOption && variationOption.option) {
-          availableOptions.add(variationOption.option);
-        }
-      }
-    });
-
-    return Array.from(availableOptions);
+  getVariationAttributes(): ProductAttribute[] {
+    return this.attributes.filter(attr => attr.variation);
   }
 
+  /*
+    getAvailableOptions(attributeSlug: string, selectedOptions: Record<string, string>): string[] {
+      if (this.variationsData.length === 0) {
+        // If variations are not loaded, all options are considered available
+        const attribute = this.attributes.find(attr => attr.slug === attributeSlug);
+        return attribute ? attribute.options.map(opt => opt.name) : [];
+      }
+  
+      const availableOptions = new Set<string>();
+  
+      this.variationsData.forEach(variation => {
+        const isMatch = Object.entries(selectedOptions).every(([slug, option]) => {
+          if (slug === attributeSlug || !option) {
+            return true; // Ignore the current attribute and unselected ones
+          }
+          return variation.attributes.some(attr => attr.slug === slug && attr.option === option);
+        });
+  
+        if (isMatch) {
+          const variationOption = variation.attributes.find(attr => attr.slug === attributeSlug);
+          if (variationOption && variationOption.option) {
+            availableOptions.add(variationOption.option);
+          }
+        }
+      });
+  
+      return Array.from(availableOptions);
+    }
+  */
   toString() {
     return 'Product ' + this.id + ': ' + this.name;
   }

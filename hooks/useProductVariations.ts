@@ -10,6 +10,8 @@ export const useProductVariations = (product: Product | null | undefined) => {
 
     // Set initial variation when variations are loaded
     useEffect(() => {
+
+        console.log(product?.id + " " + variations.length);
         // Only set initial options if no options are selected yet
         if (variations && variations.length > 0 && Object.keys(selectedOptions).length === 0) {
             const firstVariation = variations[0];

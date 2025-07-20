@@ -1,19 +1,22 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
+import { BuyProduct } from '@/components/features/product/BuyProduct';
 import { ProductDetails } from '@/components/features/product/ProductDetails';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
-import { ProductMainSection } from '@/components/features/product/ProductMainSection';
+import { ProductVariations } from '@/components/features/product/ProductVariations';
 import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Breadcrumbs, Heading, Loader } from '@/components/ui';
+import { Breadcrumbs, CustomText, Heading, Loader } from '@/components/ui';
 import { useProduct } from '@/hooks/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
 import { useProductVariations } from '@/hooks/useProductVariations';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
+import { formatPrice } from '@/utils/helpers';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo } from 'react';
+import { View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
@@ -58,16 +61,21 @@ export const ProductScreen = () => {
       <Stack.Screen options={{ title: displayProduct.name }} />
       <PageHeader>
         <Breadcrumbs categoryId={categoryId} isLastClickable={true} />
-        <Heading title={displayProduct.name} size="md" />
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
         <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
         <PageContent>
-          <ProductMainSection
+          <View style={{ alignItems: "center", justifyContent: "space-between" }}>
+
+            <Heading title={displayProduct.name} size="md" />
+            <CustomText fontSize="xxl" bold>
+              {formatPrice(displayProduct.price)}
+            </CustomText>
+          </View>
+          <CustomText fontSize="sm" >{product.short_description}</CustomText>
+          <BuyProduct product={displayProduct} />
+          <ProductVariations
             product={product}
-            displayProduct={displayProduct}
-            selectedOptions={selectedOptions}
-            onSelectOption={handleSelectOptionAndScroll}
           />
         </PageContent>
 

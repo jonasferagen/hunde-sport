@@ -3,8 +3,8 @@ import React from 'react';
 
 interface VariationChipProps {
     option: string;
-    onPress: () => void;
-    isSelected: boolean;
+    onPress?: () => void;
+    isSelected?: boolean;
     disabled?: boolean;
 }
 
