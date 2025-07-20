@@ -1,35 +1,25 @@
 import { Col, Row } from '@/components/ui/layout';
 import { Select } from '@/components/ui/select/Select';
-import { useProductVariations } from '@/hooks/useProductVariations';
-import { Product } from '@/models/Product';
+import { useProductContext } from '@/contexts/ProductContext';
 import { formatPrice } from '@/utils/helpers';
-import React, { JSX, useEffect } from 'react';
+import React, { JSX } from 'react';
 import { Text } from 'react-native';
 import { VariationChip } from './VariationChip';
 
 interface ProductVariationsProps {
-    product: Product;
-    onVariantChange: (variant: Product | null) => void;
     displayAs?: 'chips' | 'select';
 }
 
 export const ProductVariations = ({
-    product,
-    onVariantChange,
     displayAs = 'select',
 }: ProductVariationsProps): JSX.Element | null => {
     const {
-        productVariant,
-        productVariations,
-        handleOptionSelect,
-        availableOptions,
-        selectedOptions,
-        variationAttributes,
-    } = useProductVariations(product);
 
-    useEffect(() => {
-        onVariantChange(productVariant);
-    }, [productVariant, onVariantChange]);
+        variationAttributes,
+        selectedOptions,
+        availableOptions,
+        handleOptionSelect,
+    } = useProductContext();
 
     if (!variationAttributes || variationAttributes.length === 0) {
         return null;
@@ -78,7 +68,7 @@ export const ProductVariations = ({
                                     let label = opt.label;
                                     if (variationForOption) {
                                         const stockDisplay = getStockDisplay(variationForOption.stock_status);
-                                        label += ` (${formatPrice(variationForOption.price)}, ${stockDisplay})`;
+                                        label += ` ${formatPrice(variationForOption.price)}, ${stockDisplay}`;
                                     } else {
                                         label += ' (Not available)';
                                     }

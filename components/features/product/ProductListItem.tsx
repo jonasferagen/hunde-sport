@@ -2,14 +2,14 @@ import { Button, CustomText, Icon } from '@/components/ui';
 import { Col, Row } from '@/components/ui/layout';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
+import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { useProductVariations } from '@/hooks/useProductVariations';
 
 import { Product } from '@/models/Product';
 import { SPACING } from '@/styles';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { ProductVariations } from './ProductVariations';
@@ -23,80 +23,82 @@ interface ProductListItemProps {
     categoryId?: number;
 }
 
-export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index, onPress, isExpanded, expandedHeight, categoryId }) => {
+const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = ({ index, onPress, isExpanded, expandedHeight, categoryId }) => {
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('card');
     const styles = createStyles(theme);
 
     const { items, addToCart, updateQuantity } = useShoppingCartContext();
-
-    const [productVariant, setProductVariant] = useState<Product | null>(null);
-
-    const {
-        availableOptions,
-    } = useProductVariations(product);
-
-
+    const { displayProduct, product, variationAttributes, priceRange } = useProductContext();
 
     // The product to display will be the selected variant, or fall back to the main product.
-    const displayProduct = productVariant || product;
-
-    const cartItem = items.find(item => item.product.id === displayProduct.id);
+    const cartItem = items.find(item => item.product.id === displayProduct!.id);
     const quantity = cartItem?.quantity ?? 0;
 
     const handleIncrease = () => {
         if (quantity === 0) {
-            addToCart(displayProduct);
+            addToCart(displayProduct!);
         } else {
-            updateQuantity(displayProduct.id, quantity + 1);
+            updateQuantity(displayProduct!.id, quantity + 1);
         }
     };
 
     const handleDecrease = () => {
-        updateQuantity(displayProduct.id, quantity - 1);
+        updateQuantity(displayProduct!.id, quantity - 1);
+    };
+
+
+    const handleProductLink = () => {
+        router.push(routes.product(product, categoryId));
     };
 
     const handlePress = () => {
         onPress(product.id);
     }
 
-    const imageUrl = getScaledImageUrl(displayProduct.images[0]?.src, 80, 80);
+
+    const imageUrl = getScaledImageUrl(displayProduct!.images[0]?.src, 80, 80);
 
     const containerStyles = [
         styles.container,
     ];
 
-
-    const hasVariations = availableOptions.size > 0;
+    const hasVariations = variationAttributes.length > 0;
 
 
     return (
         <View style={containerStyles}>
-            <Row onPress={handlePress}>
-                <Row justifyContent='space-between' alignItems='center'>
+            <Row>
+                <Row alignItems='center' onPress={handleProductLink}>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />}
-                    <Col style={styles.infoContainer}>
-                        <CustomText style={styles.name} numberOfLines={2}>{displayProduct.name}</CustomText>
-                        <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
-                        {false && hasVariations && !isExpanded && (
-                            <Row style={styles.variationIndicator} flex={0}>
+                    <Col>
+                        <Row style={{ flexGrow: 0 }} >
+                            <CustomText style={styles.name} numberOfLines={2}>{displayProduct!.name}</CustomText>
+                        </Row>
+                        <Row justifyContent='space-between' style={[styles.variationIndicator, { flexGrow: 0 }]} >
+                            <Col>
+                                <CustomText style={styles.price}>
+                                    {priceRange
+                                        ? `Fra ${formatPrice(priceRange.min)}`
+                                        : formatPrice(displayProduct!.price)}
+                                </CustomText>
+                            </Col>
+                            <Row>
                                 <Icon name="exclamation" size="md" color={theme.text.primary} />
                                 <CustomText style={styles.variationText}>Flere varianter</CustomText>
                             </Row>
-                        )}
+                        </Row>
                     </Col>
-
                 </Row>
             </Row>
-            <Col style={{ paddingHorizontal: SPACING.md }}>
-                <ProductVariations
-                    product={product}
-                    onVariantChange={setProductVariant}
-                    displayAs="select"
-                />
-            </Col>
-            <Row justifyContent='flex-end' alignItems='center'>
-                <Col alignItems='flex-end'>
+
+            <Row justifyContent='space-between' alignItems='center'>
+                <Col style={{ paddingHorizontal: SPACING.md }}>
+                    <ProductVariations
+                        displayAs="select"
+                    />
+                </Col>
+                <Col alignItems='flex-end' style={{ flexGrow: .5 }}>
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 </Col>
             </Row>
@@ -116,13 +118,26 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     </>
                 )
             }
-        </View>
+        </View >
     )
 };
 
+/*
+   <View style={[styles.variationIndicator, { flexDirection: 'row' }]} >
+                                <Icon name="exclamation" size="md" color={theme.text.primary} />
+                                <CustomText style={styles.variationText}>Flere varianter</CustomText>
+                            </View>
+*/
+
+export const ProductListItem: React.FC<ProductListItemProps> = ({ product, ...props }) => {
+    return (
+        <ProductProvider product={product}>
+            <ProductListItemContent {...props} />
+        </ProductProvider>
+    )
+}
+
 const createStyles = (theme: any) => StyleSheet.create({
-
-
 
 
     link: {
@@ -140,9 +155,7 @@ const createStyles = (theme: any) => StyleSheet.create({
         borderRadius: 8,
         marginRight: 12,
     },
-    infoContainer: {
-        flex: 1,
-    },
+
     name: {
         fontWeight: 'bold',
         fontSize: 16,

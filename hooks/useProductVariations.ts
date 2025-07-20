@@ -62,15 +62,15 @@ export const useProductVariations = (product: Product) => {
     };
 
     const availableOptions = useMemo(() => {
-        if (!productVariations) return new Map<number, Map<string, Product>>();
+        if (!productVariations) return new Map();
         return product.getAvailableOptions(productVariations, selectedOptions);
-    }, [productVariations, selectedOptions, product]);
+    }, [product, productVariations, selectedOptions]);
 
     const variationAttributes = product.getVariationAttributes();
 
     return {
         productVariant,
-        productVariations,
+        productVariations: productVariations || [],
         handleOptionSelect,
         availableOptions,
         selectedOptions,
