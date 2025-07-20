@@ -1,36 +1,35 @@
 import { useThemeContext } from '@/contexts';
 import { FONT_SIZES } from '@/styles';
 import { IStyleVariant } from '@/types';
-import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { CustomText } from '../text/CustomText';
 
 export const ValidIcon = {
-    add: 'plus',
-    remove: 'minus',
-    addToCart: 'shopping-cart',
-    shoppingCart: 'shopping-cart',
-    menu: 'bars',
-    tag: 'tag',
-    emptyCart: 'trash',
-    close: 'times',
-    collapse: 'chevron-up',
-    expand: 'chevron-down',
-    category: 'tag',
-    categories: 'tags',
-    home: 'home',
-    next: 'arrow-right',
-    prev: 'arrow-left',
-    breadcrumbSeparator: 'chevron-left',
-    search: 'search',
-    dot: 'circle',
-    link: 'link'
-
+    add: 'add-outline',
+    remove: 'remove-outline',
+    addToCart: 'cart-outline',
+    shoppingCart: 'cart-outline',
+    menu: 'menu-outline',
+    tag: 'pricetag-outline',
+    emptyCart: 'trash-outline',
+    close: 'close-outline',
+    collapse: 'chevron-up-outline',
+    expand: 'chevron-down-outline',
+    category: 'pricetag-outline',
+    categories: 'pricetags-outline',
+    home: 'home-outline',
+    next: 'arrow-forward-outline',
+    prev: 'arrow-back-outline',
+    breadcrumbSeparator: 'chevron-forward-outline',
+    search: 'search-outline',
+    dot: 'ellipse-outline',
+    link: 'link-outline'
 } as const;
 
-// Get the type of all props that FontAwesome accepts
-interface IconProps extends Omit<React.ComponentProps<typeof FontAwesome>, 'name' | 'size' | 'color'> {
+// Get the type of all props that Ionicons accepts
+interface IconProps extends Omit<React.ComponentProps<typeof Ionicons>, 'name' | 'size' | 'color'> {
     name: string;
     badge?: number;
     size?: string;
@@ -56,7 +55,7 @@ export const Icon = ({ name, badge = 0, size = 'xl', color, ...rest }: IconProps
 
     return (
         <View>
-            <FontAwesome name={fontName} size={fontSize} color={finalColor} {...rest} />
+            <Ionicons name={fontName} size={fontSize} color={finalColor} {...rest} />
             {badge > 0 && (
                 <View style={styles.badge}>
                     <CustomText style={styles.badgeText}>{badge}</CustomText>

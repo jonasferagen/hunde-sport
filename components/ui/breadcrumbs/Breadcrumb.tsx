@@ -1,14 +1,13 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
-import { Loader } from '@/components/ui';
+import { Icon } from '@/components/ui/icon/Icon';
+import { Loader } from '@/components/ui/loader/Loader';
+import { CustomText } from '@/components/ui/text/CustomText';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts/ThemeContext';
 import { SPACING } from '@/styles';
 import { Category } from '@/types';
-import { CustomText } from '../text/CustomText';
 
 interface BreadcrumbProps {
   category?: Category;
@@ -20,8 +19,10 @@ export const Breadcrumb = React.memo(({ category, isCurrent = false, loading = f
   const { themeManager } = useThemeContext();
   const theme = themeManager.getVariant('card');
 
+
+
   if (loading) {
-    return <Loader size="small" />
+    return <Loader size="small" style={{ marginRight: SPACING.md }} />
   }
 
   if (!category) {
@@ -35,23 +36,15 @@ export const Breadcrumb = React.memo(({ category, isCurrent = false, loading = f
         href={routes.category(category)}
         asChild
       >
-        <CustomText style={[styles.text, { color: theme.text.primary, fontWeight: isCurrent ? 'bold' : 'normal' }]}>{category.name}</CustomText>
+        <CustomText bold={isCurrent}>{category.name}</CustomText>
       </Link>
-      {!isCurrent && <Ionicons
-        name="chevron-forward"
-        size={16}
+      {!isCurrent && <Icon
+        name="breadcrumbSeparator"
+        size="md"
         color={theme.text.primary}
-        style={styles.icon}
+        style={{ marginHorizontal: SPACING.xs, marginTop: 2 }}
       />}
     </>
   );
 });
 
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 14,
-  },
-  icon: {
-    marginHorizontal: SPACING.xs,
-  },
-});

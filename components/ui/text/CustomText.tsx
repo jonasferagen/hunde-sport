@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleProp, Text, TextProps, TextStyle } from 'react-native';
 
+import { useThemeContext } from '@/contexts';
 import { FONT_FAMILY, FONT_SIZES } from '@/styles/Typography';
 
 export interface CustomTextProps extends TextProps {
@@ -13,6 +14,9 @@ export interface CustomTextProps extends TextProps {
 export const CustomText = (props: CustomTextProps) => {
     const { fontSize: size = 'md', bold = false, color = 'black', style, children, ...rest } = props;
 
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant('default');
+
     if (!children) {
         return null;
     }
@@ -20,7 +24,7 @@ export const CustomText = (props: CustomTextProps) => {
     const textStyle = React.useMemo(() => ({
         fontSize: FONT_SIZES[size],
         fontFamily: bold ? FONT_FAMILY.bold : FONT_FAMILY.regular,
-        color,
+        color: color || theme.text.primary,
     }), [size, bold, color]);
 
 
