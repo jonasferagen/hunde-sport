@@ -42,18 +42,12 @@ export const ProductScreen = () => {
       <PageHeader>
         {categoryId && <Breadcrumbs categoryId={categoryId} isLastClickable={true} />}
       </PageHeader>
-
-      {isLoading ? (
-        <PageSection flex>
-          <PageContent flex>
-            <Loader flex size="large" />
-          </PageContent>
-        </PageSection>
-      ) : product && displayProduct && (
+      {isLoading && <Loader flex size="large" />}
+      {product && displayProduct && (
         <>
           <PageSection scrollable ref={scrollRef}>
             <PageContent>
-              <ProductImage image={displayProduct?.images[0]} onPress={() => openImageViewer(0)} />
+              <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
               <Row style={{ alignItems: "center", justifyContent: "space-between" }}>
                 <Heading title={displayProduct.name} size="md" />
                 <CustomText fontSize="xxl" bold>
