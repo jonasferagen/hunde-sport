@@ -20,7 +20,7 @@ export const RecursiveBreadcrumb = ({ categoryId, isCurrent = false }: Recursive
 
     return (
         <>
-            {category.parent && category.parent !== 0 && <RecursiveBreadcrumb categoryId={category.parent} />}
+            {category.parent && category.parent !== 0 ? <RecursiveBreadcrumb categoryId={category.parent} /> : null}
             <Breadcrumb category={category} isCurrent={isCurrent} />
         </>
     );

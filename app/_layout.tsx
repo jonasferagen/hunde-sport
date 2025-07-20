@@ -1,5 +1,4 @@
 import {
-  BreadcrumbProvider,
   LayoutProvider,
   ProductProvider,
   ShoppingCartProvider,
@@ -34,17 +33,15 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <StatusProvider>
-          <BreadcrumbProvider>
-            <ProductProvider>
-              <ShoppingCartProvider>
-                <LayoutProvider>
-                  <ThemeProvider>
-                    {children}
-                  </ThemeProvider>
-                </LayoutProvider>
-              </ShoppingCartProvider>
-            </ProductProvider>
-          </BreadcrumbProvider>
+          <ProductProvider>
+            <ShoppingCartProvider>
+              <LayoutProvider>
+                <ThemeProvider>
+                  {children}
+                </ThemeProvider>
+              </LayoutProvider>
+            </ShoppingCartProvider>
+          </ProductProvider>
         </StatusProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
