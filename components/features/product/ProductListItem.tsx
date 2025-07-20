@@ -26,7 +26,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     const theme = themeManager.getVariant('card');
     const styles = createStyles(theme);
 
-    const { items, addToCart, updateQuantity, canAddToCart } = useShoppingCartContext();
+    const { items, addToCart, updateQuantity } = useShoppingCartContext();
     const [imageDimensions, setImageDimensions] = useState({ width: 80, height: 80 });
     const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
 
@@ -54,7 +54,6 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     }
 
     const imageUrl = getScaledImageUrl(displayProduct!.images[0]?.src, imageDimensions.width, imageDimensions.height);
-    const isPurchasable = canAddToCart(displayProduct);
 
     const containerStyles = [
         styles.container,
@@ -80,11 +79,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
             <Row>
                 <CustomText style={styles.subtitle} numberOfLines={2}>{product.short_description}</CustomText>
                 <View style={styles.actionContainer}>
-                    {isPurchasable ? (
-                        <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
-                    ) : (
-                        <Icon name="next" size="xxl" color={theme.text.primary} />
-                    )}
+                    <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 </View>
             </Row>
             <View style={styles.variationsContainer}>
