@@ -83,9 +83,9 @@ export const ProductScreen = () => {
             <PageContent title="Relaterte produkter" horizontal accent>
               <RelatedProducts productIds={product.related_ids} />
             </PageContent>
-          </>
-        )}
-        </PageSection>
+          </PageSection>
+        </>
+      )}
       <ImageViewing
         images={galleryImages}
         imageIndex={imageIndex}
