@@ -6,11 +6,11 @@ import { Breadcrumbs, CustomText, Heading, Loader } from '@/components/ui';
 import { Row } from '@/components/ui/listitem/layout';
 import { useProduct } from '@/hooks/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
-import { useProductVariations } from '@/hooks/useProductVariations';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
+import { Product } from '@/models/Product';
 import { formatPrice } from '@/utils/helpers';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
@@ -20,6 +20,7 @@ export const ProductScreen = () => {
   const scrollRef = useScrollToTop(id);
 
   const { imageIndex, isViewerVisible, openImageViewer, closeImageViewer } = useImageViewer();
+  const [productVariant, setProductVariant] = useState<Product | null>(null);
 
   const galleryImages = useMemo(
     () => (product?.images || []).map(img => ({ uri: img.src })),
@@ -38,14 +39,6 @@ export const ProductScreen = () => {
   if (!product) {
     return <Loader />; // Or a "not found" message
   }
-
-  const {
-    productVariant,
-    handleOptionSelect,
-    availableOptions,
-    selectedOptions,
-    variationAttributes,
-  } = useProductVariations(product);
 
   // The product to display will be the selected variant, or fall back to the main product.
   const displayProduct = productVariant || product;
@@ -67,12 +60,7 @@ export const ProductScreen = () => {
               {formatPrice(displayProduct.price)}
             </CustomText>
           </Row>
-          <ProductVariations
-            variationAttributes={variationAttributes}
-            selectedOptions={selectedOptions}
-            availableOptions={availableOptions}
-            onOptionSelect={handleOptionSelect}
-          />
+          <ProductVariations product={product} onVariantChange={setProductVariant} />
           <CustomText fontSize="sm" >{product.short_description}</CustomText>
           <BuyProduct product={displayProduct} />
         </PageContent>

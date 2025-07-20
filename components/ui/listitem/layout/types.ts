@@ -7,5 +7,6 @@ export interface ContainerProps {
     alignItems?: FlexAlignType;
     style?: StyleProp<ViewStyle>;
     debug?: string;
+    flex?: number;
     onPress?: () => void;
 }

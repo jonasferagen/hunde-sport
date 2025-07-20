@@ -25,7 +25,8 @@ export const ValidIcon = {
     breadcrumbSeparator: 'chevron-forward-outline',
     search: 'search',
     dot: 'ellipse',
-    link: 'arrow-forward'
+    link: 'arrow-forward',
+    more: 'ellipsis-horizontal'
 } as const;
 
 // Get the type of all props that Ionicons accepts

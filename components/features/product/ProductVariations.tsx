@@ -1,17 +1,28 @@
 import { Col, Row } from '@/components/ui/listitem/layout';
-import { ProductAttribute } from '@/models/ProductAttribute';
-import React, { JSX } from 'react';
+import { useProductVariations } from '@/hooks/useProductVariations';
+import { Product } from '@/models/Product';
+import React, { JSX, useEffect } from 'react';
 import { Text } from 'react-native';
 import { VariationChip } from './VariationChip';
 
 interface ProductVariationsProps {
-    variationAttributes: ProductAttribute[];
-    selectedOptions: Record<number, string>;
-    availableOptions: Map<number, Set<string>>;
-    onOptionSelect: (attributeId: number, option: string) => void;
+    product: Product;
+    onVariantChange: (variant: Product | null) => void;
 }
 
-export const ProductVariations = ({ variationAttributes, selectedOptions, availableOptions, onOptionSelect }: ProductVariationsProps): JSX.Element | null => {
+export const ProductVariations = ({ product, onVariantChange }: ProductVariationsProps): JSX.Element | null => {
+    const {
+        productVariant,
+        handleOptionSelect,
+        availableOptions,
+        selectedOptions,
+        variationAttributes,
+    } = useProductVariations(product);
+
+    useEffect(() => {
+        onVariantChange(productVariant);
+    }, [productVariant, onVariantChange]);
+
     if (variationAttributes.length === 0) {
         return null;
     }
@@ -30,7 +41,7 @@ export const ProductVariations = ({ variationAttributes, selectedOptions, availa
                                     <VariationChip
                                         key={`${attribute.id}-${option.name}`}
                                         label={option.label}
-                                        onPress={() => onOptionSelect(attribute.id, option.name!)}
+                                        onPress={() => handleOptionSelect(attribute.id, option.name!)}
                                         disabled={!availableOptions.get(attribute.id)?.has(option.name)}
                                         isSelected={selectedOptions[attribute.id] === option.name}
                                     />

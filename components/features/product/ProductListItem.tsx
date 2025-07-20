@@ -31,10 +31,6 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     const {
         productVariant,
-        handleOptionSelect,
-        availableOptions,
-        selectedOptions,
-        variationAttributes,
     } = useProductVariations(product);
 
     // The product to display will be the selected variant, or fall back to the main product.
@@ -67,40 +63,54 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
         isExpanded && { height: expandedHeight },
     ];
 
+
+    const handleVariantChange = (variant: Product | null) => {
+        if (variant) {
+
+        }
+    };
+
     return (
         <View style={containerStyles}>
             <Row onPress={handlePress}>
-                <Row>
+                <Row justifyContent='space-between' alignItems='center'>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />}
                     <Col style={styles.infoContainer}>
                         <CustomText style={styles.name} numberOfLines={2}>{displayProduct.name}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
                     </Col>
+
                 </Row>
-                <Row onPress={() => router.push(routes.product(product, categoryId))} flex={0}>
-                    <Icon name="next" size="xxl" color={theme.text.primary} />
-                </Row>
+
             </Row>
-            <Row>
-                <CustomText style={styles.subtitle} numberOfLines={2}>{product.id}- {displayProduct.id}{product.short_description}</CustomText>
-                <View style={styles.actionContainer}>
+            <Row justifyContent='space-between' alignItems='center'>
+                <Col flex={0} onPress={handlePress}>
+                    <Icon name="more" size="xxl" color={theme.text.primary} />
+                </Col>
+                <Col alignItems='flex-end'>
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
-                </View>
+                </Col>
             </Row>
 
-            <ProductVariations
-                variationAttributes={variationAttributes}
-                selectedOptions={selectedOptions}
-                availableOptions={availableOptions}
-                onOptionSelect={handleOptionSelect}
-            />
+            {
+                isExpanded && (
+                    <>
 
-            {isExpanded && (
-                <View style={styles.variationsContainer}>
-                    <CustomText>Hei</CustomText>
-                </View>
-            )}
-        </View>
+                        <ProductVariations
+                            product={product}
+                            onVariantChange={handleVariantChange}
+                        />
+
+                        <Row>
+                            <CustomText style={styles.subtitle}>{product.short_description} </CustomText>
+                            <Row onPress={() => router.push(routes.product(product, categoryId))} flex={0}>
+                                <Icon name="next" size="xxl" color={theme.text.primary} />
+                            </Row>
+                        </Row>
+                    </>
+                )
+            }
+        </View >
     );
 };
 
@@ -133,10 +143,6 @@ const createStyles = (theme: any) => StyleSheet.create({
         color: theme.text.primary,
         fontSize: 14,
     },
-    actionContainer: {
-        marginLeft: 16,
-    },
-    variationsContainer: {
-        marginTop: 12,
-    },
+
+
 });

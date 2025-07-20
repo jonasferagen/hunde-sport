@@ -21,7 +21,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const { showMessage } = useStatusContext();
 
-    const addToCart = useCallback((product: Product, variant?: Product) => {
+    const addToCart = useCallback((product: Product) => {
 
 
         setItems(prevItems => {
