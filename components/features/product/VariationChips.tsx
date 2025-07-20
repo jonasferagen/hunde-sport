@@ -1,9 +1,10 @@
 import { ChipContainer } from '@/components/ui';
+import { ProductAttributeOption } from '@/types';
 import React from 'react';
 import { VariationChip } from './VariationChip';
 
 interface VariationChipsProps {
-    options: string[];
+    options: ProductAttributeOption[];
     onSelectOption: (option: string) => void;
     selectedOption: string | null;
 };
@@ -18,10 +19,11 @@ export const VariationChips = ({ options, onSelectOption, selectedOption }: Vari
         <ChipContainer gap="md">
             {options.map(option => (
                 <VariationChip
-                    key={option}
-                    option={option}
-                    onPress={() => onSelectOption(option)}
-                    isSelected={selectedOption === option}
+                    key={option.name}
+                    option={option.name}
+                    onPress={() => onSelectOption(option.name)}
+                    isSelected={selectedOption === option.name}
+                    disabled={!option.isAvailable}
                 />
             ))}
         </ChipContainer>

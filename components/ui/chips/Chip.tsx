@@ -13,6 +13,7 @@ interface ChipProps {
     textProps?: CustomTextProps;
     isSelected?: boolean;
     icon?: string;
+    disabled?: boolean;
 }
 
 export const Chip = ({
@@ -22,7 +23,8 @@ export const Chip = ({
     style,
     textProps,
     icon,
-    isSelected = false
+    isSelected = false,
+    disabled = false
 }: ChipProps) => {
     const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant(variant);
@@ -31,6 +33,7 @@ export const Chip = ({
     const chipStyle = [
         styles.chip,
         style,
+        disabled && styles.disabled,
     ];
 
     const textStyle = [
@@ -39,10 +42,11 @@ export const Chip = ({
     ];
 
     return (
-        <Row onPress={onPress} style={[chipStyle, { gap: 5 }]} alignItems="center" justifyContent="space-between">
+        <Row onPress={disabled ? undefined : onPress} style={[chipStyle, { gap: 5 }]} alignItems="center" justifyContent="space-between">
             <CustomText style={textStyle} numberOfLines={1} ellipsizeMode="tail">
                 {label}
             </CustomText>
+
         </Row>
     );
 };
@@ -62,6 +66,9 @@ const createStyles = (themeVariant: any) => {
             alignItems: 'center',
             outlineColor: themeVariant.outlineColor,
             outlineWidth: 1,
+        },
+        disabled: {
+            opacity: 0.5,
         },
         text: {
             color: themeVariant.text.primary,

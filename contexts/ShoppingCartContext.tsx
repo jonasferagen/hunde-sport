@@ -12,7 +12,6 @@ interface ShoppingCartContextType {
     removeFromCart: (productId: number) => void;
     updateQuantity: (productId: number, quantity: number) => void;
     clearCart: () => void;
-    canAddToCart: (product: Product) => boolean;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
@@ -21,14 +20,10 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const { showMessage } = useStatusContext();
 
-    const canAddToCart = useCallback((product: Product): boolean => {
-        return product.type === 'variable' || product.type === 'simple';
-    }, []);
+
 
     const addToCart = useCallback((product: Product) => {
-        if (!canAddToCart(product)) {
-            throw new Error('Product ' + product.id + ' is not purchasable');
-        }
+
 
         setItems(prevItems => {
             const existingItem = prevItems.find(item => item.product.id === product.id);
@@ -44,7 +39,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             }
         });
         showMessage({ text: `${product.name} er lagt til i handlekurven`, type: 'info' });
-    }, [showMessage, canAddToCart]);
+    }, [showMessage]);
 
     const removeFromCart = useCallback((productId: number) => {
         setItems(prevItems => prevItems.filter(item => item.product.id !== productId));
@@ -98,7 +93,6 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 removeFromCart,
                 updateQuantity,
                 clearCart,
-                canAddToCart,
             }}
         >
             {children}

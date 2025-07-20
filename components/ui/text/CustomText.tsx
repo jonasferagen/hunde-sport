@@ -21,11 +21,11 @@ export const CustomText = (props: CustomTextProps) => {
         return null;
     }
 
-    const textStyle = React.useMemo(() => ({
+    const textStyle = {
         fontSize: FONT_SIZES[size],
         fontFamily: bold ? FONT_FAMILY.bold : FONT_FAMILY.regular,
         color: color || theme.text.primary,
-    }), [size, bold, color]);
+    };
 
 
     return <Text style={[textStyle, style]} {...rest}>{children}</Text>

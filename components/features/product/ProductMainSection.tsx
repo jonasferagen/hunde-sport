@@ -1,7 +1,7 @@
 import { VariationChips } from '@/components/features/product/VariationChips';
 import { Button, CustomText, Heading } from '@/components/ui';
 import { useShoppingCartContext } from '@/contexts';
-import { Product } from '@/types';
+import { Product, ProductAttribute } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
 import { View } from 'react-native';
@@ -11,21 +11,21 @@ interface ProductHeaderProps {
     displayProduct: Product;
     selectedOptions: Record<string, string>;
     onSelectOption: (attributeSlug: string, option: string) => void;
+    attributes: ProductAttribute[];
 }
 
 
 const AddToCartButton = ({ product, displayProduct }: { product: Product; displayProduct: Product }) => {
-    const { addToCart, canAddToCart } = useShoppingCartContext();
+    const { addToCart } = useShoppingCartContext();
 
-    const isPurchasable = canAddToCart(displayProduct);
 
     return (
         <Button
             variant="primary"
             icon="addToCart"
-            title={isPurchasable ? 'Legg til i handlekurv' : 'Velg variant'}
+            title={'Legg til i handlekurv'}
             onPress={() => addToCart(displayProduct)}
-            disabled={!isPurchasable}
+
         />
     );
 };
@@ -35,9 +35,10 @@ export const ProductMainSection = ({
     displayProduct,
     selectedOptions,
     onSelectOption,
+    attributes
 }: ProductHeaderProps) => {
     return <>
-        {product.attributes
+        {attributes
             .filter(attr => attr.variation)
             .map(attribute => {
                 return (

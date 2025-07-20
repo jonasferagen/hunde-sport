@@ -35,7 +35,7 @@ export const ListItem: React.FC<ListItemProps> = ({
                             {imageUrl && <Image source={{ uri: getScaledImageUrl(imageUrl, imageSize, imageSize) }} style={styles.image} />}
                         </View>
                         <View style={styles.infoContainer}>
-                            <CustomText style={styles.name} numberOfLines={1}>{product.name}</CustomText>
+                            <CustomText style={styles.name} numberOfLines={1}>{product.name} {product.id}</CustomText>
                         </View>
                     </TouchableOpacity>
                     {product.price && <CustomText style={styles.price}>{formatPrice(product.price)}</CustomText>}

@@ -25,7 +25,7 @@ export const ValidIcon = {
     breadcrumbSeparator: 'chevron-forward-outline',
     search: 'search',
     dot: 'ellipse',
-    link: 'link-outline'
+    link: 'arrow-forward'
 } as const;
 
 // Get the type of all props that Ionicons accepts
@@ -34,9 +34,10 @@ interface IconProps extends Omit<React.ComponentProps<typeof Ionicons>, 'name' |
     badge?: number;
     size?: string;
     color?: string;
+    rotate?: number;
 };
 
-export const Icon = ({ name, badge = 0, size = 'xl', color, ...rest }: IconProps) => {
+export const Icon = ({ name, badge = 0, size = 'xl', color, rotate, ...rest }: IconProps) => {
 
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('primary');
@@ -53,9 +54,14 @@ export const Icon = ({ name, badge = 0, size = 'xl', color, ...rest }: IconProps
         return null;
     }
 
+    const iconStyle = [
+        rest.style,
+        rotate ? { transform: [{ rotate: `${rotate}deg` }] } : {}
+    ];
+
     return (
         <View>
-            <Ionicons name={fontName} size={fontSize} color={finalColor} {...rest} />
+            <Ionicons name={fontName} size={fontSize} color={finalColor} {...rest} style={iconStyle} />
             {badge > 0 && (
                 <View style={styles.badge}>
                     <CustomText style={styles.badgeText}>{badge}</CustomText>
