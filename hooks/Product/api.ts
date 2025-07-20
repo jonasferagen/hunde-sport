@@ -5,6 +5,13 @@ import { cleanHtml, cleanNumber } from '@/utils/helpers';
 
 
 const mapToProduct = (item: any): Product => {
+
+
+    const otherAttributes = item.attributes.filter((attr: any) => attr.variation === false);
+    if (otherAttributes.length > 0) {
+        console.log('------', otherAttributes, item.attributes);
+    }
+
     const productData: ProductData = {
         id: item.id,
         name: cleanHtml(item.name),

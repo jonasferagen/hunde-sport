@@ -24,7 +24,7 @@ export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ chi
     return (
       <ScrollView
         ref={ref}
-        contentContainerStyle={[styles.scrollContentContainer, style]}
+        contentContainerStyle={[flex ? styles.flexContainer : styles.scrollContentContainer, style]}
         showsVerticalScrollIndicator={true}
         scrollEventThrottle={16}
         nestedScrollEnabled={true}

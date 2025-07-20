@@ -22,67 +22,66 @@ export const ProductScreen = () => {
   const { imageIndex, isViewerVisible, openImageViewer, closeImageViewer } = useImageViewer();
   const [productVariant, setProductVariant] = useState<Product | null>(null);
 
+  // The product to display will be the selected variant, or fall back to the main product.
+  const displayProduct = productVariant || product;
+  const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product?.categories[0]?.id;
+
   const galleryImages = useMemo(
     () => (product?.images || []).map(img => ({ uri: img.src })),
     [product?.images]
   );
 
-  // Explicitly handle loading, error, and not-found states
-  if (isLoading) {
-    return <Loader />;
+  // Handle not-found state after loading is complete
+  if (!product && !isLoading) {
+    return <CustomText>Produktet ble ikke funnet.</CustomText>;
   }
-
-  if (error) {
-    return <CustomText>Error loading product.</CustomText>;
-  }
-
-  if (!product) {
-    return <Loader />; // Or a "not found" message
-  }
-
-  // The product to display will be the selected variant, or fall back to the main product.
-  const displayProduct = productVariant || product;
-
-  const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product.categories[0]?.id;
 
   return (
     <PageView>
-      <Stack.Screen options={{ title: displayProduct.name }} />
+      <Stack.Screen options={{ title: displayProduct?.name || 'Laster inn...' }} />
       <PageHeader>
-        <Breadcrumbs categoryId={categoryId} isLastClickable={true} />
+        {categoryId && <Breadcrumbs categoryId={categoryId} isLastClickable={true} />}
       </PageHeader>
-      <PageSection scrollable ref={scrollRef}>
-        <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
-        <PageContent>
-          <Row style={{ alignItems: "center", justifyContent: "space-between" }}>
-            <Heading title={displayProduct.name} size="md" />
-            <CustomText fontSize="xxl" bold>
-              {formatPrice(displayProduct.price)}
-            </CustomText>
-          </Row>
-          <ProductVariations product={product} onVariantChange={setProductVariant} />
-          <CustomText fontSize="sm" >{product.short_description}</CustomText>
-          <BuyProduct product={displayProduct} />
-        </PageContent>
+      <PageSection flex scrollable ref={scrollRef}>
+        {isLoading ? (
+          <PageContent flex>
+            <Loader flex size="large" />
+          </PageContent>
+        ) : product && displayProduct && (
+          <>
+            <PageContent>
+              <ProductImage image={displayProduct?.images[0]} onPress={() => openImageViewer(0)} />
+              <Row style={{ alignItems: "center", justifyContent: "space-between" }}>
+                <Heading title={displayProduct.name} size="md" />
+                <CustomText fontSize="xxl" bold>
+                  {formatPrice(displayProduct.price)}
+                </CustomText>
+              </Row>
+              <ProductVariations product={product} onVariantChange={setProductVariant} />
+              <CustomText fontSize="sm" >{product.short_description}</CustomText>
+              <BuyProduct product={displayProduct} />
+            </PageContent>
 
-        <PageContent title="Produktinformasjon" secondary>
-          <ProductDetails product={product} />
-        </PageContent>
+            <PageContent title="Produktinformasjon" secondary>
+              <ProductDetails product={product} />
+            </PageContent>
 
-        <PageContent title="Produktbilder" horizontal>
-          <ProductImageGallery
-            images={displayProduct.images.slice(1)}
-            onImagePress={(index) => openImageViewer(index + 1)}
-          />
-        </PageContent>
+            <PageContent title="Produktbilder" horizontal>
+              <ProductImageGallery
+                images={displayProduct.images.slice(1)}
+                onImagePress={(index) => openImageViewer(index + 1)}
+              />
+            </PageContent>
 
-        <PageContent title="Kategorier">
-          <CategoryChips categories={product.categories} />
-        </PageContent>
+            <PageContent title="Kategorier">
+              <CategoryChips categories={product.categories} />
+            </PageContent>
 
-        <PageContent title="Relaterte produkter" horizontal accent>
-          <RelatedProducts productIds={product.related_ids} />
-        </PageContent>
+            <PageContent title="Relaterte produkter" horizontal accent>
+              <RelatedProducts productIds={product.related_ids} />
+            </PageContent>
+          </>
+        )}
       </PageSection>
       <ImageViewing
         images={galleryImages}
