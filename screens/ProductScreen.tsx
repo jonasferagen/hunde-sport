@@ -1,10 +1,5 @@
 import { CategoryChips } from '@/components/features/category';
-import { BuyProduct } from '@/components/features/product/BuyProduct';
-import { ProductDetails } from '@/components/features/product/ProductDetails';
-import { ProductImage } from '@/components/features/product/ProductImage';
-import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
-import { ProductVariations } from '@/components/features/product/ProductVariations';
-import { RelatedProducts } from '@/components/features/product/RelatedProducts';
+import { BuyProduct, ProductDetails, ProductImage, ProductImageGallery, ProductVariations, RelatedProducts } from '@/components/features/product/';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, CustomText, Heading, Loader } from '@/components/ui';
@@ -15,31 +10,21 @@ import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Product } from '@/models/Product';
 import { formatPrice } from '@/utils/helpers';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const { data: product, isLoading, error } = useProduct(Number(id));
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productVariant, setProductVariant] = useState<Product | null>(null);
 
   const scrollRef = useScrollToTop(id);
-
-  // This effect ensures that selectedProduct is updated when the base product loads
-  // or when the user navigates to a new product page.
-  useEffect(() => {
-    if (product) {
-      // Initially, the selected product is the base product itself.
-      // The ProductVariations component will then update it to the default variation if available.
-      setSelectedProduct(product);
-    }
-  }, [product]);
 
   const { imageIndex, isViewerVisible, openImageViewer, closeImageViewer } = useImageViewer();
 
   const galleryImages = useMemo(
-    () => (selectedProduct?.images || []).map(img => ({ uri: img.src })),
-    [selectedProduct?.images]
+    () => (product?.images || []).map(img => ({ uri: img.src })),
+    [product?.images]
   );
 
   // Explicitly handle loading, error, and not-found states
@@ -51,36 +36,36 @@ export const ProductScreen = () => {
     return <CustomText>Error loading product.</CustomText>;
   }
 
-  // If the product is not found after loading, show a message.
-  if (!product || !selectedProduct) {
-    // We check selectedProduct here as well to ensure it's initialized before rendering
+  if (!product) {
     return <Loader />; // Or a "not found" message
   }
+
+  // The product to display will be the selected variant, or fall back to the main product.
+  const displayProduct = productVariant || product;
 
   const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product.categories[0]?.id;
 
   return (
     <PageView>
-      <Stack.Screen options={{ title: selectedProduct.name }} />
+      <Stack.Screen options={{ title: displayProduct.name }} />
       <PageHeader>
         <Breadcrumbs categoryId={categoryId} isLastClickable={true} />
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
-        <ProductImage image={selectedProduct.images[0]} onPress={() => openImageViewer(0)} />
+        <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
         <PageContent>
           <Row style={{ alignItems: "center", justifyContent: "space-between" }}>
-            <Heading title={selectedProduct.name} size="md" />
+            <Heading title={displayProduct.name} size="md" />
             <CustomText fontSize="xxl" bold>
-              {formatPrice(selectedProduct.price)}
+              {formatPrice(displayProduct.price)}
             </CustomText>
           </Row>
           <ProductVariations
             product={product}
-            onVariationChange={setSelectedProduct}
+            onVariationChange={setProductVariant}
           />
-          <CustomText fontSize="sm" >{selectedProduct.id + ' ' + selectedProduct.name}</CustomText>
-          <CustomText fontSize="sm" >{product.short_description}</CustomText>
-          <BuyProduct product={selectedProduct} />
+          <CustomText fontSize="sm" >{displayProduct.id + ' ' + product.short_description}</CustomText>
+          <BuyProduct product={displayProduct} />
         </PageContent>
 
         <PageContent title="Produktinformasjon" secondary>
@@ -89,7 +74,7 @@ export const ProductScreen = () => {
 
         <PageContent title="Produktbilder" horizontal>
           <ProductImageGallery
-            images={selectedProduct.images.slice(1)}
+            images={displayProduct.images.slice(1)}
             onImagePress={(index) => openImageViewer(index + 1)}
           />
         </PageContent>

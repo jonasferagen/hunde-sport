@@ -1,7 +1,7 @@
 import { Col, Row } from '@/components/ui/listitem/layout';
 import { useProducts } from '@/hooks/Product';
 import { Product } from '@/models/Product';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { JSX, useEffect, useMemo, useState } from 'react';
 import { Text } from 'react-native';
 import { VariationChip } from './VariationChip';
 
@@ -10,108 +10,51 @@ interface ProductVariationsProps {
     onVariationChange: (product: Product) => void;
 }
 
-export const ProductVariations = ({ product, onVariationChange }: ProductVariationsProps) => {
-    const { products: variantProducts, isLoading } = useProducts(
-        product?.variations || []
-    );
-
+export const ProductVariations = ({ product, onVariationChange }: ProductVariationsProps): JSX.Element | null => {
+    const { products: variantProducts, isLoading } = useProducts(product.variations);
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
 
-    const variationAttributes = useMemo(() => product.getVariationAttributes(), [product]);
-
-    // Effect to set initial selected options
+    // Effect to set the initial default variation when the component mounts
     useEffect(() => {
-        // Only set initial options if we have variations and no options are selected yet
-        if (variantProducts && variantProducts.length > 0 && Object.keys(selectedOptions).length === 0) {
+        if (product.default_attributes.length > 0 && variantProducts && Object.keys(selectedOptions).length === 0) {
             const initialOptions: Record<number, string> = {};
-            const attributesToSelect =
-                product.default_attributes?.length > 0
-                    ? product.default_attributes
-                    : variantProducts?.[0]?.attributes;
-
-            if (attributesToSelect) {
-                attributesToSelect.forEach((attr) => {
-                    if (attr.option) {
-                        initialOptions[attr.id] = attr.option;
-                    }
-                });
-            }
+            product.default_attributes.forEach(attr => {
+                if (attr.id && attr.option) {
+                    initialOptions[attr.id] = attr.option;
+                }
+            });
             setSelectedOptions(initialOptions);
         }
-    }, [product.default_attributes, variantProducts?.length, selectedOptions]);
+    }, [product.default_attributes, variantProducts, selectedOptions]);
 
-    // Effect to find and report the selected variation
+    // Effect to notify the parent component when the selected variation changes
     useEffect(() => {
-        if (!variantProducts || Object.keys(selectedOptions).length === 0) {
-            if (product.type !== 'variable') {
-                onVariationChange(product);
-            }
-            return;
-        }
+        if (!variantProducts) return;
 
-        const selectedKeys = Object.keys(selectedOptions);
-
-        const matchedVariant = variantProducts.find(variant =>
-            selectedKeys.every(key => {
-                const attributeId = Number(key);
-                const selectedOption = selectedOptions[attributeId];
-                return variant.attributes.some(attr => attr.id === attributeId && attr.option === selectedOption);
-            })
-        );
-
+        const matchedVariant = product.findVariant(variantProducts, selectedOptions);
         if (matchedVariant) {
             onVariationChange(matchedVariant);
-        } else if (product.type !== 'variable') {
-            // Fallback for simple products or if no match is found initially
-            onVariationChange(product);
+        } else if (Object.keys(selectedOptions).length === 0) {
+            // If no options are selected, signal that there is no specific variant.
+            onVariationChange(null);
         }
-
     }, [selectedOptions, variantProducts, product, onVariationChange]);
 
-    const handleSelectOption = (attributeId: number, optionName: string) => {
-        setSelectedOptions((prev) => ({
+    const handleOptionSelect = (attributeId: number, option: string) => {
+        setSelectedOptions(prev => ({
             ...prev,
-            [attributeId]: optionName,
+            [attributeId]: option,
         }));
     };
 
     const availableOptions = useMemo(() => {
-        if (!variantProducts) return new Map<number, Set<string>>();
+        if (!variantProducts) return new Map();
+        return product.getAvailableOptions(variantProducts, selectedOptions);
+    }, [variantProducts, selectedOptions, product]);
 
-        const available = new Map<number, Set<string>>();
-        variationAttributes.forEach((attr) => {
-            available.set(attr.id, new Set<string>());
-        });
+    const variationAttributes = product.getVariationAttributes();
 
-        for (const variant of variantProducts) {
-            for (const variantAttr of variant.attributes) {
-                let isMatch = true;
-                // Check if this variant matches all *other* selected options
-                for (const selectedAttrId in selectedOptions) {
-                    if (Number(selectedAttrId) === variantAttr.id) continue; // Skip self
-
-                    const selectedOption = selectedOptions[selectedAttrId];
-                    const variantHasSelectedOption =
-                        variant.attributes.find(
-                            (a) => a.id === Number(selectedAttrId) && a.option === selectedOption
-                        ) !== undefined;
-
-                    if (!variantHasSelectedOption) {
-                        isMatch = false;
-                        break;
-                    }
-                }
-
-                if (isMatch && variantAttr.option) {
-                    available.get(variantAttr.id)?.add(variantAttr.option);
-                }
-            }
-        }
-
-        return available;
-    }, [variantProducts, selectedOptions, variationAttributes]);
-
-    if (product.type !== 'variable') {
+    if (!variantProducts || variationAttributes.length === 0) {
         return null; // Don't render anything for simple products
     }
 
@@ -130,7 +73,7 @@ export const ProductVariations = ({ product, onVariationChange }: ProductVariati
                                         <VariationChip
                                             key={`${attribute.id}-${option.name}`}
                                             label={option.label}
-                                            onPress={() => handleSelectOption(attribute.id, option.name)}
+                                            onPress={() => handleOptionSelect(attribute.id, option.name)}
                                             disabled={!availableOptions.get(attribute.id)?.has(option.name)}
                                             isSelected={selectedOptions[attribute.id] === option.name}
                                         />

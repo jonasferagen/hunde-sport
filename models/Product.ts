@@ -75,6 +75,65 @@ export class Product {
     return this.attributes.filter(attr => attr.variation);
   }
 
+  /**
+   * Finds a matching variant from a list of products based on selected options.
+   * @param variants - An array of variation products to search through.
+   * @param selectedOptions - A record of selected attribute IDs and their option values.
+   * @returns The matched product variant or undefined if no match is found.
+   */
+  findVariant(variants: Product[], selectedOptions: Record<number, string>): Product | undefined {
+    const selectedKeys = Object.keys(selectedOptions);
+    if (selectedKeys.length === 0) return undefined;
+
+    return variants.find(variant =>
+      selectedKeys.every(key => {
+        const attributeId = Number(key);
+        const selectedOption = selectedOptions[attributeId];
+        return variant.attributes.some(attr => attr.id === attributeId && attr.option === selectedOption);
+      })
+    );
+  }
+
+  /**
+   * Calculates which attribute options are available based on the current selections.
+   * @param variants - An array of all possible variation products.
+   * @param selectedOptions - A record of the currently selected attribute options.
+   * @returns A map where keys are attribute IDs and values are a Set of available option names.
+   */
+  getAvailableOptions(variants: Product[], selectedOptions: Record<number, string>): Map<number, Set<string>> {
+    const available = new Map<number, Set<string>>();
+    const variationAttributes = this.getVariationAttributes();
+
+    variationAttributes.forEach(attr => {
+      available.set(attr.id, new Set<string>());
+    });
+
+    for (const variant of variants) {
+      for (const variantAttr of variant.attributes) {
+        let isMatch = true;
+        // Check if this variant is compatible with all *other* selected options.
+        for (const selectedAttrId in selectedOptions) {
+          if (Number(selectedAttrId) === variantAttr.id) continue; // Skip self
+
+          const selectedOption = selectedOptions[selectedAttrId];
+          const variantHasSelectedOption = variant.attributes.find(
+            (a) => a.id === Number(selectedAttrId) && a.option === selectedOption
+          );
+
+          if (!variantHasSelectedOption) {
+            isMatch = false;
+            break;
+          }
+        }
+
+        if (isMatch && variantAttr.option) {
+          available.get(variantAttr.id)?.add(variantAttr.option);
+        }
+      }
+    }
+    return available;
+  }
+
   toString() {
     return 'Product ' + this.id + ': ' + this.name;
   }

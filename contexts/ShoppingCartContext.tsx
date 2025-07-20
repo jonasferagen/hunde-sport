@@ -9,7 +9,7 @@ interface ShoppingCartContextType {
     items: ShoppingCartItem[];
     cartItemCount: number;
     cartTotal: number;
-    addToCart: (product: Product) => void;
+    addToCart: (product: Product, variant?: Product) => void;
     removeFromCart: (productId: number) => void;
     updateQuantity: (productId: number, quantity: number) => void;
     clearCart: () => void;
@@ -21,9 +21,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const { showMessage } = useStatusContext();
 
-
-
-    const addToCart = useCallback((product: Product) => {
+    const addToCart = useCallback((product: Product, variant?: Product) => {
 
 
         setItems(prevItems => {

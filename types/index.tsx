@@ -1,5 +1,5 @@
+import { Product } from "@/models/Product";
 import { ColorValue } from "react-native";
-import { Product, ProductData, ProductType } from "@/models/Product";
 
 // Re-export models
 export * from '@/models/Category';
@@ -32,6 +32,7 @@ export interface Breadcrumb {
 export interface ShoppingCartItem {
   product: Product;
   quantity: number;
+  variant?: Product;
 }
 
 export interface IStyleVariant {

@@ -7,9 +7,10 @@ import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { Product } from '@/models/Product';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
+import { ProductVariations } from './ProductVariations';
 
 interface ProductListItemProps {
     product: Product;
@@ -27,33 +28,48 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     const { items, addToCart, updateQuantity } = useShoppingCartContext();
     const [imageDimensions, setImageDimensions] = useState({ width: 80, height: 80 });
+    const [productVariant, setProductVariant] = useState<Product | null>(null);
 
-    const displayProduct = product;
+    useEffect(() => {
+        if (product) {
+            // Initially, the selected product is the base product itself.
+            // The ProductVariations component will then update it to the default variation if available.
+            setProductVariant(product);
+        }
+    }, [product]);
 
-    const cartItem = items.find(item => item.product.id === displayProduct!.id);
+    if (!product) {
+        return null;
+    }
+
+    // The product to display will be the selected variant, or fall back to the main product.
+    const displayProduct = productVariant || product;
+
+    if (!displayProduct) {
+        // Don't render anything until the display product is initialized.
+        return null;
+    }
+
+    const cartItem = items.find(item => item.product.id === product.id);
     const quantity = cartItem?.quantity ?? 0;
 
     const handleIncrease = () => {
         if (quantity === 0) {
-            addToCart(displayProduct!);
+            addToCart(product);
         } else {
-            updateQuantity(displayProduct!.id, quantity + 1);
+            updateQuantity(product.id, quantity + 1);
         }
     };
 
     const handleDecrease = () => {
-        updateQuantity(displayProduct!.id, quantity - 1);
+        updateQuantity(product.id, quantity - 1);
     };
 
     const handlePress = () => {
         onPress(product.id);
     }
 
-    if (!displayProduct) {
-        throw new Error("displayProduct is undefined" + product?.id);
-    }
-
-    const imageUrl = getScaledImageUrl(displayProduct!.images[0]?.src, imageDimensions.width, imageDimensions.height);
+    const imageUrl = getScaledImageUrl(displayProduct.images[0]?.src, imageDimensions.width, imageDimensions.height);
 
     const containerStyles = [
         styles.container,
@@ -61,15 +77,14 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
         isExpanded && { height: expandedHeight },
     ];
 
-
     return (
         <View style={containerStyles}>
             <Row onPress={handlePress}>
                 <Row>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, imageDimensions]} />}
                     <Col style={styles.infoContainer}>
-                        <CustomText style={styles.name} numberOfLines={2}>{product.name} {product.id} {product.type}</CustomText>
-                        <CustomText style={styles.price}>{formatPrice(displayProduct!.price)}</CustomText>
+                        <CustomText style={styles.name} numberOfLines={2}>{displayProduct.name} {displayProduct.id} {displayProduct.type}</CustomText>
+                        <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
                     </Col>
                 </Row>
                 <Row onPress={() => router.push(routes.product(product, categoryId))} flex={0}>
@@ -82,19 +97,10 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 </View>
             </Row>
-            {/*
-            <View style={styles.variationsContainer}>
-                {product.attributes
-                    .filter(attr => attr.variation)
-                    .map(attribute => (
-                        <VariationChips
-                            key={attribute.id}
-                            options={attribute.options}
-                            selectedOption={selectedOptions[attribute.slug] || null}
-                            onSelectOption={option => handleSelectOption(attribute.slug, option)}
-                        />
-                    ))}
-            </View>  */}
+            <ProductVariations
+                product={product}
+                onVariationChange={setProductVariant}
+            />
             {isExpanded && (
                 <View style={styles.variationsContainer}>
                     <CustomText>Hei</CustomText>
