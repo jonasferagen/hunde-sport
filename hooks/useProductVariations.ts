@@ -9,7 +9,7 @@ export const useProductVariations = (product: Product) => {
             productVariant: null,
             productVariations: [],
             handleOptionSelect: () => { },
-            availableOptions: new Map(),
+            availableOptions: new Map<number, Map<string, Product>>(),
             selectedOptions: {},
             variationAttributes: [],
         };
@@ -62,7 +62,7 @@ export const useProductVariations = (product: Product) => {
     };
 
     const availableOptions = useMemo(() => {
-        if (!productVariations) return new Map();
+        if (!productVariations) return new Map<number, Map<string, Product>>();
         return product.getAvailableOptions(productVariations, selectedOptions);
     }, [productVariations, selectedOptions, product]);
 

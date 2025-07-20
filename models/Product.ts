@@ -88,31 +88,53 @@ export class Product {
     const selectedKeys = Object.keys(selectedOptions);
     if (selectedKeys.length === 0) return undefined;
 
-    return variants.find(variant =>
-      selectedKeys.every(key => {
+    // Get the available options based on the current selections.
+    const availableOptions = this.getAvailableOptions(variants, selectedOptions);
+
+    // Find the first attribute that has a selection and is available.
+    const firstSelectedAttrId = selectedKeys.map(Number)[0];
+    const selectedOption = selectedOptions[firstSelectedAttrId];
+
+    // Retrieve the variant from the new map structure.
+    const variant = availableOptions.get(firstSelectedAttrId)?.get(selectedOption);
+
+    if (variant) {
+      // Final check to ensure the retrieved variant matches all selected options.
+      const allOptionsMatch = selectedKeys.every(key => {
         const attributeId = Number(key);
-        const selectedOption = selectedOptions[attributeId];
-        return variant.attributes.some(attr => attr.id === attributeId && attr.option === selectedOption);
-      })
-    );
+        const option = selectedOptions[attributeId];
+        return variant.attributes.some(attr => attr.id === attributeId && attr.option === option);
+      });
+
+      if (allOptionsMatch) {
+        return variant;
+      }
+    }
+
+    return undefined;
   }
 
   /**
    * Calculates which attribute options are available based on the current selections.
    * @param variants - An array of all possible variation products.
    * @param selectedOptions - A record of the currently selected attribute options.
-   * @returns A map where keys are attribute IDs and values are a Set of available option names.
+   * @returns A map where keys are attribute IDs and values are a map of available option names to their full Product variant.
    */
-  getAvailableOptions(variants: Product[], selectedOptions: Record<number, string>): Map<number, Set<string>> {
-    const available = new Map<number, Set<string>>();
+  getAvailableOptions(
+    variants: Product[],
+    selectedOptions: Record<number, string>
+  ): Map<number, Map<string, Product>> {
+    const available = new Map<number, Map<string, Product>>();
     const variationAttributes = this.getVariationAttributes();
 
-    variationAttributes.forEach(attr => {
-      available.set(attr.id, new Set<string>());
+    variationAttributes.forEach((attr) => {
+      available.set(attr.id, new Map<string, Product>());
     });
 
     for (const variant of variants) {
       for (const variantAttr of variant.attributes) {
+        if (!variantAttr.option) continue;
+
         let isMatch = true;
         // Check if this variant is compatible with all *other* selected options.
         for (const selectedAttrId in selectedOptions) {
@@ -129,8 +151,8 @@ export class Product {
           }
         }
 
-        if (isMatch && variantAttr.option) {
-          available.get(variantAttr.id)?.add(variantAttr.option);
+        if (isMatch) {
+          available.get(variantAttr.id)?.set(variantAttr.option, variant);
         }
       }
     }

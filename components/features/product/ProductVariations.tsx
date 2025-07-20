@@ -73,16 +73,10 @@ export const ProductVariations = ({
                                 selectedValue={currentSelection}
                                 onValueChange={(value) => handleOptionSelect(attribute.id, value as string)}
                                 options={options.map((opt) => {
-                                    const isAvailable = availableOptions.get(attribute.id)?.has(opt.name!);
-
-                                    const tempSelectedOptions = { ...selectedOptions, [attribute.id]: opt.name! };
-                                    const variationForOption = product.findVariant(
-                                        productVariations ?? [],
-                                        tempSelectedOptions
-                                    );
+                                    const variationForOption = availableOptions.get(attribute.id)?.get(opt.name!);
 
                                     let label = opt.label;
-                                    if (isAvailable && variationForOption) {
+                                    if (variationForOption) {
                                         const stockDisplay = getStockDisplay(variationForOption.stock_status);
                                         label += ` (${formatPrice(variationForOption.price)}, ${stockDisplay})`;
                                     } else {
