@@ -5,20 +5,21 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Text } from 'react-native';
 import { VariationChip } from './VariationChip';
 
-interface ProductVariations {
+interface ProductVariationsProps {
     product: Product;
+    onVariationChange: (product: Product) => void;
 }
 
-export const ProductVariations = ({
-    product
-}: ProductVariations) => {
-
-    const { products: variantProducts, isLoading } = useProducts(product?.variations || []);
+export const ProductVariations = ({ product, onVariationChange }: ProductVariationsProps) => {
+    const { products: variantProducts, isLoading } = useProducts(
+        product?.variations || []
+    );
 
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
 
     const variationAttributes = useMemo(() => product.getVariationAttributes(), [product]);
 
+    // Effect to set initial selected options
     useEffect(() => {
         // Only set initial options if we have variations and no options are selected yet
         if (variantProducts && variantProducts.length > 0 && Object.keys(selectedOptions).length === 0) {
@@ -38,6 +39,34 @@ export const ProductVariations = ({
             setSelectedOptions(initialOptions);
         }
     }, [product.default_attributes, variantProducts?.length, selectedOptions]);
+
+    // Effect to find and report the selected variation
+    useEffect(() => {
+        if (!variantProducts || Object.keys(selectedOptions).length === 0) {
+            if (product.type !== 'variable') {
+                onVariationChange(product);
+            }
+            return;
+        }
+
+        const selectedKeys = Object.keys(selectedOptions);
+
+        const matchedVariant = variantProducts.find(variant =>
+            selectedKeys.every(key => {
+                const attributeId = Number(key);
+                const selectedOption = selectedOptions[attributeId];
+                return variant.attributes.some(attr => attr.id === attributeId && attr.option === selectedOption);
+            })
+        );
+
+        if (matchedVariant) {
+            onVariationChange(matchedVariant);
+        } else if (product.type !== 'variable') {
+            // Fallback for simple products or if no match is found initially
+            onVariationChange(product);
+        }
+
+    }, [selectedOptions, variantProducts, product, onVariationChange]);
 
     const handleSelectOption = (attributeId: number, optionName: string) => {
         setSelectedOptions((prev) => ({
@@ -82,29 +111,36 @@ export const ProductVariations = ({
         return available;
     }, [variantProducts, selectedOptions, variationAttributes]);
 
-    return <>
-        <Row>
-            <Col>
-                {variationAttributes.map(attribute => {
-                    return (
-                        <React.Fragment key={attribute.id}>
-                            <Text style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</Text>
-                            <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>
-                                {attribute.options.map(option => (
-                                    <VariationChip
-                                        key={`${attribute.id}-${option.name}`}
-                                        label={option.label}
-                                        onPress={() => handleSelectOption(attribute.id, option.name)}
-                                        disabled={!availableOptions.get(attribute.id)?.has(option.name)}
-                                        isSelected={selectedOptions[attribute.id] === option.name}
-                                    />
-                                ))}
-                            </Row>
-                        </React.Fragment>
-                    );
-                })}
-            </Col>
-        </Row>
-    </>
+    if (product.type !== 'variable') {
+        return null; // Don't render anything for simple products
+    }
 
+    return (
+        <>
+            <Row>
+                <Col>
+                    {variationAttributes.map((attribute) => {
+                        return (
+                            <React.Fragment key={attribute.id}>
+                                <Text style={{ marginTop: 8, marginBottom: 4 }}>
+                                    {attribute.label}:
+                                </Text>
+                                <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>
+                                    {attribute.options.map((option) => (
+                                        <VariationChip
+                                            key={`${attribute.id}-${option.name}`}
+                                            label={option.label}
+                                            onPress={() => handleSelectOption(attribute.id, option.name)}
+                                            disabled={!availableOptions.get(attribute.id)?.has(option.name)}
+                                            isSelected={selectedOptions[attribute.id] === option.name}
+                                        />
+                                    ))}
+                                </Row>
+                            </React.Fragment>
+                        );
+                    })}
+                </Col>
+            </Row>
+        </>
+    );
 };

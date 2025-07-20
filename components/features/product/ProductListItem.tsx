@@ -3,14 +3,13 @@ import { Col, Row } from '@/components/ui/listitem/layout';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { useProductVariations } from '@/hooks/useProductVariations';
+
 import { Product } from '@/models/Product';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
-import { VariationChips } from './VariationChips';
 
 interface ProductListItemProps {
     product: Product;
@@ -28,7 +27,8 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     const { items, addToCart, updateQuantity } = useShoppingCartContext();
     const [imageDimensions, setImageDimensions] = useState({ width: 80, height: 80 });
-    const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
+
+    const displayProduct = product;
 
     const cartItem = items.find(item => item.product.id === displayProduct!.id);
     const quantity = cartItem?.quantity ?? 0;
@@ -50,7 +50,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     }
 
     if (!displayProduct) {
-        throw new Error("displayProduct is undefined" + product.id);
+        throw new Error("displayProduct is undefined" + product?.id);
     }
 
     const imageUrl = getScaledImageUrl(displayProduct!.images[0]?.src, imageDimensions.width, imageDimensions.height);
@@ -82,6 +82,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 </View>
             </Row>
+            {/*
             <View style={styles.variationsContainer}>
                 {product.attributes
                     .filter(attr => attr.variation)
@@ -93,7 +94,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                             onSelectOption={option => handleSelectOption(attribute.slug, option)}
                         />
                     ))}
-            </View>
+            </View>  */}
             {isExpanded && (
                 <View style={styles.variationsContainer}>
                     <CustomText>Hei</CustomText>
