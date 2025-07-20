@@ -62,7 +62,8 @@ export interface ProductData {
   attributes: ProductAttributeData[];
   variations: number[];
   related_ids: number[];
-  type: ProductType
+  type: ProductType;
+  default_attributes: ProductAttributeData[];
 }
 
 export class Product {
@@ -82,6 +83,7 @@ export class Product {
   variationsData: Product[] = [];
   related_ids: number[];
   type: ProductType;
+  default_attributes: ProductAttribute[];
 
   constructor(data: ProductData) {
     this.id = data.id;
@@ -97,6 +99,8 @@ export class Product {
     this.variations = data.variations;
     this.related_ids = data.related_ids;
     this.type = data.type;
+    this.attributes = (data.attributes || []).map(attr => new ProductAttribute(attr));
+    this.default_attributes = (data.default_attributes || []).map(attr => new ProductAttribute(attr));
 
     // Add a placeholder image if none exist
     this.images = data.images || [];
@@ -110,12 +114,11 @@ export class Product {
     }
 
     // Initialize attributes
-    this.attributes = (data.attributes || []).map(attr => new ProductAttribute(attr));
   }
-
-  setVariations(variations: Product[]) {
-    this.variationsData = variations;
-  }
+  /*
+    setVariations(variations: Product[]) {
+      this.variationsData = variations;
+    } */
 
   getVariationAttributes(): ProductAttribute[] {
     return this.attributes.filter(attr => attr.variation);
@@ -157,9 +160,19 @@ export class Product {
 
 export type ProductType = 'simple' | 'variable' | 'variant';
 
-export interface ProductAttributeOption {
+export class ProductAttributeOption {
   name: string;
   isAvailable: boolean;
+
+  constructor(name: string) {
+    this.name = name;
+    this.isAvailable = true;
+  }
+
+  get label(): string {
+    if (!this.name) return '';
+    return this.name.charAt(0).toUpperCase() + this.name.slice(1);
+  }
 }
 
 export interface ProductAttributeData {
@@ -202,10 +215,12 @@ export class ProductAttribute {
       }
 
       return 0; // Preserve original order for non-numeric options
-    }).map((option: string) => ({
-      name: option.charAt(0).toUpperCase() + option.slice(1).toLowerCase(),
-      isAvailable: true
-    }));
+    }).map((option: string) => new ProductAttributeOption(option));
+  }
+
+  get label(): string {
+    if (!this.name) return '';
+    return this.name.charAt(0).toUpperCase() + this.name.slice(1);
   }
 }
 

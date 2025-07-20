@@ -24,6 +24,10 @@ const mapToProduct = (item: any): Product => {
         variations: item.variations || [],
         related_ids: item.related_ids || [],
         type: item.type as ProductType,
+        default_attributes: (item.default_attributes || []).map((attr: any) => ({
+            ...attr,
+            options: (attr.options || []).map(cleanHtml),
+        })),
     };
 
     return new Product(productData);

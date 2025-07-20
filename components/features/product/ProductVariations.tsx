@@ -26,19 +26,31 @@ export const ProductVariations = ({
         });
     }
 
+    const selectedOptions = new Set<string>();
+    const attributesToSelect = product.default_attributes?.length > 0
+        ? product.default_attributes
+        : variantProducts?.[0]?.attributes;
+
+    if (attributesToSelect) {
+        attributesToSelect.forEach(attr => {
+            selectedOptions.add(`${attr.id}-${attr.option}`);
+        });
+    }
+
     return <>
         <Row>
             <Col>
                 {options.map(attribute => {
                     return (
                         <React.Fragment key={attribute.id}>
-                            <Text style={{ marginTop: 8, marginBottom: 4 }}>{attribute.name}:</Text>
+                            <Text style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</Text>
                             <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>
                                 {attribute.options.map(option => (
                                     <VariationChip
                                         key={`${attribute.id}-${option.name}`}
-                                        option={option.name}
+                                        label={option.label}
                                         disabled={!availableOptions.has(`${attribute.id}-${option.name}`)}
+                                        isSelected={selectedOptions.has(`${attribute.id}-${option.name}`)}
                                     />
                                 ))}
                             </Row>
