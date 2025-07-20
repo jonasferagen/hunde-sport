@@ -8,15 +8,14 @@ import { RelatedProducts } from '@/components/features/product/RelatedProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, CustomText, Heading, Loader } from '@/components/ui';
+import { Row } from '@/components/ui/listitem/layout';
 import { useProduct } from '@/hooks/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
-import { useProductVariations } from '@/hooks/useProductVariations';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { formatPrice } from '@/utils/helpers';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo } from 'react';
-import { View } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
@@ -24,19 +23,15 @@ export const ProductScreen = () => {
 
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const { data: product, isLoading, error } = useProduct(Number(id));
-  const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
 
   const scrollRef = useScrollToTop(id);
+  //  scrollRef.current?.scrollTo({ y: 0, animated: true });
 
-  const handleSelectOptionAndScroll = (attributeSlug: string, option: string) => {
-    handleSelectOption(attributeSlug, option);
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
-  };
   const { imageIndex, isViewerVisible, openImageViewer, closeImageViewer } = useImageViewer();
 
   const galleryImages = useMemo(
-    () => (displayProduct?.images || []).map(img => ({ uri: img.src })),
-    [displayProduct?.images]
+    () => (product?.images || []).map(img => ({ uri: img.src })),
+    [product?.images]
   );
 
   // Explicitly handle loading, error, and not-found states
@@ -50,7 +45,7 @@ export const ProductScreen = () => {
   }
 
   // If the product is not found after loading, show a message.
-  if (!product || !displayProduct) {
+  if (!product) {
     throw new Error('Product not found: ' + id);
   }
 
@@ -58,25 +53,24 @@ export const ProductScreen = () => {
 
   return (
     <PageView>
-      <Stack.Screen options={{ title: displayProduct.name }} />
+      <Stack.Screen options={{ title: product.name }} />
       <PageHeader>
         <Breadcrumbs categoryId={categoryId} isLastClickable={true} />
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>
-        <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
+        <ProductImage image={product.images[0]} onPress={() => openImageViewer(0)} />
         <PageContent>
-          <View style={{ alignItems: "center", justifyContent: "space-between" }}>
-
-            <Heading title={displayProduct.name} size="md" />
+          <Row style={{ alignItems: "center", justifyContent: "space-between" }}>
+            <Heading title={product.name} size="md" />
             <CustomText fontSize="xxl" bold>
-              {formatPrice(displayProduct.price)}
+              {formatPrice(product.price)}
             </CustomText>
-          </View>
-          <CustomText fontSize="sm" >{product.short_description}</CustomText>
-          <BuyProduct product={displayProduct} />
+          </Row>
           <ProductVariations
             product={product}
           />
+          <CustomText fontSize="sm" >{product.short_description}</CustomText>
+          <BuyProduct product={product} />
         </PageContent>
 
         <PageContent title="Produktinformasjon" secondary>
@@ -85,7 +79,7 @@ export const ProductScreen = () => {
 
         <PageContent title="Produktbilder" horizontal>
           <ProductImageGallery
-            images={displayProduct.images.slice(1)}
+            images={product.images.slice(1)}
             onImagePress={(index) => openImageViewer(index + 1)}
           />
         </PageContent>
