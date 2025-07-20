@@ -25,8 +25,6 @@ export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
     const { category, isLoading } = useCategory(Number(id));
 
-    if (isLoading) return <Loader />;
-    if (!category) return null;
 
     return (
         <PageView>
@@ -37,7 +35,8 @@ export const CategoryScreen = memo(() => {
             </PageHeader>
             <PageSection flex>
                 <PageContent flex paddingHorizontal="none" paddingVertical="none" >
-                    {category && <CategoryProducts category={category!} />}
+                    {isLoading && <Loader flex size="large" />}
+                    {category && <CategoryProducts category={category} />}
                 </PageContent>
             </PageSection>
         </PageView>

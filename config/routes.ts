@@ -28,8 +28,15 @@ export const routes = {
     category: (category: Category) => {
         return { pathname: paths.category, params: { id: category.id.toString(), name: category.name } };
     },
-    product: (product: Product) => {
-        return { pathname: paths.product, params: { id: product.id.toString(), name: product.name } };
+    product: (product: Product, categoryId?: number) => {
+        const params: { id: string; name: string; categoryId?: string } = {
+            id: product.id.toString(),
+            name: product.name,
+        };
+        if (categoryId) {
+            params.categoryId = categoryId.toString();
+        }
+        return { pathname: paths.product, params };
     },
     checkout: () => {
         return paths.checkout;

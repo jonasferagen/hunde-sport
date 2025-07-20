@@ -4,10 +4,11 @@ import { Breadcrumb } from './Breadcrumb';
 
 interface RecursiveBreadcrumbProps {
     categoryId: number;
-    isCurrent?: boolean;
+    isLast?: boolean;
+    isLastClickable?: boolean;
 }
 
-export const RecursiveBreadcrumb = ({ categoryId, isCurrent = false }: RecursiveBreadcrumbProps): JSX.Element | null => {
+export const RecursiveBreadcrumb = ({ categoryId, isLast = false, isLastClickable = false }: RecursiveBreadcrumbProps): JSX.Element | null => {
     const { category, isLoading, isError } = useCategory(categoryId);
 
     if (isLoading) {
@@ -20,8 +21,8 @@ export const RecursiveBreadcrumb = ({ categoryId, isCurrent = false }: Recursive
 
     return (
         <>
-            {category.parent && category.parent !== 0 ? <RecursiveBreadcrumb categoryId={category.parent} /> : null}
-            <Breadcrumb category={category} isCurrent={isCurrent} />
+            {category.parent && category.parent !== 0 ? <RecursiveBreadcrumb categoryId={category.parent} isLast={false} isLastClickable={isLastClickable} /> : null}
+            <Breadcrumb category={category} isLast={isLast} isLastClickable={isLastClickable} />
         </>
     );
 };

@@ -11,15 +11,17 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { VariationChips } from './VariationChips';
+
 interface ProductListItemProps {
     product: Product;
     index: number;
     onPress: (id: number) => void;
     isExpanded: boolean;
     expandedHeight: number;
+    categoryId?: number;
 }
 
-export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index, onPress, isExpanded, expandedHeight }) => {
+export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index, onPress, isExpanded, expandedHeight, categoryId }) => {
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('card');
     const styles = createStyles(theme);
@@ -71,7 +73,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                         <CustomText style={styles.price}>{formatPrice(displayProduct!.price)}</CustomText>
                     </Col>
                 </Row>
-                <Row onPress={() => router.push(routes.product(product))} flex={0}>
+                <Row onPress={() => router.push(routes.product(product, categoryId))} flex={0}>
                     <Icon name="next" size="xxl" color={theme.text.primary} />
                 </Row>
             </Row>

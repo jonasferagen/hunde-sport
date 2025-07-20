@@ -16,11 +16,10 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
-
 export const ProductScreen = () => {
   useRenderGuard('ProductScreen');
 
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const { data: product, isLoading, error } = useProduct(Number(id));
   const { displayProduct, selectedOptions, handleSelectOption } = useProductVariations(product);
 
@@ -52,12 +51,13 @@ export const ProductScreen = () => {
     throw new Error('Product not found: ' + id);
   }
 
+  const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product.categories[0]?.id;
 
   return (
     <PageView>
       <Stack.Screen options={{ title: displayProduct.name }} />
       <PageHeader>
-        <Breadcrumbs key={product.id} product={product} />
+        <Breadcrumbs categoryId={categoryId} isLastClickable={true} />
         <Heading title={displayProduct.name} size="md" />
       </PageHeader>
       <PageSection scrollable ref={scrollRef}>

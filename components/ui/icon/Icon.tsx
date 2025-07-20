@@ -9,22 +9,22 @@ import { CustomText } from '../text/CustomText';
 export const ValidIcon = {
     add: 'add-outline',
     remove: 'remove-outline',
-    addToCart: 'cart-outline',
-    shoppingCart: 'cart-outline',
+    addToCart: 'cart',
+    shoppingCart: 'cart',
     menu: 'menu-outline',
     tag: 'pricetag-outline',
     emptyCart: 'trash-outline',
-    close: 'close-outline',
+    close: 'close',
     collapse: 'chevron-up-outline',
     expand: 'chevron-down-outline',
     category: 'pricetag-outline',
     categories: 'pricetags-outline',
-    home: 'home-outline',
+    home: 'home',
     next: 'arrow-forward-outline',
     prev: 'arrow-back-outline',
     breadcrumbSeparator: 'chevron-forward-outline',
-    search: 'search-outline',
-    dot: 'ellipse-outline',
+    search: 'search',
+    dot: 'ellipse',
     link: 'link-outline'
 } as const;
 

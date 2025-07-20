@@ -11,11 +11,12 @@ import { Category } from '@/types';
 
 interface BreadcrumbProps {
   category?: Category;
-  isCurrent?: boolean;
+  isLast?: boolean;
+  isLastClickable?: boolean;
   loading?: boolean;
 }
 
-export const Breadcrumb = React.memo(({ category, isCurrent = false, loading = false }: BreadcrumbProps) => {
+export const Breadcrumb = React.memo(({ category, isLast = false, isLastClickable = false, loading = false }: BreadcrumbProps) => {
   const { themeManager } = useThemeContext();
   const theme = themeManager.getVariant('card');
 
@@ -31,14 +32,18 @@ export const Breadcrumb = React.memo(({ category, isCurrent = false, loading = f
 
   return (
     <>
-      <Link
-        replace
-        href={routes.category(category)}
-        asChild
-      >
-        <CustomText bold={isCurrent}>{category.name}</CustomText>
-      </Link>
-      {!isCurrent && <Icon
+      {isLast && !isLastClickable ? (
+        <CustomText bold={isLast}>{category.name}</CustomText>
+      ) : (
+        <Link
+          replace
+          href={routes.category(category)}
+          asChild
+        >
+          <CustomText bold={isLast}>{category.name}</CustomText>
+        </Link>
+      )}
+      {!isLast && <Icon
         name="breadcrumbSeparator"
         size="md"
         color={theme.text.primary}
@@ -47,4 +52,3 @@ export const Breadcrumb = React.memo(({ category, isCurrent = false, loading = f
     </>
   );
 });
-
