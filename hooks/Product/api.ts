@@ -28,6 +28,7 @@ const mapToProduct = (item: any): Product => {
             ...attr,
             options: (attr.options || []).map(cleanHtml),
         })),
+        parent_id: item.parent_id,
     };
 
     return new Product(productData);

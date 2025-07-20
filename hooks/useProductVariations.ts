@@ -3,6 +3,17 @@ import { Product } from '@/models/Product';
 import { useEffect, useMemo, useState } from 'react';
 
 export const useProductVariations = (product: Product) => {
+    // --- Optimization: Early exit for non-variable products ---
+    if (product.type !== 'variable') {
+        return {
+            productVariant: null,
+            handleOptionSelect: () => { },
+            availableOptions: new Map(),
+            selectedOptions: {},
+            variationAttributes: [],
+        };
+    }
+
     const { products: variantProducts } = useProducts(product.variations);
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);

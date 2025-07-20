@@ -21,6 +21,7 @@ export interface ProductData {
   related_ids: number[];
   type: ProductType;
   default_attributes: ProductAttributeData[];
+  parent_id: number;
 }
 
 export class Product {
@@ -41,6 +42,7 @@ export class Product {
   related_ids: number[];
   type: ProductType;
   default_attributes: ProductAttribute[];
+  parent_id: number;
 
   constructor(data: ProductData) {
     this.id = data.id;
@@ -58,6 +60,7 @@ export class Product {
     this.type = data.type;
     this.attributes = (data.attributes || []).map(attr => new ProductAttribute(attr));
     this.default_attributes = (data.default_attributes || []).map(attr => new ProductAttribute(attr));
+    this.parent_id = data.parent_id;
 
     // Add a placeholder image if none exist
     this.images = data.images || [];
