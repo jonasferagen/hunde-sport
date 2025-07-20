@@ -1,5 +1,5 @@
-import { CustomText, Icon } from '@/components/ui';
-import { Col, Row } from '@/components/ui/listitem/layout';
+import { Button, CustomText, Icon } from '@/components/ui';
+import { Col, Row } from '@/components/ui/layout';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
@@ -9,7 +9,7 @@ import { Product } from '@/models/Product';
 import { SPACING } from '@/styles';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { ProductVariations } from './ProductVariations';
@@ -30,10 +30,13 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     const { items, addToCart, updateQuantity } = useShoppingCartContext();
 
+    const [productVariant, setProductVariant] = useState<Product | null>(null);
+
     const {
-        productVariant,
         availableOptions,
     } = useProductVariations(product);
+
+
 
     // The product to display will be the selected variant, or fall back to the main product.
     const displayProduct = productVariant || product;
@@ -64,12 +67,6 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     ];
 
 
-    const handleVariantChange = (variant: Product | null) => {
-        if (variant) {
-
-        }
-    };
-
     const hasVariations = availableOptions.size > 0;
 
 
@@ -81,7 +78,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     <Col style={styles.infoContainer}>
                         <CustomText style={styles.name} numberOfLines={2}>{displayProduct.name}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
-                        {hasVariations && !isExpanded && (
+                        {false && hasVariations && !isExpanded && (
                             <Row style={styles.variationIndicator} flex={0}>
                                 <Icon name="exclamation" size="md" color={theme.text.primary} />
                                 <CustomText style={styles.variationText}>Flere varianter</CustomText>
@@ -90,12 +87,15 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     </Col>
 
                 </Row>
-
             </Row>
-            <Row justifyContent='space-between' alignItems='center'>
-                <Col flex={0} onPress={handlePress}>
-                    <Icon name="more" size="xxl" color={theme.text.primary} />
-                </Col>
+            <Col style={{ paddingHorizontal: SPACING.md }}>
+                <ProductVariations
+                    product={product}
+                    onVariantChange={setProductVariant}
+                    displayAs="select"
+                />
+            </Col>
+            <Row justifyContent='flex-end' alignItems='center'>
                 <Col alignItems='flex-end'>
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 </Col>
@@ -103,18 +103,17 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
             {
                 isExpanded && (
-                    <Col style={{ paddingHorizontal: SPACING.md }}>
-                        <ProductVariations
-                            product={product}
-                            onVariantChange={handleVariantChange}
-                        />
-                        <CustomText style={styles.subtitle}>
-                            {product.short_description}{' '}
-                            <CustomText style={[styles.link, { borderWidth: 1, borderColor: 'red', padding: 4 }]} onPress={() => router.push(routes.product(product, categoryId))}>
-                                Til produktside <Icon name="next" size="sm" color={theme.text.primary} />
+                    <>
+
+                        <Row >
+                            <CustomText style={styles.subtitle}>
+                                {product.short_description}{' '}
                             </CustomText>
-                        </CustomText>
-                    </Col>
+                        </Row>
+                        <Row>
+                            <Button title='Til produktside' onPress={() => router.push(routes.product(product, categoryId))} icon="next" variant="secondary" />
+                        </Row>
+                    </>
                 )
             }
         </View>
@@ -122,6 +121,16 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 };
 
 const createStyles = (theme: any) => StyleSheet.create({
+
+
+
+
+    link: {
+        alignSelf: 'flex-end',
+        marginTop: 'auto',
+        color: '#666',
+    },
+
     container: {
         padding: 8,
         borderBottomWidth: 1,
@@ -152,11 +161,7 @@ const createStyles = (theme: any) => StyleSheet.create({
         fontSize: 14,
         lineHeight: 20,
     },
-    link: {
-        color: theme.text.primary,
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
+
     variationIndicator: {
         marginTop: SPACING.sm,
         alignItems: 'center',

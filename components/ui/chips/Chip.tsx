@@ -2,7 +2,7 @@ import { useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
 import React from 'react';
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
-import { Row } from '../listitem/layout';
+import { Row } from '../layout';
 import { CustomText, CustomTextProps } from '../text/CustomText';
 
 interface ChipProps {

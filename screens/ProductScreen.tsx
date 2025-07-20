@@ -3,7 +3,7 @@ import { BuyProduct, ProductDetails, ProductImage, ProductImageGallery, ProductV
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, CustomText, Heading, Loader } from '@/components/ui';
-import { Row } from '@/components/ui/listitem/layout';
+import { Row } from '@/components/ui/layout';
 import { useProduct } from '@/hooks/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
 import { useScrollToTop } from '@/hooks/useScrollToTop';

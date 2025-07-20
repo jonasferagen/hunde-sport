@@ -7,6 +7,7 @@ export const useProductVariations = (product: Product) => {
     if (product.type !== 'variable') {
         return {
             productVariant: null,
+            productVariations: [],
             handleOptionSelect: () => { },
             availableOptions: new Map(),
             selectedOptions: {},
@@ -14,13 +15,13 @@ export const useProductVariations = (product: Product) => {
         };
     }
 
-    const { products: variantProducts } = useProducts(product.variations);
+    const { products: productVariations } = useProducts(product.variations);
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
 
     useEffect(() => {
         // Guard to ensure this runs only once per product when data is ready.
-        if (variantProducts && product.id !== initializedForProductId) {
+        if (productVariations && product.id !== initializedForProductId) {
             const initialOptions: Record<number, string> = {};
 
             // First, try to use the defined default attributes.
@@ -46,12 +47,12 @@ export const useProductVariations = (product: Product) => {
                 setInitializedForProductId(product.id);
             }
         }
-    }, [variantProducts, product, initializedForProductId]);
+    }, [productVariations, product, initializedForProductId]);
 
     const productVariant = useMemo(() => {
-        if (!variantProducts || Object.keys(selectedOptions).length === 0) return null;
-        return product.findVariant(variantProducts, selectedOptions) || null;
-    }, [selectedOptions, variantProducts, product]);
+        if (!productVariations || Object.keys(selectedOptions).length === 0) return null;
+        return product.findVariant(productVariations, selectedOptions) || null;
+    }, [selectedOptions, productVariations, product]);
 
     const handleOptionSelect = (attributeId: number, option: string) => {
         setSelectedOptions(prev => ({
@@ -61,14 +62,15 @@ export const useProductVariations = (product: Product) => {
     };
 
     const availableOptions = useMemo(() => {
-        if (!variantProducts) return new Map();
-        return product.getAvailableOptions(variantProducts, selectedOptions);
-    }, [variantProducts, selectedOptions, product]);
+        if (!productVariations) return new Map();
+        return product.getAvailableOptions(productVariations, selectedOptions);
+    }, [productVariations, selectedOptions, product]);
 
     const variationAttributes = product.getVariationAttributes();
 
     return {
         productVariant,
+        productVariations,
         handleOptionSelect,
         availableOptions,
         selectedOptions,
