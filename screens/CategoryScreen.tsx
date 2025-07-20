@@ -2,7 +2,8 @@ import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Breadcrumbs, Loader } from '@/components/ui';
+import { Loader } from '@/components/ui';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/types';
@@ -24,17 +25,19 @@ export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
     const { category, isLoading } = useCategory(Number(id));
 
+    if (isLoading) return <Loader />;
+    if (!category) return null;
+
     return (
         <PageView>
-            <Stack.Screen options={{ title: category?.name }} />
+            <Stack.Screen options={{ title: category?.name || 'Category' }} />
             <PageHeader>
-                <Breadcrumbs category={category} />
+                <Breadcrumbs categoryId={Number(id)} />
                 {category && <CategoryChipsContainer category={category} />}
             </PageHeader>
             <PageSection flex>
                 <PageContent flex paddingHorizontal="none" paddingVertical="none" >
-                    {isLoading && <Loader size="large" flex />}
-                    {!isLoading && category && <CategoryProducts category={category!} />}
+                    {category && <CategoryProducts category={category!} />}
                 </PageContent>
             </PageSection>
         </PageView>

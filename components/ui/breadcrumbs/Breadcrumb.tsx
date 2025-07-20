@@ -1,55 +1,70 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-import { Pressable, StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { routes } from '@/config/routes';
+import { useThemeContext } from '@/contexts/ThemeContext';
 import { SPACING } from '@/styles';
 import { Category } from '@/types';
 import { Icon } from '../icon/Icon';
 import { CustomText } from '../text/CustomText';
 
 interface BreadcrumbProps {
-  category: Category;
-  isLast: boolean;
+  category?: Category;
+  isCurrent?: boolean;
+  loading?: boolean;
   style?: StyleProp<ViewStyle>;
 }
 
-export const Breadcrumb = React.memo(({ category, isLast, style }: BreadcrumbProps) => {
+export const Breadcrumb = React.memo(({ category, isCurrent = false, loading = false, style }: BreadcrumbProps) => {
+  const { themeManager } = useThemeContext();
+  const theme = themeManager.getVariant('card');
+
+  if (loading) {
+    return (
+      <View style={[styles.container, style]}>
+        <Icon name="loader" size={'sm'} />
+      </View>
+    );
+  }
+
+  if (!category) {
+    return null;
+  }
+
   return (
-    <React.Fragment key={category.id}>
+    <View style={[styles.container, style]}>
       <Link
         replace
         href={routes.category(category)}
         asChild
       >
-        <Pressable style={[styles.crumbContainer, style]}>
-          <CustomText style={styles.crumbText}>{category.name}</CustomText>
-        </Pressable>
+        <CustomText style={[styles.text, { color: theme.text.primary, fontWeight: isCurrent ? 'bold' : 'normal' }]}>
+          {category.name}
+        </CustomText>
       </Link>
-      {!isLast && (
-        <Icon
-          name="breadcrumbSeparator"
-          color={styles.crumbText.color}
-          size={'sm'}
-          style={styles.crumbSeparator}
-        />
-      )}
-    </React.Fragment>
+      {!isCurrent && <Ionicons
+        name="chevron-forward"
+        size={16}
+        color={theme.text.primary}
+        style={styles.icon}
+      />}
+    </View>
   );
 });
 
-const styles = {
-  crumbContainer: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  crumbText: {
-    color: 'black'
+  text: {
+    fontSize: 14,
   },
-  crumbSeparator: {
+  icon: {
     marginHorizontal: SPACING.xs,
-    top: 0,
   },
-};
+});
 
 export default Breadcrumb;

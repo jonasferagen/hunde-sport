@@ -1,10 +1,18 @@
 import { useStatusContext } from '@/contexts/StatusContext';
+import { Category } from '@/types';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { categoriesQueryOptions, categoryQueryOptions } from './queries';
 
-
-
+export const getCategory = async (categoryId: number, queryClient: any): Promise<Category | null> => {
+    try {
+        const category = await queryClient.fetchQuery(categoryQueryOptions(categoryId));
+        return category;
+    } catch (error) {
+        console.error(`Failed to fetch category ${categoryId}`, error);
+        return null;
+    }
+};
 
 export const useCategories = (categoryId: number) => {
     const query = useInfiniteQuery(categoriesQueryOptions(categoryId));
@@ -43,7 +51,6 @@ export const useCategories = (categoryId: number) => {
 export const useCategory = (categoryId: number) => {
     const result = useQuery(categoryQueryOptions(categoryId));
     const category = useMemo(() => result.data, [result.data]);
-
 
     return {
         ...result,

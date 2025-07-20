@@ -1,4 +1,4 @@
-import { categoryQueryOptions } from '@/hooks/Category/queries';
+import { getCategory } from '@/hooks/Category';
 import { Category } from '@/types';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
@@ -32,9 +32,7 @@ export const BreadcrumbProvider = ({ children }: { children: ReactNode }) => {
 
             while (parentId && parentId !== 0) {
                 try {
-                    const parentCategory = await queryClient.fetchQuery(
-                        categoryQueryOptions(parentId)
-                    );
+                    const parentCategory = await getCategory(parentId, queryClient);
                     if (parentCategory) {
                         breadcrumbs.unshift(parentCategory);
                         parentId = parentCategory.parent;
