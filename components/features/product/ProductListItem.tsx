@@ -6,6 +6,7 @@ import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { useProductVariations } from '@/hooks/useProductVariations';
 
 import { Product } from '@/models/Product';
+import { SPACING } from '@/styles';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React from 'react';
@@ -31,6 +32,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     const {
         productVariant,
+        availableOptions,
     } = useProductVariations(product);
 
     // The product to display will be the selected variant, or fall back to the main product.
@@ -59,8 +61,6 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
     const containerStyles = [
         styles.container,
-        isExpanded && styles.expandedContainer,
-        isExpanded && { height: expandedHeight },
     ];
 
 
@@ -70,6 +70,9 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
         }
     };
 
+    const hasVariations = availableOptions.size > 0;
+
+
     return (
         <View style={containerStyles}>
             <Row onPress={handlePress}>
@@ -78,6 +81,12 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                     <Col style={styles.infoContainer}>
                         <CustomText style={styles.name} numberOfLines={2}>{displayProduct.name}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
+                        {hasVariations && !isExpanded && (
+                            <Row style={styles.variationIndicator} flex={0}>
+                                <Icon name="exclamation" size="md" color={theme.text.primary} />
+                                <CustomText style={styles.variationText}>Flere varianter</CustomText>
+                            </Row>
+                        )}
                     </Col>
 
                 </Row>
@@ -94,24 +103,22 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
 
             {
                 isExpanded && (
-                    <>
-
+                    <Col style={{ paddingHorizontal: SPACING.md }}>
                         <ProductVariations
                             product={product}
                             onVariantChange={handleVariantChange}
                         />
-
-                        <Row>
-                            <CustomText style={styles.subtitle}>{product.short_description} </CustomText>
-                            <Row onPress={() => router.push(routes.product(product, categoryId))} flex={0}>
-                                <Icon name="next" size="xxl" color={theme.text.primary} />
-                            </Row>
-                        </Row>
-                    </>
+                        <CustomText style={styles.subtitle}>
+                            {product.short_description}{' '}
+                            <CustomText style={[styles.link, { borderWidth: 1, borderColor: 'red', padding: 4 }]} onPress={() => router.push(routes.product(product, categoryId))}>
+                                Til produktside <Icon name="next" size="sm" color={theme.text.primary} />
+                            </CustomText>
+                        </CustomText>
+                    </Col>
                 )
             }
-        </View >
-    );
+        </View>
+    )
 };
 
 const createStyles = (theme: any) => StyleSheet.create({
@@ -119,9 +126,6 @@ const createStyles = (theme: any) => StyleSheet.create({
         padding: 8,
         borderBottomWidth: 1,
         borderBottomColor: theme.borderColor,
-    },
-    expandedContainer: {
-        justifyContent: 'flex-start',
     },
     image: {
         borderRadius: 8,
@@ -138,11 +142,28 @@ const createStyles = (theme: any) => StyleSheet.create({
     price: {
         fontSize: 16,
     },
+    descriptionContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'flex-end',
+    },
     subtitle: {
-        flex: 1,
         color: theme.text.primary,
         fontSize: 14,
+        lineHeight: 20,
     },
-
-
+    link: {
+        color: theme.text.primary,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    variationIndicator: {
+        marginTop: SPACING.sm,
+        alignItems: 'center',
+    },
+    variationText: {
+        marginLeft: SPACING.xs,
+        fontSize: 12,
+        color: theme.text.primary,
+    }
 });

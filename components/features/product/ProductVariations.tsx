@@ -31,7 +31,7 @@ export const ProductVariations = ({ product, onVariantChange }: ProductVariation
         <Col>
             {variationAttributes.map((attribute) => (
                 <React.Fragment key={attribute.id}>
-                    <Text style={{ marginTop: 8, marginBottom: 4 }}>
+                    <Text style={{ marginTop: 8, marginBottom: 4, display: 'none' }}>
                         {attribute.label}:
                     </Text>
                     <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>

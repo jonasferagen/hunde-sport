@@ -26,7 +26,8 @@ export const ValidIcon = {
     search: 'search',
     dot: 'ellipse',
     link: 'arrow-forward',
-    more: 'ellipsis-horizontal'
+    more: 'information-circle',
+    exclamation: 'alert-circle',
 } as const;
 
 // Get the type of all props that Ionicons accepts
