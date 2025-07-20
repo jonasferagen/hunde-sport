@@ -6,17 +6,16 @@ import { Breadcrumbs, CustomText, Heading, Loader } from '@/components/ui';
 import { Row } from '@/components/ui/listitem/layout';
 import { useProduct } from '@/hooks/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
+import { useProductVariations } from '@/hooks/useProductVariations';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
-import { Product } from '@/models/Product';
 import { formatPrice } from '@/utils/helpers';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const { data: product, isLoading, error } = useProduct(Number(id));
-  const [productVariant, setProductVariant] = useState<Product | null>(null);
 
   const scrollRef = useScrollToTop(id);
 
@@ -40,6 +39,14 @@ export const ProductScreen = () => {
     return <Loader />; // Or a "not found" message
   }
 
+  const {
+    productVariant,
+    handleOptionSelect,
+    availableOptions,
+    selectedOptions,
+    variationAttributes,
+  } = useProductVariations(product);
+
   // The product to display will be the selected variant, or fall back to the main product.
   const displayProduct = productVariant || product;
 
@@ -61,10 +68,12 @@ export const ProductScreen = () => {
             </CustomText>
           </Row>
           <ProductVariations
-            product={product}
-            onVariationChange={setProductVariant}
+            variationAttributes={variationAttributes}
+            selectedOptions={selectedOptions}
+            availableOptions={availableOptions}
+            onOptionSelect={handleOptionSelect}
           />
-          <CustomText fontSize="sm" >{displayProduct.id + ' ' + product.short_description}</CustomText>
+          <CustomText fontSize="sm" >{product.short_description}</CustomText>
           <BuyProduct product={displayProduct} />
         </PageContent>
 

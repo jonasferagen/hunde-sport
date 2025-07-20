@@ -3,11 +3,12 @@ import { Col, Row } from '@/components/ui/listitem/layout';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
+import { useProductVariations } from '@/hooks/useProductVariations';
 
 import { Product } from '@/models/Product';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { ProductVariations } from './ProductVariations';
@@ -27,49 +28,38 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
     const styles = createStyles(theme);
 
     const { items, addToCart, updateQuantity } = useShoppingCartContext();
-    const [imageDimensions, setImageDimensions] = useState({ width: 80, height: 80 });
-    const [productVariant, setProductVariant] = useState<Product | null>(null);
 
-    useEffect(() => {
-        if (product) {
-            // Initially, the selected product is the base product itself.
-            // The ProductVariations component will then update it to the default variation if available.
-            setProductVariant(product);
-        }
-    }, [product]);
-
-    if (!product) {
-        return null;
-    }
+    const {
+        productVariant,
+        handleOptionSelect,
+        availableOptions,
+        selectedOptions,
+        variationAttributes,
+    } = useProductVariations(product);
 
     // The product to display will be the selected variant, or fall back to the main product.
     const displayProduct = productVariant || product;
 
-    if (!displayProduct) {
-        // Don't render anything until the display product is initialized.
-        return null;
-    }
-
-    const cartItem = items.find(item => item.product.id === product.id);
+    const cartItem = items.find(item => item.product.id === displayProduct.id);
     const quantity = cartItem?.quantity ?? 0;
 
     const handleIncrease = () => {
         if (quantity === 0) {
-            addToCart(product);
+            addToCart(displayProduct);
         } else {
-            updateQuantity(product.id, quantity + 1);
+            updateQuantity(displayProduct.id, quantity + 1);
         }
     };
 
     const handleDecrease = () => {
-        updateQuantity(product.id, quantity - 1);
+        updateQuantity(displayProduct.id, quantity - 1);
     };
 
     const handlePress = () => {
         onPress(product.id);
     }
 
-    const imageUrl = getScaledImageUrl(displayProduct.images[0]?.src, imageDimensions.width, imageDimensions.height);
+    const imageUrl = getScaledImageUrl(displayProduct.images[0]?.src, 80, 80);
 
     const containerStyles = [
         styles.container,
@@ -81,9 +71,9 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
         <View style={containerStyles}>
             <Row onPress={handlePress}>
                 <Row>
-                    {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, imageDimensions]} />}
+                    {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />}
                     <Col style={styles.infoContainer}>
-                        <CustomText style={styles.name} numberOfLines={2}>{displayProduct.name} {displayProduct.id} {displayProduct.type}</CustomText>
+                        <CustomText style={styles.name} numberOfLines={2}>{displayProduct.name}</CustomText>
                         <CustomText style={styles.price}>{formatPrice(displayProduct.price)}</CustomText>
                     </Col>
                 </Row>
@@ -92,15 +82,19 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, index
                 </Row>
             </Row>
             <Row>
-                <CustomText style={styles.subtitle} numberOfLines={2}>{product.short_description}</CustomText>
+                <CustomText style={styles.subtitle} numberOfLines={2}>{product.id}- {displayProduct.id}{product.short_description}</CustomText>
                 <View style={styles.actionContainer}>
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 </View>
             </Row>
+
             <ProductVariations
-                product={product}
-                onVariationChange={setProductVariant}
+                variationAttributes={variationAttributes}
+                selectedOptions={selectedOptions}
+                availableOptions={availableOptions}
+                onOptionSelect={handleOptionSelect}
             />
+
             {isExpanded && (
                 <View style={styles.variationsContainer}>
                     <CustomText>Hei</CustomText>
@@ -136,7 +130,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     },
     subtitle: {
         flex: 1,
-        color: theme.text.secondary,
+        color: theme.text.primary,
         fontSize: 14,
     },
     actionContainer: {
