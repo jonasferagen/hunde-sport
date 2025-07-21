@@ -9,6 +9,7 @@ import { useProduct } from '@/hooks';
 import { useCategories } from '@/hooks/Category';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
+import { Product } from '@/types';
 import { router, Stack } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
@@ -75,8 +76,14 @@ export const HomeScreen = () => {
         }
     };
 
-    const { data: product } = useProduct(35961);
-
+    const productIds = [35961, 27445];
+    let products: Product[] = [];
+    productIds.forEach(id => {
+        const { data: product } = useProduct(id);
+        if (product) {
+            products.push(product);
+        }
+    });
 
     return (
         <PageView>
@@ -85,7 +92,9 @@ export const HomeScreen = () => {
                 <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
-                {product && <ProductTile product={product!} />}
+                <PageContent style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    {products.map(product => <ProductTile product={product!} />)}
+                </PageContent>
                 <PageContent secondary horizontal title="Nyheter">
                     <ProductTiles type="recent" themeVariant="accent" />
                 </PageContent>

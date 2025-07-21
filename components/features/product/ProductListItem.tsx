@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
+import { PriceRange } from './display/PriceRange';
 import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
 import { ProductTitle } from './display/ProductTitle';
@@ -31,7 +32,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     const styles = createStyles(theme);
 
     const { items, addToCart, updateQuantity } = useShoppingCartContext();
-    const { displayProduct, product, variationAttributes, priceRange } = useProductContext();
+    const { displayProduct, product, priceRange } = useProductContext();
 
     // The product to display will be the selected variant, or fall back to the main product.
     const cartItem = items.find(item => item.product.id === displayProduct!.id);
@@ -72,7 +73,16 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                     <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />
                     <Col>
                         <ProductTitle product={product} displayProduct={displayProduct!} />
-                        <PriceTag fontSize="md" product={displayProduct!} />
+
+                        {priceRange ?
+                            <Row>
+                                {priceRange && <PriceRange priceRange={priceRange} />}
+                                <ProductStatus fontSize="xs" displayProduct={displayProduct!} />
+                            </Row>
+                            : <Row>
+                                <PriceTag fontSize="md" product={displayProduct!} />
+                            </Row>
+                        }
                     </Col>
                 </Row>
             </Row>
@@ -80,7 +90,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
             <Row>
                 <Col onPress={handlePress}>
                     <CustomText>
-                        <ProductStatus fontSize="xs" displayProduct={displayProduct!} />
                         <Icon name={isExpanded ? "collapse" : "expand"} size="md" color={theme.text.primary} />
                     </CustomText>
                 </Col>
