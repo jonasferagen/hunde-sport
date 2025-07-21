@@ -80,7 +80,6 @@ const createStyles = (theme: any) => StyleSheet.create({
         flex: 1,
         borderRadius: BORDER_RADIUS.md,
         overflow: 'hidden',
-        marginRight: SPACING.sm,
         borderWidth: 1,
         borderColor: 'black'
     },

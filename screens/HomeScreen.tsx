@@ -17,37 +17,47 @@ const CategorySection = () => {
     const { categories, isLoading } = useCategories(0);
 
     if (isLoading) {
-        return <Loader size='large' flex />;
+        return <Loader size="large" flex />;
     }
 
+    const chunk = (arr: any[], size: number) =>
+        Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+            arr.slice(i * size, i * size + size)
+        );
+
+    const chunkedCategories = chunk(categories, 3);
+
     return (
-        <View style={styles.categoryContainer}>
-            {categories.map((item) => (
-                <CategoryTile
-                    key={item.id.toString()}
-                    category={item}
-                    style={styles.categoryTile}
-                />
+        <View style={styles.gridContainer}>
+            {chunkedCategories.map((row, rowIndex) => (
+                <View key={rowIndex} style={styles.row}>
+                    {row.map((item) => (
+                        <CategoryTile
+                            key={item.id.toString()}
+                            category={item}
+                            style={styles.tile}
+                            aspectRatio={1}
+                        />
+                    ))}
+                </View>
             ))}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    categoryContainer: {
+    gridContainer: {
+        gap: SPACING.md,
+    },
+    row: {
+        gap: SPACING.md,
         flexDirection: 'row',
-        flexWrap: 'wrap',
         justifyContent: 'space-between',
-        marginHorizontal: SPACING.md,
-        borderColor: 'red',
-        borderWidth: 1,
-        gap: SPACING.sm,
 
     },
-    categoryTile: {
-        width: '32%',
-        height: 100,
-        marginBottom: SPACING.sm,
+    tile: {
+        flex: 1,
+        width: '30%',
     },
 });
 
@@ -82,10 +92,10 @@ export const HomeScreen = () => {
                 <PageContent primary horizontal title="Tilbud">
                     <ProductTiles type="discounted" themeVariant="secondary" />
                 </PageContent>
-                <PageContent paddingHorizontal="none" title="Kategorier">
+                <PageContent title="Kategorier">
                     <CategorySection />
                 </PageContent>
-                <PageContent primary horizontal title="Populære produkter">
+                <PageContent primary horizontal title="Populære produkter" >
                     <ProductTiles type="featured" themeVariant="secondary" />
                 </PageContent>
             </PageSection>

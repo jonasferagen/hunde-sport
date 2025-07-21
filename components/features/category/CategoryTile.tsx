@@ -11,6 +11,7 @@ interface CategoryTileProps {
     style?: StyleProp<ViewStyle>;
     width?: DimensionValue;
     height?: DimensionValue;
+    aspectRatio?: number;
     textSize?: string;
 }
 
@@ -19,6 +20,7 @@ export const CategoryTile = ({
     style,
     width = CARD_DIMENSIONS.category.width,
     height = CARD_DIMENSIONS.category.height,
+    aspectRatio = 1.2,
     textSize = "sm",
 
 }: CategoryTileProps) => {
@@ -30,7 +32,7 @@ export const CategoryTile = ({
                 name={category.name}
                 height={height}
                 width={width}
-                aspectRatio={1.2}
+                aspectRatio={aspectRatio}
                 style={style}
                 textSize={textSize}
                 themeVariant={'primary'}

@@ -1,7 +1,9 @@
 import { Loader } from '@/components/ui';
 import { useProducts } from '@/hooks/Product';
 import { ProductListType } from '@/hooks/Product/api';
+import { SPACING } from '@/styles';
 import React, { JSX } from 'react';
+import { View } from 'react-native';
 import { ProductTile } from './ProductTile';
 
 interface ProductTilesProps {
@@ -21,7 +23,7 @@ export const ProductTiles = ({ type, themeVariant }: ProductTilesProps): JSX.Ele
     }
 
     return (
-        <>
+        <View style={{ gap: SPACING.md, flexDirection: 'row' }}>
             {products.map((product) => (
                 <ProductTile
                     key={product.id}
@@ -29,6 +31,6 @@ export const ProductTiles = ({ type, themeVariant }: ProductTilesProps): JSX.Ele
                     themeVariant={themeVariant}
                 />
             ))}
-        </>
+        </View>
     );
 };
