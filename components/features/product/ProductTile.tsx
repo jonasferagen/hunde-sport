@@ -31,7 +31,7 @@ export const ProductTile = ({
                 themeVariant={themeVariant}
                 name={name}
                 imageUrl={image.src}
-                topRightComponent={<PriceInfo product={product} themeVariant={themeVariant} />}
+                topRightComponent={<PriceInfo product={product} themeVariant={themeVariant as any} />}
                 nameNumberOfLines={2}
                 gradientMinHeight={40}
 

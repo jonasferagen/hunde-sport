@@ -8,12 +8,12 @@ import { StyleSheet, View } from 'react-native';
 
 interface PriceInfoProps {
     product: Product;
-    themeVariant?: 'primary' | 'secondary' | 'accent' | 'default' | 'card';
+    themeVariant?: any;
 }
 
 export const PriceInfo = ({ product, themeVariant }: PriceInfoProps) => {
     const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant(themeVariant ?? 'primary');
+    const theme = themeManager.getVariant(themeVariant);
     const styles = createStyles(theme);
 
     if (product.on_sale) {
