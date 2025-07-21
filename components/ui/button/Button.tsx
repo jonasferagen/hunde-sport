@@ -15,7 +15,14 @@ export interface ButtonProps {
 };
 
 
-export const Button = React.forwardRef<View, ButtonProps>(({ onPress, title = undefined, icon, variant = 'primary', size = 'md', disabled = false }, ref) => {
+export const Button = React.forwardRef<View, ButtonProps>(({
+    onPress,
+    title = undefined,
+    icon,
+    variant = 'primary',
+    size = 'md',
+    disabled = false
+}, ref) => {
     const { themeManager } = useThemeContext();
 
     const themeVariant = themeManager.getVariant(variant);

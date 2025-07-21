@@ -1,17 +1,18 @@
 import { BaseTile } from "@/components/ui/tile/BaseTile";
 import { routes } from '@/config/routes';
-import { CARD_DIMENSIONS } from '@/styles/Dimensions';
+import { useThemeContext } from "@/contexts";
+import { CARD_DIMENSIONS, SPACING } from '@/styles';
 import { Product } from "@/types";
 import { Link } from 'expo-router';
 import React from 'react';
-import { DimensionValue } from 'react-native';
-import { PriceInfo } from './price/PriceInfo';
+import { DimensionValue, StyleSheet, View } from 'react-native';
+import { PriceTag } from './display/PriceTag';
 
 interface ProductTileProps {
     product: Product;
     width?: DimensionValue;
     height?: DimensionValue;
-    themeVariant?: string;
+    themeVariant?: any;
 }
 
 export const ProductTile = ({
@@ -22,20 +23,37 @@ export const ProductTile = ({
 }: ProductTileProps) => {
     const { images, name } = product;
     const image = images[0];
+    const { themeManager } = useThemeContext();
+    const theme = themeManager.getVariant(themeVariant);
+    const styles = createStyles(theme);
+
+    const PriceComponent = (
+        <View style={styles.priceContainer}>
+            <PriceTag product={product} />
+        </View>
+    );
+
     return (
         <Link href={routes.product(product)} asChild>
             <BaseTile
-
                 width={width}
                 height={height}
                 themeVariant={themeVariant}
                 name={name}
                 imageUrl={image.src}
-                topRightComponent={<PriceInfo product={product} themeVariant={themeVariant as any} />}
+                topRightComponent={PriceComponent}
                 nameNumberOfLines={2}
                 gradientMinHeight={40}
-
             />
         </Link>
     );
 };
+
+const createStyles = (theme: any) => StyleSheet.create({
+    priceContainer: {
+        backgroundColor: theme.backgroundColor,
+        paddingVertical: SPACING.xs,
+        paddingHorizontal: SPACING.sm,
+        borderRadius: SPACING.sm,
+    },
+});

@@ -7,6 +7,7 @@ import { useStatusContext } from './StatusContext';
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
+    purchaseInfo: (displayProduct: Product) => { status: string, msg: string, msg_short: string };
     cartItemCount: number;
     cartTotal: number;
     addToCart: (product: Product, variant?: Product) => void;
@@ -20,6 +21,32 @@ const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(u
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const { showMessage } = useStatusContext();
+
+    const purchaseInfo = (displayProduct: Product) => {
+
+        if (displayProduct.stock_status === 'outofstock') {
+            return {
+                status: 'outofstock',
+                msg: 'Produktet er ikke lenger på lager',
+                msg_short: 'Utsolgt'
+            };
+        }
+
+        if (!(displayProduct.type === 'simple' || displayProduct.type === 'variation')) {
+            return {
+                status: 'variation_needed',
+                msg: 'Du må velge en variant',
+                msg_short: 'Velg variant'
+            };
+        }
+
+        return {
+            status: 'ok',
+            msg: 'Legg til i handlekurv',
+            msg_short: 'Kjøp'
+        };
+
+    };
 
     const addToCart = useCallback((product: Product) => {
 
@@ -86,6 +113,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         <ShoppingCartContext.Provider
             value={{
                 items,
+                purchaseInfo,
                 cartItemCount,
                 cartTotal,
                 addToCart,
