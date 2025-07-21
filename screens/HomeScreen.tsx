@@ -1,12 +1,10 @@
 import { CategoryTile } from '@/components/features/category/CategoryTile';
-import { ProductTile } from '@/components/features/product/ProductTile';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { routes } from '@/config/routes';
-import { useProduct } from '@/hooks';
 import { useCategories } from '@/hooks/Category';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
@@ -51,8 +49,8 @@ export const HomeScreen = () => {
         }
     };
 
-    const { data: product } = useProduct(35961);
-
+    //   const { data: product } = useProduct(35961);
+    //    {false && product && <ProductTile product={product!} />}
 
     return (
         <PageView>
@@ -60,24 +58,17 @@ export const HomeScreen = () => {
             <PageHeader>
                 <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
             </PageHeader>
-            <PageSection>
+            <PageSection scrollable>
                 <PageContent accent horizontal title="Populære produkter">
                     <ProductTiles type="featured" themeVariant="secondary" />
                 </PageContent>
-            </PageSection>
-            <PageSection>
                 <PageContent secondary horizontal title="Nyheter">
                     <ProductTiles type="recent" themeVariant="primary" />
                 </PageContent>
-            </PageSection>
-            <PageSection>
                 <PageContent primary horizontal title="Tilbud">
                     <ProductTiles type="discounted" themeVariant="accent" />
                 </PageContent>
-            </PageSection>
-            <PageSection >
-                <PageContent paddingHorizontal="none">
-                    {false && product && <ProductTile product={product!} />}
+                <PageContent paddingHorizontal="none" title="Kategorier">
                     <CategorySection />
                 </PageContent>
             </PageSection>

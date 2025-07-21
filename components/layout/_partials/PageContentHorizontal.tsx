@@ -12,7 +12,6 @@ import {
   ViewProps
 } from 'react-native';
 
-
 interface PageContentHorizontalProps extends ViewProps {
   title?: string;
   children: React.ReactNode;
@@ -32,9 +31,15 @@ export const PageContentHorizontal = ({ title = undefined, children, style, ...p
     contentWidth > scrollViewWidth &&
     scrollPosition < contentWidth - scrollViewWidth - 10;
 
+  const { paddingHorizontal, ...restStyle } = StyleSheet.flatten(style) || {};
+
   return (
-    <View style={[styles.horizontalContainer, style]}>
-      <Heading title={title} style={{ marginBottom: SPACING.md }} />
+    <View style={[styles.horizontalContainer, restStyle]}>
+      {title && (
+        <View style={styles.titleContainer}>
+          <Heading title={title} />
+        </View>
+      )}
       <View>
         <AnimatePresence>
           {showLeftGradient && (
@@ -63,7 +68,7 @@ export const PageContentHorizontal = ({ title = undefined, children, style, ...p
           onLayout={(event) =>
             setScrollViewWidth(event.nativeEvent.layout.width)
           }
-          contentContainerStyle={styles.scrollViewContent}
+          contentContainerStyle={[styles.scrollViewContent, { paddingHorizontal }]}
           {...props}
         >
           {Children.toArray(children).filter(child => Boolean(child))}
@@ -94,9 +99,13 @@ export const PageContentHorizontal = ({ title = undefined, children, style, ...p
 const styles = StyleSheet.create({
   horizontalContainer: {
     position: 'relative',
+    gap: SPACING.md,
+  },
+  titleContainer: {
+    paddingHorizontal: SPACING.md,
   },
   scrollViewContent: {
-    paddingHorizontal: 2, // Small padding to avoid touching the gradients
+    // No horizontal padding here, it's passed from the style prop
   },
   gradient: {
     position: 'absolute',
