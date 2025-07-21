@@ -1,14 +1,14 @@
 
 export * from './BuyProduct';
+export * from './image/ProductImage';
+export * from './image/ProductImageGallery';
+export * from './image/ProductImageManager';
 export * from './ProductDetails';
-export * from './ProductImage';
-export * from './ProductImageGallery';
-export * from './ProductImageManager';
 export * from './ProductListItem';
 export * from './ProductTile';
 export * from './ProductTiles';
-export * from './ProductVariations';
 export * from './RelatedProducts';
-export * from './VariationChip';
-export * from './VariationChips';
+export * from './variation/ProductVariations';
+export * from './variation/VariationChip';
+export * from './variation/VariationChips';
 

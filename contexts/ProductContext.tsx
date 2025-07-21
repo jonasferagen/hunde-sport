@@ -34,7 +34,8 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
             return null;
         }
 
-        const prices = productVariations.map((v) => parseFloat(v.price));
+
+        const prices = productVariations.map((v) => v.price);
         const min = Math.min(...prices);
         const max = Math.max(...prices);
 

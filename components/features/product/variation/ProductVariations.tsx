@@ -36,6 +36,7 @@ export const ProductVariations = ({
         }
     };
 
+
     return (
         <Col>
             {variationAttributes.map((attribute) => {

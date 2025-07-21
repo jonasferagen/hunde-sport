@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
-import { ProductVariations } from './ProductVariations';
+import { ProductVariations } from './variation/ProductVariations';
 
 interface ProductListItemProps {
     product: Product;
