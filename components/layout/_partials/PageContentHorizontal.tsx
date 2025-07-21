@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   titleContainer: {
-    paddingHorizontal: SPACING.md,
+    marginHorizontal: SPACING.md,
   },
   scrollViewContent: {
     // No horizontal padding here, it's passed from the style prop

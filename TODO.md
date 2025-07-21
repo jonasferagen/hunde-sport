@@ -15,12 +15,17 @@ Tilbud - on_sale=true (nyeste)
 
 
 -Varianter
-velg alltid første, dersom default ikke er satt.
-sorter attributter alfanumerisk
+velg alltid første, dersom default ikke er satt.  (NB - må tenkes gjennom, ikke sikkert at dette alltid er lurt )
+sorter attributter alfanumerisk (De er faktisk allerede alfanumeriske. Endret logikken til at tall sorteres først)
 
 Filtrer	på "stock_status": "instock".
 
 '#' i category.description så viser vi den ikke
+
+
+Web view
+
+
 
 - Sveaintegrasjon (hvordan)
 

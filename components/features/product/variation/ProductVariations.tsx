@@ -70,23 +70,39 @@ const SelectVariationSelector = ({ attribute, options, currentSelection, availab
                 onDismiss={closeMenu}
                 anchor={<Button onPress={openMenu}>{selectedLabel}</Button>}
             >
-                {options.map((option) => (
-                    <Menu.Item
-                        key={option.name}
-                        onPress={() => {
-                            handleOptionSelect(attribute.id, option.name!);
-                            closeMenu();
-                        }}
-                        title={<OptionRenderer
-                            option={option}
-                            attribute={attribute}
-                            currentSelection={currentSelection}
-                            availableOptions={availableOptions}
-                            handleOptionSelect={() => { }}
-                            isLoading={isLoading}
-                        />}
-                    />
-                ))}
+                {options.map((option) => {
+                    const isSelected = currentSelection === option.name;
+                    const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!);
+                    const variant = availableOptions.get(attribute.id)?.get(option.name!);
+                    const waiting = isLoading && !variant;
+                    const unavailable = !variant && !isLoading;
+
+                    return (
+                        <Menu.Item
+                            key={option.name}
+                            disabled={isDisabled}
+                            onPress={() => {
+                                handleOptionSelect(attribute.id, option.name!);
+                                closeMenu();
+                            }}
+                            title={
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1 }}>
+                                            {option.label}
+                                        </CustomText>
+                                        {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
+                                    </View>
+                                    <View style={{ alignItems: 'flex-end' }}>
+                                        {variant && <PriceTag product={variant} />}
+                                        {waiting && <Loader size='small' />}
+                                        {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
+                                    </View>
+                                </View>
+                            }
+                        />
+                    );
+                })}
             </Menu>
         </View>
     );

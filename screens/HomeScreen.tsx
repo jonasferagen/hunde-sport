@@ -93,7 +93,7 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection scrollable>
                 <PageContent style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {products.map(product => <ProductTile product={product!} />)}
+                    {products.map(product => <ProductTile key={product.id} product={product!} />)}
                 </PageContent>
                 <PageContent secondary horizontal title="Nyheter">
                     <ProductTiles type="recent" themeVariant="accent" />

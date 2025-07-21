@@ -12,9 +12,7 @@ export const PageContentVertical = ({ title, children, style, ...props }: PageCo
   return (
     <View style={[styles.container, style]} {...props}>
       {title && (
-        <View style={styles.titleContainer}>
-          <Heading title={title} />
-        </View>
+        <Heading title={title} />
       )}
       {Children.toArray(children).filter(child => Boolean(child))}
     </View>
@@ -25,7 +23,5 @@ const styles = StyleSheet.create({
   container: {
     gap: SPACING.md,
   },
-  titleContainer: {
-    paddingHorizontal: SPACING.md,
-  },
+
 });
