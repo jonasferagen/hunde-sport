@@ -10,6 +10,7 @@ export interface ProductData {
   price: number,
   regular_price: number,
   sale_price: number,
+  on_sale: boolean,
   featured: boolean,
   stock_status: string,
   description: string;
@@ -30,6 +31,7 @@ export class Product {
   price: number;
   regular_price: number;
   sale_price: number;
+  on_sale: boolean;
   featured: boolean;
   stock_status: string;
   description: string;
@@ -47,6 +49,7 @@ export class Product {
   constructor(data: ProductData) {
     this.id = data.id;
     this.name = data.name;
+    this.on_sale = data.on_sale;
     this.price = data.price;
     this.regular_price = data.regular_price;
     this.sale_price = data.sale_price;

@@ -13,6 +13,7 @@ const mapToProduct = (item: any): Product => {
         id: item.id,
         name: cleanHtml(item.name),
         price: cleanNumber(item.price),
+        on_sale: item.on_sale,
         regular_price: cleanNumber(item.regular_price),
         sale_price: cleanNumber(item.sale_price),
         featured: item.featured,

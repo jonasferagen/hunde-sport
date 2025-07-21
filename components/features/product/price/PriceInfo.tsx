@@ -1,4 +1,3 @@
-import { DiscountBadge } from '@/components/ui/badge/DiscountBadge';
 import { CustomText } from '@/components/ui/text/CustomText';
 import { useThemeContext } from '@/contexts';
 import { SPACING } from '@/styles';
@@ -9,35 +8,33 @@ import { StyleSheet, View } from 'react-native';
 
 interface PriceInfoProps {
     product: Product;
+    themeVariant?: 'primary' | 'secondary' | 'accent' | 'default' | 'card';
 }
 
-export const PriceInfo = ({ product }: PriceInfoProps) => {
+export const PriceInfo = ({ product, themeVariant }: PriceInfoProps) => {
     const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant('card');
+    const theme = themeManager.getVariant(themeVariant ?? 'primary');
     const styles = createStyles(theme);
-    const { price } = product;
-    const regularPrice = 100;
-    const salePrice = 50;
-    const onSale = true;
-    if (onSale) {
+
+    if (product.on_sale) {
         return (
-            <View style={styles.container}>
-                <View style={styles.priceContainer}>
+            <View style={[styles.container, styles.priceContainer]}>
+                <View style={styles.discountContainer}>
                     <CustomText fontSize='sm' style={styles.regularPrice}>
-                        {formatPrice(regularPrice)}
+                        {formatPrice(product.regular_price)}
                     </CustomText>
                     <CustomText fontSize='sm' style={styles.salePrice}>
-                        {formatPrice(salePrice)}
+                        {formatPrice(product.sale_price)}
                     </CustomText>
                 </View>
-                <DiscountBadge regularPrice={regularPrice} salePrice={salePrice} />
+
             </View>
         );
     }
 
     return (
-        <View style={[styles.container, styles.priceOnlyContainer]}>
-            <CustomText fontSize='sm' style={styles.price}>{formatPrice(price)}</CustomText>
+        <View style={[styles.container, styles.priceContainer]}>
+            <CustomText fontSize='sm' style={styles.price}>{formatPrice(product.price)}</CustomText>
         </View>
     );
 };
@@ -46,13 +43,13 @@ const createStyles = (theme: any) => StyleSheet.create({
     container: {
         alignItems: 'flex-end',
     },
-    priceOnlyContainer: {
+    priceContainer: {
         backgroundColor: theme.backgroundColor,
         paddingVertical: SPACING.xs,
         paddingHorizontal: SPACING.sm,
         borderRadius: SPACING.sm,
     },
-    priceContainer: {
+    discountContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-end',
