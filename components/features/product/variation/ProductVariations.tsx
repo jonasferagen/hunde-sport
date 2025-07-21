@@ -43,7 +43,7 @@ const OptionRenderer = ({ option, attribute, currentSelection, availableOptions,
                 justifyContent='space-between'
                 alignItems='center'
             >
-                <XStack gap={"$2"} style={{ borderColor: 'green', borderWidth: 1 }}>
+                <XStack gap={"$2"}>
                     <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1 }}>
                         {option.label}
                     </CustomText>
