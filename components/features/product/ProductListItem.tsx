@@ -7,11 +7,14 @@ import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 
 import { Product } from '@/models/Product';
 import { SPACING } from '@/styles';
-import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
+import { getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
+import { PriceTag } from './display/PriceTag';
+import { ProductStatus } from './display/ProductStatus';
+import { ProductTitle } from './display/ProductTitle';
 import { ProductVariations } from './variation/ProductVariations';
 
 interface ProductListItemProps {
@@ -69,17 +72,9 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                 <Row alignItems='center' onPress={handleProductLink}>
                     {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />}
                     <Col>
-                        <Row style={{ flexGrow: 0 }} >
-                            <CustomText style={styles.name} numberOfLines={2}>{displayProduct!.name}</CustomText>
-                        </Row>
-                        <Row justifyContent='space-between' style={[styles.variationIndicator, { flexGrow: 0 }]} >
-                            <Col>
-                                <CustomText style={styles.price}>
-                                    {formatPrice(displayProduct!.price)}
-                                </CustomText>
-                            </Col>
-
-                        </Row>
+                        <ProductTitle product={product} displayProduct={displayProduct!} />
+                        <PriceTag fontSize="md" product={displayProduct!} />
+                        <ProductStatus fontSize="xs" displayProduct={displayProduct!} />
                     </Col>
                 </Row>
             </Row>

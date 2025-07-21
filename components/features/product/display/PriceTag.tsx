@@ -10,7 +10,7 @@ interface PriceInfoProps {
     fontSize?: CustomTextProps['fontSize'];
 }
 
-export const PriceTag = ({ product, fontSize = 'sm' }: PriceInfoProps) => {
+export const PriceTag = ({ product, fontSize = 'md' }: PriceInfoProps) => {
     const styles = createStyles();
 
     if (product.on_sale) {
