@@ -15,8 +15,6 @@ interface VariationSelectorProps {
     isLoading: boolean;
 }
 
-
-
 const DropdownVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => {
     const useFullscreen = options.length > 10; // Adjust threshold as needed
     return (
@@ -25,7 +23,7 @@ const DropdownVariationSelector = ({ attribute, options, currentSelection, avail
             value={currentSelection}
             onValueChange={(v) => handleOptionSelect(attribute.id, v)}
             disablePreventBodyScroll
-            native
+
         >
             <Select.Trigger >
                 <Select.Value placeholder="Velg et alternativ" />

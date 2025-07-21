@@ -145,6 +145,7 @@ export default function DrawerLayout() {
     ]);
 
     return (
+
         <Drawer
             drawerContent={drawerContent}
             screenOptions={screenOptions}>

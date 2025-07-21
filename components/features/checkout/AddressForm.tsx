@@ -175,7 +175,7 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                         )}
                     </YStack>
 
-                    <YStack space="$2">
+                    <YStack gap="$2">
                         <Label htmlFor="phone">Telefon</Label>
                         <Controller
                             control={control}
@@ -200,7 +200,7 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                     </YStack>
 
                     <Form.Trigger asChild>
-                        <Button theme="primary" marginTop="$4">
+                        <Button marginTop="$4">
                             Send inn
                         </Button>
                     </Form.Trigger>

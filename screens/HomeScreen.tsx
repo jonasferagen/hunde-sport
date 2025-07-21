@@ -85,6 +85,7 @@ export const HomeScreen = () => {
         }
     });
 
+
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />

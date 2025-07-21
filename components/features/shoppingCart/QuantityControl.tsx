@@ -1,8 +1,14 @@
 import { CustomText, Icon } from '@/components/ui';
 import { useThemeContext } from '@/contexts';
 import { FONT_SIZES, SPACING } from '@/styles';
-import React, { useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+    interpolate,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+} from 'react-native-reanimated';
 
 interface QuantityControlProps {
     quantity: number;
@@ -10,38 +16,42 @@ interface QuantityControlProps {
     onDecrease: () => void;
 }
 
-export const QuantityControl: React.FC<QuantityControlProps> = ({ quantity, onIncrease, onDecrease }) => {
-    const animation = useRef(new Animated.Value(quantity > 0 ? 1 : 0)).current;
+export const QuantityControl: React.FC<QuantityControlProps> = ({
+    quantity,
+    onIncrease,
+    onDecrease,
+}) => {
+    const animation = useSharedValue(quantity > 0 ? 1 : 0);
 
     const { themeManager } = useThemeContext();
     const variant = themeManager.getVariant('accent');
 
-
     useEffect(() => {
-        Animated.timing(animation, {
-            toValue: quantity > 0 ? 1 : 0,
+        animation.value = withTiming(quantity > 0 ? 1 : 0, {
             duration: 200,
-            useNativeDriver: true,
-        }).start();
-    }, [quantity]);
+        });
+    }, [quantity, animation]);
 
-    const animatedStyle = {
-        opacity: animation,
-        transform: [
-            {
-                translateX: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                }),
-            },
-        ],
-    };
+    const animatedStyle = useAnimatedStyle(() => {
+        const translateX = interpolate(animation.value, [0, 1], [20, 0]);
+        return {
+            opacity: animation.value,
+            transform: [{ translateX }],
+        };
+    });
 
     return (
         <View style={styles.quantityContainer}>
-            <Animated.View style={[styles.minusContainer, animatedStyle]} pointerEvents={quantity > 0 ? 'auto' : 'none'}>
+            <Animated.View
+                style={[styles.minusContainer, animatedStyle]}
+                pointerEvents={quantity > 0 ? 'auto' : 'none'}
+            >
                 <Pressable onPress={onDecrease} style={styles.quantityButton}>
-                    <Icon name="remove" size="xxl" color={variant.text.secondary} />
+                    <Icon
+                        name="remove"
+                        size="xxl"
+                        color={variant.text.secondary}
+                    />
                 </Pressable>
                 <CustomText style={styles.quantityText}>{quantity}</CustomText>
             </Animated.View>

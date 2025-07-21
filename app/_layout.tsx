@@ -5,6 +5,7 @@ import {
   ThemeProvider
 } from '@/contexts';
 
+
 import { config } from '@/config/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
