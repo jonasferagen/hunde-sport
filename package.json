@@ -21,6 +21,7 @@
     "@react-navigation/native": "^7.1.6",
     "@shopify/flash-list": "^2.0.0-rc.11",
     "@tamagui/config": "^1.132.11",
+    "@tamagui/portal": "^1.132.11",
     "@tanstack/react-query": "^5.82.0",
     "expo": "~53.0.17",
     "expo-constants": "~17.1.7",

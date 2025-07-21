@@ -7,12 +7,12 @@ import {
 
 import { config } from '@/config/tamagui.config';
 import { TamaguiProvider, createTamagui } from '@tamagui/core';
+import { PortalProvider } from '@tamagui/portal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot, useNavigationContainerRef } from 'expo-router';
 import React, { JSX, memo, useState } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 const tamaGuiConfig = createTamagui(config);
 
 const AppContent = memo((): JSX.Element => {
@@ -38,17 +38,19 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <StatusProvider>
-          <ShoppingCartProvider>
-            <LayoutProvider>
-              <ThemeProvider>
-                <TamaguiProvider config={tamaGuiConfig}>
-                  {children}
-                </TamaguiProvider>
-              </ThemeProvider>
-            </LayoutProvider>
-          </ShoppingCartProvider>
-        </StatusProvider>
+        <PortalProvider>
+          <TamaguiProvider config={tamaGuiConfig}>
+            <StatusProvider>
+              <ShoppingCartProvider>
+                <LayoutProvider>
+                  <ThemeProvider>
+                    {children}
+                  </ThemeProvider>
+                </LayoutProvider>
+              </ShoppingCartProvider>
+            </StatusProvider>
+          </TamaguiProvider>
+        </PortalProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

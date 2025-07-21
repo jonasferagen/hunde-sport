@@ -4,7 +4,7 @@ import { useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import React, { JSX } from 'react';
 import { Pressable } from 'react-native';
-import { XStack, YStack } from 'tamagui';
+import { Adapt, Select, Sheet, XStack, YStack } from 'tamagui';
 
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
@@ -78,15 +78,86 @@ const ListVariationSelector = ({ attribute, options, currentSelection, available
     </YStack >
 );
 
+const SelectOptionRenderer = ({ option, attribute, availableOptions, isLoading }: Omit<OptionRendererProps, 'handleOptionSelect' | 'currentSelection'>) => {
+    const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!);
+    const variant = availableOptions.get(attribute.id)?.get(option.name!);
+    const waiting = isLoading && !variant;
+    const unavailable = !variant && !isLoading;
+
+    return (
+        <XStack
+            flex={1}
+            paddingVertical={"$2"}
+            paddingHorizontal={"$3"}
+            justifyContent='space-between'
+            alignItems='center'
+            opacity={isDisabled ? 0.5 : 1}
+        >
+            <XStack alignItems='center' gap={"$2"}>
+                <CustomText>
+                    {option.label}
+                </CustomText>
+                {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
+            </XStack>
+            <YStack alignItems='flex-end'>
+                <XStack justifyContent='flex-end' alignItems='center' gap={"$2"}>
+                    {variant && <PriceTag product={variant} />}
+                    {waiting && <Loader size='small' />}
+                    {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
+                </XStack>
+            </YStack>
+        </XStack>
+    );
+};
+
+const DropdownVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => {
+    return <Select onValueChange={(v) => handleOptionSelect(attribute.id, v)} value={currentSelection}>
+        <Select.Trigger>
+            <Select.Value placeholder="Velg et alternativ" />
+        </Select.Trigger>
+
+        <Adapt when="sm" platform="touch">
+            <Sheet modal dismissOnSnapToBottom>
+                <Sheet.Frame>
+                    <Sheet.ScrollView><Adapt.Contents /></Sheet.ScrollView>
+                </Sheet.Frame>
+                <Sheet.Overlay />
+            </Sheet>
+        </Adapt>
+
+        <Select.Content zIndex={2000}>
+            <Select.Group>
+                {options.map((option, index) => {
+                    const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!)
+                    return (
+                        <Select.Item index={index} key={option.name} value={option.name!} disabled={isDisabled}>
+                            <Select.ItemText>
+                                <SelectOptionRenderer
+                                    option={option}
+                                    attribute={attribute}
+                                    availableOptions={availableOptions}
+                                    isLoading={isLoading}
+                                />
+                            </Select.ItemText>
+                        </Select.Item>
+                    )
+                })}
+            </Select.Group>
+        </Select.Content>
+    </Select>
+}
+
+
 const variationSelectors = {
     list: ListVariationSelector,
+    dropdown: DropdownVariationSelector,
 };
 
 interface ProductVariationsProps {
     displayAs?: keyof typeof variationSelectors;
 }
 
-export const ProductVariations = ({ displayAs = 'list' }: ProductVariationsProps): JSX.Element | null => {
+export const ProductVariations = ({ displayAs = 'dropdown' }: ProductVariationsProps): JSX.Element | null => {
     const {
         variationAttributes,
         selectedOptions,
