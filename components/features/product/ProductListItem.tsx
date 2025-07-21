@@ -73,7 +73,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                     <Col>
                         <ProductTitle product={product} displayProduct={displayProduct!} />
                         <PriceTag fontSize="md" product={displayProduct!} />
-                        <ProductStatus fontSize="xs" displayProduct={displayProduct!} />
                     </Col>
                 </Row>
             </Row>
@@ -81,6 +80,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
             <Row>
                 <Col onPress={handlePress}>
                     <CustomText>
+                        <ProductStatus fontSize="xs" displayProduct={displayProduct!} />
                         <Icon name={isExpanded ? "collapse" : "expand"} size="md" color={theme.text.primary} />
                     </CustomText>
                 </Col>

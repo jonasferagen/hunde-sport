@@ -36,7 +36,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         if (!(displayProduct.type === 'simple' || displayProduct.type === 'variation')) {
             return {
                 status: 'variantneeded',
-                msg: 'Du må velge en variant',
+                msg: 'Tilgjengelige varianter',
                 msgShort: 'Velg variant'
             };
         }
