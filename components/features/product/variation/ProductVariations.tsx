@@ -1,3 +1,4 @@
+import { Loader } from '@/components/ui';
 import { Col, Row } from '@/components/ui/layout';
 import { Select } from '@/components/ui/select/Select';
 import { CustomText } from '@/components/ui/text/CustomText';
@@ -14,9 +15,10 @@ interface VariationSelectorProps {
     currentSelection: string | undefined;
     availableOptions: Map<number, Map<string, any>>;
     handleOptionSelect: (attributeId: number, optionName: string) => void;
+    isLoading: boolean;
 }
 
-const ChipVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect }: VariationSelectorProps) => (
+const ChipVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect }: Omit<VariationSelectorProps, 'isLoading'>) => (
     <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>
         {options.map((option) => (
             <VariationChip
@@ -30,7 +32,7 @@ const ChipVariationSelector = ({ attribute, options, currentSelection, available
     </Row>
 );
 
-const SelectVariationSelector = ({ attribute, options, currentSelection, handleOptionSelect }: VariationSelectorProps) => (
+const SelectVariationSelector = ({ attribute, options, currentSelection, handleOptionSelect }: Omit<VariationSelectorProps, 'isLoading'>) => (
     <Select
         label=""
         selectedValue={currentSelection}
@@ -42,7 +44,7 @@ const SelectVariationSelector = ({ attribute, options, currentSelection, handleO
     />
 );
 
-const ListVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect }: VariationSelectorProps) => (
+const ListVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => (
     <View>
         {options.map((option) => {
             const isSelected = currentSelection === option.name;
@@ -55,7 +57,7 @@ const ListVariationSelector = ({ attribute, options, currentSelection, available
                         <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1, paddingVertical: 4 }}>
                             {option.label}
                         </CustomText>
-                        {variant ? <PriceTag product={variant} /> : <CustomText style={{ opacity: 0.5 }}>Ikke tilgjengelig</CustomText>}
+                        {isLoading && !variant ? <Loader size='small' /> : (variant ? <PriceTag product={variant} /> : <CustomText style={{ opacity: 0.5 }}>Ikke tilgjengelig</CustomText>)}
                     </Row>
                 </Pressable>
             );
@@ -79,6 +81,7 @@ export const ProductVariations = ({ displayAs = 'select' }: ProductVariationsPro
         selectedOptions,
         availableOptions,
         handleOptionSelect,
+        isLoading,
     } = useProductContext();
 
     if (!variationAttributes || variationAttributes.length === 0) {
@@ -102,6 +105,7 @@ export const ProductVariations = ({ displayAs = 'select' }: ProductVariationsPro
                             currentSelection={currentSelection}
                             availableOptions={availableOptions}
                             handleOptionSelect={handleOptionSelect}
+                            isLoading={isLoading}
                         />
                     </React.Fragment>
                 );

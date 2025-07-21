@@ -10,11 +10,16 @@ interface UseProductVariantsReturn {
     availableOptions: Map<number, Map<string, Product>>;
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
+    isLoading: boolean;
 }
 
 export const useProductVariants = (product: Product): UseProductVariantsReturn => {
+
+
+
     // --- Optimization: Early exit for non-variable products ---
     if (product.type !== 'variable') {
+        console.log("Product is not variable : " + product.type)
         return {
             productVariant: null,
             productVariants: [],
@@ -22,17 +27,21 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
             availableOptions: new Map<number, Map<string, Product>>(),
             selectedOptions: {},
             variationAttributes: [],
+            isLoading: false,
         };
     }
 
-    const { productVariations: productVariants, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id);
+    const { productVariations: productVariants, isLoading: isInitialLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id);
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
+    const [isFetchingAll, setIsFetchingAll] = useState(true);
 
     useEffect(() => {
 
         if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
+        } else if (!hasNextPage) {
+            setIsFetchingAll(false);
         }
 
         // Guard to ensure this runs only once per product when data is ready.
@@ -90,5 +99,6 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         availableOptions,
         selectedOptions,
         variationAttributes: variationAttributes,
+        isLoading: isInitialLoading || hasNextPage || isFetchingAll,
     };
 };

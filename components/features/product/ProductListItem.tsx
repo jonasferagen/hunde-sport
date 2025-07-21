@@ -15,7 +15,6 @@ import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
 import { ProductTitle } from './display/ProductTitle';
-import { ProductVariations } from './variation/ProductVariations';
 
 interface ProductListItemProps {
     product: Product;
@@ -100,17 +99,18 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                         {product.short_description}{' '}
                     </CustomText>
                 </Row>
-                <Col style={{ paddingHorizontal: SPACING.md }}>
-                    <ProductVariations
-                        displayAs="list"
-                    />
-                </Col>
+
             </View>
         </View >
     )
 };
 
-/*
+/*          <Col style={{ paddingHorizontal: SPACING.md }}>
+           
+                </Col>
+         <ProductVariations
+                        displayAs="list"
+                    />
    <View style={[styles.variationIndicator, { flexDirection: 'row' }]} >
                                 <Icon name="exclamation" size="md" color={theme.text.primary} />
                                 <CustomText style={styles.variationText}>Flere varianter</CustomText>

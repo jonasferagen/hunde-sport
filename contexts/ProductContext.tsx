@@ -12,6 +12,7 @@ interface ProductContextType {
     availableOptions: Map<number, Map<string, Product>>;
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
+    isLoading: boolean;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -26,14 +27,14 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
         handleOptionSelect,
         availableOptions,
         selectedOptions,
-        variationAttributes: variationAttributes,
+        variationAttributes,
+        isLoading,
     } = useProductVariants(product);
 
     const priceRange = useMemo(() => {
         if (!productVariants || productVariants.length === 0) {
             return null;
         }
-
 
         const prices = productVariants.map((v: Product) => v.price);
         const min = Math.min(...prices);
@@ -57,6 +58,7 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
         availableOptions,
         selectedOptions,
         variationAttributes,
+        isLoading,
     };
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
