@@ -28,7 +28,7 @@ export const ValidIcon = {
     link: 'arrow-forward',
     more: 'information-circle',
     exclamation: 'alert-circle',
-
+    outofstock: 'alert-circle',
 } as const;
 
 // Get the type of all props that Ionicons accepts

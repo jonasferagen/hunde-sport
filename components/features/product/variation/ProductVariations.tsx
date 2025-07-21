@@ -1,7 +1,6 @@
 import { Col, Row } from '@/components/ui/layout';
 import { Select } from '@/components/ui/select/Select';
 import { useProductContext } from '@/contexts/ProductContext';
-import { formatPrice } from '@/utils/helpers';
 import React, { JSX } from 'react';
 import { Text } from 'react-native';
 import { VariationChip } from './VariationChip';
@@ -27,9 +26,9 @@ export const ProductVariations = ({
     const getStockDisplay = (status: string) => {
         switch (status) {
             case 'instock':
-                return 'In Stock';
+                return 'På lager';
             case 'outofstock':
-                return 'Out of Stock';
+                return 'Utsolgt';
             default:
                 return '';
         }
@@ -63,18 +62,9 @@ export const ProductVariations = ({
                                 selectedValue={currentSelection}
                                 onValueChange={(value) => handleOptionSelect(attribute.id, value as string)}
                                 options={options.map((opt) => {
-                                    const variationForOption = availableOptions.get(attribute.id)?.get(opt.name!);
-
-                                    let label = opt.label;
-                                    if (variationForOption) {
-                                        const stockDisplay = getStockDisplay(variationForOption.stock_status);
-                                        label += ` ${formatPrice(variationForOption.price)}, ${stockDisplay}`;
-                                    } else {
-                                        label += ' (Not available)';
-                                    }
 
                                     return {
-                                        label,
+                                        label: opt.label,
                                         value: opt.name!,
                                     };
                                 })}

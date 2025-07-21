@@ -28,12 +28,11 @@ export const Chip = ({
 }: ChipProps) => {
     const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant(variant);
-    const styles = createStyles(themeVariant);
+    const styles = createStyles(themeVariant, disabled);
 
     const chipStyle = [
         styles.chip,
         style,
-        disabled && styles.disabled,
     ];
 
     const textStyle = [
@@ -51,7 +50,7 @@ export const Chip = ({
     );
 };
 
-const createStyles = (themeVariant: any) => {
+const createStyles = (themeVariant: any, disabled: boolean) => {
 
 
     return StyleSheet.create({
@@ -66,14 +65,14 @@ const createStyles = (themeVariant: any) => {
             alignItems: 'center',
             outlineColor: themeVariant.outlineColor,
             outlineWidth: 1,
+            opacity: disabled ? 0.5 : 1,
         },
-        disabled: {
-            opacity: 0.5,
-        },
+
         text: {
             color: themeVariant.text.primary,
             fontSize: FONT_SIZES.sm,
             textAlign: 'center',
+            textDecorationLine: disabled ? 'line-through' : 'none',
         },
     });
 };
