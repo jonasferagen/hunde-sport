@@ -1,12 +1,12 @@
-import { useProductVariations } from '@/hooks/useProductVariations';
+import { useProductVariants } from '@/hooks/useProductVariants';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import React, { createContext, useContext, useMemo } from 'react';
 
 interface ProductContextType {
     product: Product;
+    productVariants: Product[];
     displayProduct: Product | null;
-    productVariations: Product[];
     priceRange: { min: number; max: number } | null;
     handleOptionSelect: (attributeId: number, option: string) => void;
     availableOptions: Map<number, Map<string, Product>>;
@@ -22,20 +22,20 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
 }) => {
     const {
         productVariant,
-        productVariations,
+        productVariants,
         handleOptionSelect,
         availableOptions,
         selectedOptions,
-        variationAttributes,
-    } = useProductVariations(product);
+        variationAttributes: variationAttributes,
+    } = useProductVariants(product);
 
     const priceRange = useMemo(() => {
-        if (!productVariations || productVariations.length === 0) {
+        if (!productVariants || productVariants.length === 0) {
             return null;
         }
 
 
-        const prices = productVariations.map((v: Product) => v.price);
+        const prices = productVariants.map((v: Product) => v.price);
         const min = Math.min(...prices);
         const max = Math.max(...prices);
 
@@ -44,14 +44,14 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
         }
 
         return { min, max };
-    }, [productVariations]);
+    }, [productVariants]);
 
     const displayProduct = productVariant || product;
 
     const value = {
         product,
         displayProduct,
-        productVariations,
+        productVariants,
         priceRange,
         handleOptionSelect,
         availableOptions,

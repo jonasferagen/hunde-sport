@@ -98,8 +98,6 @@ export async function fetchProductVariations(page: number, productId: number): P
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `?page=${page}&per_page=${PAGE_SIZE}`
     );
-    console.log("fetchProductVariations" + data?.length);
-    console.log("error", error);
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }

@@ -4,17 +4,14 @@ import {
   ProductDetails,
   ProductImage,
   ProductImageGallery,
-  ProductVariations,
-  RelatedProducts,
+  RelatedProducts
 } from '@/components/features/product/';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Breadcrumbs, CustomText, Heading, Loader } from '@/components/ui';
-import { Row } from '@/components/ui/layout';
+import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { useProduct } from '@/hooks/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
-import { formatPrice } from '@/utils/helpers';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo } from 'react';
 import ImageViewing from 'react-native-image-viewing';
@@ -34,25 +31,17 @@ const ProductScreenContent = () => {
     <>
       <PageSection scrollable>
         <PageContent>
-          <ProductImage image={displayProduct.images[0]} onPress={() => openImageViewer(0)} />
-          <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
-            <Heading title={displayProduct.name} size="md" />
-            <CustomText fontSize="xxl" bold>
-              {formatPrice(displayProduct.price)}
-            </CustomText>
-          </Row>
-          <ProductVariations displayAs="chips" />
-          <CustomText fontSize="sm">{product.short_description}</CustomText>
-          <BuyProduct product={displayProduct} />
+          <ProductImage image={displayProduct.image} onPress={() => openImageViewer(0)} />
+          <BuyProduct product={product} displayProduct={displayProduct} />
         </PageContent>
 
         <PageContent title="Produktinformasjon" secondary>
           <ProductDetails product={product} />
         </PageContent>
 
-        <PageContent title="Produktbilder" horizontal>
+        <PageContent title="Flere bilder" horizontal>
           <ProductImageGallery
-            images={displayProduct.images.slice(1)}
+            images={product.images.slice(1)}
             onImagePress={(index) => openImageViewer(index + 1)}
           />
         </PageContent>

@@ -14,8 +14,6 @@ export const ProductVariations = ({
     displayAs = 'select',
 }: ProductVariationsProps): JSX.Element | null => {
     const {
-        product,
-        productVariations,
         variationAttributes,
         selectedOptions,
         availableOptions,
@@ -36,9 +34,6 @@ export const ProductVariations = ({
                 return '';
         }
     };
-
-    const blah = product.getAvailableOptions(productVariations, selectedOptions);
-    console.log(productVariations.length);
 
 
     return (

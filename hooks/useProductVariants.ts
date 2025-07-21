@@ -1,23 +1,23 @@
-import { useProductVariations as useFetchProductVariations } from '@/hooks/Product';
+import { useProductVariations } from '@/hooks/Product';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { useEffect, useMemo, useState } from 'react';
 
-interface UseProductVariationsReturn {
+interface UseProductVariantsReturn {
     productVariant: Product | null;
-    productVariations: Product[];
+    productVariants: Product[];
     handleOptionSelect: (attributeId: number, option: string) => void;
     availableOptions: Map<number, Map<string, Product>>;
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
 }
 
-export const useProductVariations = (product: Product): UseProductVariationsReturn => {
+export const useProductVariants = (product: Product): UseProductVariantsReturn => {
     // --- Optimization: Early exit for non-variable products ---
     if (product.type !== 'variable') {
         return {
             productVariant: null,
-            productVariations: [],
+            productVariants: [],
             handleOptionSelect: () => { },
             availableOptions: new Map<number, Map<string, Product>>(),
             selectedOptions: {},
@@ -25,7 +25,7 @@ export const useProductVariations = (product: Product): UseProductVariationsRetu
         };
     }
 
-    const { productVariations, hasNextPage, isFetchingNextPage, fetchNextPage } = useFetchProductVariations(product.id);
+    const { productVariations: productVariants, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id);
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
 
@@ -36,7 +36,7 @@ export const useProductVariations = (product: Product): UseProductVariationsRetu
         }
 
         // Guard to ensure this runs only once per product when data is ready.
-        if (productVariations && product.id !== initializedForProductId) {
+        if (productVariants && product.id !== initializedForProductId) {
             const initialOptions: Record<number, string> = {};
 
             // First, try to use the defined default attributes.
@@ -62,12 +62,12 @@ export const useProductVariations = (product: Product): UseProductVariationsRetu
                 setInitializedForProductId(product.id);
             }
         }
-    }, [productVariations, product, initializedForProductId, hasNextPage, isFetchingNextPage]);
+    }, [productVariants, product, initializedForProductId, hasNextPage, isFetchingNextPage]);
 
     const productVariant = useMemo(() => {
-        if (!productVariations || Object.keys(selectedOptions).length === 0) return null;
-        return product.findVariant(productVariations, selectedOptions) || null;
-    }, [selectedOptions, productVariations, product]);
+        if (!productVariants || Object.keys(selectedOptions).length === 0) return null;
+        return product.findVariant(productVariants, selectedOptions) || null;
+    }, [selectedOptions, productVariants, product]);
 
     const handleOptionSelect = (attributeId: number, option: string) => {
         setSelectedOptions(prev => ({
@@ -77,18 +77,18 @@ export const useProductVariations = (product: Product): UseProductVariationsRetu
     };
 
     const availableOptions = useMemo(() => {
-        if (!productVariations) return new Map();
-        return product.getAvailableOptions(productVariations, selectedOptions);
-    }, [product, productVariations, selectedOptions]);
+        if (!productVariants) return new Map();
+        return product.getAvailableOptions(productVariants, selectedOptions);
+    }, [product, productVariants, selectedOptions]);
 
     const variationAttributes = product.getVariationAttributes();
 
     return {
         productVariant,
-        productVariations: productVariations || [],
+        productVariants: productVariants || [],
         handleOptionSelect,
         availableOptions,
         selectedOptions,
-        variationAttributes,
+        variationAttributes: variationAttributes,
     };
 };

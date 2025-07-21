@@ -81,6 +81,10 @@ export class Product {
     return this.attributes.filter(attr => attr.variation);
   }
 
+  get image(): Image {
+    return this.images[0];
+  }
+
   /**
    * Finds a matching variant from a list of products based on selected options.
    * @param variants - An array of variation products to search through.
