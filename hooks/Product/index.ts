@@ -1,4 +1,5 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { Product } from '@/models/Product';
+import { useInfiniteQuery, UseInfiniteQueryOptions, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { ProductListType } from './api';
 import {
@@ -9,6 +10,13 @@ import {
     productVariationsQueryOptions,
     searchProductsQueryOptions,
 } from './queries';
+
+// Define a type for the options to ensure type safety.
+// This allows passing any valid `useInfiniteQuery` option, except for the ones already defined in `productVariationsQueryOptions`.
+type ProductVariationsQueryOptions = Omit<
+    UseInfiniteQueryOptions<Product[], Error, Product[], Product[], (string | number)[]>,
+    'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
+>;
 
 export const useProduct = (id: number) => {
     return useQuery(productQueryOptions(id));

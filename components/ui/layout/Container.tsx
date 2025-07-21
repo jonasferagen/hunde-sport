@@ -1,3 +1,4 @@
+import { SPACING } from '@/styles';
 import React, { JSX } from 'react';
 import { FlexAlignType, Pressable, StyleProp, View, ViewStyle } from 'react-native';
 
@@ -9,13 +10,15 @@ export interface ContainerProps {
     debug?: string;
     flex?: number;
     onPress?: () => void;
+    gap?: string;
 }
 
-export const Container = ({ children, justifyContent, alignItems, style, debug, onPress, flex }: ContainerProps): JSX.Element => {
+export const Container = ({ children, justifyContent, alignItems, style, debug, onPress, flex, gap = 'sm' }: ContainerProps): JSX.Element => {
     const dynamicStyles: ViewStyle = {
         justifyContent,
         alignItems,
         flex,
+        gap: SPACING[gap as keyof typeof SPACING],
     };
 
     const debugStyle: ViewStyle = debug ? { borderWidth: 1, borderColor: debug } : {};

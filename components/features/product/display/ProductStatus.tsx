@@ -22,12 +22,10 @@ export const ProductStatus = ({ displayProduct, fontSize = 'md', short = false }
     const styles = createStyles();
 
     if (status === 'outofstock') {
-        return (
-            <Row alignItems="center" style={styles.container}>
-                <Icon name="outofstock" size={fontSize} color='red' />
-                <CustomText fontSize={fontSize} bold color='red'>{message}</CustomText>
-            </Row>
-        );
+        return <Row justifyContent="flex-start">
+            <Icon name="outofstock" size={fontSize} color='red' />
+            <CustomText fontSize={fontSize} bold color='red'>{message}</CustomText>
+        </Row>;
     }
 
     if (status === 'variantneeded') {

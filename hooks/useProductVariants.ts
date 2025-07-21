@@ -17,7 +17,8 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
 
     const isVariable = product.type === 'variable';
 
-    const { productVariations: productVariants, isLoading: isInitialLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id, { enabled: isVariable });
+    const { productVariations: productVariants, isLoading: isInitialLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id);
+
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
     const [isFetchingAll, setIsFetchingAll] = useState(isVariable);
@@ -27,36 +28,15 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
 
         if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
-        } else if (!hasNextPage) {
+            return;
+        }
+        if (!hasNextPage) {
             setIsFetchingAll(false);
         }
 
         // Guard to ensure this runs only once per product when data is ready.
         if (productVariants && product.id !== initializedForProductId) {
-            const initialOptions: Record<number, string> = {};
-
-            // First, try to use the defined default attributes.
-            if (product.default_attributes.length > 0) {
-                product.default_attributes.forEach(attr => {
-                    if (attr.id && attr.option) {
-                        initialOptions[attr.id] = attr.option;
-                    }
-                });
-            }
-            // If no defaults, fall back to the first available option for each attribute.
-            else if (product.attributes.length > 0) {
-                product.attributes.forEach(attribute => {
-                    if (attribute.variation && attribute.options.length > 0) {
-                        initialOptions[attribute.id] = attribute.options[0].name;
-                    }
-                });
-            }
-
-            // If we found any options to set, update the state.
-            if (Object.keys(initialOptions).length > 0) {
-                setSelectedOptions(initialOptions);
-                setInitializedForProductId(product.id);
-            }
+            setInitializedForProductId(product.id);
         }
     }, [productVariants, product, initializedForProductId, hasNextPage, isFetchingNextPage, isVariable]);
 
@@ -64,6 +44,20 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         if (!isVariable || !productVariants || Object.keys(selectedOptions).length === 0) return null;
         return product.findVariant(productVariants, selectedOptions) || null;
     }, [selectedOptions, productVariants, product, isVariable]);
+
+    useEffect(() => {
+        if (productVariant) {
+            const variantOptions = productVariant.attributes.reduce((acc, attr) => {
+                acc[attr.id] = attr.option!;
+                return acc;
+            }, {} as Record<number, string>);
+
+            // Prevent infinite loops by only updating if the options have changed.
+            if (JSON.stringify(variantOptions) !== JSON.stringify(selectedOptions)) {
+                setSelectedOptions(variantOptions);
+            }
+        }
+    }, [productVariant]);
 
     const handleOptionSelect = (attributeId: number, option: string) => {
         setSelectedOptions(prev => ({

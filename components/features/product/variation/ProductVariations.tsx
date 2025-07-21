@@ -56,7 +56,7 @@ const ListVariationSelector = ({ attribute, options, currentSelection, available
             const unavailable = !variant && !isLoading;
             return (
                 <Pressable key={option.name} onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)} disabled={isDisabled}>
-                    <Row>
+                    <Row style={{ backgroundColor: isSelected ? 'lightgray' : 'transparent', paddingVertical: SPACING.sm }}>
                         <Row style={{ gap: SPACING.sm }}>
                             <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1, paddingVertical: 4 }}>
                                 {option.label}

@@ -18,9 +18,10 @@ export const BuyProduct = ({ product, displayProduct }: { product: Product; disp
             <ProductTitle product={product} displayProduct={displayProduct} />
             <PriceTag fontSize="xxl" product={displayProduct} />
         </Row>
-        <ProductStatus displayProduct={displayProduct} />
+
         <ProductVariations displayAs="list" />
-        <CustomText fontSize="sm">{displayProduct.type} {product.short_description}</CustomText>
+        <CustomText fontSize="sm">{product.short_description}</CustomText>
+        <ProductStatus displayProduct={displayProduct} />
         <Button
             icon="addToCart"
             title={msg}
