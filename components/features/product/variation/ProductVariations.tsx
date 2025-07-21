@@ -1,12 +1,11 @@
 import { Loader } from '@/components/ui';
-import { Col, Row } from '@/components/ui/layout';
 import { CustomText } from '@/components/ui/text/CustomText';
 import { useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
-import { SPACING } from '@/styles';
-import React, { JSX, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Button, Menu } from 'react-native-paper';
+import React, { JSX } from 'react';
+import { Pressable } from 'react-native';
+import { XStack, YStack } from 'tamagui';
+
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
 
@@ -37,79 +36,34 @@ const OptionRenderer = ({ option, attribute, currentSelection, availableOptions,
 
     return (
         <Pressable key={option.name} onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)} disabled={isDisabled}>
-            <Row style={{ backgroundColor: isSelected ? 'lightgray' : 'transparent', paddingVertical: SPACING.sm, paddingHorizontal: SPACING.sm }}>
-                <Row>
-                    <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1, paddingVertical: 4 }}>
+            <XStack
+                backgroundColor={isSelected ? '$backgroundFocus' : 'transparent'}
+                paddingVertical={"$2"}
+                paddingHorizontal={"$3"}
+                justifyContent='space-between'
+                alignItems='center'
+            >
+                <XStack gap={"$2"} style={{ borderColor: 'green', borderWidth: 1 }}>
+                    <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1 }}>
                         {option.label}
                     </CustomText>
-                    {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
-                </Row>
-                <Col alignItems='flex-end'>
-                    <Row justifyContent='flex-end'>
+                    {variant && <ProductStatus displayProduct={variant} fontSize="sm" short={true} />}
+                </XStack>
+                <YStack>
+                    <XStack gap={"$2"}>
                         {variant && <PriceTag product={variant} />}
                         {waiting && <Loader size='small' />}
                         {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
-                    </Row>
-                </Col>
-            </Row>
+                    </XStack>
+                </YStack>
+            </XStack>
         </Pressable>
     );
 };
 
-const SelectVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => {
-    const [visible, setVisible] = useState(false);
-    const openMenu = () => setVisible(true);
-    const closeMenu = () => setVisible(false);
-
-    const selectedLabel = options.find(o => o.name === currentSelection)?.label || 'Velg...';
-
-    return (
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-            <Menu
-                visible={visible}
-                onDismiss={closeMenu}
-                anchor={<Button onPress={openMenu}>{selectedLabel}</Button>}
-            >
-                {options.map((option) => {
-                    const isSelected = currentSelection === option.name;
-                    const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!);
-                    const variant = availableOptions.get(attribute.id)?.get(option.name!);
-                    const waiting = isLoading && !variant;
-                    const unavailable = !variant && !isLoading;
-
-                    return (
-                        <Menu.Item
-                            key={option.name}
-                            disabled={isDisabled}
-                            onPress={() => {
-                                handleOptionSelect(attribute.id, option.name!);
-                                closeMenu();
-                            }}
-                            title={
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1 }}>
-                                            {option.label}
-                                        </CustomText>
-                                        {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
-                                    </View>
-                                    <View style={{ alignItems: 'flex-end' }}>
-                                        {variant && <PriceTag product={variant} />}
-                                        {waiting && <Loader size='small' />}
-                                        {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
-                                    </View>
-                                </View>
-                            }
-                        />
-                    );
-                })}
-            </Menu>
-        </View>
-    );
-};
 
 const ListVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => (
-    <View>
+    <YStack>
         {options.map((option) => (
             <OptionRenderer
                 key={option.name}
@@ -121,11 +75,10 @@ const ListVariationSelector = ({ attribute, options, currentSelection, available
                 isLoading={isLoading}
             />
         ))}
-    </View >
+    </YStack >
 );
 
 const variationSelectors = {
-    select: SelectVariationSelector,
     list: ListVariationSelector,
 };
 
@@ -133,7 +86,7 @@ interface ProductVariationsProps {
     displayAs?: keyof typeof variationSelectors;
 }
 
-export const ProductVariations = ({ displayAs = 'select' }: ProductVariationsProps): JSX.Element | null => {
+export const ProductVariations = ({ displayAs = 'list' }: ProductVariationsProps): JSX.Element | null => {
     const {
         variationAttributes,
         selectedOptions,
@@ -146,17 +99,17 @@ export const ProductVariations = ({ displayAs = 'select' }: ProductVariationsPro
         return null;
     }
 
-    const Component = variationSelectors[displayAs] || SelectVariationSelector;
+    const Component = variationSelectors[displayAs];
 
     return (
-        <Col>
+        <YStack>
             {variationAttributes.map((attribute) => {
                 const currentSelection = selectedOptions[attribute.id];
                 const options = attribute.options.filter((o) => o.name);
 
                 return (
                     <React.Fragment key={attribute.id}>
-                        <Text style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</Text>
+                        <CustomText style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</CustomText>
                         <Component
                             attribute={attribute}
                             options={options}
@@ -168,34 +121,6 @@ export const ProductVariations = ({ displayAs = 'select' }: ProductVariationsPro
                     </React.Fragment>
                 );
             })}
-        </Col>
+        </YStack>
     );
 };
-
-const styles = StyleSheet.create({
-    selectContainer: {
-        position: 'relative',
-        zIndex: 1,
-    },
-    selectHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: SPACING.md,
-        borderWidth: 1,
-        borderColor: 'grey',
-        borderRadius: 5,
-    },
-    optionsContainer: {
-        position: 'absolute',
-        top: '100%',
-        left: 0,
-        right: 0,
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: 'grey',
-        borderRadius: 5,
-        marginTop: 4,
-        zIndex: 2, // Ensure it's above other content
-    },
-});

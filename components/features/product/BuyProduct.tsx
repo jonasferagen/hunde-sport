@@ -7,10 +7,8 @@ import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
 import { ProductTitle } from './display/ProductTitle';
 import { ProductVariations } from './variation/ProductVariations';
-
 export const BuyProduct = ({ product, displayProduct }: { product: Product; displayProduct: Product }) => {
     const { addToCart, purchaseInfo } = useShoppingCartContext();
-
     const { status, msg } = purchaseInfo(displayProduct);
 
     return <>
@@ -22,6 +20,7 @@ export const BuyProduct = ({ product, displayProduct }: { product: Product; disp
         <ProductVariations displayAs="list" />
         <CustomText fontSize="sm">{product.short_description}</CustomText>
         <ProductStatus displayProduct={displayProduct} />
+
         <Button
             icon="addToCart"
             title={msg}

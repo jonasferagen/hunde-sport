@@ -20,6 +20,7 @@
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "@shopify/flash-list": "^2.0.0-rc.11",
+    "@tamagui/config": "^1.132.11",
     "@tanstack/react-query": "^5.82.0",
     "expo": "~53.0.17",
     "expo-constants": "~17.1.7",
@@ -50,6 +51,7 @@
     "react-native-svg": "^15.12.0",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
+    "tamagui": "^1.132.11",
     "tinycolor2": "^1.6.0",
     "zod": "^4.0.5"
   },
