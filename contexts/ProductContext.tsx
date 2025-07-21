@@ -32,7 +32,11 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
     } = useProductVariants(product);
 
     const priceRange = useMemo(() => {
-        if (!productVariants || productVariants.length === 0) {
+        if (!productVariants) {
+            return null;
+        }
+
+        if (productVariants.length === 0) {
             return null;
         }
 

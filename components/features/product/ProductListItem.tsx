@@ -118,12 +118,14 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 */
 
 export const ProductListItem: React.FC<ProductListItemProps> = ({ product, ...props }) => {
+
+
     return (
         <ProductProvider product={product}>
             <ProductListItemContent {...props} />
         </ProductProvider>
-    )
-}
+    );
+};
 
 const createStyles = (theme: any) => StyleSheet.create({
 
