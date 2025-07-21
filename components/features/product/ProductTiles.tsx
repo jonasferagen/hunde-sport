@@ -6,13 +6,14 @@ import { ProductTile } from './ProductTile';
 
 interface ProductTilesProps {
     type: ProductListType;
+    themeVariant?: string;
 }
 
-export const ProductTiles = ({ type }: ProductTilesProps): JSX.Element => {
+export const ProductTiles = ({ type, themeVariant }: ProductTilesProps): JSX.Element => {
     const { products, isLoading } = useProducts({ type });
 
     if (isLoading) {
-        return <Loader />;
+        return <Loader size="large" flex />;
     }
 
     if (!products || products.length === 0) {
@@ -25,7 +26,7 @@ export const ProductTiles = ({ type }: ProductTilesProps): JSX.Element => {
                 <ProductTile
                     key={product.id}
                     product={product}
-                    themeVariant={'secondary'}
+                    themeVariant={themeVariant}
                 />
             ))}
         </>

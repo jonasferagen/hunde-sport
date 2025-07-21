@@ -62,17 +62,17 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection>
                 <PageContent accent horizontal title="Populære produkter">
-                    <ProductTiles type="featured" />
+                    <ProductTiles type="featured" themeVariant="secondary" />
                 </PageContent>
             </PageSection>
             <PageSection>
                 <PageContent secondary horizontal title="Nyheter">
-                    <ProductTiles type="recent" />
+                    <ProductTiles type="recent" themeVariant="primary" />
                 </PageContent>
             </PageSection>
             <PageSection>
-                <PageContent secondary horizontal title="Tilbud">
-                    <ProductTiles type="discounted" />
+                <PageContent primary horizontal title="Tilbud">
+                    <ProductTiles type="discounted" themeVariant="accent" />
                 </PageContent>
             </PageSection>
             <PageSection >
