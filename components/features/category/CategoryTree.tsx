@@ -2,8 +2,8 @@ import { CustomText, Icon, Loader } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useCategories } from '@/hooks/Category';
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { Category } from '@/models/Category';
+import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { IStyleVariant } from '@/types';
 import { rgba } from '@/utils/helpers';
 import { Link } from 'expo-router';
@@ -41,7 +41,7 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
                     <Link href={routes.category(category)} asChild>
                         <Pressable style={styles.categoryInfo}>
                             <Icon name='dot' size='xxs' color={color} />
-                            <CustomText style={[styles.categoryText, { color }]} >{category.name}- {category.id}</CustomText>
+                            <CustomText style={[styles.categoryText, { color }]} >{category.name}</CustomText>
                         </Pressable>
                     </Link>
                     {hasChildren && (

@@ -1,7 +1,7 @@
 
 import { Loader } from '@/components/ui';
 import { useProducts } from '@/hooks/Product';
-import { ProductCard } from './ProductCard';
+import { ProductTile } from './ProductTile';
 
 interface RelatedProductsProps {
     productIds: number[];
@@ -20,7 +20,7 @@ export const RelatedProducts = ({ productIds }: RelatedProductsProps) => {
 
     return (
         relatedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductTile key={product.id} product={product} />
         ))
 
     );

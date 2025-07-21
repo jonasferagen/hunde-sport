@@ -103,22 +103,22 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                 </Col>
             </Row>
 
-            {
-                isExpanded && (
-                    <>
-                        <Row >
-                            <CustomText style={styles.subtitle}>
-                                {product.short_description}{' '}
-                            </CustomText>
-                        </Row>
-                        <Col style={{ paddingHorizontal: SPACING.md }}>
-                            <ProductVariations
-                                displayAs="chips"
-                            />
-                        </Col>
-                    </>
-                )
-            }
+            <View
+                style={[{
+                    display: isExpanded ? 'flex' : 'none',
+                }]}
+            >
+                <Row >
+                    <CustomText style={styles.subtitle}>
+                        {product.short_description}{' '}
+                    </CustomText>
+                </Row>
+                <Col style={{ paddingHorizontal: SPACING.md }}>
+                    <ProductVariations
+                        displayAs="chips"
+                    />
+                </Col>
+            </View>
         </View >
     )
 };

@@ -1,3 +1,7 @@
 export { useCategories } from './Category';
-export { useFeaturedProducts, useProduct, useProductsByCategory, useSearchProducts } from './Product';
+export {
+    useProduct,
+    useProducts,
+    useProducts as useProductsList
+} from './Product';
 

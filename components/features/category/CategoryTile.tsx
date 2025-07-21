@@ -1,23 +1,41 @@
-import { useThemeContext } from '@/contexts';
-import type { Category } from '@/models/Category';
-import { BaseTile, type BaseTileProps } from '../../ui/tile/BaseTile';
+import { BaseTile } from '@/components/ui/tile/BaseTile';
+import { routes } from '@/config/routes';
+import { Category } from '@/models/Category';
+import { CARD_DIMENSIONS } from '@/styles/Dimensions';
+import { Link } from 'expo-router';
+import React from 'react';
+import { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 
-interface CategoryTileProps extends Omit<BaseTileProps, 'name' | 'imageUrl' | 'topRightText'> {
+interface CategoryTileProps {
     category: Category;
+    style?: StyleProp<ViewStyle>;
+    width?: DimensionValue;
+    height?: DimensionValue;
+    textSize?: string;
 }
 
-export const CategoryTile = ({ category, ...rest }: CategoryTileProps) => {
-    const { themeManager } = useThemeContext();
+export const CategoryTile = ({
+    category,
+    style,
+    width = CARD_DIMENSIONS.category.width,
+    height = CARD_DIMENSIONS.category.height,
+    textSize = "sm",
 
+}: CategoryTileProps) => {
 
-    const themeVariant = themeManager.getVariant('primary');
 
     return (
-        <BaseTile
-            name={category.name}
-            imageUrl={category.image.src}
-            mainColor={themeVariant.backgroundColor}
-            {...rest}
-        />
+        <Link href={routes.category(category)} asChild>
+            <BaseTile
+                name={category.name}
+                height={height}
+                width={width}
+                aspectRatio={1.2}
+                style={style}
+                textSize={textSize}
+                themeVariant={'primary'}
+                imageUrl={category.image.src}
+            />
+        </Link>
     );
-}
+};

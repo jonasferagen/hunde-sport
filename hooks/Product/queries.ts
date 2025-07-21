@@ -1,6 +1,10 @@
 import { Product } from '@/models/Product';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
-import { fetchFeaturedProducts, fetchProduct, fetchProductByCategory, searchProducts } from './api';
+import {
+    fetchProduct,
+    fetchProducts,
+    ProductListType,
+} from './api';
 
 import { PAGE_SIZE } from '@/config/api';
 
@@ -27,21 +31,19 @@ const productInfiniteQueryOptions = (
         ...options,
     });
 
-export const productsByCategoryQueryOptions = (categoryId: number) =>
-    productInfiniteQueryOptions(
-        ['productsByCategory', categoryId],
-        ({ pageParam }) => fetchProductByCategory(pageParam, categoryId)
-    );
+interface ProductsQueryArgs {
+    type: ProductListType;
+    categoryId?: number;
+    searchQuery?: string;
+}
 
-export const featuredProductsQueryOptions = () =>
-    productInfiniteQueryOptions(
-        ['featuredProducts'],
-        ({ pageParam }) => fetchFeaturedProducts(pageParam)
-    );
+export const productsQueryOptions = ({ type, categoryId, searchQuery }: ProductsQueryArgs) => {
+    const queryKey = ['products', type, { categoryId, searchQuery }];
 
-export const searchProductsQueryOptions = (query: string) =>
-    productInfiniteQueryOptions(
-        ['searchProducts', query],
-        ({ pageParam }) => searchProducts(pageParam, query),
-        { enabled: !!query }
-    );
+    const queryFn = ({ pageParam = 1 }) =>
+        fetchProducts(pageParam, type, { categoryId, searchQuery });
+
+    const options = { enabled: type !== 'search' || !!searchQuery };
+
+    return productInfiniteQueryOptions(queryKey, queryFn, options);
+};

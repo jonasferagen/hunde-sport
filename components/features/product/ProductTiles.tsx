@@ -1,10 +1,15 @@
 import { Loader } from '@/components/ui';
-import { useFeaturedProducts } from '@/hooks/Product';
+import { useProducts } from '@/hooks/Product';
+import { ProductListType } from '@/hooks/Product/api';
 import React, { JSX } from 'react';
-import { ProductCard } from './ProductCard';
+import { ProductTile } from './ProductTile';
 
-export const FeaturedProducts = (): JSX.Element => {
-    const { products, isLoading } = useFeaturedProducts();
+interface ProductTilesProps {
+    type: ProductListType;
+}
+
+export const ProductTiles = ({ type }: ProductTilesProps): JSX.Element => {
+    const { products, isLoading } = useProducts({ type });
 
     if (isLoading) {
         return <Loader />;
@@ -17,7 +22,7 @@ export const FeaturedProducts = (): JSX.Element => {
     return (
         <>
             {products.map((product) => (
-                <ProductCard
+                <ProductTile
                     key={product.id}
                     product={product}
                     themeVariant={'secondary'}

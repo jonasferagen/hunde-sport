@@ -1,6 +1,6 @@
-import { CategoryCard } from '@/components/features/category/CategoryCard';
-import { FeaturedProducts } from '@/components/features/product/FeaturedProducts';
-import { ProductCard } from '@/components/features/product/ProductCard';
+import { CategoryTile } from '@/components/features/category/CategoryTile';
+import { ProductTile } from '@/components/features/product/ProductTile';
+import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
@@ -11,6 +11,7 @@ import { useCategories } from '@/hooks/Category';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
 import { router, Stack } from 'expo-router';
+import React from 'react';
 import { FlatList, TextInput } from 'react-native';
 
 const CategorySection = () => {
@@ -26,7 +27,7 @@ const CategorySection = () => {
             numColumns={3}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-                <CategoryCard
+                <CategoryTile
                     category={item}
                     style={{
                         flex: 1,
@@ -61,12 +62,22 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection>
                 <PageContent accent horizontal title="Populære produkter">
-                    <FeaturedProducts />
+                    <ProductTiles type="featured" />
+                </PageContent>
+            </PageSection>
+            <PageSection>
+                <PageContent secondary horizontal title="Nyheter">
+                    <ProductTiles type="recent" />
+                </PageContent>
+            </PageSection>
+            <PageSection>
+                <PageContent secondary horizontal title="Tilbud">
+                    <ProductTiles type="discounted" />
                 </PageContent>
             </PageSection>
             <PageSection >
                 <PageContent paddingHorizontal="none">
-                    {false && product && <ProductCard product={product!} />}
+                    {false && product && <ProductTile product={product!} />}
                     <CategorySection />
                 </PageContent>
             </PageSection>
