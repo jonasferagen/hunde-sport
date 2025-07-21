@@ -32,7 +32,6 @@ export const useProductsList = (type: ProductListType) => {
     return { ...query, products };
 };
 
-
 export const useProductsByCategory = (categoryId: number) => {
     const query = useInfiniteQuery(productsByCategoryQueryOptions(categoryId));
     const products = useMemo(() => query.data?.pages.flat() ?? [], [query.data]);

@@ -25,11 +25,16 @@ export const useProductVariations = (product: Product): UseProductVariationsRetu
         };
     }
 
-    const { productVariations } = useFetchProductVariations(product.id);
+    const { productVariations, hasNextPage, isFetchingNextPage, fetchNextPage } = useFetchProductVariations(product.id);
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
 
     useEffect(() => {
+
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+
         // Guard to ensure this runs only once per product when data is ready.
         if (productVariations && product.id !== initializedForProductId) {
             const initialOptions: Record<number, string> = {};
@@ -57,7 +62,7 @@ export const useProductVariations = (product: Product): UseProductVariationsRetu
                 setInitializedForProductId(product.id);
             }
         }
-    }, [productVariations, product, initializedForProductId]);
+    }, [productVariations, product, initializedForProductId, hasNextPage, isFetchingNextPage]);
 
     const productVariant = useMemo(() => {
         if (!productVariations || Object.keys(selectedOptions).length === 0) return null;
