@@ -87,64 +87,86 @@ const SelectOptionRenderer = ({ option, attribute, availableOptions, isLoading }
     return (
         <XStack
             flex={1}
-            paddingVertical={"$2"}
-            paddingHorizontal={"$3"}
             justifyContent='space-between'
             alignItems='center'
             opacity={isDisabled ? 0.5 : 1}
         >
-            <XStack alignItems='center' gap={"$2"}>
+            <XStack flex={1} alignItems='center' gap={"$2"}>
                 <CustomText>
                     {option.label}
                 </CustomText>
                 {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
             </XStack>
-            <YStack alignItems='flex-end'>
-                <XStack justifyContent='flex-end' alignItems='center' gap={"$2"}>
-                    {variant && <PriceTag product={variant} />}
-                    {waiting && <Loader size='small' />}
-                    {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
-                </XStack>
-            </YStack>
+            <XStack justifyContent='flex-end' alignItems='center' gap={"$2"}>
+                {variant && <PriceTag product={variant} />}
+                {waiting && <Loader size='small' />}
+                {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
+            </XStack>
         </XStack>
     );
 };
 
 const DropdownVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => {
-    return <Select onValueChange={(v) => handleOptionSelect(attribute.id, v)} value={currentSelection}>
-        <Select.Trigger>
-            <Select.Value placeholder="Velg et alternativ" />
-        </Select.Trigger>
+    return (
+        <Select
+            value={currentSelection}
+            onValueChange={(v) => handleOptionSelect(attribute.id, v)}
+        >
+            <Select.Trigger>
+                <Select.Value placeholder="Velg et alternativ" />
+            </Select.Trigger>
 
-        <Adapt when="sm" platform="touch">
-            <Sheet modal dismissOnSnapToBottom>
-                <Sheet.Frame>
-                    <Sheet.ScrollView><Adapt.Contents /></Sheet.ScrollView>
-                </Sheet.Frame>
-                <Sheet.Overlay />
-            </Sheet>
-        </Adapt>
+            <Adapt when="maxMd" platform="touch">
+                <Sheet native modal dismissOnSnapToBottom animation="medium">
+                    <Sheet.Frame>
+                        <Sheet.ScrollView>
+                            <Adapt.Contents />
+                        </Sheet.ScrollView>
+                    </Sheet.Frame>
+                    <Sheet.Overlay
+                        backgroundColor="$shadowColor"
+                        animation="lazy"
+                        enterStyle={{ opacity: 0 }}
+                        exitStyle={{ opacity: 0 }}
+                    />
+                </Sheet>
+            </Adapt>
 
-        <Select.Content zIndex={2000}>
-            <Select.Group>
-                {options.map((option, index) => {
-                    const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!)
-                    return (
-                        <Select.Item index={index} key={option.name} value={option.name!} disabled={isDisabled}>
-                            <Select.ItemText>
-                                <SelectOptionRenderer
-                                    option={option}
-                                    attribute={attribute}
-                                    availableOptions={availableOptions}
-                                    isLoading={isLoading}
-                                />
-                            </Select.ItemText>
-                        </Select.Item>
-                    )
-                })}
-            </Select.Group>
-        </Select.Content>
-    </Select>
+
+            <Select.Content zIndex={2000}>
+
+                <Select.ScrollUpButton />
+                <Select.Viewport>
+                    <Select.Group>
+                        {options.map((option, index) => {
+                            const isDisabled = !availableOptions
+                                .get(attribute.id)
+                                ?.has(option.name!)
+                            return (
+                                <Select.Item
+                                    key={option.name}
+                                    index={index}
+                                    value={option.name!}
+                                    disabled={isDisabled}
+                                >
+                                    <Select.ItemText>
+                                        <SelectOptionRenderer
+                                            option={option}
+                                            attribute={attribute}
+                                            availableOptions={availableOptions}
+                                            isLoading={isLoading}
+                                        />
+                                    </Select.ItemText>
+                                </Select.Item>
+                            )
+                        })}
+                    </Select.Group>
+                </Select.Viewport>
+                <Select.ScrollDownButton />
+            </Select.Content>
+        </Select>
+    )
+
 }
 
 

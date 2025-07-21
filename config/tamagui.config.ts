@@ -1,13 +1,16 @@
-import { defaultConfig } from '@tamagui/config/v4'
-import { createTamagui } from 'tamagui'
+import { config as baseConfig } from '@tamagui/config';
+import { createTamagui } from 'tamagui';
 
-export const config = createTamagui({
-    ...defaultConfig,
-    settings: { ...defaultConfig.settings, onlyAllowShorthands: false, },
-})
+const config = createTamagui({
+    ...baseConfig,
+    settings: { ...baseConfig.settings, onlyAllowShorthands: false, },
+});
 
 type OurConfig = typeof config
 
 declare module 'tamagui' {
     interface TamaguiCustomConfig extends OurConfig { }
 }
+
+export { config };
+
