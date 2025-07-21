@@ -1,15 +1,14 @@
 import { Loader } from '@/components/ui';
 import { Col, Row } from '@/components/ui/layout';
-import { Select } from '@/components/ui/select/Select';
 import { CustomText } from '@/components/ui/text/CustomText';
 import { useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { SPACING } from '@/styles';
-import React, { JSX } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { JSX, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Button, Menu } from 'react-native-paper';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
-import { VariationChip } from './VariationChip';
 
 interface VariationSelectorProps {
     attribute: ProductAttribute;
@@ -20,65 +19,96 @@ interface VariationSelectorProps {
     isLoading: boolean;
 }
 
-const ChipVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect }: Omit<VariationSelectorProps, 'isLoading'>) => (
-    <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>
-        {options.map((option) => (
-            <VariationChip
-                key={`${attribute.id}-${option.name}`}
-                label={option.label}
-                onPress={() => handleOptionSelect(attribute.id, option.name!)}
-                disabled={!availableOptions.get(attribute.id)?.has(option.name!)}
-                isSelected={currentSelection === option.name}
-            />
-        ))}
-    </Row>
-);
+interface OptionRendererProps {
+    option: any;
+    attribute: ProductAttribute;
+    currentSelection: string | undefined;
+    availableOptions: Map<number, Map<string, any>>;
+    handleOptionSelect: (attributeId: number, optionName: string) => void;
+    isLoading: boolean;
+}
 
-const SelectVariationSelector = ({ attribute, options, currentSelection, handleOptionSelect }: Omit<VariationSelectorProps, 'isLoading'>) => (
-    <Select
-        label=""
-        selectedValue={currentSelection}
-        onValueChange={(value) => handleOptionSelect(attribute.id, value as string)}
-        options={options.map((opt) => ({
-            label: opt.label,
-            value: opt.name!,
-        }))}
-    />
-);
+const OptionRenderer = ({ option, attribute, currentSelection, availableOptions, handleOptionSelect, isLoading }: OptionRendererProps) => {
+    const isSelected = currentSelection === option.name;
+    const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!);
+    const variant = availableOptions.get(attribute.id)?.get(option.name!);
+    const waiting = isLoading && !variant;
+    const unavailable = !variant && !isLoading;
+
+    return (
+        <Pressable key={option.name} onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)} disabled={isDisabled}>
+            <Row style={{ backgroundColor: isSelected ? 'lightgray' : 'transparent', paddingVertical: SPACING.sm, paddingHorizontal: SPACING.sm }}>
+                <Row>
+                    <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1, paddingVertical: 4 }}>
+                        {option.label}
+                    </CustomText>
+                    {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
+                </Row>
+                <Col alignItems='flex-end'>
+                    <Row justifyContent='flex-end'>
+                        {variant && <PriceTag product={variant} />}
+                        {waiting && <Loader size='small' />}
+                        {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
+                    </Row>
+                </Col>
+            </Row>
+        </Pressable>
+    );
+};
+
+const SelectVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => {
+    const [visible, setVisible] = useState(false);
+    const openMenu = () => setVisible(true);
+    const closeMenu = () => setVisible(false);
+
+    const selectedLabel = options.find(o => o.name === currentSelection)?.label || 'Velg...';
+
+    return (
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+            <Menu
+                visible={visible}
+                onDismiss={closeMenu}
+                anchor={<Button onPress={openMenu}>{selectedLabel}</Button>}
+            >
+                {options.map((option) => (
+                    <Menu.Item
+                        key={option.name}
+                        onPress={() => {
+                            handleOptionSelect(attribute.id, option.name!);
+                            closeMenu();
+                        }}
+                        title={<OptionRenderer
+                            option={option}
+                            attribute={attribute}
+                            currentSelection={currentSelection}
+                            availableOptions={availableOptions}
+                            handleOptionSelect={() => { }}
+                            isLoading={isLoading}
+                        />}
+                    />
+                ))}
+            </Menu>
+        </View>
+    );
+};
 
 const ListVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => (
     <View>
-        {options.map((option) => {
-            const isSelected = currentSelection === option.name;
-            const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!);
-            const variant = availableOptions.get(attribute.id)?.get(option.name!);
-            const waiting = isLoading && !variant;
-            const unavailable = !variant && !isLoading;
-            return (
-                <Pressable key={option.name} onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)} disabled={isDisabled}>
-                    <Row style={{ backgroundColor: isSelected ? 'lightgray' : 'transparent', paddingVertical: SPACING.sm }}>
-                        <Row>
-                            <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1, paddingVertical: 4 }}>
-                                {option.label}
-                            </CustomText>
-                            {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
-                        </Row>
-                        <Col alignItems='flex-end'>
-                            <Row justifyContent='flex-end'>
-                                {variant && <PriceTag product={variant} />}
-                                {waiting && <Loader size='small' />}
-                                {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
-                            </Row>
-                        </Col>
-                    </Row>
-                </Pressable>
-            );
-        })}
+        {options.map((option) => (
+            <OptionRenderer
+                key={option.name}
+                option={option}
+                attribute={attribute}
+                currentSelection={currentSelection}
+                availableOptions={availableOptions}
+                handleOptionSelect={handleOptionSelect}
+                isLoading={isLoading}
+            />
+        ))}
     </View >
 );
 
 const variationSelectors = {
-    chips: ChipVariationSelector,
     select: SelectVariationSelector,
     list: ListVariationSelector,
 };
@@ -125,3 +155,31 @@ export const ProductVariations = ({ displayAs = 'select' }: ProductVariationsPro
         </Col>
     );
 };
+
+const styles = StyleSheet.create({
+    selectContainer: {
+        position: 'relative',
+        zIndex: 1,
+    },
+    selectHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: SPACING.md,
+        borderWidth: 1,
+        borderColor: 'grey',
+        borderRadius: 5,
+    },
+    optionsContainer: {
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'grey',
+        borderRadius: 5,
+        marginTop: 4,
+        zIndex: 2, // Ensure it's above other content
+    },
+});

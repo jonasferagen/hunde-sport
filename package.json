@@ -14,6 +14,7 @@
     "@expo-google-fonts/montserrat": "^0.4.1",
     "@expo/vector-icons": "^14.1.0",
     "@hookform/resolvers": "^5.1.1",
+    "@react-native-picker/picker": "2.11.1",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/drawer": "^7.5.3",
     "@react-navigation/elements": "^2.3.8",
@@ -43,6 +44,7 @@
     "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-image-viewing": "^0.2.2",
+    "react-native-paper": "^5.14.5",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
@@ -50,8 +52,7 @@
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "tinycolor2": "^1.6.0",
-    "zod": "^4.0.5",
-    "@react-native-picker/picker": "2.11.1"
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

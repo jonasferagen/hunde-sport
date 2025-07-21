@@ -9,6 +9,5 @@ export * from './ProductTile';
 export * from './ProductTiles';
 export * from './RelatedProducts';
 export * from './variation/ProductVariations';
-export * from './variation/VariationChip';
-export * from './variation/VariationChips';
+
 
