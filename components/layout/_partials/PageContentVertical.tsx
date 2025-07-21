@@ -23,5 +23,4 @@ const styles = StyleSheet.create({
   container: {
     gap: SPACING.md,
   },
-
 });

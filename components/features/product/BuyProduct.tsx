@@ -19,7 +19,7 @@ export const BuyProduct = ({ product, displayProduct }: { product: Product; disp
             <PriceTag fontSize="xxl" product={displayProduct} />
         </Row>
 
-        <ProductVariations displayAs="select" />
+        <ProductVariations displayAs="list" />
         <CustomText fontSize="sm">{product.short_description}</CustomText>
         <ProductStatus displayProduct={displayProduct} />
         <Button
