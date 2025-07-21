@@ -63,9 +63,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         styles.container,
     ];
 
-    const hasVariations = variationAttributes.length > 0;
-
-
     return (
         <View style={containerStyles}>
             <Row>
@@ -78,15 +75,10 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                         <Row justifyContent='space-between' style={[styles.variationIndicator, { flexGrow: 0 }]} >
                             <Col>
                                 <CustomText style={styles.price}>
-                                    {priceRange
-                                        ? `Fra ${formatPrice(priceRange.min)}`
-                                        : formatPrice(displayProduct!.price)}
+                                    {formatPrice(displayProduct!.price)}
                                 </CustomText>
                             </Col>
-                            <Row onPress={handlePress}>
-                                <Icon name="exclamation" size="md" color={theme.text.primary} />
-                                <CustomText style={styles.variationText}>Flere varianter</CustomText>
-                            </Row>
+
                         </Row>
                     </Col>
                 </Row>

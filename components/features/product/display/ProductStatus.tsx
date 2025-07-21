@@ -21,5 +21,14 @@ export const ProductStatus = ({ displayProduct }: ProductStatusProps) => {
         );
     }
 
+    if (status === 'variantneeded') {
+        return (
+            <Row alignItems="center">
+                <Icon name="exclamation" size="md" color='grey' />
+                <CustomText fontSize="sm" bold color='grey'>{msg}</CustomText>
+            </Row>
+        );
+    }
+
     return null;
 };
