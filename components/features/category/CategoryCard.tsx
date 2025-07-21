@@ -1,8 +1,7 @@
 import { CategoryTile } from '@/components/ui';
 import { routes } from '@/config/routes';
-import { useThemeContext } from '@/contexts';
-import { CARD_DIMENSIONS } from '@/styles/Dimensions';
 import { Category } from '@/models/Category';
+import { CARD_DIMENSIONS } from '@/styles/Dimensions';
 import { Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue, StyleProp, ViewStyle } from 'react-native';
@@ -13,7 +12,6 @@ interface CategoryCardProps {
     width?: DimensionValue;
     height?: DimensionValue;
     textSize?: string;
-    textColor?: string;
 }
 
 export const CategoryCard = ({
@@ -21,12 +19,10 @@ export const CategoryCard = ({
     style,
     width = CARD_DIMENSIONS.category.width,
     height = CARD_DIMENSIONS.category.height,
-    textSize = "md",
-    textColor
+    textSize = "sm",
+
 }: CategoryCardProps) => {
-    const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant('card');
-    const finalTextColor = textColor || theme.text.primary;
+
 
     return (
         <Link href={routes.category(category)} asChild>
@@ -34,9 +30,10 @@ export const CategoryCard = ({
                 category={category}
                 height={height}
                 width={width}
+                aspectRatio={1.2}
                 style={style}
                 textSize={textSize}
-                textColor={finalTextColor}
+                themeVariant={'primary'}
             />
         </Link>
     );

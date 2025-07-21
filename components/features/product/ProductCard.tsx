@@ -10,14 +10,14 @@ interface ProductCardProps {
     product: Product;
     width?: DimensionValue;
     height?: DimensionValue;
-    mainColor?: string;
+    themeVariant?: string;
 }
 
 export const ProductCard = ({
     product,
     width = CARD_DIMENSIONS.product.width,
     height = CARD_DIMENSIONS.product.height,
-    mainColor = '#777'
+    themeVariant = 'primary'
 }: ProductCardProps) => {
 
     return (
@@ -26,7 +26,8 @@ export const ProductCard = ({
                 product={product}
                 width={width}
                 height={height}
-                mainColor={mainColor}
+                themeVariant={themeVariant}
+
             />
         </Link>
     );

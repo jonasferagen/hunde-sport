@@ -11,9 +11,11 @@ export interface BaseTileProps {
     topRightText?: string;
     width?: DimensionValue;
     height?: DimensionValue;
+    aspectRatio?: number;
     onPress?: () => void;
     nameNumberOfLines?: number;
     gradientMinHeight?: number;
+    themeVariant?: string;
     mainColor?: string;
     textSize?: string;
     textColor?: string;
@@ -25,26 +27,32 @@ export const BaseTile = ({
     imageUrl,
     topRightText,
     width = '100%',
-    height = '100%',
+    height,
+    aspectRatio,
     onPress,
     nameNumberOfLines = 1,
     gradientMinHeight = 40,
-    mainColor,
-    textColor,
+    themeVariant = 'card',
     textSize = 'sm',
     style }: BaseTileProps) => {
     const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant('card');
+    const theme = themeManager.getVariant(themeVariant as any);
 
-    const finalMainColor = mainColor || theme.backgroundColor;
-    const finalTextColor = textColor || theme.text.primary;
+    const finalMainColor = theme.backgroundColor;
+    const finalTextColor = theme.text.primary;
 
     if (!imageUrl) {
         return null;
     }
 
+    const dynamicStyle: StyleProp<ViewStyle> = {
+        width,
+        height: aspectRatio ? undefined : height || '100%',
+        aspectRatio,
+    };
+
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.container, { width, height }, style]}>
+        <TouchableOpacity onPress={onPress} style={[styles.container, dynamicStyle, style]}>
             <ImageBackground
                 source={{ uri: imageUrl }}
                 style={styles.imageBackground}

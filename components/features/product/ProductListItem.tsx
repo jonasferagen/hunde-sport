@@ -1,4 +1,4 @@
-import { Button, CustomText, Icon } from '@/components/ui';
+import { CustomText, Icon } from '@/components/ui';
 import { Col, Row } from '@/components/ui/layout';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
@@ -83,7 +83,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                                         : formatPrice(displayProduct!.price)}
                                 </CustomText>
                             </Col>
-                            <Row>
+                            <Row onPress={handlePress}>
                                 <Icon name="exclamation" size="md" color={theme.text.primary} />
                                 <CustomText style={styles.variationText}>Flere varianter</CustomText>
                             </Row>
@@ -93,10 +93,10 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
             </Row>
 
             <Row justifyContent='space-between' alignItems='center'>
-                <Col style={{ paddingHorizontal: SPACING.md }}>
-                    <ProductVariations
-                        displayAs="select"
-                    />
+                <Col onPress={handlePress}>
+                    <CustomText>
+                        <Icon name={isExpanded ? "collapse" : "expand"} size="md" color={theme.text.primary} />
+                    </CustomText>
                 </Col>
                 <Col alignItems='flex-end' style={{ flexGrow: .5 }}>
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
@@ -106,15 +106,16 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
             {
                 isExpanded && (
                     <>
-
                         <Row >
                             <CustomText style={styles.subtitle}>
                                 {product.short_description}{' '}
                             </CustomText>
                         </Row>
-                        <Row>
-                            <Button title='Til produktside' onPress={() => router.push(routes.product(product, categoryId))} icon="next" variant="secondary" />
-                        </Row>
+                        <Col style={{ paddingHorizontal: SPACING.md }}>
+                            <ProductVariations
+                                displayAs="chips"
+                            />
+                        </Col>
                     </>
                 )
             }

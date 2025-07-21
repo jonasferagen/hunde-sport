@@ -11,7 +11,7 @@ import { useCategories } from '@/hooks/Category';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
 import { router, Stack } from 'expo-router';
-import { TextInput } from 'react-native';
+import { FlatList, TextInput } from 'react-native';
 
 const CategorySection = () => {
     const { categories, isLoading } = useCategories(0);
@@ -19,16 +19,26 @@ const CategorySection = () => {
     if (isLoading) {
         return <Loader />;
     }
-    1
-    return categories.map((category, index) => {
-        return (
-            <CategoryCard
-                category={category}
-                key={index}
-                style={{ marginBottom: SPACING.lg }}
-            />
-        );
-    });
+
+    return (
+        <FlatList
+            data={categories}
+            numColumns={3}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+                <CategoryCard
+                    category={item}
+                    style={{
+                        flex: 1,
+                        margin: SPACING.sm,
+                    }}
+                />
+            )}
+            contentContainerStyle={{
+                paddingHorizontal: SPACING.sm,
+            }}
+        />
+    );
 }
 
 export const HomeScreen = () => {
@@ -43,7 +53,6 @@ export const HomeScreen = () => {
     const { data: product } = useProduct(35961);
 
 
-
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
@@ -51,14 +60,13 @@ export const HomeScreen = () => {
                 <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
             </PageHeader>
             <PageSection>
-
                 <PageContent accent horizontal title="Populære produkter">
                     <FeaturedProducts />
                 </PageContent>
             </PageSection>
-            <PageSection scrollable>
+            <PageSection >
                 <PageContent paddingHorizontal="none">
-                    {product && <ProductCard product={product!} />}
+                    {false && product && <ProductCard product={product!} />}
                     <CategorySection />
                 </PageContent>
             </PageSection>
