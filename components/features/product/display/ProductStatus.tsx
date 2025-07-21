@@ -13,6 +13,8 @@ interface ProductStatusProps {
 }
 
 export const ProductStatus = ({ displayProduct, fontSize = 'md', short = false }: ProductStatusProps) => {
+
+
     const { purchaseInfo } = useShoppingCartContext();
     const { status, msg, msgShort: shortMsg } = purchaseInfo(displayProduct);
     const message = short ? shortMsg : msg;

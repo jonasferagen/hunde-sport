@@ -5,7 +5,7 @@ import { CustomText } from '@/components/ui/text/CustomText';
 import { useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { SPACING } from '@/styles';
-import React, { JSX } from 'react';
+import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
@@ -52,7 +52,8 @@ const ListVariationSelector = ({ attribute, options, currentSelection, available
             const isSelected = currentSelection === option.name;
             const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!);
             const variant = availableOptions.get(attribute.id)?.get(option.name!);
-
+            const waiting = isLoading && !variant;
+            const unavailable = !variant && !isLoading;
             return (
                 <Pressable key={option.name} onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)} disabled={isDisabled}>
                     <Row>
@@ -64,10 +65,9 @@ const ListVariationSelector = ({ attribute, options, currentSelection, available
                         </Row>
                         <Col alignItems='flex-end'>
                             <Row justifyContent='flex-end' style={{ gap: SPACING.sm }}>
-                                {isLoading && !variant && <Loader size='small' />}
-
                                 {variant && <PriceTag product={variant} />}
-                                {!variant && !isLoading && <CustomText style={{ opacity: 0.5 }} fontSize="xs">Ikke tilgjengelig</CustomText>}
+                                {waiting && <Loader size='small' />}
+                                {unavailable && <CustomText fontSize="xs" bold color='grey'>Ikke tilgjengelig</CustomText>}
                             </Row>
                         </Col>
                     </Row>

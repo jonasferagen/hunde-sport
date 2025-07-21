@@ -94,7 +94,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                     display: isExpanded ? 'flex' : 'none',
                 }]}
             >
-                <Row >
+                <Row>
                     <CustomText style={styles.subtitle}>
                         {product.short_description}{' '}
                     </CustomText>

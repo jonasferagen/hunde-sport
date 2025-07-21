@@ -24,6 +24,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const purchaseInfo = (displayProduct: Product) => {
 
+
         if (displayProduct.stock_status === 'outofstock') {
             return {
                 status: 'outofstock',
