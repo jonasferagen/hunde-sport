@@ -36,8 +36,9 @@ export const PageContentHorizontal = ({ title = undefined, children, style, ...p
   return (
     <View style={[styles.horizontalContainer, restStyle]}>
       {title && (
-        <View style={styles.titleContainer}>
+        <View style={[styles.titleContainer]}>
           <Heading title={title} />
+
         </View>
       )}
       <View>

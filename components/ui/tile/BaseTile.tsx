@@ -2,13 +2,14 @@ import { useThemeContext } from '@/contexts';
 import { BORDER_RADIUS, SPACING } from '@/styles';
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
 import { DimensionValue, ImageBackground, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import { CustomText } from '../text/CustomText';
 
 export interface BaseTileProps {
     name: string;
     imageUrl: string;
-    topRightText?: string;
+    topRightComponent?: React.ReactNode;
     width?: DimensionValue;
     height?: DimensionValue;
     aspectRatio?: number;
@@ -25,7 +26,7 @@ export interface BaseTileProps {
 export const BaseTile = ({
     name,
     imageUrl,
-    topRightText,
+    topRightComponent,
     width = '100%',
     height,
     aspectRatio,
@@ -41,15 +42,15 @@ export const BaseTile = ({
     const finalMainColor = theme.backgroundColor;
     const finalTextColor = theme.text.primary;
 
-    if (!imageUrl) {
-        return null;
-    }
+    const styles = createStyles(theme);
 
     const dynamicStyle: StyleProp<ViewStyle> = {
         width,
         height: aspectRatio ? undefined : height || '100%',
         aspectRatio,
     };
+
+
 
     return (
         <TouchableOpacity onPress={onPress} style={[styles.container, dynamicStyle, style]}>
@@ -58,9 +59,9 @@ export const BaseTile = ({
                 style={styles.imageBackground}
                 imageStyle={styles.imageStyle}
             >
-                {topRightText && (
-                    <View style={[styles.topRightContainer, { backgroundColor: finalMainColor }]}>
-                        <CustomText fontSize="sm" style={{ color: finalTextColor }}>{topRightText}</CustomText>
+                {topRightComponent && (
+                    <View style={styles.topRightContainer}>
+                        {topRightComponent}
                     </View>
                 )}
                 <LinearGradient
@@ -74,12 +75,14 @@ export const BaseTile = ({
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
     container: {
         flex: 1,
         borderRadius: BORDER_RADIUS.md,
         overflow: 'hidden',
         marginRight: SPACING.sm,
+        borderWidth: 1,
+        borderColor: 'black'
     },
     imageBackground: {
         flex: 1,
@@ -94,8 +97,6 @@ const styles = StyleSheet.create({
         borderRadius: BORDER_RADIUS.md,
         paddingVertical: SPACING.xs,
         paddingHorizontal: SPACING.sm,
-    },
-    topRightText: {
     },
     imageStyle: {
         resizeMode: 'cover',

@@ -2,10 +2,10 @@ import { BaseTile } from "@/components/ui/tile/BaseTile";
 import { routes } from '@/config/routes';
 import { CARD_DIMENSIONS } from '@/styles/Dimensions';
 import { Product } from "@/types";
-import { formatPrice } from "@/utils/helpers";
 import { Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from 'react-native';
+import { PriceInfo } from './price/PriceInfo';
 
 interface ProductTileProps {
     product: Product;
@@ -20,7 +20,7 @@ export const ProductTile = ({
     height = CARD_DIMENSIONS.product.height,
     themeVariant = 'primary'
 }: ProductTileProps) => {
-    const { images, name, price } = product;
+    const { images, name } = product;
     const image = images[0];
     return (
         <Link href={routes.product(product)} asChild>
@@ -31,7 +31,7 @@ export const ProductTile = ({
                 themeVariant={themeVariant}
                 name={name}
                 imageUrl={image.src}
-                topRightText={formatPrice(price)}
+                topRightComponent={<PriceInfo product={product} />}
                 nameNumberOfLines={2}
                 gradientMinHeight={40}
 
