@@ -13,13 +13,14 @@ interface PriceInfoProps {
 export const PriceTag = ({ product, fontSize = 'md' }: PriceInfoProps) => {
     const styles = createStyles();
 
+
     if (product.on_sale) {
         return (
             <View style={styles.discountContainer}>
                 <CustomText fontSize={fontSize} style={styles.regularPrice}>
                     {formatPrice(product.regular_price)}
                 </CustomText>
-                <CustomText fontSize={fontSize} style={styles.salePrice}>
+                <CustomText fontSize={fontSize} style={styles.price}>
                     {formatPrice(product.sale_price)}
                 </CustomText>
             </View>
@@ -42,9 +43,6 @@ const createStyles = () => StyleSheet.create({
         textDecorationLine: 'line-through',
         marginRight: SPACING.sm,
         opacity: 0.7,
-    },
-    salePrice: {
-        fontWeight: 'bold',
     },
     price: {
         fontWeight: 'bold',

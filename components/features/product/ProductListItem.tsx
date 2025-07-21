@@ -70,7 +70,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         <View style={containerStyles}>
             <Row>
                 <Row alignItems='center' onPress={handleProductLink}>
-                    {imageUrl && <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />}
+                    <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />
                     <Col>
                         <ProductTitle product={product} displayProduct={displayProduct!} />
                         <PriceTag fontSize="md" product={displayProduct!} />
@@ -102,7 +102,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                 </Row>
                 <Col style={{ paddingHorizontal: SPACING.md }}>
                     <ProductVariations
-                        displayAs="chips"
+                        displayAs="list"
                     />
                 </Col>
             </View>

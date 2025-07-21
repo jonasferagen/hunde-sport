@@ -1,17 +1,79 @@
 import { Col, Row } from '@/components/ui/layout';
 import { Select } from '@/components/ui/select/Select';
+import { CustomText } from '@/components/ui/text/CustomText';
 import { useProductContext } from '@/contexts/ProductContext';
+import { ProductAttribute } from '@/models/ProductAttribute';
 import React, { JSX } from 'react';
-import { Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { PriceTag } from '../display/PriceTag';
 import { VariationChip } from './VariationChip';
 
-interface ProductVariationsProps {
-    displayAs?: 'chips' | 'select';
+interface VariationSelectorProps {
+    attribute: ProductAttribute;
+    options: ProductAttribute['options'];
+    currentSelection: string | undefined;
+    availableOptions: Map<number, Map<string, any>>;
+    handleOptionSelect: (attributeId: number, optionName: string) => void;
 }
 
-export const ProductVariations = ({
-    displayAs = 'select',
-}: ProductVariationsProps): JSX.Element | null => {
+const ChipVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect }: VariationSelectorProps) => (
+    <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>
+        {options.map((option) => (
+            <VariationChip
+                key={`${attribute.id}-${option.name}`}
+                label={option.label}
+                onPress={() => handleOptionSelect(attribute.id, option.name!)}
+                disabled={!availableOptions.get(attribute.id)?.has(option.name!)}
+                isSelected={currentSelection === option.name}
+            />
+        ))}
+    </Row>
+);
+
+const SelectVariationSelector = ({ attribute, options, currentSelection, handleOptionSelect }: VariationSelectorProps) => (
+    <Select
+        label=""
+        selectedValue={currentSelection}
+        onValueChange={(value) => handleOptionSelect(attribute.id, value as string)}
+        options={options.map((opt) => ({
+            label: opt.label,
+            value: opt.name!,
+        }))}
+    />
+);
+
+const ListVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect }: VariationSelectorProps) => (
+    <View>
+        {options.map((option) => {
+            const isSelected = currentSelection === option.name;
+            const isDisabled = !availableOptions.get(attribute.id)?.has(option.name!);
+            const variant = availableOptions.get(attribute.id)?.get(option.name!);
+
+            return (
+                <Pressable key={option.name} onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)} disabled={isDisabled}>
+                    <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                        <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1, paddingVertical: 4 }}>
+                            {option.label}
+                        </CustomText>
+                        {variant ? <PriceTag product={variant} /> : <CustomText style={{ opacity: 0.5 }}>Ikke tilgjengelig</CustomText>}
+                    </Row>
+                </Pressable>
+            );
+        })}
+    </View>
+);
+
+const variationSelectors = {
+    chips: ChipVariationSelector,
+    select: SelectVariationSelector,
+    list: ListVariationSelector,
+};
+
+interface ProductVariationsProps {
+    displayAs?: keyof typeof variationSelectors;
+}
+
+export const ProductVariations = ({ displayAs = 'select' }: ProductVariationsProps): JSX.Element | null => {
     const {
         variationAttributes,
         selectedOptions,
@@ -23,17 +85,7 @@ export const ProductVariations = ({
         return null;
     }
 
-    const getStockDisplay = (status: string) => {
-        switch (status) {
-            case 'instock':
-                return 'På lager';
-            case 'outofstock':
-                return 'Utsolgt';
-            default:
-                return '';
-        }
-    };
-
+    const Component = variationSelectors[displayAs] || SelectVariationSelector;
 
     return (
         <Col>
@@ -44,32 +96,13 @@ export const ProductVariations = ({
                 return (
                     <React.Fragment key={attribute.id}>
                         <Text style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</Text>
-                        {displayAs === 'chips' ? (
-                            <Row style={{ flexWrap: 'wrap', marginBottom: 8 }}>
-                                {options.map((option) => (
-                                    <VariationChip
-                                        key={`${attribute.id}-${option.name}`}
-                                        label={option.label}
-                                        onPress={() => handleOptionSelect(attribute.id, option.name!)}
-                                        disabled={!availableOptions.get(attribute.id)?.has(option.name!)}
-                                        isSelected={currentSelection === option.name}
-                                    />
-                                ))}
-                            </Row>
-                        ) : (
-                            <Select
-                                label=""
-                                selectedValue={currentSelection}
-                                onValueChange={(value) => handleOptionSelect(attribute.id, value as string)}
-                                options={options.map((opt) => {
-
-                                    return {
-                                        label: opt.label,
-                                        value: opt.name!,
-                                    };
-                                })}
-                            />
-                        )}
+                        <Component
+                            attribute={attribute}
+                            options={options}
+                            currentSelection={currentSelection}
+                            availableOptions={availableOptions}
+                            handleOptionSelect={handleOptionSelect}
+                        />
                     </React.Fragment>
                 );
             })}
