@@ -85,7 +85,7 @@ export const HomeScreen = () => {
                 <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
-                {false && product && <ProductTile product={product!} />}
+                {product && <ProductTile product={product!} />}
                 <PageContent secondary horizontal title="Nyheter">
                     <ProductTiles type="recent" themeVariant="accent" />
                 </PageContent>

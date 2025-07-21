@@ -1,4 +1,4 @@
-import { ENDPOINTS } from '@/config/api';
+import { ENDPOINTS, PAGE_SIZE } from '@/config/api';
 import { Product, ProductData, ProductType } from '@/models/Product';
 import apiClient from '@/utils/apiClient';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
@@ -39,17 +39,9 @@ const mapToProduct = (item: any): Product => {
     return new Product(productData);
 };
 
-export type ProductListType = 'featured' | 'recent' | 'discounted' | 'search' | 'category';
+export type ProductListType = 'featured' | 'recent' | 'discounted';
 
-interface FetchProductsOptions {
-    searchQuery?: string;
-    categoryId?: number;
-}
-
-function getQueryStringForType(
-    type: ProductListType,
-    options: FetchProductsOptions
-): string {
+function getQueryStringForType(type: ProductListType): string {
     switch (type) {
         case 'featured':
             return 'featured=true&min_price=1';
@@ -57,21 +49,53 @@ function getQueryStringForType(
             return 'orderby=date&min_price=1';
         case 'discounted':
             return 'on_sale=true&min_price=1';
-        case 'search':
-            return `search=${options.searchQuery}&min_price=1`;
-        case 'category':
-            return `category=${options.categoryId}&min_price=1`;
     }
 }
 
 export async function fetchProducts(
     page: number,
-    type: ProductListType,
-    options: FetchProductsOptions = {}
+    type: ProductListType
 ): Promise<Product[]> {
-    const queryString = getQueryStringForType(type, options);
+    const queryString = getQueryStringForType(type);
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, queryString)
+    );
+
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+export async function fetchProductByCategory(page: number, categoryId: number): Promise<Product[]> {
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.LIST(page, 'category=' + categoryId)
+    );
+
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+export async function searchProducts(page: number, query: string): Promise<Product[]> {
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.LIST(page, `search=${query}`)
+    );
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+export async function fetchProductsByIds(page: number, ids: number[]): Promise<Product[]> {
+    if (ids.length === 0) {
+        return [];
+    }
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.LIST(page, `include=${ids.join(',')}`)
+    );
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `?page=${page}&per_page=${PAGE_SIZE}`
     );
 
     if (error) throw new Error(error);

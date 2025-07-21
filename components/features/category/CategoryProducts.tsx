@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { useProducts } from '@/hooks/Product';
+import { useProductsByCategory } from '@/hooks/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
 import React, { JSX } from 'react';
@@ -11,7 +11,7 @@ interface CategoryProductsProps {
 
 export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Element => {
     useRenderGuard('CategoryProducts');
-    const { products, isLoading, isFetchingNextPage, fetchNextPage } = useProducts({ type: 'category', categoryId: category.id });
+    const { products, isLoading, isFetchingNextPage, fetchNextPage } = useProductsByCategory(category.id);
 
     if (isLoading) {
         return <Loader size="large" flex />;

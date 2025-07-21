@@ -1,8 +1,18 @@
-import { useProducts } from '@/hooks/Product';
+import { useProductVariations as useFetchProductVariations } from '@/hooks/Product';
 import { Product } from '@/models/Product';
+import { ProductAttribute } from '@/models/ProductAttribute';
 import { useEffect, useMemo, useState } from 'react';
 
-export const useProductVariations = (product: Product) => {
+interface UseProductVariationsReturn {
+    productVariant: Product | null;
+    productVariations: Product[];
+    handleOptionSelect: (attributeId: number, option: string) => void;
+    availableOptions: Map<number, Map<string, Product>>;
+    selectedOptions: Record<number, string>;
+    variationAttributes: ProductAttribute[];
+}
+
+export const useProductVariations = (product: Product): UseProductVariationsReturn => {
     // --- Optimization: Early exit for non-variable products ---
     if (product.type !== 'variable') {
         return {
@@ -15,7 +25,7 @@ export const useProductVariations = (product: Product) => {
         };
     }
 
-    const { products: productVariations } = useProducts(product.variations);
+    const { productVariations } = useFetchProductVariations(product.id);
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
 

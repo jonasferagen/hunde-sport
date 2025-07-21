@@ -2,8 +2,12 @@ import { Product } from '@/models/Product';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import {
     fetchProduct,
+    fetchProductByCategory,
     fetchProducts,
+    fetchProductsByIds,
+    fetchProductVariations,
     ProductListType,
+    searchProducts,
 } from './api';
 
 import { PAGE_SIZE } from '@/config/api';
@@ -31,19 +35,34 @@ const productInfiniteQueryOptions = (
         ...options,
     });
 
-interface ProductsQueryArgs {
-    type: ProductListType;
-    categoryId?: number;
-    searchQuery?: string;
-}
+export const productsByCategoryQueryOptions = (categoryId: number) =>
+    productInfiniteQueryOptions(
+        ['productsByCategory', categoryId],
+        ({ pageParam }) => fetchProductByCategory(pageParam, categoryId)
+    );
 
-export const productsQueryOptions = ({ type, categoryId, searchQuery }: ProductsQueryArgs) => {
-    const queryKey = ['products', type, { categoryId, searchQuery }];
+export const productsByIdsQueryOptions = (ids: number[]) =>
+    productInfiniteQueryOptions(
+        ['products', { ids: [...ids].sort() }],
+        ({ pageParam }) => fetchProductsByIds(pageParam, ids),
+        { enabled: ids.length > 0 }
+    );
 
-    const queryFn = ({ pageParam = 1 }) =>
-        fetchProducts(pageParam, type, { categoryId, searchQuery });
+export const productVariationsQueryOptions = (productId: number) =>
+    productInfiniteQueryOptions(
+        ['productVariations', productId],
+        ({ pageParam }) => fetchProductVariations(pageParam, productId),
+        { enabled: !!productId }
+    );
 
-    const options = { enabled: type !== 'search' || !!searchQuery };
+export const productsQueryOptions = (type: ProductListType) =>
+    productInfiniteQueryOptions(['products', type], ({ pageParam }) =>
+        fetchProducts(pageParam, type)
+    );
 
-    return productInfiniteQueryOptions(queryKey, queryFn, options);
-};
+export const searchProductsQueryOptions = (query: string) =>
+    productInfiniteQueryOptions(
+        ['searchProducts', query],
+        ({ pageParam }) => searchProducts(pageParam, query),
+        { enabled: !!query }
+    );

@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { useProducts } from '@/hooks/Product';
+import { useProductsList } from '@/hooks/Product';
 import { ProductListType } from '@/hooks/Product/api';
 import { SPACING } from '@/styles';
 import React, { JSX } from 'react';
@@ -12,7 +12,7 @@ interface ProductTilesProps {
 }
 
 export const ProductTiles = ({ type, themeVariant }: ProductTilesProps): JSX.Element => {
-    const { products, isLoading } = useProducts({ type });
+    const { products, isLoading } = useProductsList(type);
 
     if (isLoading) {
         return <Loader size="large" flex />;

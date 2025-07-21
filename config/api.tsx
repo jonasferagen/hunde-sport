@@ -19,10 +19,7 @@ export const ENDPOINTS = {
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,
     LIST: (page: number, ...params: string[]) => `${PRODUCTS_URL}?page=${page}&${params.join('&')}&${filterParams}`,
-  },
-  TAGS: {
-    GET: (id: number) => `${TAGS_URL}/${id}`,
-    LIST: (page: number, ...params: string[]) => `${TAGS_URL}?page=${page}&${params.join('&')}&${filterParams}`,
+    VARIATIONS: (productId: number) => `${PRODUCTS_URL}/${productId}/variations`,
   },
 };
 

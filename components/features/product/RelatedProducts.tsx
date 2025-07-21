@@ -1,6 +1,6 @@
 
 import { Loader } from '@/components/ui';
-import { useProducts } from '@/hooks/Product';
+import { useRelatedProducts } from '@/hooks/Product';
 import { ProductTile } from './ProductTile';
 
 interface RelatedProductsProps {
@@ -8,7 +8,7 @@ interface RelatedProductsProps {
 }
 
 export const RelatedProducts = ({ productIds }: RelatedProductsProps) => {
-    const { products: relatedProducts, isLoading } = useProducts(productIds);
+    const { products: relatedProducts, isLoading } = useRelatedProducts(productIds);
 
     if (isLoading) {
         return <Loader />;
