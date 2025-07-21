@@ -7,7 +7,7 @@ import { useStatusContext } from './StatusContext';
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
-    purchaseInfo: (displayProduct: Product) => { status: string, msg: string, msg_short: string };
+    purchaseInfo: (displayProduct: Product) => { status: string, msg: string, msgShort: string };
     cartItemCount: number;
     cartTotal: number;
     addToCart: (product: Product, variant?: Product) => void;
@@ -28,7 +28,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             return {
                 status: 'outofstock',
                 msg: 'Produktet er ikke lenger på lager',
-                msg_short: 'Utsolgt'
+                msgShort: 'Utsolgt'
             };
         }
 
@@ -36,14 +36,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             return {
                 status: 'variantneeded',
                 msg: 'Du må velge en variant',
-                msg_short: 'Velg variant'
+                msgShort: 'Velg variant'
             };
         }
 
         return {
             status: 'ok',
             msg: 'Legg til i handlekurv',
-            msg_short: 'Kjøp'
+            msgShort: 'Kjøp'
         };
 
     };

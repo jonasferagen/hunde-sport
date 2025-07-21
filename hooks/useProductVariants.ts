@@ -15,28 +15,15 @@ interface UseProductVariantsReturn {
 
 export const useProductVariants = (product: Product): UseProductVariantsReturn => {
 
+    const isVariable = product.type === 'variable';
 
-
-    // --- Optimization: Early exit for non-variable products ---
-    if (product.type !== 'variable') {
-        console.log("Product is not variable : " + product.type)
-        return {
-            productVariant: null,
-            productVariants: [],
-            handleOptionSelect: () => { },
-            availableOptions: new Map<number, Map<string, Product>>(),
-            selectedOptions: {},
-            variationAttributes: [],
-            isLoading: false,
-        };
-    }
-
-    const { productVariations: productVariants, isLoading: isInitialLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id);
+    const { productVariations: productVariants, isLoading: isInitialLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id, { enabled: isVariable });
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
-    const [isFetchingAll, setIsFetchingAll] = useState(true);
+    const [isFetchingAll, setIsFetchingAll] = useState(isVariable);
 
     useEffect(() => {
+        if (!isVariable) return;
 
         if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
@@ -71,12 +58,12 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
                 setInitializedForProductId(product.id);
             }
         }
-    }, [productVariants, product, initializedForProductId, hasNextPage, isFetchingNextPage]);
+    }, [productVariants, product, initializedForProductId, hasNextPage, isFetchingNextPage, isVariable]);
 
     const productVariant = useMemo(() => {
-        if (!productVariants || Object.keys(selectedOptions).length === 0) return null;
+        if (!isVariable || !productVariants || Object.keys(selectedOptions).length === 0) return null;
         return product.findVariant(productVariants, selectedOptions) || null;
-    }, [selectedOptions, productVariants, product]);
+    }, [selectedOptions, productVariants, product, isVariable]);
 
     const handleOptionSelect = (attributeId: number, option: string) => {
         setSelectedOptions(prev => ({
@@ -86,11 +73,14 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
     };
 
     const availableOptions = useMemo(() => {
-        if (!productVariants) return new Map();
+        if (!isVariable || !productVariants) return new Map();
         return product.getAvailableOptions(productVariants, selectedOptions);
-    }, [product, productVariants, selectedOptions]);
+    }, [product, productVariants, selectedOptions, isVariable]);
 
-    const variationAttributes = product.getVariationAttributes();
+    const variationAttributes = useMemo(() => {
+        if (!isVariable) return [];
+        return product.getVariationAttributes();
+    }, [product, isVariable]);
 
     return {
         productVariant,
@@ -99,6 +89,6 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         availableOptions,
         selectedOptions,
         variationAttributes: variationAttributes,
-        isLoading: isInitialLoading || hasNextPage || isFetchingAll,
+        isLoading: !isVariable ? false : (isInitialLoading || hasNextPage || isFetchingAll),
     };
 };
