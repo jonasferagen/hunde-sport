@@ -55,15 +55,15 @@ const ListVariationSelector = ({ attribute, options, currentSelection, available
 
             return (
                 <Pressable key={option.name} onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)} disabled={isDisabled}>
-                    <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Row alignItems='center' style={{ gap: SPACING.sm }}>
+                    <Row>
+                        <Row style={{ gap: SPACING.sm }}>
                             <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isDisabled ? 0.5 : 1, paddingVertical: 4 }}>
                                 {option.label}
                             </CustomText>
                             {variant && <ProductStatus displayProduct={variant} fontSize="xs" short={true} />}
                         </Row>
                         <Col alignItems='flex-end'>
-                            <Row alignItems='center' justifyContent='flex-end' style={{ gap: SPACING.sm }}>
+                            <Row justifyContent='flex-end' style={{ gap: SPACING.sm }}>
                                 {isLoading && !variant && <Loader size='small' />}
 
                                 {variant && <PriceTag product={variant} />}

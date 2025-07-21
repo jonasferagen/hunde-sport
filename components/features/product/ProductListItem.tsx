@@ -68,7 +68,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     return (
         <View style={containerStyles}>
             <Row>
-                <Row alignItems='center' onPress={handleProductLink}>
+                <Row onPress={handleProductLink}>
                     <Image source={{ uri: imageUrl }} style={[styles.image, { width: 80, height: 80 }]} />
                     <Col>
                         <ProductTitle product={product} displayProduct={displayProduct!} />
@@ -78,7 +78,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                 </Row>
             </Row>
 
-            <Row justifyContent='space-between' alignItems='center'>
+            <Row>
                 <Col onPress={handlePress}>
                     <CustomText>
                         <Icon name={isExpanded ? "collapse" : "expand"} size="md" color={theme.text.primary} />
