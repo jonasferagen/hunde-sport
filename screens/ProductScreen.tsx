@@ -29,6 +29,7 @@ const ProductScreenContent = () => {
 
   return (
     <>
+
       <PageSection scrollable>
         <PageContent>
           <ProductImage image={displayProduct.image} onPress={() => openImageViewer(0)} />

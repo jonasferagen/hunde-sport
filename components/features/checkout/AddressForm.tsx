@@ -1,15 +1,9 @@
 // AddressForm.tsx
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { StyleSheet, View } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { Button, Form, Input, Label, ScrollView, Text, XStack, YStack } from 'tamagui';
 import { z } from 'zod';
-
-import { PageContent, PageSection } from '@/components/layout';
-import { Button } from '@/components/ui/button/Button';
-import { FormField } from '@/components/ui/form/FormField';
-import { FormRow } from '@/components/ui/form/FormRow';
-import { SPACING } from '@/styles/Dimensions';
 
 const addressSchema = z.object({
     first_name: z.string().min(1, { message: 'Fornavn er påkrevd' }),
@@ -33,74 +27,185 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
     });
 
     return (
-        <PageSection scrollable>
-            <PageContent>
-                <FormRow>
-                    <FormField
-                        name="first_name"
-                        label="Fornavn"
-                        control={control}
-                        errors={errors}
-                    />
-                    <FormField
-                        name="last_name"
-                        label="Etternavn"
-                        control={control}
-                        errors={errors}
-                    />
-                </FormRow>
+        <Form onSubmit={handleSubmit(onSubmit)} flex={1}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <YStack space="$4" padding="$4">
+                    <XStack space="$4">
+                        <YStack flex={1} space="$2">
+                            <Label htmlFor="first_name">Fornavn</Label>
+                            <Controller
+                                control={control}
+                                name="first_name"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input
+                                        id="first_name"
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value}
+                                        placeholder="Fornavn"
+                                        borderColor={errors.first_name ? '$red10' : undefined}
+                                    />
+                                )}
+                            />
+                            {errors.first_name && (
+                                <Text color="$red10" fontSize="$2">
+                                    {errors.first_name.message}
+                                </Text>
+                            )}
+                        </YStack>
 
-                <FormField
-                    name="address_1"
-                    label="Adresse"
-                    control={control}
-                    errors={errors}
-                    containerStyle={styles.singleField}
-                />
+                        <YStack flex={1} space="$2">
+                            <Label htmlFor="last_name">Etternavn</Label>
+                            <Controller
+                                control={control}
+                                name="last_name"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input
+                                        id="last_name"
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value}
+                                        placeholder="Etternavn"
+                                        borderColor={errors.last_name ? '$red10' : undefined}
+                                    />
+                                )}
+                            />
+                            {errors.last_name && (
+                                <Text color="$red10" fontSize="$2">
+                                    {errors.last_name.message}
+                                </Text>
+                            )}
+                        </YStack>
+                    </XStack>
 
-                <FormRow>
-                    <FormField name="city" label="By" control={control} errors={errors} />
-                    <FormField
-                        name="postcode"
-                        label="Postnummer"
-                        control={control}
-                        errors={errors}
-                        keyboardType="numeric"
-                    />
-                </FormRow>
+                    <YStack space="$2">
+                        <Label htmlFor="address_1">Adresse</Label>
+                        <Controller
+                            control={control}
+                            name="address_1"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <Input
+                                    id="address_1"
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Adresse"
+                                    borderColor={errors.address_1 ? '$red10' : undefined}
+                                />
+                            )}
+                        />
+                        {errors.address_1 && (
+                            <Text color="$red10" fontSize="$2">
+                                {errors.address_1.message}
+                            </Text>
+                        )}
+                    </YStack>
 
+                    <XStack space="$4">
+                        <YStack flex={1} space="$2">
+                            <Label htmlFor="city">By</Label>
+                            <Controller
+                                control={control}
+                                name="city"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input
+                                        id="city"
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value}
+                                        placeholder="By"
+                                        borderColor={errors.city ? '$red10' : undefined}
+                                    />
+                                )}
+                            />
+                            {errors.city && (
+                                <Text color="$red10" fontSize="$2">
+                                    {errors.city.message}
+                                </Text>
+                            )}
+                        </YStack>
 
-                <FormField
-                    name="email"
-                    label="E-post"
-                    control={control}
-                    errors={errors}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    containerStyle={styles.singleField}
-                />
-                <FormField
-                    name="phone"
-                    label="Telefon"
-                    control={control}
-                    errors={errors}
-                    keyboardType="phone-pad"
-                    containerStyle={styles.singleField}
-                />
+                        <YStack flex={1} space="$2">
+                            <Label htmlFor="postcode">Postnummer</Label>
+                            <Controller
+                                control={control}
+                                name="postcode"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input
+                                        id="postcode"
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value}
+                                        placeholder="Postnummer"
+                                        keyboardType="numeric"
+                                        borderColor={errors.postcode ? '$red10' : undefined}
+                                    />
+                                )}
+                            />
+                            {errors.postcode && (
+                                <Text color="$red10" fontSize="$2">
+                                    {errors.postcode.message}
+                                </Text>
+                            )}
+                        </YStack>
+                    </XStack>
 
-                <View style={styles.buttonContainer}>
-                    <Button title="Send inn" onPress={handleSubmit(onSubmit)} />
-                </View>
-            </PageContent>
-        </PageSection>
+                    <YStack space="$2">
+                        <Label htmlFor="email">E-post</Label>
+                        <Controller
+                            control={control}
+                            name="email"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <Input
+                                    id="email"
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="E-post"
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                    borderColor={errors.email ? '$red10' : undefined}
+                                />
+                            )}
+                        />
+                        {errors.email && (
+                            <Text color="$red10" fontSize="$2">
+                                {errors.email.message}
+                            </Text>
+                        )}
+                    </YStack>
+
+                    <YStack space="$2">
+                        <Label htmlFor="phone">Telefon</Label>
+                        <Controller
+                            control={control}
+                            name="phone"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <Input
+                                    id="phone"
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Telefon"
+                                    keyboardType="phone-pad"
+                                    borderColor={errors.phone ? '$red10' : undefined}
+                                />
+                            )}
+                        />
+                        {errors.phone && (
+                            <Text color="$red10" fontSize="$2">
+                                {errors.phone.message}
+                            </Text>
+                        )}
+                    </YStack>
+
+                    <Form.Trigger asChild>
+                        <Button theme="primary" marginTop="$4">
+                            Send inn
+                        </Button>
+                    </Form.Trigger>
+                </YStack>
+            </ScrollView>
+        </Form>
     );
 };
-
-const styles = StyleSheet.create({
-    singleField: {
-        marginBottom: SPACING.md,
-    },
-    buttonContainer: {
-        marginTop: SPACING.lg,
-    },
-});

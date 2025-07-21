@@ -16,7 +16,6 @@ export const BuyProduct = ({ product, displayProduct }: { product: Product; disp
             <ProductTitle product={product} displayProduct={displayProduct} />
             <PriceTag fontSize="xxl" product={displayProduct} />
         </Row>
-
         <ProductVariations />
         <CustomText fontSize="sm">{product.short_description}</CustomText>
         <ProductStatus displayProduct={displayProduct} />

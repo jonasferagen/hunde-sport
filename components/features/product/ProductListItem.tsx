@@ -16,6 +16,7 @@ import { PriceRange } from './display/PriceRange';
 import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
 import { ProductTitle } from './display/ProductTitle';
+import { ProductVariations } from './variation/ProductVariations';
 
 interface ProductListItemProps {
     product: Product;
@@ -97,6 +98,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                     <QuantityControl quantity={quantity} onIncrease={handleIncrease} onDecrease={handleDecrease} />
                 </Col>
             </Row>
+            <ProductVariations />
 
             <View
                 style={[{
