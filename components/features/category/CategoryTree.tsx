@@ -38,16 +38,16 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
             <View style={[isExpanded ? styles.activeCategory : null, { marginLeft: level * SPACING.md }]}>
-                <View style={{ borderColor: 'green', borderWidth: 1 }}>
+                <View>
                     <XStack alignItems="center" justifyContent='space-between' >
-                        <Link href={routes.category(category)}>
-                            <XStack alignItems="center" style={{ paddingVertical: SPACING.sm, borderColor: 'blue', borderWidth: 1, flex: 1 }}>
+                        <Link href={routes.category(category)} style={{ flex: 1 }}>
+                            <XStack alignItems="center" style={{ paddingVertical: SPACING.sm, width: '100%' }}>
                                 <Icon name='dot' size='xxs' color={color} />
-                                <CustomText >{category.name}</CustomText>
+                                <CustomText style={{ marginLeft: SPACING.xs }}>{category.name}</CustomText>
                             </XStack>
                         </Link>
                         {hasChildren && (
-                            <YStack onPress={handleExpand} style={{ padding: SPACING.sm, borderColor: 'blue', borderWidth: 1 }}>
+                            <YStack onPress={handleExpand} style={{ padding: SPACING.sm, }}>
                                 <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
                             </YStack>
                         )}
@@ -125,7 +125,6 @@ export const CategoryTree = React.memo(({ variant = 'primary', style }: Category
 });
 
 const createStyles = (theme: any) => StyleSheet.create({
-
 
     activeCategory: {
         backgroundColor: rgba(theme.backgroundColor, 0.1),
