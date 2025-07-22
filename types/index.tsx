@@ -30,9 +30,9 @@ export interface Breadcrumb {
 }
 
 export interface ShoppingCartItem {
-  product: Product;
+  baseProduct: Product;
   quantity: number;
-  variant?: Product;
+  selectedVariant?: Product;
 }
 
 export interface IStyleVariant {
@@ -44,4 +44,3 @@ export interface IStyleVariant {
   readonly borderColor: string;
   getGradient(amounts?: number[]): [ColorValue, ColorValue];
 }
-

@@ -8,7 +8,7 @@ import { Product } from '@/models/Product';
 import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React from 'react';
-import { Image, Text, XStack, YStack } from 'tamagui';
+import { Image, XStack, YStack } from 'tamagui';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
@@ -40,13 +40,13 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     const isPurchasable = status === 'ok';
 
     // The product to display will be the selected variant, or fall back to the main product.
-    const cartItem = items.find((item) => item.product.id === activeProduct.id);
+    const cartItem = items.find((item) => (item.selectedVariant || item.baseProduct).id === activeProduct.id);
     const quantity = cartItem?.quantity ?? 0;
 
     const handleIncrease = () => {
         if (!isPurchasable) return;
         if (quantity === 0) {
-            addToCart(activeProduct);
+            addToCart(product, productVariant ?? undefined);
         } else {
             updateQuantity(activeProduct.id, quantity + 1);
         }
@@ -69,48 +69,51 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 
     return (
         <YStack padding="$2" borderBottomWidth={1} borderColor={theme.borderColor} gap="$3">
-
-            <XStack justifyContent="space-between">
+            <XStack justifyContent="space-between" gap="$3">
+                {/* Left Column: Image, Title, Description */}
                 <XStack flex={1} onPress={handleProductLink} gap="$3">
                     <Image source={{ uri: imageUrl }} width={80} height={80} borderRadius="$4" />
                     <YStack flex={1} gap="$2">
                         <ProductTitle product={product} activeProduct={activeProduct} />
-                        {priceRange ? (
-                            <XStack alignItems="center" gap="$2">
-                                <CustomText fontSize="md" bold>Fra {formatPrice(priceRange.min)}</CustomText>
-                                <ProductStatus fontSize="xs" displayProduct={activeProduct} />
-                            </XStack>
-                        ) : (
-                            <XStack>
-                                <PriceTag fontSize="md" product={activeProduct} />
-                            </XStack>
-                        )}
+                        <CustomText color={theme.text.primary} numberOfLines={2} fontSize={14} lineHeight={20}>
+                            {product.short_description}
+                        </CustomText>
                     </YStack>
                 </XStack>
 
+                {/* Right Column: Price & Actions */}
                 <YStack justifyContent="space-between" alignItems="flex-end" gap="$2">
-                    <YStack onPress={handlePress}>
+                    {product.type === 'variable' && !productVariant ? (
+                        <CustomText fontSize="md" bold>Fra {formatPrice(priceRange!.min)}</CustomText>
+                    ) : (
+                        <PriceTag fontSize="md" product={activeProduct} />
+                    )}
+
+                    {isPurchasable ? (
+                        <QuantityControl
+                            quantity={quantity}
+                            onIncrease={handleIncrease}
+                            onDecrease={handleDecrease}
+                        />
+                    ) : (
+                        <ProductStatus displayProduct={activeProduct} fontSize="xs" />
+                    )}
+
+                    <XStack onPress={handlePress} gap="$2" alignItems="center">
+                        {product.type === 'variable' && !productVariant && (
+                            <CustomText fontSize="xs" color="$gray10">Velg variant</CustomText>
+                        )}
                         <Icon
                             name={isExpanded ? 'collapse' : 'expand'}
                             size="md"
                             color={theme.text.primary}
                         />
-                    </YStack>
-                    <QuantityControl
-                        quantity={quantity}
-                        onIncrease={handleIncrease}
-                        onDecrease={handleDecrease}
-                        disabled={!isPurchasable}
-                    />
+                    </XStack>
                 </YStack>
             </XStack>
-            <ProductStatus displayProduct={activeProduct} fontSize="xs" />
-            <ProductVariations />
 
             <YStack display={isExpanded ? 'flex' : 'none'}>
-                <Text color={theme.text.primary} fontSize={14} lineHeight={20}>
-                    {product.short_description}
-                </Text>
+                <ProductVariations />
             </YStack>
         </YStack>
     );
