@@ -4,7 +4,7 @@ import {
   ProductDetails,
   ProductImage,
   ProductImageGallery,
-  RelatedProducts
+  ProductTiles
 } from '@/components/features/product/';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -53,8 +53,8 @@ const ProductScreenContent = () => {
           <CategoryChips categories={product.categories} />
         </PageContent>
 
-        <PageContent title="Relaterte produkter" horizontal accent>
-          <RelatedProducts productIds={product.related_ids} />
+        <PageContent primary horizontal title="Relaterte produkter" >
+          <ProductTiles type="related" themeVariant="secondary" />
         </PageContent>
       </PageSection>
       <ImageViewing

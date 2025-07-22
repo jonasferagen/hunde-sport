@@ -16,12 +16,10 @@ interface ShoppingCartItemActionsProps {
 
 export const ShoppingCartItemActions: React.FC<ShoppingCartItemActionsProps> = ({ item }) => {
     const { themeManager } = useThemeContext();
-    const { increaseQuantity, decreaseQuantity, removeFromCart } = useShoppingCartContext();
+    const { removeFromCart } = useShoppingCartContext();
     const accentVariant = themeManager.getVariant('accent');
     const product = item.selectedVariant || item.baseProduct;
 
-    const handleIncrease = () => increaseQuantity(product, item.baseProduct);
-    const handleDecrease = () => decreaseQuantity(product);
     const handleRemove = () => removeFromCart(product.id);
     const handlePress = () => router.push(routes.product(item.baseProduct));
 
@@ -32,11 +30,7 @@ export const ShoppingCartItemActions: React.FC<ShoppingCartItemActionsProps> = (
             </Pressable>
             <YStack alignItems="flex-end">
                 <XStack alignItems="center">
-                    <QuantityControl
-                        quantity={item.quantity}
-                        onIncrease={handleIncrease}
-                        onDecrease={handleDecrease}
-                    />
+                    <QuantityControl product={product} baseProduct={item.baseProduct} />
                     <Pressable onPress={handleRemove} style={{ padding: 8, marginLeft: 8 }}>
                         <Icon name="emptyCart" color={accentVariant.text.primary} />
                     </Pressable>

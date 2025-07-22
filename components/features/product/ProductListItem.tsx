@@ -33,21 +33,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         return null;
     }
 
-    const { status } = purchaseInfo(activeProduct);
-    const isPurchasable = status === 'ok';
-
-    const quantity = getQuantity(activeProduct);
-
-    const handleIncrease = () => {
-        if (!isPurchasable) return;
-        increaseQuantity(activeProduct, product);
-    };
-
-    const handleDecrease = () => {
-        if (!isPurchasable) return;
-        decreaseQuantity(activeProduct);
-    };
-
     const handleExpand = () => {
         onPress(product.id);
     };
@@ -60,10 +45,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                     product={product}
                     activeProduct={activeProduct}
                     isExpanded={isExpanded}
-                    quantity={quantity}
                     handleExpand={handleExpand}
-                    handleIncrease={handleIncrease}
-                    handleDecrease={handleDecrease}
                 />
             }
         />

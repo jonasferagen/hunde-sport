@@ -1,16 +1,17 @@
 import { ShoppingCartListItem } from '@/components/features/shoppingCart/ShoppingCartListItem';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Button, CustomText } from '@/components/ui';
+import { CustomText } from '@/components/ui';
+import { StyledButton, StyledButtonText } from '@/components/ui/button/StyledButton';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { FONT_SIZES, SPACING } from '@/styles';
 import { IStyleVariant, ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
-import { Link, Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import React, { memo, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { YStack } from 'tamagui';
 
 interface ShoppingCartSummaryProps {
     cartItemCount: number;
@@ -26,42 +27,49 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
     return (
         <>
             <View style={styles.summaryRow}>
-                <CustomText bold fontSize='lg' style={styles.totalText}>Antall: {cartItemCount}</CustomText>
-                <CustomText bold fontSize='lg' style={styles.totalText}>Total: {formatPrice(cartTotal)}</CustomText>
+                <CustomText bold fontSize="lg" style={styles.totalText}>
+                    Antall: {cartItemCount}
+                </CustomText>
+                <CustomText bold fontSize="lg" style={styles.totalText}>
+                    Total: {formatPrice(cartTotal)}
+                </CustomText>
             </View>
-            <View style={styles.buttonContainer}>
-                <Button title="Tøm handlekurv" icon="emptyCart" variant="secondary" onPress={onClearCart} />
-                <Link href={routes.checkout()} asChild>
-                    <Button title="Gå til kassen" icon="next" variant="primary" />
-                </Link>
-            </View>
+            <YStack gap="$3" mt="$3">
+                <StyledButton
+                    onPress={onClearCart}
+                    variant="secondary"
+                >
+                    <StyledButtonText variant="secondary">Tøm handlekurv</StyledButtonText>
+                </StyledButton>
+                <StyledButton
+                    onPress={() => useRouter().push(routes.checkout())}
+                    variant="primary"
+                >
+                    <StyledButtonText variant="primary">Gå til kassen</StyledButtonText>
+                </StyledButton>
+            </YStack>
         </>
     );
 });
 
 export const ShoppingCartScreen = () => {
-    const { items, cartTotal, cartItemCount, updateQuantity, removeFromCart, clearCart } = useShoppingCartContext();
+    const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
     const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
+    const router = useRouter();
 
-    const renderItem = useCallback(({ item, index }: { item: ShoppingCartItem, index: number }) => (
-        <ShoppingCartListItem
-            item={item}
-            index={index}
-            onUpdateQuantity={updateQuantity}
-            onRemove={removeFromCart}
-        />
-    ), [updateQuantity, removeFromCart]);
-
-
+    const renderItem = useCallback(
+        ({ item }: { item: ShoppingCartItem }) => <ShoppingCartListItem item={item} />,
+        []
+    );
 
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageHeader title="Handlekurv" />
             <PageSection flex>
-                <PageContent paddingHorizontal="none" paddingVertical="none" flex >
+                <PageContent paddingHorizontal="none" paddingVertical="none" flex>
                     <FlatList
                         data={items}
                         keyExtractor={(item) => item.baseProduct.id.toString()}
@@ -72,32 +80,24 @@ export const ShoppingCartScreen = () => {
                 <PageContent secondary>
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
                 </PageContent>
-            </PageSection >
+            </PageSection>
         </PageView>
-
     );
-}
+};
 
-const createStyles = (themeVariant: IStyleVariant) => StyleSheet.create({
-
-    summaryRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    buttonContainer: {
-
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        gap: SPACING.md,
-    },
-    totalText: {
-        textAlign: 'right',
-    },
-    emptyText: {
-        textAlign: 'center',
-        marginTop: 50,
-        fontSize: FONT_SIZES.md,
-        color: themeVariant.text.secondary,
-    },
-});
+const createStyles = (themeVariant: IStyleVariant) =>
+    StyleSheet.create({
+        summaryRow: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        },
+        totalText: {
+            textAlign: 'right',
+        },
+        emptyText: {
+            textAlign: 'center',
+            marginTop: 50,
+            color: themeVariant.text.secondary,
+        },
+    });

@@ -61,10 +61,6 @@ const styles = StyleSheet.create({
     },
 });
 
-/* 
-               <PageContent accent horizontal title="Populære produkter">
-                    <ProductTiles type="featured" themeVariant="secondary" />
-                </PageContent> */
 
 export const HomeScreen = () => {
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());

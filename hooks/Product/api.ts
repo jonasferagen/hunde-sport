@@ -40,9 +40,9 @@ const mapToProduct = (item: any): Product => {
     }
 };
 
-export type ProductListType = 'featured' | 'recent' | 'discounted';
+export type ProductListType = 'featured' | 'recent' | 'discounted' | 'related';
 
-function getQueryStringForType(type: ProductListType): string {
+function getQueryStringForType(type: ProductListType, params?: any): string {
     switch (type) {
         case 'featured':
             return 'featured=true&min_price=1';
@@ -50,6 +50,8 @@ function getQueryStringForType(type: ProductListType): string {
             return 'orderby=date&min_price=1';
         case 'discounted':
             return 'on_sale=true&min_price=1';
+        case 'related':
+            return `include=${params.join(',')}`;
     }
 }
 
@@ -77,7 +79,7 @@ export async function fetchProductByCategory(page: number, categoryId: number): 
 
 export async function searchProducts(page: number, query: string): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, `search=${query}`)
+        ENDPOINTS.PRODUCTS.LIST(page, `search = ${query} `)
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
@@ -88,7 +90,7 @@ export async function fetchProductsByIds(page: number, ids: number[]): Promise<P
         return [];
     }
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, `include=${ids.join(',')}`)
+        ENDPOINTS.PRODUCTS.LIST(page, `include = ${ids.join(',')} `)
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
@@ -96,7 +98,7 @@ export async function fetchProductsByIds(page: number, ids: number[]): Promise<P
 
 export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `?page=${page}&per_page=${PAGE_SIZE}`
+        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `? page = ${page}& per_page=${PAGE_SIZE} `
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);

@@ -1,6 +1,6 @@
 import { Icon } from '@/components/ui';
 import { CustomText } from '@/components/ui/text/CustomText';
-import { useShoppingCartContext, useThemeContext } from '@/contexts';
+import { useThemeContext } from '@/contexts';
 import { Product } from '@/models/Product';
 import { formatPrice } from '@/utils/helpers';
 import React, { JSX } from 'react';
@@ -12,10 +12,7 @@ interface ItemActionsProps {
     product: Product;
     activeProduct: Product;
     isExpanded: boolean;
-    quantity: number;
     handleExpand: () => void;
-    handleIncrease: () => void;
-    handleDecrease: () => void;
 }
 
 interface VariantSelectionTextProps {
@@ -48,16 +45,10 @@ export const ItemActions = ({
     product,
     activeProduct,
     isExpanded,
-    quantity,
-    handleExpand,
-    handleIncrease,
-    handleDecrease
+    handleExpand
 }: ItemActionsProps): JSX.Element => {
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('default');
-    const { purchaseInfo } = useShoppingCartContext();
-    const { status } = purchaseInfo(activeProduct);
-    const isPurchasable = status === 'ok';
 
     return (
         <YStack>
@@ -75,13 +66,7 @@ export const ItemActions = ({
                     {activeProduct.stock_status === 'outofstock' && (
                         <CustomText fontSize="md" color="$gray10">Ikke på lager</CustomText>
                     )}
-                    {isPurchasable && (
-                        <QuantityControl
-                            quantity={quantity}
-                            onIncrease={handleIncrease}
-                            onDecrease={handleDecrease}
-                        />
-                    )}
+                    <QuantityControl product={activeProduct} baseProduct={product} />
                 </XStack>
             </XStack>
             {isExpanded && (
