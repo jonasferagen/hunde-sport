@@ -52,11 +52,18 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         return product.findVariant(productVariants, selectedOptions) || null;
     }, [selectedOptions, productVariants, product, isVariable, variationAttributes]);
 
-    const handleOptionSelect = (attributeId: number, option: string) => {
-        setSelectedOptions(prev => ({
-            ...prev,
-            [attributeId]: option,
-        }));
+    const handleOptionSelect = (attributeId: number, optionName: string) => {
+        setSelectedOptions(prev => {
+            const newOptions = { ...prev };
+            if (newOptions[attributeId] === optionName) {
+                // If the same option is selected again, unselect it.
+                delete newOptions[attributeId];
+            } else {
+                // Otherwise, select the new option.
+                newOptions[attributeId] = optionName;
+            }
+            return newOptions;
+        });
     };
 
     const availableOptions = useMemo(() => {
