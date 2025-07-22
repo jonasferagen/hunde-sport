@@ -124,15 +124,16 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 
             {/* Bottom Row: Actions */}
             <XStack justifyContent="space-between" alignItems="center" padding="$1" >
+                {product.type === 'variable' ? (
+                    <XStack onPress={handlePress} gap="$2" alignItems="center" marginLeft="$2">
+                        <Icon name="dot" size="xs" color={theme.text.primary} />
+                        <CustomText fontSize="md" color="$gray10">
+                            {isExpanded ? 'Endre variant' : 'Velg variant'}
+                        </CustomText>
+                    </XStack>
+                ) : <XStack >
 
-                <XStack onPress={handlePress} gap="$2" alignItems="center" marginLeft="$2">
-                    <Icon
-                        name={isExpanded ? 'collapse' : 'expand'}
-                        size="lg"
-                        color={theme.text.primary}
-                    />
-                    <CustomText fontSize="md" color="$gray10">Velg variant</CustomText>
-                </XStack>
+                </XStack>}
                 {isPurchasable && (
                     <QuantityControl
                         quantity={quantity}
