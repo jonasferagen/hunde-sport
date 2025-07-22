@@ -1,4 +1,4 @@
-import { SizableText, styled, XStack } from 'tamagui';
+import { styled, XStack } from 'tamagui';
 
 export const Chip = styled(XStack, {
     name: 'Chip',
@@ -43,38 +43,6 @@ export const Chip = styled(XStack, {
         disabled: {
             true: {
                 opacity: 0.5,
-            },
-        },
-    } as const,
-
-    defaultVariants: {
-        variant: 'default',
-    },
-});
-
-export const ChipText = styled(SizableText, {
-    name: 'ChipText',
-    size: '$2',
-    numberOfLines: 1,
-
-    variants: {
-        variant: {
-            primary: {
-                color: '$primaryText',
-            },
-            secondary: {
-                color: '$secondaryText',
-            },
-            accent: {
-                color: '$accentText',
-            },
-            default: {
-                color: '$color',
-            },
-        },
-        disabled: {
-            true: {
-                textDecorationLine: 'line-through',
             },
         },
     } as const,

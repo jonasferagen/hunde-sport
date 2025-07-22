@@ -1,8 +1,8 @@
-import { CategoryChip, Chip, Loader } from "@/components/ui/";
-import { ChipContainer } from "@/components/ui/chips/ChipContainer";
+import { CategoryChip, Chip, ChipText, Loader } from "@/components/ui/";
 import { Category } from "@/types";
 import { useState } from "react";
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleProp, ViewStyle } from "react-native";
+import { XStack } from "tamagui";
 
 interface CategoryChipsProps {
     categories: Category[];
@@ -19,42 +19,32 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
 
-    return (
-        categories.length > 0 ? (
-            <View style={[styles.container, style]}>
-                <ChipContainer gap='xs'>
-                    {displayedCategories.map((category) => (
-                        <CategoryChip key={category.id} category={category} />
-                    ))}
-                    {(isLoading || isFetchingNextPage) && <Loader />}
-                    {!showAll && limit && categories.length > limit && (
-                        <Chip
-                            label={`Mer..(${categories.length - limit})`}
-                            onPress={() => setShowAll(true)}
-                            variant="accent"
-                        />
-                    )}
+    if (!categories || categories.length === 0) {
+        return null;
+    }
 
-                    {showAll && (
-                        <>
-                            {limit && (
-                                <Chip
-                                    label={"Skjul.."}
-                                    onPress={() => setShowAll(false)}
-                                    variant="accent"
-                                />
-                            )}
-                        </>
-                    )}
-                </ChipContainer>
-            </View>
-        ) : null
+    return (
+        <XStack flexWrap="wrap" alignItems="center" gap="$2" style={style as any}>
+            {displayedCategories.map((category) => (
+                <CategoryChip key={category.id} category={category} />
+            ))}
+            {(isLoading || isFetchingNextPage) && <Loader />}
+            {!showAll && limit && categories.length > limit && (
+                <Chip
+                    onPress={() => setShowAll(true)}
+                    variant="accent"
+                >
+                    <ChipText>{`Mer..(${categories.length - limit})`}</ChipText>
+                </Chip>
+            )}
+            {showAll && limit && categories.length > limit && (
+                <Chip
+                    onPress={() => setShowAll(false)}
+                    variant="accent"
+                >
+                    <ChipText>Skjul</ChipText>
+                </Chip>
+            )}
+        </XStack>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: 'flex-start',
-
-    },
-});

@@ -2,7 +2,7 @@ import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { Link } from 'expo-router';
 import React from 'react';
-import { Chip, ChipText } from '../../ui/chips/Chip';
+import { Chip, ChipText } from '../../ui/';
 
 interface CategoryChipProps {
     category: Category;

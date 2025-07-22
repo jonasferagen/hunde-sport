@@ -55,7 +55,6 @@ export const BaseTile = ({
 
     return (
         <YStack
-            pressable
             onPress={onPress}
             width={width}
             height={aspectRatio ? undefined : height || '100%'}
