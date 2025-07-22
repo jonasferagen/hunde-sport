@@ -1,7 +1,5 @@
 export { useCategories } from './Category';
 export {
-    useProduct,
-    useProducts,
-    useProducts as useProductsList
+    useProduct
 } from './Product';
 

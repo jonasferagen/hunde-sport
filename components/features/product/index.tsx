@@ -7,7 +7,6 @@ export * from './ProductDetails';
 export * from './ProductListItem';
 export * from './ProductTile';
 export * from './ProductTiles';
-export * from './RelatedProducts';
 export * from './variation/ProductVariations';
 
 

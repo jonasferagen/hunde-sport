@@ -1,6 +1,6 @@
-import { Heading } from '@/components/ui';
 import { Product } from '@/models/Product';
 import React from 'react';
+import { H3 } from 'tamagui';
 
 interface ProductTitleProps {
     product: Product;
@@ -10,8 +10,15 @@ interface ProductTitleProps {
 export const ProductTitle = ({ product, activeProduct }: ProductTitleProps) => {
 
     if (!activeProduct) {
-        return <Heading title={product.name} size="lg" />;
+        if (product) {
+            return <H3>{product.name}</H3>;
+        }
+    } else {
+        const title = (activeProduct.id === product.id) ? product.name : product.name + ' ' + activeProduct.name;
+        if (title) {
+            return <H3>{title}</H3>;
+        }
     }
-    const title = (activeProduct.id === product.id) ? product.name : product.name + ' ' + activeProduct.name;
-    return <Heading title={title} size="lg" />;
+
+    return null;
 };

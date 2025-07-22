@@ -1,5 +1,5 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
-import { Heading, Icon } from '@/components/ui';
+import { Icon } from '@/components/ui';
 import { useThemeContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { BORDER_RADIUS, FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
@@ -9,6 +9,7 @@ import { useSegments } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { H2, H4 } from 'tamagui';
 
 const getDrawerItemProps = (themeManager: any) => {
     const secondaryVariant = themeManager.getVariant('secondary');
@@ -67,7 +68,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                         <Icon name="close" size='xl' color={secondaryVariant.text.primary} style={{ padding: SPACING.md }} />
                     </TouchableOpacity>
                 </View>
-                <Heading title="HundeSport.no" style={{ marginBottom: SPACING.md }} />
+                <H2 style={{ marginBottom: SPACING.md }}>HundeSport.no</H2>
                 <DrawerItem
                     label="Hjem"
                     icon={({ color }) => <Icon name="home" color={color} size="xl" />}
@@ -82,7 +83,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                     onPress={handleCartNavigation}
                     {...drawerItemProps}
                 />
-                <Heading title="Kategorier" style={{ marginVertical: SPACING.md }} />
+                <H4 style={{ marginVertical: SPACING.md }}>Kategorier</H4>
                 <CategoryTree variant="secondary" style={{ marginHorizontal: 10 }} />
             </DrawerContentScrollView>
         </LinearGradient>

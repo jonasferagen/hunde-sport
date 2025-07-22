@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { StatusMessage } from '../ui/statusmessage/StatusMessage';
+import { StatusMessage } from '../ui/statusMessage/StatusMessage';
 
 export const PageView = ({ children }: { children: React.ReactNode }) => {
   return (

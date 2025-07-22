@@ -11,6 +11,6 @@ export { Icon } from './icon/Icon';
 export { Loader } from './loader/Loader';
 export { SearchBar } from './searchBar/Searchbar';
 export { CustomText } from './text/CustomText';
-export { Heading } from './text/Heading';
+
 
 export { ChipText } from './chips/ChipText';

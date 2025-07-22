@@ -34,21 +34,21 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   return (
     <TamaguiProvider config={appConfig}>
       <Theme name="light">
-        <PortalProvider>
-          <SafeAreaProvider>
-            <QueryClientProvider client={queryClient}>
-              <StatusProvider>
-                <ShoppingCartProvider>
-                  <LayoutProvider>
-                    <ThemeProvider>
+        <ThemeProvider>
+          <PortalProvider>
+            <SafeAreaProvider>
+              <QueryClientProvider client={queryClient}>
+                <StatusProvider>
+                  <ShoppingCartProvider>
+                    <LayoutProvider>
                       {children}
-                    </ThemeProvider>
-                  </LayoutProvider>
-                </ShoppingCartProvider>
-              </StatusProvider>
-            </QueryClientProvider >
-          </SafeAreaProvider >
-        </PortalProvider>
+                    </LayoutProvider>
+                  </ShoppingCartProvider>
+                </StatusProvider>
+              </QueryClientProvider >
+            </SafeAreaProvider >
+          </PortalProvider>
+        </ThemeProvider>
       </Theme>
     </TamaguiProvider>
   );

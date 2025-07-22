@@ -5,7 +5,7 @@
 
 # 2. Clear all caches
 npx expo install --fix
-npx expo r -c
+npx expo . -c
 
 # 3. Clear Metro cache specifically
 npx react-native start --reset-cache

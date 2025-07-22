@@ -25,6 +25,10 @@ export const useProduct = (id: number) => {
 export const useRelatedProducts = (ids: number[]) => {
     const query = useInfiniteQuery(productsByIdsQueryOptions(ids));
     const products = useMemo(() => query.data?.pages.flat() ?? [], [query.data]);
+
+    console.log("--- related products ---");
+
+
     return { ...query, products };
 };
 

@@ -1,7 +1,7 @@
-import { Heading } from '@/components/ui';
 import { SPACING } from '@/styles';
 import React, { Children } from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
+import { H4 } from 'tamagui';
 
 interface PageContentVerticalProps extends ViewProps {
   title?: string;
@@ -12,7 +12,7 @@ export const PageContentVertical = ({ title, children, style, ...props }: PageCo
   return (
     <View style={[styles.container, style]} {...props}>
       {title && (
-        <Heading title={title} />
+        <H4>{title}</H4>
       )}
       {Children.toArray(children).filter(child => Boolean(child))}
     </View>

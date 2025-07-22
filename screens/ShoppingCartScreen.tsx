@@ -57,7 +57,7 @@ export const ShoppingCartScreen = () => {
     const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
-    const router = useRouter();
+
 
     const renderItem = useCallback(
         ({ item }: { item: ShoppingCartItem }) => <ShoppingCartListItem item={item} />,
@@ -72,7 +72,7 @@ export const ShoppingCartScreen = () => {
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex>
                     <FlatList
                         data={items}
-                        keyExtractor={(item) => item.baseProduct.id.toString()}
+                        keyExtractor={(item) => item.baseProduct.id.toString() + (item.selectedVariant?.id?.toString() || '')}
                         renderItem={renderItem}
                         ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
                     />

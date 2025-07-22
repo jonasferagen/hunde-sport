@@ -1,10 +1,7 @@
-import { CustomText } from '@/components/ui';
-import { useThemeContext } from '@/contexts';
-import { SPACING } from '@/styles';
 import { ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { Separator, Text, YStack } from 'tamagui';
 import { CheckoutListItem } from './CheckoutListItem';
 
 interface CheckoutListProps {
@@ -13,46 +10,23 @@ interface CheckoutListProps {
 }
 
 export const CheckoutList: React.FC<CheckoutListProps> = ({ items, cartTotal }) => {
-    const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant('primary');
-    const styles = createStyles(theme);
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={items}
-                renderItem={({ item }) => <CheckoutListItem item={item} />}
-                keyExtractor={(item) => item.product.id.toString()}
-                ListFooterComponent={() => (
-                    <View style={styles.totalContainer}>
-                        <CustomText style={styles.totalText}>Total:</CustomText>
-                        <CustomText style={styles.totalAmount}>{formatPrice(cartTotal)}</CustomText>
-                    </View>
-                )}
-            />
-        </View>
+        <YStack>
+            {items.map((item: ShoppingCartItem) => (
+                <CheckoutListItem
+                    key={item.baseProduct.id.toString() + (item.selectedVariant?.id?.toString() || '')}
+                    item={item}
+                />
+            ))}
+            <Separator my="$2" />
+            <YStack ai="flex-end" gap="$2">
+                <Text fontSize="$6" fontWeight="bold">
+                    Total
+                </Text>
+                <Text fontSize="$7" fontWeight="bold">
+                    {formatPrice(cartTotal)}
+                </Text>
+            </YStack>
+        </YStack>
     );
 };
-
-const createStyles = (theme: any) => StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    totalContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: SPACING.md,
-        paddingTop: SPACING.md,
-        borderTopWidth: 1,
-        borderColor: theme.borderColor,
-    },
-    totalText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: theme.text.primary,
-    },
-    totalAmount: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: theme.text.primary,
-    },
-});

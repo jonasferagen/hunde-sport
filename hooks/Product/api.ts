@@ -51,7 +51,7 @@ function getQueryStringForType(type: ProductListType, params?: any): string {
         case 'discounted':
             return 'on_sale=true&min_price=1';
         case 'related':
-            return `include=${params.join(',')}`;
+            return `include=${params.join(',')}&min_price=1`;
     }
 }
 
@@ -63,7 +63,8 @@ export async function fetchProducts(
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, queryString)
     );
-
+    console.log('---' + type + '---');
+    console.log(data?.map((item) => item.id));
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
@@ -90,8 +91,9 @@ export async function fetchProductsByIds(page: number, ids: number[]): Promise<P
         return [];
     }
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, `include = ${ids.join(',')} `)
+        ENDPOINTS.PRODUCTS.LIST(page, `include=${ids.join(',')}&min_price=1`)
     );
+    console.log("--- products by ids ---");
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }

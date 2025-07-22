@@ -1,44 +1,35 @@
-import { CustomText } from '@/components/ui';
-import { useThemeContext } from '@/contexts';
-import { SPACING } from '@/styles';
 import { ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Text, XStack } from 'tamagui';
 
 interface CheckoutListItemProps {
     item: ShoppingCartItem;
 }
 
 export const CheckoutListItem: React.FC<CheckoutListItemProps> = ({ item }) => {
-    const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant('primary');
-    const styles = createStyles(theme);
-    const subtotal = item.product.price * item.quantity;
+    const product = item.selectedVariant ?? item.baseProduct;
+    const subtotal = product.price * item.quantity;
 
     return (
-        <View style={styles.container}>
-            <CustomText style={styles.name} color={theme.text.primary}>{item.product.name} ({item.quantity})</CustomText>
-            <CustomText style={styles.subtotal} color={theme.text.primary}>{formatPrice(subtotal)}</CustomText>
-        </View>
+        <XStack
+            justifyContent="space-between"
+            paddingVertical="$2"
+            borderBottomWidth={1}
+            borderColor="$borderColor"
+            alignItems="center"
+        >
+            <Text flex={1} fow="bold">
+                {item.baseProduct.name} ({item.quantity})
+            </Text>
+            {item.selectedVariant && (
+                <Text flex={1} fos="$2" ml="$2">
+                    {item.selectedVariant.name}
+                </Text>
+            )}
+            <Text fow="bold" miw={80} ta="right">
+                {formatPrice(subtotal)}
+            </Text>
+        </XStack>
     );
 };
-
-const createStyles = (theme: any) => StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: SPACING.sm,
-        borderBottomWidth: 1,
-        borderColor: theme.borderColor,
-        alignItems: 'center',
-    },
-    name: {
-        flex: 1,
-    },
-    subtotal: {
-        minWidth: 80,
-        textAlign: 'right',
-        fontWeight: 'bold',
-    },
-});
