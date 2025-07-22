@@ -119,41 +119,36 @@ export class Product {
     const available = new Map<number, Map<string, Product[]>>();
     const variationAttributes = this.getVariationAttributes();
 
-    variationAttributes.forEach((attr) => {
-      available.set(attr.id, new Map<string, Product[]>());
-    });
+    variationAttributes.forEach((attribute) => {
+      const currentAttributeId = attribute.id.toString();
 
-    for (const variant of variants) {
-      for (const variantAttr of variant.attributes) {
-        if (!variantAttr.option) continue;
+      // For the current attribute, we want to find variants that match all *other* selections.
+      const otherSelectedOptions = Object.entries(selectedOptions).filter(
+        ([attrId]) => attrId !== currentAttributeId
+      );
 
-        let isMatch = true;
-        // Check if this variant is compatible with all *other* selected options.
-        for (const selectedAttrId in selectedOptions) {
-          if (Number(selectedAttrId) === variantAttr.id) continue; // Skip self
-
-          const selectedOption = selectedOptions[selectedAttrId];
-          const variantHasSelectedOption = variant.attributes.find(
-            (a) => a.id === Number(selectedAttrId) && a.option === selectedOption
+      const matchingVariants = variants.filter(variant => {
+        return otherSelectedOptions.every(([attrId, optionValue]) => {
+          return variant.attributes.some(
+            attr => attr.id.toString() === attrId && attr.option === optionValue
           );
+        });
+      });
 
-          if (!variantHasSelectedOption) {
-            isMatch = false;
-            break;
-          }
-        }
-
-        if (isMatch) {
-          const optionsMap = available.get(variantAttr.id);
-          if (optionsMap) {
-            if (!optionsMap.has(variantAttr.option)) {
-              optionsMap.set(variantAttr.option, []);
+      const attributeOptions = new Map<string, Product[]>();
+      for (const variant of matchingVariants) {
+        for (const variantAttr of variant.attributes) {
+          if (variantAttr.id === attribute.id && variantAttr.option) {
+            if (!attributeOptions.has(variantAttr.option)) {
+              attributeOptions.set(variantAttr.option, []);
             }
-            optionsMap.get(variantAttr.option)?.push(variant);
+            attributeOptions.get(variantAttr.option)?.push(variant);
           }
         }
       }
-    }
+      available.set(attribute.id, attributeOptions);
+    });
+
     return available;
   }
 

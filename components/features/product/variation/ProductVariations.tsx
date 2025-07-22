@@ -26,7 +26,8 @@ export const ProductVariations = (): JSX.Element | null => {
                 const options = attribute.options.filter((o) => o.name);
                 const currentAvailableOptions = availableOptions.get(attribute.id);
 
-
+                console.log(currentAvailableOptions?.get("Svart")?.map((o) => o.name));
+                console.log(currentSelection);
                 return (
 
                     <YStack key={attribute.id} flex={1}>

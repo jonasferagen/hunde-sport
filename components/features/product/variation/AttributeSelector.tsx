@@ -15,11 +15,11 @@ interface AttributeSelectorProps {
 
 interface OptionRendererProps {
     option: any;
+    disabled?: boolean;
+    isSelected?: boolean;
 }
 
-const OptionRenderer = ({ option }: OptionRendererProps) => {
-    const isSelected = false; // This will need to be updated with proper state
-
+const OptionRenderer = ({ option, disabled, isSelected }: OptionRendererProps) => {
 
     return (
         <XStack
@@ -31,7 +31,7 @@ const OptionRenderer = ({ option }: OptionRendererProps) => {
             alignItems='center'
         >
             <XStack gap={"\$2"}>
-                <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal' }}>
+                <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', textDecorationLine: disabled ? 'line-through' : 'none' }}>
                     {option.label}
                 </CustomText>
             </XStack>
@@ -88,15 +88,19 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
                         {options.map((option, index) => {
                             const matchingVariants = currentAvailableOptions?.get(option.name!)
                             const isDisabled = !matchingVariants || matchingVariants.length === 0;
+                            const isSelected = currentSelection === option.name;
                             return (
                                 <Select.Item
                                     key={option.name + attribute.id + index}
                                     index={index}
                                     value={option.name!}
                                     disabled={isDisabled}
+
                                 >
                                     <OptionRenderer
                                         option={option}
+                                        disabled={isDisabled}
+                                        isSelected={isSelected}
                                     />
                                 </Select.Item>
                             )
