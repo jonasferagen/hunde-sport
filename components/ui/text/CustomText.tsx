@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleProp, Text, TextProps, TextStyle } from 'react-native';
 
 import { useThemeContext } from '@/contexts';
-import { FONT_FAMILY, FONT_SIZES } from '@/styles/Typography';
+import { FONT_SIZES } from '@/styles/Typography';
 
 export interface CustomTextProps extends TextProps {
     fontSize?: keyof typeof FONT_SIZES;
@@ -23,8 +23,8 @@ export const CustomText = (props: CustomTextProps) => {
 
     const textStyle = {
         fontSize: FONT_SIZES[size],
-        fontFamily: bold ? FONT_FAMILY.bold : FONT_FAMILY.regular,
         color: color || theme.text.primary,
+        fontWeight: bold ? "600" : "400" as TextStyle['fontWeight'],
     };
 
 

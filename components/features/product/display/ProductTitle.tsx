@@ -10,5 +10,5 @@ interface ProductTitleProps {
 export const ProductTitle = ({ product, activeProduct }: ProductTitleProps) => {
     const title = (activeProduct.id === product.id) ? product.name : product.name + ' ' + activeProduct.name;
 
-    return <Heading title={title} size="lg" />;
+    return <Heading title={title + ' ' + activeProduct.name} size="lg" />;
 };
