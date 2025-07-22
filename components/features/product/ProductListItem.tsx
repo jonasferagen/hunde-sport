@@ -110,13 +110,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                                 <ProductTitle product={product} activeProduct={activeProduct} />
                             </YStack>
 
-                            <CustomText
-                                fontSize="md"
-                                bold
-                                style={{ backgroundColor: theme.backgroundColor }}
-                            >
-                                {formatPrice(product.price)}
-                            </CustomText>
+                            <PriceTag product={activeProduct} />
                         </XStack>
 
                         {/* Description */}
