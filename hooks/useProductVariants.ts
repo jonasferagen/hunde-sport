@@ -40,24 +40,17 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         }
     }, [productVariants, product, initializedForProductId, hasNextPage, isFetchingNextPage, isVariable]);
 
+    const variationAttributes = useMemo(() => {
+        if (!isVariable) return [];
+        return product.getVariationAttributes();
+    }, [product, isVariable]);
+
     const productVariant = useMemo(() => {
-        if (!isVariable || !productVariants || Object.keys(selectedOptions).length === 0) return null;
-        return product.findVariant(productVariants, selectedOptions) || null;
-    }, [selectedOptions, productVariants, product, isVariable]);
-
-    useEffect(() => {
-        if (productVariant) {
-            const variantOptions = productVariant.attributes.reduce((acc, attr) => {
-                acc[attr.id] = attr.option!;
-                return acc;
-            }, {} as Record<number, string>);
-
-            // Prevent infinite loops by only updating if the options have changed.
-            if (JSON.stringify(variantOptions) !== JSON.stringify(selectedOptions)) {
-                setSelectedOptions(variantOptions);
-            }
+        if (!isVariable || !productVariants || Object.keys(selectedOptions).length < variationAttributes.length) {
+            return null;
         }
-    }, [productVariant]);
+        return product.findVariant(productVariants, selectedOptions) || null;
+    }, [selectedOptions, productVariants, product, isVariable, variationAttributes]);
 
     const handleOptionSelect = (attributeId: number, option: string) => {
         setSelectedOptions(prev => ({
@@ -70,11 +63,6 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         if (!isVariable || !productVariants) return new Map();
         return product.getAvailableOptions(productVariants, selectedOptions);
     }, [product, productVariants, selectedOptions, isVariable]);
-
-    const variationAttributes = useMemo(() => {
-        if (!isVariable) return [];
-        return product.getVariationAttributes();
-    }, [product, isVariable]);
 
     return {
         productVariant,
