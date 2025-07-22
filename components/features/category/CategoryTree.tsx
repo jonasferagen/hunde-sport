@@ -37,17 +37,17 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
+            <View style={[isExpanded ? styles.activeCategory : null, { marginLeft: level * SPACING.md }]}>
                 <View style={{ borderColor: 'green', borderWidth: 1 }}>
                     <XStack alignItems="center" justifyContent='space-between' >
                         <Link href={routes.category(category)}>
-                            <XStack alignItems="center" style={{ borderColor: 'blue', borderWidth: 1 }}>
+                            <XStack alignItems="center" style={{ paddingVertical: SPACING.sm, borderColor: 'blue', borderWidth: 1, flex: 1 }}>
                                 <Icon name='dot' size='xxs' color={color} />
-                                <CustomText style={{ borderColor: 'red', borderWidth: 1 }} >{category.name}</CustomText>
+                                <CustomText >{category.name}</CustomText>
                             </XStack>
                         </Link>
                         {hasChildren && (
-                            <YStack onPress={handleExpand}>
+                            <YStack onPress={handleExpand} style={{ padding: SPACING.sm, borderColor: 'blue', borderWidth: 1 }}>
                                 <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
                             </YStack>
                         )}
