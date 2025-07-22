@@ -12,8 +12,6 @@ interface PriceInfoProps {
 
 export const PriceTag = ({ product, fontSize = 'md' }: PriceInfoProps) => {
     const styles = createStyles();
-
-
     if (product.on_sale) {
         return (
             <View style={styles.discountContainer}>
