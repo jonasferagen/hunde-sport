@@ -9,7 +9,7 @@ interface ProductContextType {
     displayProduct: Product | null;
     priceRange: { min: number; max: number } | null;
     handleOptionSelect: (attributeId: number, option: string) => void;
-    availableOptions: Map<number, Map<string, Product>>;
+    availableOptions: Map<number, Map<string, Product[]>>;
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
     isLoading: boolean;

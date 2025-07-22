@@ -7,7 +7,7 @@ interface UseProductVariantsReturn {
     productVariant: Product | null;
     productVariants: Product[];
     handleOptionSelect: (attributeId: number, option: string) => void;
-    availableOptions: Map<number, Map<string, Product>>;
+    availableOptions: Map<number, Map<string, Product[]>>;
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
     isLoading: boolean;

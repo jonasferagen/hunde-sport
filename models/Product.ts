@@ -92,33 +92,18 @@ export class Product {
    * @returns The matched product variant or undefined if no match is found.
    */
   findVariant(variants: Product[], selectedOptions: Record<number, string>): Product | undefined {
-    const selectedKeys = Object.keys(selectedOptions);
-    if (selectedKeys.length === 0) return undefined;
-
-    // Get the available options based on the current selections.
-    const availableOptions = this.getAvailableOptions(variants, selectedOptions);
-
-    // Find the first attribute that has a selection and is available.
-    const firstSelectedAttrId = selectedKeys.map(Number)[0];
-    const selectedOption = selectedOptions[firstSelectedAttrId];
-
-    // Retrieve the variant from the new map structure.
-    const variant = availableOptions.get(firstSelectedAttrId)?.get(selectedOption);
-
-    if (variant) {
-      // Final check to ensure the retrieved variant matches all selected options.
-      const allOptionsMatch = selectedKeys.every(key => {
-        const attributeId = Number(key);
-        const option = selectedOptions[attributeId];
-        return variant.attributes.some(attr => attr.id === attributeId && attr.option === option);
-      });
-
-      if (allOptionsMatch) {
-        return variant;
-      }
+    const selectedEntries = Object.entries(selectedOptions);
+    if (selectedEntries.length === 0) {
+      return undefined;
     }
 
-    return undefined;
+    return variants.find(variant => {
+      return selectedEntries.every(([attrId, optionValue]) => {
+        return variant.attributes.some(
+          attr => attr.id.toString() === attrId && attr.option === optionValue
+        );
+      });
+    });
   }
 
   /**
@@ -130,12 +115,12 @@ export class Product {
   getAvailableOptions(
     variants: Product[],
     selectedOptions: Record<number, string>
-  ): Map<number, Map<string, Product>> {
-    const available = new Map<number, Map<string, Product>>();
+  ): Map<number, Map<string, Product[]>> {
+    const available = new Map<number, Map<string, Product[]>>();
     const variationAttributes = this.getVariationAttributes();
 
     variationAttributes.forEach((attr) => {
-      available.set(attr.id, new Map<string, Product>());
+      available.set(attr.id, new Map<string, Product[]>());
     });
 
     for (const variant of variants) {
@@ -159,7 +144,13 @@ export class Product {
         }
 
         if (isMatch) {
-          available.get(variantAttr.id)?.set(variantAttr.option, variant);
+          const optionsMap = available.get(variantAttr.id);
+          if (optionsMap) {
+            if (!optionsMap.has(variantAttr.option)) {
+              optionsMap.set(variantAttr.option, []);
+            }
+            optionsMap.get(variantAttr.option)?.push(variant);
+          }
         }
       }
     }
