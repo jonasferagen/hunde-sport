@@ -8,8 +8,9 @@ import { IStyleVariant } from '@/types';
 import { rgba } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+import { XStack, YStack } from 'tamagui';
 
 interface CategoryTreeItemProps {
     category: Category;
@@ -36,29 +37,35 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <View style={[isExpanded ? styles.activeCategory : null, { marginLeft: level * SPACING.md }]}>
-                <Pressable onPress={handleExpand} style={styles.itemContainer}>
-                    <Link style={styles.categoryInfo} href={routes.category(category)} asChild>
-                        <View style={styles.categoryInfo}>
-                            <Icon name='dot' size='xxs' color={color} />
-                            <CustomText style={[styles.categoryText, { color }]} >{category.name}</CustomText>
-                        </View>
-                    </Link>
-                    {hasChildren && (
-                        <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
-                    )}
-                </Pressable>
-                {isExpanded && (
-                    <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
-                        <CategorySubTree
-                            categoryId={category.id}
-                            level={level + 1}
-                            ancestors={ancestors}
-                            variant={variant}
-                        />
-                    </Animated.View>
-                )}
-            </View>
+            <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
+                <View style={{ borderColor: 'green', borderWidth: 1 }}>
+                    <XStack alignItems="center" justifyContent='space-between' >
+                        <Link href={routes.category(category)}>
+                            <XStack alignItems="center" style={{ borderColor: 'blue', borderWidth: 1 }}>
+                                <Icon name='dot' size='xxs' color={color} />
+                                <CustomText style={{ borderColor: 'red', borderWidth: 1 }} >{category.name}</CustomText>
+                            </XStack>
+                        </Link>
+                        {hasChildren && (
+                            <YStack onPress={handleExpand}>
+                                <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
+                            </YStack>
+                        )}
+                    </XStack>
+                </View>
+                {
+                    isExpanded && (
+                        <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
+                            <CategorySubTree
+                                categoryId={category.id}
+                                level={level + 1}
+                                ancestors={ancestors}
+                                variant={variant}
+                            />
+                        </Animated.View>
+                    )
+                }
+            </View >
         </Animated.View >
     );
 };
@@ -119,24 +126,7 @@ export const CategoryTree = React.memo(({ variant = 'primary', style }: Category
 
 const createStyles = (theme: any) => StyleSheet.create({
 
-    itemContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: SPACING.sm,
-    },
-    categoryInfo: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-    },
-    categoryText: {
-        marginLeft: SPACING.sm,
-    },
 
-    icon: {
-        marginRight: SPACING.md,
-    },
     activeCategory: {
         backgroundColor: rgba(theme.backgroundColor, 0.1),
         borderRadius: BORDER_RADIUS.lg,
