@@ -6,7 +6,7 @@ import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { FONT_SIZES, SPACING } from '@/styles';
-import { IStyleVariant } from '@/types';
+import { IStyleVariant, ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Link, Stack } from 'expo-router';
 import React, { memo, useCallback } from 'react';
@@ -45,7 +45,7 @@ export const ShoppingCartScreen = () => {
     const themeVariant = themeManager.getVariant('default');
     const styles = createStyles(themeVariant);
 
-    const renderItem = useCallback(({ item, index }: { item: any, index: number }) => (
+    const renderItem = useCallback(({ item, index }: { item: ShoppingCartItem, index: number }) => (
         <ShoppingCartListItem
             item={item}
             index={index}
@@ -64,7 +64,7 @@ export const ShoppingCartScreen = () => {
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex >
                     <FlatList
                         data={items}
-                        keyExtractor={(item) => item.product.id.toString()}
+                        keyExtractor={(item) => item.baseProduct.id.toString()}
                         renderItem={renderItem}
                         ListEmptyComponent={<CustomText style={styles.emptyText}>Handlekurven er tom.</CustomText>}
                     />

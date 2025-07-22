@@ -17,7 +17,7 @@ import React, { useMemo } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
 const ProductScreenContent = () => {
-  const { displayProduct, product } = useProductContext();
+  const { productVariant, product } = useProductContext();
   const { imageIndex, isViewerVisible, openImageViewer, closeImageViewer } = useImageViewer();
 
   const galleryImages = useMemo(
@@ -25,15 +25,17 @@ const ProductScreenContent = () => {
     [product?.images]
   );
 
-  if (!displayProduct || !product) return null;
+  const activeProduct = productVariant || product;
+
+  if (!activeProduct) return null;
 
   return (
     <>
 
       <PageSection scrollable>
         <PageContent>
-          <ProductImage image={displayProduct.image} onPress={() => openImageViewer(0)} />
-          <BuyProduct product={product} displayProduct={displayProduct} />
+          <ProductImage image={activeProduct.image} onPress={() => openImageViewer(0)} />
+          <BuyProduct product={product} displayProduct={activeProduct} />
         </PageContent>
 
         <PageContent title="Produktinformasjon" secondary>

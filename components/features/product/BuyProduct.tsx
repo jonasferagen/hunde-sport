@@ -13,7 +13,7 @@ export const BuyProduct = ({ product, displayProduct }: { product: Product; disp
 
     return <>
         <Row alignItems="center" justifyContent="space-between">
-            <ProductTitle product={product} displayProduct={displayProduct} />
+            <ProductTitle product={product} activeProduct={displayProduct} />
             <PriceTag fontSize="xxl" product={displayProduct} />
         </Row>
         <ProductVariations />

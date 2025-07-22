@@ -18,21 +18,22 @@ interface ShoppingCartListItemProps {
 export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item, index, onUpdateQuantity, onRemove }) => {
     const { themeManager } = useThemeContext();
     const accentVariant = themeManager.getVariant('accent');
+    const product = item.selectedVariant || item.baseProduct;
 
     const handleIncrease = () => {
-        onUpdateQuantity(item.product.id, item.quantity + 1);
+        onUpdateQuantity(item.baseProduct.id, item.quantity + 1);
     };
 
     const handleDecrease = () => {
-        onUpdateQuantity(item.product.id, item.quantity - 1);
+        onUpdateQuantity(item.baseProduct.id, item.quantity - 1);
     };
 
     const handleRemove = () => {
-        onRemove(item.product.id);
+        onRemove(item.baseProduct.id);
     };
 
     const handlePress = () => {
-        router.push(routes.product(item.product));
+        router.push(routes.product(item.baseProduct));
     }
 
     const actionComponent = (
@@ -51,7 +52,7 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
                         <Icon name="emptyCart" color={accentVariant.text.primary} />
                     </Pressable>
                 </View>
-                <CustomText>Subtotal: {formatPrice(item.product.price * item.quantity)}</CustomText>
+                <CustomText>Subtotal: {formatPrice(product.price * item.quantity)}</CustomText>
             </View>
         </View>
     );
@@ -59,7 +60,7 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
     return (
         <ListItem
             index={index}
-            product={item.product}
+            product={product}
             actionComponent={actionComponent}
             onPress={handlePress}
         />

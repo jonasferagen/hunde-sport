@@ -6,8 +6,8 @@ import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { Product } from '@/models/Product';
 import { SPACING } from '@/styles';
-import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
-import { router } from 'expo-router';
+import { getScaledImageUrl } from '@/utils/helpers';
+import { Link } from 'expo-router';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Image, XStack, YStack } from 'tamagui';
@@ -62,77 +62,63 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         updateQuantity(activeProduct.id, quantity - 1);
     };
 
-    const handleProductLink = () => {
-        router.push(routes.product(product, categoryId));
-    };
-
-    const handlePress = () => {
+    const handleExpand = () => {
         onPress(product.id);
     };
 
     const styles = createStyles(theme);
-    const priceContainer = product.type === 'variable' && !productVariant && priceRange ? (
-        <XStack alignItems="center" gap="$1" style={styles.priceContainer}>
-            <CustomText fontSize="md" bold>Fra</CustomText><CustomText fontSize="md" bold>{formatPrice(priceRange.min)}</CustomText>
-        </XStack>
-    ) : (
-        <PriceTag fontSize="md" product={activeProduct} />
-    );
-
 
     const imageUrl = getScaledImageUrl(activeProduct.images[0]?.src, 80, 80);
 
     return (
         <YStack borderBottomWidth={1} borderColor={theme.borderColor} gap="$2" padding="$3">
 
-            <XStack justifyContent="space-between" gap="$3">
-                <XStack
-                    alignSelf="stretch"
-                    justifyContent="flex-start"
-                    gap="$3"
-                    style={{ width: '100%' }}
-                >
-                    {/* Product image */}
-                    <YStack
-                        alignItems="center"
-                        justifyContent="center"
-
+            <Link href={routes.product(product, categoryId)} asChild>
+                <XStack justifyContent="space-between" gap="$3">
+                    <XStack
+                        alignSelf="stretch"
+                        justifyContent="flex-start"
+                        gap="$3"
+                        style={{ width: '100%' }}
                     >
-                        <Image source={{ uri: imageUrl }} width={80} height={80} borderRadius="$4" />
-                    </YStack>
+                        {/* Product image */}
+                        <YStack
+                            alignItems="center"
+                            justifyContent="center"
 
-                    {/* Text section with title and price on the same line */}
-                    <YStack flex={1} gap="$2" >
+                        >
+                            <Image source={{ uri: imageUrl }} width={80} height={80} borderRadius="$4" />
+                        </YStack>
 
-                        {/* Title + Price */}
-                        <XStack justifyContent="space-between" alignItems="flex-start">
-                            <YStack flex={1} paddingRight="$2"> {/* give room for price */}
-                                <ProductTitle product={product} activeProduct={activeProduct} />
-                            </YStack>
-
-                            <PriceTag product={activeProduct} />
-                        </XStack>
-
-                        {/* Description */}
-                        <CustomText fontSize="xs" color={theme.text.primary} numberOfLines={2}>
-                            {product.short_description}
-                        </CustomText>
-                    </YStack>
+                        {/* Text section with title and price on the same line */}
+                        <YStack flex={1} gap="$2" >
+                            {/* Title + Price */}
+                            <XStack justifyContent="space-between" alignItems="flex-start">
+                                <YStack flex={1} paddingRight="$2"> {/* give room for price */}
+                                    <ProductTitle product={product} activeProduct={activeProduct} />
+                                </YStack>
+                                <PriceTag product={activeProduct} />
+                            </XStack>
+                            {/* Description */}
+                            <CustomText fontSize="xs" color={theme.text.primary} numberOfLines={2}>
+                                {product.short_description}
+                            </CustomText>
+                        </YStack>
+                    </XStack>
                 </XStack>
-            </XStack>
-
+            </Link>
 
             {/* Bottom Row: Actions */}
             <XStack justifyContent="space-between" alignItems="center" padding="$1" >
                 {product.type === 'variable' ? (
-                    <XStack onPress={handlePress} gap="$2" alignItems="center" marginLeft="$2">
+                    <XStack onPress={handleExpand} gap="$2" alignItems="center" marginLeft="$2">
                         <Icon name="dot" size="xs" color={theme.text.primary} />
                         <CustomText fontSize="md" color="$gray10">
                             {isExpanded ? 'Endre variant' : 'Velg variant'}
                         </CustomText>
                     </XStack>
                 ) : <XStack >
-
+                    <CustomText fontSize="md" color="$gray10"></CustomText>
                 </XStack>}
                 {isPurchasable && (
                     <QuantityControl
