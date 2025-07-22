@@ -11,7 +11,6 @@ import React from 'react';
 import { Image, XStack, YStack } from 'tamagui';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
 import { PriceTag } from './display/PriceTag';
-import { ProductStatus } from './display/ProductStatus';
 import { ProductTitle } from './display/ProductTitle';
 import { ProductVariations } from './variation/ProductVariations';
 
@@ -34,6 +33,10 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 
     const { items, addToCart, updateQuantity, purchaseInfo } = useShoppingCartContext();
     const { product, priceRange, productVariant } = useProductContext();
+
+    if (!product) {
+        return null;
+    }
 
     const activeProduct = productVariant || product;
     const { status } = purchaseInfo(activeProduct);
@@ -69,47 +72,44 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 
     return (
         <YStack padding="$2" borderBottomWidth={1} borderColor={theme.borderColor} gap="$3">
+            {/* Top Row: Product Info & Price */}
             <XStack justifyContent="space-between" gap="$3">
-                {/* Left Column: Image, Title, Description */}
                 <XStack flex={1} onPress={handleProductLink} gap="$3">
                     <Image source={{ uri: imageUrl }} width={80} height={80} borderRadius="$4" />
                     <YStack flex={1} gap="$2">
                         <ProductTitle product={product} activeProduct={activeProduct} />
-                        <CustomText color={theme.text.primary} numberOfLines={2} fontSize={14} lineHeight={20}>
+                        <CustomText color={theme.text.primary} numberOfLines={2}>
                             {product.short_description}
                         </CustomText>
                     </YStack>
                 </XStack>
-
-                {/* Right Column: Price & Actions */}
-                <YStack justifyContent="space-between" alignItems="flex-end" gap="$2">
-                    {product.type === 'variable' && !productVariant ? (
-                        <CustomText fontSize="md" bold>Fra {formatPrice(priceRange!.min)}</CustomText>
+                <YStack>
+                    {product.type === 'variable' && !productVariant && priceRange ? (
+                        <CustomText fontSize="md" bold>Fra {formatPrice(priceRange.min)}</CustomText>
                     ) : (
                         <PriceTag fontSize="md" product={activeProduct} />
                     )}
+                </YStack>
+            </XStack>
 
-                    {isPurchasable ? (
-                        <QuantityControl
-                            quantity={quantity}
-                            onIncrease={handleIncrease}
-                            onDecrease={handleDecrease}
-                        />
-                    ) : (
-                        <ProductStatus displayProduct={activeProduct} fontSize="xs" />
-                    )}
-
+            {/* Bottom Row: Actions */}
+            <XStack justifyContent="flex-end" alignItems="center">
+                {isPurchasable ? (
+                    <QuantityControl
+                        quantity={quantity}
+                        onIncrease={handleIncrease}
+                        onDecrease={handleDecrease}
+                    />
+                ) : (
                     <XStack onPress={handlePress} gap="$2" alignItems="center">
-                        {product.type === 'variable' && !productVariant && (
-                            <CustomText fontSize="xs" color="$gray10">Velg variant</CustomText>
-                        )}
+                        <CustomText fontSize="xs" color="$gray10">Velg variant</CustomText>
                         <Icon
                             name={isExpanded ? 'collapse' : 'expand'}
                             size="md"
                             color={theme.text.primary}
                         />
                     </XStack>
-                </YStack>
+                )}
             </XStack>
 
             <YStack display={isExpanded ? 'flex' : 'none'}>

@@ -36,20 +36,18 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <View style={[isExpanded ? styles.activeCategory : null, { paddingVertical: SPACING.xs, marginLeft: level * SPACING.md }]}>
-                <View style={styles.itemContainer}>
-                    <Link href={routes.category(category)} asChild>
-                        <Pressable style={styles.categoryInfo}>
+            <View style={[isExpanded ? styles.activeCategory : null, { marginLeft: level * SPACING.md }]}>
+                <Pressable onPress={handleExpand} style={styles.itemContainer}>
+                    <Link style={styles.categoryInfo} href={routes.category(category)} asChild>
+                        <View style={styles.categoryInfo}>
                             <Icon name='dot' size='xxs' color={color} />
                             <CustomText style={[styles.categoryText, { color }]} >{category.name}</CustomText>
-                        </Pressable>
+                        </View>
                     </Link>
                     {hasChildren && (
-                        <Pressable onPress={handleExpand}>
-                            <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
-                        </Pressable>
+                        <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
                     )}
-                </View>
+                </Pressable>
                 {isExpanded && (
                     <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
                         <CategorySubTree
@@ -130,6 +128,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     categoryInfo: {
         flexDirection: 'row',
         alignItems: 'center',
+        flex: 1,
     },
     categoryText: {
         marginLeft: SPACING.sm,
