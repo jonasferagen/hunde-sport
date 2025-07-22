@@ -1,10 +1,15 @@
-import { useThemeContext } from '@/contexts';
-import { BORDER_RADIUS, SPACING } from '@/styles';
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { DimensionValue, ImageBackground, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
-import { CustomText } from '../text/CustomText';
+import { DimensionValue, StyleProp, ViewStyle } from "react-native";
+import { Image, Text, YStack, styled, useTheme } from 'tamagui';
+
+const StyledLinearGradient = styled(LinearGradient, {
+    name: 'StyledLinearGradient',
+    minHeight: 40,
+    padding: '$2',
+    justifyContent: 'center',
+});
 
 export interface BaseTileProps {
     name: string;
@@ -16,8 +21,7 @@ export interface BaseTileProps {
     onPress?: () => void;
     nameNumberOfLines?: number;
     gradientMinHeight?: number;
-    themeVariant?: string;
-    mainColor?: string;
+    themeVariant?: 'primary' | 'secondary' | 'accent' | 'default' | 'card';
     textSize?: string;
     textColor?: string;
     style?: StyleProp<ViewStyle>;
@@ -35,84 +39,72 @@ export const BaseTile = ({
     gradientMinHeight = 40,
     themeVariant = 'card',
     textSize = 'sm',
-    style }: BaseTileProps) => {
-    const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant(themeVariant as any);
+    style
+}: BaseTileProps) => {
+    const theme = useTheme();
 
-    const finalMainColor = theme.backgroundColor;
-    const finalTextColor = theme.text.primary;
-
-    const styles = createStyles(theme);
-
-    const dynamicStyle: StyleProp<ViewStyle> = {
-        width,
-        height: aspectRatio ? undefined : height || '100%',
-        aspectRatio,
+    const themeColors = {
+        primary: { bg: theme.primary?.val ?? theme.background.val, text: theme.primaryText?.val ?? theme.color.val },
+        secondary: { bg: theme.secondary?.val ?? theme.background.val, text: theme.secondaryText?.val ?? theme.color.val },
+        accent: { bg: theme.accent?.val ?? theme.background.val, text: theme.accentText?.val ?? theme.color.val },
+        card: { bg: theme.background.val, text: theme.color.val },
+        default: { bg: theme.background.val, text: theme.color.val },
     };
 
-
+    const selectedTheme = themeColors[themeVariant];
 
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.container, dynamicStyle, style]}>
-            <ImageBackground
+        <YStack
+            pressable
+            onPress={onPress}
+            width={width}
+            height={aspectRatio ? undefined : height || '100%'}
+            aspectRatio={aspectRatio}
+            borderRadius="$3"
+            overflow="hidden"
+            borderWidth={1}
+            borderColor="$defaultBorder"
+            flex={1}
+            style={style}
+        >
+            <Image
                 source={{ uri: imageUrl }}
-                style={styles.imageBackground}
-                imageStyle={styles.imageStyle}
-            >
-                {topRightComponent && (
-                    <View style={styles.topRightContainer}>
-                        {topRightComponent}
-                    </View>
-                )}
-                <LinearGradient
-                    colors={[rgba(finalMainColor, .7), rgba(finalMainColor, 1)]}
-                    style={[styles.gradient, { minHeight: gradientMinHeight }]}
+                position="absolute"
+                top={0}
+                left={0}
+                right={0}
+                bottom={0}
+                resizeMode="cover"
+            />
+            {topRightComponent && (
+                <YStack
+                    position="absolute"
+                    top="$2"
+                    right="$2"
+                    alignSelf="flex-end"
+                    opacity={0.9}
+                    borderRadius="$3"
+                    paddingVertical="$1"
+                    paddingHorizontal="$2"
                 >
-                    <CustomText fontSize={textSize as any} style={[styles.name, { color: finalTextColor }]} numberOfLines={nameNumberOfLines}>{name}</CustomText>
-                </LinearGradient>
-            </ImageBackground>
-        </TouchableOpacity>
+                    {topRightComponent}
+                </YStack>
+            )}
+            <YStack flex={1} justifyContent="flex-end">
+                <StyledLinearGradient
+                    colors={[rgba(selectedTheme.bg, 0.7), rgba(selectedTheme.bg, 1)]}
+                    minHeight={gradientMinHeight}
+                >
+                    <Text
+                        fontSize={textSize === 'sm' ? '$2' : '$3'}
+                        color={selectedTheme.text}
+                        textAlign="center"
+                        numberOfLines={nameNumberOfLines}
+                    >
+                        {name}
+                    </Text>
+                </StyledLinearGradient>
+            </YStack>
+        </YStack>
     );
 }
-
-const createStyles = (theme: any) => StyleSheet.create({
-    container: {
-        flex: 1,
-        borderRadius: BORDER_RADIUS.md,
-        overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: 'black'
-    },
-    imageBackground: {
-        flex: 1,
-        justifyContent: 'flex-end',
-    },
-    topRightContainer: {
-        position: 'absolute',
-        top: SPACING.sm,
-        right: SPACING.sm,
-        alignSelf: 'flex-end',
-        opacity: 0.9,
-        borderRadius: BORDER_RADIUS.md,
-        paddingVertical: SPACING.xs,
-        paddingHorizontal: SPACING.sm,
-    },
-    imageStyle: {
-        resizeMode: 'cover',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-    },
-    gradient: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        padding: SPACING.sm,
-    },
-    name: {
-        textAlign: 'center',
-    },
-});

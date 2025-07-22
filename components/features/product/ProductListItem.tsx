@@ -66,8 +66,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         onPress(product.id);
     };
 
-    const styles = createStyles(theme);
-
     const imageUrl = getScaledImageUrl(activeProduct.images[0]?.src, 80, 80);
 
     return (

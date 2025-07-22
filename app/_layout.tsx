@@ -4,9 +4,6 @@ import {
   StatusProvider,
   ThemeProvider
 } from '@/contexts';
-
-
-import { config } from '@/config/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot, useNavigationContainerRef } from 'expo-router';
@@ -14,22 +11,15 @@ import React, { JSX, memo, useState } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
+import appConfig from '../tamagui.config';
 
 const AppContent = memo((): JSX.Element => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }} >
-      <TamaguiProvider config={config}>
-        <Theme name="light">
-          <PortalProvider>
-            <Slot />
-          </PortalProvider>
-        </Theme>
-      </TamaguiProvider>
+      <Slot />
     </GestureHandlerRootView>
   );
 });
-
-
 
 const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient({
@@ -42,19 +32,25 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   }));
 
   return (
-    <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <StatusProvider>
-          <ShoppingCartProvider>
-            <LayoutProvider>
-              <ThemeProvider>
-                {children}
-              </ThemeProvider>
-            </LayoutProvider>
-          </ShoppingCartProvider>
-        </StatusProvider>
-      </QueryClientProvider >
-    </SafeAreaProvider >
+    <TamaguiProvider config={appConfig}>
+      <Theme name="light">
+        <PortalProvider>
+          <SafeAreaProvider>
+            <QueryClientProvider client={queryClient}>
+              <StatusProvider>
+                <ShoppingCartProvider>
+                  <LayoutProvider>
+                    <ThemeProvider>
+                      {children}
+                    </ThemeProvider>
+                  </LayoutProvider>
+                </ShoppingCartProvider>
+              </StatusProvider>
+            </QueryClientProvider >
+          </SafeAreaProvider >
+        </PortalProvider>
+      </Theme>
+    </TamaguiProvider>
   );
 });
 

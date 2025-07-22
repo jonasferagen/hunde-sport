@@ -36,7 +36,7 @@ export const CategoryTile = ({
                 style={style}
                 textSize={textSize}
                 themeVariant={'primary'}
-                imageUrl={category.image.src}
+                imageUrl={category.image?.src ?? ''}
             />
         </Link>
     );
