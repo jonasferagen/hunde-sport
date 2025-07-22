@@ -1,18 +1,18 @@
-import { BaseTile } from "@/components/ui/tile/BaseTile";
+import { BaseTile, ThemeVariant } from "@/components/ui/tile/BaseTile";
 import { routes } from '@/config/routes';
-import { useThemeContext } from "@/contexts";
-import { CARD_DIMENSIONS, SPACING } from '@/styles';
+import { CARD_DIMENSIONS } from '@/styles';
 import { Product } from "@/types";
 import { Link } from 'expo-router';
 import React from 'react';
-import { DimensionValue, StyleSheet, View } from 'react-native';
+import { DimensionValue } from 'react-native';
+import { View, YStack } from 'tamagui';
 import { PriceTag } from './display/PriceTag';
 
 interface ProductTileProps {
     product: Product;
     width?: DimensionValue;
     height?: DimensionValue;
-    themeVariant?: any;
+    themeVariant?: ThemeVariant;
 }
 
 export const ProductTile = ({
@@ -23,37 +23,36 @@ export const ProductTile = ({
 }: ProductTileProps) => {
     const { images, name } = product;
     const image = images[0];
-    const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant(themeVariant);
-    const styles = createStyles(theme);
-
-    const PriceComponent = (
-        <View style={styles.priceContainer}>
-            <PriceTag product={product} />
-        </View>
-    );
 
     return (
         <Link href={routes.product(product)} asChild>
-            <BaseTile
-                width={width}
+            <YStack
                 height={height}
-                themeVariant={themeVariant}
-                name={name}
-                imageUrl={image.src}
-                topRightComponent={PriceComponent}
-                nameNumberOfLines={2}
-                gradientMinHeight={40}
-            />
+                width={width}
+                borderRadius="$3"
+                overflow="hidden"
+            >
+                <BaseTile
+                    width={width}
+                    height={height}
+                    themeVariant={themeVariant}
+                    name={name}
+                    imageUrl={image?.src ?? ''}
+                    nameNumberOfLines={2}
+                    gradientMinHeight={40}
+                />
+                <View
+                    position="absolute"
+                    top="$2"
+                    right="$2"
+                    backgroundColor="$background0.5"
+                    paddingVertical="$2"
+                    paddingHorizontal="$3"
+                    borderRadius="$3"
+                >
+                    <PriceTag product={product} />
+                </View>
+            </YStack>
         </Link>
     );
 };
-
-const createStyles = (theme: any) => StyleSheet.create({
-    priceContainer: {
-        backgroundColor: theme.backgroundColor,
-        paddingVertical: SPACING.xs,
-        paddingHorizontal: SPACING.sm,
-        borderRadius: SPACING.sm,
-    },
-});

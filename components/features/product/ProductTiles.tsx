@@ -1,17 +1,17 @@
 import { Loader } from '@/components/ui';
 import { useProductsList } from '@/hooks/Product';
 import { ProductListType } from '@/hooks/Product/api';
-import { SPACING } from '@/styles';
 import React, { JSX } from 'react';
-import { View } from 'react-native';
+import { XStack } from 'tamagui';
+import { ThemeVariant } from '../../ui/tile/BaseTile';
 import { ProductTile } from './ProductTile';
 
 interface ProductTilesProps {
     type: ProductListType;
-    themeVariant?: string;
+    themeVariant?: ThemeVariant;
 }
 
-export const ProductTiles = ({ type, themeVariant }: ProductTilesProps): JSX.Element => {
+export const ProductTiles = ({ type, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
     const { products, isLoading } = useProductsList(type);
 
     if (isLoading) {
@@ -23,7 +23,7 @@ export const ProductTiles = ({ type, themeVariant }: ProductTilesProps): JSX.Ele
     }
 
     return (
-        <View style={{ gap: SPACING.md, flexDirection: 'row' }}>
+        <XStack gap="$space.4">
             {products.map((product) => (
                 <ProductTile
                     key={product.id}
@@ -31,6 +31,6 @@ export const ProductTiles = ({ type, themeVariant }: ProductTilesProps): JSX.Ele
                     themeVariant={themeVariant}
                 />
             ))}
-        </View>
+        </XStack>
     );
 };

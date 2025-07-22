@@ -11,43 +11,41 @@ const StyledLinearGradient = styled(LinearGradient, {
     justifyContent: 'center',
 });
 
+// Define the type for our variants. Export it so other components can use it.
+export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';
+
 export interface BaseTileProps {
     name: string;
     imageUrl: string;
-    topRightComponent?: React.ReactNode;
     width?: DimensionValue;
     height?: DimensionValue;
     aspectRatio?: number;
     onPress?: () => void;
     nameNumberOfLines?: number;
     gradientMinHeight?: number;
-    themeVariant?: 'primary' | 'secondary' | 'accent' | 'default' | 'card';
-    textSize?: string;
-    textColor?: string;
+    themeVariant?: ThemeVariant;
     style?: StyleProp<ViewStyle>;
 }
 
 export const BaseTile = ({
     name,
     imageUrl,
-    topRightComponent,
     width = '100%',
     height,
     aspectRatio,
     onPress,
     nameNumberOfLines = 1,
     gradientMinHeight = 40,
-    themeVariant = 'card',
-    textSize = 'sm',
+    themeVariant = 'default',
     style
 }: BaseTileProps) => {
     const theme = useTheme();
 
-    const themeColors = {
+    // Define colors inside the component to access the theme hook
+    const themeColors: Record<ThemeVariant, { bg: string, text: string }> = {
         primary: { bg: theme.primary?.val ?? theme.background.val, text: theme.primaryText?.val ?? theme.color.val },
         secondary: { bg: theme.secondary?.val ?? theme.background.val, text: theme.secondaryText?.val ?? theme.color.val },
         accent: { bg: theme.accent?.val ?? theme.background.val, text: theme.accentText?.val ?? theme.color.val },
-        card: { bg: theme.background.val, text: theme.color.val },
         default: { bg: theme.background.val, text: theme.color.val },
     };
 
@@ -75,27 +73,13 @@ export const BaseTile = ({
                 bottom={0}
                 resizeMode="cover"
             />
-            {topRightComponent && (
-                <YStack
-                    position="absolute"
-                    top="$2"
-                    right="$2"
-                    alignSelf="flex-end"
-                    opacity={0.9}
-                    borderRadius="$3"
-                    paddingVertical="$1"
-                    paddingHorizontal="$2"
-                >
-                    {topRightComponent}
-                </YStack>
-            )}
             <YStack flex={1} justifyContent="flex-end">
                 <StyledLinearGradient
                     colors={[rgba(selectedTheme.bg, 0.7), rgba(selectedTheme.bg, 1)]}
                     minHeight={gradientMinHeight}
                 >
                     <Text
-                        fontSize={textSize === 'sm' ? '$2' : '$3'}
+                        fontSize={14}
                         color={selectedTheme.text}
                         textAlign="center"
                         numberOfLines={nameNumberOfLines}
