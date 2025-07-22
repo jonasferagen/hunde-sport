@@ -1,10 +1,9 @@
 import { CustomText } from '@/components/ui/text/CustomText';
 import { useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
-import React, { JSX } from 'react';
+import React, { JSX, useState } from 'react';
 import { View } from 'react-native';
-import { Adapt, Select, Sheet } from 'tamagui';
-
+import { Adapt, Select, Sheet, XStack } from 'tamagui';
 
 interface VariationSelectorProps {
     attribute: ProductAttribute;
@@ -17,12 +16,14 @@ interface VariationSelectorProps {
 
 const DropdownVariationSelector = ({ attribute, options, currentSelection, availableOptions, handleOptionSelect, isLoading }: VariationSelectorProps) => {
     const useFullscreen = options.length > 10; // Adjust threshold as needed
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <Select
             key={`${attribute.id}-${currentSelection}`}
             value={currentSelection}
-            onValueChange={(v) => handleOptionSelect(attribute.id, v)}
+            onValueChange={(v) => { handleOptionSelect(attribute.id, v); setIsOpen(false) }}
             disablePreventBodyScroll
+            onOpenChange={setIsOpen}
 
         >
             <Select.Trigger >
@@ -45,25 +46,24 @@ const DropdownVariationSelector = ({ attribute, options, currentSelection, avail
                     </Sheet>
                 </Adapt>
             )}
-            <Select.Content zIndex={2000}>
+            <Select.Content zIndex={2000} >
                 <Select.ScrollUpButton />
                 <Select.Viewport>
-                    <Select.Group>
-
+                    <Select.Group display={isOpen ? 'flex' : 'none'}>
                         {options.map((option, index) => {
                             const isDisabled = !availableOptions
                                 .get(attribute.id)
                                 ?.has(option.name!)
                             return (
                                 <Select.Item
-                                    key={option.name}
+                                    key={option.name + attribute.id + index}
                                     index={index}
                                     value={option.name!}
                                     disabled={isDisabled}
                                     flex={1}
                                     visibility='visible'
                                 >
-                                    <Select.ItemText>{option.name}</Select.ItemText>
+                                    <Select.ItemText key={option.name + attribute.id + index}>{option.name}</Select.ItemText>
                                 </Select.Item>
                             )
                         })}
@@ -94,24 +94,29 @@ export const ProductVariations = (): JSX.Element | null => {
 
     return (
         <View>
-            {variationAttributes.map((attribute) => {
-                const currentSelection = selectedOptions[attribute.id];
-                const options = attribute.options.filter((o) => o.name);
+            <XStack>
+                {variationAttributes.map((attribute) => {
+                    const currentSelection = selectedOptions[attribute.id];
+                    const options = attribute.options.filter((o) => o.name);
 
-                return (
-                    <View key={attribute.id}>
-                        <CustomText style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</CustomText>
-                        <DropdownVariationSelector
-                            attribute={attribute}
-                            options={options}
-                            currentSelection={currentSelection}
-                            availableOptions={availableOptions}
-                            handleOptionSelect={handleOptionSelect}
-                            isLoading={isLoading}
-                        />
-                    </View>
-                );
-            })}
+                    return (
+
+                        <View key={attribute.id}>
+                            <CustomText style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</CustomText>
+                            <DropdownVariationSelector
+                                attribute={attribute}
+                                options={options}
+                                currentSelection={currentSelection}
+                                availableOptions={availableOptions}
+                                handleOptionSelect={handleOptionSelect}
+                                isLoading={isLoading}
+                            />
+                        </View>
+                    );
+                })}
+
+            </XStack>
+
         </View>
     );
 };

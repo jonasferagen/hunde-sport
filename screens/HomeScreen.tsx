@@ -11,7 +11,6 @@ import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
 import { Product } from '@/types';
 import { router, Stack } from 'expo-router';
-import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 const CategorySection = () => {

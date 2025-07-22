@@ -1,10 +1,11 @@
 import { Loader } from '@/components/ui';
 import { useLayoutContext } from '@/contexts';
-import { SPACING } from '@/styles';
 import { Product } from '@/models/Product';
+import { SPACING } from '@/styles';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback, useState } from 'react';
 import { ViewStyle } from 'react-native';
+import { YStack } from 'tamagui';
 import { ProductListItem } from './ProductListItem';
 
 interface ProductListProps {
@@ -39,7 +40,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, contentConta
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 
-    return <FlashList style={{ flex: 1 }}
+    return <YStack flex={1}><FlashList
         data={products}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
@@ -52,5 +53,5 @@ export const ProductList = memo(({ products, loadMore, loadingMore, contentConta
         estimatedItemSize={100}
         extraData={expandedProductId}
     />
-
+    </YStack>
 });

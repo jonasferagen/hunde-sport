@@ -29,9 +29,9 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
     return (
         <Form onSubmit={handleSubmit(onSubmit)} flex={1}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <YStack space="$4" padding="$4">
-                    <XStack space="$4">
-                        <YStack flex={1} space="$2">
+                <YStack gap="$4" padding="$4">
+                    <XStack gap="$4">
+                        <YStack flex={1} gap="$2">
                             <Label htmlFor="first_name">Fornavn</Label>
                             <Controller
                                 control={control}
@@ -54,7 +54,7 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                             )}
                         </YStack>
 
-                        <YStack flex={1} space="$2">
+                        <YStack flex={1} gap="$2">
                             <Label htmlFor="last_name">Etternavn</Label>
                             <Controller
                                 control={control}
@@ -78,7 +78,7 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                         </YStack>
                     </XStack>
 
-                    <YStack space="$2">
+                    <YStack gap="$2">
                         <Label htmlFor="address_1">Adresse</Label>
                         <Controller
                             control={control}
@@ -101,8 +101,8 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                         )}
                     </YStack>
 
-                    <XStack space="$4">
-                        <YStack flex={1} space="$2">
+                    <XStack gap="$4">
+                        <YStack flex={1} gap="$2">
                             <Label htmlFor="city">By</Label>
                             <Controller
                                 control={control}
@@ -125,7 +125,7 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                             )}
                         </YStack>
 
-                        <YStack flex={1} space="$2">
+                        <YStack flex={1} gap="$2">
                             <Label htmlFor="postcode">Postnummer</Label>
                             <Controller
                                 control={control}
@@ -150,7 +150,7 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                         </YStack>
                     </XStack>
 
-                    <YStack space="$2">
+                    <YStack gap="$2">
                         <Label htmlFor="email">E-post</Label>
                         <Controller
                             control={control}

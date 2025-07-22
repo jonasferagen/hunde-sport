@@ -25,10 +25,8 @@ interface ProductListItemProps {
 }
 
 const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = ({
-    index,
     onPress,
     isExpanded,
-    expandedHeight,
     categoryId,
 }) => {
     const { themeManager } = useThemeContext();
@@ -64,7 +62,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     const imageUrl = getScaledImageUrl(displayProduct!.images[0]?.src, 80, 80);
 
     return (
-        <YStack padding="$2" borderBottomWidth={1} borderColor={theme.borderColor} space="$3">
+        <YStack padding="$2" borderBottomWidth={1} borderColor={theme.borderColor} gap="$3">
             <XStack justifyContent="space-between">
                 <XStack flex={1} onPress={handleProductLink} space="$3">
                     <Image source={{ uri: imageUrl }} width={80} height={80} borderRadius="$4" />

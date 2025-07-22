@@ -5,7 +5,7 @@ const SimpleSelectTest = () => {
     const [value, setValue] = React.useState('');
 
     return (
-        <YStack padding="$4" space="$2">
+        <YStack padding="$4" gap="$2">
             <Text>Test Select (Current: {value || 'None'})</Text>
             <Select value={value} onValueChange={setValue}>
                 <Select.Trigger width={200}>
