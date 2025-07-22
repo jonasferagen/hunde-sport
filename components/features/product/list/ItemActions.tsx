@@ -18,6 +18,32 @@ interface ItemActionsProps {
     handleDecrease: () => void;
 }
 
+interface VariantSelectionTextProps {
+    product: Product;
+    activeProduct: Product;
+}
+
+const VariantSelectionText = ({ product, activeProduct }: VariantSelectionTextProps) => {
+    if (activeProduct.type === 'variation') {
+        return (
+            <>
+                <CustomText fontSize="md" color="$gray10">
+                    {product.name} - <CustomText bold fontSize="md" color="$gray10">{activeProduct.name.trim()}</CustomText>
+                </CustomText>
+                <CustomText bold fontSize="md" color="$gray10">
+                    á {formatPrice(activeProduct.price)}
+                </CustomText>
+            </>
+        );
+    }
+
+    return (
+        <CustomText fontSize="md" color="$gray10">
+            Velg variant
+        </CustomText>
+    );
+};
+
 export const ItemActions = ({
     product,
     activeProduct,
@@ -32,31 +58,17 @@ export const ItemActions = ({
     const { purchaseInfo } = useShoppingCartContext();
     const { status } = purchaseInfo(activeProduct);
     const isPurchasable = status === 'ok';
+
     return (
-        <>
-            <XStack justifyContent="space-between" alignItems="center" padding="$1" >
+        <YStack>
+            <XStack justifyContent="space-between" alignItems="center" padding="$1">
                 <XStack gap="$3" alignItems="center">
                     {product.type === 'variable' && (
                         <XStack onPress={handleExpand} gap="$2" alignItems="center" marginLeft="$2">
                             <Icon name="dot" size="xs" color={theme.text.primary} />
-                            {activeProduct.type !== 'variation' && (
-                                <CustomText fontSize="md" color="$gray10">
-                                    Velg variant
-                                </CustomText>
-                            )}
-                            {activeProduct.type === 'variation' && (
-                                <CustomText fontSize="md" color="$gray10">
-                                    {product.name} - <CustomText bold fontSize="md" color="$gray10">{activeProduct.name.trim()}</CustomText>
-                                </CustomText>
-                            )}
-                            {activeProduct.type === 'variation' && (
-                                <CustomText bold fontSize="md" color="$gray10">
-                                    á {formatPrice(activeProduct.price)}
-                                </CustomText>
-                            )}
+                            <VariantSelectionText product={product} activeProduct={activeProduct} />
                         </XStack>
                     )}
-
                 </XStack>
 
                 <XStack gap="$2">
@@ -72,9 +84,11 @@ export const ItemActions = ({
                     )}
                 </XStack>
             </XStack>
-            <YStack display={isExpanded ? 'flex' : 'none'} marginHorizontal="$3" marginTop="$2">
-                <ProductVariations />
-            </YStack>
-        </>
+            {isExpanded && (
+                <YStack marginHorizontal="$3" marginTop="$2">
+                    <ProductVariations />
+                </YStack>
+            )}
+        </YStack>
     );
 };
