@@ -13,6 +13,9 @@ export const cleanNumber = (value: string) => {
 export const formatPrice = (price: number): string =>
     price.toFixed(0).replace('.', ',') + ',-';
 
+export const formatPriceRange = (priceRange: { min: number; max: number }): string =>
+    priceRange.min === priceRange.max ? formatPrice(priceRange.min) : `${formatPrice(priceRange.min)} / ${formatPrice(priceRange.max)}`;
+
 export const lighten = (color: string, amount: number) =>
     tinycolor(color).lighten(amount).toString();
 

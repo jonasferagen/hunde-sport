@@ -1,8 +1,9 @@
 import { Loader } from '@/components/ui';
 import { CustomText } from '@/components/ui/text/CustomText';
+import { calculatePriceRange } from '@/hooks/usePriceRange';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
-import { formatPrice } from '@/utils/helpers';
+import { formatPriceRange } from '@/utils/helpers';
 import React, { useState } from 'react';
 import { Adapt, Select, Sheet, XStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
@@ -32,10 +33,7 @@ interface OptionRendererProps {
 
 const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, selectedOptions, isFirst, isLast, isLoading }: OptionRendererProps) => {
 
-    //console.log(matchingVariants?.reduce((a, b) => a.price < b.price ? a : b));
-    const prices = (matchingVariants?.map((variant) => variant.price));
-    const minPrice = prices?.reduce((a, b) => a < b ? a : b) ?? 0;
-    const maxPrice = prices?.reduce((a, b) => a > b ? a : b) ?? 0;
+    const priceRange = calculatePriceRange(matchingVariants);
 
     const opacity = isFirst ? 0.5 : 1;
 
@@ -62,7 +60,8 @@ const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, select
                     </XStack>
                 ) : <XStack opacity={opacity} alignItems='flex-end'>
                     <CustomText fontSize={fontSize}>
-                        {minPrice === maxPrice ? formatPrice(minPrice) : `${minPrice} - ${maxPrice}`}</CustomText>
+                        {priceRange && formatPriceRange(priceRange)}
+                    </CustomText>
                 </XStack>
             )}
         </XStack>
@@ -79,9 +78,10 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
         <Select
             key={`${attribute.id}-${currentSelection}`}
             value={currentSelection}
-            onValueChange={(v) => { handleOptionSelect(attribute.id, v); setIsOpen(true) }}
+            onValueChange={(v) => { handleOptionSelect(attribute.id, v); }}
             disablePreventBodyScroll
-            onOpenChange={() => setIsOpen(true)}
+            onOpenChange={(v) => setIsOpen(v)}
+            open={isOpen}
         >
             <Select.Trigger >
                 <Select.Value>
@@ -119,7 +119,7 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
             <Select.Content zIndex={2000} >
                 <Select.ScrollUpButton />
                 <Select.Viewport>
-                    <Select.Group>
+                    <Select.Group display={isOpen ? 'flex' : 'none'}>
                         {options.map((option, index) => {
                             const matchingVariants = currentAvailableOptions?.get(option.name!)
                             const isDisabled = !matchingVariants || matchingVariants.length === 0;

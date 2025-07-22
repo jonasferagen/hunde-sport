@@ -1,15 +1,15 @@
 import { Icon } from '@/components/ui';
+import { CustomText } from '@/components/ui/text/CustomText';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { Product } from '@/models/Product';
-import { getScaledImageUrl } from '@/utils/helpers';
+import { formatPrice, getScaledImageUrl } from '@/utils/helpers';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, Text, XStack, YStack } from 'tamagui';
 import { QuantityControl } from '../shoppingCart/QuantityControl';
-import { PriceRange } from './display/PriceRange';
 import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
 import { ProductTitle } from './display/ProductTitle';
@@ -32,23 +32,29 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('card');
 
-    const { items, addToCart, updateQuantity } = useShoppingCartContext();
-    const { displayProduct, product, priceRange } = useProductContext();
+    const { items, addToCart, updateQuantity, purchaseInfo } = useShoppingCartContext();
+    const { product, priceRange, productVariant } = useProductContext();
+
+    const activeProduct = productVariant || product;
+    const { status } = purchaseInfo(activeProduct);
+    const isPurchasable = status === 'ok';
 
     // The product to display will be the selected variant, or fall back to the main product.
-    const cartItem = items.find((item) => item.product.id === displayProduct!.id);
+    const cartItem = items.find((item) => item.product.id === activeProduct.id);
     const quantity = cartItem?.quantity ?? 0;
 
     const handleIncrease = () => {
+        if (!isPurchasable) return;
         if (quantity === 0) {
-            addToCart(displayProduct!);
+            addToCart(activeProduct);
         } else {
-            updateQuantity(displayProduct!.id, quantity + 1);
+            updateQuantity(activeProduct.id, quantity + 1);
         }
     };
 
     const handleDecrease = () => {
-        updateQuantity(displayProduct!.id, quantity - 1);
+        if (!isPurchasable) return;
+        updateQuantity(activeProduct.id, quantity - 1);
     };
 
     const handleProductLink = () => {
@@ -59,29 +65,30 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         onPress(product.id);
     };
 
-    const imageUrl = getScaledImageUrl(displayProduct!.images[0]?.src, 80, 80);
+    const imageUrl = getScaledImageUrl(activeProduct.images[0]?.src, 80, 80);
 
     return (
         <YStack padding="$2" borderBottomWidth={1} borderColor={theme.borderColor} gap="$3">
+
             <XStack justifyContent="space-between">
-                <XStack flex={1} onPress={handleProductLink} space="$3">
+                <XStack flex={1} onPress={handleProductLink} gap="$3">
                     <Image source={{ uri: imageUrl }} width={80} height={80} borderRadius="$4" />
-                    <YStack flex={1} space="$2">
-                        <ProductTitle product={product} displayProduct={displayProduct!} />
+                    <YStack flex={1} gap="$2">
+                        <ProductTitle product={product} activeProduct={activeProduct} />
                         {priceRange ? (
-                            <XStack alignItems="center" space="$2">
-                                {priceRange && <PriceRange priceRange={priceRange} />}
-                                <ProductStatus fontSize="xs" displayProduct={displayProduct!} />
+                            <XStack alignItems="center" gap="$2">
+                                <CustomText fontSize="md" bold>Fra {formatPrice(priceRange.min)}</CustomText>
+                                <ProductStatus fontSize="xs" displayProduct={activeProduct} />
                             </XStack>
                         ) : (
                             <XStack>
-                                <PriceTag fontSize="md" product={displayProduct!} />
+                                <PriceTag fontSize="md" product={activeProduct} />
                             </XStack>
                         )}
                     </YStack>
                 </XStack>
 
-                <YStack justifyContent="space-between" alignItems="flex-end" space="$2">
+                <YStack justifyContent="space-between" alignItems="flex-end" gap="$2">
                     <YStack onPress={handlePress}>
                         <Icon
                             name={isExpanded ? 'collapse' : 'expand'}
@@ -93,10 +100,11 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                         quantity={quantity}
                         onIncrease={handleIncrease}
                         onDecrease={handleDecrease}
+                        disabled={!isPurchasable}
                     />
                 </YStack>
             </XStack>
-
+            <ProductStatus displayProduct={activeProduct} fontSize="xs" />
             <ProductVariations />
 
             <YStack display={isExpanded ? 'flex' : 'none'}>

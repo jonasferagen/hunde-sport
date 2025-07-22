@@ -27,7 +27,6 @@ export const ProductStatus = ({ displayProduct, fontSize = 'md', short = false }
     if (status === 'variantneeded') {
         return (
             <XStack alignItems="center">
-
                 <Icon name="exclamation" size={fontSize} color='grey' />
                 <CustomText fontSize={fontSize} bold color='grey'>{message}</CustomText>
             </XStack>

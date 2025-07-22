@@ -4,11 +4,11 @@ import React from 'react';
 
 interface ProductTitleProps {
     product: Product;
-    displayProduct: Product;
+    activeProduct: Product;
 }
 
-export const ProductTitle = ({ product, displayProduct }: ProductTitleProps) => {
-    const title = (displayProduct.id === product.id) ? product.name : product.name + ' ' + displayProduct.name;
+export const ProductTitle = ({ product, activeProduct }: ProductTitleProps) => {
+    const title = (activeProduct.id === product.id) ? product.name : product.name + ' ' + activeProduct.name;
 
-    return <Heading title={title + ' ' + product.id} size="lg" />;
+    return <Heading title={title} size="lg" />;
 };
