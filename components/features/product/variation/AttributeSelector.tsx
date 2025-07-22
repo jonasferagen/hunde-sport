@@ -1,8 +1,11 @@
+import { Loader } from '@/components/ui';
 import { CustomText } from '@/components/ui/text/CustomText';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
+import { formatPrice } from '@/utils/helpers';
 import React, { useState } from 'react';
 import { Adapt, Select, Sheet, XStack } from 'tamagui';
+import { PriceTag } from '../display/PriceTag';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
@@ -11,22 +14,39 @@ interface AttributeSelectorProps {
     currentAvailableOptions: Map<string, Product[]> | undefined;
     handleOptionSelect: (attributeId: number, optionName: string) => void;
     isLoading: boolean;
+    selectedOptions: Record<number, string>;
+    isFirst: boolean;
+    isLast: boolean;
 }
 
 interface OptionRendererProps {
     option: any;
     disabled?: boolean;
     isSelected?: boolean;
+    matchingVariants?: Product[];
+    selectedOptions: Record<number, string>;
+    isFirst: boolean;
+    isLast: boolean;
+    isLoading: boolean;
 }
 
-const OptionRenderer = ({ option, disabled, isSelected }: OptionRendererProps) => {
+const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, selectedOptions, isFirst, isLast, isLoading }: OptionRendererProps) => {
+
+    //console.log(matchingVariants?.reduce((a, b) => a.price < b.price ? a : b));
+    const prices = (matchingVariants?.map((variant) => variant.price));
+    const minPrice = prices?.reduce((a, b) => a < b ? a : b) ?? 0;
+    const maxPrice = prices?.reduce((a, b) => a > b ? a : b) ?? 0;
+
+    const opacity = isFirst ? 0.5 : 1;
+
+    const fontSize = isFirst ? "xs" : "sm";
 
     return (
         <XStack
             flex={1}
             backgroundColor={isSelected ? '$backgroundFocus' : 'transparent'}
             paddingVertical={"\$2"}
-            paddingHorizontal={"\$3"}
+            paddingHorizontal={"\$1"}
             justifyContent='space-between'
             alignItems='center'
         >
@@ -35,11 +55,21 @@ const OptionRenderer = ({ option, disabled, isSelected }: OptionRendererProps) =
                     {option.label}
                 </CustomText>
             </XStack>
+            {isLoading ? <Loader /> : matchingVariants && (
+                matchingVariants.length === 1 ? (
+                    <XStack opacity={opacity}>
+                        <PriceTag product={matchingVariants[0]} />
+                    </XStack>
+                ) : <XStack opacity={opacity} alignItems='flex-end'>
+                    <CustomText fontSize={fontSize}>
+                        {minPrice === maxPrice ? formatPrice(minPrice) : `${minPrice} - ${maxPrice}`}</CustomText>
+                </XStack>
+            )}
         </XStack>
     );
 };
 
-export const AttributeSelector = ({ attribute, options, currentSelection, currentAvailableOptions, handleOptionSelect, isLoading }: AttributeSelectorProps) => {
+export const AttributeSelector = ({ attribute, options, currentSelection, currentAvailableOptions, handleOptionSelect, isLoading, selectedOptions, isFirst, isLast }: AttributeSelectorProps) => {
     const useFullscreen = options.length > 10; // Adjust threshold as needed
     const [isOpen, setIsOpen] = useState(false);
     const selectedOption = options.find((o) => o.name === currentSelection);
@@ -58,6 +88,11 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
                     {selectedOption ? (
                         <OptionRenderer
                             option={selectedOption}
+                            isSelected={true}
+                            selectedOptions={selectedOptions}
+                            isFirst={isFirst}
+                            isLast={isLast}
+                            isLoading={isLoading}
                         />
                     ) : (
                         'Velg et alternativ'
@@ -101,6 +136,11 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
                                         option={option}
                                         disabled={isDisabled}
                                         isSelected={isSelected}
+                                        matchingVariants={matchingVariants}
+                                        selectedOptions={selectedOptions}
+                                        isFirst={isFirst}
+                                        isLast={isLast}
+                                        isLoading={isLoading}
                                     />
                                 </Select.Item>
                             )

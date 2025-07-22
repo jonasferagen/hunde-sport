@@ -20,18 +20,18 @@ export const ProductVariations = (): JSX.Element | null => {
 
     return (
 
-        <XStack justifyContent="space-between" gap={"$2"}>
-            {variationAttributes.map((attribute) => {
+        <XStack space="$2" flexWrap="wrap">
+            {variationAttributes.map((attribute, index) => {
                 const currentSelection = selectedOptions[attribute.id];
                 const options = attribute.options.filter((o) => o.name);
                 const currentAvailableOptions = availableOptions.get(attribute.id);
 
-                console.log(currentAvailableOptions?.get("Svart")?.map((o) => o.name));
-                console.log(currentSelection);
                 return (
 
                     <YStack key={attribute.id} flex={1}>
-                        <CustomText style={{ marginTop: 8, marginBottom: 4 }}>{attribute.label}:</CustomText>
+                        <CustomText fontSize="sm" bold>
+                            {attribute.name}:
+                        </CustomText>
                         <AttributeSelector
                             attribute={attribute}
                             options={options}
@@ -39,11 +39,13 @@ export const ProductVariations = (): JSX.Element | null => {
                             currentAvailableOptions={currentAvailableOptions}
                             handleOptionSelect={handleOptionSelect}
                             isLoading={isLoading}
+                            selectedOptions={selectedOptions}
+                            isFirst={index === 0}
+                            isLast={index === variationAttributes.length - 1}
                         />
                     </YStack>
                 );
             })}
-
         </XStack>
 
 
