@@ -9,13 +9,15 @@ export interface InfiniteListQueryOptions {
 
 export const useInfiniteListQuery = <T>(
     queryOptions: UseInfiniteQueryOptions<T[], Error, InfiniteData<T[]>, any, number>,
-    options?: InfiniteListQueryOptions,
+    options: InfiniteListQueryOptions = { autoload: true },
 ) => {
     const queryResult = useInfiniteQuery(queryOptions);
 
     useEffect(() => {
 
         if (options?.autoload) {
+
+
             const fetchAllPages = async () => {
                 if (queryResult.hasNextPage && !queryResult.isFetchingNextPage) {
                     await queryResult.fetchNextPage();

@@ -17,28 +17,21 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
 
     const isVariable = product.type === 'variable';
 
-    const { productVariations: productVariants, isLoading: isInitialLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useProductVariations(product.id);
+    const { items: productVariants, isLoading, hasNextPage, isFetchingNextPage, } = useProductVariations(product.id);
 
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
-    const [isFetchingAll, setIsFetchingAll] = useState(isVariable);
+
 
     useEffect(() => {
         if (!isVariable) return;
 
-        if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-            return;
-        }
-        if (!hasNextPage) {
-            setIsFetchingAll(false);
-        }
 
         // Guard to ensure this runs only once per product when data is ready.
         if (productVariants && product.id !== initializedForProductId) {
             setInitializedForProductId(product.id);
         }
-    }, [productVariants, product, initializedForProductId, hasNextPage, isFetchingNextPage, isVariable]);
+    }, [productVariants, product, initializedForProductId, isVariable]);
 
     const variationAttributes = useMemo(() => {
         if (!isVariable) return [];
@@ -78,6 +71,6 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         availableOptions,
         selectedOptions,
         variationAttributes: variationAttributes,
-        isLoading: !isVariable ? false : (isInitialLoading || hasNextPage || isFetchingAll),
+        isLoading: isLoading || hasNextPage || isFetchingNextPage,
     };
 };

@@ -10,56 +10,34 @@ import { useDiscountedProducts, useFeaturedProducts, useProductsByIds } from '@/
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
 import { router, Stack } from 'expo-router';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
+import { XStack } from 'tamagui';
 
 const CategorySection = () => {
     const { items: categories, isLoading } = useCategories(0);
+
+    console.log(isLoading, categories.length);
 
     if (isLoading) {
         return <Loader size="large" flex />;
     }
 
-    const chunk = (arr: any[], size: number) =>
-        Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-            arr.slice(i * size, i * size + size)
-        );
-
-    const chunkedCategories = chunk(categories, 3);
-
     return (
-        <View style={styles.gridContainer}>
-            {chunkedCategories.map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.row}>
-                    {row.map((item) => (
-                        <CategoryTile
-                            key={item.id.toString()}
-                            category={item}
-                            style={styles.tile}
-                            aspectRatio={1}
-                        />
-                    ))}
-                </View>
+        <XStack flexWrap="wrap" gap={SPACING.md} jc="space-between">
+            {categories.map((item) => (
+                <CategoryTile
+                    key={item.id.toString()}
+                    category={item}
+                    aspectRatio={1}
+                    flexBasis="30%"
+                    flexGrow={1}
+                />
             ))}
-        </View>
+        </XStack>
     );
 };
 
-const styles = StyleSheet.create({
-    gridContainer: {
-        gap: SPACING.md,
-    },
-    row: {
-        gap: SPACING.md,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-
-    },
-    tile: {
-        flex: 1,
-        width: '30%',
-    },
-});
-
+const styles = StyleSheet.create({});
 
 export const HomeScreen = () => {
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
