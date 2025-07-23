@@ -73,22 +73,22 @@ export async function fetchProduct(id: number): Promise<Product> {
     return mapToProduct(data);
 }
 
-export async function fetchProducts(page: number, query: ProductListParams): Promise<Product[]> {
-    const queryString = getQueryStringForType(query);
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, queryString)
-    );
-    console.log("--- products by query ---" + queryString);
-    if (error) throw new Error(error);
-    return (data ?? []).map(mapToProduct);
-}
-
 
 export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `?page=${page}&per_page=${PAGE_SIZE} `
     );
-    console.log("--- product variations ---", productId);
+
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+export async function fetchProducts(page: number, queryString: string): Promise<Product[]> {
+
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.LIST(page, queryString)
+    );
+
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }

@@ -1,30 +1,11 @@
-import { Product } from '@/models/Product';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import {
     fetchProduct,
     fetchProducts,
-    fetchProductVariations,
-    ProductListParams
+    fetchProductVariations
 } from './api';
 
 import { PAGE_SIZE } from '@/config/api';
-
-
-const productInfiniteQueryOptions = (
-    queryKey: (string | number | object)[],
-    queryFn: ({ pageParam }: { pageParam: number }) => Promise<Product[]>,
-    options: { enabled?: boolean } = {}
-) =>
-    infiniteQueryOptions({
-        queryKey,
-        queryFn,
-        initialPageParam: 1,
-        getNextPageParam: (lastPage, allPages) => {
-            //return undefined;
-            return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
-        },
-        ...options,
-    });
 
 export const productQueryOptions = (productId: number) =>
     queryOptions({
@@ -33,41 +14,25 @@ export const productQueryOptions = (productId: number) =>
         enabled: !!productId,
     });
 
-export const productsQueryOptions = (query: ProductListParams) =>
-    productInfiniteQueryOptions(
-        ['products', query],
-        ({ pageParam }) => fetchProducts(pageParam, query),
-        { enabled: !!query }
-    );
-
-export const productVariationsQueryOptions = (productId: number) =>
-    productInfiniteQueryOptions(
-        ['productVariations', productId],
-        ({ pageParam }) => fetchProductVariations(pageParam, productId),
-        { enabled: !!productId }
-    );
-
-
-/*
-export const productsByIdsQueryOptions = (ids: number[]) =>
-    productInfiniteQueryOptions(
-        ['products', { ids: [...ids].sort() }],
-        ({ pageParam }) => fetchProductsByIds(pageParam, ids),
-        { enabled: ids.length > 0 }
-    );
-
-
-export const productsByCategoryQueryOptions = (categoryId: number) =>
-    productInfiniteQueryOptions(
-        ['productsByCategory', categoryId],
-        ({ pageParam }) => fetchProductByCategory(pageParam, categoryId)
-    );
-
-export const productsByQueryOptions = (query: string) =>
-    productInfiniteQueryOptions(
-        ['productsByQuery', query],
-        ({ pageParam }) => searchProducts(pageParam, query),
-        { enabled: !!query }
-    );
-
-*/
+export const productsQueryOptions = (queryString: string) => {
+    return infiniteQueryOptions({
+        queryKey: ['product', queryString],
+        queryFn: ({ pageParam = 1 }) => fetchProducts(pageParam, queryString),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
+        },
+        enabled: !!queryString,
+    });
+}
+export const productVariationsQueryOptions = (productId: number) => {
+    return infiniteQueryOptions({
+        queryKey: ['productVariations', productId],
+        queryFn: ({ pageParam = 1 }) => fetchProductVariations(pageParam, productId),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
+        },
+        enabled: !!productId,
+    });
+}

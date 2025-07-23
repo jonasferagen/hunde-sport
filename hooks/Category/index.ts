@@ -17,29 +17,3 @@ export const useCategory = (categoryId: number) => {
     };
 };
 
-/*     @TODO can this be thrown and caught at a higher level?
-useEffect(() => {
-    if (isError) {
-        showMessage({
-            text: 'Could not load categories.',
-            type: 'error',
-            action: {
-                label: 'Retry',
-                onPress: () => refetch(),
-            },
-        });
-    }
-}, [isError, refetch, showMessage]);
-
-useEffect(() => {
-    const fetchAllPages = async () => {
-        if (hasNextPage && !isFetchingNextPage) {
-            await fetchNextPage();
-        }
-    };
-    fetchAllPages();
-        const { showMessage } = useStatusContext();
-
-    const { showMessage } = useStatusContext();
-
-}, [hasNextPage, fetchNextPage, isFetchingNextPage, data]); */
