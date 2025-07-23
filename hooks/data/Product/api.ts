@@ -46,8 +46,8 @@ export async function fetchProductVariations(page: number, productId: number): P
     return (data ?? []).map(mapToProduct);
 }
 
-export async function fetchProducts(page: number, queryString: string): Promise<Product[]> {
-
+export async function fetchProducts(page: number, query: ProductListParams): Promise<Product[]> {
+    const queryString = getQueryStringForType(query);
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, queryString)
     );

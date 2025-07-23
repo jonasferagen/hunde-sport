@@ -4,8 +4,7 @@ export { CategoryChip } from '../features/category/CategoryChip';
 export { CategoryTile } from '../features/category/CategoryTile';
 export { ProductTile } from '../features/product/ProductTile';
 
-export { Chip } from './chips/Chip';
-export { ChipContainer } from './chips/ChipContainer';
+export { Chip, ChipContainer } from './chips';
 export { Icon } from './icon/Icon';
 
 export { Loader } from './loader/Loader';

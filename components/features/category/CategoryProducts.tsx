@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { useProducts } from '@/hooks/data/Product';
+import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
 import React, { JSX } from 'react';
@@ -14,8 +14,8 @@ export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Eleme
     const { items: products,
         isLoading,
         isFetchingNextPage,
-        fetchNextPage } = useProducts(
-            { type: 'category', params: category.id },
+        fetchNextPage } = useProductsByCategory(
+            category.id,
             { autoload: false }
         );
 

@@ -2,7 +2,8 @@ import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import {
     fetchProduct,
     fetchProducts,
-    fetchProductVariations
+    fetchProductVariations,
+    ProductListParams
 } from './api';
 
 import { PAGE_SIZE } from '@/config/api';
@@ -14,17 +15,18 @@ export const productQueryOptions = (productId: number) =>
         enabled: !!productId,
     });
 
-export const productsQueryOptions = (queryString: string) => {
+export const productsQueryOptions = (query: ProductListParams) => {
     return infiniteQueryOptions({
-        queryKey: ['product', queryString],
-        queryFn: ({ pageParam = 1 }) => fetchProducts(pageParam, queryString),
+        queryKey: ['products', query],
+        queryFn: ({ pageParam = 1 }) => fetchProducts(pageParam, query),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
         },
-        enabled: !!queryString,
+        enabled: !!query,
     });
 }
+
 export const productVariationsQueryOptions = (productId: number) => {
     return infiniteQueryOptions({
         queryKey: ['productVariations', productId],

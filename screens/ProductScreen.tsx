@@ -10,7 +10,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
-import { useProduct } from '@/hooks/data/Product';
+import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo } from 'react';
@@ -37,7 +37,7 @@ const ProductScreenContent = () => {
           <BuyProduct product={product} displayProduct={activeProduct} />
         </PageContent>
         <PageContent primary horizontal title="Relaterte produkter" >
-          <ProductTiles type="ids" params={product.related_ids} themeVariant="secondary" />
+          <ProductTiles querybuilder={useProductsByIds(activeProduct.related_ids)} themeVariant="secondary" />
         </PageContent>
         <PageContent title="Produktinformasjon" secondary>
           <ProductDetails product={product} />

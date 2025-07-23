@@ -2,14 +2,13 @@ import { CategoryTile } from '@/components/features/category/CategoryTile';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Loader, ProductTile } from '@/components/ui';
+import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { routes } from '@/config/routes';
-import { useProduct } from '@/hooks';
 import { useCategories } from '@/hooks/data/Category';
+import { useDiscountedProducts, useFeaturedProducts, useProductsByIds } from '@/hooks/data/Product';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
-import { Product } from '@/types';
 import { router, Stack } from 'expo-router';
 import { StyleSheet, TextInput, View } from 'react-native';
 
@@ -71,15 +70,12 @@ export const HomeScreen = () => {
         }
     };
 
-    const productIds = [35961, 27445];
-    let products: Product[] = [];
-    productIds.forEach(id => {
-        const { data: product } = useProduct(id);
-        if (product) {
-            products.push(product);
-        }
-    });
+    const debugIds = [35961, 27445];
 
+    const recentProducts = useProductsByIds(debugIds);
+    const discountedProducts = useDiscountedProducts();
+    const featuredProducts = useFeaturedProducts();
+    const debugProducts = useProductsByIds(debugIds);
 
     return (
         <PageView>
@@ -89,19 +85,19 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection scrollable>
                 <PageContent style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {products.map(product => <ProductTile key={product.id} product={product!} />)}
+                    <ProductTiles querybuilder={debugProducts} themeVariant="secondary" />
                 </PageContent>
                 <PageContent secondary horizontal title="Nyheter">
-                    <ProductTiles type="recent" themeVariant="accent" />
+                    <ProductTiles querybuilder={recentProducts} themeVariant="accent" />
                 </PageContent>
                 <PageContent primary horizontal title="Tilbud">
-                    <ProductTiles type="discounted" themeVariant="secondary" />
+                    <ProductTiles querybuilder={discountedProducts} themeVariant="secondary" />
                 </PageContent>
                 <PageContent title="Kategorier">
                     <CategorySection />
                 </PageContent>
                 <PageContent primary horizontal title="Populære produkter" >
-                    <ProductTiles type="featured" themeVariant="secondary" />
+                    <ProductTiles querybuilder={featuredProducts} themeVariant="secondary" />
                 </PageContent>
             </PageSection>
         </PageView>

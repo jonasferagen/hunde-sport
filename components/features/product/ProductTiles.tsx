@@ -1,20 +1,16 @@
 import { Loader } from '@/components/ui';
-import { useProducts } from '@/hooks/data/Product';
-import { ProductListType } from '@/hooks/data/Product/api';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
 import { ThemeVariant } from '../../ui/tile/BaseTile';
 import { ProductTile } from './ProductTile';
 
 interface ProductTilesProps {
-    type: ProductListType;
-    params?: any;
+    querybuilder: any;
     themeVariant?: ThemeVariant;
 }
 
-export const ProductTiles = ({ type, params, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
-    const { items: products, isLoading } = useProducts({ type, params });
-
+export const ProductTiles = ({ querybuilder, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
+    const { items: products, isLoading } = querybuilder;
     if (isLoading) {
         return <Loader size="large" flex />;
     }
