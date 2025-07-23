@@ -1,5 +1,5 @@
-export { useCategories } from './Category';
+export { useCategories } from './data/Category';
 export {
     useProduct
-} from './Product';
+} from './data/Product';
 

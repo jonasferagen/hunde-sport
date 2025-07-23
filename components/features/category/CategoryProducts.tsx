@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { useProducts } from '@/hooks/Product';
+import { useProducts } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
 import React, { JSX } from 'react';

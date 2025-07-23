@@ -1,7 +1,7 @@
 import { CustomText, Icon, Loader } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
-import { useCategories } from '@/hooks/Category';
+import { useCategories } from '@/hooks/data/Category';
 import { Category } from '@/models/Category';
 import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
 import { IStyleVariant } from '@/types';

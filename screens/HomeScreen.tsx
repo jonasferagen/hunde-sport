@@ -6,7 +6,7 @@ import { Loader, ProductTile } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { routes } from '@/config/routes';
 import { useProduct } from '@/hooks';
-import { useCategories } from '@/hooks/Category';
+import { useCategories } from '@/hooks/data/Category';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
 import { Product } from '@/types';

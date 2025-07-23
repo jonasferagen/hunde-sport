@@ -1,6 +1,6 @@
 import { Loader } from '@/components/ui';
-import { useProducts } from '@/hooks/Product';
-import { ProductListType } from '@/hooks/Product/api';
+import { useProducts } from '@/hooks/data/Product';
+import { ProductListType } from '@/hooks/data/Product/api';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
 import { ThemeVariant } from '../../ui/tile/BaseTile';

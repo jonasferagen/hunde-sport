@@ -1,4 +1,4 @@
-import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/Query';
+import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
 import { useQuery } from '@tanstack/react-query';
 import { getQueryStringForType, ProductListParams } from './api';
 import {

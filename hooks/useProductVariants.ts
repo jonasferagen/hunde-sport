@@ -1,4 +1,4 @@
-import { useProductVariations } from '@/hooks/Product';
+import { useProductVariations } from '@/hooks/data/Product';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { useEffect, useMemo, useState } from 'react';

@@ -1,14 +1,7 @@
 import { ENDPOINTS } from '@/config/api';
-import { Category } from '@/models/Category';
 import apiClient from '@/utils/apiClient';
 
-const mapToCategory = (item: any): Category => new Category({
-    id: item.id,
-    name: item.name,
-    parent: item.parent,
-    image: item.image,
-    count: item.count,
-});
+import { mapToCategory } from '@/hooks/data/util';
 
 export async function fetchCategoryByCategory(page: number, categoryId: number) {
 

@@ -1,4 +1,4 @@
-import { useCategory } from '@/hooks/Category';
+import { useCategory } from '@/hooks/data/Category';
 import React, { JSX } from 'react';
 import { Breadcrumb } from './Breadcrumb';
 

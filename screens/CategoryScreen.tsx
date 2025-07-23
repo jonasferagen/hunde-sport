@@ -4,7 +4,7 @@ import { CategoryProducts } from '@/components/features/category/CategoryProduct
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
-import { useCategories, useCategory } from '@/hooks/Category';
+import { useCategories, useCategory } from '@/hooks/data/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
 import { Stack, useLocalSearchParams } from 'expo-router';

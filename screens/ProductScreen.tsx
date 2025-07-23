@@ -10,7 +10,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
-import { useProduct } from '@/hooks/Product';
+import { useProduct } from '@/hooks/data/Product';
 import { useImageViewer } from '@/hooks/useImageViewer';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo } from 'react';
