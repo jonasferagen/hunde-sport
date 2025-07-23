@@ -31,13 +31,14 @@ const ProductScreenContent = () => {
 
   return (
     <>
-
       <PageSection scrollable>
         <PageContent>
           <ProductImage image={activeProduct.image} onPress={() => openImageViewer(0)} />
           <BuyProduct product={product} displayProduct={activeProduct} />
         </PageContent>
-
+        <PageContent primary horizontal title="Relaterte produkter" >
+          <ProductTiles type="ids" params={product.related_ids} themeVariant="secondary" />
+        </PageContent>
         <PageContent title="Produktinformasjon" secondary>
           <ProductDetails product={product} />
         </PageContent>
@@ -53,9 +54,7 @@ const ProductScreenContent = () => {
           <CategoryChips categories={product.categories} />
         </PageContent>
 
-        <PageContent primary horizontal title="Relaterte produkter" >
-          <ProductTiles type="related" themeVariant="secondary" />
-        </PageContent>
+
       </PageSection>
       <ImageViewing
         images={galleryImages}

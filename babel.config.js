@@ -9,7 +9,6 @@ module.exports = function (api) {
           components: ['tamagui'],
           config: './tamagui.config.ts',
           logTimings: true,
-          exclude: /node_modules\/(?!react-native).*/,
         },
       ],
       [

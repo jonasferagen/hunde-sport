@@ -1,19 +1,16 @@
-import { Loader } from '@/components/ui';
-import { useProductsList } from '@/hooks/Product';
-import { ProductListType } from '@/hooks/Product/api';
+import { Loader, ProductTile } from '@/components/ui';
+import { useProducts } from '@/hooks/Product';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
 import { ThemeVariant } from '../../ui/tile/BaseTile';
-import { ProductTile } from './ProductTile';
 
 interface ProductTilesProps {
-    type: ProductListType;
-    params?: any;
+    ids: number[];
     themeVariant?: ThemeVariant;
 }
 
-export const ProductTiles = ({ type, params, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
-    const { products, isLoading } = useProductsList(type, params);
+export const ProductTiles2 = ({ ids, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
+    const { products, isLoading } = useProducts(ids);
 
     if (isLoading) {
         return <Loader size="large" flex />;
@@ -34,4 +31,6 @@ export const ProductTiles = ({ type, params, themeVariant = 'primary' }: Product
             ))}
         </XStack>
     );
+
+
 };

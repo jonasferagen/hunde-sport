@@ -2,22 +2,14 @@ import { Product } from '@/models/Product';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import {
     fetchProduct,
-    fetchProductByCategory,
     fetchProducts,
-    fetchProductsByIds,
     fetchProductVariations,
-    ProductListType,
-    searchProducts,
+    getQueryStringForType,
+    ProductListType
 } from './api';
 
 import { PAGE_SIZE } from '@/config/api';
 
-export const productQueryOptions = (productId: number) =>
-    queryOptions({
-        queryKey: ['product', productId],
-        queryFn: () => fetchProduct(productId),
-        enabled: !!productId,
-    });
 
 const productInfiniteQueryOptions = (
     queryKey: (string | number | object)[],
@@ -35,18 +27,35 @@ const productInfiniteQueryOptions = (
         ...options,
     });
 
-export const productsByCategoryQueryOptions = (categoryId: number) =>
-    productInfiniteQueryOptions(
-        ['productsByCategory', categoryId],
-        ({ pageParam }) => fetchProductByCategory(pageParam, categoryId)
-    );
-
+export const productQueryOptions = (productId: number) =>
+    queryOptions({
+        queryKey: ['product', productId],
+        queryFn: () => fetchProduct(productId),
+        enabled: !!productId,
+    });
+/*
 export const productsByIdsQueryOptions = (ids: number[]) =>
     productInfiniteQueryOptions(
         ['products', { ids: [...ids].sort() }],
         ({ pageParam }) => fetchProductsByIds(pageParam, ids),
         { enabled: ids.length > 0 }
     );
+
+
+export const productsByCategoryQueryOptions = (categoryId: number) =>
+    productInfiniteQueryOptions(
+        ['productsByCategory', categoryId],
+        ({ pageParam }) => fetchProductByCategory(pageParam, categoryId)
+    );
+
+export const productsByQueryOptions = (query: string) =>
+    productInfiniteQueryOptions(
+        ['productsByQuery', query],
+        ({ pageParam }) => searchProducts(pageParam, query),
+        { enabled: !!query }
+    );
+
+*/
 
 export const productVariationsQueryOptions = (productId: number) =>
     productInfiniteQueryOptions(
@@ -55,14 +64,12 @@ export const productVariationsQueryOptions = (productId: number) =>
         { enabled: !!productId }
     );
 
-export const productsQueryOptions = (type: ProductListType) =>
-    productInfiniteQueryOptions(['products', type], ({ pageParam }) =>
-        fetchProducts(pageParam, type)
-    );
+export const productsListQueryOptions = (type: ProductListType, params?: any) => {
 
-export const searchProductsQueryOptions = (query: string) =>
-    productInfiniteQueryOptions(
-        ['searchProducts', query],
-        ({ pageParam }) => searchProducts(pageParam, query),
-        { enabled: !!query }
+    const queryString = getQueryStringForType(type, params);
+    console.log(type, params, queryString);
+
+    return productInfiniteQueryOptions(['products', queryString], ({ pageParam }) =>
+        fetchProducts(pageParam, queryString)
     );
+};

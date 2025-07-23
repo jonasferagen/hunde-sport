@@ -40,35 +40,65 @@ const mapToProduct = (item: any): Product => {
     }
 };
 
-export type ProductListType = 'featured' | 'recent' | 'discounted' | 'related';
+export type ProductListType = 'featured' | 'recent' | 'discounted' | 'search' | 'category' | 'ids';
 
-function getQueryStringForType(type: ProductListType, params?: any): string {
+export function getQueryStringForType(type: ProductListType, params?: any): string {
     switch (type) {
         case 'featured':
-            return 'featured=true&min_price=1';
+            return 'featured=true';
         case 'recent':
-            return 'orderby=date&min_price=1';
+            return 'orderby=date';
         case 'discounted':
-            return 'on_sale=true&min_price=1';
-        case 'related':
-            return `include=${params.join(',')}&min_price=1`;
+            return 'on_sale=true';
+        case 'search':
+            return 'search=' + params;
+        case 'category':
+            return 'category=' + params;
+        case 'ids':
+            return 'include=' + params.join(',');
     }
 }
 
-export async function fetchProducts(
-    page: number,
-    type: ProductListType
-): Promise<Product[]> {
-    const queryString = getQueryStringForType(type);
+
+export async function fetchProduct(id: number): Promise<Product> {
+    const { data, error } = await apiClient.get<any>(ENDPOINTS.PRODUCTS.GET(id));
+    if (error) throw new Error(error);
+    return mapToProduct(data);
+}
+
+export async function fetchProducts(page: number, query: string): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, queryString)
+        ENDPOINTS.PRODUCTS.LIST(page, query)
     );
-    console.log('---' + type + '---');
-    console.log(data?.map((item) => item.id));
+    console.log("--- products by query ---" + query);
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
 
+export async function fetchProductsList(
+    page: number,
+    type: ProductListType,
+    params?: any
+): Promise<Product[]> {
+    const queryString = getQueryStringForType(type, params) + '&min_price=1';
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.LIST(page, queryString)
+    );
+
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+
+export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
+    const { data, error } = await apiClient.get<any[]>(
+        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `? page=${page}&per_page=${PAGE_SIZE} `
+    );
+    if (error) throw new Error(error);
+    return (data ?? []).map(mapToProduct);
+}
+
+/*
 export async function fetchProductByCategory(page: number, categoryId: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, 'category=' + categoryId)
@@ -80,7 +110,7 @@ export async function fetchProductByCategory(page: number, categoryId: number): 
 
 export async function searchProducts(page: number, query: string): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, `search = ${query} `)
+        ENDPOINTS.PRODUCTS.LIST(page, `search=${query}`)
     );
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
@@ -97,17 +127,6 @@ export async function fetchProductsByIds(page: number, ids: number[]): Promise<P
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
+*/
 
-export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `? page = ${page}& per_page=${PAGE_SIZE} `
-    );
-    if (error) throw new Error(error);
-    return (data ?? []).map(mapToProduct);
-}
 
-export async function fetchProduct(id: number): Promise<Product> {
-    const { data, error } = await apiClient.get<any>(ENDPOINTS.PRODUCTS.GET(id));
-    if (error) throw new Error(error);
-    return mapToProduct(data);
-}

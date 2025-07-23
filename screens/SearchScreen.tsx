@@ -2,7 +2,7 @@ import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { CustomText, Loader, SearchBar } from '@/components/ui';
-import { useSearchProducts } from '@/hooks/Product';
+import { useProductsByQueryString } from '@/hooks/Product';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ export const SearchScreen = () => {
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
     const [liveQuery, setLiveQuery] = useState(initialQuery || '');
 
-    const { products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchProducts(initialQuery || '');
+    const { products, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByQueryString(initialQuery || '');
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
 
     useEffect(() => {
