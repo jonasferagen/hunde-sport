@@ -75,58 +75,15 @@ export async function fetchProducts(page: number, query: string): Promise<Produc
     return (data ?? []).map(mapToProduct);
 }
 
-export async function fetchProductsList(
-    page: number,
-    type: ProductListType,
-    params?: any
-): Promise<Product[]> {
-    const queryString = getQueryStringForType(type, params) + '&min_price=1';
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, queryString)
-    );
-
-    if (error) throw new Error(error);
-    return (data ?? []).map(mapToProduct);
-}
-
 
 export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `? page=${page}&per_page=${PAGE_SIZE} `
+        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `?page=${page}&per_page=${PAGE_SIZE} `
     );
+    console.log("--- product variations ---", productId);
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
 
-/*
-export async function fetchProductByCategory(page: number, categoryId: number): Promise<Product[]> {
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, 'category=' + categoryId)
-    );
-
-    if (error) throw new Error(error);
-    return (data ?? []).map(mapToProduct);
-}
-
-export async function searchProducts(page: number, query: string): Promise<Product[]> {
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, `search=${query}`)
-    );
-    if (error) throw new Error(error);
-    return (data ?? []).map(mapToProduct);
-}
-
-export async function fetchProductsByIds(page: number, ids: number[]): Promise<Product[]> {
-    if (ids.length === 0) {
-        return [];
-    }
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, `include=${ids.join(',')}&min_price=1`)
-    );
-    console.log("--- products by ids ---");
-    if (error) throw new Error(error);
-    return (data ?? []).map(mapToProduct);
-}
-*/
 
 

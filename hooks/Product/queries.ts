@@ -33,6 +33,25 @@ export const productQueryOptions = (productId: number) =>
         queryFn: () => fetchProduct(productId),
         enabled: !!productId,
     });
+
+export const productsQueryOptions = (type: ProductListType, params?: any) => {
+
+    const queryString = getQueryStringForType(type, params);
+
+    return productInfiniteQueryOptions(['products', queryString], ({ pageParam }) =>
+        fetchProducts(pageParam, queryString)
+    );
+};
+
+export const productVariationsQueryOptions = (productId: number) =>
+    productInfiniteQueryOptions(
+        ['productVariations', productId],
+        ({ pageParam }) => fetchProductVariations(pageParam, productId),
+        { enabled: !!productId }
+    );
+
+
+
 /*
 export const productsByIdsQueryOptions = (ids: number[]) =>
     productInfiniteQueryOptions(
@@ -56,20 +75,3 @@ export const productsByQueryOptions = (query: string) =>
     );
 
 */
-
-export const productVariationsQueryOptions = (productId: number) =>
-    productInfiniteQueryOptions(
-        ['productVariations', productId],
-        ({ pageParam }) => fetchProductVariations(pageParam, productId),
-        { enabled: !!productId }
-    );
-
-export const productsListQueryOptions = (type: ProductListType, params?: any) => {
-
-    const queryString = getQueryStringForType(type, params);
-    console.log(type, params, queryString);
-
-    return productInfiniteQueryOptions(['products', queryString], ({ pageParam }) =>
-        fetchProducts(pageParam, queryString)
-    );
-};

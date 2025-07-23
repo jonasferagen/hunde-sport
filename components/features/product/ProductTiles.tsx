@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { useProductsList } from '@/hooks/Product';
+import { useProducts } from '@/hooks/Product';
 import { ProductListType } from '@/hooks/Product/api';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
@@ -13,7 +13,7 @@ interface ProductTilesProps {
 }
 
 export const ProductTiles = ({ type, params, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
-    const { products, isLoading } = useProductsList(type, params);
+    const { products, isLoading } = useProducts(type, params);
 
     if (isLoading) {
         return <Loader size="large" flex />;

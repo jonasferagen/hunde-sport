@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { ProductListType } from './api';
 import {
     productQueryOptions,
-    productsListQueryOptions,
+    productsQueryOptions,
     productVariationsQueryOptions
 } from './queries';
 
@@ -19,33 +19,9 @@ export const useProduct = (id: number) => {
     return useQuery(productQueryOptions(id));
 };
 
-export const useProducts = (ids: number[]) => {
-    return useProductsList('ids', ids);
-};
 
-export const useProductsByCategory = (categoryId: number) => {
-    return useProductsList('category', categoryId);
-};
-
-export const useProductsByQueryString = (queryString: string) => {
-    return useProductsList('search', queryString);
-};
-
-export const useFeaturedProducts = () => {
-    return useProductsList('featured');
-};
-
-export const useRecentProducts = () => {
-    return useProductsList('recent');
-};
-
-export const useDiscountedProducts = () => {
-    return useProductsList('discounted');
-};
-
-
-export const useProductsList = (type: ProductListType, params?: any) => {
-    const query = useInfiniteQuery(productsListQueryOptions(type, params));
+export const useProducts = (type: ProductListType, params?: any) => {
+    const query = useInfiniteQuery(productsQueryOptions(type, params));
     const products = useMemo(() => query.data?.pages.flat() ?? [], [query.data]);
     return { ...query, products };
 };
