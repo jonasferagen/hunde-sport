@@ -10,13 +10,11 @@ import { useDiscountedProducts, useFeaturedProducts, useProductsByIds } from '@/
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
 import { router, Stack } from 'expo-router';
-import { StyleSheet, TextInput } from 'react-native';
+import { TextInput } from 'react-native';
 import { XStack } from 'tamagui';
 
 const CategorySection = () => {
     const { items: categories, isLoading } = useCategories(0);
-
-    console.log(isLoading, categories.length);
 
     if (isLoading) {
         return <Loader size="large" flex />;
@@ -24,10 +22,10 @@ const CategorySection = () => {
 
     return (
         <XStack flexWrap="wrap" gap={SPACING.md} jc="space-between">
-            {categories.map((item) => (
+            {categories.map((category) => (
                 <CategoryTile
-                    key={item.id.toString()}
-                    category={item}
+                    key={category.id.toString()}
+                    category={category}
                     aspectRatio={1}
                     flexBasis="30%"
                     flexGrow={1}
@@ -36,8 +34,6 @@ const CategorySection = () => {
         </XStack>
     );
 };
-
-const styles = StyleSheet.create({});
 
 export const HomeScreen = () => {
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());

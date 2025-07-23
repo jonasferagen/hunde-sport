@@ -1,8 +1,8 @@
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { DimensionValue, StyleProp, ViewStyle } from "react-native";
-import { Image, Text, YStack, styled, useTheme } from 'tamagui';
+import { DimensionValue } from "react-native";
+import { GetProps, Image, Text, YStack, styled, useTheme } from 'tamagui';
 
 const StyledLinearGradient = styled(LinearGradient, {
     name: 'StyledLinearGradient',
@@ -14,7 +14,7 @@ const StyledLinearGradient = styled(LinearGradient, {
 // Define the type for our variants. Export it so other components can use it.
 export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';
 
-export interface BaseTileProps {
+export interface BaseTileProps extends Omit<GetProps<typeof YStack>, 'name'> {
     name: string;
     imageUrl: string;
     width?: DimensionValue;
@@ -24,21 +24,22 @@ export interface BaseTileProps {
     nameNumberOfLines?: number;
     gradientMinHeight?: number;
     themeVariant?: ThemeVariant;
-    style?: StyleProp<ViewStyle>;
 }
 
-export const BaseTile = ({
-    name,
-    imageUrl,
-    width = '100%',
-    height,
-    aspectRatio,
-    onPress,
-    nameNumberOfLines = 1,
-    gradientMinHeight = 40,
-    themeVariant = 'default',
-    style
-}: BaseTileProps) => {
+export const BaseTile = (props: BaseTileProps) => {
+    const {
+        name,
+        imageUrl,
+        width = '100%',
+        height,
+        aspectRatio,
+        onPress,
+        nameNumberOfLines = 1,
+        gradientMinHeight = 40,
+        themeVariant = 'default',
+        ...stackProps
+    } = props;
+
     const theme = useTheme();
 
     // Define colors inside the component to access the theme hook
@@ -62,7 +63,7 @@ export const BaseTile = ({
             borderWidth={1}
             borderColor="$defaultBorder"
             flex={1}
-            style={style}
+            {...stackProps}
         >
             <Image
                 source={{ uri: imageUrl }}
