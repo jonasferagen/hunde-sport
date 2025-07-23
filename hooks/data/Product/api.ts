@@ -5,7 +5,7 @@ import apiClient from '@/utils/apiClient';
 import { mapToProduct } from '@/hooks/data/util';
 
 export type ProductListParams =
-    | { type: 'recent' | 'featured' | 'discounted', params: undefined }
+    | { type: 'recent' | 'featured' | 'discounted', params?: undefined }
     | { type: 'search', params: string }
     | { type: 'category', params: number }
     | { type: 'ids', params: number[] };
@@ -36,7 +36,6 @@ export async function fetchProduct(id: number): Promise<Product> {
     return mapToProduct(data);
 }
 
-
 export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `?page=${page}&per_page=${PAGE_SIZE} `
@@ -51,7 +50,6 @@ export async function fetchProducts(page: number, query: ProductListParams): Pro
     const { data, error } = await apiClient.get<any[]>(
         ENDPOINTS.PRODUCTS.LIST(page, queryString)
     );
-
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }

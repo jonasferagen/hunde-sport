@@ -23,7 +23,7 @@ export const productsQueryOptions = (query: ProductListParams) => {
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
         },
-        enabled: !!query,
+        enabled: !!query.params,
     });
 }
 

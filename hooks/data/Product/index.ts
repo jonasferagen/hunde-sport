@@ -15,13 +15,13 @@ export const useProductVariations = (productId: number, options?: InfiniteListQu
 
 // Specific hooks for different product lists
 export const useFeaturedProducts = () =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'featured', params: undefined }));
+    useInfiniteListQuery(productsQueryOptions({ type: 'featured' }));
 
 export const useRecentProducts = () =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'recent', params: undefined }));
+    useInfiniteListQuery(productsQueryOptions({ type: 'recent' }));
 
 export const useDiscountedProducts = () =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'discounted', params: undefined }));
+    useInfiniteListQuery(productsQueryOptions({ type: 'discounted' }));
 
 export const useProductsByCategory = (categoryId: number) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'category', params: categoryId }), { autoload: false });
