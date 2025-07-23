@@ -11,7 +11,7 @@ interface CategoryProductsProps {
 
 export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Element => {
     useRenderGuard('CategoryProducts');
-    const { products, isLoading, isFetchingNextPage, fetchNextPage } = useProducts('category', category.id);
+    const { products, isLoading, isFetchingNextPage, fetchNextPage } = useProducts({ type: 'category', params: category.id });
 
     if (isLoading) {
         return <Loader size="large" flex />;

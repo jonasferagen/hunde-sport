@@ -4,8 +4,7 @@ import {
     fetchProduct,
     fetchProducts,
     fetchProductVariations,
-    getQueryStringForType,
-    ProductListType
+    ProductListParams
 } from './api';
 
 import { PAGE_SIZE } from '@/config/api';
@@ -34,14 +33,12 @@ export const productQueryOptions = (productId: number) =>
         enabled: !!productId,
     });
 
-export const productsQueryOptions = (type: ProductListType, params?: any) => {
-
-    const queryString = getQueryStringForType(type, params);
-
-    return productInfiniteQueryOptions(['products', queryString], ({ pageParam }) =>
-        fetchProducts(pageParam, queryString)
+export const productsQueryOptions = (query: ProductListParams) =>
+    productInfiniteQueryOptions(
+        ['products', query],
+        ({ pageParam }) => fetchProducts(pageParam, query),
+        { enabled: !!query }
     );
-};
 
 export const productVariationsQueryOptions = (productId: number) =>
     productInfiniteQueryOptions(
@@ -49,7 +46,6 @@ export const productVariationsQueryOptions = (productId: number) =>
         ({ pageParam }) => fetchProductVariations(pageParam, productId),
         { enabled: !!productId }
     );
-
 
 
 /*

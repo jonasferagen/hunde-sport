@@ -3,6 +3,7 @@ import { Product, ProductData, ProductType } from '@/models/Product';
 import apiClient from '@/utils/apiClient';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
 
+
 const mapToProduct = (item: any): Product => {
     try {
 
@@ -40,14 +41,20 @@ const mapToProduct = (item: any): Product => {
     }
 };
 
-export type ProductListType = 'featured' | 'recent' | 'discounted' | 'search' | 'category' | 'ids';
+export type ProductListParams =
+    | { type: 'recent' | 'featured' | 'discounted', params: undefined }
+    | { type: 'search', params: string }
+    | { type: 'category', params: number }
+    | { type: 'ids', params: number[] };
 
-export function getQueryStringForType(type: ProductListType, params?: any): string {
+export type ProductListType = ProductListParams['type'];
+
+export function getQueryStringForType({ type, params }: ProductListParams): string {
     switch (type) {
-        case 'featured':
-            return 'featured=true';
         case 'recent':
             return 'orderby=date';
+        case 'featured':
+            return 'featured=true';
         case 'discounted':
             return 'on_sale=true';
         case 'search':
@@ -66,11 +73,12 @@ export async function fetchProduct(id: number): Promise<Product> {
     return mapToProduct(data);
 }
 
-export async function fetchProducts(page: number, query: string): Promise<Product[]> {
+export async function fetchProducts(page: number, query: ProductListParams): Promise<Product[]> {
+    const queryString = getQueryStringForType(query);
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, query)
+        ENDPOINTS.PRODUCTS.LIST(page, queryString)
     );
-    console.log("--- products by query ---" + query);
+    console.log("--- products by query ---" + queryString);
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
@@ -84,6 +92,3 @@ export async function fetchProductVariations(page: number, productId: number): P
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
 }
-
-
-
