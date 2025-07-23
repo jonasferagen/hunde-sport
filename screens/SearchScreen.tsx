@@ -12,7 +12,11 @@ export const SearchScreen = () => {
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
     const [liveQuery, setLiveQuery] = useState(initialQuery || '');
 
-    const { products, isLoading, fetchNextPage, isFetchingNextPage } = useProducts({ type: 'search', params: initialQuery || '' });
+    const { items: products, isLoading, fetchNextPage, isFetchingNextPage } =
+        useProducts({ type: 'search', params: initialQuery || '' },
+            { autoload: false }
+        );
+
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
 
     useEffect(() => {

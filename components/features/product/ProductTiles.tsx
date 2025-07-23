@@ -13,7 +13,7 @@ interface ProductTilesProps {
 }
 
 export const ProductTiles = ({ type, params, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
-    const { products, isLoading } = useProducts({ type, params });
+    const { items: products, isLoading } = useProducts({ type, params });
 
     if (isLoading) {
         return <Loader size="large" flex />;

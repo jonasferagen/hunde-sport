@@ -1,8 +1,8 @@
 
+export { Breadcrumbs } from '../features/breadcrumbs/Breadcrumbs';
 export { CategoryChip } from '../features/category/CategoryChip';
 export { CategoryTile } from '../features/category/CategoryTile';
 export { ProductTile } from '../features/product/ProductTile';
-export { Breadcrumbs } from './breadcrumbs/Breadcrumbs';
 
 export { Chip } from './chips/Chip';
 export { ChipContainer } from './chips/ChipContainer';

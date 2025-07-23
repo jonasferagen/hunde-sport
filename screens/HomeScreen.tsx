@@ -14,7 +14,7 @@ import { router, Stack } from 'expo-router';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 const CategorySection = () => {
-    const { categories, isLoading } = useCategories(0);
+    const { items: categories, isLoading } = useCategories(0);
 
     if (isLoading) {
         return <Loader size="large" flex />;

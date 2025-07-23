@@ -23,7 +23,7 @@ interface CategoryTreeItemProps {
 };
 
 const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive, variant }: CategoryTreeItemProps) => {
-    const { categories } = useCategories(category.id);
+    const { items: categories } = useCategories(category.id);
     const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(themeVariant);
@@ -78,7 +78,7 @@ interface CategorySubTreeProps {
 };
 
 const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: CategorySubTreeProps) => {
-    const { categories, isFetchingNextPage } = useCategories(categoryId);
+    const { items: categories, isFetchingNextPage } = useCategories(categoryId);
 
     const activeChild = categories.find((c: Category) => ancestors.some(b => b.id === c.id));
     const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);

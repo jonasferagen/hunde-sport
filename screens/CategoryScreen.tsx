@@ -1,9 +1,9 @@
+import { Breadcrumbs } from '@/components/features/breadcrumbs/Breadcrumbs';
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
-import { Breadcrumbs } from '@/components/ui/breadcrumbs/Breadcrumbs';
 import { useCategories, useCategory } from '@/hooks/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
@@ -12,7 +12,7 @@ import { memo } from 'react';
 
 
 const CategoryChipsContainer = ({ category }: { category: Category }) => {
-    const { categories, isFetchingNextPage } = useCategories(category.id);
+    const { items: categories, isFetchingNextPage } = useCategories(category.id);
 
     return (
         <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} />

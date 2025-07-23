@@ -11,7 +11,13 @@ interface CategoryProductsProps {
 
 export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Element => {
     useRenderGuard('CategoryProducts');
-    const { products, isLoading, isFetchingNextPage, fetchNextPage } = useProducts({ type: 'category', params: category.id });
+    const { items: products,
+        isLoading,
+        isFetchingNextPage,
+        fetchNextPage } = useProducts(
+            { type: 'category', params: category.id },
+            { autoload: false }
+        );
 
     if (isLoading) {
         return <Loader size="large" flex />;
