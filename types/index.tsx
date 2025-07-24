@@ -7,7 +7,7 @@ export * from '@/models/Image';
 export * from '@/models/Product';
 export * from '@/models/ProductAttribute';
 export * from '@/models/ProductAttributeOption';
-
+export * from './tamagui';
 
 // API-related types
 export type ApiResponse<T> = {

@@ -40,6 +40,7 @@ export const ProductImageManager = () => {
                 onRequestClose={closeImageViewer}
                 animationType="slide"
             />
+
         </>
     );
 };

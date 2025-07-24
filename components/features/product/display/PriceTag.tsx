@@ -1,4 +1,4 @@
-import { Loader } from '@/components/ui';
+import { Loader } from '@/components/ui/loader/Loader';
 import { useProductContext } from '@/contexts';
 import { useProductVariants } from '@/hooks/useProductVariants';
 import { formatPrice } from '@/utils/helpers';

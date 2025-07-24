@@ -1,4 +1,5 @@
 import { ListItem } from '@/components/ui/list/ListItem';
+import { ProductProvider } from '@/contexts';
 import { ShoppingCartItem } from '@/types';
 import React from 'react';
 import { SimpleItemHeader } from '../product/list/SimpleItemHeader';
@@ -9,12 +10,14 @@ interface ShoppingCartListItemProps {
 }
 
 export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item }) => {
-    const product = item.selectedVariant || item.baseProduct;
 
     return (
-        <ListItem
-            header={<SimpleItemHeader product={product} />}
-            actions={<ShoppingCartItemActions item={item} />}
-        />
+
+        <ProductProvider product={item.baseProduct} productVariant={item.selectedVariant}>
+            <ListItem
+                header={<SimpleItemHeader />}
+                actions={<ShoppingCartItemActions item={item} />}
+            />
+        </ProductProvider>
     );
 };

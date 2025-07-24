@@ -6,8 +6,8 @@ import React, { createContext, useContext } from 'react';
 
 interface ProductContextType {
     product: Product;
+    productVariant?: Product | undefined;
     productVariants: Product[];
-    productVariant: Product | null;
     priceRange: { min: number; max: number } | null;
     handleOptionSelect: (attributeId: number, option: string) => void;
     availableOptions: Map<number, Map<string, Product[]>>;
@@ -18,12 +18,12 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-export const ProductProvider: React.FC<{ product: Product; children: React.ReactNode }> = ({
+export const ProductProvider: React.FC<{ product: Product; productVariant?: Product | undefined; children: React.ReactNode }> = ({
     product,
+    productVariant,
     children,
 }) => {
     const {
-        productVariant,
         productVariants,
         handleOptionSelect,
         availableOptions,

@@ -1,3 +1,4 @@
+import '@/types/tamagui';
 import { createAnimations } from '@tamagui/animations-react-native';
 import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
@@ -115,19 +116,5 @@ const appConfig = createTamagui({
         body: font,
     },
 });
-
-export type AppConfig = typeof appConfig;
-
-declare module 'tamagui' {
-    interface TamaguiCustomConfig extends AppConfig { }
-
-    interface TypeOverride {
-        variants: {
-            Chip: {
-                variant: 'primary' | 'secondary' | 'accent' | 'default';
-            };
-        };
-    }
-}
 
 export default appConfig;
