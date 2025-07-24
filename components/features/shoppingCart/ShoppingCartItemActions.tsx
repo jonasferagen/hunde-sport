@@ -22,7 +22,7 @@ export const ShoppingCartItemActions = ({
     const handlePress = (): void => router.push(routes.product(item.baseProduct));
 
     return (
-        <XStack justifyContent="space-between" alignItems="center" width="100%">
+        <XStack jc="space-between" ai="center" width="100%">
             <Button unstyled onPress={handlePress} hitSlop={10} pressStyle={{ opacity: 0.7 }}>
                 <ChevronLeft color="$color" />
             </Button>

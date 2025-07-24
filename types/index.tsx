@@ -34,7 +34,7 @@ export interface Breadcrumb {
 export interface ShoppingCartItem {
   baseProduct: Product;
   quantity: number;
-  selectedVariant?: Product;
+  selectedVariant: Product | undefined;
 }
 
 export interface IStyleVariant {

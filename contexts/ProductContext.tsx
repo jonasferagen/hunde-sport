@@ -1,7 +1,7 @@
 import { useProductVariations } from '@/hooks/data/Product';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 export const calculatePriceRange = (productVariations: Product[] | undefined | null): { min: number; max: number } | null => {
     if (!productVariations || productVariations.length === 0) {
@@ -35,12 +35,33 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-export const ProductProvider: React.FC<{ product: Product; children: React.ReactNode }> = ({ product, children }) => {
+const getOptionsFromVariant = (variant: Product | null | undefined) => {
+    if (!variant || !variant.attributes) return {};
+    return variant.attributes.reduce(
+        (acc, attr) => {
+            if (attr.id && attr.option) {
+                acc[attr.id] = attr.option;
+            }
+            return acc;
+        },
+        {} as Record<number, string>
+    );
+};
+
+export const ProductProvider: React.FC<{ product: Product; productVariant?: Product | null; children: React.ReactNode }> = ({
+    product,
+    productVariant: initialProductVariant,
+    children,
+}) => {
     const isVariable = product.type === 'variable';
 
     const { items: productVariants, isLoading, isFetchingNextPage, hasNextPage } = useProductVariations(product.id, { enabled: isVariable, autoload: true });
 
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
+    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariant(initialProductVariant));
+
+    useEffect(() => {
+        setSelectedOptions(getOptionsFromVariant(initialProductVariant));
+    }, [initialProductVariant]);
 
     const variationAttributes = useMemo(() => {
         if (!isVariable) return [];
