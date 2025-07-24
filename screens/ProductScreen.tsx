@@ -36,7 +36,7 @@ const ProductScreenContent = () => {
           <ProductImage image={activeProduct.image} onPress={() => openImageViewer(0)} />
           <BuyProduct product={product} displayProduct={activeProduct} />
         </PageContent>
-        <PageContent primary horizontal title="Relaterte produkter" >
+        <PageContent primary title="Relaterte produkter" >
           <ProductTiles queryResult={useProductsByIds(activeProduct.related_ids)} themeVariant="secondary" />
         </PageContent>
         <PageContent title="Produktinformasjon" secondary>

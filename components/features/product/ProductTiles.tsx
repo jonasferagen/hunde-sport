@@ -17,7 +17,7 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
     const { items: products, isLoading, isFetchingNextPage, fetchNextPage } = queryResult;
 
     if (isLoading) {
-        return <Loader size="large" flex />;
+        return <Loader size="small" flex />;
     }
 
     if (!products || products.length === 0) {
@@ -35,7 +35,7 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
                 />
             )}
             keyExtractor={(item) => item.id.toString()}
-            showsHorizontalScrollIndicator={false}
+            showsHorizontalScrollIndicator={true}
             ItemSeparatorComponent={() => <View style={{ width: SPACING.md }} />}
             estimatedItemSize={150}
             onEndReached={() => {
@@ -44,7 +44,7 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
                 }
             }}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={isFetchingNextPage ? <Loader /> : null}
+            ListFooterComponent={isFetchingNextPage ? <Loader size="small" flex /> : null}
         />
     );
 };
