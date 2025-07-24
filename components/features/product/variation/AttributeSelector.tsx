@@ -3,11 +3,12 @@ import { calculatePriceRange } from '@/contexts/ProductContext';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { ProductAttributeOption } from '@/types';
-import { formatPrice, formatPriceRange } from '@/utils/helpers';
+import { formatPriceRange } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, XStack } from 'tamagui';
+import { VariantInfo } from '../display/VariantInfo';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
@@ -69,8 +70,11 @@ const OptionRenderer = ({
             <XStack alignItems='flex-end'>
                 <SizableText opacity={opacity} fontSize={fontSize} color={isSelected ? '$primaryText' : '$color'}>
                     {isLoading && <Loader />}
-                    {matchingVariants && matchingVariants.length === 1 && formatPrice(matchingVariants[0].price)}
-                    {matchingVariants && matchingVariants.length > 1 && formatPriceRange(priceRange!)}
+                    {matchingVariants && matchingVariants.length === 1 ? (
+                        <VariantInfo variant={matchingVariants[0]} />
+                    ) : matchingVariants && matchingVariants.length > 1 ? (
+                        formatPriceRange(priceRange!)
+                    ) : null}
                 </SizableText>
             </XStack>
 
@@ -82,7 +86,9 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
 
     const renderItem = ({ item: option }: { item: ProductAttributeOption }) => {
         const matchingVariants = currentAvailableOptions?.get(option.name!)
-        const isDisabled = !matchingVariants || matchingVariants.length === 0;
+        const singleVariant = matchingVariants && matchingVariants.length === 1 ? matchingVariants[0] : null;
+        const isOutOfStock = singleVariant ? singleVariant.stock_status === 'outofstock' : false;
+        const isDisabled = !matchingVariants || matchingVariants.length === 0 || isOutOfStock;
         const isSelected = currentSelection === option.name;
 
         return (
