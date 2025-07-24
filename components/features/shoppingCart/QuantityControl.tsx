@@ -31,7 +31,7 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({ product, baseP
                 <XStack onPress={handleDecrease} p="$2" pressStyle={{ opacity: 0.7 }}>
                     <Icon name="remove" size="xxl" color={variant.text.secondary} />
                 </XStack>
-                <CustomText fontSize="$md" fontWeight="600" minWidth={20} textAlign="center">
+                <CustomText fontSize="$3" fontWeight="600" minWidth={20} textAlign="center">
                     {quantity}
                 </CustomText>
             </XStack>

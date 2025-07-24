@@ -17,7 +17,7 @@ export const BuyProduct = ({ product, displayProduct }: { product: Product; disp
         <>
             <XStack alignItems="center" justifyContent="space-between">
                 <ProductTitle product={product} activeProduct={displayProduct} />
-                <PriceTag fontSize="xxl" product={displayProduct} />
+                <PriceTag fontSize="$3" product={displayProduct} />
             </XStack>
             <ProductVariations />
             <CustomText fontSize="sm">{product.short_description}</CustomText>

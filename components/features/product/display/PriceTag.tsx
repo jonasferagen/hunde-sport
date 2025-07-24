@@ -1,14 +1,28 @@
-import { Product } from '@/types';
+import { Loader } from '@/components/ui';
+import { useProductContext } from '@/contexts';
+import { useProductVariants } from '@/hooks/useProductVariants';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
 import { FontSizeTokens, Text, XStack } from 'tamagui';
 
 interface PriceInfoProps {
-    product: Product;
     fontSize?: FontSizeTokens;
 }
 
-export const PriceTag = ({ product, fontSize = '$3' }: PriceInfoProps) => {
+export const PriceTag = ({ fontSize = '$3' }: PriceInfoProps) => {
+    const { product } = useProductContext();
+    const { isLoading } = useProductVariants(product);
+
+    if (!product) {
+        return null;
+    }
+
+    if (isLoading) {
+        return (
+            <Loader size="small" flex />
+        );
+    }
+
     if (product.on_sale) {
         return (
             <XStack alignItems="center">

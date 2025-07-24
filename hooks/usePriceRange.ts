@@ -6,12 +6,12 @@ interface PriceRange {
     max: number;
 }
 
-export const calculatePriceRange = (products: Product[] | undefined | null): PriceRange | null => {
-    if (!products || products.length === 0) {
+export const calculatePriceRange = (productVariations: Product[] | undefined | null): PriceRange | null => {
+    if (!productVariations || productVariations.length === 0) {
         return null;
     }
 
-    const prices = products.map((p) => p.price).filter((p) => p > 0);
+    const prices = productVariations.map((p) => p.price).filter((p) => p > 0);
 
     if (prices.length === 0) {
         return null;
@@ -23,8 +23,8 @@ export const calculatePriceRange = (products: Product[] | undefined | null): Pri
     return { min, max };
 };
 
-export const usePriceRange = (products: Product[] | undefined | null) => {
-    const priceRange = useMemo(() => calculatePriceRange(products), [products]);
+export const usePriceRange = (productVariations: Product[] | undefined | null) => {
+    const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 
     return priceRange;
 };

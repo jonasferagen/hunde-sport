@@ -1,24 +1,15 @@
-import { Product } from '@/models/Product';
+import { useProductContext } from '@/contexts';
 import React from 'react';
 import { H3 } from 'tamagui';
 
-interface ProductTitleProps {
-    product: Product;
-    activeProduct?: Product;
-}
+export const ProductTitle = () => {
+    const { product, productVariant } = useProductContext();
 
-export const ProductTitle = ({ product, activeProduct }: ProductTitleProps) => {
-
-    if (!activeProduct) {
-        if (product) {
-            return <H3>{product.name}</H3>;
-        }
-    } else {
-        const title = (activeProduct.id === product.id) ? product.name : product.name + ' ' + activeProduct.name;
-        if (title) {
-            return <H3>{title}</H3>;
-        }
+    if (!product) {
+        return null;
     }
 
-    return null;
+    const title = productVariant ? `${product.name} ${productVariant.name}` : product.name;
+
+    return <H3>{title}</H3>;
 };

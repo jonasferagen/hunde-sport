@@ -17,7 +17,6 @@ export const useInfiniteListQuery = <T>(
     const queryResult = useInfiniteQuery(queryOptions);
 
     useEffect(() => {
-        console.log("useInfiniteListQuery", queryOptions.queryKey);
 
         if (options?.autoload) {
             const fetchAllPages = async () => {

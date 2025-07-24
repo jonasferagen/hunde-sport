@@ -1,6 +1,7 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { TileBadge } from "@/components/ui/tile/TileBadge";
 import { routes } from '@/config/routes';
+import { ProductProvider, useProductContext } from '@/contexts';
 import { CARD_DIMENSIONS } from '@/styles';
 import { Product, ThemeVariant } from "@/types";
 import React from 'react';
@@ -14,12 +15,16 @@ interface ProductTileProps {
     themeVariant?: ThemeVariant;
 }
 
-export const ProductTile = ({
-    product,
+const ProductTileContent = ({
     width = CARD_DIMENSIONS.product.width,
     height = CARD_DIMENSIONS.product.height,
     themeVariant = 'primary'
-}: ProductTileProps) => {
+}: Omit<ProductTileProps, 'product'>) => {
+    const { product } = useProductContext();
+
+    if (!product) {
+        return null;
+    }
 
     return (
         <Tile
@@ -33,8 +38,16 @@ export const ProductTile = ({
             href={routes.product(product)}
         >
             <TileBadge themeVariant={themeVariant}>
-                <PriceTag product={product} />
+                <PriceTag />
             </TileBadge>
         </Tile>
+    );
+};
+
+export const ProductTile = ({ product, ...props }: ProductTileProps) => {
+    return (
+        <ProductProvider product={product}>
+            <ProductTileContent {...props} />
+        </ProductProvider>
     );
 };

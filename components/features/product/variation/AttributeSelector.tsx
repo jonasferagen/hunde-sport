@@ -36,8 +36,7 @@ const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, select
     const priceRange = calculatePriceRange(matchingVariants);
 
     const opacity = isFirst ? 0.5 : 1;
-
-    const fontSize = isFirst ? "xs" : "sm";
+    const fontSize = isFirst ? "\$2" : "\$3";
 
     return (
         <XStack
@@ -101,10 +100,10 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
             </Select.Trigger>
             {useFullscreen && (
                 <Adapt platform="touch">
-                    <Sheet modal dismissOnSnapToBottom snapPoints={[90]} animation="medium">
+                    <Sheet modal dismissOnSnapToBottom snapPoints={[90]} animation="quick">
                         <Sheet.Overlay
                             backgroundColor="$shadowColor"
-                            animation="medium"
+                            animation="quick"
                             enterStyle={{ opacity: 0 }}
                             exitStyle={{ opacity: 0 }}
                         />

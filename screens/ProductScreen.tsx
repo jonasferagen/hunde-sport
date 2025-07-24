@@ -1,7 +1,6 @@
 import { CategoryChips } from '@/components/features/category';
 import {
   BuyProduct,
-  ProductDetails,
   ProductImage,
   ProductImageGallery,
   ProductTiles
@@ -40,7 +39,7 @@ const ProductScreenContent = () => {
           <ProductTiles queryResult={useProductsByIds(activeProduct.related_ids)} themeVariant="secondary" />
         </PageContent>
         <PageContent title="Produktinformasjon" secondary>
-          <ProductDetails product={product} />
+          <CustomText fontSize="sm">{product.description || 'Ingen beskrivelse tilgjengelig'}</CustomText>
         </PageContent>
 
         <PageContent title="Flere bilder" horizontal>
