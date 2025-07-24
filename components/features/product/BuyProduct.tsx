@@ -24,7 +24,7 @@ export const BuyProduct = () => {
         <>
             <XStack alignItems="center" justifyContent="space-between">
                 <ProductTitle />
-                <PriceTag fontSize="$3" />
+                <PriceTag fontSize="$6" />
             </XStack>
             <ProductVariations />
             <CustomText fontSize="sm">{product.short_description}</CustomText>

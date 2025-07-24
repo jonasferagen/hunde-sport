@@ -9,6 +9,7 @@ import { ProductImageProvider, ProductProvider, useProductContext } from '@/cont
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
+import { SizableText } from 'tamagui';
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
@@ -21,7 +22,7 @@ export const ProductScreen = () => {
   }
 
   if (!product) {
-    return <CustomText>Produktet ble ikke funnet.</CustomText>;
+    return <SizableText>Produktet ble ikke funnet.</SizableText>;
   }
 
   return (
