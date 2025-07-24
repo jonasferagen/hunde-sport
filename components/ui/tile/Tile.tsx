@@ -1,9 +1,11 @@
+import { getThemeColors } from '@/styles/Theme';
+import { ThemeVariant } from '@/types';
 import { getScaledImageUrl, rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from "react-native";
-import { GetProps, Image, Text, YStack, styled, useTheme } from 'tamagui';
+import { GetProps, Image, Text, YStack, styled } from 'tamagui';
 
 const StyledLinearGradient = styled(LinearGradient, {
     name: 'StyledLinearGradient',
@@ -12,8 +14,7 @@ const StyledLinearGradient = styled(LinearGradient, {
     justifyContent: 'center',
 });
 
-// Define the type for our variants. Export it so other components can use it.
-export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';
+
 
 export interface TileProps extends Omit<GetProps<typeof YStack>, 'href'> {
     title: string;
@@ -45,17 +46,7 @@ export const Tile = (props: TileProps) => {
         ...stackProps
     } = props;
 
-    const theme = useTheme();
-
-    // Define colors inside the component to access the theme hook
-    const themeColors: Record<ThemeVariant, { bg: string, text: string }> = {
-        primary: { bg: theme.primary?.val ?? theme.background.val, text: theme.primaryText?.val ?? theme.color.val },
-        secondary: { bg: theme.secondary?.val ?? theme.background.val, text: theme.secondaryText?.val ?? theme.color.val },
-        accent: { bg: theme.accent?.val ?? theme.background.val, text: theme.accentText?.val ?? theme.color.val },
-        default: { bg: theme.background.val, text: theme.color.val },
-    };
-
-    const selectedTheme = themeColors[themeVariant];
+    const selectedTheme = getThemeColors(themeVariant);
 
     const finalImageUrl = getScaledImageUrl(imageUrl, Number(width), Number(height));
 

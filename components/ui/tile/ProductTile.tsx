@@ -1,8 +1,8 @@
-import { ThemeVariant, Tile } from "@/components/ui/tile/Tile";
+import { Tile } from "@/components/ui/tile/Tile";
 import { TileBadge } from "@/components/ui/tile/TileBadge";
 import { routes } from '@/config/routes';
 import { CARD_DIMENSIONS } from '@/styles';
-import { Product } from "@/types";
+import { Product, ThemeVariant } from "@/types";
 import React from 'react';
 import { DimensionValue } from 'react-native';
 import { PriceTag } from '../../features/product/display/PriceTag';
@@ -32,7 +32,7 @@ export const ProductTile = ({
             gradientMinHeight={40}
             href={routes.product(product)}
         >
-            <TileBadge>
+            <TileBadge themeVariant={themeVariant}>
                 <PriceTag product={product} />
             </TileBadge>
         </Tile>

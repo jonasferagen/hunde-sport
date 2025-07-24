@@ -44,3 +44,5 @@ export interface IStyleVariant {
   readonly borderColor: string;
   getGradient(amounts?: number[]): [ColorValue, ColorValue];
 }
+
+export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';

@@ -1,6 +1,7 @@
-import { IStyleVariant } from '@/types';
+import { IStyleVariant, ThemeVariant } from '@/types';
 import { darken, lighten } from '@/utils/helpers';
 import { ColorValue } from 'react-native';
+import { useTheme } from 'tamagui';
 
 const primary = '#D7C8E7';
 const secondary = '#DDE2C3';
@@ -23,6 +24,19 @@ export const palette = {
   success: '#388E3C', // A standard success green
   info: darken(primary, 30), // A standard info blue
 };
+
+export const getThemeColors = (variant: ThemeVariant) => {
+  const theme = useTheme();
+
+  const themeColors: Record<ThemeVariant, { bg: string, text: string }> = {
+    primary: { bg: theme.primary?.val ?? theme.background.val, text: theme.primaryText?.val ?? theme.color.val },
+    secondary: { bg: theme.secondary?.val ?? theme.background.val, text: theme.secondaryText?.val ?? theme.color.val },
+    accent: { bg: theme.accent?.val ?? theme.background.val, text: theme.accentText?.val ?? theme.color.val },
+    default: { bg: theme.background.val, text: theme.color.val },
+  };
+
+  return themeColors[variant];
+}
 
 export class StyleVariant implements IStyleVariant {
   public readonly backgroundColor: string;
