@@ -11,7 +11,7 @@ export const useProduct = (id: number) => {
 };
 
 export const useProductVariations = (productId: number, options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productVariationsQueryOptions(productId), { autoload: true, ...options });
+    useInfiniteListQuery(productVariationsQueryOptions(productId), options);
 
 // Specific hooks for different product lists
 export const useFeaturedProducts = (options?: InfiniteListQueryOptions) =>

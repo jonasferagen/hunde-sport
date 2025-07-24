@@ -1,10 +1,11 @@
 import { ListItem } from '@/components/ui/list/ListItem';
-import { useThemeContext } from '@/contexts';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { Product } from '@/models/Product';
 import React from 'react';
 import { ItemActions } from './list/ItemActions';
 import { ItemHeader } from './list/ItemHeader';
+
+
 
 interface ProductListItemProps {
     product: Product;

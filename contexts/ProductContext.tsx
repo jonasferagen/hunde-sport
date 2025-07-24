@@ -30,6 +30,7 @@ interface ProductContextType {
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
     isLoading: boolean;
+    isProductVariantsLoading: boolean;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -37,7 +38,7 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const ProductProvider: React.FC<{ product: Product; children: React.ReactNode }> = ({ product, children }) => {
     const isVariable = product.type === 'variable';
 
-    const { items: productVariants, isLoading, isFetchingNextPage, hasNextPage } = useProductVariations(product.id);
+    const { items: productVariants, isLoading, isFetchingNextPage, hasNextPage } = useProductVariations(product.id, { enabled: isVariable, autoload: true });
 
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
 
@@ -94,7 +95,8 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
         availableOptions,
         selectedOptions,
         variationAttributes,
-        isLoading: isLoading || isFetchingNextPage || hasNextPage,
+        isLoading,
+        isProductVariantsLoading: isFetchingNextPage || hasNextPage,
     };
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;

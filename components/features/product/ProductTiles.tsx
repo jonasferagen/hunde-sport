@@ -45,7 +45,7 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
                 }
             }}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={isFetchingNextPage ? <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="small" /></YStack> : null}
+            ListFooterComponent={isFetchingNextPage ? <YStack flex={1} ai="center" jc="center"><Spinner size="small" /></YStack> : null}
         />
     );
 };

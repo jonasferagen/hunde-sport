@@ -8,6 +8,7 @@ export type InfiniteListQueryResult<T> = UseInfiniteQueryResult<InfiniteData<T[]
 
 export interface InfiniteListQueryOptions {
     autoload: boolean;
+    enabled?: boolean;
 }
 
 export const useInfiniteListQuery = <T>(
