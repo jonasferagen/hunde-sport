@@ -28,7 +28,7 @@ export interface BaseTileProps extends Omit<GetProps<typeof YStack>, 'href'> {
     href: HrefObject;
 }
 
-export const BaseTile = (props: BaseTileProps) => {
+export const Tile = (props: BaseTileProps) => {
     const {
         title,
         imageUrl,

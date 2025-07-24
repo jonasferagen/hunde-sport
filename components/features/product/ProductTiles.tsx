@@ -5,7 +5,7 @@ import { Product } from '@/models/Product';
 import { CARD_DIMENSIONS } from '@/styles';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
-import { BaseTile, ThemeVariant } from '../../ui/tile/BaseTile';
+import { ThemeVariant, Tile } from '../../ui/tile/Tile';
 
 interface ProductTilesProps {
     queryResult: InfiniteListQueryResult<Product>;
@@ -27,7 +27,8 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
         <XStack gap="$space.4" minHeight={CARD_DIMENSIONS.product.height}>
             {
                 products.map((product: Product) => (
-                    <BaseTile
+                    <Tile
+                        key={product.id}
                         title={product.name}
                         imageUrl={product.images?.[0]?.src ?? ''}
                         themeVariant={themeVariant}

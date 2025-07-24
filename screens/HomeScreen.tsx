@@ -3,7 +3,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
-import { BaseTile } from '@/components/ui/tile/BaseTile';
+import { Tile } from '@/components/ui/tile/Tile';
 import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
@@ -22,7 +22,7 @@ const CategorySection = () => {
     return (
         <XStack flexWrap="wrap" gap={SPACING.md} jc="space-between">
             {categories.map((category) => (
-                <BaseTile
+                <Tile
                     key={category.id.toString()}
                     href={routes.category(category)}
                     title={category.name}

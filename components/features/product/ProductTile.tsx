@@ -1,4 +1,4 @@
-import { BaseTile, ThemeVariant } from "@/components/ui/tile/BaseTile";
+import { ThemeVariant, Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { CARD_DIMENSIONS } from '@/styles';
 import { Product } from "@/types";
@@ -31,7 +31,7 @@ export const ProductTile = ({
             overflow="hidden"
 
         >
-            <BaseTile
+            <Tile
                 width={width}
                 height={height}
                 themeVariant={themeVariant}

@@ -4,7 +4,7 @@ export { CategoryChip } from '../features/category/CategoryChip';
 export { CategoryTile } from '../features/category/CategoryTile';
 export { ProductTile } from '../features/product/ProductTile';
 
-export { Chip, ChipContainer } from './chips';
+export { Chip, ChipText } from './chips';
 export { Icon } from './icon/Icon';
 
 export { Loader } from './loader/Loader';
@@ -12,4 +12,5 @@ export { SearchBar } from './searchBar/Searchbar';
 export { CustomText } from './text/CustomText';
 
 
-export { ChipText } from './chips/ChipText';
+export { Tile } from './tile/Tile';
+

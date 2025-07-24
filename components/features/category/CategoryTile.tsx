@@ -1,4 +1,4 @@
-import { BaseTile, BaseTileProps } from '@/components/ui/tile/BaseTile';
+import { BaseTileProps, Tile } from '@/components/ui/tile/Tile';
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import React from 'react';
@@ -9,18 +9,22 @@ interface CategoryTileProps extends BaseTileProps {
 
 export const CategoryTile = ({
     category,
+    title,
+    imageUrl,
+    href,
     ...props
 }: CategoryTileProps) => {
 
-    const imageUrl = category.image?.src ?? '';
+    const finalImageUrl = category.image.src ?? '';
+    const finalHref = routes.category(category);
 
     return (
 
-        <BaseTile
-            title={category.name}
+        <Tile
+            title={title ?? category.name}
             themeVariant={'primary'}
-            imageUrl={imageUrl}
-            href={routes.category(category)}
+            imageUrl={finalImageUrl}
+            href={finalHref}
             {...props}
         />
 

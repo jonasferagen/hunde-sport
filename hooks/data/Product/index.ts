@@ -14,20 +14,20 @@ export const useProductVariations = (productId: number, options?: InfiniteListQu
     useInfiniteListQuery(productVariationsQueryOptions(productId), options);
 
 // Specific hooks for different product lists
-export const useFeaturedProducts = () =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'featured' }));
+export const useFeaturedProducts = (options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'featured' }), options);
 
-export const useRecentProducts = () =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'recent' }));
+export const useRecentProducts = (options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'recent' }), options);
 
-export const useDiscountedProducts = () =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'discounted' }));
+export const useDiscountedProducts = (options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'discounted' }), options);
 
-export const useProductsByCategory = (categoryId: number) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'category', params: categoryId }), { autoload: false });
+export const useProductsByCategory = (categoryId: number, options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'category', params: categoryId }), options);
 
-export const useProductsBySearch = (searchTerm: string) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'search', params: searchTerm }), { autoload: false });
+export const useProductsBySearch = (searchTerm: string, options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'search', params: searchTerm }), options);
 
-export const useProductsByIds = (ids: number[]) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'ids', params: ids }));
+export const useProductsByIds = (ids: number[], options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'ids', params: ids }), options);

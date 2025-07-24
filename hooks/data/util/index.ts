@@ -7,12 +7,12 @@ import { useEffect, useMemo } from 'react';
 export type InfiniteListQueryResult<T> = UseInfiniteQueryResult<InfiniteData<T[]>, Error> & { items: T[] };
 
 export interface InfiniteListQueryOptions {
-    autoload?: boolean;
+    autoload: boolean;
 }
 
 export const useInfiniteListQuery = <T>(
     queryOptions: UseInfiniteQueryOptions<T[], Error, InfiniteData<T[]>, any, number>,
-    options: InfiniteListQueryOptions = { autoload: true },
+    options: InfiniteListQueryOptions = { autoload: false },
 ): InfiniteListQueryResult<T> => {
     const queryResult = useInfiniteQuery(queryOptions);
 
@@ -20,7 +20,7 @@ export const useInfiniteListQuery = <T>(
 
         if (options?.autoload) {
 
-
+            console.log(options);
             const fetchAllPages = async () => {
                 if (queryResult.hasNextPage && !queryResult.isFetchingNextPage) {
                     await queryResult.fetchNextPage();
