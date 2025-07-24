@@ -1,4 +1,4 @@
-import '@/types/tamagui';
+
 import { createAnimations } from '@tamagui/animations-react-native';
 import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';

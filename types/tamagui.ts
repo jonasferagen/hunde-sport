@@ -1,4 +1,4 @@
-import appConfig from '@/config/tamagui.config';
+import appConfig from '@/tamagui/tamagui.config';
 
 // This is the base type for the Tamagui configuration
 export type AppConfig = typeof appConfig;

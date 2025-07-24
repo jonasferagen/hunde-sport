@@ -1,10 +1,10 @@
-import appConfig from '@/config/tamagui.config';
 import {
   LayoutProvider,
   ShoppingCartProvider,
   StatusProvider,
   ThemeProvider
 } from '@/contexts';
+import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot, useNavigationContainerRef } from 'expo-router';

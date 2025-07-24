@@ -48,6 +48,7 @@ export const ItemActions = ({
     const { product, productVariant } = useProductContext();
     const activeProduct = productVariant || product;
 
+
     if (!product || !activeProduct) {
         return <YStack />;
     }
