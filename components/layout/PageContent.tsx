@@ -53,6 +53,7 @@ export const PageContent: React.FC<PageContentProps> = ({
     return null;
   }
 
+
   const content = (
     <PageContentProvider value={{ styleVariantName }}>
       {children}

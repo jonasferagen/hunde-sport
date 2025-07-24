@@ -4,6 +4,7 @@ import { AlertCircle, ChevronsDown } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { QuantityControl } from '../../shoppingCart/QuantityControl';
+import { VariantInfo } from '../display/VariantInfo';
 import { ProductVariations } from '../variation/ProductVariations';
 interface ItemActionsProps {
     isExpanded: boolean;
@@ -12,20 +13,19 @@ interface ItemActionsProps {
 
 const VariantSelectionText = () => {
     const { product, productVariant } = useProductContext();
-    const activeProduct = productVariant || product;
 
-    if (!activeProduct || !product) {
+    if (!product || !productVariant) {
         return null;
     }
 
-    if (activeProduct.type === 'variation') {
+    if (productVariant.type === 'variation') {
         return (
             <>
-                <SizableText color="$gray10">
-                    {product.name} - <SizableText fontWeight="bold" color="$gray10">{activeProduct.name.trim()}</SizableText>
+                <SizableText color="$color">
+                    {product.name} - <SizableText fontWeight="bold" color="$color">{productVariant.name.trim()}</SizableText>
                 </SizableText>
-                <SizableText fontWeight="bold" color="$gray10">
-                    {formatPrice(activeProduct.price)}
+                <SizableText fontWeight="bold" color="$color">
+                    {formatPrice(productVariant.price)}
                 </SizableText>
             </>
         );
@@ -46,22 +46,25 @@ export const ItemActions = ({
     const { product, productVariant } = useProductContext();
     const activeProduct = productVariant || product;
 
-    if (!product || !activeProduct) {
+    if (!activeProduct) {
         return <YStack />;
     }
 
     return (
-        <YStack>
-            <XStack jc="space-between" ai="center" padding="$1">
+        <YStack theme='secondary' backgroundColor="$background" padding="$2">
+            <XStack jc="space-between" ai="center">
                 <XStack gap="$3" alignItems="center">
                     {product.type === 'variable' && (
                         <XStack onPress={handleExpand} ai="center">
-                            <ChevronsDown size="$3" />
+                            <ChevronsDown size="$4" />
                             <VariantSelectionText />
+
                         </XStack>
                     )}
                 </XStack>
-
+                {productVariant && (
+                    <VariantInfo variant={productVariant} />
+                )}
                 <XStack gap="$2" ai='center'>
                     {activeProduct.stock_status === 'outofstock' ? (
                         <XStack gap="$1" ai="center">

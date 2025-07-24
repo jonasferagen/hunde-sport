@@ -46,7 +46,7 @@ const ProductScreenContent = () => {
         <PageContent>
           <BuyProduct />
         </PageContent>
-        <PageContent title="Flere bilder" horizontal>
+        <PageContent title="Flere bilder">
           <ProductImageGallery />
         </PageContent>
         <PageContent primary title="Relaterte produkter">

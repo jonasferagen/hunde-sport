@@ -63,9 +63,6 @@ const customTokens = {
         accentPress: '#B2D0CF',
         accentText: '#4d7372',
         accentBorder: '#92c3c1',
-        default: '#FFFFFF',
-        defaultText: '#000000',
-        defaultBorder: '#E8E8E8',
     },
     fontSize: font.size,
     radius: {
@@ -106,9 +103,9 @@ const appConfig = createTamagui({
         ...themes,
         light: {
             ...themes.light,
-            background: customTokens.color.default,
+            background: customTokens.color.white1,
             backgroundPress: themes.light.gray3,
-            color: customTokens.color.defaultText,
+            color: customTokens.color.black1,
             primary: customTokens.color.primary,
             primaryPress: customTokens.color.primaryPress,
             secondary: customTokens.color.secondary,
@@ -119,14 +116,17 @@ const appConfig = createTamagui({
         primary: {
             background: customTokens.color.primary,
             color: customTokens.color.primaryText,
+            borderColor: customTokens.color.primaryBorder,
         },
         secondary: {
             background: customTokens.color.secondary,
             color: customTokens.color.secondaryText,
+            borderColor: customTokens.color.secondaryBorder,
         },
         accent: {
             background: customTokens.color.accent,
             color: customTokens.color.accentText,
+            borderColor: customTokens.color.accentBorder,
         },
     },
     tokens: customTokens,

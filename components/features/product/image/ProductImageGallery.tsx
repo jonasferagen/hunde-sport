@@ -8,8 +8,9 @@ export const ProductImageGallery = () => {
     const { product } = useProductContext();
     const { openImageViewer } = useProductImage();
 
-    if (!product || !product.images || product.images.length <= 1) {
-        return null;
+    if (!product.images || product.images.length <= 1) {
+        console.log("No images for product", product.name)
+        return <></>;
     }
 
     const galleryImages = product.images.slice(1);
