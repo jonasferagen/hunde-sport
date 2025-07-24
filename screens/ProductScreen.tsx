@@ -33,7 +33,7 @@ const ProductScreenContent = () => {
       <PageSection scrollable>
         <PageContent>
           <ProductImage image={activeProduct.image} onPress={() => openImageViewer(0)} />
-          <BuyProduct product={product} displayProduct={activeProduct} />
+          <BuyProduct />
         </PageContent>
         <PageContent primary title="Relaterte produkter" >
           <ProductTiles queryResult={useProductsByIds(activeProduct.related_ids)} themeVariant="secondary" />

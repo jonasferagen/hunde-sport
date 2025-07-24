@@ -1,7 +1,6 @@
 import { Icon } from '@/components/ui';
 import { CustomText } from '@/components/ui/text/CustomText';
-import { useThemeContext } from '@/contexts';
-import { Product } from '@/models/Product';
+import { useProductContext, useThemeContext } from '@/contexts';
 import { formatPrice } from '@/utils/helpers';
 import React, { JSX } from 'react';
 import { XStack, YStack } from 'tamagui';
@@ -9,18 +8,18 @@ import { QuantityControl } from '../../shoppingCart/QuantityControl';
 import { ProductVariations } from '../variation/ProductVariations';
 
 interface ItemActionsProps {
-    product: Product;
-    activeProduct: Product;
     isExpanded: boolean;
     handleExpand: () => void;
 }
 
-interface VariantSelectionTextProps {
-    product: Product;
-    activeProduct: Product;
-}
+const VariantSelectionText = () => {
+    const { product, productVariant } = useProductContext();
+    const activeProduct = productVariant || product;
 
-const VariantSelectionText = ({ product, activeProduct }: VariantSelectionTextProps) => {
+    if (!activeProduct || !product) {
+        return null;
+    }
+
     if (activeProduct.type === 'variation') {
         return (
             <>
@@ -42,13 +41,17 @@ const VariantSelectionText = ({ product, activeProduct }: VariantSelectionTextPr
 };
 
 export const ItemActions = ({
-    product,
-    activeProduct,
     isExpanded,
     handleExpand
 }: ItemActionsProps): JSX.Element => {
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('default');
+    const { product, productVariant } = useProductContext();
+    const activeProduct = productVariant || product;
+
+    if (!product || !activeProduct) {
+        return <YStack />;
+    }
 
     return (
         <YStack>
@@ -57,7 +60,7 @@ export const ItemActions = ({
                     {product.type === 'variable' && (
                         <XStack onPress={handleExpand} gap="$2" alignItems="center" marginLeft="$2">
                             <Icon name="dot" size="xs" color={theme.text.primary} />
-                            <VariantSelectionText product={product} activeProduct={activeProduct} />
+                            <VariantSelectionText />
                         </XStack>
                     )}
                 </XStack>

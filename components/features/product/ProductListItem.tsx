@@ -20,14 +20,9 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     isExpanded,
     categoryId,
 }) => {
-    const { themeManager } = useThemeContext();
-    const theme = themeManager.getVariant('default');
+    const { product } = useProductContext();
 
-    const { product, productVariant } = useProductContext();
-
-    const activeProduct = productVariant || product;
-
-    if (!product || !activeProduct) {
+    if (!product) {
         return null;
     }
 
@@ -37,15 +32,8 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 
     return (
         <ListItem
-            header={<ItemHeader product={product} activeProduct={activeProduct} categoryId={categoryId} />}
-            actions={
-                <ItemActions
-                    product={product}
-                    activeProduct={activeProduct}
-                    isExpanded={isExpanded}
-                    handleExpand={handleExpand}
-                />
-            }
+            header={<ItemHeader categoryId={categoryId} />}
+            actions={<ItemActions isExpanded={isExpanded} handleExpand={handleExpand} />}
         />
     );
 };
