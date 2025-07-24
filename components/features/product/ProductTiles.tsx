@@ -1,12 +1,10 @@
 import { ProductTile } from '@/components/ui/tile/ProductTile';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';
-import { SPACING } from '@/styles/Dimensions';
 import { ThemeVariant } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React, { JSX } from 'react';
-import { View } from 'react-native';
-import { Spinner, YStack } from 'tamagui';
+import { Spinner, View, YStack } from 'tamagui';
 
 interface ProductTilesProps {
     queryResult: InfiniteListQueryResult<Product>;
@@ -37,7 +35,7 @@ export const ProductTiles = ({ queryResult, theme = 'primary' }: ProductTilesPro
             )}
             keyExtractor={(item) => item.id.toString()}
             showsHorizontalScrollIndicator={true}
-            ItemSeparatorComponent={() => <View style={{ width: SPACING.md }} />}
+            ItemSeparatorComponent={() => <View width="$4" />}
             estimatedItemSize={150}
             onEndReached={() => {
                 if (fetchNextPage) {
