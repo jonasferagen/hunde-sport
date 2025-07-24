@@ -1,10 +1,12 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
-import { CARD_DIMENSIONS } from '@/styles';
 import { ThemeVariant } from '@/types';
 import React from 'react';
 import { DimensionValue, StyleProp, ViewStyle } from 'react-native';
+
+const CATEGORY_TILE_WIDTH: DimensionValue = 'auto';
+const CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 
 interface CategoryTileProps {
     category: Category;
@@ -15,13 +17,12 @@ interface CategoryTileProps {
 }
 export const CategoryTile = ({
     category,
-    width = CARD_DIMENSIONS.category.width,
-    height = CARD_DIMENSIONS.category.height,
+    width = CATEGORY_TILE_WIDTH,
+    height = CATEGORY_TILE_HEIGHT,
     theme,
     style,
     ...props
 }: CategoryTileProps) => {
-
 
     const finalHref = routes.category(category);
 
