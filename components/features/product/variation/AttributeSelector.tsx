@@ -1,5 +1,5 @@
 import { Loader } from '@/components/ui';
-import { calculatePriceRange } from '@/hooks/usePriceRange';
+import { calculatePriceRange } from '@/contexts/ProductContext';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { ProductAttributeOption } from '@/types';
@@ -22,7 +22,7 @@ interface AttributeSelectorProps {
 }
 
 interface OptionRendererProps {
-    option: any;
+    option: ProductAttributeOption;
     disabled?: boolean;
     isSelected?: boolean;
     matchingVariants?: Product[];

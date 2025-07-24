@@ -14,10 +14,6 @@ export const BuyProduct = () => {
 
     const activeProduct = productVariant || product;
 
-    if (!product || !activeProduct) {
-        return null;
-    }
-
     const { status, msg } = purchaseInfo(activeProduct);
 
     return (

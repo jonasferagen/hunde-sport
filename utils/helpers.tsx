@@ -32,7 +32,7 @@ export const darken = (color: string, amount: number) =>
 export const rgba = (color: string, alpha: number): string =>
     tinycolor(color).setAlpha(alpha).toString();
 
-import { PriceRange } from '@/hooks/usePriceRange';
+import { PriceRange } from '@/types';
 import { parseDocument } from 'htmlparser2';
 
 const isAllWhitespace = (str: string) => /^\s*$/.test(str);
