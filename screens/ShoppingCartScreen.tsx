@@ -1,7 +1,7 @@
 import { ShoppingCartListItem } from '@/components/features/shoppingCart/ShoppingCartListItem';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { StyledButton, StyledButtonText } from '@/components/ui/button/StyledButton';
+
 import { routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
@@ -9,7 +9,7 @@ import { formatPrice } from '@/utils/helpers';
 import { Stack, useRouter } from 'expo-router';
 import React, { memo, useCallback } from 'react';
 import { FlatList } from 'react-native';
-import { SizableText, XStack, YStack } from 'tamagui';
+import { Button, SizableText, XStack, YStack } from 'tamagui';
 
 interface ShoppingCartSummaryProps {
     cartItemCount: number;
@@ -29,12 +29,12 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
                 </SizableText>
             </XStack>
             <YStack gap="$3" mt="$3">
-                <StyledButton onPress={onClearCart} variant="secondary">
-                    <StyledButtonText variant="secondary">Tøm handlekurv</StyledButtonText>
-                </StyledButton>
-                <StyledButton onPress={() => useRouter().push(routes.checkout())} variant="primary">
-                    <StyledButtonText variant="primary">Gå til kassen</StyledButtonText>
-                </StyledButton>
+                <Button onPress={onClearCart} theme="secondary">
+                    Tøm handlekurv
+                </Button>
+                <Button onPress={() => useRouter().push(routes.checkout())} theme="primary">
+                    Gå til kassen
+                </Button>
             </YStack>
         </>
     );

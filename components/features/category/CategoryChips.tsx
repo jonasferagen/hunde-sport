@@ -1,4 +1,5 @@
-import { CategoryChip, Chip, ChipText } from "@/components/ui/";
+import { Chip } from "@/components/ui/";
+import { routes } from "@/config/routes";
 import { Category } from "@/types";
 import { useState } from "react";
 import { StyleProp, ViewStyle } from "react-native";
@@ -26,24 +27,23 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
     return (
         <XStack flexWrap="wrap" alignItems="center" gap="$2" style={style as any}>
             {displayedCategories.map((category) => (
-                <CategoryChip key={category.id} category={category} />
+                <Chip
+                    key={category.id}
+                    theme="primary"
+                    title={category.name}
+                    href={routes.category(category)}
+                />
             ))}
             {(isLoading || isFetchingNextPage) && <Spinner />}
             {!showAll && limit && categories.length > limit && (
                 <Chip
+                    theme="accent"
+                    title={`Mer..(${categories.length - limit})`}
                     onPress={() => setShowAll(true)}
-                    variant="accent"
-                >
-                    <ChipText>{`Mer..(${categories.length - limit})`}</ChipText>
-                </Chip>
+                />
             )}
             {showAll && limit && categories.length > limit && (
-                <Chip
-                    onPress={() => setShowAll(false)}
-                    variant="accent"
-                >
-                    <ChipText>Skjul</ChipText>
-                </Chip>
+                <Chip theme="accent" title="Skjul" onPress={() => setShowAll(false)} />
             )}
         </XStack>
     );
