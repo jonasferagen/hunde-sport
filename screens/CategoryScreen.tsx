@@ -12,7 +12,7 @@ import { memo } from 'react';
 
 
 const CategoryChipsContainer = ({ category }: { category: Category }) => {
-    const { items: categories, isFetchingNextPage } = useCategories(category.id);
+    const { items: categories, isFetchingNextPage } = useCategories(category.id, { autoload: true });
 
     return (
         <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} />

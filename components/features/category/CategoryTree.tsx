@@ -23,7 +23,7 @@ interface CategoryTreeItemProps {
 };
 
 const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive, variant }: CategoryTreeItemProps) => {
-    const { items: categories } = useCategories(category.id);
+    const { items: categories } = useCategories(category.id, { autoload: true });
     const { themeManager } = useThemeContext();
     const themeVariant = themeManager.getVariant(variant);
     const styles = createStyles(themeVariant);

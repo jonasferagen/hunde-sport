@@ -14,7 +14,7 @@ import { TextInput } from 'react-native';
 import { XStack } from 'tamagui';
 
 const CategorySection = () => {
-    const { items: categories, isLoading } = useCategories(0);
+    const { items: categories, isLoading } = useCategories(0, { autoload: true });
 
     if (isLoading) {
         return <Loader size="large" flex />;
