@@ -24,6 +24,7 @@
     "@tamagui/config": "^1.132.11",
     "@tamagui/lucide-icons": "^1.132.12",
     "@tamagui/portal": "^1.132.11",
+    "@tamagui/react-native-web-lite": "^1.132.12",
     "@tanstack/react-query": "^5.82.0",
     "@types/react": "19.0.0",
     "expo": "53.0.20",
