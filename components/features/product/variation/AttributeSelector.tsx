@@ -7,8 +7,10 @@ import { formatPriceRange } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { Pressable } from 'react-native';
-import { SizableText, XStack } from 'tamagui';
+import { SizableText, ThemeName, XStack, YStack } from 'tamagui';
 import { VariantInfo } from '../display/VariantInfo';
+
+const getThemeName = (name: string): ThemeName => name as ThemeName;
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
@@ -39,19 +41,17 @@ const OptionRenderer = ({
     disabled,
     isSelected,
     matchingVariants,
-    selectedOptions,
-    isFirst,
-    isLast,
     isLoading }: OptionRendererProps) => {
-    const opacity = isFirst ? 0.5 : 1;
-    const fontSize = isFirst ? "$2" : "$3";
+    const opacity = 1;
+    const fontSize = "$3";
     const priceRange = calculatePriceRange(matchingVariants);
     return (
         <XStack
             flex={1}
-            backgroundColor={isSelected ? '$primary' : 'transparent'}
-            paddingVertical={"$2"}
-            paddingHorizontal={"$1"}
+            theme={isSelected ? getThemeName('primary') : null}
+            backgroundColor={isSelected ? '$background' : 'transparent'}
+            paddingVertical={"$3"}
+            paddingHorizontal={"$2"}
             justifyContent='space-between'
             alignItems='center'
             cursor={disabled ? 'not-allowed' : 'pointer'}
@@ -62,15 +62,14 @@ const OptionRenderer = ({
                     textTransform="capitalize"
                     fontWeight={isSelected ? 'bold' : 'normal'}
                     textDecorationLine={disabled ? 'line-through' : 'none'}
-                    color={isSelected ? '$primaryText' : '$color'}
+                    color={'$color'}
                 >
                     {option.label}
                 </SizableText>
             </XStack>
             <XStack alignItems='flex-end'>
-                <SizableText opacity={opacity} fontSize={fontSize} color={isSelected ? '$primaryText' : '$color'}>
-                    {isLoading && <Loader />}
-                    {matchingVariants && matchingVariants.length === 1 ? (
+                <SizableText opacity={opacity} fontSize={fontSize} color={'$color'}>
+                    {isLoading ? <Loader /> : matchingVariants && matchingVariants.length === 1 ? (
                         <VariantInfo variant={matchingVariants[0]} />
                     ) : matchingVariants && matchingVariants.length > 1 ? (
                         formatPriceRange(priceRange!)
@@ -111,13 +110,18 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
     };
 
 
+    const ITEM_HEIGHT = 60; // Approximate item height
+    const MAX_ITEMS_VISIBLE = 10;
+
     return (
-        <FlashList
-            data={options}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => `${item.name}-${attribute.id}-${index}`}
-            estimatedItemSize={50} // Adjust as needed
-            extraData={{ currentSelection, isLoading }}
-        />
+        <YStack maxHeight={options.length > MAX_ITEMS_VISIBLE ? ITEM_HEIGHT * MAX_ITEMS_VISIBLE : undefined} flex={1}>
+            <FlashList
+                data={options}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => `${item.name}-${attribute.id}-${index}`}
+                estimatedItemSize={ITEM_HEIGHT}
+                extraData={{ currentSelection, isLoading }}
+            />
+        </YStack>
     );
 }

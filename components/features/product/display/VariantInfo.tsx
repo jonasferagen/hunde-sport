@@ -16,7 +16,7 @@ export const VariantInfo = ({ variant }: VariantInfoProps) => {
                     <SizableText fontWeight="bold" color='$red10' fontSize="$1">Utsolgt</SizableText>
                 </XStack>
             )}
-            <SizableText fontWeight="bold" color='$color' textDecorationLine={textDecorationLine}>{formatPrice(variant.price)}</SizableText>
+            <SizableText color='$color' textDecorationLine={textDecorationLine}>{formatPrice(variant.price)}</SizableText>
         </XStack>
     );
 };
