@@ -6,10 +6,6 @@ import { AttributeSelector } from './AttributeSelector';
 export const ProductVariations = (): JSX.Element | null => {
     const {
         variationAttributes,
-        selectedOptions,
-        availableOptions,
-        handleOptionSelect,
-        isProductVariantsLoading,
         product
     } = useProductContext();
 
@@ -19,15 +15,11 @@ export const ProductVariations = (): JSX.Element | null => {
     }
 
     return (
-
         <XStack gap="$2" flexWrap="wrap">
-            {variationAttributes.map((attribute, index) => {
-                const currentSelection = selectedOptions[attribute.id];
+            {variationAttributes.map((attribute) => {
                 const options = attribute.options.filter((o) => o.name);
-                const currentAvailableOptions = availableOptions.get(attribute.id);
 
                 return (
-
                     <YStack key={attribute.id} flex={1}>
                         <SizableText fontSize="$3" fontWeight="bold" textTransform="capitalize" mb="$2" ml="$1">
                             {attribute.name}
@@ -35,19 +27,10 @@ export const ProductVariations = (): JSX.Element | null => {
                         <AttributeSelector
                             attribute={attribute}
                             options={options}
-                            currentSelection={currentSelection}
-                            currentAvailableOptions={currentAvailableOptions}
-                            handleOptionSelect={handleOptionSelect}
-                            isProductVariantsLoading={isProductVariantsLoading}
-                            selectedOptions={selectedOptions}
-                            isFirst={index === 0}
-                            isLast={index === variationAttributes.length - 1}
                         />
                     </YStack>
                 );
             })}
         </XStack>
-
-
     );
 };
