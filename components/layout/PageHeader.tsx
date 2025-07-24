@@ -1,34 +1,23 @@
-import { useThemeContext } from '@/contexts';
-import { SPACING } from '@/styles';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { H4 } from 'tamagui';
+import { H4, YStack, YStackProps } from 'tamagui';
 
-interface PageHeaderProps {
+interface PageHeaderProps extends YStackProps {
     title?: string;
     children?: React.ReactNode;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ title, children }) => {
-    const { themeManager } = useThemeContext();
-    const themeVariant = themeManager.getVariant('card');
-    const { backgroundColor, borderColor } = themeVariant;
+export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...props }) => {
     return (
-        <View style={[styles.container, { backgroundColor, borderColor }]}>
-            <View style={styles.titleContainer}>
-                <H4>{title}</H4>
-            </View>
+        <YStack
+            padding="$space.md"
+            borderBottomWidth={1}
+            backgroundColor="$background"
+            borderColor="$borderColor"
+            gap="$space.md"
+            {...props}
+        >
+            {title && <H4>{title}</H4>}
             {children}
-        </View>
+        </YStack>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        padding: SPACING.md,
-        borderBottomWidth: 1,
-    },
-    titleContainer: {
-        gap: SPACING.md,
-    },
-});

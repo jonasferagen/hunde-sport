@@ -2,7 +2,6 @@ import {
   LayoutProvider,
   ShoppingCartProvider,
   StatusProvider,
-  ThemeProvider
 } from '@/contexts';
 import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
@@ -34,21 +33,19 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   return (
     <TamaguiProvider config={appConfig}>
       <Theme name="light">
-        <ThemeProvider>
-          <PortalProvider>
-            <SafeAreaProvider>
-              <QueryClientProvider client={queryClient}>
-                <StatusProvider>
-                  <ShoppingCartProvider>
-                    <LayoutProvider>
-                      {children}
-                    </LayoutProvider>
-                  </ShoppingCartProvider>
-                </StatusProvider>
-              </QueryClientProvider >
-            </SafeAreaProvider >
-          </PortalProvider>
-        </ThemeProvider>
+        <PortalProvider>
+          <SafeAreaProvider>
+            <QueryClientProvider client={queryClient}>
+              <StatusProvider>
+                <ShoppingCartProvider>
+                  <LayoutProvider>
+                    {children}
+                  </LayoutProvider>
+                </ShoppingCartProvider>
+              </StatusProvider>
+            </QueryClientProvider >
+          </SafeAreaProvider >
+        </PortalProvider>
       </Theme>
     </TamaguiProvider>
   );

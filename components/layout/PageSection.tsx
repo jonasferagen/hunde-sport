@@ -1,58 +1,20 @@
-import { LayoutContext, useLayoutContext } from '@/contexts/LayoutContext';
-import React, { useState } from 'react';
-import { LayoutChangeEvent, ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
+import React from 'react';
+import { ScrollView } from 'react-native';
+import { YStack, YStackProps } from 'tamagui';
 
-interface PageSectionProps {
+interface PageSectionProps extends YStackProps {
   children: React.ReactNode;
-  style?: ViewStyle;
-  flex?: boolean;
   scrollable?: boolean;
-};
+}
 
-export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ children, style, flex, scrollable }, ref) => {
-  const parentLayout = useLayoutContext();
-  const [layout, setLayout] = useState({ width: 0, height: 0 });
-
-  const handleLayout = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    if (layout.width !== width || layout.height !== height) {
-      setLayout({ width, height });
-    }
-  };
-
+export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ children, scrollable, ...props }, ref) => {
   if (scrollable) {
     return (
-      <ScrollView
-        ref={ref}
-        contentContainerStyle={[styles.scrollContentContainer, style]}
-        showsVerticalScrollIndicator={true}
-        scrollEventThrottle={16}
-        nestedScrollEnabled={true}
-        scrollsToTop={true}
-        onLayout={handleLayout}
-      >
-        <LayoutContext.Provider value={{ insets: parentLayout.insets, layout }}>
-          {children}
-        </LayoutContext.Provider>
+      <ScrollView ref={ref} showsVerticalScrollIndicator={true} nestedScrollEnabled={true} scrollsToTop={true}>
+        <YStack {...props}>{children}</YStack>
       </ScrollView>
     );
   }
 
-  return (
-    <View style={[flex ? styles.flexContainer : styles.container, style]} onLayout={handleLayout}>
-      <LayoutContext.Provider value={{ insets: parentLayout.insets, layout }}>
-        {children}
-      </LayoutContext.Provider>
-    </View>
-  );
-});
-
-const styles = StyleSheet.create({
-  container: {},
-  flexContainer: {
-    flex: 1,
-  },
-  scrollContentContainer: {
-    // Add any specific styles for scrollable content here
-  },
+  return <YStack {...props}>{children}</YStack>;
 });

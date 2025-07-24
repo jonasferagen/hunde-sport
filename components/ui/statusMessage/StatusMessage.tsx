@@ -1,32 +1,28 @@
-import { useStatusContext, useThemeContext } from '@/contexts';
-import { BORDER_RADIUS, SPACING } from '@/styles';
+import { useStatusContext } from '@/contexts';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text } from 'react-native';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
+import { SizableText, YStack } from 'tamagui';
+
+const AnimatedYStack = Animated.createAnimatedComponent(YStack);
 
 export const StatusMessage: React.FC = () => {
     const { message, type, elementRef } = useStatusContext();
-    const { themeManager } = useThemeContext();
 
     const opacity = useSharedValue(0);
     const top = useSharedValue(0);
-
-    const alertType = type === 'warning' ? 'info' : type;
-    const variant = themeManager.getAlert(alertType);
 
     useEffect(() => {
         if (message) {
             opacity.value = withTiming(1, { duration: 300 });
 
             if (elementRef?.current) {
-                // Use measure to position the status message below the triggering element
                 elementRef.current.measure(
                     (_x: number, _y: number, _width: number, height: number, _pageX: number, pageY: number) => {
-                        top.value = pageY + height + SPACING.sm;
+                        top.value = pageY + height + 10; // Corresponds to space.sm
                     }
                 );
             }
@@ -46,37 +42,33 @@ export const StatusMessage: React.FC = () => {
         return null;
     }
 
-    const containerStyle = {
-        backgroundColor: variant.backgroundColor,
-        borderColor: variant.borderColor,
-        borderWidth: 1,
+    const getThemeProps = () => {
+        switch (type) {
+            case 'success':
+                return { backgroundColor: '$green8', borderColor: '$green10' };
+            case 'warning':
+            case 'info':
+                return { backgroundColor: '$blue8', borderColor: '$blue10' };
+            default:
+                return { backgroundColor: '$background', borderColor: '$borderColor' };
+        }
     };
 
     return (
-        <Animated.View
-            style={[
-                styles.statusContainer,
-                containerStyle,
-                animatedStyle,
-            ]}
+        <AnimatedYStack
+            position="absolute"
+            left="$space.md"
+            right="$space.md"
+            padding="$space.md"
+            borderRadius="$4"
+            zIndex={1000}
+            borderWidth={1}
+            {...getThemeProps()}
+            style={animatedStyle}
         >
-            <Text style={styles.text}>{message}</Text>
-        </Animated.View>
+            <SizableText color="$color.white" textAlign="center">
+                {message}
+            </SizableText>
+        </AnimatedYStack>
     );
 };
-
-const styles = StyleSheet.create({
-    statusContainer: {
-        position: 'absolute',
-        left: SPACING.md,
-        right: SPACING.md,
-        padding: SPACING.md,
-        borderRadius: BORDER_RADIUS.md,
-        zIndex: 1000, // Ensure it's on top
-        opacity: 0.8, // Set base opacity here
-    },
-    text: {
-        color: 'white',
-        textAlign: 'center',
-    },
-});

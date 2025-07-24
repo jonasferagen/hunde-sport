@@ -1,10 +1,7 @@
-import { CustomText } from '@/components/ui';
 import { CheckoutStep } from '@/config/routes';
-import { useThemeContext } from '@/contexts';
-import { SPACING } from '@/styles';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
-import { StyleSheet, View, TextStyle } from 'react-native';
+import { SizableText, XStack } from 'tamagui';
 
 interface RouteTrailProps {
     steps: CheckoutStep[];
@@ -12,45 +9,32 @@ interface RouteTrailProps {
 }
 
 export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Element => {
-    const { themeManager } = useThemeContext();
     const currentStepIndex = steps.findIndex(step => step.name === currentStepName);
 
     return (
-        <View style={styles.container}>
+        <XStack alignItems="center" justifyContent="center" paddingVertical="$space.sm">
             {steps.map((step, index) => {
                 const isCompleted = index < currentStepIndex;
                 const isCurrent = index === currentStepIndex;
 
-                const textStyle: TextStyle = {
-                    color: isCompleted || isCurrent ? themeManager.getVariant('default').text.primary : themeManager.getVariant('default').text.secondary,
-                    textDecorationLine: isCurrent ? 'underline' : 'none',
-                };
-
                 return (
                     <React.Fragment key={step.name}>
                         <Link href={step.route} disabled={!isCompleted && !isCurrent} asChild>
-                            <CustomText style={textStyle}>{step.title}</CustomText>
+                            <SizableText
+                                color={isCompleted || isCurrent ? '$color.primary' : '$color.secondary'}
+                                textDecorationLine={isCurrent ? 'underline' : 'none'}
+                            >
+                                {step.title}
+                            </SizableText>
                         </Link>
                         {index < steps.length - 1 && (
-                            <CustomText style={[styles.separator, { color: themeManager.getVariant('default').text.secondary }]}>
+                            <SizableText marginHorizontal="$space.sm" color="$color.secondary">
                                 &gt;
-                            </CustomText>
+                            </SizableText>
                         )}
                     </React.Fragment>
                 );
             })}
-        </View>
+        </XStack>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: SPACING.sm,
-    },
-    separator: {
-        marginHorizontal: SPACING.sm,
-    },
-});

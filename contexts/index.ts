@@ -3,5 +3,5 @@ export { ProductProvider, useProductContext } from './ProductContext';
 export { ProductImageProvider, useProductImage } from './ProductImageContext';
 export { ShoppingCartProvider, useShoppingCartContext } from './ShoppingCartContext';
 export { StatusProvider, useStatusContext } from './StatusContext';
-export { ThemeProvider, useThemeContext } from './ThemeContext';
+
 
