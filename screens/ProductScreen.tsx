@@ -12,32 +12,6 @@ import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 
-const ProductScreenContent = () => {
-  const { productVariant, product } = useProductContext();
-
-  const activeProduct = productVariant || product;
-
-  if (!activeProduct || !product) return null;
-
-  return (
-    <PageSection scrollable>
-      <PageContent>
-        <ProductImageManager />
-        <BuyProduct />
-      </PageContent>
-      <PageContent primary title="Relaterte produkter">
-        <ProductTiles queryResult={useProductsByIds(activeProduct.related_ids)} themeVariant="secondary" />
-      </PageContent>
-      <PageContent title="Produktinformasjon" secondary>
-        <CustomText fontSize="sm">{product.description || 'Ingen beskrivelse tilgjengelig'}</CustomText>
-      </PageContent>
-
-      <PageContent title="Kategorier">
-        <CategoryChips categories={product.categories} />
-      </PageContent>
-    </PageSection>
-  );
-};
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
@@ -61,5 +35,28 @@ export const ProductScreen = () => {
         <ProductScreenContent />
       </PageView>
     </ProductProvider>
+  );
+};
+
+const ProductScreenContent = () => {
+  const { product } = useProductContext();
+
+  return (
+    <PageSection scrollable>
+      <PageContent>
+        <ProductImageManager />
+        <BuyProduct />
+      </PageContent>
+      <PageContent primary title="Relaterte produkter">
+        <ProductTiles queryResult={useProductsByIds(product.related_ids)} themeVariant="secondary" />
+      </PageContent>
+      <PageContent title="Produktinformasjon" secondary>
+        <CustomText fontSize="sm">{product.description || 'Ingen beskrivelse tilgjengelig'}</CustomText>
+      </PageContent>
+
+      <PageContent title="Kategorier">
+        <CategoryChips categories={product.categories} />
+      </PageContent>
+    </PageSection>
   );
 };
