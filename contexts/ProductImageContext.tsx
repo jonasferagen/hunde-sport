@@ -1,5 +1,5 @@
-import { useProductContext } from '@/contexts';
-import { Image } from '@/types';
+import { useProductContext } from '@/contexts/ProductContext';
+import { Image } from '@/models/Image';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 
