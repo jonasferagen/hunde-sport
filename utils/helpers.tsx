@@ -64,7 +64,7 @@ export const htmlToPlainText = (html: string): string => {
     return result.replace(/\n{3,}/g, '\n\n').trim();
 };
 
-export const getScaledImageUrl = (url: string, width: number, height: number) => {
+export const getScaledImageUrl = (url: string, width: number, height: number): string | undefined => {
     if (!url || width === 0 || height === 0) {
         return undefined; // Return undefined if url is missing or size is not measured
     }

@@ -1,11 +1,10 @@
+import { ProductTile } from '@/components/features/product/ProductTile';
 import { Loader } from '@/components/ui';
-import { routes } from '@/config/routes';
+import { ThemeVariant } from '@/components/ui/tile/Tile';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';
-import { CARD_DIMENSIONS } from '@/styles';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
-import { ThemeVariant, Tile } from '../../ui/tile/Tile';
 
 interface ProductTilesProps {
     queryResult: InfiniteListQueryResult<Product>;
@@ -24,20 +23,14 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
     }
 
     return (
-        <XStack gap="$space.4" minHeight={CARD_DIMENSIONS.product.height}>
+        <XStack gap="$space.4" >
             {
                 products.map((product: Product) => (
-                    <Tile
+                    <ProductTile
                         key={product.id}
-                        title={product.name}
-                        imageUrl={product.images?.[0]?.src ?? ''}
+                        product={product}
                         themeVariant={themeVariant}
-                        width={CARD_DIMENSIONS.product.width}
-                        height={CARD_DIMENSIONS.product.height}
-                        titleNumberOfLines={2}
-                        href={routes.product(product)}
                     />
-
                 ))
             }
         </XStack >

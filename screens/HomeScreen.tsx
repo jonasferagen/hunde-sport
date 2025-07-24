@@ -1,9 +1,9 @@
+import { CategoryTile } from '@/components/features/category/CategoryTile';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Loader } from '@/components/ui';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
-import { Tile } from '@/components/ui/tile/Tile';
 import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
@@ -22,11 +22,9 @@ const CategorySection = () => {
     return (
         <XStack flexWrap="wrap" gap={SPACING.md} jc="space-between">
             {categories.map((category) => (
-                <Tile
+                <CategoryTile
                     key={category.id.toString()}
-                    href={routes.category(category)}
-                    title={category.name}
-                    imageUrl={category.image?.src ?? ''}
+                    category={category}
                     aspectRatio={1}
                     flexBasis="30%"
                     flexGrow={1}

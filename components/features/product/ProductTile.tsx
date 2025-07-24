@@ -1,10 +1,10 @@
 import { ThemeVariant, Tile } from "@/components/ui/tile/Tile";
+import { TileBadge } from "@/components/ui/tile/TileBadge";
 import { routes } from '@/config/routes';
 import { CARD_DIMENSIONS } from '@/styles';
 import { Product } from "@/types";
 import React from 'react';
 import { DimensionValue } from 'react-native';
-import { View, YStack } from 'tamagui';
 import { PriceTag } from './display/PriceTag';
 
 interface ProductTileProps {
@@ -21,37 +21,20 @@ export const ProductTile = ({
     themeVariant = 'primary'
 }: ProductTileProps) => {
 
-
     return (
-
-        <YStack
-            height={height}
+        <Tile
             width={width}
-            borderRadius="$3"
-            overflow="hidden"
-
+            height={height}
+            themeVariant={themeVariant}
+            title={product.name}
+            imageUrl={product.image?.src ?? ''}
+            titleNumberOfLines={2}
+            gradientMinHeight={40}
+            href={routes.product(product)}
         >
-            <Tile
-                width={width}
-                height={height}
-                themeVariant={themeVariant}
-                title={product.name}
-                imageUrl={product.image?.src ?? ''}
-                titleNumberOfLines={2}
-                gradientMinHeight={40}
-                href={routes.product(product)}
-            />
-            <View
-                position="absolute"
-                top="$2"
-                right="$2"
-                backgroundColor="$background0.5"
-                paddingVertical="$2"
-                paddingHorizontal="$3"
-                borderRadius="$3"
-            >
+            <TileBadge>
                 <PriceTag product={product} />
-            </View>
-        </YStack>
+            </TileBadge>
+        </Tile>
     );
 };

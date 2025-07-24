@@ -19,7 +19,7 @@ export const CategoryTile = ({
     ...props
 }: CategoryTileProps) => {
 
-    const finalImageUrl = category.image.src ?? '';
+
     const finalHref = routes.category(category);
 
     return (
@@ -27,10 +27,13 @@ export const CategoryTile = ({
         <Tile
             title={category.name}
             themeVariant={themeVariant ?? 'primary'}
-            imageUrl={finalImageUrl}
+            imageUrl={category.image?.src}
             href={finalHref}
             {...props}
-        />
+
+        >
+            <></>
+        </Tile>
 
     );
 };

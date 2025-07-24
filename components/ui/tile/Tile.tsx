@@ -1,4 +1,4 @@
-import { rgba } from "@/utils/helpers";
+import { getScaledImageUrl, rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
@@ -15,7 +15,7 @@ const StyledLinearGradient = styled(LinearGradient, {
 // Define the type for our variants. Export it so other components can use it.
 export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';
 
-export interface BaseTileProps extends Omit<GetProps<typeof YStack>, 'href'> {
+export interface TileProps extends Omit<GetProps<typeof YStack>, 'href'> {
     title: string;
     imageUrl: string;
     width?: DimensionValue;
@@ -26,9 +26,10 @@ export interface BaseTileProps extends Omit<GetProps<typeof YStack>, 'href'> {
     gradientMinHeight?: number;
     themeVariant?: ThemeVariant;
     href: HrefObject;
+    children?: React.ReactNode;
 }
 
-export const Tile = (props: BaseTileProps) => {
+export const Tile = (props: TileProps) => {
     const {
         title,
         imageUrl,
@@ -40,6 +41,7 @@ export const Tile = (props: BaseTileProps) => {
         gradientMinHeight = 40,
         themeVariant = 'default',
         href,
+        children,
         ...stackProps
     } = props;
 
@@ -55,7 +57,9 @@ export const Tile = (props: BaseTileProps) => {
 
     const selectedTheme = themeColors[themeVariant];
 
-    const content = (
+    const finalImageUrl = getScaledImageUrl(imageUrl, Number(width), Number(height));
+
+    return <Link href={href} asChild>
         <YStack
             onPress={onPress}
             width={width}
@@ -69,7 +73,7 @@ export const Tile = (props: BaseTileProps) => {
             {...stackProps}
         >
             <Image
-                source={{ uri: imageUrl }}
+                source={{ uri: finalImageUrl }}
                 position="absolute"
                 top={0}
                 left={0}
@@ -92,12 +96,8 @@ export const Tile = (props: BaseTileProps) => {
                     </Text>
                 </StyledLinearGradient>
             </YStack>
+            {children}
         </YStack>
-    );
+    </Link>;
 
-    return (
-        <Link href={href} asChild>
-            {content}
-        </Link>
-    );
 }
