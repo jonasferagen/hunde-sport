@@ -46,6 +46,8 @@ const animations = createAnimations({
     },
 });
 
+//    accent: '#C8E6E5',
+
 const customTokens = {
     ...tokens,
     color: {
@@ -63,6 +65,7 @@ const customTokens = {
         defaultText: '#000000',
         defaultBorder: '#E8E8E8',
     },
+    fontSize: font.size,
     radius: {
         ...tokens.radius,
         0: 0,
@@ -115,6 +118,7 @@ const appConfig = createTamagui({
         heading: font,
         body: font,
     },
+    size: font.size,
 });
 
 export default appConfig;

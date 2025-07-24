@@ -1,9 +1,9 @@
 import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Button, CustomText } from '@/components/ui';
 import { checkoutFlow, routes } from '@/config/routes';
 import { Stack, useRouter } from 'expo-router';
 import React from 'react';
+import { Button, SizableText } from 'tamagui';
 
 const PaymentScreen = () => {
     const router = useRouter();
@@ -21,10 +21,10 @@ const PaymentScreen = () => {
             </PageHeader>
             <PageSection flex>
                 <PageContent flex>
-                    <CustomText>Betalingsinformasjon kommer her.</CustomText>
+                    <SizableText>Betalingsinformasjon kommer her.</SizableText>
                 </PageContent>
                 <PageContent>
-                    <Button title="Fullfør Kjøp" onPress={handleNext} />
+                    <Button onPress={handleNext}>Fullfør Kjøp</Button>
                 </PageContent>
             </PageSection>
         </PageView>

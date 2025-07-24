@@ -1,9 +1,8 @@
 import { Icon } from '@/components/ui';
-import { CustomText } from '@/components/ui/text/CustomText';
 import { useProductContext, useThemeContext } from '@/contexts';
 import { formatPrice } from '@/utils/helpers';
 import React, { JSX } from 'react';
-import { XStack, YStack } from 'tamagui';
+import { SizableText, XStack, YStack } from 'tamagui';
 import { QuantityControl } from '../../shoppingCart/QuantityControl';
 import { ProductVariations } from '../variation/ProductVariations';
 
@@ -23,20 +22,20 @@ const VariantSelectionText = () => {
     if (activeProduct.type === 'variation') {
         return (
             <>
-                <CustomText fontSize="md" color="$gray10">
-                    {product.name} - <CustomText bold fontSize="md" color="$gray10">{activeProduct.name.trim()}</CustomText>
-                </CustomText>
-                <CustomText bold fontSize="md" color="$gray10">
-                    á {formatPrice(activeProduct.price)}
-                </CustomText>
+                <SizableText color="$gray10">
+                    {product.name} - <SizableText fontWeight="bold" color="$gray10">{activeProduct.name.trim()}</SizableText>
+                </SizableText>
+                <SizableText fontWeight="bold" color="$gray10">
+                    {formatPrice(activeProduct.price)}
+                </SizableText>
             </>
         );
     }
 
     return (
-        <CustomText fontSize="md" color="$gray10">
+        <SizableText color="$gray10">
             Velg variant
-        </CustomText>
+        </SizableText>
     );
 };
 
@@ -55,25 +54,26 @@ export const ItemActions = ({
 
     return (
         <YStack>
-            <XStack justifyContent="space-between" alignItems="center" padding="$1">
+            <XStack jc="space-between" ai="center" padding="$1">
                 <XStack gap="$3" alignItems="center">
                     {product.type === 'variable' && (
-                        <XStack onPress={handleExpand} gap="$2" alignItems="center" marginLeft="$2">
+                        <XStack onPress={handleExpand} gap="$2" ai="center" ml="$2">
                             <Icon name="dot" size="xs" color={theme.text.primary} />
                             <VariantSelectionText />
                         </XStack>
                     )}
                 </XStack>
 
-                <XStack gap="$2">
-                    {activeProduct.stock_status === 'outofstock' && (
-                        <CustomText fontSize="md" color="$gray10">Ikke på lager</CustomText>
+                <XStack gap="$2" ai='center'>
+                    {activeProduct.stock_status === 'outofstock' || true && (
+                        <SizableText color="red">Ikke på lager</SizableText>
                     )}
                     <QuantityControl product={activeProduct} baseProduct={product} />
                 </XStack>
             </XStack>
             {isExpanded && (
                 <YStack marginHorizontal="$3" marginTop="$2">
+
                     <ProductVariations />
                 </YStack>
             )}
