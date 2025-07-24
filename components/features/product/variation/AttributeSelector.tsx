@@ -7,7 +7,7 @@ import { formatPriceRange } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { Pressable } from 'react-native';
-import { SizableText, Spinner, ThemeName, XStack, YStack } from 'tamagui';
+import { SizableText, ThemeName, XStack, YStack } from 'tamagui';
 import { VariantInfo } from '../display/VariantInfo';
 
 const getThemeName = (name: string): ThemeName => name as ThemeName;
@@ -18,7 +18,7 @@ interface AttributeSelectorProps {
     currentSelection: string | undefined;
     currentAvailableOptions: Map<string, Product[]> | undefined;
     handleOptionSelect: (attributeId: number, optionName: string) => void;
-    isLoading: boolean;
+    isProductVariantsLoading: boolean;
     selectedOptions: Record<number, string>;
     isFirst: boolean;
     isLast: boolean;
@@ -32,7 +32,7 @@ interface OptionRendererProps {
     selectedOptions: Record<number, string>;
     isFirst: boolean;
     isLast: boolean;
-    isLoading: boolean;
+    isProductVariantsLoading: boolean;
 }
 
 
@@ -41,7 +41,8 @@ const OptionRenderer = ({
     disabled,
     isSelected,
     matchingVariants,
-    isLoading }: OptionRendererProps) => {
+    isProductVariantsLoading
+}: OptionRendererProps) => {
     const opacity = 1;
     const fontSize = "$3";
     const priceRange = calculatePriceRange(matchingVariants);
@@ -69,7 +70,7 @@ const OptionRenderer = ({
             </XStack>
             <XStack alignItems='flex-end'>
                 <SizableText opacity={opacity} fontSize={fontSize} color={'$color'}>
-                    {isLoading ? <Spinner /> : matchingVariants && matchingVariants.length === 1 ? (
+                    {matchingVariants && matchingVariants.length === 1 ? (
                         <VariantInfo variant={matchingVariants[0]} />
                     ) : matchingVariants && matchingVariants.length > 1 ? (
                         formatPriceRange(priceRange!)
@@ -81,7 +82,15 @@ const OptionRenderer = ({
     );
 };
 
-export const AttributeSelector = ({ attribute, options, currentSelection, currentAvailableOptions, handleOptionSelect, isLoading, selectedOptions, isFirst, isLast }: AttributeSelectorProps) => {
+export const AttributeSelector = ({ attribute,
+    options,
+    currentSelection,
+    currentAvailableOptions,
+    handleOptionSelect,
+    isProductVariantsLoading,
+    selectedOptions,
+    isFirst,
+    isLast }: AttributeSelectorProps) => {
 
     const renderItem = ({ item: option }: { item: ProductAttributeOption }) => {
         const matchingVariants = currentAvailableOptions?.get(option.name!)
@@ -103,7 +112,7 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
                     selectedOptions={selectedOptions}
                     isFirst={isFirst}
                     isLast={isLast}
-                    isLoading={isLoading}
+                    isProductVariantsLoading={isProductVariantsLoading}
                 />
             </Pressable>
         );
@@ -111,16 +120,16 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
 
 
     const ITEM_HEIGHT = 60; // Approximate item height
-    const MAX_ITEMS_VISIBLE = 10;
+
 
     return (
-        <YStack maxHeight={options.length > MAX_ITEMS_VISIBLE ? ITEM_HEIGHT * MAX_ITEMS_VISIBLE : undefined} flex={1}>
+        <YStack flex={1}>
             <FlashList
                 data={options}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.name}-${attribute.id}-${index}`}
                 estimatedItemSize={ITEM_HEIGHT}
-                extraData={{ currentSelection, isLoading }}
+                extraData={{ currentSelection, isProductVariantsLoading }}
             />
         </YStack>
     );

@@ -9,7 +9,7 @@ export const ProductVariations = (): JSX.Element | null => {
         selectedOptions,
         availableOptions,
         handleOptionSelect,
-        isLoading,
+        isProductVariantsLoading,
         product
     } = useProductContext();
 
@@ -38,7 +38,7 @@ export const ProductVariations = (): JSX.Element | null => {
                             currentSelection={currentSelection}
                             currentAvailableOptions={currentAvailableOptions}
                             handleOptionSelect={handleOptionSelect}
-                            isLoading={isLoading}
+                            isProductVariantsLoading={isProductVariantsLoading}
                             selectedOptions={selectedOptions}
                             isFirst={index === 0}
                             isLast={index === variationAttributes.length - 1}

@@ -9,7 +9,7 @@ import { ProductImageProvider, ProductProvider, useProductContext } from '@/cont
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { SizableText, Spinner, YStack } from 'tamagui';
+import { SizableText, Spinner } from 'tamagui';
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
@@ -18,7 +18,7 @@ export const ProductScreen = () => {
   const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product?.categories[0]?.id;
 
   if (isLoading) {
-    return <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>;
+    return <Spinner size="large" />;
   }
 
   if (!product) {
