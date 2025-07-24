@@ -1,46 +1,36 @@
 
-import { useThemeContext } from '@/contexts';
-import { IStyleVariant } from '@/types';
-import { Image as ProductImageType } from '@/models/Image';
+import { useProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { YStack } from 'tamagui';
 
 interface ProductImageProps {
-    image: ProductImageType;
     onPress: () => void;
 }
 
 const IMAGE_HEIGHT = 300;
 
+export const ProductImage = ({ onPress }: ProductImageProps) => {
+    const { product, productVariant } = useProductContext();
+    const activeProduct = productVariant || product;
 
-export const ProductImage = ({ image, onPress }: ProductImageProps) => {
-    const { themeManager } = useThemeContext();
-    const themeVariant = themeManager.getVariant('default');
-    const styles = createStyles(themeVariant);
-    const imageUrl = getScaledImageUrl(image.src, IMAGE_HEIGHT, IMAGE_HEIGHT);
+    if (!activeProduct?.image) {
+        return null; // Or a placeholder
+    }
+
+    const imageUrl = getScaledImageUrl(activeProduct.image.src, IMAGE_HEIGHT, IMAGE_HEIGHT);
 
     return (
-        <View style={styles.mainImageWrapper}>
-            <TouchableOpacity onPress={onPress}>
-                <Image source={{ uri: imageUrl }} style={styles.mainImage} />
-            </TouchableOpacity>
-        </View>
+        <YStack
+            width="100%"
+            height={IMAGE_HEIGHT}
+            overflow="hidden"
+            borderBottomWidth={1}
+            borderColor="$borderColor"
+            onPress={onPress}
+        >
+            <Image source={{ uri: imageUrl }} style={{ height: '100%', width: '100%' }} />
+        </YStack>
     );
 };
-
-const createStyles = (themeVariant: IStyleVariant) =>
-    StyleSheet.create({
-        mainImageWrapper: {
-            width: '100%',
-            height: IMAGE_HEIGHT,
-            overflow: 'hidden',
-            borderBottomWidth: 1,
-            borderColor: themeVariant.borderColor,
-        },
-        mainImage: {
-            height: '100%',
-            width: '100%',
-        },
-    });

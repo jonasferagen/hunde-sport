@@ -5,8 +5,7 @@ import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { formatPriceRange } from '@/utils/helpers';
 import React, { useState } from 'react';
-import { Adapt, Select, Sheet, XStack } from 'tamagui';
-import { PriceTag } from '../display/PriceTag';
+import { Adapt, Select, Sheet, Text, XStack } from 'tamagui';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
@@ -55,12 +54,12 @@ const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, select
             {isLoading ? <Loader /> : matchingVariants && (
                 matchingVariants.length === 1 ? (
                     <XStack opacity={opacity}>
-                        <PriceTag product={matchingVariants[0]} />
+                        <Text>{matchingVariants[0].price}</Text>
                     </XStack>
                 ) : <XStack opacity={opacity} alignItems='flex-end'>
-                    <CustomText fontSize={fontSize}>
+                    <Text fontSize={fontSize}>
                         {priceRange && formatPriceRange(priceRange)}
-                    </CustomText>
+                    </Text>
                 </XStack>
             )}
         </XStack>

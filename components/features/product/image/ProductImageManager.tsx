@@ -1,15 +1,12 @@
 import { PageContent } from '@/components/layout';
-import { Product } from '@/models/Product';
+import { useProductContext } from '@/contexts';
 import React, { useState } from 'react';
 import ImageViewing from 'react-native-image-viewing';
 import { ProductImage } from './ProductImage';
 import { ProductImageGallery } from './ProductImageGallery';
 
-interface ProductImageManagerProps {
-    product: Product;
-}
-
-export const ProductImageManager = ({ product }: ProductImageManagerProps) => {
+export const ProductImageManager = () => {
+    const { product } = useProductContext();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isImageViewerVisible, setImageViewerVisible] = useState(false);
 
@@ -22,26 +19,19 @@ export const ProductImageManager = ({ product }: ProductImageManagerProps) => {
         setImageViewerVisible(false);
     };
 
-    if (!product.images || product.images.length === 0) {
+    if (!product || !product.images || product.images.length === 0) {
         return null; // Or a placeholder
     }
 
-    const galleryImages = product.images.map(img => ({ uri: img.src }));
+    const galleryImages = product.images.map((img) => ({ uri: img.src }));
 
     return (
         <>
+            <ProductImage onPress={() => openImageViewer(0)} />
 
-            <ProductImage image={product.images[0]} onPress={() => openImageViewer(0)} />
-
-
-            {product.images.length > 1 && (
-                <PageContent horizontal secondary title="Bilder">
-                    <ProductImageGallery
-                        images={product.images}
-                        onImagePress={openImageViewer}
-                    />
-                </PageContent>
-            )}
+            <PageContent title="Flere bilder" horizontal>
+                <ProductImageGallery onImagePress={(index) => openImageViewer(index + 1)} />
+            </PageContent>
 
             <ImageViewing
                 images={galleryImages}

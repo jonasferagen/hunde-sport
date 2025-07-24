@@ -1,57 +1,37 @@
-import { useThemeContext } from '@/contexts';
-import { BORDER_RADIUS, SPACING } from '@/styles';
-import { IStyleVariant } from '@/types';
-import { Image as ProductImage } from '@/models/Image';
+import { useProductContext } from '@/contexts';
 import { Image } from 'expo-image';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { XStack, YStack } from 'tamagui';
 
 interface ProductImageGalleryProps {
-    images: ProductImage[];
     onImagePress: (index: number) => void;
 }
 
-export const ProductImageGallery = ({
-    images,
-    onImagePress,
-}: ProductImageGalleryProps) => {
-    const { themeManager } = useThemeContext();
-    const themeVariant = themeManager.getVariant('default');
-    const styles = createStyles(themeVariant);
+export const ProductImageGallery = ({ onImagePress }: ProductImageGalleryProps) => {
+    const { product } = useProductContext();
 
-    if (!images || images.length === 0) {
+    if (!product || !product.images || product.images.length <= 1) {
         return null;
     }
 
+    const galleryImages = product.images.slice(1);
+
     return (
-        <View style={styles.imageGalleryContainer}>
-            {images.map((image, index) => (
-                <View key={'imageGalleryItem-' + index} style={styles.imageThumbnailWrapper}>
-                    <TouchableOpacity onPress={() => onImagePress(index)}>
-                        <Image source={{ uri: image.src }} style={styles.imageThumbnail} />
-                    </TouchableOpacity>
-                </View>
+        <XStack gap="$2">
+            {galleryImages.map((image, index) => (
+                <YStack
+                    key={'imageGalleryItem-' + index}
+                    width={100}
+                    height={100}
+                    borderRadius="$2"
+                    borderWidth={1}
+                    borderColor="$borderColor"
+                    overflow="hidden"
+                    onPress={() => onImagePress(index)}
+                >
+                    <Image source={{ uri: image.src }} style={{ height: '100%', width: '100%' }} />
+                </YStack>
             ))}
-        </View>
+        </XStack>
     );
 };
-
-const createStyles = (themeVariant: IStyleVariant) =>
-    StyleSheet.create({
-        imageGalleryContainer: {
-            flexDirection: 'row',
-            gap: SPACING.sm,
-        },
-        imageThumbnailWrapper: {
-            width: 100, // Creates a 3-column grid with spacing
-            height: 100,
-            borderRadius: BORDER_RADIUS.sm,
-            borderWidth: 1,
-            borderColor: themeVariant.borderColor,
-            overflow: 'hidden', // Ensures the image respects the border radius
-        },
-        imageThumbnail: {
-            height: '100%',
-            width: '100%',
-        },
-    });
