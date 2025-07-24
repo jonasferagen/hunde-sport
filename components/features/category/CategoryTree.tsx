@@ -1,4 +1,4 @@
-import { CustomText, Icon, Loader } from '@/components/ui';
+import { CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useThemeContext } from '@/contexts';
 import { useCategories } from '@/hooks/data/Category';
@@ -10,7 +10,7 @@ import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { XStack, YStack } from 'tamagui';
+import { Spinner, XStack, YStack } from 'tamagui';
 
 interface CategoryTreeItemProps {
     category: Category;
@@ -105,7 +105,9 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: Cat
                     );
                 })}
                 {isFetchingNextPage && (
-                    <Loader size="small" style={{ marginVertical: SPACING.sm }} />
+                    <YStack flex={1} alignItems="center" justifyContent="center" marginVertical="$2">
+                        <Spinner size="small" />
+                    </YStack>
                 )}
             </View>
         </View>

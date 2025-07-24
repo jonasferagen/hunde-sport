@@ -1,8 +1,8 @@
-import { CategoryChip, Chip, ChipText, Loader } from "@/components/ui/";
+import { CategoryChip, Chip, ChipText } from "@/components/ui/";
 import { Category } from "@/types";
 import { useState } from "react";
 import { StyleProp, ViewStyle } from "react-native";
-import { XStack } from "tamagui";
+import { Spinner, XStack } from "tamagui";
 
 interface CategoryChipsProps {
     categories: Category[];
@@ -28,7 +28,7 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
             {displayedCategories.map((category) => (
                 <CategoryChip key={category.id} category={category} />
             ))}
-            {(isLoading || isFetchingNextPage) && <Loader />}
+            {(isLoading || isFetchingNextPage) && <Spinner />}
             {!showAll && limit && categories.length > limit && (
                 <Chip
                     onPress={() => setShowAll(true)}
