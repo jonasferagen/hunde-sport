@@ -1,8 +1,11 @@
 import { Category } from '@/models/Category';
 import { Product, ProductData, ProductType } from '@/models/Product';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
-import { InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
+
+export type InfiniteListQueryResult<T> = UseInfiniteQueryResult<InfiniteData<T[]>, Error> & { items: T[] };
+
 export interface InfiniteListQueryOptions {
     autoload?: boolean;
 }
@@ -10,7 +13,7 @@ export interface InfiniteListQueryOptions {
 export const useInfiniteListQuery = <T>(
     queryOptions: UseInfiniteQueryOptions<T[], Error, InfiniteData<T[]>, any, number>,
     options: InfiniteListQueryOptions = { autoload: true },
-) => {
+): InfiniteListQueryResult<T> => {
     const queryResult = useInfiniteQuery(queryOptions);
 
     useEffect(() => {

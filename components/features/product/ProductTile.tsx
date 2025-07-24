@@ -21,8 +21,7 @@ export const ProductTile = ({
     height = CARD_DIMENSIONS.product.height,
     themeVariant = 'primary'
 }: ProductTileProps) => {
-    const { images, name } = product;
-    const image = images[0];
+
 
     return (
         <Link href={routes.product(product)} asChild>
@@ -31,13 +30,14 @@ export const ProductTile = ({
                 width={width}
                 borderRadius="$3"
                 overflow="hidden"
+
             >
                 <BaseTile
                     width={width}
                     height={height}
                     themeVariant={themeVariant}
-                    name={name}
-                    imageUrl={image?.src ?? ''}
+                    name={product.name}
+                    imageUrl={product.image?.src ?? ''}
                     nameNumberOfLines={2}
                     gradientMinHeight={40}
                 />

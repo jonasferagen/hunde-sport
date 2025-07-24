@@ -37,7 +37,7 @@ const ProductScreenContent = () => {
           <BuyProduct product={product} displayProduct={activeProduct} />
         </PageContent>
         <PageContent primary horizontal title="Relaterte produkter" >
-          <ProductTiles querybuilder={useProductsByIds(activeProduct.related_ids)} themeVariant="secondary" />
+          <ProductTiles queryResult={useProductsByIds(activeProduct.related_ids)} themeVariant="secondary" />
         </PageContent>
         <PageContent title="Produktinformasjon" secondary>
           <ProductDetails product={product} />

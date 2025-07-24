@@ -1,16 +1,22 @@
 import { Loader } from '@/components/ui';
+import { routes } from '@/config/routes';
+import { InfiniteListQueryResult } from '@/hooks/data/util';
+import { Product } from '@/models/Product';
+import { CARD_DIMENSIONS } from '@/styles';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
-import { ThemeVariant } from '../../ui/tile/BaseTile';
-import { ProductTile } from './ProductTile';
+import { BaseTile, ThemeVariant } from '../../ui/tile/BaseTile';
 
 interface ProductTilesProps {
-    querybuilder: any;
+    queryResult: InfiniteListQueryResult<Product>;
     themeVariant?: ThemeVariant;
 }
 
-export const ProductTiles = ({ querybuilder, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
+export const ProductTiles = ({ queryResult: querybuilder, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
     const { items: products, isLoading } = querybuilder;
+
+
+
     if (isLoading) {
         return <Loader size="large" flex />;
     }
@@ -19,15 +25,23 @@ export const ProductTiles = ({ querybuilder, themeVariant = 'primary' }: Product
         return <></>;
     }
 
+
     return (
-        <XStack gap="$space.4">
-            {products.map((product) => (
-                <ProductTile
-                    key={product.id}
-                    product={product}
-                    themeVariant={themeVariant}
-                />
-            ))}
-        </XStack>
+        <XStack gap="$space.4" minHeight={CARD_DIMENSIONS.product.height}>
+            {
+                products.map((product: Product) => (
+                    <BaseTile
+                        key={product.id}
+                        href={routes.product(product)}
+                        name={product.name}
+                        imageUrl={product.images?.[0]?.src ?? ''}
+                        themeVariant={themeVariant}
+                        width={CARD_DIMENSIONS.product.width}
+                        height={CARD_DIMENSIONS.product.height}
+                        nameNumberOfLines={2}
+                    />
+                ))
+            }
+        </XStack >
     );
 };
