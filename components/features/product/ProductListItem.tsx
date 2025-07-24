@@ -1,7 +1,6 @@
 import { ListItem } from '@/components/ui/list/ListItem';
 import { useThemeContext } from '@/contexts';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
-import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { Product } from '@/models/Product';
 import React from 'react';
 import { ItemActions } from './list/ItemActions';
@@ -24,7 +23,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('default');
 
-    const { getQuantity, increaseQuantity, decreaseQuantity, purchaseInfo } = useShoppingCartContext();
     const { product, productVariant } = useProductContext();
 
     const activeProduct = productVariant || product;

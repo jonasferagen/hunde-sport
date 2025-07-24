@@ -1,3 +1,4 @@
+import appConfig from '@/config/tamagui.config';
 import {
   LayoutProvider,
   ShoppingCartProvider,
@@ -11,7 +12,6 @@ import React, { JSX, memo, useState } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
-import appConfig from '../tamagui.config';
 
 const AppContent = memo((): JSX.Element => {
   return (

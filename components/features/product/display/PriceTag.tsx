@@ -1,48 +1,30 @@
-import { CustomText, CustomTextProps } from '@/components/ui/text/CustomText';
-import { SPACING } from '@/styles';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { FontSizeTokens, Text, XStack } from 'tamagui';
 
 interface PriceInfoProps {
     product: Product;
-    fontSize?: CustomTextProps['fontSize'];
+    fontSize?: FontSizeTokens;
 }
 
-export const PriceTag = ({ product, fontSize = 'md' }: PriceInfoProps) => {
-    const styles = createStyles();
+export const PriceTag = ({ product, fontSize = '$3' }: PriceInfoProps) => {
     if (product.on_sale) {
         return (
-            <View style={styles.discountContainer}>
-                <CustomText fontSize={fontSize} style={styles.regularPrice}>
+            <XStack alignItems="center">
+                <Text textDecorationLine="line-through" marginRight="$2" opacity={0.7} fontSize={fontSize}>
                     {formatPrice(product.regular_price)}
-                </CustomText>
-                <CustomText fontSize={fontSize} style={styles.price}>
+                </Text>
+                <Text fontWeight="bold" fontSize={fontSize}>
                     {formatPrice(product.sale_price)}
-                </CustomText>
-            </View>
+                </Text>
+            </XStack>
         );
     }
 
     return (
-        <CustomText fontSize={fontSize} style={styles.price}>
+        <Text fontWeight="bold" fontSize={fontSize}>
             {formatPrice(product.price)}
-        </CustomText>
+        </Text>
     );
 };
-
-const createStyles = () => StyleSheet.create({
-    discountContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    regularPrice: {
-        textDecorationLine: 'line-through',
-        marginRight: SPACING.sm,
-        opacity: 0.7,
-    },
-    price: {
-        fontWeight: 'bold',
-    },
-});
