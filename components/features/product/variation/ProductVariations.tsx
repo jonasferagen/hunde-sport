@@ -29,8 +29,8 @@ export const ProductVariations = (): JSX.Element | null => {
                 return (
 
                     <YStack key={attribute.id} flex={1}>
-                        <SizableText fontSize="$3" fontWeight="bold" textTransform="capitalize" >
-                            {attribute.name}:
+                        <SizableText fontSize="$3" fontWeight="bold" textTransform="capitalize" mb="$2" ml="$1">
+                            {attribute.name}
                         </SizableText>
                         <AttributeSelector
                             attribute={attribute}
