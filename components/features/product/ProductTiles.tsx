@@ -3,8 +3,10 @@ import { ProductTile } from '@/components/ui/tile/ProductTile';
 import { ThemeVariant } from '@/components/ui/tile/Tile';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';
+import { SPACING } from '@/styles/Dimensions';
+import { FlashList } from '@shopify/flash-list';
 import React, { JSX } from 'react';
-import { XStack } from 'tamagui';
+import { View } from 'react-native';
 
 interface ProductTilesProps {
     queryResult: InfiniteListQueryResult<Product>;
@@ -12,7 +14,7 @@ interface ProductTilesProps {
 }
 
 export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
-    const { items: products, isLoading } = queryResult;
+    const { items: products, isLoading, isFetchingNextPage, fetchNextPage } = queryResult;
 
     if (isLoading) {
         return <Loader size="large" flex />;
@@ -23,16 +25,26 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
     }
 
     return (
-        <XStack gap="$space.4" >
-            {
-                products.map((product: Product) => (
-                    <ProductTile
-                        key={product.id}
-                        product={product}
-                        themeVariant={themeVariant}
-                    />
-                ))
-            }
-        </XStack >
+        <FlashList
+            horizontal
+            data={products}
+            renderItem={({ item }) => (
+                <ProductTile
+                    product={item}
+                    themeVariant={themeVariant}
+                />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View style={{ width: SPACING.md }} />}
+            estimatedItemSize={150}
+            onEndReached={() => {
+                if (fetchNextPage) {
+                    fetchNextPage();
+                }
+            }}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={isFetchingNextPage ? <Loader /> : null}
+        />
     );
 };

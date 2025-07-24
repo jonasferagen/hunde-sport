@@ -25,9 +25,11 @@ const CategorySection = () => {
                 <CategoryTile
                     key={category.id.toString()}
                     category={category}
-                    aspectRatio={1}
-                    flexBasis="30%"
-                    flexGrow={1}
+                    style={{
+                        aspectRatio: 1,
+                        flexBasis: '30%',
+                        flexGrow: 1,
+                    }}
                     themeVariant={'primary'}
                 />
             ))}
@@ -54,19 +56,19 @@ export const HomeScreen = () => {
                 <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
-                <PageContent>
+                <PageContent title="Debug">
                     <ProductTiles key='debug' queryResult={debugProducts} themeVariant="secondary" />
                 </PageContent>
-                <PageContent secondary horizontal title="Nyheter">
+                <PageContent secondary title="Nyheter">
                     <ProductTiles key='recent' queryResult={recentProducts} themeVariant="accent" />
                 </PageContent>
-                <PageContent primary horizontal title="Tilbud">
+                <PageContent primary title="Tilbud">
                     <ProductTiles key='discounted' queryResult={discountedProducts} themeVariant="secondary" />
                 </PageContent>
                 <PageContent title="Kategorier">
                     <CategorySection />
                 </PageContent>
-                <PageContent primary horizontal title="Populære produkter" >
+                <PageContent primary title="Populære produkter" >
                     <ProductTiles key='featured' queryResult={featuredProducts} themeVariant="secondary" />
                 </PageContent>
             </PageSection>

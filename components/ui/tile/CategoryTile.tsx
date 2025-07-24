@@ -3,19 +3,21 @@ import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { CARD_DIMENSIONS } from '@/styles';
 import React from 'react';
-import { DimensionValue } from 'react-native';
+import { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 
 interface CategoryTileProps {
     category: Category;
     width?: DimensionValue;
     height?: DimensionValue;
     themeVariant?: ThemeVariant;
+    style?: StyleProp<ViewStyle>;
 }
 export const CategoryTile = ({
     category,
     width = CARD_DIMENSIONS.category.width,
     height = CARD_DIMENSIONS.category.height,
     themeVariant,
+    style,
     ...props
 }: CategoryTileProps) => {
 
@@ -29,6 +31,7 @@ export const CategoryTile = ({
             themeVariant={themeVariant ?? 'primary'}
             imageUrl={category.image?.src}
             href={finalHref}
+            style={style}
             {...props}
 
         >
