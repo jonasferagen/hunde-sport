@@ -1,7 +1,7 @@
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Loader } from '@/components/ui';
+
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { CategoryTile } from '@/components/ui/tile/CategoryTile';
 import { routes } from '@/config/routes';
@@ -11,13 +11,13 @@ import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { SPACING } from '@/styles';
 import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
-import { XStack } from 'tamagui';
+import { Spinner, XStack, YStack } from 'tamagui';
 
 const CategorySection = () => {
     const { items: categories, isLoading } = useCategories(0, { autoload: true });
 
     if (isLoading) {
-        return <Loader size="large" flex />;
+        return <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>;
     }
     return (
         <XStack flexWrap="wrap" gap={SPACING.md} jc="space-between">

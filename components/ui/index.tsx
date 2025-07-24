@@ -7,7 +7,7 @@ export { ProductTile } from './tile/ProductTile';
 export { CategoryChip, Chip, ChipText } from './chips';
 export { Icon } from './icon/Icon';
 
-export { Loader } from './loader/Loader';
+
 export { SearchBar } from './searchBar/Searchbar';
 export { CustomText } from './text/CustomText';
 

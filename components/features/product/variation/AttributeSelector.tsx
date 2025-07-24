@@ -1,4 +1,4 @@
-import { Loader } from '@/components/ui';
+
 import { calculatePriceRange } from '@/contexts/ProductContext';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
@@ -7,7 +7,7 @@ import { formatPriceRange } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { Pressable } from 'react-native';
-import { SizableText, ThemeName, XStack, YStack } from 'tamagui';
+import { SizableText, Spinner, ThemeName, XStack, YStack } from 'tamagui';
 import { VariantInfo } from '../display/VariantInfo';
 
 const getThemeName = (name: string): ThemeName => name as ThemeName;
@@ -69,7 +69,7 @@ const OptionRenderer = ({
             </XStack>
             <XStack alignItems='flex-end'>
                 <SizableText opacity={opacity} fontSize={fontSize} color={'$color'}>
-                    {isLoading ? <Loader /> : matchingVariants && matchingVariants.length === 1 ? (
+                    {isLoading ? <Spinner /> : matchingVariants && matchingVariants.length === 1 ? (
                         <VariantInfo variant={matchingVariants[0]} />
                     ) : matchingVariants && matchingVariants.length > 1 ? (
                         formatPriceRange(priceRange!)

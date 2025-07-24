@@ -1,16 +1,12 @@
-import { CustomText, Icon } from '@/components/ui';
 import { routes } from '@/config/routes';
-import { useThemeContext } from '@/contexts';
 import { useCategories } from '@/hooks/data/Category';
 import { Category } from '@/models/Category';
-import { BORDER_RADIUS, SPACING } from '@/styles/Dimensions';
-import { IStyleVariant } from '@/types';
-import { rgba } from '@/utils/helpers';
+import { ChevronDownCircle, ChevronUpCircle } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { Spinner, XStack, YStack } from 'tamagui';
+import { SizableText, Spinner, View, XStack, YStack } from 'tamagui';
 
 interface CategoryTreeItemProps {
     category: Category;
@@ -19,40 +15,38 @@ interface CategoryTreeItemProps {
     isExpanded: boolean;
     onExpand: (categoryId: number) => void;
     isActive: boolean;
-    variant: keyof IStyleVariant['text'];
 };
 
-const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive, variant }: CategoryTreeItemProps) => {
+const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive }: CategoryTreeItemProps) => {
     const { items: categories } = useCategories(category.id, { autoload: true });
-    const { themeManager } = useThemeContext();
-    const themeVariant = themeManager.getVariant(variant);
-    const styles = createStyles(themeVariant);
     const hasChildren = categories.length > 0; // subcategories
 
     const handleExpand = useCallback(() => {
         onExpand(category.id);
     }, [onExpand, category.id]);
 
-    const color = themeVariant.text.primary;
 
     return (
         <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <View style={[isExpanded ? styles.activeCategory : null, { marginLeft: level * SPACING.md }]}>
-                <View>
-                    <XStack alignItems="center" justifyContent='space-between' >
-                        <Link href={routes.category(category)} style={{ flex: 1 }}>
-                            <XStack alignItems="center" style={{ paddingVertical: SPACING.sm, width: '100%' }}>
-                                <Icon name='dot' size='xxs' color={color} />
-                                <CustomText style={{ marginLeft: SPACING.xs }}>{category.name}</CustomText>
+            <YStack
+                backgroundColor={isExpanded ? '$backgroundFocus' : 'transparent'}
+                borderRadius="$4"
+                marginLeft={level * 20}
+            >
+                <XStack ai="center" jc='space-between' >
+                    <Link href={routes.category(category)} asChild>
+                        <Pressable>
+                            <XStack ai="center" paddingVertical="$3" width={'100%'} >
+                                <SizableText size="$3" fontSize="$4" marginLeft="$2">{category.name}</SizableText>
                             </XStack>
-                        </Link>
-                        {hasChildren && (
-                            <YStack onPress={handleExpand} style={{ padding: SPACING.sm, }}>
-                                <Icon name={isExpanded ? 'collapse' : 'expand'} size='md' color={color} />
-                            </YStack>
-                        )}
-                    </XStack>
-                </View>
+                        </Pressable>
+                    </Link>
+                    {hasChildren && (
+                        <YStack onPress={handleExpand} padding="$2" >
+                            {isExpanded ? <ChevronUpCircle size="$3" /> : <ChevronDownCircle size="$3" />}
+                        </YStack>
+                    )}
+                </XStack>
                 {
                     isExpanded && (
                         <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
@@ -60,12 +54,11 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
                                 categoryId={category.id}
                                 level={level + 1}
                                 ancestors={ancestors}
-                                variant={variant}
                             />
                         </Animated.View>
                     )
                 }
-            </View >
+            </YStack >
         </Animated.View >
     );
 };
@@ -74,10 +67,9 @@ interface CategorySubTreeProps {
     categoryId: number;
     level?: number;
     ancestors?: Category[];
-    variant: keyof IStyleVariant['text'];
 };
 
-const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: CategorySubTreeProps) => {
+const CategorySubTree = ({ categoryId, level = 0, ancestors = [] }: CategorySubTreeProps) => {
     const { items: categories, isFetchingNextPage } = useCategories(categoryId);
 
     const activeChild = categories.find((c: Category) => ancestors.some(b => b.id === c.id));
@@ -88,7 +80,7 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: Cat
     };
 
     return (
-        <View style={{ marginHorizontal: 0 }}>
+        <YStack marginHorizontal={0}>
             <View>
                 {categories.map((category: Category) => {
                     return (
@@ -100,36 +92,26 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [], variant }: Cat
                             isExpanded={expandedItemId === category.id}
                             onExpand={handleToggleExpand}
                             isActive={ancestors.some(b => b.id === category.id)}
-                            variant={variant}
                         />
                     );
                 })}
                 {isFetchingNextPage && (
-                    <YStack flex={1} alignItems="center" justifyContent="center" marginVertical="$2">
+                    <YStack flex={1} ai="center" jc="center" marginVertical="$2">
                         <Spinner size="small" />
                     </YStack>
                 )}
             </View>
-        </View>
+        </YStack>
     );
 };
 
 interface CategoryTreeProps {
-    variant?: keyof IStyleVariant['text'];
     style?: StyleProp<ViewStyle>;
 }
 
-export const CategoryTree = React.memo(({ variant = 'primary', style }: CategoryTreeProps) => {
+export const CategoryTree = React.memo(({ style }: CategoryTreeProps) => {
 
-    return <View style={style}>
-        <CategorySubTree categoryId={0} variant={variant} />
+    return <View style={style as any}>
+        <CategorySubTree categoryId={0} />
     </View>;
-});
-
-const createStyles = (theme: any) => StyleSheet.create({
-
-    activeCategory: {
-        backgroundColor: rgba(theme.backgroundColor, 0.1),
-        borderRadius: BORDER_RADIUS.lg,
-    },
 });

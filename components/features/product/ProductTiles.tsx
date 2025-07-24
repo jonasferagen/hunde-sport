@@ -1,12 +1,12 @@
-import { Loader } from '@/components/ui';
 import { ProductTile } from '@/components/ui/tile/ProductTile';
-import { ThemeVariant } from '@/components/ui/tile/Tile';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';
 import { SPACING } from '@/styles/Dimensions';
+import { ThemeVariant } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React, { JSX } from 'react';
 import { View } from 'react-native';
+import { Spinner, YStack } from 'tamagui';
 
 interface ProductTilesProps {
     queryResult: InfiniteListQueryResult<Product>;
@@ -16,8 +16,9 @@ interface ProductTilesProps {
 export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
     const { items: products, isLoading, isFetchingNextPage, fetchNextPage } = queryResult;
 
+
     if (isLoading) {
-        return <Loader size="small" flex />;
+        return <Spinner size="small" />;
     }
 
     if (!products || products.length === 0) {
@@ -44,7 +45,7 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
                 }
             }}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={isFetchingNextPage ? <Loader size="small" flex /> : null}
+            ListFooterComponent={isFetchingNextPage ? <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="small" /></YStack> : null}
         />
     );
 };

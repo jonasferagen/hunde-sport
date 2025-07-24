@@ -1,4 +1,3 @@
-
 import { createAnimations } from '@tamagui/animations-react-native';
 import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
@@ -53,12 +52,15 @@ const customTokens = {
     color: {
         ...tokens.color,
         primary: '#D7C8E7',
+        primaryPress: '#C1B2D1',
         primaryText: '#5f4a73',
         primaryBorder: '#a992c5',
         secondary: '#DDE2C3',
+        secondaryPress: '#C9D0A9',
         secondaryText: '#444f21',
         secondaryBorder: '#b1bb87',
         accent: '#C8E6E5',
+        accentPress: '#B2D0CF',
         accentText: '#4d7372',
         accentBorder: '#92c3c1',
         default: '#FFFFFF',
@@ -67,7 +69,6 @@ const customTokens = {
     },
     fontSize: font.size,
     radius: {
-        ...tokens.radius,
         0: 0,
         1: 2,
         2: 4,
@@ -106,10 +107,14 @@ const appConfig = createTamagui({
         light: {
             ...themes.light,
             background: customTokens.color.default,
+            backgroundPress: themes.light.gray3,
             color: customTokens.color.defaultText,
             primary: customTokens.color.primary,
+            primaryPress: customTokens.color.primaryPress,
             secondary: customTokens.color.secondary,
+            secondaryPress: customTokens.color.secondaryPress,
             accent: customTokens.color.accent,
+            accentPress: customTokens.color.accentPress,
         },
     },
     tokens: customTokens,

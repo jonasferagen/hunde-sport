@@ -3,12 +3,13 @@ import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Loader } from '@/components/ui';
+
 import { useCategories, useCategory } from '@/hooks/data/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
+import { Spinner, YStack } from 'tamagui';
 
 
 const CategoryChipsContainer = ({ category }: { category: Category }) => {
@@ -35,7 +36,7 @@ export const CategoryScreen = memo(() => {
             </PageHeader>
             <PageSection flex>
                 <PageContent flex paddingHorizontal="none" paddingVertical="none" >
-                    {isLoading && <Loader flex size="large" />}
+                    {isLoading && <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>}
                     {category && <CategoryProducts category={category} />}
                 </PageContent>
             </PageSection>

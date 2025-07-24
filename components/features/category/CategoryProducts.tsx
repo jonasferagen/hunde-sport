@@ -1,4 +1,4 @@
-import { Loader } from '@/components/ui';
+import { Spinner, YStack } from 'tamagui';
 import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
@@ -20,7 +20,7 @@ export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Eleme
         );
 
     if (isLoading) {
-        return <Loader size="large" flex />;
+        return <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>;
     }
 
     if (!products || products.length === 0) {

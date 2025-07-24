@@ -1,11 +1,11 @@
-import { Loader } from '@/components/ui';
+
 import { useLayoutContext } from '@/contexts';
 import { Product } from '@/models/Product';
 import { SPACING } from '@/styles';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback, useState } from 'react';
 import { ViewStyle } from 'react-native';
-import { YStack } from 'tamagui';
+import { Spinner, YStack } from 'tamagui';
 import { ProductListItem } from './ProductListItem';
 
 interface ProductListProps {
@@ -48,7 +48,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, contentConta
         onEndReachedThreshold={0.5}
         contentContainerStyle={contentContainerStyle}
         ListFooterComponent={() =>
-            loadingMore ? <Loader style={{ paddingVertical: SPACING.lg }} flex /> : null
+            loadingMore ? <YStack flex={1} alignItems="center" justifyContent="center" paddingVertical={SPACING.lg}><Spinner /></YStack> : null
         }
         estimatedItemSize={100}
         extraData={expandedProductId}

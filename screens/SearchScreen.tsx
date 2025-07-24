@@ -1,12 +1,13 @@
 import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { CustomText, Loader, SearchBar } from '@/components/ui';
+import { CustomText, SearchBar } from '@/components/ui';
 import { useProductsBySearch } from '@/hooks/data/Product';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
+import { Spinner, YStack } from 'tamagui';
 
 export const SearchScreen = () => {
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
@@ -58,7 +59,7 @@ export const SearchScreen = () => {
                 <PageContent flex paddingHorizontal="none" paddingVertical="none" >
 
                     {isLoading ? (
-                        <Loader size="large" flex />
+                        <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>
                     ) : (
                         products.length === 0 && initialQuery ? (
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

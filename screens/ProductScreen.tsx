@@ -4,12 +4,12 @@ import { ProductImage } from '@/components/features/product/image/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/image/ProductImageGallery';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
+import { Breadcrumbs, CustomText } from '@/components/ui';
 import { ProductImageProvider, ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { SizableText } from 'tamagui';
+import { SizableText, Spinner, YStack } from 'tamagui';
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
@@ -18,7 +18,7 @@ export const ProductScreen = () => {
   const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product?.categories[0]?.id;
 
   if (isLoading) {
-    return <Loader flex size="large" />;
+    return <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>;
   }
 
   if (!product) {
