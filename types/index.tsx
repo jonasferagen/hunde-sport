@@ -47,4 +47,5 @@ export interface IStyleVariant {
   getGradient(amounts?: number[]): [ColorValue, ColorValue];
 }
 
-export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';
+// Defines the available theme variants for components
+export type ThemeVariant = 'primary' | 'secondary' | 'accent';

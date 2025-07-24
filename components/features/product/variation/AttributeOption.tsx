@@ -5,13 +5,15 @@ import { ProductAttributeOption as ProductAttributeOptionType } from '@/types';
 import { formatPriceRange } from '@/utils/helpers';
 import React from 'react';
 import { Pressable } from 'react-native';
-import { SizableText, XStack } from 'tamagui';
+import { SizableText, ThemeName, XStack } from 'tamagui';
 import { VariantInfo } from '../display/VariantInfo';
 
 interface AttributeOptionProps {
     item: ProductAttributeOptionType;
     attribute: ProductAttribute;
 }
+
+const getThemeName = (name: string): ThemeName => name as ThemeName;
 
 export const AttributeOption = ({ item: option, attribute }: AttributeOptionProps) => {
     const { handleOptionSelect, selectedOptions, availableOptions } = useProductContext();
@@ -30,7 +32,7 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
         >
             <XStack
                 flex={1}
-                theme={isSelected ? 'primary' : null}
+                theme={isSelected ? getThemeName('primary') : null}
                 backgroundColor={isSelected ? '$background' : 'transparent'}
                 paddingVertical={"$3"}
                 paddingHorizontal={"$2"}

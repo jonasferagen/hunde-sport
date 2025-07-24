@@ -10,14 +10,14 @@ interface CategoryTileProps {
     category: Category;
     width?: DimensionValue;
     height?: DimensionValue;
-    themeVariant?: ThemeVariant;
+    theme?: ThemeVariant;
     style?: StyleProp<ViewStyle>;
 }
 export const CategoryTile = ({
     category,
     width = CARD_DIMENSIONS.category.width,
     height = CARD_DIMENSIONS.category.height,
-    themeVariant,
+    theme,
     style,
     ...props
 }: CategoryTileProps) => {
@@ -29,7 +29,7 @@ export const CategoryTile = ({
 
         <Tile
             title={category.name}
-            themeVariant={themeVariant ?? 'primary'}
+            theme={theme}
             imageUrl={category.image?.src}
             href={finalHref}
             style={style}

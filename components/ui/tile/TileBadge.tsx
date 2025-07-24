@@ -1,31 +1,30 @@
-import { getThemeColors } from "@/styles/Theme";
 import { ThemeVariant } from "@/types";
 import { rgba } from "@/utils/helpers";
 import React from "react";
-import { View } from "tamagui";
+import { YStack, useTheme } from "tamagui";
 
 interface TileBadgeProps {
     children: React.ReactNode;
-    themeVariant?: ThemeVariant;
+    theme?: ThemeVariant;
 }
 
-export const TileBadge = ({ children, themeVariant = 'default' }: TileBadgeProps): React.JSX.Element => {
-
-    const selectedTheme = getThemeColors(themeVariant);
+export const TileBadge = ({ children, theme = 'primary' }: TileBadgeProps): React.JSX.Element => {
+    const themeValues = useTheme();
 
     return (
-        <View
+        <YStack
+            theme={theme}
             position="absolute"
             top="$2"
             right="$2"
-            backgroundColor={rgba(selectedTheme.bg, 0.7)}
+            backgroundColor={rgba(themeValues.background.val, 0.7)}
             borderWidth={1}
-            borderColor={selectedTheme.borderColor}
+            borderColor={"$borderColor"}
             paddingVertical="$1"
             paddingHorizontal="$2"
             borderRadius="$3"
         >
             {children}
-        </View>
+        </YStack>
     );
 };

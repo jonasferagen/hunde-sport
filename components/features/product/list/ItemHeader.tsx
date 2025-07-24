@@ -1,6 +1,5 @@
 import { routes } from '@/config/routes';
 import { useProductContext } from '@/contexts';
-import { getThemeColors } from '@/styles/Theme';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { Button, SizableText } from 'tamagui';
@@ -13,7 +12,6 @@ interface ItemHeaderProps {
 
 export const ItemHeader = ({ categoryId }: ItemHeaderProps): JSX.Element => {
     const { product } = useProductContext();
-    const themeColors = getThemeColors('default');
 
 
     if (!product) {
@@ -25,7 +23,7 @@ export const ItemHeader = ({ categoryId }: ItemHeaderProps): JSX.Element => {
             <Button unstyled pressStyle={{ opacity: 0.7 }}>
                 <SimpleItemHeader>
                     <PriceTag />
-                    <SizableText fontSize="$1" color={themeColors.text} numberOfLines={2}>
+                    <SizableText fontSize="$1" color="$color" numberOfLines={2}>
                         {product.short_description}
                     </SizableText>
                 </SimpleItemHeader>

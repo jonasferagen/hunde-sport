@@ -116,6 +116,18 @@ const appConfig = createTamagui({
             accent: customTokens.color.accent,
             accentPress: customTokens.color.accentPress,
         },
+        primary: {
+            background: customTokens.color.primary,
+            color: customTokens.color.primaryText,
+        },
+        secondary: {
+            background: customTokens.color.secondary,
+            color: customTokens.color.secondaryText,
+        },
+        accent: {
+            background: customTokens.color.accent,
+            color: customTokens.color.accentText,
+        },
     },
     tokens: customTokens,
     shorthands,

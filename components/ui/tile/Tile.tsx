@@ -1,11 +1,10 @@
-import { getThemeColors } from '@/styles/Theme';
 import { ThemeVariant } from '@/types';
 import { getScaledImageUrl, rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from "react-native";
-import { GetProps, Image, Text, YStack, styled } from 'tamagui';
+import { GetProps, Image, Text, YStack, styled, useTheme } from 'tamagui';
 
 const StyledLinearGradient = styled(LinearGradient, {
     name: 'StyledLinearGradient',
@@ -13,8 +12,6 @@ const StyledLinearGradient = styled(LinearGradient, {
     padding: '$2',
     justifyContent: 'center',
 });
-
-
 
 export interface TileProps extends Omit<GetProps<typeof YStack>, 'href'> {
     title: string;
@@ -25,7 +22,7 @@ export interface TileProps extends Omit<GetProps<typeof YStack>, 'href'> {
     onPress?: () => void;
     titleNumberOfLines?: number;
     gradientMinHeight?: number;
-    themeVariant?: ThemeVariant;
+    theme?: ThemeVariant;
     href: HrefObject;
     children?: React.ReactNode;
 }
@@ -40,18 +37,18 @@ export const Tile = (props: TileProps) => {
         onPress,
         titleNumberOfLines = 1,
         gradientMinHeight = 40,
-        themeVariant = 'primary',
+        theme = 'primary',
         href,
         children,
         ...stackProps
     } = props;
 
-
-    const selectedTheme = getThemeColors(themeVariant);
+    const themeValues = useTheme();
     const finalImageUrl = getScaledImageUrl(imageUrl, Number(width), Number(height));
 
     return <Link href={href} asChild>
         <YStack
+            theme={theme}
             onPress={onPress}
             width={width}
             height={aspectRatio ? undefined : height || '100%'}
@@ -59,7 +56,7 @@ export const Tile = (props: TileProps) => {
             borderRadius="$3"
             overflow="hidden"
             borderWidth={1}
-
+            borderColor="$borderColor"
             flex={1}
             {...stackProps}
         >
@@ -74,12 +71,12 @@ export const Tile = (props: TileProps) => {
             />
             <YStack flex={1} justifyContent="flex-end">
                 <StyledLinearGradient
-                    colors={[rgba(selectedTheme.bg, 0.7), rgba(selectedTheme.bg, 1)]}
+                    colors={[rgba(themeValues.background.val, 0.7), rgba(themeValues.background.val, 1)]}
                     minHeight={gradientMinHeight}
                 >
                     <Text
                         fontSize={14}
-                        color={selectedTheme.text}
+                        color={"$color"}
                         textAlign="center"
                         numberOfLines={titleNumberOfLines}
                     >
@@ -90,5 +87,4 @@ export const Tile = (props: TileProps) => {
             {children}
         </YStack>
     </Link>;
-
 }

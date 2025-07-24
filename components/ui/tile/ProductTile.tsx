@@ -12,13 +12,13 @@ interface ProductTileProps {
     product: Product;
     width?: DimensionValue;
     height?: DimensionValue;
-    themeVariant?: ThemeVariant;
+    theme?: ThemeVariant;
 }
 
 const ProductTileContent = ({
     width = CARD_DIMENSIONS.product.width,
     height = CARD_DIMENSIONS.product.height,
-    themeVariant = 'primary'
+    theme = 'primary'
 }: Omit<ProductTileProps, 'product'>) => {
     const { product } = useProductContext();
 
@@ -30,14 +30,14 @@ const ProductTileContent = ({
         <Tile
             width={width}
             height={height}
-            themeVariant={themeVariant}
+            theme={theme}
             title={product.name + ' ' + product.id}
             imageUrl={product.image?.src ?? ''}
             titleNumberOfLines={2}
             gradientMinHeight={40}
             href={routes.product(product)}
         >
-            <TileBadge themeVariant={themeVariant}>
+            <TileBadge theme={theme}>
                 <PriceTag />
             </TileBadge>
         </Tile>
