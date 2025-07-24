@@ -15,7 +15,7 @@ const StyledLinearGradient = styled(LinearGradient, {
 // Define the type for our variants. Export it so other components can use it.
 export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';
 
-export interface BaseTileProps extends GetProps<typeof YStack> {
+export interface BaseTileProps extends Omit<GetProps<typeof YStack>, 'href'> {
     title: string;
     imageUrl: string;
     width?: DimensionValue;
