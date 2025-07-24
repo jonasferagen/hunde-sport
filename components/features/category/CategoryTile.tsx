@@ -13,13 +13,12 @@ export const CategoryTile = ({
     ...props
 }: CategoryTileProps) => {
 
-    const { name, image } = category;
-    const imageUrl = image?.src ?? '';
+    const imageUrl = category.image?.src ?? '';
 
     return (
-        <Link href={routes.category(category)} asChild>
+        <Link key={category.id} href={routes.category(category)} asChild>
             <BaseTile
-                name={name}
+                title={category.name}
                 themeVariant={'primary'}
                 imageUrl={imageUrl}
                 {...props}

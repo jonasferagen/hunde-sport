@@ -19,7 +19,6 @@ const CategorySection = () => {
     if (isLoading) {
         return <Loader size="large" flex />;
     }
-
     return (
         <XStack flexWrap="wrap" gap={SPACING.md} jc="space-between">
             {categories.map((category) => (
@@ -58,19 +57,19 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection scrollable>
                 <PageContent>
-                    <ProductTiles queryResult={debugProducts} themeVariant="secondary" />
+                    <ProductTiles key='debug' queryResult={debugProducts} themeVariant="secondary" />
                 </PageContent>
                 <PageContent secondary horizontal title="Nyheter">
-                    <ProductTiles queryResult={recentProducts} themeVariant="accent" />
+                    <ProductTiles key='recent' queryResult={recentProducts} themeVariant="accent" />
                 </PageContent>
                 <PageContent primary horizontal title="Tilbud">
-                    <ProductTiles queryResult={discountedProducts} themeVariant="secondary" />
+                    <ProductTiles key='discounted' queryResult={discountedProducts} themeVariant="secondary" />
                 </PageContent>
                 <PageContent title="Kategorier">
                     <CategorySection />
                 </PageContent>
                 <PageContent primary horizontal title="Populære produkter" >
-                    <ProductTiles queryResult={featuredProducts} themeVariant="secondary" />
+                    <ProductTiles key='featured' queryResult={featuredProducts} themeVariant="secondary" />
                 </PageContent>
             </PageSection>
         </PageView>

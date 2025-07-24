@@ -3,6 +3,7 @@ import { routes } from '@/config/routes';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';
 import { CARD_DIMENSIONS } from '@/styles';
+import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
 import { BaseTile, ThemeVariant } from '../../ui/tile/BaseTile';
@@ -12,10 +13,8 @@ interface ProductTilesProps {
     themeVariant?: ThemeVariant;
 }
 
-export const ProductTiles = ({ queryResult: querybuilder, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
-    const { items: products, isLoading } = querybuilder;
-
-
+export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
+    const { items: products, isLoading } = queryResult;
 
     if (isLoading) {
         return <Loader size="large" flex />;
@@ -25,21 +24,20 @@ export const ProductTiles = ({ queryResult: querybuilder, themeVariant = 'primar
         return <></>;
     }
 
-
     return (
         <XStack gap="$space.4" minHeight={CARD_DIMENSIONS.product.height}>
             {
                 products.map((product: Product) => (
-                    <BaseTile
-                        key={product.id}
-                        href={routes.product(product)}
-                        name={product.name}
-                        imageUrl={product.images?.[0]?.src ?? ''}
-                        themeVariant={themeVariant}
-                        width={CARD_DIMENSIONS.product.width}
-                        height={CARD_DIMENSIONS.product.height}
-                        nameNumberOfLines={2}
-                    />
+                    <Link key={product.id} href={routes.product(product)}>
+                        <BaseTile
+                            title={product.name}
+                            imageUrl={product.images?.[0]?.src ?? ''}
+                            themeVariant={themeVariant}
+                            width={CARD_DIMENSIONS.product.width}
+                            height={CARD_DIMENSIONS.product.height}
+                            titleNumberOfLines={2}
+                        />
+                    </Link>
                 ))
             }
         </XStack >

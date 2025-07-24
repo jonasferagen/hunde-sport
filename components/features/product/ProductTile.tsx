@@ -36,9 +36,9 @@ export const ProductTile = ({
                     width={width}
                     height={height}
                     themeVariant={themeVariant}
-                    name={product.name}
+                    title={product.name}
                     imageUrl={product.image?.src ?? ''}
-                    nameNumberOfLines={2}
+                    titleNumberOfLines={2}
                     gradientMinHeight={40}
                 />
                 <View

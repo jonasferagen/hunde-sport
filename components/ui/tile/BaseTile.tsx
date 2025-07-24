@@ -1,6 +1,5 @@
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
-import { Href, Link } from "expo-router";
 import React from 'react';
 import { DimensionValue } from "react-native";
 import { GetProps, Image, Text, YStack, styled, useTheme } from 'tamagui';
@@ -15,31 +14,31 @@ const StyledLinearGradient = styled(LinearGradient, {
 // Define the type for our variants. Export it so other components can use it.
 export type ThemeVariant = 'primary' | 'secondary' | 'accent' | 'default';
 
-export interface BaseTileProps extends Omit<GetProps<typeof YStack>, 'name'> {
-    name: string;
+export interface BaseTileProps extends GetProps<typeof YStack> {
+    title: string;
     imageUrl: string;
-    href?: Href;
     width?: DimensionValue;
     height?: DimensionValue;
     aspectRatio?: number;
     onPress?: () => void;
-    nameNumberOfLines?: number;
+    titleNumberOfLines?: number;
     gradientMinHeight?: number;
     themeVariant?: ThemeVariant;
+    href?: string;
 }
 
 export const BaseTile = (props: BaseTileProps) => {
     const {
-        name,
+        title,
         imageUrl,
-        href,
         width = '100%',
         height,
         aspectRatio,
         onPress,
-        nameNumberOfLines = 1,
+        titleNumberOfLines = 1,
         gradientMinHeight = 40,
         themeVariant = 'default',
+        href,
         ...stackProps
     } = props;
 
@@ -86,18 +85,15 @@ export const BaseTile = (props: BaseTileProps) => {
                         fontSize={14}
                         color={selectedTheme.text}
                         textAlign="center"
-                        numberOfLines={nameNumberOfLines}
+                        numberOfLines={titleNumberOfLines}
                     >
-                        {name}
+                        {title}
                     </Text>
                 </StyledLinearGradient>
             </YStack>
         </YStack>
     );
 
-    if (href) {
-        return <Link href={href} asChild>{content}</Link>;
-    }
 
     return content;
 }
