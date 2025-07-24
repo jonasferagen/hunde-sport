@@ -1,7 +1,7 @@
 import { Product } from '@/models/Product';
 import { useMemo } from 'react';
 
-interface PriceRange {
+export interface PriceRange {
     min: number;
     max: number;
 }

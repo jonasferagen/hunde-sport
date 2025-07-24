@@ -13,8 +13,15 @@ export const cleanNumber = (value: string) => {
 export const formatPrice = (price: number): string =>
     price.toFixed(0).replace('.', ',') + ',-';
 
-export const formatPriceRange = (priceRange: { min: number; max: number }): string =>
-    priceRange.min === priceRange.max ? formatPrice(priceRange.min) : `${formatPrice(priceRange.min)} / ${formatPrice(priceRange.max)}`;
+export const formatPriceRange = (priceRange: PriceRange, compact: boolean = true): string => {
+    if (priceRange.min === priceRange.max) {
+        return formatPrice(priceRange.min);
+    }
+    if (compact) {
+        return `Fra ${formatPrice(priceRange.min)}`;
+    }
+    return `${formatPrice(priceRange.min)} - ${formatPrice(priceRange.max)}`;
+};
 
 export const lighten = (color: string, amount: number) =>
     tinycolor(color).lighten(amount).toString();
@@ -25,6 +32,7 @@ export const darken = (color: string, amount: number) =>
 export const rgba = (color: string, alpha: number): string =>
     tinycolor(color).setAlpha(alpha).toString();
 
+import { PriceRange } from '@/hooks/usePriceRange';
 import { parseDocument } from 'htmlparser2';
 
 const isAllWhitespace = (str: string) => /^\s*$/.test(str);

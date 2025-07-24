@@ -2,6 +2,7 @@ import { useProductVariations } from '@/hooks/data/Product';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { useEffect, useMemo, useState } from 'react';
+import { PriceRange, usePriceRange } from './usePriceRange';
 
 interface UseProductVariantsReturn {
     productVariant: Product | null;
@@ -11,21 +12,21 @@ interface UseProductVariantsReturn {
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
     isLoading: boolean;
+    priceRange: PriceRange | null;
 }
 
 export const useProductVariants = (product: Product): UseProductVariantsReturn => {
 
     const isVariable = product.type === 'variable';
 
-    const { items: productVariants, isLoading, hasNextPage, isFetchingNextPage, } = useProductVariations(product.id);
+    const { items: productVariants, isLoading, hasNextPage, isFetchingNextPage } = useProductVariations(product.id);
 
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [initializedForProductId, setInitializedForProductId] = useState<number | null>(null);
-
+    const priceRange = usePriceRange(productVariants);
 
     useEffect(() => {
         if (!isVariable) return;
-
 
         // Guard to ensure this runs only once per product when data is ready.
         if (productVariants && product.id !== initializedForProductId) {
@@ -72,5 +73,6 @@ export const useProductVariants = (product: Product): UseProductVariantsReturn =
         selectedOptions,
         variationAttributes: variationAttributes,
         isLoading: isLoading || hasNextPage || isFetchingNextPage,
+        priceRange,
     };
 };

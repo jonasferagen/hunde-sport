@@ -1,9 +1,9 @@
 import { Loader } from '@/components/ui/loader/Loader';
 import { useProductContext } from '@/contexts';
 import { useProductVariants } from '@/hooks/useProductVariants';
-import { formatPrice } from '@/utils/helpers';
+import { formatPrice, formatPriceRange } from '@/utils/helpers';
 import React from 'react';
-import { FontSizeTokens, Text, XStack } from 'tamagui';
+import { FontSizeTokens, SizableText, XStack } from 'tamagui';
 
 interface PriceInfoProps {
     fontSize?: FontSizeTokens;
@@ -11,11 +11,7 @@ interface PriceInfoProps {
 
 export const PriceTag = ({ fontSize = '$3' }: PriceInfoProps) => {
     const { product } = useProductContext();
-    const { isLoading } = useProductVariants(product);
-
-    if (!product) {
-        return null;
-    }
+    const { isLoading, priceRange } = useProductVariants(product);
 
     if (isLoading) {
         return (
@@ -23,22 +19,31 @@ export const PriceTag = ({ fontSize = '$3' }: PriceInfoProps) => {
         );
     }
 
+    if (priceRange) {
+        return (
+            <SizableText fontWeight="bold" fontSize={fontSize}>
+                {formatPriceRange(priceRange)}
+            </SizableText>
+        );
+    }
+
+
     if (product.on_sale) {
         return (
             <XStack alignItems="center">
-                <Text textDecorationLine="line-through" marginRight="$2" opacity={0.7} fontSize={fontSize}>
+                <SizableText textDecorationLine="line-through" mr="$2" opacity={0.7} fontSize={fontSize}>
                     {formatPrice(product.regular_price)}
-                </Text>
-                <Text fontWeight="bold" fontSize={fontSize}>
+                </SizableText>
+                <SizableText fontWeight="bold" fontSize={fontSize}>
                     {formatPrice(product.sale_price)}
-                </Text>
+                </SizableText>
             </XStack>
         );
     }
 
     return (
-        <Text fontWeight="bold" fontSize={fontSize}>
+        <SizableText fontWeight="bold" fontSize={fontSize}>
             {formatPrice(product.price)}
-        </Text>
+        </SizableText>
     );
 };
