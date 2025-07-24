@@ -74,7 +74,7 @@ export const ItemActions = ({
                 </XStack>
             </XStack>
             {isExpanded && (
-                <YStack marginHorizontal="$3" marginTop="$2">
+                <YStack marginHorizontal="$3" mt="$2">
                     <ProductVariations />
                 </YStack>
             )}

@@ -4,7 +4,7 @@ import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { formatPrice, formatPriceRange } from '@/utils/helpers';
 import React, { useState } from 'react';
-import { Adapt, Select, Sheet, SizableText, XStack } from 'tamagui';
+import { Select, SizableText, XStack } from 'tamagui';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
@@ -30,10 +30,15 @@ interface OptionRendererProps {
 }
 
 
-
-
-
-const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, selectedOptions, isFirst, isLast, isLoading }: OptionRendererProps) => {
+const OptionRenderer = ({
+    option,
+    disabled,
+    isSelected,
+    matchingVariants,
+    selectedOptions,
+    isFirst,
+    isLast,
+    isLoading }: OptionRendererProps) => {
     const opacity = isFirst ? 0.5 : 1;
     const fontSize = isFirst ? "\$2" : "\$3";
     const priceRange = calculatePriceRange(matchingVariants);
@@ -47,7 +52,7 @@ const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, select
             alignItems='center'
         >
             <XStack gap={"\$2"}>
-                <SizableText style={{ fontWeight: isSelected ? 'bold' : 'normal', textDecorationLine: disabled ? 'line-through' : 'none' }}>
+                <SizableText textTransform="capitalize" fontWeight={isSelected ? 'bold' : 'normal'} textDecorationLine={disabled ? 'line-through' : 'none'}>
                     {option.label}
                 </SizableText>
             </XStack>
@@ -64,8 +69,8 @@ const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, select
 };
 
 export const AttributeSelector = ({ attribute, options, currentSelection, currentAvailableOptions, handleOptionSelect, isLoading, selectedOptions, isFirst, isLast }: AttributeSelectorProps) => {
-    const useFullscreen = options.length > 10; // Adjust threshold as needed
-    const [isOpen, setIsOpen] = useState(false);
+
+    const [isOpen, setIsOpen] = useState(true);
     const selectedOption = options.find((o) => o.name === currentSelection);
 
     return (
@@ -87,31 +92,14 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
                             isFirst={isFirst}
                             isLast={isLast}
                             isLoading={isLoading}
-
                         />
                     ) : (
                         'Velg et alternativ'
                     )}
                 </Select.Value>
             </Select.Trigger>
-            {useFullscreen && (
-                <Adapt platform="touch">
-                    <Sheet modal dismissOnSnapToBottom snapPoints={[90]} animation="quick">
-                        <Sheet.Overlay
-                            backgroundColor="$shadowColor"
-                            animation="quick"
-                            enterStyle={{ opacity: 0 }}
-                            exitStyle={{ opacity: 0 }}
-                        />
-                        <Sheet.Frame padding="$4">
-                            <Sheet.ScrollView>
-                                <Adapt.Contents />
-                            </Sheet.ScrollView>
-                        </Sheet.Frame>
-                    </Sheet>
-                </Adapt>
-            )}
-            <Select.Content zIndex={2000} >
+
+            <Select.Content zIndex={10} >
                 <Select.ScrollUpButton />
                 <Select.Viewport>
                     <Select.Group display={isOpen ? 'flex' : 'none'}>

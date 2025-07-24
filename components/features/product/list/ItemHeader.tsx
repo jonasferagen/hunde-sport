@@ -13,7 +13,7 @@ interface ItemHeaderProps {
 export const ItemHeader = ({ categoryId }: ItemHeaderProps): JSX.Element => {
     const { themeManager } = useThemeContext();
     const theme = themeManager.getVariant('default');
-    const { product, priceRange } = useProductContext();
+    const { product } = useProductContext();
 
     if (!product) {
         return <XStack />;

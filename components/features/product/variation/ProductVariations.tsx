@@ -10,12 +10,13 @@ export const ProductVariations = (): JSX.Element | null => {
         availableOptions,
         handleOptionSelect,
         isLoading,
+        product
     } = useProductContext();
 
     if (!variationAttributes || variationAttributes.length === 0) {
+        console.error("No variation attributes found! Product: ", product.id + " " + product.name);
         return null;
     }
-
 
     return (
 
@@ -28,7 +29,7 @@ export const ProductVariations = (): JSX.Element | null => {
                 return (
 
                     <YStack key={attribute.id} flex={1}>
-                        <SizableText fontSize="$3" >
+                        <SizableText fontSize="$3" fontWeight="bold" textTransform="capitalize" >
                             {attribute.name}:
                         </SizableText>
                         <AttributeSelector
