@@ -1,5 +1,6 @@
 import { rgba } from "@/utils/helpers";
 import { LinearGradient } from 'expo-linear-gradient';
+import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from "react-native";
 import { GetProps, Image, Text, YStack, styled, useTheme } from 'tamagui';
@@ -24,7 +25,7 @@ export interface BaseTileProps extends GetProps<typeof YStack> {
     titleNumberOfLines?: number;
     gradientMinHeight?: number;
     themeVariant?: ThemeVariant;
-    href?: string;
+    href: HrefObject;
 }
 
 export const BaseTile = (props: BaseTileProps) => {
@@ -94,6 +95,9 @@ export const BaseTile = (props: BaseTileProps) => {
         </YStack>
     );
 
-
-    return content;
+    return (
+        <Link href={href} asChild>
+            {content}
+        </Link>
+    );
 }

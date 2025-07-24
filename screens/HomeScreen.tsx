@@ -25,7 +25,7 @@ const CategorySection = () => {
                 <BaseTile
                     key={category.id.toString()}
                     href={routes.category(category)}
-                    name={category.name}
+                    title={category.name}
                     imageUrl={category.image?.src ?? ''}
                     aspectRatio={1}
                     flexBasis="30%"

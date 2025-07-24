@@ -3,7 +3,6 @@ import { routes } from '@/config/routes';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';
 import { CARD_DIMENSIONS } from '@/styles';
-import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { XStack } from 'tamagui';
 import { BaseTile, ThemeVariant } from '../../ui/tile/BaseTile';
@@ -28,16 +27,16 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
         <XStack gap="$space.4" minHeight={CARD_DIMENSIONS.product.height}>
             {
                 products.map((product: Product) => (
-                    <Link key={product.id} href={routes.product(product)}>
-                        <BaseTile
-                            title={product.name}
-                            imageUrl={product.images?.[0]?.src ?? ''}
-                            themeVariant={themeVariant}
-                            width={CARD_DIMENSIONS.product.width}
-                            height={CARD_DIMENSIONS.product.height}
-                            titleNumberOfLines={2}
-                        />
-                    </Link>
+                    <BaseTile
+                        title={product.name}
+                        imageUrl={product.images?.[0]?.src ?? ''}
+                        themeVariant={themeVariant}
+                        width={CARD_DIMENSIONS.product.width}
+                        height={CARD_DIMENSIONS.product.height}
+                        titleNumberOfLines={2}
+                        href={routes.product(product)}
+                    />
+
                 ))
             }
         </XStack >
