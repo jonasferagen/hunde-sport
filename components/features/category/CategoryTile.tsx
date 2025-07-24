@@ -1,17 +1,21 @@
-import { BaseTileProps, Tile } from '@/components/ui/tile/Tile';
+import { ThemeVariant, Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
+import { CARD_DIMENSIONS } from '@/styles';
 import React from 'react';
+import { DimensionValue } from 'react-native';
 
-interface CategoryTileProps extends BaseTileProps {
+interface CategoryTileProps {
     category: Category;
+    width?: DimensionValue;
+    height?: DimensionValue;
+    themeVariant?: ThemeVariant;
 }
-
 export const CategoryTile = ({
     category,
-    title,
-    imageUrl,
-    href,
+    width = CARD_DIMENSIONS.category.width,
+    height = CARD_DIMENSIONS.category.height,
+    themeVariant,
     ...props
 }: CategoryTileProps) => {
 
@@ -21,8 +25,8 @@ export const CategoryTile = ({
     return (
 
         <Tile
-            title={title ?? category.name}
-            themeVariant={'primary'}
+            title={category.name}
+            themeVariant={themeVariant ?? 'primary'}
             imageUrl={finalImageUrl}
             href={finalHref}
             {...props}
