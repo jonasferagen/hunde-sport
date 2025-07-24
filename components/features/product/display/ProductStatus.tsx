@@ -1,14 +1,12 @@
-import { CustomText, Icon } from '@/components/ui';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
-import { FONT_SIZES } from '@/styles';
+import { Ban } from '@tamagui/lucide-icons';
 import React from 'react';
-import { XStack } from 'tamagui';
+import { SizableText, XStack } from 'tamagui';
 
 interface ProductStatusProps {
-    fontSize?: keyof typeof FONT_SIZES;
     short?: boolean;
 }
-export const ProductStatus = ({ fontSize = 'md', short = false }: ProductStatusProps) => {
+export const ProductStatus = ({ short = false }: ProductStatusProps) => {
     const { product, productVariant } = useProductContext();
     const { purchaseInfo } = useShoppingCartContext();
 
@@ -23,11 +21,11 @@ export const ProductStatus = ({ fontSize = 'md', short = false }: ProductStatusP
 
     if (status === 'outofstock') {
         return (
-            <XStack alignItems="center">
-                <Icon name="outofstock" size={fontSize} color="red" />
-                <CustomText fontSize={fontSize} bold color="red">
+            <XStack alignItems="center" space="$2">
+                <Ban color="$red10" size="$1" />
+                <SizableText size="$2" fontWeight="bold" color="$red10">
                     {message}
-                </CustomText>
+                </SizableText>
             </XStack>
         );
     }

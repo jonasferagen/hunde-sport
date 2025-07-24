@@ -1,149 +1,129 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
-import { Icon } from '@/components/ui';
-import { useThemeContext } from '@/contexts';
-import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { BORDER_RADIUS, FONT_FAMILY, FONT_SIZES, SPACING } from '@/styles';
-import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useShoppingCartContext } from '@/contexts';
+import { DrawerContentScrollView, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
+import { LinearGradient } from '@tamagui/linear-gradient';
+import { Home, ShoppingCart, X } from '@tamagui/lucide-icons';
 import { useSegments } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import React, { useCallback, useMemo } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { H2, H4 } from 'tamagui';
+import { Button, H2, H4, Text, YStack } from 'tamagui';
 
-const getDrawerItemProps = (themeManager: any) => {
-    const secondaryVariant = themeManager.getVariant('secondary');
-    return {
-        activeTintColor: secondaryVariant.text.primary,
-        inactiveTintColor: secondaryVariant.text.primary,
-        activeItemStyle: {
-            backgroundColor: secondaryVariant.backgroundColor,
-            borderRadius: BORDER_RADIUS.lg,
-            borderColor: 'red',
-            borderWidth: 1,
-        },
-        inactiveItemStyle: {
-            backgroundColor: secondaryVariant.backgroundColor,
-            borderRadius: BORDER_RADIUS.lg,
-            borderColor: 'red',
-            borderWidth: 1,
-        },
-        labelStyle: {
-            fontFamily: FONT_FAMILY.regular,
-            fontSize: FONT_SIZES.md,
-        }
-    }
-}
+
 
 const CustomDrawerContent = React.memo((props: any) => {
     const { navigation } = props;
     const segments = useSegments() as string[];
-    const { themeManager } = useThemeContext();
-    const secondaryVariant = themeManager.getVariant('secondary');
     const { cartItemCount } = useShoppingCartContext();
-
-    const drawerItemProps = useMemo(() => getDrawerItemProps(themeManager), [themeManager]);
 
     const handleCloseDrawer = useCallback(() => {
         props.navigation.closeDrawer();
     }, [props.navigation]);
 
     const handleHomeNavigation = useCallback(() => {
-        navigation.navigate('_home');
+        navigation.navigate('(tabs)', { screen: '(home)' });
     }, [navigation]);
 
     const handleCartNavigation = useCallback(() => {
-        navigation.navigate('_shoppingCart');
+        navigation.navigate('(tabs)', { screen: 'shopping-cart' });
     }, [navigation]);
 
-    return (
-        <LinearGradient
-            colors={[secondaryVariant.borderColor, secondaryVariant.backgroundColor]}
-            style={StyleSheet.absoluteFill}
-        >
-            <DrawerContentScrollView {...props}>
+    const isHomeActive = segments.includes('(home)');
+    const isCartActive = segments.includes('shopping-cart');
 
-                <View style={{ alignItems: 'flex-end' }}>
-                    <TouchableOpacity onPress={handleCloseDrawer}>
-                        <Icon name="close" size='xl' color={secondaryVariant.text.primary} style={{ padding: SPACING.md }} />
-                    </TouchableOpacity>
-                </View>
-                <H2 style={{ marginBottom: SPACING.md }}>HundeSport.no</H2>
-                <DrawerItem
-                    label="Hjem"
-                    icon={({ color }) => <Icon name="home" color={color} size="xl" />}
-                    focused={segments[3] === 'index'}
-                    onPress={handleHomeNavigation}
-                    {...drawerItemProps}
-                />
-                <DrawerItem
-                    label="Handlekurv"
-                    icon={({ color }) => <Icon name="shoppingCart" color={color} size="xl" badge={cartItemCount} />}
-                    focused={segments[3] === 'shoppingCart'}
-                    onPress={handleCartNavigation}
-                    {...drawerItemProps}
-                />
-                <H4 style={{ marginVertical: SPACING.md }}>Kategorier</H4>
-                <CategoryTree variant="secondary" style={{ marginHorizontal: 10 }} />
+    return (
+        <YStack f={1} backgroundColor="$background">
+            <DrawerContentScrollView {...props}>
+                <YStack p="$4">
+                    <Button
+                        icon={<X color="$color" />}
+                        onPress={handleCloseDrawer}
+                        alignSelf="flex-end"
+                        unstyled
+                        pressStyle={{ opacity: 0.7 }}
+                    />
+                    <H2 mb="$4">HundeSport.no</H2>
+                    <DrawerItem
+                        label="Hjem"
+                        icon={({ color }) => <Home color={color} />}
+                        focused={isHomeActive}
+                        onPress={handleHomeNavigation}
+                        activeTintColor="$color"
+                        inactiveTintColor="$color10"
+                        activeBackgroundColor="$backgroundHover"
+                    />
+                    <DrawerItem
+                        icon={({ color }) => <ShoppingCart color={color} />}
+                        focused={isCartActive}
+                        onPress={handleCartNavigation}
+                        activeTintColor="$color"
+                        inactiveTintColor="$color10"
+                        activeBackgroundColor="$backgroundHover"
+                        labelStyle={{ position: 'relative' }}
+                        label={({ focused, color }) => (
+                            <>
+                                <Text color={color}>Handlekurv</Text>
+                                {cartItemCount > 0 && (
+                                    <YStack
+                                        backgroundColor="$red10"
+                                        borderRadius={999}
+                                        px="$2"
+                                        py="$1"
+                                        position="absolute"
+                                        right={-25}
+                                        top={-8}
+                                    >
+                                        <Text fontSize="$1" color="$color1">{cartItemCount}</Text>
+                                    </YStack>
+                                )}
+                            </>
+                        )}
+                    />
+                    <H4 my="$4">Kategorier</H4>
+                    <CategoryTree />
+                </YStack>
             </DrawerContentScrollView>
-        </LinearGradient>
+        </YStack>
     );
 });
 
 export default function DrawerLayout() {
-    const { themeManager } = useThemeContext();
-
-    const primaryVariant = themeManager.getVariant('primary');
-    const secondaryVariant = themeManager.getVariant('secondary');
-
     const headerBackground = useCallback(() => (
         <LinearGradient
-            colors={[primaryVariant.borderColor, primaryVariant.backgroundColor]}
-            style={StyleSheet.absoluteFill}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            colors={['$background', '$backgroundPress']}
+            start={[0, 0]}
+            end={[1, 1]}
+            flex={1}
         />
-    ), [primaryVariant.borderColor, primaryVariant.backgroundColor]);
+    ), []);
 
     const drawerContent = useCallback((props: any) => <CustomDrawerContent {...props} />, []);
 
-    const screenOptions = useMemo(() => ({
-        headerTitleAlign: 'center' as const,
-        headerStyle: {
-            elevation: 5, // Add elevation for Android shadow
-            shadowOpacity: 0.1, // iOS shadow
-            shadowRadius: 5,
-            shadowOffset: {
-                height: 2,
-                width: 0,
-            }
-        },
-        headerBackground,
-        headerTitleStyle: {
-            color: primaryVariant.text.primary,
-            fontFamily: FONT_FAMILY.bold,
-            fontSize: FONT_SIZES.lg,
-        },
-        headerTintColor: primaryVariant.text.primary,
-        headerShadowVisible: true,
-        headerTitle: 'HundeSport.no',
-        drawerActiveBackgroundColor: secondaryVariant.backgroundColor,
-        drawerActiveTintColor: secondaryVariant.text.primary,
-        drawerInactiveTintColor: secondaryVariant.text.secondary,
-        drawerLabelStyle: {
-            fontFamily: FONT_FAMILY.regular,
-            fontSize: FONT_SIZES.md,
-        },
-        drawerStyle: {
-            backgroundColor: 'transparent',
-        }
-    }), [
-        headerBackground,
-        primaryVariant.text.primary,
-        secondaryVariant.backgroundColor,
-        secondaryVariant.text.primary,
-        secondaryVariant.text.secondary
-    ]);
+    const screenOptions = useMemo<DrawerNavigationOptions>(
+        () => ({
+            headerTitleAlign: 'center',
+            headerStyle: {
+                elevation: 0,
+                shadowOpacity: 0,
+                shadowRadius: 0,
+                shadowOffset: {
+                    height: 0,
+                    width: 0,
+                },
+            },
+            headerBackground,
+            headerTitleStyle: {
+                color: '$color',
+                fontFamily: '$body',
+                fontSize: 20,
+            },
+            headerTintColor: '$color',
+            drawerStyle: {
+                backgroundColor: '$background',
+                width: '80%',
+            },
+        }),
+        [headerBackground]
+    );
 
     return (
 

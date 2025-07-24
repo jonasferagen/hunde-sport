@@ -5,7 +5,6 @@ export { CategoryTile } from './tile/CategoryTile';
 export { ProductTile } from './tile/ProductTile';
 
 export { CategoryChip, Chip, ChipText } from './chips';
-export { Icon } from './icon/Icon';
 
 
 export { SearchBar } from './searchBar/Searchbar';

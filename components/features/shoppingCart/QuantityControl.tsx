@@ -1,8 +1,8 @@
-import { CustomText, Icon } from '@/components/ui';
-import { useShoppingCartContext, useThemeContext } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts';
 import { Product } from '@/models/Product';
+import { Minus, Plus } from '@tamagui/lucide-icons';
 import React from 'react';
-import { XStack } from 'tamagui';
+import { SizableText, XStack } from 'tamagui';
 
 interface QuantityControlProps {
     product: Product;
@@ -10,9 +10,7 @@ interface QuantityControlProps {
 }
 
 export const QuantityControl: React.FC<QuantityControlProps> = ({ product, baseProduct }) => {
-    const { themeManager } = useThemeContext();
     const { getQuantity, increaseQuantity, decreaseQuantity } = useShoppingCartContext();
-    const variant = themeManager.getVariant('accent');
 
     const quantity = getQuantity(product);
 
@@ -29,15 +27,15 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({ product, baseP
                 pointerEvents={quantity > 0 ? 'auto' : 'none'}
             >
                 <XStack onPress={handleDecrease} p="$2" pressStyle={{ opacity: 0.7 }}>
-                    <Icon name="remove" size="xxl" color={variant.text.secondary} />
+                    <Minus size={28} color="$color10" />
                 </XStack>
-                <CustomText fontSize="$3" fontWeight="600" minWidth={20} textAlign="center">
+                <SizableText fontSize="$3" fontWeight="600" minWidth={20} textAlign="center">
                     {quantity}
-                </CustomText>
+                </SizableText>
             </XStack>
 
             <XStack onPress={handleIncrease} p="$2" pressStyle={{ opacity: 0.7 }}>
-                <Icon name="add" size="xxl" color={variant.text.secondary} />
+                <Plus size={28} color="$color10" />
             </XStack>
         </XStack>
     );

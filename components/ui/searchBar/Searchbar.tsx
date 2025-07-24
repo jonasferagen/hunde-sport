@@ -1,9 +1,8 @@
-import { useThemeContext } from '@/contexts';
 import { useDebounce } from '@/hooks/useDebounce';
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '@/styles';
+import { Search } from '@tamagui/lucide-icons';
 import React, { forwardRef, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
-import { Icon } from '../icon/Icon';
+import { TextInput } from 'react-native';
+import { Button, Input, XStack } from 'tamagui';
 
 export interface SearchBarProps {
     placeholder?: string;
@@ -14,72 +13,67 @@ export interface SearchBarProps {
     debounce?: number;
 }
 
-export const SearchBar = forwardRef<TextInput, SearchBarProps>(({ placeholder = 'Hva leter du etter?', initialQuery, onTextChange, onQueryChange, onSubmit, debounce = 0 }, ref) => {
-    const [query, setQuery] = useState(initialQuery || '');
-    const { themeManager } = useThemeContext();
-    const debouncedQuery = useDebounce(query, debounce);
+export const SearchBar = forwardRef<TextInput, SearchBarProps>(
+    ({ placeholder = 'Hva leter du etter?', initialQuery, onTextChange, onQueryChange, onSubmit, debounce = 0 }, ref) => {
+        const [query, setQuery] = useState(initialQuery || '');
+        const debouncedQuery = useDebounce(query, debounce);
 
-    const themeVariant = themeManager.getVariant('default');
-    const styles = createStyles(themeVariant);
+        useEffect(() => {
+            if (initialQuery !== undefined) {
+                setQuery(initialQuery);
+            }
+        }, [initialQuery]);
 
-    useEffect(() => {
-        if (initialQuery !== undefined) {
-            setQuery(initialQuery);
-        }
-    }, [initialQuery]);
+        useEffect(() => {
+            if (debounce > 0) {
+                onQueryChange?.(debouncedQuery);
+            }
+        }, [debouncedQuery]);
 
-    useEffect(() => {
-        if (debounce > 0) {
-            onQueryChange?.(debouncedQuery);
-        }
-    }, [debouncedQuery]);
+        const handleSearch = () => {
+            onSubmit?.(query);
+        };
 
-    const handleSearch = () => {
-        onSubmit?.(query);
-    };
+        const handleChangeText = (text: string) => {
+            setQuery(text);
+            onTextChange?.(text);
+            if (debounce === 0) {
+                onQueryChange?.(text);
+            }
+        };
 
-    const handleChangeText = (text: string) => {
-        setQuery(text);
-        onTextChange?.(text);
-        if (debounce === 0) {
-            onQueryChange?.(text);
-        }
-    };
-
-    return (
-        <View style={styles.container}>
-            <TextInput
-                ref={ref}
-                style={styles.input}
-                placeholder={placeholder}
-                placeholderTextColor={themeVariant.text.secondary}
-                selectionColor={themeVariant.text.secondary}
-                value={query}
-                onChangeText={handleChangeText}
-                onSubmitEditing={handleSearch}
-            />
-            <Pressable onPress={handleSearch} style={styles.button} disabled={!query.trim()}>
-                <Icon name="search" size='xl' color={themeVariant.text.primary} />
-            </Pressable>
-        </View>
-    );
-});
-
-const createStyles = (themeVariant: { backgroundColor: string; text: { primary: string; secondary: string; }; borderColor: string; }) => StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: themeVariant.backgroundColor,
-        borderRadius: BORDER_RADIUS.md,
-        paddingHorizontal: SPACING.sm,
-        borderWidth: 1,
-        borderColor: themeVariant.borderColor,
-    },
-    input: {
-        flex: 1,
-        fontSize: FONT_SIZES.md,
-    },
-    button: {
-        padding: SPACING.sm,
-    },
-});
+        return (
+            <XStack
+                alignItems="center"
+                backgroundColor="$background"
+                borderRadius="$4"
+                paddingHorizontal="$3"
+                borderWidth={1}
+                borderColor="$borderColor"
+            >
+                <Input
+                    ref={ref}
+                    flex={1}
+                    fontSize="$5"
+                    placeholder={placeholder}
+                    placeholderTextColor="$color10"
+                    selectionColor="$color10"
+                    value={query}
+                    onChangeText={handleChangeText}
+                    onSubmitEditing={handleSearch}
+                    unstyled
+                    backgroundColor="transparent"
+                    borderColor="transparent"
+                />
+                <Button
+                    unstyled
+                    pressStyle={{ opacity: 0.7 }}
+                    onPress={handleSearch}
+                    disabled={!query.trim()}
+                    icon={<Search color="$color" />}
+                    padding="$2"
+                />
+            </XStack>
+        );
+    }
+);

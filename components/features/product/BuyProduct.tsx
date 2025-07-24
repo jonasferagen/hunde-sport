@@ -1,8 +1,7 @@
-import { CustomText, Icon } from '@/components/ui';
-import { StyledButton, StyledButtonText } from '@/components/ui/button/StyledButton';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
+import { ShoppingCart } from '@tamagui/lucide-icons';
 import React from 'react';
-import { XStack } from 'tamagui';
+import { Button, SizableText, XStack } from 'tamagui';
 import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
 import { ProductTitle } from './display/ProductTitle';
@@ -23,17 +22,17 @@ export const BuyProduct = () => {
                 <PriceTag fontSize="$6" />
             </XStack>
             <ProductVariations />
-            <CustomText fontSize="sm">{product.short_description}</CustomText>
+            <SizableText size="$3">{product.short_description}</SizableText>
             <ProductStatus />
 
-            <StyledButton
-                icon={<Icon name="addToCart" />}
+            <Button
+                icon={<ShoppingCart />}
                 onPress={() => increaseQuantity(activeProduct, product)}
                 disabled={status !== 'ok'}
-                variant="primary"
+                theme="blue"
             >
-                <StyledButtonText variant="primary">{msg}</StyledButtonText>
-            </StyledButton>
+                {msg}
+            </Button>
         </>
     );
 };

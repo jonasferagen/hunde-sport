@@ -1,41 +1,47 @@
-import { Icon } from '@/components/ui';
-import { CustomText } from '@/components/ui/text/CustomText';
 import { routes } from '@/config/routes';
-import { useShoppingCartContext, useThemeContext } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts';
 import { ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
+import { ChevronLeft, Trash2 } from '@tamagui/lucide-icons';
 import { router } from 'expo-router';
-import React from 'react';
-import { Pressable } from 'react-native';
-import { XStack, YStack } from 'tamagui';
+import React, { JSX } from 'react';
+import { Button, SizableText, XStack, YStack } from 'tamagui';
 import { QuantityControl } from './QuantityControl';
 
 interface ShoppingCartItemActionsProps {
     item: ShoppingCartItem;
 }
 
-export const ShoppingCartItemActions: React.FC<ShoppingCartItemActionsProps> = ({ item }) => {
-    const { themeManager } = useThemeContext();
+export const ShoppingCartItemActions = ({
+    item,
+}: ShoppingCartItemActionsProps): JSX.Element => {
     const { removeFromCart } = useShoppingCartContext();
-    const accentVariant = themeManager.getVariant('accent');
     const product = item.selectedVariant || item.baseProduct;
 
-    const handleRemove = () => removeFromCart(product.id);
-    const handlePress = () => router.push(routes.product(item.baseProduct));
+    const handleRemove = (): void => removeFromCart(product.id);
+    const handlePress = (): void => router.push(routes.product(item.baseProduct));
 
     return (
         <XStack justifyContent="space-between" alignItems="center" width="100%">
-            <Pressable onPress={handlePress} hitSlop={10}>
-                <Icon name="prev" color={accentVariant.text.primary} />
-            </Pressable>
+            <Button unstyled onPress={handlePress} hitSlop={10} pressStyle={{ opacity: 0.7 }}>
+                <ChevronLeft color="$color" />
+            </Button>
             <YStack alignItems="flex-end">
                 <XStack alignItems="center">
                     <QuantityControl product={product} baseProduct={item.baseProduct} />
-                    <Pressable onPress={handleRemove} style={{ padding: 8, marginLeft: 8 }}>
-                        <Icon name="emptyCart" color={accentVariant.text.primary} />
-                    </Pressable>
+                    <Button
+                        unstyled
+                        onPress={handleRemove}
+                        padding="$2"
+                        marginLeft="$2"
+                        pressStyle={{ opacity: 0.7 }}
+                    >
+                        <Trash2 color="$color" />
+                    </Button>
                 </XStack>
-                <CustomText>Subtotal: {formatPrice(product.price * item.quantity)}</CustomText>
+                <SizableText>
+                    Subtotal: {formatPrice(product.price * item.quantity)}
+                </SizableText>
             </YStack>
         </XStack>
     );

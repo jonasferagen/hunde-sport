@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { Spinner, Stack, Text, XStack } from 'tamagui';
 
-import { Icon } from '@/components/ui/icon/Icon';
+import { ChevronRight } from '@tamagui/lucide-icons';
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 
@@ -39,10 +39,7 @@ export const Breadcrumb = React.memo(({ category, isLast = false, isLastClickabl
       )}
       {!isLast && (
         <Stack marginHorizontal="$1" marginTop="$1">
-          <Icon
-            name="breadcrumbSeparator"
-            size="md"
-          />
+          <ChevronRight size="$1" />
         </Stack>
       )}
     </XStack>
