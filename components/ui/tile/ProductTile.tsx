@@ -5,7 +5,7 @@ import { CARD_DIMENSIONS } from '@/styles';
 import { Product } from "@/types";
 import React from 'react';
 import { DimensionValue } from 'react-native';
-import { PriceTag } from './display/PriceTag';
+import { PriceTag } from '../../features/product/display/PriceTag';
 
 interface ProductTileProps {
     product: Product;

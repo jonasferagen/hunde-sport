@@ -1,5 +1,5 @@
-import { ProductTile } from '@/components/features/product/ProductTile';
 import { Loader } from '@/components/ui';
+import { ProductTile } from '@/components/ui/tile/ProductTile';
 import { ThemeVariant } from '@/components/ui/tile/Tile';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';

@@ -25,7 +25,7 @@ export const BORDER_RADIUS = {
 export const CARD_DIMENSIONS = {
   product: {
     width: 200,
-    height: 150,
+    height: 100,
   },
   category: {
     width: 'auto' as const,

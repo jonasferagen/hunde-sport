@@ -1,4 +1,5 @@
-import { Chip, ChipText } from '@/components/ui/chips';
+import { Chip } from '@/components/ui/chips/Chip';
+import { ChipText } from '@/components/ui/chips/ChipText';
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { Link } from 'expo-router';
