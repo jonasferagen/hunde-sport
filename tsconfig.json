@@ -13,7 +13,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "tamagui.config.js"
+    "config/tamagui.config.js"
   ],
   "exclude": [
     "node_modules",
