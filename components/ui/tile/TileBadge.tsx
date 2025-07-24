@@ -19,8 +19,10 @@ export const TileBadge = ({ children, themeVariant = 'default' }: TileBadgeProps
             top="$2"
             right="$2"
             backgroundColor={rgba(selectedTheme.bg, 0.7)}
-            paddingVertical="$2"
-            paddingHorizontal="$3"
+            borderWidth={1}
+            borderColor={selectedTheme.borderColor}
+            paddingVertical="$1"
+            paddingHorizontal="$2"
             borderRadius="$3"
         >
             {children}

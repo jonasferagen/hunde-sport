@@ -1,7 +1,8 @@
-import { ThemeVariant, Tile } from "@/components/ui/tile/Tile";
+import { Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { CARD_DIMENSIONS } from '@/styles';
+import { ThemeVariant } from '@/types';
 import React from 'react';
 import { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 

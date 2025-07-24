@@ -40,14 +40,14 @@ export const Tile = (props: TileProps) => {
         onPress,
         titleNumberOfLines = 1,
         gradientMinHeight = 40,
-        themeVariant = 'default',
+        themeVariant = 'primary',
         href,
         children,
         ...stackProps
     } = props;
 
-    const selectedTheme = getThemeColors(themeVariant);
 
+    const selectedTheme = getThemeColors(themeVariant);
     const finalImageUrl = getScaledImageUrl(imageUrl, Number(width), Number(height));
 
     return <Link href={href} asChild>
@@ -59,7 +59,7 @@ export const Tile = (props: TileProps) => {
             borderRadius="$3"
             overflow="hidden"
             borderWidth={1}
-            borderColor="$defaultBorder"
+
             flex={1}
             {...stackProps}
         >

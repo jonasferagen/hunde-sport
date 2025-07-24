@@ -28,11 +28,11 @@ export const palette = {
 export const getThemeColors = (variant: ThemeVariant) => {
   const theme = useTheme();
 
-  const themeColors: Record<ThemeVariant, { bg: string, text: string }> = {
-    primary: { bg: theme.primary?.val ?? theme.background.val, text: theme.primaryText?.val ?? theme.color.val },
-    secondary: { bg: theme.secondary?.val ?? theme.background.val, text: theme.secondaryText?.val ?? theme.color.val },
-    accent: { bg: theme.accent?.val ?? theme.background.val, text: theme.accentText?.val ?? theme.color.val },
-    default: { bg: theme.background.val, text: theme.color.val },
+  const themeColors: Record<ThemeVariant, { bg: string; text: string; borderColor: string }> = {
+    primary: { bg: theme.primary?.val, text: theme.primaryText?.val, borderColor: theme.primaryBorder?.val },
+    secondary: { bg: theme.secondary?.val, text: theme.secondaryText?.val, borderColor: theme.secondaryBorder?.val },
+    accent: { bg: theme.accent?.val, text: theme.accentText?.val, borderColor: theme.accentBorder?.val },
+    default: { bg: theme.background?.val, text: theme.color?.val, borderColor: theme.borderColor?.val },
   };
 
   return themeColors[variant];
