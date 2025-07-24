@@ -1,76 +1,60 @@
-import { PageContentProvider, useThemeContext } from '@/contexts';
-import { SPACING } from '@/styles';
-import React from 'react';
-import { ViewProps } from 'react-native';
-import { PageContentHorizontal } from './_partials/PageContentHorizontal';
-import { PageContentVertical } from './_partials/PageContentVertical';
+import { ThemeVariant } from '@/types';
+import React, { ReactNode } from 'react';
+import { ScrollView } from 'react-native';
+import { H3, Spacer, YStack, YStackProps } from 'tamagui';
 
-interface PageContentProps extends ViewProps {
-  children?: React.ReactNode;
-  flex?: boolean;
-  gap?: keyof typeof SPACING;
+interface PageContentProps extends YStackProps {
+  children: ReactNode;
   title?: string;
-
-  paddingVertical?: keyof typeof SPACING;
-  paddingHorizontal?: keyof typeof SPACING;
+  theme?: ThemeVariant;
   horizontal?: boolean;
-  primary?: boolean;
-  secondary?: boolean;
-  accent?: boolean;
-  style?: any;
 }
 
-export const PageContent: React.FC<PageContentProps> = ({
-  children,
-  flex,
-  horizontal,
-  paddingHorizontal = 'md',
-  paddingVertical = 'md',
-  primary = false,
-  secondary = false,
-  accent = false,
-  style,
-  ...props }: PageContentProps) => {
+export const PageContent = (props: PageContentProps) => {
 
-  const { themeManager } = useThemeContext();
-
-  const styleVariantName = primary ? 'primary' : secondary ? 'secondary' : accent ? 'accent' : 'default';
-  const variant = themeManager.getVariant(styleVariantName);
-  const containerStyle = {
-    backgroundColor: variant.backgroundColor,
-    borderColor: variant.borderColor,
-    borderWidth: 1,
-  };
-
-  const computedStyle = [
-    { paddingVertical: paddingVertical ? SPACING[paddingVertical] : 0 },
-    { paddingHorizontal: paddingHorizontal ? SPACING[paddingHorizontal] : 0 },
-    containerStyle,
-    style,
-  ];
+  const {
+    children,
+    title,
+    theme,
+    horizontal,
+    paddingVertical = '$4',
+    paddingHorizontal = '$4',
+    ...stackProps
+  } = props;
 
   if (!children) {
     return null;
   }
 
-
   const content = (
-    <PageContentProvider value={{ styleVariantName }}>
-      {children}
-    </PageContentProvider>
+    <>
+      {title && (
+        <>
+          <H3 paddingHorizontal={paddingHorizontal}>{title}</H3>
+          <Spacer size="$3" />
+        </>
+      )}
+      {horizontal ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {children}
+        </ScrollView>
+      ) : (
+        children
+      )}
+    </>
   );
 
-  if (horizontal) {
-    return (
-      <PageContentHorizontal style={computedStyle} {...props}>
-        {content}
-      </PageContentHorizontal>
-    );
-  }
-
   return (
-    <PageContentVertical style={[{ flex: flex ? 1 : 0 }, ...computedStyle]} {...props}>
+    <YStack
+      theme={theme}
+      paddingVertical={paddingVertical}
+      paddingHorizontal={title ? undefined : paddingHorizontal}
+      borderWidth={1}
+      borderColor="$borderColor"
+      backgroundColor="$background"
+      {...stackProps}
+    >
       {content}
-    </PageContentVertical>
+    </YStack>
   );
 };

@@ -8,7 +8,6 @@ import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
-import { SPACING } from '@/styles';
 import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
 import { Spinner, XStack, YStack } from 'tamagui';
@@ -20,7 +19,7 @@ const CategorySection = () => {
         return <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>;
     }
     return (
-        <XStack flexWrap="wrap" gap={SPACING.md} jc="space-between">
+        <XStack flexWrap="wrap" gap="$4" jc="space-between">
             {categories.map((category) => (
                 <CategoryTile
                     key={category.id.toString()}
@@ -30,7 +29,7 @@ const CategorySection = () => {
                         flexBasis: '30%',
                         flexGrow: 1,
                     }}
-                    themeVariant={'primary'}
+                    theme={'primary'}
                 />
             ))}
         </XStack>
@@ -57,19 +56,19 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection scrollable>
                 <PageContent title="Debug">
-                    <ProductTiles key='debug' queryResult={debugProducts} themeVariant="secondary" />
+                    <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
                 </PageContent>
-                <PageContent secondary title="Nyheter">
-                    <ProductTiles key='recent' queryResult={recentProducts} themeVariant="accent" />
+                <PageContent theme="secondary" title="Nyheter">
+                    <ProductTiles key='recent' queryResult={recentProducts} theme="accent" />
                 </PageContent>
-                <PageContent primary title="Tilbud">
-                    <ProductTiles key='discounted' queryResult={discountedProducts} themeVariant="secondary" />
+                <PageContent theme="primary" title="Tilbud">
+                    <ProductTiles key='discounted' queryResult={discountedProducts} theme="secondary" />
                 </PageContent>
                 <PageContent title="Kategorier">
                     <CategorySection />
                 </PageContent>
-                <PageContent primary title="Populære produkter" >
-                    <ProductTiles key='featured' queryResult={featuredProducts} themeVariant="secondary" />
+                <PageContent theme="primary" title="Populære produkter" >
+                    <ProductTiles key='featured' queryResult={featuredProducts} theme="secondary" />
                 </PageContent>
             </PageSection>
         </PageView>

@@ -54,7 +54,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(
                 <Input
                     ref={ref}
                     flex={1}
-                    fontSize="$5"
+                    fontSize="$3"
                     placeholder={placeholder}
                     placeholderTextColor="$color10"
                     selectionColor="$color10"

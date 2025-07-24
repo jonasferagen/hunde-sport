@@ -10,10 +10,10 @@ import { Spinner, YStack } from 'tamagui';
 
 interface ProductTilesProps {
     queryResult: InfiniteListQueryResult<Product>;
-    themeVariant?: ThemeVariant;
+    theme?: ThemeVariant;
 }
 
-export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductTilesProps): JSX.Element => {
+export const ProductTiles = ({ queryResult, theme = 'primary' }: ProductTilesProps): JSX.Element => {
     const { items: products, isLoading, isFetchingNextPage, fetchNextPage } = queryResult;
 
 
@@ -32,7 +32,7 @@ export const ProductTiles = ({ queryResult, themeVariant = 'primary' }: ProductT
             renderItem={({ item }) => (
                 <ProductTile
                     product={item}
-                    themeVariant={themeVariant}
+                    theme={theme}
                 />
             )}
             keyExtractor={(item) => item.id.toString()}

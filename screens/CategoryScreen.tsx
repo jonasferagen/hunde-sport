@@ -35,7 +35,7 @@ export const CategoryScreen = memo(() => {
                 {category && <CategoryChipsContainer category={category} />}
             </PageHeader>
             <PageSection flex>
-                <PageContent flex paddingHorizontal="none" paddingVertical="none" >
+                <PageContent style={{ flex: 1 }} paddingHorizontal="none" paddingVertical="none" >
                     {isLoading && <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>}
                     {category && <CategoryProducts category={category} />}
                 </PageContent>

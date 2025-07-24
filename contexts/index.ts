@@ -1,5 +1,4 @@
 export { LayoutProvider, useLayoutContext } from './LayoutContext';
-export { PageContentProvider, usePageContentContext } from './PageContentContext';
 export { ProductProvider, useProductContext } from './ProductContext';
 export { ProductImageProvider, useProductImage } from './ProductImageContext';
 export { ShoppingCartProvider, useShoppingCartContext } from './ShoppingCartContext';

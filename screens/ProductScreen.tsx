@@ -4,7 +4,7 @@ import { ProductImage } from '@/components/features/product/image/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/image/ProductImageGallery';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Breadcrumbs, CustomText } from '@/components/ui';
+import { Breadcrumbs } from '@/components/ui';
 import { ProductImageProvider, ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -49,11 +49,11 @@ const ProductScreenContent = () => {
         <PageContent title="Flere bilder">
           <ProductImageGallery />
         </PageContent>
-        <PageContent primary title="Relaterte produkter">
-          <ProductTiles queryResult={useProductsByIds(product.related_ids)} themeVariant="secondary" />
+        <PageContent theme="primary" title="Relaterte produkter">
+          <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
         </PageContent>
-        <PageContent title="Produktinformasjon" secondary>
-          <CustomText fontSize="sm">{product.description || 'Ingen beskrivelse tilgjengelig'}</CustomText>
+        <PageContent theme="secondary" title="Produktinformasjon">
+          <SizableText size="$3">{product.description || 'Ingen beskrivelse tilgjengelig'}</SizableText>
         </PageContent>
 
         <PageContent title="Kategorier">
