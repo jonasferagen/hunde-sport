@@ -1,14 +1,12 @@
-import { useProductContext } from '@/contexts';
+import { useProductContext, useProductImage } from '@/contexts';
 import { Image } from 'expo-image';
 import React from 'react';
 import { XStack, YStack } from 'tamagui';
 
-interface ProductImageGalleryProps {
-    onImagePress: (index: number) => void;
-}
 
-export const ProductImageGallery = ({ onImagePress }: ProductImageGalleryProps) => {
+export const ProductImageGallery = () => {
     const { product } = useProductContext();
+    const { openImageViewer } = useProductImage();
 
     if (!product || !product.images || product.images.length <= 1) {
         return null;
@@ -27,7 +25,7 @@ export const ProductImageGallery = ({ onImagePress }: ProductImageGalleryProps) 
                     borderWidth={1}
                     borderColor="$borderColor"
                     overflow="hidden"
-                    onPress={() => onImagePress(index)}
+                    onPress={() => openImageViewer(index + 1)}
                 >
                     <Image source={{ uri: image.src }} style={{ height: '100%', width: '100%' }} />
                 </YStack>

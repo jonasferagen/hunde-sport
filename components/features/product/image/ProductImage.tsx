@@ -1,18 +1,17 @@
-
-import { useProductContext } from '@/contexts';
+import { useProductContext, useProductImage } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Image } from 'expo-image';
 import React from 'react';
 import { YStack } from 'tamagui';
 
 interface ProductImageProps {
-    onPress: () => void;
 }
 
 const IMAGE_HEIGHT = 300;
 
-export const ProductImage = ({ onPress }: ProductImageProps) => {
+export const ProductImage = () => {
     const { product, productVariant } = useProductContext();
+    const { openImageViewer } = useProductImage();
     const activeProduct = productVariant || product;
 
     if (!activeProduct?.image) {
@@ -28,7 +27,7 @@ export const ProductImage = ({ onPress }: ProductImageProps) => {
             overflow="hidden"
             borderBottomWidth={1}
             borderColor="$borderColor"
-            onPress={onPress}
+            onPress={() => openImageViewer(0)}
         >
             <Image source={{ uri: imageUrl }} style={{ height: '100%', width: '100%' }} />
         </YStack>

@@ -1,11 +1,10 @@
 import { Loader } from '@/components/ui';
-import { CustomText } from '@/components/ui/text/CustomText';
 import { calculatePriceRange } from '@/hooks/usePriceRange';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
-import { formatPriceRange } from '@/utils/helpers';
+import { formatPrice, formatPriceRange } from '@/utils/helpers';
 import React, { useState } from 'react';
-import { Adapt, Select, Sheet, Text, XStack } from 'tamagui';
+import { Adapt, Select, Sheet, SizableText, XStack } from 'tamagui';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
@@ -30,13 +29,14 @@ interface OptionRendererProps {
     isLoading: boolean;
 }
 
+
+
+
+
 const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, selectedOptions, isFirst, isLast, isLoading }: OptionRendererProps) => {
-
-    const priceRange = calculatePriceRange(matchingVariants);
-
     const opacity = isFirst ? 0.5 : 1;
     const fontSize = isFirst ? "\$2" : "\$3";
-
+    const priceRange = calculatePriceRange(matchingVariants);
     return (
         <XStack
             flex={1}
@@ -47,21 +47,18 @@ const OptionRenderer = ({ option, disabled, isSelected, matchingVariants, select
             alignItems='center'
         >
             <XStack gap={"\$2"}>
-                <CustomText style={{ fontWeight: isSelected ? 'bold' : 'normal', textDecorationLine: disabled ? 'line-through' : 'none' }}>
+                <SizableText style={{ fontWeight: isSelected ? 'bold' : 'normal', textDecorationLine: disabled ? 'line-through' : 'none' }}>
                     {option.label}
-                </CustomText>
+                </SizableText>
             </XStack>
-            {isLoading ? <Loader /> : matchingVariants && (
-                matchingVariants.length === 1 ? (
-                    <XStack opacity={opacity}>
-                        <Text>{matchingVariants[0].price}</Text>
-                    </XStack>
-                ) : <XStack opacity={opacity} alignItems='flex-end'>
-                    <Text fontSize={fontSize}>
-                        {priceRange && formatPriceRange(priceRange)}
-                    </Text>
-                </XStack>
-            )}
+            <XStack alignItems='flex-end'>
+                <SizableText opacity={opacity} fontSize={fontSize}>
+                    {isLoading && <Loader />}
+                    {matchingVariants && matchingVariants.length === 1 && formatPrice(matchingVariants[0].price)}
+                    {matchingVariants && matchingVariants.length > 1 && formatPriceRange(priceRange!)}
+                </SizableText>
+            </XStack>
+
         </XStack>
     );
 };
@@ -70,7 +67,6 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
     const useFullscreen = options.length > 10; // Adjust threshold as needed
     const [isOpen, setIsOpen] = useState(false);
     const selectedOption = options.find((o) => o.name === currentSelection);
-
 
     return (
         <Select
@@ -91,6 +87,7 @@ export const AttributeSelector = ({ attribute, options, currentSelection, curren
                             isFirst={isFirst}
                             isLast={isLast}
                             isLoading={isLoading}
+
                         />
                     ) : (
                         'Velg et alternativ'

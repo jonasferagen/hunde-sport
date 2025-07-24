@@ -1,7 +1,6 @@
-import { CustomText } from '@/components/ui/text/CustomText';
 import { useProductContext } from '@/contexts/ProductContext';
 import React, { JSX } from 'react';
-import { XStack, YStack } from 'tamagui';
+import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 export const ProductVariations = (): JSX.Element | null => {
@@ -20,7 +19,7 @@ export const ProductVariations = (): JSX.Element | null => {
 
     return (
 
-        <XStack space="$2" flexWrap="wrap">
+        <XStack gap="$2" flexWrap="wrap">
             {variationAttributes.map((attribute, index) => {
                 const currentSelection = selectedOptions[attribute.id];
                 const options = attribute.options.filter((o) => o.name);
@@ -29,9 +28,9 @@ export const ProductVariations = (): JSX.Element | null => {
                 return (
 
                     <YStack key={attribute.id} flex={1}>
-                        <CustomText fontSize="sm" bold>
+                        <SizableText fontSize="$3" >
                             {attribute.name}:
-                        </CustomText>
+                        </SizableText>
                         <AttributeSelector
                             attribute={attribute}
                             options={options}

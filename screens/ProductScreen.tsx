@@ -1,17 +1,14 @@
-import { CategoryChips } from '@/components/features/category';
-import {
-  BuyProduct,
-  ProductImageManager,
-  ProductTiles
-} from '@/components/features/product/';
-import { PageContent, PageSection, PageView } from '@/components/layout';
-import { PageHeader } from '@/components/layout/PageHeader';
+import { CategoryChips } from '@/components/features/category/CategoryChips';
+import { BuyProduct } from '@/components/features/product/BuyProduct';
+import { ProductImage } from '@/components/features/product/image/ProductImage';
+import { ProductImageGallery } from '@/components/features/product/image/ProductImageGallery';
+import { ProductTiles } from '@/components/features/product/ProductTiles';
+import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs, CustomText, Loader } from '@/components/ui';
-import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
+import { ProductImageProvider, ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
@@ -42,21 +39,26 @@ const ProductScreenContent = () => {
   const { product } = useProductContext();
 
   return (
-    <PageSection scrollable>
-      <PageContent>
-        <ProductImageManager />
-        <BuyProduct />
-      </PageContent>
-      <PageContent primary title="Relaterte produkter">
-        <ProductTiles queryResult={useProductsByIds(product.related_ids)} themeVariant="secondary" />
-      </PageContent>
-      <PageContent title="Produktinformasjon" secondary>
-        <CustomText fontSize="sm">{product.description || 'Ingen beskrivelse tilgjengelig'}</CustomText>
-      </PageContent>
+    <ProductImageProvider>
+      <PageSection scrollable>
+        <ProductImage />
+        <PageContent>
+          <BuyProduct />
+        </PageContent>
+        <PageContent title="Flere bilder" horizontal>
+          <ProductImageGallery />
+        </PageContent>
+        <PageContent primary title="Relaterte produkter">
+          <ProductTiles queryResult={useProductsByIds(product.related_ids)} themeVariant="secondary" />
+        </PageContent>
+        <PageContent title="Produktinformasjon" secondary>
+          <CustomText fontSize="sm">{product.description || 'Ingen beskrivelse tilgjengelig'}</CustomText>
+        </PageContent>
 
-      <PageContent title="Kategorier">
-        <CategoryChips categories={product.categories} />
-      </PageContent>
-    </PageSection>
+        <PageContent title="Kategorier">
+          <CategoryChips categories={product.categories} />
+        </PageContent>
+      </PageSection>
+    </ProductImageProvider>
   );
 };
