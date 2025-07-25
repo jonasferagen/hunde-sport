@@ -8,8 +8,6 @@ export interface PriceRange {
   max: number;
 }
 
-
-
 export interface ProductData {
   id: number;
   name: string;
@@ -53,6 +51,7 @@ export class Product {
   parent_id: number;
 
   constructor(data: ProductData) {
+
     this.id = data.id;
     this.name = data.name;
     this.on_sale = data.on_sale;

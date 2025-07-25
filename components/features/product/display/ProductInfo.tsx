@@ -1,13 +1,13 @@
-import { Product } from '@/models/Product';
+import { Product, ProductVariation } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
 import { SizableText, XStack } from 'tamagui';
-interface VariantInfoProps {
-    variant: Product;
+interface ProductInfoProps {
+    product: Product | ProductVariation;
 }
 
-export const VariantInfo = ({ variant }: VariantInfoProps) => {
-    const isOutOfStock = variant.stock_status === 'outofstock';
+export const ProductInfo = ({ product }: ProductInfoProps) => {
+    const isOutOfStock = product.stock_status === 'outofstock';
     const textDecorationLine = isOutOfStock ? 'line-through' : 'none';
     return (
         <XStack alignItems="center" gap="$2">
@@ -16,7 +16,7 @@ export const VariantInfo = ({ variant }: VariantInfoProps) => {
                     <SizableText fontWeight="bold" color='$red10' fontSize="$1">Utsolgt</SizableText>
                 </XStack>
             )}
-            <SizableText color='$color' textDecorationLine={textDecorationLine}>{formatPrice(variant.price)}</SizableText>
+            <SizableText color='$color' textDecorationLine={textDecorationLine}>{formatPrice(product.price)}</SizableText>
         </XStack>
     );
 };

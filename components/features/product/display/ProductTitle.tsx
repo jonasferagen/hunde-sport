@@ -3,13 +3,13 @@ import React from 'react';
 import { H3 } from 'tamagui';
 
 export const ProductTitle = () => {
-    const { product, productVariant } = useProductContext();
+    const { product, productVariation } = useProductContext();
 
     if (!product) {
         return null;
     }
 
-    const title = productVariant ? `${product.name} ${productVariant.name}` : product.name;
+    const title = productVariation ? `${product.name} ${productVariation.name}` : product.name;
 
     return <H3>{title}</H3>;
 };

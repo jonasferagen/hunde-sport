@@ -7,9 +7,9 @@ import { Image, YStack } from 'tamagui';
 const IMAGE_HEIGHT = 300;
 
 export const ProductImage = () => {
-    const { product, productVariant } = useProductContext();
+    const { product, productVariation } = useProductContext();
     const { openImageViewer } = useProductImage();
-    const activeProduct = productVariant || product;
+    const activeProduct = productVariation || product;
 
     if (!activeProduct?.image) {
         return null; // Or a placeholder

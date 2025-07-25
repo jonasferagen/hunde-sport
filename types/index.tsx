@@ -1,4 +1,6 @@
 import { Product } from "@/models/Product";
+import { ProductVariation } from "@/models/ProductVariation";
+
 
 // Re-export models
 export * from '@/models/Category';
@@ -6,6 +8,7 @@ export * from '@/models/Image';
 export * from '@/models/Product';
 export * from '@/models/ProductAttribute';
 export * from '@/models/ProductAttributeOption';
+export * from '@/models/ProductVariation';
 export * from './tamagui';
 
 
@@ -31,9 +34,9 @@ export interface Breadcrumb {
 }
 
 export interface ShoppingCartItem {
-  baseProduct: Product;
+  product: Product;
+  productVariation: ProductVariation | undefined;
   quantity: number;
-  selectedVariant: Product | undefined;
 }
 
 

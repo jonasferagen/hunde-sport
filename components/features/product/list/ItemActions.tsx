@@ -4,7 +4,7 @@ import { AlertCircle, ChevronsDown } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { QuantityControl } from '../../shoppingCart/QuantityControl';
-import { VariantInfo } from '../display/VariantInfo';
+import { ProductInfo } from '../display/ProductInfo';
 import { ProductVariations } from '../variation/ProductVariations';
 interface ItemActionsProps {
     isExpanded: boolean;
@@ -63,7 +63,7 @@ export const ItemActions = ({
                     )}
                 </XStack>
                 {productVariant && (
-                    <VariantInfo variant={productVariant} />
+                    <ProductInfo variant={productVariant} />
                 )}
                 <XStack gap="$2" ai='center'>
                     {activeProduct.stock_status === 'outofstock' ? (

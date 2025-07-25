@@ -1,10 +1,11 @@
 import { useProductContext } from '@/contexts';
+import { Product, ProductVariation } from '@/types';
 import { formatPrice, formatPriceRange } from '@/utils/helpers';
 import React, { JSX } from 'react';
 import { FontSizeTokens, SizableText, Spinner, XStack } from 'tamagui';
 
 interface PriceProps {
-    product: any;
+    product: Product | ProductVariation;
     fontSize: FontSizeTokens;
 }
 
@@ -34,15 +35,15 @@ interface PriceTagProps {
 }
 
 export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
-    const { product, isLoading, priceRange, productVariant } = useProductContext();
+    const { product, isLoading, priceRange, productVariation } = useProductContext();
 
 
     if (isLoading) {
         return <Spinner alignSelf='flex-end' size="small" />;
     }
 
-    if (productVariant) {
-        return <Price product={productVariant} fontSize={fontSize} />;
+    if (productVariation) {
+        return <Price product={productVariation} fontSize={fontSize} />;
     }
 
     if (priceRange) {

@@ -1,5 +1,6 @@
 import { Category } from '@/models/Category';
 import { Product, ProductData, ProductType } from '@/models/Product';
+import { ProductVariation } from '@/models/ProductVariation';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
 import { InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
@@ -44,9 +45,7 @@ export const mapToCategory = (item: any): Category => new Category({
     count: item.count,
 });
 
-
-
-export const mapToProduct = (item: any): Product => {
+export const mapToProduct = (item: any): Product | ProductVariation => {
     try {
 
         const productData: ProductData = {
@@ -75,6 +74,10 @@ export const mapToProduct = (item: any): Product => {
             })),
             parent_id: item.parent_id,
         };
+
+        if (productData.type === 'variation') {
+            return new ProductVariation(productData);
+        }
 
         return new Product(productData);
     } catch (error) {

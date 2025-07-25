@@ -13,7 +13,7 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
 
     return (
 
-        <ProductProvider product={item.baseProduct} productVariant={item.selectedVariant}>
+        <ProductProvider product={item.product} productVariation={item.productVariation}>
             <ListItem
                 header={<SimpleItemHeader />}
                 actions={<ShoppingCartItemActions item={item} />}

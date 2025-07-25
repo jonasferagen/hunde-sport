@@ -1,6 +1,7 @@
 import { useProductVariations } from '@/hooks/data/Product';
 import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
+import { ProductVariation } from '@/models/ProductVariation';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 export const calculatePriceRange = (productVariations: Product[] | undefined | null): { min: number; max: number } | null => {
@@ -22,22 +23,22 @@ export const calculatePriceRange = (productVariations: Product[] | undefined | n
 
 interface ProductContextType {
     product: Product;
-    productVariant?: Product | null;
-    productVariants: Product[];
+    productVariation?: ProductVariation | null;
+    productVariations: ProductVariation[];
     priceRange: { min: number; max: number } | null;
     handleOptionSelect: (attributeId: number, option: string) => void;
-    availableOptions: Map<number, Map<string, Product[]>>;
+    availableOptions: Map<number, Map<string, ProductVariation[]>>;
     selectedOptions: Record<number, string>;
     variationAttributes: ProductAttribute[];
     isLoading: boolean;
-    isProductVariantsLoading: boolean;
+    isProductVariationsLoading: boolean;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-const getOptionsFromVariant = (variant: Product | null | undefined) => {
-    if (!variant || !variant.attributes) return {};
-    return variant.attributes.reduce(
+const getOptionsFromVariation = (variation: ProductVariation | null | undefined) => {
+    if (!variation || !variation.attributes) return {};
+    return variation.attributes.reduce(
         (acc, attr) => {
             if (attr.id && attr.option) {
                 acc[attr.id] = attr.option;
@@ -48,19 +49,19 @@ const getOptionsFromVariant = (variant: Product | null | undefined) => {
     );
 };
 
-export const ProductProvider: React.FC<{ product: Product; productVariant?: Product | null; children: React.ReactNode }> = ({
+export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation | null; children: React.ReactNode }> = ({
     product,
-    productVariant: initialProductVariant,
+    productVariation: initialProductVariant,
     children,
 }) => {
     const isVariable = product.type === 'variable';
 
-    const { items: productVariants, isLoading, isFetchingNextPage, hasNextPage } = useProductVariations(product.id, { enabled: isVariable, autoload: true });
+    const { items: productVariations, isLoading, isFetchingNextPage, hasNextPage } = useProductVariations(product.id, { enabled: isVariable, autoload: true });
 
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariant(initialProductVariant));
+    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariation(initialProductVariant));
 
     useEffect(() => {
-        setSelectedOptions(getOptionsFromVariant(initialProductVariant));
+        setSelectedOptions(getOptionsFromVariation(initialProductVariant));
     }, [initialProductVariant]);
 
     const variationAttributes = useMemo(() => {
@@ -68,12 +69,12 @@ export const ProductProvider: React.FC<{ product: Product; productVariant?: Prod
         return product.getVariationAttributes();
     }, [product, isVariable]);
 
-    const productVariant = useMemo(() => {
-        if (!isVariable || !productVariants || Object.keys(selectedOptions).length < variationAttributes.length) {
+    const productVariation = useMemo(() => {
+        if (!isVariable || !productVariations || Object.keys(selectedOptions).length < variationAttributes.length) {
             return null;
         }
-        return product.findVariant(productVariants, selectedOptions) || null;
-    }, [selectedOptions, productVariants, product, isVariable, variationAttributes]);
+        return product.findVariant(productVariations, selectedOptions) || null;
+    }, [selectedOptions, productVariations, product, isVariable, variationAttributes]);
 
     const handleOptionSelect = (attributeId: number, optionName: string) => {
         setSelectedOptions(prev => {
@@ -88,7 +89,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariant?: Prod
             }
 
             // Filter out attributes that are no longer valid
-            const validAttributes = product.getAvailableOptions(productVariants || [], newOptions);
+            const validAttributes = product.getAvailableOptions(productVariations || [], newOptions);
             const finalOptions: Record<number, string> = {};
             for (const id in newOptions) {
                 if (validAttributes.has(Number(id))) {
@@ -101,23 +102,23 @@ export const ProductProvider: React.FC<{ product: Product; productVariant?: Prod
     };
 
     const availableOptions = useMemo(() => {
-        if (!isVariable || !productVariants) return new Map();
-        return product.getAvailableOptions(productVariants, selectedOptions);
-    }, [product, productVariants, selectedOptions, isVariable]);
+        if (!isVariable || !productVariations) return new Map();
+        return product.getAvailableOptions(productVariations, selectedOptions);
+    }, [product, productVariations, selectedOptions, isVariable]);
 
-    const priceRange = useMemo(() => calculatePriceRange(productVariants), [productVariants]);
+    const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 
     const value = {
         product,
-        productVariant,
-        productVariants: productVariants || [],
+        productVariation,
+        productVariations: productVariations || [],
         priceRange,
         handleOptionSelect,
         availableOptions,
         selectedOptions,
         variationAttributes,
         isLoading,
-        isProductVariantsLoading: isFetchingNextPage || hasNextPage,
+        isProductVariationsLoading: isFetchingNextPage || hasNextPage,
     };
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;

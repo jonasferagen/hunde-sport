@@ -7,10 +7,10 @@ interface ProductStatusProps {
     short?: boolean;
 }
 export const ProductStatus = ({ short = false }: ProductStatusProps) => {
-    const { product, productVariant } = useProductContext();
+    const { product, productVariation } = useProductContext();
     const { purchaseInfo } = useShoppingCartContext();
 
-    const activeProduct = productVariant || product;
+    const activeProduct = productVariation || product;
 
     if (!activeProduct) {
         return null;

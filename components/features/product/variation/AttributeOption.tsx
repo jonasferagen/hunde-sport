@@ -1,12 +1,11 @@
-import { useProductContext } from '@/contexts/ProductContext';
-import { Product } from '@/models/Product';
+import { calculatePriceRange, useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { ProductAttributeOption as ProductAttributeOptionType } from '@/types';
 import { formatPriceRange } from '@/utils/helpers';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, ThemeName, XStack } from 'tamagui';
-import { VariantInfo } from '../display/VariantInfo';
+import { ProductInfo } from '../display/ProductInfo';
 
 interface AttributeOptionProps {
     item: ProductAttributeOptionType;
@@ -54,7 +53,7 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
                 <XStack alignItems='flex-end'>
                     <SizableText color={'$color'}>
                         {matchingVariants && matchingVariants.length === 1 ? (
-                            <VariantInfo variant={matchingVariants[0]} />
+                            <ProductInfo product={matchingVariants[0]} />
                         ) : matchingVariants && matchingVariants.length > 1 ? (
                             formatPriceRange(priceRange!)
                         ) : null}
@@ -65,15 +64,3 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
     );
 };
 
-// Helper function to calculate price range, can be moved to a utility file if needed
-const calculatePriceRange = (variants: Product[] | undefined) => {
-    if (!variants || variants.length === 0) {
-        return null;
-    }
-
-    const prices = variants.map(v => v.price);
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
-
-    return { min: minPrice, max: maxPrice };
-};

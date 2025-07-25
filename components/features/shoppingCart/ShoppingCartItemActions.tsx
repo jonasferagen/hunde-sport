@@ -16,10 +16,10 @@ export const ShoppingCartItemActions = ({
     item,
 }: ShoppingCartItemActionsProps): JSX.Element => {
     const { removeFromCart } = useShoppingCartContext();
-    const product = item.selectedVariant || item.baseProduct;
+    const product = item.productVariation || item.product;
 
     const handleRemove = (): void => removeFromCart(product.id);
-    const handlePress = (): void => router.push(routes.product(item.baseProduct));
+    const handlePress = (): void => router.push(routes.product(item.product));
 
     return (
         <XStack jc="space-between" ai="center" width="100%">
@@ -28,7 +28,7 @@ export const ShoppingCartItemActions = ({
             </Button>
             <YStack alignItems="flex-end">
                 <XStack alignItems="center">
-                    <QuantityControl product={product} baseProduct={item.baseProduct} />
+                    <QuantityControl product={product} parentProduct={item.product} />
                     <Button
                         unstyled
                         onPress={handleRemove}

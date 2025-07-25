@@ -1,20 +1,21 @@
 import { useShoppingCartContext } from '@/contexts';
 import { Product } from '@/models/Product';
+import { ProductVariation } from '@/models/ProductVariation';
 import { Minus, Plus } from '@tamagui/lucide-icons';
 import React from 'react';
 import { SizableText, XStack } from 'tamagui';
 
 interface QuantityControlProps {
-    product: Product;
-    baseProduct?: Product;
+    product: Product | ProductVariation;
+    parentProduct?: Product;
 }
 
-export const QuantityControl: React.FC<QuantityControlProps> = ({ product, baseProduct }) => {
+export const QuantityControl: React.FC<QuantityControlProps> = ({ product, parentProduct }) => {
     const { getQuantity, increaseQuantity, decreaseQuantity } = useShoppingCartContext();
 
     const quantity = getQuantity(product);
 
-    const handleIncrease = () => increaseQuantity(product, baseProduct);
+    const handleIncrease = () => increaseQuantity(product, parentProduct);
     const handleDecrease = () => decreaseQuantity(product);
 
     return (

@@ -1,5 +1,6 @@
 import { routes } from '@/config/routes';
 import type { Product } from '@/models/Product';
+import { ProductVariation } from '@/models/ProductVariation';
 import type { ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
@@ -7,12 +8,12 @@ import { useStatusContext } from './StatusContext';
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
-    purchaseInfo: (displayProduct: Product) => { status: string; msg: string; msgShort: string };
+    purchaseInfo: (displayProduct: Product | ProductVariation) => { status: string; msg: string; msgShort: string };
     cartItemCount: number;
     cartTotal: number;
-    getQuantity: (product: Product) => number;
-    increaseQuantity: (product: Product, baseProduct?: Product) => void;
-    decreaseQuantity: (product: Product) => void;
+    getQuantity: (product: Product | ProductVariation) => number;
+    increaseQuantity: (product: Product | ProductVariation, parentProduct?: Product) => void;
+    decreaseQuantity: (product: Product | ProductVariation) => void;
     removeFromCart: (productId: number) => void;
     clearCart: () => void;
 }
@@ -23,7 +24,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const { showMessage } = useStatusContext();
 
-    const purchaseInfo = (displayProduct: Product) => {
+    const purchaseInfo = (displayProduct: Product | ProductVariation) => {
         if (displayProduct.stock_status === 'outofstock') {
             return {
                 status: 'outofstock',
@@ -48,18 +49,18 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
 
     const getQuantity = useCallback(
-        (product: Product) => {
-            const cartItem = items.find((item) => (item.selectedVariant || item.baseProduct).id === product.id);
+        (product: Product | ProductVariation) => {
+            const cartItem = items.find((item) => (item.productVariation || item.product).id === product.id);
             return cartItem?.quantity ?? 0;
         },
         [items]
     );
 
-    const decreaseQuantity = useCallback((product: Product) => {
+    const decreaseQuantity = useCallback((product: Product | ProductVariation) => {
         setItems((prevItems) =>
             prevItems
                 .map((item) => {
-                    const itemProduct = item.selectedVariant || item.baseProduct;
+                    const itemProduct = item.productVariation || item.product;
                     return itemProduct.id === product.id ? { ...item, quantity: item.quantity - 1 } : item;
                 })
                 .filter((item) => item.quantity > 0)
@@ -67,30 +68,30 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }, []);
 
     const increaseQuantity = useCallback(
-        (activeProduct: Product, baseProduct?: Product) => {
+        (productToAdd: Product | ProductVariation, parentProduct?: Product) => {
             setItems((prevItems) => {
-                const existingItem = prevItems.find((item) => (item.selectedVariant || item.baseProduct).id === activeProduct.id);
+                const existingItem = prevItems.find((item) => (item.productVariation || item.product).id === productToAdd.id);
 
                 if (existingItem) {
                     return prevItems.map((item) =>
-                        (item.selectedVariant || item.baseProduct).id === activeProduct.id
+                        (item.productVariation || item.product).id === productToAdd.id
                             ? { ...item, quantity: item.quantity + 1 }
                             : item
                     );
                 } else {
-                    const newBase = activeProduct.type === 'variation' ? baseProduct : activeProduct;
-                    if (!newBase) {
+                    const newProduct = productToAdd.type === 'variation' ? parentProduct : productToAdd;
+                    if (!newProduct) {
                         console.error('Cannot add variation to cart without a base product.');
                         return prevItems;
                     }
-                    const newVariant = activeProduct.type === 'variation' ? activeProduct : undefined;
-                    return [...prevItems, { baseProduct: newBase, selectedVariant: newVariant, quantity: 1 }];
+                    const newVariation = productToAdd.type === 'variation' ? (productToAdd as ProductVariation) : undefined;
+                    return [...prevItems, { product: newProduct, productVariation: newVariation, quantity: 1 }];
                 }
             });
 
-            const title = activeProduct.type === 'variation' && baseProduct
-                ? `${baseProduct.name} - ${activeProduct.name}`
-                : activeProduct.name;
+            const title = productToAdd.type === 'variation' && parentProduct
+                ? `${parentProduct.name} - ${productToAdd.name}`
+                : productToAdd.name;
 
             showMessage({ text: `${title} er lagt til i handlekurven`, type: 'info' });
         },
@@ -100,7 +101,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const removeFromCart = useCallback((productId: number) => {
         setItems((prevItems) =>
             prevItems.filter((item) => {
-                const itemProduct = item.selectedVariant || item.baseProduct;
+                const itemProduct = item.productVariation || item.product;
                 return itemProduct.id !== productId;
             })
         );
@@ -134,7 +135,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const cartTotal = useMemo(() => {
         return items.reduce((sum, item) => {
-            const itemProduct = item.selectedVariant || item.baseProduct;
+            const itemProduct = item.productVariation || item.product;
             return sum + itemProduct.price * item.quantity;
         }, 0);
     }, [items]);
