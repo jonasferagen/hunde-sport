@@ -86,7 +86,7 @@ export class Product {
     }
   }
 
-  getVariationAttributes(): ProductAttribute[] {
+  getProductVariationAttributes(): ProductAttribute[] {
     return this.attributes.filter(attr => attr.variation);
   }
 
@@ -96,17 +96,17 @@ export class Product {
 
   /**
    * Finds a matching variant from a list of products based on selected options.
-   * @param variants - An array of variation products to search through.
+   * @param variation - An array of variation products to search through.
    * @param selectedOptions - A record of selected attribute IDs and their option values.
    * @returns The matched product variant or undefined if no match is found.
    */
-  findVariant(variants: Product[], selectedOptions: Record<number, string>): Product | undefined {
+  findVariation(variation: Product[], selectedOptions: Record<number, string>): Product | undefined {
     const selectedEntries = Object.entries(selectedOptions);
     if (selectedEntries.length === 0) {
       return undefined;
     }
 
-    return variants.find(variant => {
+    return variation.find(variant => {
       return selectedEntries.every(([attrId, optionValue]) => {
         return variant.attributes.some(
           attr => attr.id.toString() === attrId && attr.option === optionValue
@@ -126,7 +126,7 @@ export class Product {
     selectedOptions: Record<number, string>
   ): Map<number, Map<string, Product[]>> {
     const available = new Map<number, Map<string, Product[]>>();
-    const variationAttributes = this.getVariationAttributes();
+    const variationAttributes = this.getProductVariationAttributes();
 
     variationAttributes.forEach((attribute) => {
       const currentAttributeId = attribute.id.toString();

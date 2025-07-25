@@ -61,6 +61,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
             product={product}
             productVariations={productVariations || []}
             initialProductVariation={initialProductVariation}
+            setProductVariation={setProductVariation}
         >
             {children}
         </ProductVariationSelectionProvider>

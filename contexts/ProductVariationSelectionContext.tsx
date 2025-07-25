@@ -2,7 +2,6 @@ import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { ProductVariation } from '@/models/ProductVariation';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { useProductContext } from './ProductContext';
 
 interface ProductVariationContextType {
     handleOptionSelect: (attributeId: number, option: string) => void;
@@ -30,20 +29,20 @@ export const ProductVariationSelectionProvider: React.FC<{
     product: Product;
     productVariations: ProductVariation[];
     initialProductVariation?: ProductVariation | null;
+    setProductVariation: (variation: ProductVariation | null) => void;
     children: React.ReactNode
-}> = ({ product, productVariations, initialProductVariation, children }) => {
-    const { setProductVariation } = useProductContext();
+}> = ({ product, productVariations, initialProductVariation, setProductVariation, children }) => {
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariation(initialProductVariation));
 
     const productVariationAttributes = useMemo(() => {
-        return product.getVariationAttributes();
+        return product.getProductVariationAttributes();
     }, [product]);
 
     const productVariation = useMemo(() => {
         if (Object.keys(selectedOptions).length < productVariationAttributes.length) {
             return null;
         }
-        return product.findVariant(productVariations, selectedOptions) || null;
+        return product.findVariation(productVariations, selectedOptions) || null;
     }, [selectedOptions, productVariations, product, productVariationAttributes]);
 
     useEffect(() => {
