@@ -1,7 +1,7 @@
 import { useProductContext, useProductImage } from '@/contexts';
-import { Image } from 'expo-image';
+
 import React from 'react';
-import { XStack, YStack } from 'tamagui';
+import { Image, XStack, YStack } from 'tamagui';
 
 
 export const ProductImageGallery = () => {

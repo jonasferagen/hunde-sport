@@ -1,11 +1,8 @@
 import { useProductContext, useProductImage } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
-import { Image } from 'expo-image';
-import React from 'react';
-import { YStack } from 'tamagui';
 
-interface ProductImageProps {
-}
+import React from 'react';
+import { Image, YStack } from 'tamagui';
 
 const IMAGE_HEIGHT = 300;
 
