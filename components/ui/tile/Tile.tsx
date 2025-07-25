@@ -10,7 +10,7 @@ const StyledLinearGradient = styled(LinearGradient, {
     name: 'StyledLinearGradient',
     minHeight: 40,
     padding: '$2',
-    justifyContent: 'center',
+    jc: 'center',
 });
 
 export interface TileProps extends Omit<GetProps<typeof YStack>, 'href'> {
@@ -69,7 +69,7 @@ export const Tile = (props: TileProps) => {
                 bottom={0}
                 resizeMode="cover"
             />
-            <YStack flex={1} justifyContent="flex-end">
+            <YStack flex={1} jc="flex-end">
                 <StyledLinearGradient
                     colors={[rgba(themeValues.background.val, 0.7), rgba(themeValues.background.val, 1)]}
                     minHeight={gradientMinHeight}

@@ -12,7 +12,7 @@ export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Ele
     const currentStepIndex = steps.findIndex(step => step.name === currentStepName);
 
     return (
-        <XStack alignItems="center" justifyContent="center" paddingVertical="$space.sm">
+        <XStack ai="center" jc="center" paddingVertical="$space.sm">
             {steps.map((step, index) => {
                 const isCompleted = index < currentStepIndex;
                 const isCurrent = index === currentStepIndex;

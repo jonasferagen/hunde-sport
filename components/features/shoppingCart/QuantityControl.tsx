@@ -1,28 +1,28 @@
-import { useShoppingCartContext } from '@/contexts';
-import { Product } from '@/models/Product';
-import { ProductVariation } from '@/models/ProductVariation';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
+import type { Product } from '@/models/Product';
+import type { ProductVariation } from '@/models/ProductVariation';
 import { Minus, Plus } from '@tamagui/lucide-icons';
 import React from 'react';
 import { SizableText, XStack } from 'tamagui';
 
 interface QuantityControlProps {
-    product: Product | ProductVariation;
-    parentProduct?: Product;
+    product: Product;
+    productVariation?: ProductVariation;
 }
 
-export const QuantityControl: React.FC<QuantityControlProps> = ({ product, parentProduct }) => {
-    const { getQuantity, increaseQuantity, decreaseQuantity } = useShoppingCartContext();
+export const QuantityControl = ({ product, productVariation }: QuantityControlProps) => {
+    const { increaseQuantity, decreaseQuantity, getQuantity } = useShoppingCartContext();
 
-    const quantity = getQuantity(product);
+    const quantity = getQuantity(product, productVariation);
 
-    const handleIncrease = () => increaseQuantity(product, parentProduct);
-    const handleDecrease = () => decreaseQuantity(product);
+    const handleIncrease = () => increaseQuantity(product, productVariation);
+    const handleDecrease = () => decreaseQuantity(product, productVariation);
 
     return (
-        <XStack alignItems="center" justifyContent="flex-end" width={100} height="auto">
+        <XStack flex={1} jc="flex-end" ai="center" width={100} height="auto">
             <XStack
                 animation="quick"
-                alignItems="center"
+                ai="center"
                 opacity={quantity > 0 ? 1 : 0}
                 transform={[{ translateX: quantity > 0 ? 0 : 20 }]}
                 pointerEvents={quantity > 0 ? 'auto' : 'none'}

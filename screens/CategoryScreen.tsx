@@ -8,7 +8,8 @@ import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
-import { Spinner, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
+import { LoadingScreen } from './misc/LoadingScreen';
 
 
 const CategoryChipsContainer = ({ category }: { category: Category }) => {
@@ -34,7 +35,7 @@ export const CategoryScreen = memo(() => {
                 {category && <CategoryChipsContainer category={category} />}
             </PageHeader>
             <YStack flex={1} paddingHorizontal="none" paddingVertical="none" >
-                {isLoading && <YStack flex={1} ai="center" jc="center"><Spinner size="large" /></YStack>}
+                {isLoading && <LoadingScreen />}
                 {category && <CategoryProducts category={category} />}
             </YStack>
         </PageView>

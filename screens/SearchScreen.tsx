@@ -7,7 +7,8 @@ import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native';
-import { SizableText, Spinner, YStack } from 'tamagui';
+import { SizableText, YStack } from 'tamagui';
+import { LoadingScreen } from './misc/LoadingScreen';
 
 export const SearchScreen = () => {
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
@@ -46,7 +47,7 @@ export const SearchScreen = () => {
                     onSubmit={handleSearchSubmit}
                     debounce={1000}
                 />
-                <SizableText >
+                <SizableText fontSize="$3">
                     {isWaiting
                         ? `Leter etter "${liveQuery}"...`
                         : (initialQuery ? `Søkeresultater for "${initialQuery}"` : ' ')}
@@ -67,7 +68,7 @@ const SearchResults = ({ query }: { query: string }) => {
     const { items: products, isLoading, fetchNextPage, isFetchingNextPage } = useProductsBySearch(query);
     return (
         isLoading ? (
-            <YStack flex={1} ai="center" jc="center"><Spinner size="large" /></YStack>
+            <LoadingScreen />
         ) : (
             products.length === 0 && query ? (
                 <YStack flex={1} ai="center" jc="center">

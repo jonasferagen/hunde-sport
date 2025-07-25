@@ -18,8 +18,8 @@ export const Chip = ({ title, theme, href, onPress, ...rest }: ChipProps) => {
             borderRadius="$2"
             backgroundColor="$background"
             borderWidth={1}
-            alignItems="center"
-            justifyContent="center"
+            ai="center"
+            jc="center"
             onPress={onPress}
             pressStyle={onPress ? { opacity: 0.7 } : undefined}
             {...rest}

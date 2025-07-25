@@ -23,13 +23,13 @@ export const SimpleItemHeader = ({ children }: SimpleItemHeaderProps): JSX.Eleme
     return (
         <XStack
             alignSelf="stretch"
-            justifyContent="flex-start"
+            jc="flex-start"
             gap="$3"
             flex={1}
         >
             <YStack
-                alignItems="center"
-                justifyContent="center"
+                ai="center"
+                jc="center"
             >
                 <Image source={{ uri: imageUrl }} width={IMAGE_SIZE} height={IMAGE_SIZE} borderRadius="$4" />
             </YStack>

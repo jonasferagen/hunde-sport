@@ -13,7 +13,7 @@ interface PriceProps {
 const Price = ({ product, fontSize }: PriceProps) => {
     if (product.on_sale) {
         return (
-            <XStack alignItems="center">
+            <XStack ai="center">
                 <SizableText textDecorationLine="line-through" mr="$2" opacity={0.7} fontSize={fontSize}>
                     {formatPrice(product.regular_price)}
                 </SizableText>

@@ -45,7 +45,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(
         return (
             <XStack
                 theme="secondary"
-                alignItems="center"
+                ai="center"
                 backgroundColor="$white3"
                 borderRadius="$4"
                 paddingHorizontal="$3"

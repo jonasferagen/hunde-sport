@@ -35,8 +35,8 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
                 backgroundColor={isSelected ? '$background' : 'transparent'}
                 paddingVertical={"$3"}
                 paddingHorizontal={"$2"}
-                justifyContent='space-between'
-                alignItems='center'
+                jc='space-between'
+                ai='center'
                 cursor={isDisabled ? 'not-allowed' : 'pointer'}
                 opacity={isDisabled ? 0.5 : 1}
             >
@@ -50,7 +50,7 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
                         {option.label}
                     </SizableText>
                 </XStack>
-                <XStack alignItems='flex-end'>
+                <XStack ai='flex-end'>
                     <SizableText color={'$color'}>
                         {matchingVariants && matchingVariants.length === 1 ? (
                             <ProductInfo product={matchingVariants[0]} />

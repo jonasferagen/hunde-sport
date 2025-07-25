@@ -9,7 +9,7 @@ interface BreadcrumbsProps {
 
 export const Breadcrumbs = React.memo(({ categoryId, isLastClickable = false }: BreadcrumbsProps) => {
     return (
-        <XStack alignItems="center" flexWrap="wrap">
+        <XStack ai="center" flexWrap="wrap">
             <RecursiveBreadcrumb categoryId={categoryId} isLast={true} isLastClickable={isLastClickable} />
         </XStack>
     );

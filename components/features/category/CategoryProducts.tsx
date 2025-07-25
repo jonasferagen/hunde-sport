@@ -1,8 +1,8 @@
-import { Spinner, YStack } from 'tamagui';
 import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
 import React, { JSX } from 'react';
+import { Spinner, YStack } from 'tamagui';
 import { ProductList } from '../product/ProductList';
 
 interface CategoryProductsProps {
@@ -20,7 +20,7 @@ export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Eleme
         );
 
     if (isLoading) {
-        return <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>;
+        return <YStack flex={1} ai="center" jc="center"><Spinner size="large" /></YStack>;
     }
 
     if (!products || products.length === 0) {

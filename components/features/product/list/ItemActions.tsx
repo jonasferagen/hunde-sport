@@ -12,20 +12,20 @@ interface ItemActionsProps {
 }
 
 const VariantSelectionText = () => {
-    const { product, productVariant } = useProductContext();
+    const { product, productVariation } = useProductContext();
 
-    if (!product || !productVariant) {
+    if (!product || !productVariation) {
         return null;
     }
 
-    if (productVariant.type === 'variation') {
+    if (productVariation.type === 'variation') {
         return (
             <>
                 <SizableText color="$color">
-                    {product.name} - <SizableText fontWeight="bold" color="$color">{productVariant.name.trim()}</SizableText>
+                    {product.name} - <SizableText fontWeight="bold" color="$color">{productVariation.name.trim()}</SizableText>
                 </SizableText>
                 <SizableText fontWeight="bold" color="$color">
-                    {formatPrice(productVariant.price)}
+                    {formatPrice(productVariation.price)}
                 </SizableText>
             </>
         );
@@ -43,8 +43,8 @@ export const ItemActions = ({
     handleExpand
 }: ItemActionsProps): JSX.Element => {
 
-    const { product, productVariant } = useProductContext();
-    const activeProduct = productVariant || product;
+    const { product, productVariation } = useProductContext();
+    const activeProduct = productVariation || product;
 
     if (!activeProduct) {
         return <YStack />;
@@ -53,7 +53,7 @@ export const ItemActions = ({
     return (
         <YStack theme='secondary' backgroundColor="$background" padding="$2">
             <XStack jc="space-between" ai="center">
-                <XStack gap="$3" alignItems="center">
+                <XStack gap="$3" ai="center">
                     {product.type === 'variable' && (
                         <XStack onPress={handleExpand} ai="center">
                             <ChevronsDown size="$4" />
@@ -62,8 +62,8 @@ export const ItemActions = ({
                         </XStack>
                     )}
                 </XStack>
-                {productVariant && (
-                    <ProductInfo variant={productVariant} />
+                {productVariation && (
+                    <ProductInfo product={activeProduct} />
                 )}
                 <XStack gap="$2" ai='center'>
                     {activeProduct.stock_status === 'outofstock' ? (
@@ -72,7 +72,7 @@ export const ItemActions = ({
                             <SizableText color="red">Ikke på lager</SizableText>
                         </XStack>
                     ) : (
-                        <QuantityControl product={activeProduct} baseProduct={product} />
+                        <QuantityControl product={activeProduct} productVariation={productVariation} />
                     )}
                 </XStack>
             </XStack>

@@ -35,7 +35,7 @@ export const Breadcrumb = React.memo(({ category,
   );
 
   return (
-    <XStack alignItems="center">
+    <XStack ai="center">
       {isLast && !isLastClickable ? (
         breadcrumbText
       ) : (

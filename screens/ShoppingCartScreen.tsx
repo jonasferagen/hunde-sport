@@ -20,7 +20,7 @@ interface ShoppingCartSummaryProps {
 const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: ShoppingCartSummaryProps) => {
     return (
         <>
-            <XStack justifyContent="space-between" alignItems="center">
+            <XStack jc="space-between" ai="center">
                 <SizableText fontWeight="bold" size="$6" textAlign="right">
                     Antall: {cartItemCount}
                 </SizableText>

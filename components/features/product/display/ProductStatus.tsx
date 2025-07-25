@@ -21,7 +21,7 @@ export const ProductStatus = ({ short = false }: ProductStatusProps) => {
 
     if (status === 'outofstock') {
         return (
-            <XStack alignItems="center" space="$2">
+            <XStack ai="center" space="$2">
                 <Ban color="$red10" size="$1" />
                 <SizableText size="$2" fontWeight="bold" color="$red10">
                     {message}

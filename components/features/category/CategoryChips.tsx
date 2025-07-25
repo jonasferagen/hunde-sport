@@ -25,7 +25,7 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
     }
 
     return (
-        <XStack flexWrap="wrap" alignItems="center" gap="$2" style={style as any}>
+        <XStack flexWrap="wrap" ai="center" gap="$2" style={style as any}>
             {displayedCategories.map((category) => (
                 <Chip
                     key={category.id}

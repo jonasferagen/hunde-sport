@@ -13,11 +13,11 @@ export const CheckoutListItem: React.FC<CheckoutListItemProps> = ({ item }) => {
 
     return (
         <XStack
-            justifyContent="space-between"
+            jc="space-between"
             paddingVertical="$2"
             borderBottomWidth={1}
             borderColor="$borderColor"
-            alignItems="center"
+            ai="center"
         >
             <Text flex={1} fow="bold">
                 {item.baseProduct.name} ({item.quantity})

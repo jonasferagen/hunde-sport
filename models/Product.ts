@@ -51,6 +51,9 @@ export class Product {
   parent_id: number;
 
   constructor(data: ProductData) {
+    if (this.constructor === Product && data.type === 'variation') {
+      throw new Error('Cannot construct Product with type "variation". Use ProductVariation instead.');
+    }
 
     this.id = data.id;
     this.name = data.name;
