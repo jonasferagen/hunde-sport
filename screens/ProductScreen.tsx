@@ -5,7 +5,7 @@ import { ProductImageGallery } from '@/components/features/product/image/Product
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
-import { ProductImageProvider, ProductProvider, useProductContext } from '@/contexts';
+import { ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -40,7 +40,7 @@ const ProductScreenContent = () => {
   const { product } = useProductContext();
 
   return (
-    <ProductImageProvider>
+    <>
       <PageSection scrollable>
         <ProductImage />
         <PageContent>
@@ -55,11 +55,10 @@ const ProductScreenContent = () => {
         <PageContent theme="secondary" title="Produktinformasjon">
           <SizableText size="$3">{product.description || 'Ingen beskrivelse tilgjengelig'}</SizableText>
         </PageContent>
-
         <PageContent title="Kategorier">
           <CategoryChips categories={product.categories} />
         </PageContent>
       </PageSection>
-    </ProductImageProvider>
+    </>
   );
 };

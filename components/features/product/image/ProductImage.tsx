@@ -1,6 +1,6 @@
-import { useProductContext, useProductImage } from '@/contexts';
+import { useProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
-
+import { Galeria } from '@nandorojo/galeria';
 import React from 'react';
 import { Image, YStack } from 'tamagui';
 
@@ -8,7 +8,6 @@ const IMAGE_HEIGHT = 300;
 
 export const ProductImage = () => {
     const { product, productVariation } = useProductContext();
-    const { openImageViewer } = useProductImage();
     const activeProduct = productVariation || product;
 
     if (!activeProduct?.image) {
@@ -24,9 +23,12 @@ export const ProductImage = () => {
             overflow="hidden"
             borderBottomWidth={1}
             borderColor="$borderColor"
-            onPress={() => openImageViewer(0)}
         >
-            <Image source={{ uri: imageUrl }} style={{ height: '100%', width: '100%' }} />
+            <Galeria urls={[imageUrl!]}>
+                <Galeria.Image>
+                    <Image source={{ uri: imageUrl }} style={{ height: '100%', width: '100%' }} />
+                </Galeria.Image>
+            </Galeria>
         </YStack>
     );
 };

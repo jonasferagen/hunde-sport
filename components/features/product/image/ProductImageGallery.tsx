@@ -1,36 +1,27 @@
-import { useProductContext, useProductImage } from '@/contexts';
-
+import { useProductContext } from '@/contexts';
+import { Galeria } from '@nandorojo/galeria';
 import React from 'react';
-import { Image, XStack, YStack } from 'tamagui';
-
+import { Image, YStack } from 'tamagui';
 
 export const ProductImageGallery = () => {
     const { product } = useProductContext();
-    const { openImageViewer } = useProductImage();
 
-    if (!product.images || product.images.length <= 1) {
-        console.log("No images for product", product.name)
-        return <></>;
+    if (product.images.length <= 1) {
+        return null;
     }
 
-    const galleryImages = product.images.slice(1);
+    const urls = product.images.map((image) => image.src);
 
-    return (
-        <XStack gap="$2">
-            {galleryImages.map((image, index) => (
-                <YStack
-                    key={'imageGalleryItem-' + index}
-                    width={100}
-                    height={100}
-                    borderRadius="$2"
-                    borderWidth={1}
-                    borderColor="$borderColor"
-                    overflow="hidden"
-                    onPress={() => openImageViewer(index + 1)}
-                >
-                    <Image source={{ uri: image.src }} style={{ height: '100%', width: '100%' }} />
-                </YStack>
+
+
+    return <YStack borderColor="red" borderWidth={1} height={200} flex={1}>
+        <Galeria urls={urls}>
+            {urls.map((url, index) => (
+                <Galeria.Image index={index} key={url + index}>
+                    <Image source={{ uri: url }} style={{ height: '100%', width: '100%' }} />
+                </Galeria.Image>
             ))}
-        </XStack>
-    );
+        </Galeria>
+    </YStack>;
+
 };
