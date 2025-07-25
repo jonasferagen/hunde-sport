@@ -4,7 +4,7 @@ import { ProductVariation } from '@/models/ProductVariation';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { ProductVariationSelectionProvider } from './ProductVariationSelectionContext';
 
-export const calculatePriceRange = (productVariations: ProductVariation[]): { min: number; max: number } => {
+export const calculatePriceRange = (productVariations: ProductVariation[]): { min: number; max: number } | undefined => {
     if (!productVariations || productVariations.length === 0) {
         return { min: 0, max: 0 };
     }
@@ -22,29 +22,13 @@ interface ProductContextType {
     productVariation?: ProductVariation | null;
     setProductVariation: (variation: ProductVariation | null) => void;
     productVariations: ProductVariation[];
-    priceRange: { min: number; max: number };
-    // handleOptionSelect: (attributeId: number, option: string) => void;
-    // availableOptions: Map<number, Map<string, ProductVariation[]>>;
-    // selectedOptions: Record<number, string>;
-    // productVariationAttributes: ProductAttribute[];
+    priceRange: { min: number; max: number } | undefined;
     isLoading: boolean;
     isProductVariationsLoading: boolean;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
-/*
-const getOptionsFromVariation = (variation: ProductVariation | null | undefined) => {
-    if (!variation || !variation.attributes) return {};
-    return variation.attributes.reduce(
-        (acc, attr) => {
-            if (attr.id && attr.option) {
-                acc[attr.id] = attr.option;
-            }
-            return acc;
-        },
-        {} as Record<number, string>
-    );
-}; */
+
 
 export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation | null; children: React.ReactNode }> = ({
     product,
@@ -60,55 +44,6 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         hasNextPage
     } = useProductVariations(product.id, { enabled: product.type === 'variable', autoload: true });
 
-    /*
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariation(initialProductVariation));
-
-    useEffect(() => {
-        setSelectedOptions(getOptionsFromVariation(initialProductVariation));
-    }, [initialProductVariation]);
-
-    const productVariationAttributes = useMemo(() => {
-        if (!isVariable) return [];
-        return product.getVariationAttributes();
-    }, [product, isVariable]);
-
-    const productVariation = useMemo(() => {
-        if (!isVariable || !productVariations || Object.keys(selectedOptions).length < productVariationAttributes.length) {
-            return null;
-        }
-        return product.findVariant(productVariations, selectedOptions) || null;
-    }, [selectedOptions, productVariations, product, isVariable, productVariationAttributes]);
-
-    const handleOptionSelect = (attributeId: number, optionName: string) => {
-        setSelectedOptions(prev => {
-            const newOptions = { ...prev };
-            const currentOption = newOptions[attributeId];
-
-            // Deselect if the same option is clicked again
-            if (currentOption === optionName) {
-                delete newOptions[attributeId];
-            } else {
-                newOptions[attributeId] = optionName;
-            }
-
-            // Filter out attributes that are no longer valid
-            const validAttributes = product.getAvailableOptions(productVariations || [], newOptions);
-            const finalOptions: Record<number, string> = {};
-            for (const id in newOptions) {
-                if (validAttributes.has(Number(id))) {
-                    finalOptions[id] = newOptions[id];
-                }
-            }
-
-            return finalOptions;
-        });
-    };
-/*
-    const availableOptions = useMemo(() => {
-        if (!isVariable || !productVariations) return new Map();
-        return product.getAvailableOptions(productVariations, selectedOptions);
-    }, [product, productVariations, selectedOptions, isVariable]);
-*/
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 
     const value = {
@@ -117,10 +52,6 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         setProductVariation,
         productVariations: productVariations || [],
         priceRange,
-        //   handleOptionSelect,
-        //availableOptions,
-        //  selectedOptions,
-        // productVariationAttributes,
         isLoading,
         isProductVariationsLoading: isLoading || isFetchingNextPage || hasNextPage,
     };
