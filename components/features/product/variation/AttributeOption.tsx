@@ -15,7 +15,7 @@ interface AttributeOptionProps {
 const getThemeName = (name: string): ThemeName => name as ThemeName;
 
 export const AttributeOption = ({ item: option, attribute }: AttributeOptionProps) => {
-    const { handleOptionSelect, selectedOptions, availableOptions, } = useProductVariationContext();
+    const { handleOptionSelect, selectedOptions, availableOptions } = useProductVariationContext();
 
     const matchingVariants = availableOptions.get(attribute.id)?.get(option.name!)
     const singleVariant = matchingVariants && matchingVariants.length === 1 ? matchingVariants[0] : null;
