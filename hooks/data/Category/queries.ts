@@ -17,6 +17,5 @@ export const categoryQueryOptions = (categoryId: number) =>
     queryOptions({
         queryKey: ['categoryId', categoryId],
         queryFn: () => fetchCategoryById(categoryId),
-        enabled: !!categoryId,
     });
 

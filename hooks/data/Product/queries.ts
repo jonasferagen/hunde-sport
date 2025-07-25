@@ -12,7 +12,6 @@ export const productQueryOptions = (productId: number) =>
     queryOptions({
         queryKey: ['product', productId],
         queryFn: () => fetchProduct(productId),
-        enabled: !!productId,
     });
 
 export const productsQueryOptions = (query: ProductListParams) => {
@@ -24,7 +23,6 @@ export const productsQueryOptions = (query: ProductListParams) => {
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
         },
-        enabled: true,
     });
 }
 
@@ -36,6 +34,5 @@ export const productVariationsQueryOptions = (productId: number) => {
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
         },
-        enabled: !!productId,
     });
 }

@@ -11,10 +11,7 @@ export const useProduct = (id: number) => {
 };
 
 export const useProductVariations = (productId: number, options?: InfiniteListQueryOptions) => {
-    if (productId === 248212) {
-        console.log("useProductVariations should not be called for ", productId);
 
-    }
     return useInfiniteListQuery(productVariationsQueryOptions(productId), options);
 }
 

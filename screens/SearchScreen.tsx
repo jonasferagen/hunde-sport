@@ -33,7 +33,6 @@ export const SearchScreen = () => {
 
     const isWaiting = initialQuery !== liveQuery;
 
-    const { items: products, isLoading, fetchNextPage, isFetchingNextPage, isEnabled } = useProductsBySearch(initialQuery || '');
 
     return (
         <PageView>
@@ -56,25 +55,31 @@ export const SearchScreen = () => {
             </PageHeader>
             <PageSection style={{ flex: 1 }}>
                 <PageContent style={{ flex: 1 }} paddingHorizontal="none" paddingVertical="none" >
-
-                    {isLoading ? (
-                        <YStack flex={1} ai="center" jc="center"><Spinner size="large" /></YStack>
-                    ) : (
-                        products.length === 0 && initialQuery ? (
-                            <YStack flex={1} ai="center" jc="center">
-                                <SizableText>Ingen resultater funnet for "{initialQuery}"</SizableText>
-                            </YStack>
-                        ) : (
-                            <ProductList
-                                products={products}
-                                loadMore={fetchNextPage}
-                                loadingMore={isFetchingNextPage}
-                            />
-                        )
-                    )}
-
+                    {initialQuery && <SearchResults query={initialQuery} />}
                 </PageContent>
             </PageSection>
         </PageView>
+    );
+};
+
+
+const SearchResults = ({ query }: { query: string }) => {
+    const { items: products, isLoading, fetchNextPage, isFetchingNextPage } = useProductsBySearch(query);
+    return (
+        isLoading ? (
+            <YStack flex={1} ai="center" jc="center"><Spinner size="large" /></YStack>
+        ) : (
+            products.length === 0 && query ? (
+                <YStack flex={1} ai="center" jc="center">
+                    <SizableText>Ingen resultater funnet for "{query}"</SizableText>
+                </YStack>
+            ) : (
+                <ProductList
+                    products={products}
+                    loadMore={fetchNextPage}
+                    loadingMore={isFetchingNextPage}
+                />
+            )
+        )
     );
 };
