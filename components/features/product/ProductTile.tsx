@@ -5,10 +5,10 @@ import { ProductProvider, useProductContext } from '@/contexts';
 import { Product, ThemeVariant } from "@/types";
 import React from 'react';
 import { DimensionValue } from 'react-native';
-import { PriceTag } from '../../features/product/display/PriceTag';
+import { PriceTag } from './display/PriceTag';
 
-const PRODUCT_TILE_WIDTH: DimensionValue = 200;
-const PRODUCT_TILE_HEIGHT: DimensionValue = 150;
+export const PRODUCT_TILE_WIDTH: DimensionValue = 200;
+export const PRODUCT_TILE_HEIGHT: DimensionValue = 150;
 
 interface ProductTileProps {
     product: Product;
