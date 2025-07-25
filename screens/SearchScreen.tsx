@@ -53,8 +53,8 @@ export const SearchScreen = () => {
                 </SizableText>
 
             </PageHeader>
-            <PageSection style={{ flex: 1 }}>
-                <PageContent style={{ flex: 1 }} paddingHorizontal="none" paddingVertical="none" >
+            <PageSection flex={1}>
+                <PageContent flex={1} paddingHorizontal="none" paddingVertical="none" >
                     {initialQuery && <SearchResults query={initialQuery} />}
                 </PageContent>
             </PageSection>

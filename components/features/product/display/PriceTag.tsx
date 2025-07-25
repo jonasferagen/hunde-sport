@@ -1,8 +1,9 @@
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useProductContext } from '@/contexts';
 import { Product, ProductVariation } from '@/types';
 import { formatPrice, formatPriceRange } from '@/utils/helpers';
 import React, { JSX } from 'react';
-import { FontSizeTokens, SizableText, Spinner, XStack } from 'tamagui';
+import { FontSizeTokens, SizableText, XStack } from 'tamagui';
 
 interface PriceProps {
     product: Product | ProductVariation;
@@ -39,7 +40,7 @@ export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
 
 
     if (isLoading) {
-        return <Spinner alignSelf='flex-end' size="small" />;
+        return <ThemedSpinner alignSelf='flex-end' size="small" />;
     }
 
     if (productVariation) {

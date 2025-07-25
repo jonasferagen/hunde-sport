@@ -24,8 +24,8 @@ export const ProductScreen = () => {
     return <LoadingScreen />;
   }
 
-  if (!product) {
-    return <NotFoundScreen message="Beklager, dette produktet ble ikke funnet" />;
+  if (!product || Math.random() < .99) {
+    return <NotFoundScreen message="Beklager, produktet ble ikke funnet" />;
   }
 
   return (
