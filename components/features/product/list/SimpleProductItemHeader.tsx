@@ -4,15 +4,15 @@ import React, { JSX, ReactNode } from 'react';
 import { Image, XStack, YStack } from 'tamagui';
 import { ProductTitle } from '../display/ProductTitle';
 
-interface SimpleItemHeaderProps {
+interface SimpleProductItemHeaderProps {
     children?: ReactNode;
 }
 
 const IMAGE_SIZE = 80;
 
-export const SimpleItemHeader = ({ children }: SimpleItemHeaderProps): JSX.Element => {
-    const { product, productVariant } = useProductContext();
-    const activeProduct = productVariant || product;
+export const SimpleProductItemHeader = ({ children }: SimpleProductItemHeaderProps): JSX.Element => {
+    const { product, productVariation } = useProductContext();
+    const activeProduct = productVariation || product;
 
     if (!activeProduct) {
         return <XStack />;

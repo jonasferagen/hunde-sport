@@ -1,50 +1,23 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useProductContext } from '@/contexts';
-import { Product, ProductVariation } from '@/types';
-import { formatPrice, formatPriceRange } from '@/utils/helpers';
+import { formatPriceRange } from '@/utils/helpers';
 import React, { JSX } from 'react';
-import { FontSizeTokens, SizableText, XStack } from 'tamagui';
-
-interface PriceProps {
-    product: Product | ProductVariation;
-    fontSize: FontSizeTokens;
-}
-
-const Price = ({ product, fontSize }: PriceProps) => {
-    if (product.on_sale) {
-        return (
-            <XStack ai="center">
-                <SizableText textDecorationLine="line-through" mr="$2" opacity={0.7} fontSize={fontSize}>
-                    {formatPrice(product.regular_price)}
-                </SizableText>
-                <SizableText fontWeight="bold" fontSize={fontSize}>
-                    {formatPrice(product.sale_price)}
-                </SizableText>
-            </XStack>
-        );
-    }
-
-    return (
-        <SizableText fontWeight="bold" fontSize={fontSize}>
-            {formatPrice(product.price)}
-        </SizableText>
-    );
-};
+import { FontSizeTokens, SizableText } from 'tamagui';
+import { Price } from './Price';
 
 interface PriceTagProps {
     fontSize?: FontSizeTokens;
 }
 
 export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
-    const { product, isLoading, priceRange, productVariation } = useProductContext();
+    const { priceRange, productVariation, isProductVariationsLoading } = useProductContext();
 
-
-    if (isLoading) {
+    if (isProductVariationsLoading) {
         return <ThemedSpinner alignSelf='flex-end' size="small" />;
     }
 
     if (productVariation) {
-        return <Price product={productVariation} fontSize={fontSize} />;
+        return <Price fontSize={fontSize} />;
     }
 
     if (priceRange) {
@@ -55,5 +28,5 @@ export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
         );
     }
 
-    return <Price product={product} fontSize={fontSize} />;
+    return <Price fontSize={fontSize} />;
 };

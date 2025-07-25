@@ -1,12 +1,11 @@
 import { useProductContext } from '@/contexts';
 import { formatPrice } from '@/utils/helpers';
-import { AlertCircle, ChevronsDown } from '@tamagui/lucide-icons';
+import { ChevronsDown } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
-import { QuantityControl } from '../../shoppingCart/QuantityControl';
-import { ProductInfo } from '../display/ProductInfo';
 import { ProductVariations } from '../variation/ProductVariations';
-interface ItemActionsProps {
+import { QuantityControl } from './QuantityControl';
+interface ProductItemActionsProps {
     isExpanded: boolean;
     handleExpand: () => void;
 }
@@ -14,17 +13,13 @@ interface ItemActionsProps {
 const VariantSelectionText = () => {
     const { product, productVariation } = useProductContext();
 
-    if (!product || !productVariation) {
-        return null;
-    }
 
-    if (productVariation.type === 'variation') {
+    if (productVariation) {
         return (
             <>
-                <SizableText color="$color">
-                    {product.name} - <SizableText fontWeight="bold" color="$color">{productVariation.name.trim()}</SizableText>
-                </SizableText>
-                <SizableText fontWeight="bold" color="$color">
+                <SizableText fontSize="$4" fontWeight='bold' color="$color" gap="$5">
+                    {product.name}
+                    - {productVariation.name.trim()}
                     {formatPrice(productVariation.price)}
                 </SizableText>
             </>
@@ -32,16 +27,16 @@ const VariantSelectionText = () => {
     }
 
     return (
-        <SizableText color="$gray10">
+        <SizableText color="red">
             Velg variant
         </SizableText>
     );
 };
 
-export const ItemActions = ({
+export const ProductItemActions = ({
     isExpanded,
     handleExpand
-}: ItemActionsProps): JSX.Element => {
+}: ProductItemActionsProps): JSX.Element => {
 
     const { product, productVariation } = useProductContext();
     const activeProduct = productVariation || product;
@@ -51,7 +46,7 @@ export const ItemActions = ({
     }
 
     return (
-        <YStack theme='secondary' backgroundColor="$background" padding="$2">
+        <YStack backgroundColor="$background" padding="$2">
             <XStack jc="space-between" ai="center">
                 <XStack gap="$3" ai="center">
                     {product.type === 'variable' && (
@@ -62,18 +57,8 @@ export const ItemActions = ({
                         </XStack>
                     )}
                 </XStack>
-                {productVariation && (
-                    <ProductInfo product={activeProduct} />
-                )}
                 <XStack gap="$2" ai='center'>
-                    {activeProduct.stock_status === 'outofstock' ? (
-                        <XStack gap="$1" ai="center">
-                            <AlertCircle size="$3" color="red" />
-                            <SizableText color="red">Ikke på lager</SizableText>
-                        </XStack>
-                    ) : (
-                        <QuantityControl product={activeProduct} productVariation={productVariation} />
-                    )}
+                    <QuantityControl product={activeProduct} productVariation={productVariation ?? undefined} />
                 </XStack>
             </XStack>
             {isExpanded && (

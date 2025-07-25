@@ -1,17 +1,49 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { BuyProduct } from '@/components/features/product/BuyProduct';
-import { ProductImage } from '@/components/features/product/image/ProductImage';
-import { ProductImageGallery } from '@/components/features/product/image/ProductImageGallery';
+import { PriceTag } from '@/components/features/product/display/PriceTag';
+import { ProductStatus } from '@/components/features/product/display/ProductStatus';
+import { ProductTitle } from '@/components/features/product/display/ProductTitle';
+import { ProductImage } from '@/components/features/product/ProductImage';
+import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
+import { ProductVariations } from '@/components/features/product/variation/ProductVariations';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
-import { ProductProvider, useProductContext } from '@/contexts';
+import { ProductProvider, useProductContext, useShoppingCartContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
+import { ShoppingCart } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { SizableText } from 'tamagui';
+import { Button, SizableText, XStack } from 'tamagui';
+
+const BuyProduct = () => {
+    const { product, productVariation } = useProductContext();
+    const { increaseQuantity, purchaseInfo } = useShoppingCartContext();
+
+    const activeProduct = productVariation || product;
+
+    const { status, msg } = purchaseInfo(activeProduct);
+
+    return (
+        <>
+            <XStack ai="center" jc="space-between" mb="$3">
+                <ProductTitle />
+                <PriceTag fontSize="$6" />
+            </XStack>
+            <ProductVariations />
+            <SizableText size="$3">{product.short_description}</SizableText>
+            <ProductStatus />
+            <Button
+                icon={<ShoppingCart />}
+                onPress={() => increaseQuantity(activeProduct, product)}
+                disabled={status !== 'ok'}
+            >
+                {msg}
+            </Button>
+        </>
+    );
+};
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();

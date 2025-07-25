@@ -4,16 +4,12 @@ import { ProductAttribute } from '@/models/ProductAttribute';
 import { ProductVariation } from '@/models/ProductVariation';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-export const calculatePriceRange = (productVariations: Product[] | undefined | null): { min: number; max: number } | null => {
+export const calculatePriceRange = (productVariations: ProductVariation[]): { min: number; max: number } => {
     if (!productVariations || productVariations.length === 0) {
-        return null;
+        return { min: 0, max: 0 };
     }
 
     const prices = productVariations.map((p) => p.price).filter((p) => p > 0);
-
-    if (prices.length === 0) {
-        return null;
-    }
 
     const min = Math.min(...prices);
     const max = Math.max(...prices);
@@ -25,7 +21,7 @@ interface ProductContextType {
     product: Product;
     productVariation?: ProductVariation | null;
     productVariations: ProductVariation[];
-    priceRange: { min: number; max: number } | null;
+    priceRange: { min: number; max: number };
     handleOptionSelect: (attributeId: number, option: string) => void;
     availableOptions: Map<number, Map<string, ProductVariation[]>>;
     selectedOptions: Record<number, string>;

@@ -2,10 +2,8 @@ import { ListItem } from '@/components/ui/list/ListItem';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { Product } from '@/models/Product';
 import React from 'react';
-import { ItemActions } from './list/ItemActions';
-import { ItemHeader } from './list/ItemHeader';
-
-
+import { ProductItemActions } from './list/ProductItemActions';
+import { ProductItemHeader } from './list/ProductItemHeader';
 
 interface ProductListItemProps {
     product: Product;
@@ -23,18 +21,14 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 }) => {
     const { product } = useProductContext();
 
-    if (!product) {
-        return null;
-    }
-
     const handleExpand = () => {
         onPress(product.id);
     };
 
     return (
         <ListItem
-            header={<ItemHeader categoryId={categoryId} />}
-            actions={<ItemActions isExpanded={isExpanded} handleExpand={handleExpand} />}
+            header={<ProductItemHeader categoryId={categoryId} />}
+            actions={<ProductItemActions isExpanded={isExpanded} handleExpand={handleExpand} />}
         />
     );
 };
