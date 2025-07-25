@@ -1,5 +1,4 @@
 import { Product } from "@/models/Product";
-import { ColorValue } from "react-native";
 
 // Re-export models
 export * from '@/models/Category';
@@ -37,15 +36,6 @@ export interface ShoppingCartItem {
   selectedVariant: Product | undefined;
 }
 
-export interface IStyleVariant {
-  readonly backgroundColor: string;
-  readonly text: {
-    readonly primary: string;
-    readonly secondary: string;
-  };
-  readonly borderColor: string;
-  getGradient(amounts?: number[]): [ColorValue, ColorValue];
-}
 
 // Defines the available theme variants for components
 export type ThemeVariant = 'primary' | 'secondary' | 'accent';
