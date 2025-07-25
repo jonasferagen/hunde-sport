@@ -7,22 +7,25 @@ import { PageContent, PageHeader, PageSection, PageView } from '@/components/lay
 import { Breadcrumbs } from '@/components/ui';
 import { ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
+import { LoadingScreen } from '@/screens/misc/LoadingScreen';
+import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { SizableText, Spinner } from 'tamagui';
+import { SizableText } from 'tamagui';
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
-  const { data: product, isLoading } = useProduct(Number(id));
+  const productId = Number(id);
+  const { data: product, isLoading } = useProduct(productId);
 
   const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product?.categories[0]?.id;
 
   if (isLoading) {
-    return <Spinner size="large" />;
+    return <LoadingScreen />;
   }
 
   if (!product) {
-    return <SizableText>Produktet ble ikke funnet.</SizableText>;
+    return <NotFoundScreen message="Beklager, dette produktet ble ikke funnet" />;
   }
 
   return (

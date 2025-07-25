@@ -46,7 +46,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                     <H3 mb="$4">HundeSport.no</H3>
                     <DrawerItem
                         label="Hjem"
-                        icon={({ color }) => <Home color={isHomeActive ? 'red' : 'blue'} />}
+                        icon={({ color }) => <Home />}
                         focused={isHomeActive}
                         onPress={handleHomeNavigation}
                         activeTintColor="$color"
@@ -54,7 +54,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                         activeBackgroundColor="$backgroundHover"
                     />
                     <DrawerItem
-                        icon={({ color }) => <ShoppingCart color={isCartActive ? 'red' : 'blue'} />}
+                        icon={({ color }) => <ShoppingCart />}
                         focused={isCartActive}
                         onPress={handleCartNavigation}
                         activeTintColor="$color"

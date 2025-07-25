@@ -5,12 +5,10 @@ import { AttributeSelector } from './AttributeSelector';
 
 export const ProductVariations = (): JSX.Element | null => {
     const {
-        variationAttributes,
-        product
+        productVariationAttributes: variationAttributes,
     } = useProductContext();
 
     if (!variationAttributes || variationAttributes.length === 0) {
-        console.error("No variation attributes found! Product: ", product.id + " " + product.name);
         return null;
     }
 

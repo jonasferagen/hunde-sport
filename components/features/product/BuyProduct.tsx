@@ -8,23 +8,22 @@ import { ProductTitle } from './display/ProductTitle';
 import { ProductVariations } from './variation/ProductVariations';
 
 export const BuyProduct = () => {
-    const { product, productVariant } = useProductContext();
+    const { product, productVariation } = useProductContext();
     const { increaseQuantity, purchaseInfo } = useShoppingCartContext();
 
-    const activeProduct = productVariant || product;
+    const activeProduct = productVariation || product;
 
     const { status, msg } = purchaseInfo(activeProduct);
 
     return (
         <>
-            <XStack alignItems="center" justifyContent="space-between">
+            <XStack ai="center" jc="space-between" mb="$3">
                 <ProductTitle />
                 <PriceTag fontSize="$6" />
             </XStack>
             <ProductVariations />
             <SizableText size="$3">{product.short_description}</SizableText>
             <ProductStatus />
-
             <Button
                 icon={<ShoppingCart />}
                 onPress={() => increaseQuantity(activeProduct, product)}

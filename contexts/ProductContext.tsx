@@ -29,7 +29,7 @@ interface ProductContextType {
     handleOptionSelect: (attributeId: number, option: string) => void;
     availableOptions: Map<number, Map<string, ProductVariation[]>>;
     selectedOptions: Record<number, string>;
-    variationAttributes: ProductAttribute[];
+    productVariationAttributes: ProductAttribute[];
     isLoading: boolean;
     isProductVariationsLoading: boolean;
 }
@@ -64,17 +64,17 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         setSelectedOptions(getOptionsFromVariation(initialProductVariant));
     }, [initialProductVariant]);
 
-    const variationAttributes = useMemo(() => {
+    const productVariationAttributes = useMemo(() => {
         if (!isVariable) return [];
         return product.getVariationAttributes();
     }, [product, isVariable]);
 
     const productVariation = useMemo(() => {
-        if (!isVariable || !productVariations || Object.keys(selectedOptions).length < variationAttributes.length) {
+        if (!isVariable || !productVariations || Object.keys(selectedOptions).length < productVariationAttributes.length) {
             return null;
         }
         return product.findVariant(productVariations, selectedOptions) || null;
-    }, [selectedOptions, productVariations, product, isVariable, variationAttributes]);
+    }, [selectedOptions, productVariations, product, isVariable, productVariationAttributes]);
 
     const handleOptionSelect = (attributeId: number, optionName: string) => {
         setSelectedOptions(prev => {
@@ -116,7 +116,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         handleOptionSelect,
         availableOptions,
         selectedOptions,
-        variationAttributes,
+        productVariationAttributes,
         isLoading,
         isProductVariationsLoading: isFetchingNextPage || hasNextPage,
     };

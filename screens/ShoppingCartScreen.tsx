@@ -56,7 +56,7 @@ export const ShoppingCartScreen = () => {
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
                     <FlatList
                         data={items}
-                        keyExtractor={(item) => item.baseProduct.id.toString() + (item.selectedVariant?.id?.toString() || '')}
+                        keyExtractor={(item) => item.product.id.toString() + (item.productVariation?.id?.toString() || '')}
                         renderItem={renderItem}
                         ListEmptyComponent={
                             <SizableText textAlign="center" marginTop="$4" color="$color.secondary">
