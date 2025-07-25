@@ -47,18 +47,18 @@ const getOptionsFromVariation = (variation: ProductVariation | null | undefined)
 
 export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation | null; children: React.ReactNode }> = ({
     product,
-    productVariation: initialProductVariant,
+    productVariation: initialProductVariation,
     children,
 }) => {
     const isVariable = product.type === 'variable';
 
     const { items: productVariations, isLoading, isFetchingNextPage, hasNextPage } = useProductVariations(product.id, { enabled: isVariable, autoload: true });
 
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariation(initialProductVariant));
+    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariation(initialProductVariation));
 
     useEffect(() => {
-        setSelectedOptions(getOptionsFromVariation(initialProductVariant));
-    }, [initialProductVariant]);
+        setSelectedOptions(getOptionsFromVariation(initialProductVariation));
+    }, [initialProductVariation]);
 
     const productVariationAttributes = useMemo(() => {
         if (!isVariable) return [];
@@ -114,7 +114,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         selectedOptions,
         productVariationAttributes,
         isLoading,
-        isProductVariationsLoading: isFetchingNextPage || hasNextPage,
+        isProductVariationsLoading: isLoading || isFetchingNextPage || hasNextPage,
     };
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;

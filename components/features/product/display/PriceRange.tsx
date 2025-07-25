@@ -1,20 +1,18 @@
-import { calculatePriceRange } from '@/contexts/ProductContext';
-import { ProductVariation } from '@/types';
 import { formatPriceRange } from '@/utils/helpers';
 import { FontSizeTokens, SizableText } from 'tamagui';
-export interface PriceProps {
-    productVariationsOverride?: ProductVariation[];
-    fontSize: FontSizeTokens;
+
+import { ProductPriceRange } from '@/types';
+
+interface PriceRangeProps {
+    productPriceRange: ProductPriceRange;
+    fontSize?: FontSizeTokens;
 }
 
-export const PriceRange = ({ productVariationsOverride, fontSize }: PriceProps) => {
+export const PriceRange = ({ productPriceRange, fontSize = "$3" }: PriceRangeProps) => {
 
-    const productVariations = productVariationsOverride || [];
-    const priceRange = calculatePriceRange(productVariations);
-    const formattedPriceRange = formatPriceRange(priceRange!);
     return (
         <SizableText fontWeight="bold" fontSize={fontSize}>
-            {formattedPriceRange}
+            {formatPriceRange(productPriceRange!)}
         </SizableText>
     );
 };

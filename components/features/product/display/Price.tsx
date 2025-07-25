@@ -1,16 +1,13 @@
-import { useProductContext } from '@/contexts';
-import { ProductVariation } from '@/types';
+import { Product, ProductVariation } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { FontSizeTokens, SizableText, XStack } from 'tamagui';
 export interface PriceProps {
     fontSize: FontSizeTokens;
-    productVariationOverride?: ProductVariation;
+    activeProduct: Product | ProductVariation;
 }
 
-export const Price = ({ fontSize, productVariationOverride }: PriceProps) => {
-    const { product, productVariation } = useProductContext();
+export const Price = ({ fontSize = "$3", activeProduct }: PriceProps) => {
 
-    const activeProduct = productVariationOverride || productVariation || product;
     if (activeProduct.on_sale) {
         return (
             <XStack ai="center">

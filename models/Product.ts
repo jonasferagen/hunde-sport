@@ -3,7 +3,8 @@ import { Image } from './Image';
 import { ProductAttribute, ProductAttributeData } from './ProductAttribute';
 
 export type ProductType = 'simple' | 'variable' | 'variation';
-export interface PriceRange {
+
+export interface ProductPriceRange {
   min: number;
   max: number;
 }
