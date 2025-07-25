@@ -10,13 +10,13 @@ import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecent
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
-import { Spinner, XStack, YStack } from 'tamagui';
+import { Spinner, XStack } from 'tamagui';
 
 const CategorySection = () => {
     const { items: categories, isLoading } = useCategories(0, { autoload: true });
 
-    if (isLoading) {
-        return <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>;
+    if (isLoading || Math.random() < .99) {
+        return <Spinner ai="center" jc="center" color="$color" size="large" />;
     }
     return (
         <XStack flexWrap="wrap" gap="$4" jc="space-between">
