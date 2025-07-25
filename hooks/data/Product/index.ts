@@ -10,10 +10,8 @@ export const useProduct = (id: number) => {
     return useQuery(productQueryOptions(id));
 };
 
-export const useProductVariations = (productId: number, options?: InfiniteListQueryOptions) => {
-
-    return useInfiniteListQuery(productVariationsQueryOptions(productId), options);
-}
+export const useProductVariations = (productId: number, options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productVariationsQueryOptions(productId), options);
 
 // Specific hooks for different product lists
 export const useFeaturedProducts = (options?: InfiniteListQueryOptions) =>
