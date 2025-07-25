@@ -36,7 +36,7 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader title='Produktsøk'>
+            <PageHeader>
 
                 <SearchBar
                     ref={searchInputRef}

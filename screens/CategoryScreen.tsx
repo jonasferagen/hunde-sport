@@ -3,7 +3,6 @@ import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-
 import { useCategories, useCategory } from '@/hooks/data/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
