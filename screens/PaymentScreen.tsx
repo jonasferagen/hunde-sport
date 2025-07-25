@@ -1,10 +1,11 @@
 import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
-import { checkoutFlow, routes } from '@/config/routes';
+import { checkoutFlow } from '@/config/routes';
 import { useOrderContext } from '@/contexts/OrderContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { OrderLineItem } from '@/models/Order';
 import { Stack, useRouter } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import React, { useEffect, useState } from 'react';
 import { Button, SizableText } from 'tamagui';
 
@@ -38,9 +39,11 @@ const PaymentScreen = () => {
 
     const handlePlaceOrder = async () => {
         setIsPlacingOrder(true);
-        const success = await placeOrder();
-        if (success) {
-            router.push(routes.orderStatus());
+        const paymentUrl = await placeOrder();
+        if (paymentUrl) {
+            await WebBrowser.openBrowserAsync(paymentUrl);
+            // Optionally, you can clear the cart or navigate the user
+            // after they return from the web browser.
         }
         setIsPlacingOrder(false);
     };

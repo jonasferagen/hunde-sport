@@ -15,6 +15,6 @@ export async function postOrder(order: Order) {
         throw new Error('Failed to post order.');
     }
 
-    console.log('API Response:', data);
+    console.log('API Response:', JSON.stringify(data, null, 2));
     return data;
 }

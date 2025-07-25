@@ -5,7 +5,7 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 interface OrderContextType {
     order: Order;
     updateOrder: (data: Partial<Order>) => void;
-    placeOrder: () => Promise<boolean>;
+    placeOrder: () => Promise<string | null>;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -22,15 +22,15 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             try {
                 console.log('Placing order from context:', JSON.stringify(order, null, 2));
                 const response = await postOrder(order);
-                console.log('Order placed successfully. API Response:', response);
-                return true;
+                console.log('Order placed successfully. API Response:', JSON.stringify(response, null, 2));
+                return response.payment_url || null;
             } catch (error) {
                 console.error('Failed to place order:', error);
-                return false;
+                return null;
             }
         } else {
             console.error('Attempted to place an invalid order from context:', order);
-            return false;
+            return null;
         }
     }, [order]);
 
