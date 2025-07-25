@@ -46,7 +46,7 @@ const ProductScreenContent = () => {
         <PageContent>
           <BuyProduct />
         </PageContent>
-        <PageContent title="Flere bilder">
+        <PageContent title="Produktbilder" style={{ flex: 1 }}>
           <ProductImageGallery />
         </PageContent>
         <PageContent theme="primary" title="Relaterte produkter">
