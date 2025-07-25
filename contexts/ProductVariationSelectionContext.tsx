@@ -2,7 +2,7 @@ import { Product } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { ProductVariation } from '@/models/ProductVariation';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-
+import { useProductContext } from './ProductContext';
 
 interface ProductVariationContextType {
     handleOptionSelect: (attributeId: number, option: string) => void;
@@ -11,7 +11,7 @@ interface ProductVariationContextType {
     productVariationAttributes: ProductAttribute[];
 }
 
-const ProductVariationContext = createContext<ProductVariationContextType | undefined>(undefined);
+const ProductVariationSelectionContext = createContext<ProductVariationContextType | undefined>(undefined);
 
 const getOptionsFromVariation = (variation: ProductVariation | null | undefined) => {
     if (!variation || !variation.attributes) return {};
@@ -26,12 +26,13 @@ const getOptionsFromVariation = (variation: ProductVariation | null | undefined)
     );
 };
 
-export const ProductVariationProvider: React.FC<{
+export const ProductVariationSelectionProvider: React.FC<{
     product: Product;
     productVariations: ProductVariation[];
     initialProductVariation?: ProductVariation | null;
     children: React.ReactNode
 }> = ({ product, productVariations, initialProductVariation, children }) => {
+    const { setProductVariation } = useProductContext();
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => getOptionsFromVariation(initialProductVariation));
 
     const productVariationAttributes = useMemo(() => {
@@ -46,8 +47,8 @@ export const ProductVariationProvider: React.FC<{
     }, [selectedOptions, productVariations, product, productVariationAttributes]);
 
     useEffect(() => {
-        //    setProductVariation(productVariation);
-    }, [productVariation]);
+        setProductVariation(productVariation);
+    }, [productVariation, setProductVariation]);
 
     const handleOptionSelect = (attributeId: number, optionName: string) => {
         setSelectedOptions(prev => {
@@ -83,13 +84,13 @@ export const ProductVariationProvider: React.FC<{
         productVariationAttributes,
     };
 
-    return <ProductVariationContext.Provider value={value}>{children}</ProductVariationContext.Provider>;
+    return <ProductVariationSelectionContext.Provider value={value}>{children}</ProductVariationSelectionContext.Provider>;
 };
 
-export const useProductVariationContext = () => {
-    const context = useContext(ProductVariationContext);
+export const useProductVariationSelectionContext = () => {
+    const context = useContext(ProductVariationSelectionContext);
     if (context === undefined) {
-        throw new Error('useProductVariationContext must be used within a ProductVariationProvider');
+        throw new Error('useProductVariationSelectionContext must be used within a ProductVariationSelectionProvider');
     }
     return context;
 };

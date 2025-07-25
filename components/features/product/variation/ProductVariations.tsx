@@ -1,31 +1,16 @@
 import { useProductContext } from '@/contexts/ProductContext';
-import { ProductVariationProvider, useProductVariationContext } from '@/contexts/ProductVariationContext';
+import { useProductVariationSelectionContext } from '@/contexts/ProductVariationSelectionContext';
 import React from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 export const ProductVariations = () => {
-    const { product, isProductVariationsLoading, productVariations, productVariation } = useProductContext();
-
+    const { product, isProductVariationsLoading } = useProductContext();
+    const { productVariationAttributes } = useProductVariationSelectionContext();
 
     if (product.type !== 'variable' || isProductVariationsLoading) {
         return null;
     }
-
-    return (
-
-        <ProductVariationProvider product={product} productVariations={productVariations} initialProductVariation={productVariation}>
-
-            <ProductVariationsContent />
-
-        </ProductVariationProvider>
-    );
-};
-
-
-const ProductVariationsContent = () => {
-    const { productVariationAttributes } = useProductVariationContext();
-
     return (
         <XStack gap="$2" flexWrap="wrap">
             {productVariationAttributes.map((attribute) => {
@@ -44,5 +29,8 @@ const ProductVariationsContent = () => {
                 );
             })}
         </XStack>
+
+
     );
 };
+

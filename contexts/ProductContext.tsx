@@ -1,7 +1,8 @@
 import { useProductVariations } from '@/hooks/data/Product';
 import { Product } from '@/models/Product';
 import { ProductVariation } from '@/models/ProductVariation';
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import { ProductVariationSelectionProvider } from './ProductVariationSelectionContext';
 
 export const calculatePriceRange = (productVariations: ProductVariation[]): { min: number; max: number } => {
     if (!productVariations || productVariations.length === 0) {
@@ -19,6 +20,7 @@ export const calculatePriceRange = (productVariations: ProductVariation[]): { mi
 interface ProductContextType {
     product: Product;
     productVariation?: ProductVariation | null;
+    setProductVariation: (variation: ProductVariation | null) => void;
     productVariations: ProductVariation[];
     priceRange: { min: number; max: number };
     // handleOptionSelect: (attributeId: number, option: string) => void;
@@ -46,10 +48,10 @@ const getOptionsFromVariation = (variation: ProductVariation | null | undefined)
 
 export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation | null; children: React.ReactNode }> = ({
     product,
-    productVariation,
+    productVariation: initialProductVariation,
     children,
 }) => {
-
+    const [productVariation, setProductVariation] = useState<ProductVariation | null | undefined>(initialProductVariation);
 
     const {
         items: productVariations,
@@ -112,6 +114,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
     const value = {
         product,
         productVariation,
+        setProductVariation,
         productVariations: productVariations || [],
         priceRange,
         //   handleOptionSelect,
@@ -122,7 +125,17 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         isProductVariationsLoading: isLoading || isFetchingNextPage || hasNextPage,
     };
 
-    return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
+    const content = product.type === 'variable' ? (
+        <ProductVariationSelectionProvider
+            product={product}
+            productVariations={productVariations || []}
+            initialProductVariation={initialProductVariation}
+        >
+            {children}
+        </ProductVariationSelectionProvider>
+    ) : children;
+
+    return <ProductContext.Provider value={value}>{content}</ProductContext.Provider>;
 };
 
 export const useProductContext = () => {
