@@ -10,7 +10,7 @@ interface ProductItemActionsProps {
     handleExpand: () => void;
 }
 
-const VariantSelectionText = () => {
+const ProductVariationSelectionText = () => {
     const { product, productVariation } = useProductContext();
 
 
@@ -52,7 +52,7 @@ export const ProductItemActions = ({
                     {product.type === 'variable' && (
                         <XStack onPress={handleExpand} ai="center">
                             <ChevronsDown size="$4" />
-                            <VariantSelectionText />
+                            <ProductVariationSelectionText />
 
                         </XStack>
                     )}
