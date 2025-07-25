@@ -22,9 +22,10 @@ type AddressFormData = z.infer<typeof addressSchema>;
 interface AddressFormProps {
     onSubmit: (data: AddressFormData) => void;
     initialData?: Partial<AddressFormData>;
+    name: string;
 }
 
-export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
+export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) => {
     const {
         control,
         handleSubmit,
@@ -40,13 +41,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
                 <YStack gap="$4" padding="$4">
                     <XStack gap="$4">
                         <YStack flex={1} gap="$2">
-                            <Label htmlFor="first_name">Fornavn</Label>
+                            <Label htmlFor={`${name}-first_name`}>Fornavn</Label>
                             <Controller
                                 control={control}
                                 name="first_name"
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <Input
-                                        id="first_name"
+                                        id={`${name}-first_name`}
                                         onBlur={onBlur}
                                         onChangeText={onChange}
                                         value={value}
@@ -63,13 +64,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
                         </YStack>
 
                         <YStack flex={1} gap="$2">
-                            <Label htmlFor="last_name">Etternavn</Label>
+                            <Label htmlFor={`${name}-last_name`}>Etternavn</Label>
                             <Controller
                                 control={control}
                                 name="last_name"
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <Input
-                                        id="last_name"
+                                        id={`${name}-last_name`}
                                         onBlur={onBlur}
                                         onChangeText={onChange}
                                         value={value}
@@ -87,13 +88,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
                     </XStack>
 
                     <YStack gap="$2">
-                        <Label htmlFor="address_1">Adresse</Label>
+                        <Label htmlFor={`${name}-address_1`}>Adresse</Label>
                         <Controller
                             control={control}
                             name="address_1"
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <Input
-                                    id="address_1"
+                                    id={`${name}-address_1`}
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value}
@@ -110,13 +111,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
                     </YStack>
 
                     <YStack gap="$2">
-                        <Label htmlFor="address_2">Adresselinje 2 (valgfritt)</Label>
+                        <Label htmlFor={`${name}-address_2`}>Adresselinje 2 (valgfritt)</Label>
                         <Controller
                             control={control}
                             name="address_2"
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <Input
-                                    id="address_2"
+                                    id={`${name}-address_2`}
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value}
@@ -134,13 +135,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
 
                     <XStack gap="$4">
                         <YStack flex={1} gap="$2">
-                            <Label htmlFor="city">By</Label>
+                            <Label htmlFor={`${name}-city`}>By</Label>
                             <Controller
                                 control={control}
                                 name="city"
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <Input
-                                        id="city"
+                                        id={`${name}-city`}
                                         onBlur={onBlur}
                                         onChangeText={onChange}
                                         value={value}
@@ -157,13 +158,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
                         </YStack>
 
                         <YStack flex={1} gap="$2">
-                            <Label htmlFor="postcode">Postnummer</Label>
+                            <Label htmlFor={`${name}-postcode`}>Postnummer</Label>
                             <Controller
                                 control={control}
                                 name="postcode"
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <Input
-                                        id="postcode"
+                                        id={`${name}-postcode`}
                                         onBlur={onBlur}
                                         onChangeText={onChange}
                                         value={value}
@@ -182,13 +183,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
                     </XStack>
 
                     <YStack gap="$2">
-                        <Label htmlFor="email">E-post</Label>
+                        <Label htmlFor={`${name}-email`}>E-post</Label>
                         <Controller
                             control={control}
                             name="email"
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <Input
-                                    id="email"
+                                    id={`${name}-email`}
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value}
@@ -207,13 +208,13 @@ export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
                     </YStack>
 
                     <YStack gap="$2">
-                        <Label htmlFor="phone">Telefon</Label>
+                        <Label htmlFor={`${name}-phone`}>Telefon</Label>
                         <Controller
                             control={control}
                             name="phone"
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <Input
-                                    id="phone"
+                                    id={`${name}-phone`}
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value}

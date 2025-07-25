@@ -1,10 +1,11 @@
+import { postOrder } from '@/hooks/data/Order/api';
 import { Order } from '@/models/Order';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 interface OrderContextType {
     order: Order;
     updateOrder: (data: Partial<Order>) => void;
-    placeOrder: () => boolean;
+    placeOrder: () => Promise<boolean>;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -16,11 +17,17 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setOrder((prevOrder) => new Order({ ...prevOrder, ...data }));
     }, []);
 
-    const placeOrder = useCallback(() => {
+    const placeOrder = useCallback(async () => {
         if (order.isValid()) {
-            console.log('Placing order from context:', JSON.stringify(order, null, 2));
-            // TODO: Post to API endpoint
-            return true;
+            try {
+                console.log('Placing order from context:', JSON.stringify(order, null, 2));
+                const response = await postOrder(order);
+                console.log('Order placed successfully. API Response:', response);
+                return true;
+            } catch (error) {
+                console.error('Failed to place order:', error);
+                return false;
+            }
         } else {
             console.error('Attempted to place an invalid order from context:', order);
             return false;

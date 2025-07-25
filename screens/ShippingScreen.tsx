@@ -36,7 +36,7 @@ const ShippingScreen = () => {
             </PageHeader>
             <PageSection flex={1}>
                 <PageContent flex={1} paddingHorizontal='none' >
-                    <AddressForm onSubmit={handleShippingSubmit} initialData={order?.billing} />
+                    <AddressForm onSubmit={handleShippingSubmit} initialData={order.billing} name="shipping" />
                 </PageContent>
             </PageSection>
         </PageView>

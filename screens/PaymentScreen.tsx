@@ -5,13 +5,14 @@ import { useOrderContext } from '@/contexts/OrderContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { OrderLineItem } from '@/models/Order';
 import { Stack, useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, SizableText } from 'tamagui';
 
 const PaymentScreen = () => {
     const router = useRouter();
     const { items: cartItems } = useShoppingCartContext();
     const { order, updateOrder, placeOrder } = useOrderContext();
+    const [isPlacingOrder, setIsPlacingOrder] = useState(false);
     const title = 'Betaling';
 
     // Finalize the order details when the user enters the payment screen
@@ -35,10 +36,13 @@ const PaymentScreen = () => {
         });
     }, [cartItems, updateOrder]);
 
-    const handlePlaceOrder = () => {
-        if (placeOrder()) {
+    const handlePlaceOrder = async () => {
+        setIsPlacingOrder(true);
+        const success = await placeOrder();
+        if (success) {
             router.push(routes.orderStatus());
         }
+        setIsPlacingOrder(false);
     };
 
     return (
@@ -52,8 +56,8 @@ const PaymentScreen = () => {
                     <SizableText>Betalingsinformasjon kommer her.</SizableText>
                 </PageContent>
                 <PageContent>
-                    <Button onPress={handlePlaceOrder} disabled={!order.isValid()}>
-                        Svea Checkout
+                    <Button onPress={handlePlaceOrder} disabled={!order.isValid() || isPlacingOrder}>
+                        {isPlacingOrder ? 'Plasserer ordre...' : 'Svea Checkout'}
                     </Button>
                 </PageContent>
             </PageSection>
