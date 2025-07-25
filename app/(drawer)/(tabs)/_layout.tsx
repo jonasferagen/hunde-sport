@@ -1,10 +1,9 @@
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { useActiveRoute } from '@/hooks/useActiveRoute';
+import { cartRoute, homeRoute, searchRoute, useActiveRoute } from '@/hooks/useActiveRoute';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { router, Tabs } from 'expo-router';
 import { SizableText, YStack } from 'tamagui';
-
 export default function TabsLayout() {
     const { cartItemCount } = useShoppingCartContext();
     const { isHomeActive, isCartActive, isSearchActive } = useActiveRoute();
@@ -39,7 +38,7 @@ export default function TabsLayout() {
                     tabPress: (e) => {
                         e.preventDefault();
                         if (isHomeActive) return;
-                        router.push('/(drawer)/(tabs)/(home)');
+                        router.push(homeRoute);
                     },
                 }}
             />
@@ -57,7 +56,8 @@ export default function TabsLayout() {
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
-                        router.push('/(drawer)/(tabs)/(home)/search');
+                        if (isSearchActive) return;
+                        router.push(searchRoute);
                     },
                 }}
             />
@@ -90,7 +90,8 @@ export default function TabsLayout() {
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
-                        router.push('/(drawer)/(tabs)/shopping-cart');
+                        if (isCartActive) return;
+                        router.push(cartRoute);
                     },
                 }}
             />

@@ -10,7 +10,6 @@ import React, { useCallback, useMemo } from 'react';
 import { Button, H3, H4, SizableText, Theme, YStack } from 'tamagui';
 
 
-
 const CustomDrawerContent = React.memo((props: any) => {
     const { navigation } = props;
     const { cartItemCount } = useShoppingCartContext();
