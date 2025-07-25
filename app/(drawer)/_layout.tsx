@@ -1,34 +1,37 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
-import { useShoppingCartContext } from '@/contexts';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
+import { cartRoute, homeRoute, useActiveRoute } from '@/hooks/useActiveRoute';
 import { DrawerContentScrollView, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Home, ShoppingCart, X } from '@tamagui/lucide-icons';
-import { useSegments } from 'expo-router';
+import { router } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import React, { useCallback, useMemo } from 'react';
-import { Button, H3, H4, Text, Theme, YStack } from 'tamagui';
+import { Button, H3, H4, SizableText, Theme, YStack } from 'tamagui';
 
 
 
 const CustomDrawerContent = React.memo((props: any) => {
     const { navigation } = props;
-    const segments = useSegments() as string[];
     const { cartItemCount } = useShoppingCartContext();
 
+    const { isHomeActive, isCartActive } = useActiveRoute();
+
     const handleCloseDrawer = useCallback(() => {
-        props.navigation.closeDrawer();
-    }, [props.navigation]);
+        navigation.closeDrawer();
+    }, [navigation]);
 
     const handleHomeNavigation = useCallback(() => {
-        navigation.navigate('(tabs)', { screen: '(home)' });
-    }, [navigation]);
+        !isHomeActive && router.push(homeRoute);
+        navigation.closeDrawer();
+    }, [navigation, isHomeActive]);
 
     const handleCartNavigation = useCallback(() => {
-        navigation.navigate('(tabs)', { screen: 'shopping-cart' });
-    }, [navigation]);
+        !isCartActive && router.push(cartRoute);
+        navigation.closeDrawer();
+    }, [navigation, isCartActive]);
 
-    const isHomeActive = segments.includes('(home)');
-    const isCartActive = segments.includes('shopping-cart');
+
 
     return (
         <YStack f={1} backgroundColor="$background">
@@ -44,7 +47,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                     <H3 mb="$4">HundeSport.no</H3>
                     <DrawerItem
                         label="Hjem"
-                        icon={({ color }) => <Home color={color} />}
+                        icon={({ color }) => <Home color={isHomeActive ? 'red' : 'blue'} />}
                         focused={isHomeActive}
                         onPress={handleHomeNavigation}
                         activeTintColor="$color"
@@ -52,7 +55,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                         activeBackgroundColor="$backgroundHover"
                     />
                     <DrawerItem
-                        icon={({ color }) => <ShoppingCart color={color} />}
+                        icon={({ color }) => <ShoppingCart color={isCartActive ? 'red' : 'blue'} />}
                         focused={isCartActive}
                         onPress={handleCartNavigation}
                         activeTintColor="$color"
@@ -61,7 +64,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                         labelStyle={{ position: 'relative' }}
                         label={({ focused, color }) => (
                             <>
-                                <Text color={color}>Handlekurv</Text>
+                                <SizableText fontWeight="bold" color={color}>Handlekurv</SizableText>
                                 {cartItemCount > 0 && (
                                     <YStack
                                         backgroundColor="$red10"
@@ -72,7 +75,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                                         right={-25}
                                         top={-8}
                                     >
-                                        <Text fontSize="$1" color="$color1">{cartItemCount}</Text>
+                                        <SizableText fontSize="$1" color="$color1">{cartItemCount}</SizableText>
                                     </YStack>
                                 )}
                             </>
