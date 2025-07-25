@@ -3,6 +3,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { CategoryTile } from '@/components/ui/tile/CategoryTile';
 import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
@@ -10,13 +11,13 @@ import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecent
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
-import { Spinner, XStack } from 'tamagui';
+import { XStack } from 'tamagui';
 
 const CategorySection = () => {
     const { items: categories, isLoading } = useCategories(0, { autoload: true });
 
-    if (isLoading || Math.random() < .99) {
-        return <Spinner ai="center" jc="center" color="$color" size="large" />;
+    if (isLoading) {
+        return <ThemedSpinner ai="center" jc="center" size="large" />;
     }
     return (
         <XStack flexWrap="wrap" gap="$4" jc="space-between">
