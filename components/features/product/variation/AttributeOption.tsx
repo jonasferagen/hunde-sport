@@ -1,8 +1,7 @@
-import { calculatePriceRange } from '@/contexts/ProductContext';
 import { useProductVariationSelectionContext } from '@/contexts/ProductVariationSelectionContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { ProductAttributeOption as ProductAttributeOptionType } from '@/types';
-import { formatPrice, formatPriceRange } from '@/utils/helpers';
+import { formatPrice } from '@/utils/helpers';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, ThemeName, XStack } from 'tamagui';
@@ -15,18 +14,16 @@ interface AttributeOptionProps {
 const getThemeName = (name: string): ThemeName => name as ThemeName;
 
 export const AttributeOption = ({ item: option, attribute }: AttributeOptionProps) => {
-    const { handleOptionSelect, selectedOptions, availableOptions } = useProductVariationSelectionContext();
+    const { selectOption, getOptionState } = useProductVariationSelectionContext();
 
-    const matchingVariants = availableOptions.get(attribute.id)?.get(option.name!)
-    const singleVariant = matchingVariants && matchingVariants.length === 1 ? matchingVariants[0] : null;
-    const isOutOfStock = singleVariant ? singleVariant.stock_status === 'outofstock' : false;
-    const isDisabled = !matchingVariants || matchingVariants.length === 0 || isOutOfStock;
-    const isSelected = selectedOptions[attribute.id] === option.name;
-    const priceRange = calculatePriceRange(matchingVariants || []);
+    const { isSelected, isAvailable, isOutOfStock, matchingVariation } = getOptionState(attribute.id, option.name!);
+    const isDisabled = !isAvailable || isOutOfStock;
+
+    const price = matchingVariation ? formatPrice(matchingVariation.price) : null;
 
     return (
         <Pressable
-            onPress={() => !isDisabled && handleOptionSelect(attribute.id, option.name!)}
+            onPress={() => !isDisabled && selectOption(attribute.id, option.name!)}
             disabled={isDisabled}
         >
             <XStack
@@ -52,11 +49,7 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
                 </XStack>
                 <XStack ai='flex-end'>
                     <SizableText color={'$color'}>
-                        {matchingVariants && matchingVariants.length === 1 ? (
-                            formatPrice(matchingVariants[0].price)
-                        ) : matchingVariants && matchingVariants.length > 1 ? (
-                            formatPriceRange(priceRange!)
-                        ) : null}
+                        {price}
                     </SizableText>
                 </XStack>
             </XStack>
