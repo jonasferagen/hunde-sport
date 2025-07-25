@@ -33,11 +33,19 @@ export interface Breadcrumb {
   type: 'category' | 'product' | 'home';
 }
 
-export interface ShoppingCartItem {
-  product: Product;
-  productVariation: ProductVariation | undefined;
-  quantity: number;
+export class ShoppingCartItem {
+  readonly key: string;
+
+  constructor(
+    public product: Product,
+    public productVariation: ProductVariation | undefined,
+    public quantity: number
+  ) {
+    this.key = `${this.product.id}-${this.productVariation?.id ?? 'simple'}`;
+  }
 }
+
+export type ShoppingCart = ShoppingCartItem[];
 
 
 // Defines the available theme variants for components

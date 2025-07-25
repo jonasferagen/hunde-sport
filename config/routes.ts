@@ -8,8 +8,7 @@ const paths = {
     search: '/search',
     category: '/category',
     product: '/product',
-    checkout: '/checkout',
-    billing: '/billing',
+    shipping: '/shipping',
     payment: '/payment',
     orderStatus: '/order-status',
 } as const;
@@ -39,11 +38,9 @@ export const routes = {
         }
         return { pathname: paths.product, params };
     },
-    checkout: () => {
-        return paths.checkout;
-    },
-    billing: () => {
-        return paths.billing;
+
+    shipping: () => {
+        return paths.shipping;
     },
     payment: () => {
         return paths.payment;
@@ -61,8 +58,8 @@ export interface CheckoutStep {
 }
 
 export const checkoutFlow: CheckoutStep[] = [
-    { name: 'checkout', title: 'Kasse', route: routes.checkout() },
-    { name: 'billing', title: 'Fakturering', route: routes.billing() },
+    { name: 'shopping-cart', title: 'Handlekurv', route: routes.shoppingCart() },
+    { name: 'shipping', title: 'Levering', route: routes.shipping() },
     { name: 'payment', title: 'Betaling', route: routes.payment() },
     { name: 'order-status', title: 'Bekreftelse', route: routes.orderStatus() },
 ];

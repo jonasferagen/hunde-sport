@@ -1,14 +1,12 @@
 import { routes } from '@/config/routes';
 import type { Product } from '@/models/Product';
 import type { ProductVariation } from '@/models/ProductVariation';
-import type { ShoppingCartItem } from '@/types';
+import { ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import { useStatusContext } from './StatusContext';
 
-const getCartItemId = (product: Product, productVariation?: ProductVariation) => {
-    return productVariation ? `${product.id}-${productVariation.id}` : `${product.id}`;
-};
+
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
@@ -52,41 +50,44 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         };
     };
 
-    const getQuantity = useCallback(
+        const getQuantity = useCallback(
         (product: Product, productVariation?: ProductVariation) => {
-            const cartItemId = getCartItemId(product, productVariation);
-            const cartItem = items.find((item) => getCartItemId(item.product, item.productVariation) === cartItemId);
+            const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
+            const cartItem = items.find((item) => item.key === key);
             return cartItem?.quantity ?? 0;
         },
         [items]
     );
 
-    const decreaseQuantity = useCallback((product: Product, productVariation?: ProductVariation) => {
-        const cartItemId = getCartItemId(product, productVariation);
+        const decreaseQuantity = useCallback((product: Product, productVariation?: ProductVariation) => {
+        const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
         setItems((prevItems) =>
             prevItems
                 .map((item) => {
-                    const currentItemId = getCartItemId(item.product, item.productVariation);
-                    return currentItemId === cartItemId ? { ...item, quantity: item.quantity - 1 } : item;
+                    if (item.key === key) {
+                        return new ShoppingCartItem(item.product, item.productVariation, item.quantity - 1);
+                    }
+                    return item;
                 })
                 .filter((item) => item.quantity > 0)
         );
     }, []);
 
-    const increaseQuantity = useCallback(
+        const increaseQuantity = useCallback(
         (product: Product, productVariation?: ProductVariation) => {
-            const cartItemId = getCartItemId(product, productVariation);
+            const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
             setItems((prevItems) => {
-                const existingItem = prevItems.find((item) => getCartItemId(item.product, item.productVariation) === cartItemId);
+                const existingItem = prevItems.find((item) => item.key === key);
 
                 if (existingItem) {
                     return prevItems.map((item) =>
-                        getCartItemId(item.product, item.productVariation) === cartItemId
-                            ? { ...item, quantity: item.quantity + 1 }
+                        item.key === key
+                            ? new ShoppingCartItem(item.product, item.productVariation, item.quantity + 1)
                             : item
                     );
                 } else {
-                    return [...prevItems, { product, productVariation, quantity: 1 }];
+                    const newItem = new ShoppingCartItem(product, productVariation, 1);
+                    return [...prevItems, newItem];
                 }
             });
 
@@ -97,14 +98,9 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [showMessage]
     );
 
-    const removeFromCart = useCallback((product: Product, productVariation?: ProductVariation) => {
-        const cartItemId = getCartItemId(product, productVariation);
-        setItems((prevItems) =>
-            prevItems.filter((item) => {
-                const currentItemId = getCartItemId(item.product, item.productVariation);
-                return currentItemId !== cartItemId;
-            })
-        );
+        const removeFromCart = useCallback((product: Product, productVariation?: ProductVariation) => {
+        const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
+        setItems((prevItems) => prevItems.filter((item) => item.key !== key));
     }, []);
 
     const clearCart = useCallback(() => {

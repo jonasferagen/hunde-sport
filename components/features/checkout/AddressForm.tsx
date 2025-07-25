@@ -9,7 +9,9 @@ const addressSchema = z.object({
     first_name: z.string().min(1, { message: 'Fornavn er påkrevd' }),
     last_name: z.string().min(1, { message: 'Etternavn er påkrevd' }),
     address_1: z.string().min(1, { message: 'Adresse er påkrevd' }),
+    address_2: z.string().optional(),
     city: z.string().min(1, { message: 'By er påkrevd' }),
+    state: z.string().min(1, { message: 'Stat/fylke er påkrevd' }),
     postcode: z.string().min(1, { message: 'Postnummer er påkrevd' }),
     email: z.string().email({ message: 'Ugyldig e-postadresse' }),
     phone: z.string().min(8, { message: 'Telefonnummer er påkrevd' }),
@@ -89,7 +91,7 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value}
-                                    placeholder="Adresse"
+                                    placeholder="Adresselinje 1"
                                     borderColor={errors.address_1 ? '$red10' : undefined}
                                 />
                             )}
@@ -97,6 +99,29 @@ export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) =>
                         {errors.address_1 && (
                             <Text color="$red10" fontSize="$2">
                                 {errors.address_1.message}
+                            </Text>
+                        )}
+                    </YStack>
+
+                    <YStack gap="$2">
+                        <Label htmlFor="address_2">Adresselinje 2 (valgfritt)</Label>
+                        <Controller
+                            control={control}
+                            name="address_2"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <Input
+                                    id="address_2"
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="Adresselinje 2"
+                                    borderColor={errors.address_2 ? '$red10' : undefined}
+                                />
+                            )}
+                        />
+                        {errors.address_2 && (
+                            <Text color="$red10" fontSize="$2">
+                                {errors.address_2.message}
                             </Text>
                         )}
                     </YStack>

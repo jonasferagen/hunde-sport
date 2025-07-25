@@ -8,9 +8,9 @@ interface CheckoutListItemProps {
 }
 
 export const CheckoutListItem: React.FC<CheckoutListItemProps> = ({ item }) => {
-    const product = item.selectedVariant ?? item.baseProduct;
+    const product = item.product;
     const subtotal = product.price * item.quantity;
-
+    const productVariation = item.productVariation;
     return (
         <XStack
             jc="space-between"
@@ -20,11 +20,11 @@ export const CheckoutListItem: React.FC<CheckoutListItemProps> = ({ item }) => {
             ai="center"
         >
             <Text flex={1} fow="bold">
-                {item.baseProduct.name} ({item.quantity})
+                {item.product.name} ({item.quantity})
             </Text>
-            {item.selectedVariant && (
+            {productVariation && (
                 <Text flex={1} fos="$2" ml="$2">
-                    {item.selectedVariant.name}
+                    {productVariation.name}
                 </Text>
             )}
             <Text fow="bold" miw={80} ta="right">

@@ -1,5 +1,6 @@
 import {
   LayoutProvider,
+  OrderProvider,
   ShoppingCartProvider,
   StatusProvider,
 } from '@/contexts';
@@ -30,11 +31,13 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
           <SafeAreaProvider>
             <QueryClientProvider client={queryClient}>
               <StatusProvider>
-                <ShoppingCartProvider>
-                  <LayoutProvider>
-                    {children}
-                  </LayoutProvider>
-                </ShoppingCartProvider>
+                <OrderProvider>
+                  <ShoppingCartProvider>
+                    <LayoutProvider>
+                      {children}
+                    </LayoutProvider>
+                  </ShoppingCartProvider>
+                </OrderProvider>
               </StatusProvider>
             </QueryClientProvider >
           </SafeAreaProvider >

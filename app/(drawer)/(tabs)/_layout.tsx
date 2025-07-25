@@ -95,10 +95,7 @@ export default function TabsLayout() {
                     },
                 }}
             />
-            <Tabs.Screen name="checkout" options={{ href: null }} />
-            <Tabs.Screen name="billing" options={{ href: null }} />
-            <Tabs.Screen name="payment" options={{ href: null }} />
-            <Tabs.Screen name="order-status" options={{ href: null }} />
+
         </Tabs>
     );
 }

@@ -14,7 +14,7 @@ export const CheckoutList: React.FC<CheckoutListProps> = ({ items, cartTotal }) 
         <YStack>
             {items.map((item: ShoppingCartItem) => (
                 <CheckoutListItem
-                    key={item.baseProduct.id.toString() + (item.selectedVariant?.id?.toString() || '')}
+                    key={item.product.id.toString() + (item.productVariation?.id?.toString() || '')}
                     item={item}
                 />
             ))}

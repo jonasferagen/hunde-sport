@@ -32,7 +32,7 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
                 <Button onPress={onClearCart} theme="secondary">
                     Tøm handlekurv
                 </Button>
-                <Button onPress={() => useRouter().push(routes.checkout())} theme="primary">
+                <Button onPress={() => useRouter().push(routes.shipping())} theme="primary">
                     Gå til kassen
                 </Button>
             </YStack>
@@ -56,7 +56,7 @@ export const ShoppingCartScreen = () => {
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
                     <FlatList
                         data={items}
-                        keyExtractor={(item) => item.product.id.toString() + (item.productVariation?.id?.toString() || '')}
+                        keyExtractor={(item) => item.key}
                         renderItem={renderItem}
                         ListEmptyComponent={
                             <SizableText textAlign="center" marginTop="$4" color="$color.secondary">
