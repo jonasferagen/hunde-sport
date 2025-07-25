@@ -6,7 +6,7 @@ import { Home, ShoppingCart, X } from '@tamagui/lucide-icons';
 import { useSegments } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import React, { useCallback, useMemo } from 'react';
-import { Button, H2, H4, Text, YStack } from 'tamagui';
+import { Button, H3, H4, Text, Theme, YStack } from 'tamagui';
 
 
 
@@ -41,7 +41,7 @@ const CustomDrawerContent = React.memo((props: any) => {
                         unstyled
                         pressStyle={{ opacity: 0.7 }}
                     />
-                    <H2 mb="$4">HundeSport.no</H2>
+                    <H3 mb="$4">HundeSport.no</H3>
                     <DrawerItem
                         label="Hjem"
                         icon={({ color }) => <Home color={color} />}
@@ -87,19 +87,23 @@ const CustomDrawerContent = React.memo((props: any) => {
 });
 
 export default function DrawerLayout() {
+
     const headerBackground = useCallback(() => (
-        <LinearGradient
-            colors={['$background', '$backgroundPress']}
-            start={[0, 0]}
-            end={[1, 1]}
-            flex={1}
-        />
+        <Theme name="secondary">
+            <LinearGradient
+                colors={['$background', '$backgroundPress']}
+                start={[0, 0]}
+                end={[1, 1]}
+                flex={1}
+            />
+        </Theme>
     ), []);
 
     const drawerContent = useCallback((props: any) => <CustomDrawerContent {...props} />, []);
 
     const screenOptions = useMemo<DrawerNavigationOptions>(
         () => ({
+            headerTitle: 'HundeSport.no',
             headerTitleAlign: 'center',
             headerStyle: {
                 elevation: 0,
@@ -127,14 +131,16 @@ export default function DrawerLayout() {
 
     return (
 
-        <Drawer
-            drawerContent={drawerContent}
-            screenOptions={screenOptions}>
+        <Theme name="secondary">
+            <Drawer
+                drawerContent={drawerContent}
+                screenOptions={screenOptions}>
 
-            <Drawer.Screen
-                name="(tabs)" // This is the actual navigator, now hidden
-                options={{ drawerItemStyle: { display: 'none' } }}
-            />
-        </Drawer>
+                <Drawer.Screen
+                    name="(tabs)" // This is the actual navigator, now hidden
+                    options={{ drawerItemStyle: { display: 'none' } }}
+                />
+            </Drawer>
+        </Theme>
     );
 }

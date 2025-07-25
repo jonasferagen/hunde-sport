@@ -1,10 +1,10 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { Spinner, Stack, Text, XStack } from 'tamagui';
+import { SizableText, Spinner, Stack, XStack } from 'tamagui';
 
-import { ChevronRight } from '@tamagui/lucide-icons';
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
+import { ChevronRight } from '@tamagui/lucide-icons';
 
 interface BreadcrumbProps {
   category?: Category;
@@ -13,9 +13,15 @@ interface BreadcrumbProps {
   loading?: boolean;
 }
 
-export const Breadcrumb = React.memo(({ category, isLast = false, isLastClickable = false, loading = false }: BreadcrumbProps) => {
+export const Breadcrumb = React.memo(({ category,
+  isLast = false,
+  isLastClickable = false,
+  loading = false
+}: BreadcrumbProps) => {
+
+
   if (loading) {
-    return <Spinner size="small" marginRight="$2" />;
+    return <Spinner color="$colorSubtle" size="small" marginRight="$2" />;
   }
 
   if (!category) {
@@ -23,9 +29,9 @@ export const Breadcrumb = React.memo(({ category, isLast = false, isLastClickabl
   }
 
   const breadcrumbText = (
-    <Text fontWeight={isLast && !isLastClickable ? 'bold' : 'normal'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
+    <SizableText fontSize="$5" fontWeight={isLast && !isLastClickable ? 'bold' : 'normal'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
       {category.name}
-    </Text>
+    </SizableText>
   );
 
   return (
@@ -38,8 +44,8 @@ export const Breadcrumb = React.memo(({ category, isLast = false, isLastClickabl
         </Link>
       )}
       {!isLast && (
-        <Stack marginHorizontal="$1" marginTop="$1">
-          <ChevronRight size="$1" />
+        <Stack  >
+          <ChevronRight size="$4" />
         </Stack>
       )}
     </XStack>

@@ -1,7 +1,7 @@
 import { Breadcrumbs } from '@/components/features/breadcrumbs/Breadcrumbs';
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
-import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 
 import { useCategories, useCategory } from '@/hooks/data/Category';
@@ -34,12 +34,10 @@ export const CategoryScreen = memo(() => {
                 <Breadcrumbs categoryId={Number(id)} />
                 {category && <CategoryChipsContainer category={category} />}
             </PageHeader>
-            <PageSection flex>
-                <PageContent style={{ flex: 1 }} paddingHorizontal="none" paddingVertical="none" >
-                    {isLoading && <YStack flex={1} alignItems="center" justifyContent="center"><Spinner size="large" /></YStack>}
-                    {category && <CategoryProducts category={category} />}
-                </PageContent>
-            </PageSection>
+            <YStack flex={1} paddingHorizontal="none" paddingVertical="none" >
+                {isLoading && <YStack flex={1} ai="center" jc="center"><Spinner size="large" /></YStack>}
+                {category && <CategoryProducts category={category} />}
+            </YStack>
         </PageView>
     );
 });

@@ -12,13 +12,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
 
-const AppContent = memo((): JSX.Element => {
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }} >
-      <Slot />
-    </GestureHandlerRootView>
-  );
-});
 
 const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient({
@@ -48,6 +41,13 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
         </PortalProvider>
       </Theme>
     </TamaguiProvider>
+  );
+});
+const AppContent = memo((): JSX.Element => {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }} >
+      <Slot />
+    </GestureHandlerRootView>
   );
 });
 
