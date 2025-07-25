@@ -1,7 +1,9 @@
+
 import { ShoppingCartListItem } from '@/components/features/shoppingCart/ShoppingCartListItem';
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { PageHeader } from '@/components/layout/PageHeader';
+import { PageHeader as OriginalPageHeader } from '@/components/layout/PageHeader';
 
+import { DebugSeeder } from '@/components/development/DebugSeeder';
 import { routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
@@ -42,6 +44,7 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
 
 export const ShoppingCartScreen = () => {
     const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
+    const router = useRouter();
 
     const renderItem = useCallback(
         ({ item }: { item: ShoppingCartItem }) => <ShoppingCartListItem item={item} />,
@@ -51,7 +54,7 @@ export const ShoppingCartScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
-            <PageHeader title="Handlekurv" />
+            <OriginalPageHeader title="Handlekurv" />
             <PageSection flex={1}>
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
                     <FlatList
@@ -68,7 +71,27 @@ export const ShoppingCartScreen = () => {
                 <PageContent secondary>
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
                 </PageContent>
+                <PageContent>
+                    <CartTotals cartTotal={cartTotal} />
+                    <Button onPress={() => router.push(routes.shipping())} disabled={cartItemCount === 0}>
+                        Gå til kassen
+                    </Button>
+                    <DebugSeeder />
+                </PageContent>
             </PageSection>
         </PageView>
+    );
+};
+
+interface CartTotalsProps {
+    cartTotal: number;
+}
+
+const CartTotals = ({ cartTotal }: CartTotalsProps) => {
+    return (
+        <XStack jc="space-between" ai="center" paddingVertical="$4">
+            <SizableText size="$6" fontWeight="bold">Total</SizableText>
+            <SizableText size="$6" fontWeight="bold">{formatPrice(cartTotal)}</SizableText>
+        </XStack>
     );
 };

@@ -5,25 +5,40 @@ import { useOrderContext } from '@/contexts/OrderContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { OrderLineItem } from '@/models/Order';
 import { Stack, useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, SizableText } from 'tamagui';
 
 const PaymentScreen = () => {
     const router = useRouter();
     const { items: cartItems } = useShoppingCartContext();
-    const { updateOrder } = useOrderContext();
+    const { order, updateOrder, placeOrder } = useOrderContext();
     const title = 'Betaling';
 
-    const handleNext = () => {
-        const line_items: OrderLineItem[] = cartItems.map((item) => ({
-            product_id: item.product.id,
-            quantity: item.quantity,
-            variation_id: item.productVariation?.id || 0,
-        }));
+    // Finalize the order details when the user enters the payment screen
+    useEffect(() => {
+        const line_items: OrderLineItem[] = cartItems.map((item) => {
+            const lineItem: OrderLineItem = {
+                product_id: item.product.id,
+                quantity: item.quantity,
+            };
 
-        updateOrder({ line_items });
+            if (item.productVariation?.id) {
+                lineItem.variation_id = item.productVariation.id;
+            }
 
-        router.push(routes.orderStatus());
+            return lineItem;
+        });
+
+        updateOrder({
+            line_items,
+            payment_method: 'svea_checkout',
+        });
+    }, [cartItems, updateOrder]);
+
+    const handlePlaceOrder = () => {
+        if (placeOrder()) {
+            router.push(routes.orderStatus());
+        }
     };
 
     return (
@@ -37,7 +52,9 @@ const PaymentScreen = () => {
                     <SizableText>Betalingsinformasjon kommer her.</SizableText>
                 </PageContent>
                 <PageContent>
-                    <Button onPress={handleNext}>Fullfør Kjøp</Button>
+                    <Button onPress={handlePlaceOrder} disabled={!order.isValid()}>
+                        Svea Checkout
+                    </Button>
                 </PageContent>
             </PageSection>
         </PageView>

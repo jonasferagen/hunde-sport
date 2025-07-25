@@ -1,9 +1,10 @@
 import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Button, CustomText } from '@/components/ui';
+
 import { checkoutFlow, routes } from '@/config/routes';
 import { Stack, useRouter } from 'expo-router';
 import React from 'react';
+import { Button, SizableText } from 'tamagui';
 
 const OrderStatusScreen = () => {
     const router = useRouter();
@@ -19,12 +20,12 @@ const OrderStatusScreen = () => {
             <PageHeader>
                 <RouteTrail steps={checkoutFlow} currentStepName="order-status" />
             </PageHeader>
-            <PageSection flex>
-                <PageContent flex>
-                    <CustomText>Takk for din bestilling!</CustomText>
+            <PageSection flex={1}>
+                <PageContent flex={1}>
+                    <SizableText>Takk for din bestilling!</SizableText>
                 </PageContent>
                 <PageContent>
-                    <Button title="Tilbake til forsiden" onPress={handleNext} />
+                    <Button onPress={handleNext}>Tilbake til forsiden</Button>
                 </PageContent>
             </PageSection>
         </PageView>

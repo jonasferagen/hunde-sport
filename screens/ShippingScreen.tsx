@@ -2,14 +2,14 @@ import { AddressForm } from '@/components/features/checkout/AddressForm';
 import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { checkoutFlow, routes } from '@/config/routes';
-import { useOrderContext } from '@/contexts';
+import { useOrderContext } from '@/contexts/OrderContext';
 import { Address, BillingAddress } from '@/models/Order';
 import { Stack, useRouter } from 'expo-router';
-import React, { JSX } from 'react';
+import React from 'react';
 
-const ShippingScreen = (): JSX.Element => {
+const ShippingScreen = () => {
     const router = useRouter();
-    const { updateOrder } = useOrderContext();
+    const { updateOrder, order } = useOrderContext();
 
     const handleShippingSubmit = (data: Omit<BillingAddress, 'address_2' | 'country'> & { address_2?: string }) => {
         const fullBillingAddress: BillingAddress = {
@@ -36,7 +36,7 @@ const ShippingScreen = (): JSX.Element => {
             </PageHeader>
             <PageSection flex={1}>
                 <PageContent flex={1} paddingHorizontal='none' >
-                    <AddressForm onSubmit={handleShippingSubmit} />
+                    <AddressForm onSubmit={handleShippingSubmit} initialData={order?.billing} />
                 </PageContent>
             </PageSection>
         </PageView>

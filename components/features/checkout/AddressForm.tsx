@@ -19,13 +19,19 @@ const addressSchema = z.object({
 
 type AddressFormData = z.infer<typeof addressSchema>;
 
-export const AddressForm = ({ onSubmit }: { onSubmit: (data: AddressFormData) => void }) => {
+interface AddressFormProps {
+    onSubmit: (data: AddressFormData) => void;
+    initialData?: Partial<AddressFormData>;
+}
+
+export const AddressForm = ({ onSubmit, initialData }: AddressFormProps) => {
     const {
         control,
         handleSubmit,
         formState: { errors },
     } = useForm<AddressFormData>({
         resolver: zodResolver(addressSchema),
+        defaultValues: initialData,
     });
 
     return (
