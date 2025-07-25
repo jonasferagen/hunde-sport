@@ -12,6 +12,20 @@ const apiClient = {
   },
 
   /**
+   * Make a POST request
+   */
+  async post<T>(url: string, data: any, options?: RequestInit): Promise<ApiResponse<T>> {
+    return this.request<T>(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      ...options,
+    });
+  },
+
+  /**
    * Base request method that handles all HTTP requests
    */
   async request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
