@@ -33,7 +33,7 @@ export default function TabsLayout() {
                 name="(home)"
                 options={{
                     title: 'Hjem',
-                    tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+                    tabBarIcon: ({ color }) => <Home color={color} size="$3" />,
                     tabBarLabel: ({ children, color }) => (
                         <SizableText size="$1" color={color}>{children}</SizableText>
                     ),
@@ -50,7 +50,7 @@ export default function TabsLayout() {
                 name="search"
                 options={{
                     title: 'Søk',
-                    tabBarIcon: ({ color, size }) => <Search color={color} size={size} />,
+                    tabBarIcon: ({ color }) => <Search color={color} size="$3" />,
                     tabBarLabel: ({ children, color }) => (
                         <SizableText size="$1" color={color}>{children}</SizableText>
                     ),
@@ -68,9 +68,9 @@ export default function TabsLayout() {
                 name="shopping-cart"
                 options={{
                     title: 'Handlekurv',
-                    tabBarIcon: ({ color, size }) => (
+                    tabBarIcon: ({ color }) => (
                         <YStack>
-                            <ShoppingCart color={color} size={size} />
+                            <ShoppingCart color={color} size="$3" />
                             {cartItemCount > 0 && (
                                 <YStack
                                     position="absolute"

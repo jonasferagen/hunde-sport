@@ -8,7 +8,7 @@ import { DimensionValue } from 'react-native';
 import { PriceTag } from '../../features/product/display/PriceTag';
 
 const PRODUCT_TILE_WIDTH: DimensionValue = 200;
-const PRODUCT_TILE_HEIGHT: DimensionValue = 100;
+const PRODUCT_TILE_HEIGHT: DimensionValue = 150;
 
 interface ProductTileProps {
     product: Product;

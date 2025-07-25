@@ -16,6 +16,7 @@ export const Chip = ({ title, theme, href, onPress, ...rest }: ChipProps) => {
             paddingVertical="$1"
             paddingHorizontal="$2"
             borderRadius="$2"
+            backgroundColor="$background"
             borderWidth={1}
             alignItems="center"
             justifyContent="center"

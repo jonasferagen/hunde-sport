@@ -19,8 +19,8 @@ export const PageContent = (props: PageContentProps) => {
     theme,
     horizontal,
     secondary,
-    paddingVertical = '$4',
-    paddingHorizontal = '$4',
+    paddingVertical = '$3',
+    paddingHorizontal = '$3',
     ...stackProps
   } = props;
 

@@ -68,7 +68,7 @@ const customTokens = {
         accentBorder: '#92c3c1',
 
         // Semantic text colors
-        colorHighContrast: tokens.color.black12,
+        colorHighContrast: tokens.color.black5,
         colorLowContrast: tokens.color.black10,
     },
     fontSize: font.size,
