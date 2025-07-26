@@ -5,7 +5,6 @@ import { getScaledImageUrl } from '@/utils/helpers';
 import { ChevronsDown, ShoppingCart } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-import { Pressable } from 'react-native';
 import { Button, H3, Image, SizableText, StackProps, XStack, YStack } from 'tamagui';
 import { PriceTag } from './display/PriceTag';
 import { ProductStatus } from './display/ProductStatus';
@@ -50,7 +49,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                         <Image source={{ uri: getScaledImageUrl(product.images[0]?.src, IMAGE_SIZE, IMAGE_SIZE) }} width={IMAGE_SIZE} height={IMAGE_SIZE} borderRadius="$4" />
                     </Link>
                 </YStack>
-                <YStack flex={1}>
+                <YStack flex={1} minHeight={IMAGE_SIZE}>
                     <Link href={routes.product(product, categoryId)} asChild>
                         <Button unstyled pressStyle={{ opacity: 0.7 }}>
                             <YStack gap="$2" jc="flex-start" flex={1} flexShrink={1}>
@@ -61,36 +60,42 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                             </YStack>
                         </Button>
                     </Link>
-                    <XStack ai='center' jc='space-between' flex={0} marginTop="$2">
-                        <XStack gap="$2" ai="center" flex={1}>
-                            <PriceTag />
-                            {productVariation && <SizableText textTransform="capitalize">{productVariation.name}</SizableText>}
-                            <ProductStatus />
-                        </XStack>
-                        <XStack flex={0} gap="$2" ai='center' theme="accent">
 
-                            {activeProduct.isPurchasable() && activeProduct.isInStock() && (
-                                <Button
-                                    icon={<ShoppingCart fontSize="$4" fontWeight="bold" />}
-                                    onPress={() => increaseQuantity(product, productVariation || undefined)}
-                                    circular
-                                    size="$5"
-
-                                />
-                            )}
-                            {!activeProduct.isPurchasable() && (
-                                <Pressable onPress={() => handleExpand()}>
-                                    <XStack ai="center">
-                                        <SizableText>Velg variant</SizableText>
-                                        <ChevronsDown size="$3" />
-                                    </XStack>
-                                </Pressable>
-                            )}
-                        </XStack>
-                    </XStack>
                 </YStack>
             </XStack>
+            <XStack ai='center' jc='space-between' flex={0} gap="$2" marginHorizontal="$3" >
 
+                <YStack theme="secondary">
+                    <Button
+
+                        icon={<ChevronsDown size="$4" fontWeight="bold" color="$color" />}
+                        onPress={() => handleExpand()}
+                        circular
+                        size="$6"
+                        disabled={!product.hasVariations()}
+                        opacity={!product.hasVariations() ? 0.5 : 1}
+                    />
+                </YStack>
+
+                <XStack gap="$2" ai="center" flex={1} theme="accent">
+                    <PriceTag />
+                    {productVariation && <SizableText textTransform="capitalize">{productVariation.name}</SizableText>}
+                    <ProductStatus />
+                </XStack>
+
+                <YStack theme="primary">
+                    <Button
+                        icon={<ShoppingCart fontSize="$5" fontWeight="bold" />}
+                        onPress={() => increaseQuantity(product, productVariation || undefined)}
+                        circular
+                        size="$6"
+                        disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
+                        opacity={!activeProduct.isPurchasable() || !activeProduct.isInStock() ? 0.5 : 1}
+
+                    />
+
+                </YStack>
+            </XStack>
             {product.type === 'variable' && isExpanded && (
                 <YStack marginHorizontal="$3" mt="$2">
                     <ProductVariations />

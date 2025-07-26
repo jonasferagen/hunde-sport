@@ -46,8 +46,8 @@ export const ProductScreen = () => {
 
 const ProductScreenContent = () => {
   const { product, productVariation } = useProductContext();
-  const { increaseQuantity, purchaseInfo } = useShoppingCartContext();
-  const { status, msg } = purchaseInfo(productVariation || product);
+  const { increaseQuantity } = useShoppingCartContext();
+
   return (
     <>
       <PageSection scrollable>
@@ -63,9 +63,9 @@ const ProductScreenContent = () => {
           <Button
             icon={<ShoppingCart />}
             onPress={() => increaseQuantity(product, productVariation || undefined)}
-            disabled={status !== 'ok'}
+            disabled={!product.isPurchasable() || !product.isInStock()}
           >
-            {msg}
+            {product.isPurchasable() ? 'Legg i handlekurv' : 'Velg variant'}
           </Button>
         </PageContent>
         <PageContent title="Produktbilder" style={{ flex: 1 }}>

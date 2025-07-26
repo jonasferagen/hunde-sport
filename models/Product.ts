@@ -94,6 +94,10 @@ export class Product {
     return this.stock_status === 'instock';
   }
 
+  hasVariations(): boolean {
+    return this.type === 'variable';
+  }
+
   isPurchasable(): boolean {
     return this.isInStock() && (this.type === 'simple' || this.type === 'variation');
   }
