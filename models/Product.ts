@@ -90,6 +90,14 @@ export class Product {
     return this.images[0];
   }
 
+  isInStock(): boolean {
+    return this.stock_status === 'instock';
+  }
+
+  isPurchasable(): boolean {
+    return this.isInStock() && (this.type === 'simple' || this.type === 'variation');
+  }
+
   toString() {
     return 'Product ' + this.id + ': ' + this.name;
   }

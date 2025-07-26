@@ -6,26 +6,11 @@ import { Button, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
 import { ProductVariations } from '../variation/ProductVariations';
+
 interface ProductItemActionsProps {
     isExpanded: boolean;
     handleExpand: () => void;
 }
-
-const ProductVariationSelectionText = () => {
-
-
-    return (
-        <>
-            <XStack flex={0} ai="center" jc="space-between" borderColor='green' borderWidth={1}>
-                <XStack gap="$2">
-                    <PriceTag /><ProductStatus />
-                </XStack>
-                <Button>Kjøp</Button>
-            </XStack>
-        </>
-    );
-
-};
 
 export const ProductItemActions = ({
     isExpanded,
@@ -34,7 +19,7 @@ export const ProductItemActions = ({
 
     const { product, productVariation } = useProductContext();
     const activeProduct = productVariation || product;
-    const { status, msg } = useShoppingCartContext().purchaseInfo(productVariation || product);
+    const { increaseQuantity } = useShoppingCartContext();
 
     if (!activeProduct) {
         return <YStack />;
@@ -43,6 +28,17 @@ export const ProductItemActions = ({
     return (
         <YStack theme="primary" backgroundColor="$background" padding="$2">
             <XStack ai="center" jc="space-between">
+                <XStack gap="$2">
+                    <PriceTag /><ProductStatus />
+                </XStack>
+
+                <Button
+                    onPress={() => increaseQuantity(product, productVariation || undefined)}
+                    disabled={!activeProduct.isPurchasable()}
+                >
+                    Kjøp
+                </Button>
+
                 {product.type === 'variable' && (
                     <XStack onPress={handleExpand} ai="center">
                         <ChevronsDown size="$4" />

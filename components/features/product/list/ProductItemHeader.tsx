@@ -1,21 +1,24 @@
 import { routes } from '@/config/routes';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
-import { ShoppingCart } from '@tamagui/lucide-icons';
+import { ChevronsDown, ShoppingCart } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { JSX, ReactNode } from 'react';
 import { Button, H3, Image, SizableText, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
+import { ProductVariations } from '../variation/ProductVariations';
 
 interface ProductItemHeaderProps {
     children?: ReactNode;
     categoryId?: number;
+    isExpanded: boolean;
+    handleExpand: () => void;
 }
 
 const IMAGE_SIZE = 80;
 
-export const ProductItemHeader = ({ children, categoryId }: ProductItemHeaderProps): JSX.Element => {
+export const ProductItemHeader = ({ children, categoryId, isExpanded, handleExpand }: ProductItemHeaderProps): JSX.Element => {
     const { product, productVariation } = useProductContext();
     const activeProduct = productVariation || product;
 
@@ -54,28 +57,46 @@ export const ProductItemHeader = ({ children, categoryId }: ProductItemHeaderPro
                     <BuyRow />
                 </YStack>
             </XStack>
+
+            {product.type === 'variable' && (
+                <YStack marginHorizontal="$3" mt="$2">
+                    <ProductVariations />
+                </YStack>
+            )}
         </>
     );
 };
 
 const BuyRow = () => {
     const { product, productVariation } = useProductContext();
+    const { increaseQuantity } = useShoppingCartContext();
     const activeProduct = productVariation || product;
+
+
     return (
         <XStack ai='center' jc='space-between' flex={0} marginTop="$2">
             <XStack gap="$2" ai="center" flex={1}>
                 <PriceTag />
-                {productVariation && <SizableText textTransform="capitalize">{productVariation.name.trim()}</SizableText>}
+                {productVariation && <SizableText textTransform="capitalize">{productVariation.name}</SizableText>}
                 <ProductStatus />
             </XStack>
             <XStack flex={0} gap="$2" ai='center' theme="accent">
-                <Button
-                    icon={<ShoppingCart fontSize="$4" fontWeight="bold" />}
-                    onPress={() => useShoppingCartContext().increaseQuantity(product, productVariation || undefined)}
-                    circular
-                    size="$5"
-                    borderColor="$accentBorder"
-                />
+
+                {activeProduct.isPurchasable() && activeProduct.isInStock() && (
+                    <Button
+                        icon={<ShoppingCart fontSize="$4" fontWeight="bold" />}
+                        onPress={() => increaseQuantity(product, productVariation || undefined)}
+                        circular
+                        size="$5"
+
+                    />
+                )}
+                {!activeProduct.isPurchasable() && (
+                    <XStack ai="center">
+                        <SizableText>Velg variant</SizableText>
+                        <ChevronsDown size="$3" />
+                    </XStack>
+                )}
             </XStack>
         </XStack>
     );

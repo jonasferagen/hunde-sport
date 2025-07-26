@@ -3,7 +3,6 @@ import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { Product } from '@/models/Product';
 import React from 'react';
 import { StackProps } from 'tamagui';
-import { ProductItemActions } from './list/ProductItemActions';
 import { ProductItemHeader } from './list/ProductItemHeader';
 
 
@@ -30,8 +29,8 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 
     return (
         <ListItem
-            header={<ProductItemHeader categoryId={categoryId} />}
-            actions={<ProductItemActions isExpanded={isExpanded} handleExpand={handleExpand} />}
+            header={<ProductItemHeader categoryId={categoryId} isExpanded={isExpanded} handleExpand={handleExpand} />}
+            actions={<></>}
             {...props}
         />
     );

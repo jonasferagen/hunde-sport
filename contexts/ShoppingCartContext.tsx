@@ -10,7 +10,6 @@ import { useStatusContext } from './StatusContext';
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
-    purchaseInfo: (displayProduct: Product | ProductVariation) => { status: string; msg: string; msgShort: string };
     cartItemCount: number;
     cartTotal: number;
     getQuantity: (product: Product, productVariation?: ProductVariation) => number;
@@ -25,30 +24,6 @@ const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(u
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const { showMessage } = useStatusContext();
-
-    const purchaseInfo = (displayProduct: Product | ProductVariation) => {
-        if (displayProduct.stock_status === 'outofstock') {
-            return {
-                status: 'outofstock',
-                msg: 'Produktet er ikke lenger på lager',
-                msgShort: 'Utsolgt',
-            };
-        }
-
-        if (!(displayProduct.type === 'simple' || displayProduct.type === 'variation')) {
-            return {
-                status: 'variantneeded',
-                msg: 'Velg en variant',
-                msgShort: 'Velg variant',
-            };
-        }
-
-        return {
-            status: 'ok',
-            msg: 'Legg til',
-            msgShort: 'Kjøp',
-        };
-    };
 
     const getQuantity = useCallback(
         (product: Product, productVariation?: ProductVariation) => {
@@ -141,7 +116,6 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         <ShoppingCartContext.Provider
             value={{
                 items,
-                purchaseInfo,
                 cartItemCount,
                 cartTotal,
                 getQuantity,
