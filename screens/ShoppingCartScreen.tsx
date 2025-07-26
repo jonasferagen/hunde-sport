@@ -1,5 +1,4 @@
 
-import { ShoppingCartListItem } from '@/components/features/shoppingCart/ShoppingCartListItem';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader as OriginalPageHeader } from '@/components/layout/PageHeader';
 
@@ -47,7 +46,13 @@ export const ShoppingCartScreen = () => {
     const router = useRouter();
 
     const renderItem = useCallback(
-        ({ item }: { item: ShoppingCartItem }) => <ShoppingCartListItem item={item} />,
+        ({ item }: { item: ShoppingCartItem }) => <XStack ai="center" jc="space-between" flex={0}>
+            <SizableText>{item.product.name}</SizableText>
+            <SizableText>{item.productVariation?.name}</SizableText>
+            <SizableText>{formatPrice(item.product.price)}</SizableText>
+            <SizableText>{item.quantity}</SizableText>
+            <SizableText>{formatPrice(item.product.price * item.quantity)}</SizableText>
+        </XStack>,
         []
     );
 

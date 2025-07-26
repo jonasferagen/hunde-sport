@@ -1,9 +1,8 @@
 import { useProductContext } from '@/contexts';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { ArrowBigRight, ChevronsDown, ShoppingCart } from '@tamagui/lucide-icons';
+import { ChevronsDown } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
-import { Pressable } from 'react-native';
-import { Button, H6, XStack, YStack } from 'tamagui';
+import { Button, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
 import { ProductVariations } from '../variation/ProductVariations';
@@ -44,34 +43,19 @@ export const ProductItemActions = ({
     return (
         <YStack theme="primary" backgroundColor="$background" padding="$2">
             <XStack ai="center" jc="space-between">
-                <XStack gap="$2">
-                    {productVariation && <H6>{product.name}</H6>}
-                    <PriceTag />
-                    <ProductStatus />
-                </XStack>
-                <XStack gap="$3" ai="center">
-                    {product.type === 'variable' && false && (
-                        <XStack onPress={handleExpand} ai="center">
-                            <ChevronsDown size="$4" />
-                            <ProductVariationSelectionText />
-                        </XStack>
-                    )}
-                </XStack>
-
-                <XStack gap="$2" ai='center'>
-                    <Pressable onPress={() => useShoppingCartContext().increaseQuantity(product, productVariation || undefined)}>
-                        <XStack ai="center" jc="center">
-                            <ArrowBigRight size="$3" />
-                            <ShoppingCart size="$4" />
-                        </XStack>
-                    </Pressable>
-                </XStack>
+                {product.type === 'variable' && (
+                    <XStack onPress={handleExpand} ai="center">
+                        <ChevronsDown size="$4" />
+                    </XStack>
+                )}
             </XStack>
-            {isExpanded && (
-                <YStack marginHorizontal="$3" mt="$2">
-                    <ProductVariations />
-                </YStack>
-            )}
-        </YStack>
+            {
+                isExpanded && (
+                    <YStack marginHorizontal="$3" mt="$2">
+                        <ProductVariations />
+                    </YStack>
+                )
+            }
+        </YStack >
     );
 };

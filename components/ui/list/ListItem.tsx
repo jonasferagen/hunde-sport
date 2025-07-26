@@ -10,6 +10,7 @@ export const ListItem: React.FC<ListItemProps> = ({ header, actions, ...props })
     return (
         <YStack gap="$2" {...props}>
             {header}
+            {actions}
         </YStack>
     );
 };

@@ -4,8 +4,7 @@ import { getScaledImageUrl } from '@/utils/helpers';
 import { ShoppingCart } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { JSX, ReactNode } from 'react';
-import { Pressable } from 'react-native';
-import { Button, H3, H6, Image, SizableText, XStack, YStack } from 'tamagui';
+import { Button, H3, Image, SizableText, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
 
@@ -37,7 +36,9 @@ export const ProductItemHeader = ({ children, categoryId }: ProductItemHeaderPro
 
             >
                 <YStack>
-                    <Image source={{ uri: imageUrl }} width={IMAGE_SIZE} height={IMAGE_SIZE} borderRadius="$4" />
+                    <Link href={routes.product(product, categoryId)}>
+                        <Image source={{ uri: imageUrl }} width={IMAGE_SIZE} height={IMAGE_SIZE} borderRadius="$4" />
+                    </Link>
                 </YStack>
                 <YStack flex={1}>
                     <Link href={routes.product(product, categoryId)} asChild>
@@ -61,16 +62,20 @@ const BuyRow = () => {
     const { product, productVariation } = useProductContext();
     const activeProduct = productVariation || product;
     return (
-        <XStack ai='center' jc='space-between' flex={0} >
-            <XStack gap="$2" flex={1}>
-                {productVariation && <H6>{product.name}</H6>}
+        <XStack ai='center' jc='space-between' flex={0} marginTop="$2">
+            <XStack gap="$2" ai="center" flex={1}>
                 <PriceTag />
+                {productVariation && <SizableText textTransform="capitalize">{productVariation.name.trim()}</SizableText>}
                 <ProductStatus />
             </XStack>
-            <XStack flex={0} gap="$2" ai='center'>
-                <Pressable onPress={() => useShoppingCartContext().increaseQuantity(product, productVariation || undefined)}>
-                    <ShoppingCart size="$3" />
-                </Pressable>
+            <XStack flex={0} gap="$2" ai='center' theme="accent">
+                <Button
+                    icon={<ShoppingCart fontSize="$4" fontWeight="bold" />}
+                    onPress={() => useShoppingCartContext().increaseQuantity(product, productVariation || undefined)}
+                    circular
+                    size="$5"
+                    borderColor="$accentBorder"
+                />
             </XStack>
         </XStack>
     );
