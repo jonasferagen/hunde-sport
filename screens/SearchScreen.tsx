@@ -21,7 +21,7 @@ export const SearchScreen = () => {
     return (
         <PageView>
             <PageHeader>
-                <SearchBar initialQuery={initialQuery} ref={searchInputRef} />
+                <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
                 <SizableText fontSize="$3">
                     {isWaiting
                         ? `Leter etter "${liveQuery}"...`

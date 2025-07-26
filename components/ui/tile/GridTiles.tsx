@@ -30,8 +30,9 @@ export const GridTiles = <T extends { id: number | string }>({
 
     return (
         <FlashList
+
             numColumns={numColumns}
-            contentContainerStyle={{ padding: spacing }}
+            contentContainerStyle={{ padding: 0 }}
             data={items}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}

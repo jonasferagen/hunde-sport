@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from "react-native";
-import { GetProps, Image, Text, YStack, styled, useTheme } from 'tamagui';
+import { GetProps, Image, SizableText, YStack, styled, useTheme } from 'tamagui';
 
 const StyledLinearGradient = styled(LinearGradient, {
     name: 'StyledLinearGradient',
@@ -74,14 +74,14 @@ export const Tile = (props: TileProps) => {
                     colors={[rgba(themeValues.background.val, 0.7), rgba(themeValues.background.val, 1)]}
                     minHeight={gradientMinHeight}
                 >
-                    <Text
-                        fontSize={14}
-                        color={"$color"}
+                    <SizableText
+                        fontSize="$1"
+                        color="$color"
                         textAlign="center"
                         numberOfLines={titleNumberOfLines}
                     >
                         {title}
-                    </Text>
+                    </SizableText>
                 </StyledLinearGradient>
             </YStack>
             {children}

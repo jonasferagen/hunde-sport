@@ -4,7 +4,7 @@ import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Category } from '@/models/Category';
 import { ThemeVariant } from '@/types';
 import React, { JSX } from 'react';
-import { XStack } from 'tamagui';
+import { YStack } from 'tamagui';
 
 interface CategoryTilesProps {
     queryResult: InfiniteListQueryResult<Category>;
@@ -13,17 +13,16 @@ interface CategoryTilesProps {
 
 export const CategoryTiles = ({ queryResult, theme = 'primary' }: CategoryTilesProps): JSX.Element => {
     return (
-        <GridTiles
-            queryResult={queryResult}
-            renderItem={({ item }) => (
-                <XStack flexShrink={0} aspectRatio={1} padding="$2">
+        <YStack style={{ borderColor: 'blue', borderWidth: 1 }}>
+            <GridTiles
+                queryResult={queryResult}
+                renderItem={({ item }) => (
                     <CategoryTile
                         category={item}
                         theme={theme}
                     />
-                </XStack>
-
-            )}
-        />
+                )}
+            />
+        </YStack>
     );
 };

@@ -32,7 +32,7 @@ export const PageContent = (props: PageContentProps) => {
     <>
       {title && (
         <>
-          <H3 paddingHorizontal={paddingHorizontal}>{title}</H3>
+          <H3>{title}</H3>
           <Spacer size="$3" />
         </>
       )}
@@ -50,7 +50,7 @@ export const PageContent = (props: PageContentProps) => {
     <YStack
       theme={theme}
       paddingVertical={paddingVertical}
-      paddingHorizontal={title ? undefined : paddingHorizontal}
+      paddingHorizontal={paddingHorizontal}
       borderWidth={1}
       borderColor="$borderColor"
       backgroundColor={secondary ? '$backgroundFocus' : '$background'}
