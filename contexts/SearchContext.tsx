@@ -22,8 +22,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const debouncedLiveQuery = useDebounce(liveQuery, 1000);
 
     useEffect(() => {
-        setQuery(debouncedLiveQuery.trim());
-        console.log("set query to ", debouncedLiveQuery)
+        console.log("setting livequery");
+        setQuery(debouncedLiveQuery);
     }, [debouncedLiveQuery]);
 
     const {

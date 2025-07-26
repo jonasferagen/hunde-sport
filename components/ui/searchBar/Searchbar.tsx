@@ -1,20 +1,22 @@
 import { useSearchContext } from '@/contexts/SearchContext';
 import { Search } from '@tamagui/lucide-icons';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { TextInput } from 'react-native';
 import { Button, Input, XStack } from 'tamagui';
 
 export interface SearchBarProps {
     placeholder?: string;
-    query: string;
+    initialQuery?: string;
     onSubmit?: (query: string) => void;
 }
 
-export const SearchBar = forwardRef<TextInput, SearchBarProps>(({
-    placeholder = 'Hva leter du etter?',
-    query,
-    onSubmit }, ref) => {
+export const SearchBar = forwardRef<TextInput, SearchBarProps>((
+    { placeholder = 'Hva leter du etter?', initialQuery = '', onSubmit }, ref) => {
     const { liveQuery, setLiveQuery, setQuery } = useSearchContext();
+
+    useEffect(() => {
+        setLiveQuery(initialQuery);
+    }, [initialQuery, setLiveQuery]);
 
     const handleSearch = () => {
         const trimmedQuery = liveQuery.trim();
@@ -43,7 +45,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({
                 placeholder={placeholder}
                 placeholderTextColor="$color10"
                 selectionColor="$color10"
-                value={query}
+                value={liveQuery}
                 onChangeText={handleChangeText}
                 onSubmitEditing={handleSearch}
                 unstyled

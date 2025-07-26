@@ -10,6 +10,7 @@ import React from 'react';
 import { TextInput } from 'react-native';
 import { SizableText, YStack } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
+
 export const SearchScreen = () => {
     useRenderGuard("SearchScreen")
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
@@ -20,7 +21,7 @@ export const SearchScreen = () => {
     return (
         <PageView>
             <PageHeader>
-                <SearchBar query={initialQuery} ref={searchInputRef} />
+                <SearchBar initialQuery={initialQuery} ref={searchInputRef} />
                 <SizableText fontSize="$3">
                     {isWaiting
                         ? `Leter etter "${liveQuery}"...`
@@ -38,7 +39,7 @@ export const SearchScreen = () => {
 
 const SearchResults = () => {
     const { query, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
-    console.log("search results for ", query)
+
     if (isLoading) {
         return <LoadingScreen />;
     }
