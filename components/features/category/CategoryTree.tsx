@@ -4,9 +4,9 @@ import { Category } from '@/models/Category';
 import { ChevronDownCircle, ChevronUpCircle } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { Pressable, StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { SizableText, Spinner, View, XStack, YStack } from 'tamagui';
+import { Button, SizableText, Spinner, View, XStack, YStack } from 'tamagui';
 
 interface CategoryTreeItemProps {
     category: Category;
@@ -33,17 +33,18 @@ const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, is
                 borderRadius="$4"
                 marginLeft={level * 20}
             >
-                <XStack ai="center" jc='space-between' >
+                <XStack ai="center" jc='space-between' flex={1} >
                     <Link href={routes.category(category)} asChild>
-                        <Pressable>
-                            <XStack ai="center" paddingVertical="$3" width={'100%'} >
-                                <SizableText size="$3" fontSize="$4" marginLeft="$2">{category.name}</SizableText>
+                        <Button flex={1} alignItems="flex-start" pressStyle={{ opacity: 0.7 }}>
+                            <XStack paddingVertical="$2" flex={1}>
+                                <SizableText size="$5">{category.name}</SizableText>
                             </XStack>
-                        </Pressable>
+                        </Button>
                     </Link>
+
                     {hasChildren && (
                         <YStack onPress={handleExpand} padding="$2" >
-                            {isExpanded ? <ChevronUpCircle size="$3" /> : <ChevronDownCircle size="$3" />}
+                            {isExpanded ? <ChevronUpCircle fontSize="$4" /> : <ChevronDownCircle fontSize="$4" />}
                         </YStack>
                     )}
                 </XStack>
