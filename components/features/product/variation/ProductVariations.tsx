@@ -18,9 +18,11 @@ export const ProductVariations = () => {
 
                 return (
                     <YStack key={attribute.id} flex={1} mb="$3">
-                        <SizableText fontSize="$3" fontWeight="bold" textTransform="capitalize" mb="$2" ml="$1">
-                            {attribute.name}
-                        </SizableText>
+                        {productVariationAttributes.length > 1 && (
+                            <SizableText fontSize="$3" fontWeight="bold" textTransform="capitalize" mb="$2" ml="$1">
+                                {attribute.name}
+                            </SizableText>
+                        )}
                         <AttributeSelector
                             attribute={attribute}
                             options={options}

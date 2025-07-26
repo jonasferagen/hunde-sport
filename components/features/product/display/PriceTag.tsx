@@ -18,13 +18,13 @@ export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
     }
 
     if (productVariation) {
-        if (priceRange) {
-            return (
-                <PriceRange productPriceRange={priceRange} fontSize={fontSize} />
-            );
-        }
-
         return <Price activeProduct={productVariation} fontSize={fontSize} />;
+    }
+
+    if (priceRange) {
+        return (
+            <PriceRange productPriceRange={priceRange} fontSize={fontSize} />
+        );
     }
 
     return <Price activeProduct={product} fontSize={fontSize} />;

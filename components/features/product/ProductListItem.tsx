@@ -2,7 +2,7 @@ import { routes } from '@/config/routes';
 import { ProductProvider, useProductContext, useShoppingCartContext } from '@/contexts';
 import { Product } from '@/models/Product';
 import { getScaledImageUrl } from '@/utils/helpers';
-import { ChevronsDown, ShoppingCart } from '@tamagui/lucide-icons';
+import { ChevronDown, ShoppingCart } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Button, H3, Image, SizableText, StackProps, XStack, YStack } from 'tamagui';
@@ -65,43 +65,46 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
             </XStack>
             <XStack ai='center' jc='space-between' flex={0} gap="$2" marginHorizontal="$3" >
 
-                <YStack theme="secondary">
-                    <Button
-
-                        icon={<ChevronsDown size="$4" fontWeight="bold" color="$color" />}
-                        onPress={() => handleExpand()}
-                        circular
-                        size="$6"
-                        disabled={!product.hasVariations()}
-                        opacity={!product.hasVariations() ? 0.5 : 1}
-                    />
-                </YStack>
-
-                <XStack gap="$2" ai="center" flex={1} theme="accent">
-                    <PriceTag />
-                    {productVariation && <SizableText textTransform="capitalize">{productVariation.name}</SizableText>}
+                <XStack gap="$2" ai="center" flex={1}>
                     <ProductStatus />
+                    <PriceTag />
+                    {product.hasVariations() && productVariation && <SizableText fontWeight="bold" >{productVariation.name}</SizableText>}
                 </XStack>
 
-                <YStack theme="primary">
-                    <Button
-                        icon={<ShoppingCart fontSize="$5" fontWeight="bold" />}
-                        onPress={() => increaseQuantity(product, productVariation || undefined)}
-                        circular
-                        size="$6"
-                        disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
-                        opacity={!activeProduct.isPurchasable() || !activeProduct.isInStock() ? 0.5 : 1}
+                <XStack gap="$2" ai="center">
+                    {product.hasVariations() &&
+                        <YStack theme="secondary">
+                            <Button
+                                icon={<ChevronDown size="$4" fontWeight="bold" color="$color" />}
+                                onPress={() => handleExpand()}
+                                circular
+                                size="$6"
+                                disabled={!product.hasVariations()}
+                                opacity={!product.hasVariations() ? 0.5 : 1}
+                            />
+                        </YStack>
+                    }
+                    <YStack theme="primary">
+                        <Button
+                            icon={<ShoppingCart fontSize="$5" fontWeight="bold" />}
+                            onPress={() => increaseQuantity(product, productVariation || undefined)}
+                            circular
+                            size="$6"
+                            disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
+                            opacity={!activeProduct.isPurchasable() || !activeProduct.isInStock() ? 0.5 : 1}
 
-                    />
-
-                </YStack>
+                        />
+                    </YStack>
+                </XStack>
             </XStack>
-            {product.type === 'variable' && isExpanded && (
-                <YStack marginHorizontal="$3" mt="$2">
-                    <ProductVariations />
-                </YStack>
-            )}
-        </YStack>
+            {
+                product.type === 'variable' && isExpanded && (
+                    <YStack marginHorizontal="$3" mt="$2">
+                        <ProductVariations />
+                    </YStack>
+                )
+            }
+        </YStack >
     );
 };
 

@@ -6,7 +6,7 @@ import { ProductVariationSelectionProvider } from './ProductVariationSelectionCo
 
 export const calculatePriceRange = (productVariations: ProductVariation[]): { min: number; max: number } | undefined => {
     if (!productVariations || productVariations.length === 0) {
-        return { min: 0, max: 0 };
+        return undefined
     }
 
     const prices = productVariations.map((p) => p.price).filter((p) => p > 0);
