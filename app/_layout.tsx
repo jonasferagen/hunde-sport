@@ -27,33 +27,33 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
 
   return (
     <TamaguiProvider config={appConfig}>
-      <Theme name="light">
-        <PortalProvider>
-          <SafeAreaProvider>
-            <QueryClientProvider client={queryClient}>
-              <StatusProvider>
-                <OrderProvider>
-                  <ShoppingCartProvider>
-                    <SearchProvider>
-                      <LayoutProvider>
-                        {children}
-                      </LayoutProvider>
-                    </SearchProvider>
-                  </ShoppingCartProvider>
-                </OrderProvider>
-              </StatusProvider>
-            </QueryClientProvider >
-          </SafeAreaProvider >
-        </PortalProvider>
-      </Theme>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Theme name="light">
+          <PortalProvider shouldAddRootHost>
+            <SafeAreaProvider>
+              <QueryClientProvider client={queryClient}>
+                <StatusProvider>
+                  <OrderProvider>
+                    <ShoppingCartProvider>
+                      <SearchProvider>
+                        <LayoutProvider>
+                          {children}
+                        </LayoutProvider>
+                      </SearchProvider>
+                    </ShoppingCartProvider>
+                  </OrderProvider>
+                </StatusProvider>
+              </QueryClientProvider >
+            </SafeAreaProvider >
+          </PortalProvider>
+        </Theme>
+      </GestureHandlerRootView>
     </TamaguiProvider>
   );
 });
 const AppContent = memo((): JSX.Element => {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} >
-      <Slot />
-    </GestureHandlerRootView>
+    <Slot />
   );
 });
 

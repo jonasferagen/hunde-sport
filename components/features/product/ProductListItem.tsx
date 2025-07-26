@@ -64,7 +64,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                 </YStack>
             </XStack>
             <XStack ai='center' jc='space-between' flex={0} gap="$2" marginHorizontal="$3" >
-
                 <XStack gap="$2" ai="center" flex={1}>
                     <PriceTag />
                     <ProductStatus />

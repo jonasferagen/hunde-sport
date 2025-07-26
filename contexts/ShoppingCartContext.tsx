@@ -67,9 +67,6 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             });
 
             const title = productVariation ? `${product.name} - ${productVariation.name}` : product.name;
-
-            console.log(productVariation);
-
             showMessage({ text: `${title} er lagt til i handlekurven`, type: 'info' });
         },
         [showMessage]

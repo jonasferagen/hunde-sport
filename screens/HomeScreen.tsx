@@ -3,6 +3,7 @@ import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 
+import TooltipTest from '@/components/development/TooltipTest';
 import { SearchBar } from '@/components/ui/searchBar/Searchbar';
 import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
@@ -10,7 +11,7 @@ import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecent
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
-
+import { YStack } from 'tamagui';
 
 export const HomeScreen = () => {
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
@@ -28,6 +29,9 @@ export const HomeScreen = () => {
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageHeader>
                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
+                <YStack paddingHorizontal="$4" paddingVertical="$2" background="red">
+                    <TooltipTest />
+                </YStack>
             </PageHeader>
             <PageSection scrollable>
                 <PageContent title="Debug">
