@@ -107,11 +107,12 @@ const CategorySubTree = ({ categoryId, level = 0, ancestors = [] }: CategorySubT
 
 interface CategoryTreeProps {
     style?: StyleProp<ViewStyle>;
+    categoryId?: number;
 }
 
-export const CategoryTree = React.memo(({ style }: CategoryTreeProps) => {
+export const CategoryTree = React.memo(({ style, categoryId = 0 }: CategoryTreeProps) => {
 
     return <View style={style as any}>
-        <CategorySubTree categoryId={0} />
+        <CategorySubTree categoryId={categoryId} />
     </View>;
 });

@@ -49,16 +49,16 @@ export const ProductItemActions = ({
         <YStack backgroundColor="$background" padding="$2">
             <XStack jc="space-between" ai="center">
                 <XStack gap="$3" ai="center">
-                    {product.type === 'variable' && (
+                    {product.type === 'variable' && false && (
                         <XStack onPress={handleExpand} ai="center">
                             <ChevronsDown size="$4" />
                             <ProductVariationSelectionText />
-
                         </XStack>
                     )}
                 </XStack>
+
                 <XStack gap="$2" ai='center'>
-                    <QuantityControl product={activeProduct} productVariation={productVariation ?? undefined} />
+                    <QuantityControl product={product} productVariation={productVariation ?? undefined} />
                 </XStack>
             </XStack>
             {isExpanded && (

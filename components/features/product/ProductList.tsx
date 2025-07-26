@@ -26,6 +26,8 @@ export const ProductList = memo(({ products, loadMore, loadingMore, contentConta
         const expandedHeight = layout.height * 0.6;
         return (
             <ProductListItem
+                borderBottomWidth={1}
+                borderBottomColor="black"
                 product={item}
                 index={index}
                 onPress={handleItemPress}

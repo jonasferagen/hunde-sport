@@ -2,10 +2,12 @@ import { ListItem } from '@/components/ui/list/ListItem';
 import { ProductProvider, useProductContext } from '@/contexts/ProductContext';
 import { Product } from '@/models/Product';
 import React from 'react';
+import { StackProps } from 'tamagui';
 import { ProductItemActions } from './list/ProductItemActions';
 import { ProductItemHeader } from './list/ProductItemHeader';
 
-interface ProductListItemProps {
+
+interface ProductListItemProps extends Omit<StackProps, 'onPress'> {
     product: Product;
     index: number;
     onPress: (id: number) => void;
@@ -18,6 +20,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     onPress,
     isExpanded,
     categoryId,
+    ...props
 }) => {
     const { product } = useProductContext();
 
@@ -29,6 +32,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         <ListItem
             header={<ProductItemHeader categoryId={categoryId} />}
             actions={<ProductItemActions isExpanded={isExpanded} handleExpand={handleExpand} />}
+            {...props}
         />
     );
 };
