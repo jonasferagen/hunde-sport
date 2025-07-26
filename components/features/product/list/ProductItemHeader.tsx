@@ -3,10 +3,7 @@ import { useProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React, { JSX, ReactNode } from 'react';
-import { Button, Image, SizableText, XStack, YStack } from 'tamagui';
-import { PriceTag } from '../display/PriceTag';
-import { ProductStatus } from '../display/ProductStatus';
-import { ProductTitle } from '../display/ProductTitle';
+import { Button, H3, Image, SizableText, XStack, YStack } from 'tamagui';
 
 interface ProductItemHeaderProps {
     children?: ReactNode;
@@ -27,32 +24,32 @@ export const ProductItemHeader = ({ children, categoryId }: ProductItemHeaderPro
 
     return (
         <>
-            <XStack
-                alignSelf="stretch"
-                jc="flex-start"
-                gap="$3"
-                flex={1}
-            >
-                <YStack
-                    ai="center"
-                    jc="center"
-                >
-                    <Image source={{ uri: imageUrl }} width={IMAGE_SIZE} height={IMAGE_SIZE} borderRadius="$4" />
-                </YStack>
-                <YStack flex={1} gap="$2">
-                    <Link href={routes.product(product, categoryId)} asChild>
-                        <Button unstyled pressStyle={{ opacity: 0.7 }}>
-                            <ProductTitle />
-                            <SizableText fontSize="$1" color="$color" numberOfLines={2}>
+            <Link href={routes.product(product, categoryId)} asChild>
+                <Button unstyled pressStyle={{ opacity: 0.7 }}>
+                    <XStack
+                        alignSelf="stretch"
+                        jc="flex-start"
+                        gap="$3"
+                        flex={1}
+                        padding="$2"
+                    >
+                        <YStack
+                            ai="center"
+                            jc="center"
+                        >
+                            <Image source={{ uri: imageUrl }} width={IMAGE_SIZE} height={IMAGE_SIZE} borderRadius="$4" />
+                        </YStack>
+                        <YStack gap="$2" jc="flex-start" flex={1}>
+                            <H3>{product.name}</H3>
+                            <SizableText fontSize="$1" color="$color" lineHeight={"$1"} textOverflow='ellipsis' numberOfLines={2}>
                                 {product.short_description}
                             </SizableText>
-                        </Button>
-                    </Link>
-                </YStack>
-            </XStack>
-            <XStack ai="center" gap="$2">
-                <PriceTag /><ProductStatus /><Button>Kjøp</Button>
-            </XStack>
+                        </YStack>
+                    </XStack>
+                </Button>
+            </Link>
+
+
         </>
     );
 };

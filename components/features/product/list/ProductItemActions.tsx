@@ -1,8 +1,9 @@
 import { useProductContext } from '@/contexts';
-import { formatPrice } from '@/utils/helpers';
 import { ChevronsDown } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
-import { SizableText, XStack, YStack } from 'tamagui';
+import { Button, XStack, YStack } from 'tamagui';
+import { PriceTag } from '../display/PriceTag';
+import { ProductStatus } from '../display/ProductStatus';
 import { ProductVariations } from '../variation/ProductVariations';
 import { QuantityControl } from './QuantityControl';
 interface ProductItemActionsProps {
@@ -11,26 +12,19 @@ interface ProductItemActionsProps {
 }
 
 const ProductVariationSelectionText = () => {
-    const { product, productVariation } = useProductContext();
 
-
-    if (productVariation) {
-        return (
-            <>
-                <SizableText fontSize="$4" fontWeight='bold' color="$color" gap="$5">
-                    {product.name}
-                    - {productVariation.name.trim()}
-                    {formatPrice(productVariation.price)}
-                </SizableText>
-            </>
-        );
-    }
 
     return (
-        <SizableText color="red">
-            Velg variant
-        </SizableText>
+        <>
+            <XStack flex={0} ai="center" justifyContent="space-between" borderColor='green' borderWidth={1}>
+                <XStack gap="$2">
+                    <PriceTag /><ProductStatus />
+                </XStack>
+                <Button>Kjøp</Button>
+            </XStack>
+        </>
     );
+
 };
 
 export const ProductItemActions = ({
