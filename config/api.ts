@@ -10,7 +10,7 @@ export const API_BASE_URL = __DEV__
   })!
   : 'https://your-production-api.com'; // Update this for production
 
-export const PAGE_SIZE = 3;
+export const PAGE_SIZE = 10;
 
 const ORDERS_URL = `${API_BASE_URL}/orders`;
 const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;

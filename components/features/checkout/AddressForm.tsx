@@ -1,7 +1,7 @@
 // AddressForm.tsx
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller, useForm } from 'react-hook-form';
 import { Button, Form, Input, Label, ScrollView, Text, XStack, YStack } from 'tamagui';
 import { z } from 'zod';
 
@@ -11,7 +11,6 @@ const addressSchema = z.object({
     address_1: z.string().min(1, { message: 'Adresse er påkrevd' }),
     address_2: z.string().optional(),
     city: z.string().min(1, { message: 'By er påkrevd' }),
-    state: z.string().min(1, { message: 'Stat/fylke er påkrevd' }),
     postcode: z.string().min(1, { message: 'Postnummer er påkrevd' }),
     email: z.string().email({ message: 'Ugyldig e-postadresse' }),
     phone: z.string().min(8, { message: 'Telefonnummer er påkrevd' }),
@@ -25,6 +24,46 @@ interface AddressFormProps {
     name: string;
 }
 
+type ControlledInputProps = {
+    control: Control<any>;
+    name: string;
+    label: string;
+    placeholder?: string;
+    keyboardType?: 'default' | 'email-address' | 'phone-pad' | 'numeric';
+    idPrefix: string;
+};
+
+const ControlledInput = ({
+    control,
+    name,
+    label,
+    placeholder,
+    keyboardType = 'default',
+    idPrefix,
+}: ControlledInputProps) => (
+    <YStack gap="$2" flex={1}>
+        <Label htmlFor={`${idPrefix}-${name}`}>{label}</Label>
+        <Controller
+            control={control}
+            name={name}
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                <>
+                    <Input
+                        id={`${idPrefix}-${name}`}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        value={value}
+                        placeholder={placeholder}
+                        keyboardType={keyboardType}
+                        borderColor={error ? '$red10' : undefined}
+                    />
+                    {error && <Text color="$red10" fontSize="$2">{error.message}</Text>}
+                </>
+            )}
+        />
+    </YStack>
+);
+
 export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) => {
     const {
         control,
@@ -33,6 +72,8 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
     } = useForm<AddressFormData>({
         resolver: zodResolver(addressSchema),
         defaultValues: initialData,
+        mode: 'onBlur',
+        reValidateMode: 'onChange',
     });
 
     return (
@@ -40,201 +81,84 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <YStack gap="$4" padding="$4">
                     <XStack gap="$4">
-                        <YStack flex={1} gap="$2">
-                            <Label htmlFor={`${name}-first_name`}>Fornavn</Label>
-                            <Controller
-                                control={control}
-                                name="first_name"
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <Input
-                                        id={`${name}-first_name`}
-                                        onBlur={onBlur}
-                                        onChangeText={onChange}
-                                        value={value}
-                                        placeholder="Fornavn"
-                                        borderColor={errors.first_name ? '$red10' : undefined}
-                                    />
-                                )}
-                            />
-                            {errors.first_name && (
-                                <Text color="$red10" fontSize="$2">
-                                    {errors.first_name.message}
-                                </Text>
-                            )}
-                        </YStack>
-
-                        <YStack flex={1} gap="$2">
-                            <Label htmlFor={`${name}-last_name`}>Etternavn</Label>
-                            <Controller
-                                control={control}
-                                name="last_name"
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <Input
-                                        id={`${name}-last_name`}
-                                        onBlur={onBlur}
-                                        onChangeText={onChange}
-                                        value={value}
-                                        placeholder="Etternavn"
-                                        borderColor={errors.last_name ? '$red10' : undefined}
-                                    />
-                                )}
-                            />
-                            {errors.last_name && (
-                                <Text color="$red10" fontSize="$2">
-                                    {errors.last_name.message}
-                                </Text>
-                            )}
-                        </YStack>
+                        <ControlledInput
+                            control={control}
+                            name="first_name"
+                            label="Fornavn"
+                            placeholder="Fornavn"
+                            idPrefix={name}
+                        />
+                        <ControlledInput
+                            control={control}
+                            name="last_name"
+                            label="Etternavn"
+                            placeholder="Etternavn"
+                            idPrefix={name}
+                        />
                     </XStack>
 
-                    <YStack gap="$2">
-                        <Label htmlFor={`${name}-address_1`}>Adresse</Label>
-                        <Controller
-                            control={control}
-                            name="address_1"
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <Input
-                                    id={`${name}-address_1`}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    placeholder="Adresselinje 1"
-                                    borderColor={errors.address_1 ? '$red10' : undefined}
-                                />
-                            )}
-                        />
-                        {errors.address_1 && (
-                            <Text color="$red10" fontSize="$2">
-                                {errors.address_1.message}
-                            </Text>
-                        )}
-                    </YStack>
+                    <ControlledInput
+                        control={control}
+                        name="address_1"
+                        label="Adresse"
+                        placeholder="Adresse"
+                        idPrefix={name}
+                    />
 
-                    <YStack gap="$2">
-                        <Label htmlFor={`${name}-address_2`}>Adresselinje 2 (valgfritt)</Label>
-                        <Controller
-                            control={control}
-                            name="address_2"
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <Input
-                                    id={`${name}-address_2`}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    placeholder="Adresselinje 2"
-                                    borderColor={errors.address_2 ? '$red10' : undefined}
-                                />
-                            )}
-                        />
-                        {errors.address_2 && (
-                            <Text color="$red10" fontSize="$2">
-                                {errors.address_2.message}
-                            </Text>
-                        )}
-                    </YStack>
+                    <ControlledInput
+                        control={control}
+                        name="address_2"
+                        label="Leilighet, suite, etc. (valgfritt)"
+                        placeholder="Leilighet, suite, etc."
+                        idPrefix={name}
+                    />
 
                     <XStack gap="$4">
-                        <YStack flex={1} gap="$2">
-                            <Label htmlFor={`${name}-city`}>By</Label>
-                            <Controller
-                                control={control}
-                                name="city"
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <Input
-                                        id={`${name}-city`}
-                                        onBlur={onBlur}
-                                        onChangeText={onChange}
-                                        value={value}
-                                        placeholder="By"
-                                        borderColor={errors.city ? '$red10' : undefined}
-                                    />
-                                )}
-                            />
-                            {errors.city && (
-                                <Text color="$red10" fontSize="$2">
-                                    {errors.city.message}
-                                </Text>
-                            )}
-                        </YStack>
-
-                        <YStack flex={1} gap="$2">
-                            <Label htmlFor={`${name}-postcode`}>Postnummer</Label>
-                            <Controller
-                                control={control}
-                                name="postcode"
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <Input
-                                        id={`${name}-postcode`}
-                                        onBlur={onBlur}
-                                        onChangeText={onChange}
-                                        value={value}
-                                        placeholder="Postnummer"
-                                        keyboardType="numeric"
-                                        borderColor={errors.postcode ? '$red10' : undefined}
-                                    />
-                                )}
-                            />
-                            {errors.postcode && (
-                                <Text color="$red10" fontSize="$2">
-                                    {errors.postcode.message}
-                                </Text>
-                            )}
-                        </YStack>
+                        <ControlledInput
+                            control={control}
+                            name="city"
+                            label="By"
+                            placeholder="By"
+                            idPrefix={name}
+                        />
+                        <ControlledInput
+                            control={control}
+                            name="postcode"
+                            label="Postnummer"
+                            placeholder="Postnummer"
+                            keyboardType="numeric"
+                            idPrefix={name}
+                        />
                     </XStack>
 
-                    <YStack gap="$2">
-                        <Label htmlFor={`${name}-email`}>E-post</Label>
-                        <Controller
-                            control={control}
-                            name="email"
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <Input
-                                    id={`${name}-email`}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    placeholder="E-post"
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    borderColor={errors.email ? '$red10' : undefined}
-                                />
-                            )}
-                        />
-                        {errors.email && (
-                            <Text color="$red10" fontSize="$2">
-                                {errors.email.message}
-                            </Text>
-                        )}
-                    </YStack>
+                    <ControlledInput
+                        control={control}
+                        name="state"
+                        label="Fylke"
+                        placeholder="Fylke"
+                        idPrefix={name}
+                    />
 
-                    <YStack gap="$2">
-                        <Label htmlFor={`${name}-phone`}>Telefon</Label>
-                        <Controller
-                            control={control}
-                            name="phone"
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <Input
-                                    id={`${name}-phone`}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    placeholder="Telefon"
-                                    keyboardType="phone-pad"
-                                    borderColor={errors.phone ? '$red10' : undefined}
-                                />
-                            )}
-                        />
-                        {errors.phone && (
-                            <Text color="$red10" fontSize="$2">
-                                {errors.phone.message}
-                            </Text>
-                        )}
-                    </YStack>
+                    <ControlledInput
+                        control={control}
+                        name="email"
+                        label="E-post"
+                        placeholder="E-post"
+                        keyboardType="email-address"
+                        idPrefix={name}
+                    />
+
+                    <ControlledInput
+                        control={control}
+                        name="phone"
+                        label="Telefon"
+                        placeholder="Telefon"
+                        keyboardType="phone-pad"
+                        idPrefix={name}
+                    />
 
                     <Form.Trigger asChild>
-                        <Button marginTop="$4">
-                            Send inn
-                        </Button>
+                        <Button marginTop="$4">Send inn</Button>
                     </Form.Trigger>
                 </YStack>
             </ScrollView>
