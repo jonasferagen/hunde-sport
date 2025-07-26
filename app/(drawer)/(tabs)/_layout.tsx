@@ -1,14 +1,17 @@
+
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { cartRoute, homeRoute, searchRoute, useActiveRoute } from '@/hooks/useActiveRoute';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { router, Tabs } from 'expo-router';
 import { SizableText, YStack } from 'tamagui';
+
 export default function TabsLayout() {
     const { cartItemCount } = useShoppingCartContext();
     const { isHomeActive, isCartActive, isSearchActive } = useActiveRoute();
 
     return (
+
         <Tabs
             screenOptions={{
                 tabBarBackground: () => (
@@ -97,5 +100,6 @@ export default function TabsLayout() {
             />
 
         </Tabs>
+
     );
 }

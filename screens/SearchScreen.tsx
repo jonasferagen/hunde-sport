@@ -2,85 +2,67 @@ import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { SearchBar } from '@/components/ui';
-import { useProductsBySearch } from '@/hooks/data/Product';
+import { useSearchContext } from '@/contexts/SearchContext';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect } from 'react';
 import { TextInput } from 'react-native';
 import { SizableText, YStack } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
 
 export const SearchScreen = () => {
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
-    const [liveQuery, setLiveQuery] = useState(initialQuery || '');
+    const { query, liveQuery, setLiveQuery, setQuery } = useSearchContext();
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
 
     useEffect(() => {
-        if (initialQuery !== undefined) {
+        if (initialQuery && initialQuery !== query) {
             setLiveQuery(initialQuery);
-
+            setQuery(initialQuery);
         }
-    }, [initialQuery]);
+    }, [initialQuery, query, setLiveQuery, setQuery]);
 
-    const handleQueryChange = (newQuery: string) => {
-        if (newQuery !== initialQuery) {
-            router.setParams({ query: newQuery });
-        }
-    };
-
-    const handleSearchSubmit = (submittedQuery: string) => {
-        router.setParams({ query: submittedQuery });
-    };
-
-    const isWaiting = initialQuery !== liveQuery;
-
+    const isWaiting = query !== liveQuery;
 
     return (
         <PageView>
             <PageHeader>
-
-                <SearchBar
-                    ref={searchInputRef}
-                    initialQuery={initialQuery}
-                    onTextChange={setLiveQuery}
-                    onQueryChange={handleQueryChange}
-                    onSubmit={handleSearchSubmit}
-                    debounce={1000}
-                />
+                <SearchBar ref={searchInputRef} />
                 <SizableText fontSize="$3">
                     {isWaiting
                         ? `Leter etter "${liveQuery}"...`
-                        : (initialQuery ? `Søkeresultater for "${initialQuery}"` : ' ')}
+                        : (query ? `Søkeresultater for "${query}"` : ' ')}
                 </SizableText>
-
             </PageHeader>
             <PageSection flex={1}>
-                <PageContent flex={1} paddingHorizontal="none" paddingVertical="none" >
-                    {initialQuery && <SearchResults query={initialQuery} />}
+                <PageContent flex={1} paddingHorizontal="none" paddingVertical="none">
+                    <SearchResults />
                 </PageContent>
             </PageSection>
         </PageView>
     );
 };
 
+const SearchResults = () => {
+    const { query, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
 
-const SearchResults = ({ query }: { query: string }) => {
-    const { items: products, isLoading, fetchNextPage, isFetchingNextPage } = useProductsBySearch(query);
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
+
+    if (products.length === 0 && query) {
+        return (
+            <YStack flex={1} ai="center" jc="center">
+                <SizableText>Ingen resultater funnet for "{query}"</SizableText>
+            </YStack>
+        );
+    }
+
     return (
-        isLoading ? (
-            <LoadingScreen />
-        ) : (
-            products.length === 0 && query ? (
-                <YStack flex={1} ai="center" jc="center">
-                    <SizableText>Ingen resultater funnet for "{query}"</SizableText>
-                </YStack>
-            ) : (
-                <ProductList
-                    products={products}
-                    loadMore={fetchNextPage}
-                    loadingMore={isFetchingNextPage}
-                />
-            )
-        )
+        <ProductList
+            products={products}
+            loadMore={fetchNextPage}
+            loadingMore={isFetchingNextPage}
+        />
     );
 };

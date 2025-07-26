@@ -15,9 +15,7 @@ import { TextInput } from 'react-native';
 export const HomeScreen = () => {
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const handleSearch = (query: string) => {
-        if (query.trim()) {
-            router.push(routes.search(query));
-        }
+        query && router.push(routes.search(query));
     };
     const debugProducts = useProductsByIds([35961, 27445]);
     const recentProducts = useRecentProducts();
@@ -29,7 +27,7 @@ export const HomeScreen = () => {
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageHeader>
-                <SearchBar ref={searchInputRef} initialQuery="" onSubmit={handleSearch} />
+                <SearchBar ref={searchInputRef} onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
                 <PageContent title="Debug">
