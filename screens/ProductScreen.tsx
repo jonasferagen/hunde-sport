@@ -1,6 +1,5 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { PriceTag } from '@/components/features/product/display/PriceTag';
-import { ProductStatus } from '@/components/features/product/display/ProductStatus';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
@@ -15,7 +14,7 @@ import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
 import { ShoppingCart } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Button, SizableText, XStack } from 'tamagui';
+import { Button, SizableText, XStack, YStack } from 'tamagui';
 
 
 export const ProductScreen = () => {
@@ -48,6 +47,8 @@ const ProductScreenContent = () => {
   const { product, productVariation } = useProductContext();
   const { increaseQuantity } = useShoppingCartContext();
 
+  const activeProduct = productVariation || product;
+
   return (
     <>
       <PageSection scrollable>
@@ -57,16 +58,21 @@ const ProductScreenContent = () => {
             <ProductTitle />
             <PriceTag fontSize="$6" />
           </XStack>
-          {product.type === 'variable' && <ProductVariations />}
           <SizableText size="$3">{product.short_description}</SizableText>
-          <ProductStatus />
-          <Button
-            icon={<ShoppingCart />}
-            onPress={() => increaseQuantity(product, productVariation || undefined)}
-            disabled={!product.isPurchasable() || !product.isInStock()}
-          >
-            {product.isPurchasable() ? 'Legg i handlekurv' : 'Velg variant'}
-          </Button>
+          {product.type === 'variable' && <ProductVariations />}
+          <XStack ai="center" jc="space-between" mb="$3">
+            <ProductTitle />
+            <PriceTag fontSize="$6" />
+          </XStack>
+          <YStack theme="primary">
+            <Button
+              icon={<ShoppingCart />}
+              onPress={() => increaseQuantity(product, productVariation || undefined)}
+              disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
+            >
+              Legg i handlekurv
+            </Button>
+          </YStack>
         </PageContent>
         <PageContent title="Produktbilder" style={{ flex: 1 }}>
           <ProductImageGallery />
