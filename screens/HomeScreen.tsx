@@ -27,7 +27,7 @@ export const HomeScreen = () => {
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
             <PageHeader>
-                <SearchBar ref={searchInputRef} onSubmit={handleSearch} />
+                <SearchBar query="" ref={searchInputRef} onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
                 <PageContent title="Debug">

@@ -3,31 +3,24 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { SearchBar } from '@/components/ui';
 import { useSearchContext } from '@/contexts/SearchContext';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { TextInput } from 'react-native';
 import { SizableText, YStack } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
-
 export const SearchScreen = () => {
+    useRenderGuard("SearchScreen")
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
-    const { query, liveQuery, setLiveQuery, setQuery } = useSearchContext();
+    const { query, liveQuery } = useSearchContext();
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
-
-    useEffect(() => {
-        if (initialQuery && initialQuery !== query) {
-            setLiveQuery(initialQuery);
-            setQuery(initialQuery);
-        }
-    }, [initialQuery, query, setLiveQuery, setQuery]);
-
     const isWaiting = query !== liveQuery;
 
     return (
         <PageView>
             <PageHeader>
-                <SearchBar ref={searchInputRef} />
+                <SearchBar query={initialQuery} ref={searchInputRef} />
                 <SizableText fontSize="$3">
                     {isWaiting
                         ? `Leter etter "${liveQuery}"...`
@@ -36,7 +29,7 @@ export const SearchScreen = () => {
             </PageHeader>
             <PageSection flex={1}>
                 <PageContent flex={1} paddingHorizontal="none" paddingVertical="none">
-                    <SearchResults />
+                    {query && <SearchResults />}
                 </PageContent>
             </PageSection>
         </PageView>
@@ -45,7 +38,7 @@ export const SearchScreen = () => {
 
 const SearchResults = () => {
     const { query, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
-
+    console.log("search results for ", query)
     if (isLoading) {
         return <LoadingScreen />;
     }

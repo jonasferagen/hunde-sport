@@ -19,10 +19,11 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [liveQuery, setLiveQuery] = useState('');
     const [query, setQuery] = useState('');
-    const debouncedLiveQuery = useDebounce(liveQuery, 500);
+    const debouncedLiveQuery = useDebounce(liveQuery, 1000);
 
     useEffect(() => {
-        setQuery(debouncedLiveQuery);
+        setQuery(debouncedLiveQuery.trim());
+        console.log("set query to ", debouncedLiveQuery)
     }, [debouncedLiveQuery]);
 
     const {

@@ -6,11 +6,13 @@ import { Button, Input, XStack } from 'tamagui';
 
 export interface SearchBarProps {
     placeholder?: string;
+    query: string;
     onSubmit?: (query: string) => void;
 }
 
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(({
     placeholder = 'Hva leter du etter?',
+    query,
     onSubmit }, ref) => {
     const { liveQuery, setLiveQuery, setQuery } = useSearchContext();
 
@@ -41,7 +43,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(({
                 placeholder={placeholder}
                 placeholderTextColor="$color10"
                 selectionColor="$color10"
-                value={liveQuery}
+                value={query}
                 onChangeText={handleChangeText}
                 onSubmitEditing={handleSearch}
                 unstyled
