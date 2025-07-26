@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from "react-native";
-import { GetProps, Image, SizableText, YStack, styled, useTheme } from 'tamagui';
+import { Image, SizableText, YStack, YStackProps, styled, useTheme } from 'tamagui';
 
 const StyledLinearGradient = styled(LinearGradient, {
     name: 'StyledLinearGradient',
@@ -13,7 +13,7 @@ const StyledLinearGradient = styled(LinearGradient, {
     jc: 'center',
 });
 
-export interface TileProps extends Omit<GetProps<typeof YStack>, 'href'> {
+export interface TileProps extends Omit<YStackProps, 'href'> {
     title: string;
     imageUrl: string;
     width?: DimensionValue;

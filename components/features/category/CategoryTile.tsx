@@ -1,4 +1,4 @@
-import { Tile } from "@/components/ui/tile/Tile";
+import { Tile, TileProps } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { ThemeVariant } from '@/types';
@@ -8,7 +8,7 @@ import { DimensionValue } from 'react-native';
 export const CATEGORY_TILE_WIDTH: DimensionValue = 200;
 export const CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 
-interface CategoryTileProps {
+interface CategoryTileProps extends Omit<TileProps, 'title' | 'imageUrl' | 'href'> {
     category: Category;
     width?: DimensionValue;
     height?: DimensionValue;
@@ -19,7 +19,7 @@ export const CategoryTile = ({
     width = CATEGORY_TILE_WIDTH,
     height = CATEGORY_TILE_HEIGHT,
     theme,
-    ...props
+    ...stackProps
 }: CategoryTileProps) => {
 
     const finalHref = routes.category(category);
@@ -32,10 +32,9 @@ export const CategoryTile = ({
             imageUrl={category.image?.src}
             href={finalHref}
             width={width}
-            aspectRatio={1}
             height={height}
-            {...props}
-
+            aspectRatio={1}
+            {...stackProps}
         >
             <></>
         </Tile>

@@ -33,15 +33,16 @@ export const HomeScreen = () => {
                 <PageContent title="Debug">
                     <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
                 </PageContent>
+                <PageContent title="Kategorier">
+                    <CategoryTiles key='categories' queryResult={categories} theme="primary" />
+                </PageContent>
                 <PageContent theme="secondary" title="Nyheter">
                     <ProductTiles key='recent' queryResult={recentProducts} theme="accent" />
                 </PageContent>
                 <PageContent theme="primary" title="Tilbud">
                     <ProductTiles key='discounted' queryResult={discountedProducts} theme="secondary" />
                 </PageContent>
-                <PageContent title="Kategorier">
-                    <CategoryTiles key='categories' queryResult={categories} theme="primary" />
-                </PageContent>
+
                 <PageContent theme="primary" title="Populære produkter" >
                     <ProductTiles key='featured' queryResult={featuredProducts} theme="secondary" />
                 </PageContent>

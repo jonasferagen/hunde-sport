@@ -13,7 +13,7 @@ interface CategoryTilesProps {
 
 export const CategoryTiles = ({ queryResult, theme = 'primary' }: CategoryTilesProps): JSX.Element => {
     return (
-        <YStack style={{ borderColor: 'blue', borderWidth: 1 }}>
+        <YStack style={{ borderColor: 'red', borderWidth: 1 }}>
             <GridTiles
                 queryResult={queryResult}
                 renderItem={({ item }) => (

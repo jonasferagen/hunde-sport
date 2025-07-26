@@ -1,6 +1,7 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
+import { CellContainer, FlashList, ListRenderItem } from '@shopify/flash-list';
+import { CellContainerProps } from '@shopify/flash-list/dist/native/cell-container/CellContainer';
 import React, { JSX } from 'react';
 import { getTokens } from 'tamagui';
 
@@ -17,8 +18,6 @@ export const GridTiles = <T extends { id: number | string }>({
     numColumns = 3,
 }: GridTilesProps<T>): JSX.Element => {
     const { items, isLoading, isFetchingNextPage, fetchNextPage } = queryResult;
-    const spacing = getTokens().space['$3'].val;
-
 
     if (isLoading) {
         return <ThemedSpinner size="large" />;
@@ -27,12 +26,13 @@ export const GridTiles = <T extends { id: number | string }>({
     if (!items || items.length === 0) {
         return <></>;
     }
+    const numRows = Math.ceil(items.length / numColumns);
 
     return (
         <FlashList
 
             numColumns={numColumns}
-            contentContainerStyle={{ padding: 0 }}
+            CellRendererComponent={(props) => GridTileContainer({ props, numColumns, numRows })}
             data={items}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
@@ -48,3 +48,15 @@ export const GridTiles = <T extends { id: number | string }>({
         />
     );
 };
+
+const GridTileContainer = ({ props, numColumns, numRows }: { props: CellContainerProps, numColumns: number, numRows: number }) => {
+    const spacing = getTokens().space['$1'].val;
+
+    const paddingLeft = props.index % numColumns === 0 ? 0 : spacing;   // First column
+    const paddingRight = props.index % numColumns === numColumns - 1 ? 0 : spacing; // Last column
+    const paddingTop = props.index < numColumns ? 0 : spacing; // First row
+    const paddingBottom = props.index >= (numRows - 1) * numColumns ? 0 : spacing; // Last row
+
+
+    return <CellContainer {...props} style={[props.style, { paddingLeft, paddingRight, paddingBottom, paddingTop }]} >{props.children}</CellContainer>;
+}
