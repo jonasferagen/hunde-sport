@@ -10,6 +10,8 @@ interface ProductVariationContextType {
     selectedOptions: Record<number, string>;
     productVariationAttributes: ProductAttribute[];
     selectedVariation: ProductVariation | null;
+    defaultVariation: ProductVariation | null;
+    availableOptions: Map<number, Map<string, ProductVariation[]>>;
 }
 
 const ProductVariationSelectionContext = createContext<ProductVariationContextType | undefined>(undefined);
@@ -27,14 +29,13 @@ export const ProductVariationSelectionProvider: React.FC<{
         selectedOptions,
         productVariationAttributes,
         selectedVariation,
+        defaultVariation,
+        availableOptions,
     } = useProductVariations(product, productVariations, initialProductVariation);
 
     useEffect(() => {
-
-        console.log(selectedVariation?.name);
-
-        setProductVariation(selectedVariation);
-    }, [selectedVariation, setProductVariation]);
+        setProductVariation(selectedVariation || defaultVariation);
+    }, [selectedVariation, setProductVariation, defaultVariation]);
 
     const value = {
         selectOption,
@@ -42,6 +43,8 @@ export const ProductVariationSelectionProvider: React.FC<{
         selectedOptions,
         productVariationAttributes,
         selectedVariation,
+        defaultVariation,
+        availableOptions,
     };
 
     return <ProductVariationSelectionContext.Provider value={value}>{children}</ProductVariationSelectionContext.Provider>;

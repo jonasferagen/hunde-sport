@@ -1,4 +1,4 @@
-import { Product } from '@/models/Product';
+import { Product, ProductPriceRange } from '@/models/Product';
 import { ProductVariation } from '@/models/ProductVariation';
 import { useMemo, useState } from 'react';
 
@@ -24,7 +24,8 @@ export interface OptionState {
     isAvailable: boolean;
     isOutOfStock: boolean;
     matchingVariation: ProductVariation | null;
-    priceRange?: { min: number; max: number };
+    priceRange?: ProductPriceRange;
+    isFinalOption: boolean;
 }
 
 /**
@@ -40,6 +41,22 @@ export const useProductVariations = (
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() =>
         getOptionsFromVariation(initialProductVariation)
     );
+
+    const defaultVariation = useMemo(() => {
+        if (!product.default_attributes || product.default_attributes.length === 0) {
+            return null;
+        }
+
+        return (
+            productVariations.find(variation => {
+                return product.default_attributes.every(defaultAttr => {
+                    return variation.attributes.some(
+                        vAttr => vAttr.id === defaultAttr.id && vAttr.option === defaultAttr.option
+                    );
+                });
+            }) || null
+        );
+    }, [product.default_attributes, productVariations]);
 
     const productVariationAttributes = useMemo(() => {
         return product.attributes.filter(attr => attr.variation);
@@ -105,16 +122,27 @@ export const useProductVariations = (
 
     const getOptionState = (attributeId: number, optionName: string): OptionState => {
         const isSelected = selectedOptions[attributeId] === optionName;
-        const matchingVariants = availableOptions.get(attributeId)?.get(optionName);
-        const isAvailable = !!matchingVariants && matchingVariants.length > 0;
-        const singleVariant = isAvailable && matchingVariants.length === 1 ? matchingVariants[0] : null;
+        const matchingVariations = availableOptions.get(attributeId)?.get(optionName) || [];
+        const isAvailable = !!matchingVariations && matchingVariations.length > 0;
+        const singleVariant = isAvailable && matchingVariations.length === 1 ? matchingVariations[0] : null;
         const isOutOfStock = singleVariant ? singleVariant.stock_status === 'outofstock' : false;
+
+        const isCurrentlySelected = !!selectedOptions[attributeId];
+        const potentialSelectionCount = Object.keys(selectedOptions).length + (isCurrentlySelected ? 0 : 1);
+        const isFinalSelectionStep = potentialSelectionCount === productVariationAttributes.length;
+
+        const isFinalOption = !!singleVariant && isFinalSelectionStep;
 
         return {
             isSelected,
             isAvailable,
             isOutOfStock,
             matchingVariation: singleVariant,
+            priceRange: matchingVariations.length > 0 ? {
+                min: Math.min(...matchingVariations.map(v => v.price)),
+                max: Math.max(...matchingVariations.map(v => v.price))
+            } : undefined,
+            isFinalOption,
         };
     };
 
@@ -125,5 +153,6 @@ export const useProductVariations = (
         getOptionState,
         productVariationAttributes,
         availableOptions, // Keep this for now for the context
+        defaultVariation,
     };
 };

@@ -2,10 +2,10 @@ import { useProductContext } from '@/contexts';
 import { Product } from '@/models/Product';
 import { ProductVariation } from '@/types';
 import React from 'react';
-import { SizableText, XStack } from 'tamagui';
+import { SizableText, SizableTextProps, XStack } from 'tamagui';
 
 
-export const ProductStatus = ({ productOverride }: { productOverride?: Product | ProductVariation }) => {
+export const ProductStatus = ({ productOverride, ...props }: { productOverride?: Product | ProductVariation } & SizableTextProps) => {
 
     const { product, productVariation } = useProductContext();
     const activeProduct = productOverride || productVariation || product;
@@ -19,18 +19,18 @@ export const ProductStatus = ({ productOverride }: { productOverride?: Product |
             break;
         case 'outofstock':
             color = 'red';
-            text = 'Ikke på lager';
+            text = 'Utsolgt';
             break;
         case 'onbackorder':
             color = 'yellow';
-            text = 'Bestilt';
+            text = 'bestilt';
             break;
     }
 
 
     return (
-        <XStack gap="$1" ai="center">
-            <SizableText color={color} fontSize="$2">⬤ {text}</SizableText>
+        <XStack gap="$1" ai="center" >
+            <SizableText fontSize="$3" color={color} {...props}>⬤ {text}</SizableText>
         </XStack>
     );
 

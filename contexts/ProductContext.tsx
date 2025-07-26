@@ -25,6 +25,7 @@ interface ProductContextType {
     priceRange: { min: number; max: number } | undefined;
     isLoading: boolean;
     isProductVariationsLoading: boolean;
+
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -41,7 +42,8 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         items: productVariations,
         isLoading,
         isFetchingNextPage,
-        hasNextPage
+        hasNextPage,
+
     } = useProductVariations(product.id, { enabled: product.type === 'variable', autoload: true });
 
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
@@ -54,6 +56,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         priceRange,
         isLoading,
         isProductVariationsLoading: isLoading || isFetchingNextPage || hasNextPage,
+
     };
 
     const content = product.type === 'variable' ? (
