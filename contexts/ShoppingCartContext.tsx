@@ -45,12 +45,12 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
         return {
             status: 'ok',
-            msg: 'Legg til i handlekurv',
+            msg: 'Legg til',
             msgShort: 'Kjøp',
         };
     };
 
-        const getQuantity = useCallback(
+    const getQuantity = useCallback(
         (product: Product, productVariation?: ProductVariation) => {
             const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
             const cartItem = items.find((item) => item.key === key);
@@ -59,7 +59,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [items]
     );
 
-        const decreaseQuantity = useCallback((product: Product, productVariation?: ProductVariation) => {
+    const decreaseQuantity = useCallback((product: Product, productVariation?: ProductVariation) => {
         const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
         setItems((prevItems) =>
             prevItems
@@ -73,7 +73,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         );
     }, []);
 
-        const increaseQuantity = useCallback(
+    const increaseQuantity = useCallback(
         (product: Product, productVariation?: ProductVariation) => {
             const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
             setItems((prevItems) => {
@@ -98,7 +98,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [showMessage]
     );
 
-        const removeFromCart = useCallback((product: Product, productVariation?: ProductVariation) => {
+    const removeFromCart = useCallback((product: Product, productVariation?: ProductVariation) => {
         const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
     }, []);

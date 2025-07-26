@@ -17,33 +17,6 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Button, SizableText, XStack } from 'tamagui';
 
-const BuyProduct = () => {
-  const { product, productVariation } = useProductContext();
-  const { increaseQuantity, purchaseInfo } = useShoppingCartContext();
-
-  const activeProduct = productVariation || product;
-
-  const { status, msg } = purchaseInfo(activeProduct);
-
-  return (
-    <>
-      <XStack ai="center" jc="space-between" mb="$3">
-        <ProductTitle />
-        <PriceTag fontSize="$6" />
-      </XStack>
-      <ProductVariations />
-      <SizableText size="$3">{product.short_description}</SizableText>
-      <ProductStatus />
-      <Button
-        icon={<ShoppingCart />}
-        onPress={() => increaseQuantity(activeProduct, product)}
-        disabled={status !== 'ok'}
-      >
-        {msg}
-      </Button>
-    </>
-  );
-};
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
@@ -72,14 +45,28 @@ export const ProductScreen = () => {
 };
 
 const ProductScreenContent = () => {
-  const { product } = useProductContext();
-
+  const { product, productVariation } = useProductContext();
+  const { increaseQuantity, purchaseInfo } = useShoppingCartContext();
+  const { status, msg } = purchaseInfo(productVariation || product);
   return (
     <>
       <PageSection scrollable>
         <ProductImage />
         <PageContent>
-          <BuyProduct />
+          <XStack ai="center" jc="space-between" mb="$3">
+            <ProductTitle />
+            <PriceTag fontSize="$6" />
+          </XStack>
+          {product.type === 'variable' && <ProductVariations />}
+          <SizableText size="$3">{product.short_description}</SizableText>
+          <ProductStatus />
+          <Button
+            icon={<ShoppingCart />}
+            onPress={() => increaseQuantity(product, productVariation || undefined)}
+            disabled={status !== 'ok'}
+          >
+            {msg}
+          </Button>
         </PageContent>
         <PageContent title="Produktbilder" style={{ flex: 1 }}>
           <ProductImageGallery />

@@ -14,10 +14,13 @@ export const ShoppingCartListItem: React.FC<ShoppingCartListItemProps> = ({ item
     return (
 
         <ProductProvider product={item.product} productVariation={item.productVariation}>
+
+
             <ListItem
                 header={<ProductItemHeader />}
                 actions={<ShoppingCartItemActions item={item} />}
             />
+
         </ProductProvider>
     );
 };

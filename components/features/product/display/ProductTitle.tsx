@@ -1,6 +1,6 @@
 import { useProductContext } from '@/contexts';
 import React from 'react';
-import { H3 } from 'tamagui';
+import { H6 } from 'tamagui';
 
 export const ProductTitle = () => {
     const { product, productVariation } = useProductContext();
@@ -11,5 +11,5 @@ export const ProductTitle = () => {
 
     const title = productVariation ? `${product.name} ${productVariation.name}` : product.name;
 
-    return <H3>{title}</H3>;
+    return <H6>{title}</H6>;
 };
