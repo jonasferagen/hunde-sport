@@ -1,62 +1,44 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { InfiniteListQueryResult } from '@/hooks/data/util';
-import { CellContainer, FlashList, ListRenderItem } from '@shopify/flash-list';
-import { CellContainerProps } from '@shopify/flash-list/dist/native/cell-container/CellContainer';
 import React, { JSX } from 'react';
-import { getTokens } from 'tamagui';
+import { StackProps, XStack, YStack } from 'tamagui';
 
-interface GridTilesProps<T> {
-    queryResult: InfiniteListQueryResult<T>;
-    renderItem: ListRenderItem<T>;
+interface GridTilesProps extends StackProps {
+    children: React.ReactNode;
     numColumns?: number;
-
 }
 
-export const GridTiles = <T extends { id: number | string }>({
-    queryResult,
-    renderItem,
+export const GridTiles = ({
+    children,
     numColumns = 3,
-}: GridTilesProps<T>): JSX.Element => {
-    const { items, isLoading, isFetchingNextPage, fetchNextPage } = queryResult;
-
-    if (isLoading) {
-        return <ThemedSpinner size="large" />;
-    }
+    gap = '$2',
+    ...stackProps
+}: GridTilesProps): JSX.Element => {
+    const items = React.Children.toArray(children);
 
     if (!items || items.length === 0) {
         return <></>;
     }
-    const numRows = Math.ceil(items.length / numColumns);
+
+    // Chunk items into rows
+    const rows = items.reduce((acc: React.ReactNode[][], item, index) => {
+        const rowIndex = Math.floor(index / numColumns);
+        if (!acc[rowIndex]) {
+            acc[rowIndex] = [];
+        }
+        acc[rowIndex].push(item);
+        return acc;
+    }, [] as React.ReactNode[][]);
 
     return (
-        <FlashList
-
-            numColumns={numColumns}
-            CellRendererComponent={(props) => GridTileContainer({ props, numColumns, numRows })}
-            data={items}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-            estimatedItemSize={150}
-            onEndReached={() => {
-                if (fetchNextPage) {
-                    fetchNextPage();
-                }
-            }}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={isFetchingNextPage ? <ThemedSpinner flex={1} ai="center" jc="center" size="small" /> : null}
-        />
+        <YStack gap={gap} flex={1} {...stackProps}>
+            {rows.map((row, rowIndex) => (
+                <XStack key={rowIndex} gap={gap} flex={1}>
+                    {row.map((item, itemIndex) => (
+                        <React.Fragment key={itemIndex}>
+                            {item}
+                        </React.Fragment>
+                    ))}
+                </XStack>
+            ))}
+        </YStack>
     );
 };
-
-const GridTileContainer = ({ props, numColumns, numRows }: { props: CellContainerProps, numColumns: number, numRows: number }) => {
-    const spacing = getTokens().space['$1'].val;
-
-    const paddingLeft = props.index % numColumns === 0 ? 0 : spacing;   // First column
-    const paddingRight = props.index % numColumns === numColumns - 1 ? 0 : spacing; // Last column
-    const paddingTop = props.index < numColumns ? 0 : spacing; // First row
-    const paddingBottom = props.index >= (numRows - 1) * numColumns ? 0 : spacing; // Last row
-
-
-    return <CellContainer {...props} style={[props.style, { paddingLeft, paddingRight, paddingBottom, paddingTop }]} >{props.children}</CellContainer>;
-}
