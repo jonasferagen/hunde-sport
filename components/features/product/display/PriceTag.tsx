@@ -10,22 +10,15 @@ interface PriceTagProps {
 }
 
 export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
-    const { priceRange, product, productVariation, isProductVariationsLoading } = useProductContext();
+    const { product, productVariation, isProductVariationsLoading } = useProductContext();
 
+    if (product.type === 'simple' || productVariation) {
+        return <Price fontSize={fontSize} />;
+    }
 
     if (isProductVariationsLoading) {
         return <ThemedSpinner alignSelf='flex-end' size="small" />;
     }
 
-    if (productVariation) {
-        return <Price activeProduct={productVariation} fontSize={fontSize} />;
-    }
-
-    if (priceRange) {
-        return (
-            <PriceRange productPriceRange={priceRange} fontSize={fontSize} />
-        );
-    }
-
-    return <Price activeProduct={product} fontSize={fontSize} />;
+    return <PriceRange fontSize={fontSize} />;
 };

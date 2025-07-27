@@ -1,8 +1,12 @@
 import { useProductContext } from '@/contexts';
 import React from 'react';
-import { H6 } from 'tamagui';
+import { FontSizeTokens, SizableText } from 'tamagui';
 
-export const ProductTitle = () => {
+interface ProductTitleProps {
+    size: FontSizeTokens;
+}
+
+export const ProductTitle = ({ size }: ProductTitleProps) => {
     const { product, productVariation } = useProductContext();
 
     if (!product) {
@@ -10,6 +14,5 @@ export const ProductTitle = () => {
     }
 
     const title = productVariation ? `${product.name} ${productVariation.name}` : product.name;
-
-    return <H6>{title}</H6>;
+    return <SizableText fontSize={size} fontWeight="bold">{title}</SizableText>;
 };
