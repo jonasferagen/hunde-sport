@@ -36,6 +36,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                             size="$5"
                             circular
                             theme="primary"
+                            disabled={quantity <= 1}
                         />
 
                         <Button
@@ -60,7 +61,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                     {/* Remove Button */}
                     <Button
                         icon={<X size="$4" />}
-                        onPress={() => removeItem(purchasable, { silent: true })}
+                        onPress={() => removeItem(purchasable, { silent: false })}
                         size="$5"
                         circular
                         theme="secondary"
@@ -70,8 +71,6 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
             </YStack>
         </Theme>
     );
-
-
 };
 
 export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {

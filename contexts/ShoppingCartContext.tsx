@@ -37,24 +37,33 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [items]
     );
 
-    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
+    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
+
         const key = purchasable.productVariation
             ? `${purchasable.product.id}-${purchasable.productVariation.id}`
             : `${purchasable.product.id}-simple`;
-        setItems((prevItems) =>
-            prevItems
-                .map((item) => {
-                    if (item.key === key) {
-                        return new ShoppingCartItem(purchasable, item.quantity - 1);
-                    }
-                    return item;
-                })
-                .filter((item) => item.quantity > 0)
-        );
+
+        setItems((prevItems) => {
+            const itemToDecrease = prevItems.find((item) => item.key === key);
+
+            if (itemToDecrease && itemToDecrease.quantity <= 1) {
+                return prevItems; // Do nothing if quantity is already 1 or less
+            }
+
+            const updatedItems = prevItems.map((item) => {
+                if (item.key === key) {
+                    const newQuantity = item.quantity - 1;
+                    return new ShoppingCartItem(purchasable, newQuantity);
+                }
+                return item;
+            });
+
+            return updatedItems;
+        });
     }, []);
 
     const increaseQuantity = useCallback(
-        (purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
+        (purchasable: Purchasable, options: CartItemOptions = {}) => {
             const { silent } = options;
 
             const key = purchasable.productVariation
@@ -85,12 +94,20 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [showMessage]
     );
 
-    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
+    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
+        const { silent = false } = options;
         const key = purchasable.productVariation
             ? `${purchasable.product.id}-${purchasable.productVariation.id}`
             : `${purchasable.product.id}-simple`;
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
-    }, []);
+
+        if (!silent) {
+            const title = purchasable.productVariation
+                ? `${purchasable.product.name} - ${purchasable.productVariation.name}`
+                : purchasable.product.name;
+            showMessage({ text: `${title} er fjernet fra handlekurven`, type: 'info' });
+        }
+    }, [showMessage]);
 
     const clearCart = useCallback(() => {
         Alert.alert(

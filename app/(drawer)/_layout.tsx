@@ -7,7 +7,7 @@ import { Home, ShoppingCart, X } from '@tamagui/lucide-icons';
 import { router } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import React, { useCallback, useMemo } from 'react';
-import { Button, H3, H4, SizableText, Theme, YStack } from 'tamagui';
+import { Button, H3, H4, SizableText, Theme, XStack, YStack } from 'tamagui';
 
 
 const CustomDrawerContent = React.memo((props: any) => {
@@ -63,20 +63,11 @@ const CustomDrawerContent = React.memo((props: any) => {
                         labelStyle={{ position: 'relative' }}
                         label={({ focused, color }) => (
                             <>
-                                <SizableText fontWeight="bold" color={color}>Handlekurv</SizableText>
-                                {cartItemCount > 0 && (
-                                    <YStack
-                                        backgroundColor="$red10"
-                                        borderRadius={999}
-                                        px="$2"
-                                        py="$1"
-                                        position="absolute"
-                                        right={-25}
-                                        top={-8}
-                                    >
-                                        <SizableText fontSize="$1" color="$color1">{cartItemCount}</SizableText>
-                                    </YStack>
-                                )}
+                                <XStack ai="center" jc="space-between">
+                                    <SizableText fontWeight="bold" color={color}>Handlekurv</SizableText>
+
+                                </XStack>
+
                             </>
                         )}
                     />

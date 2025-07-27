@@ -4,7 +4,7 @@ import { cartRoute, homeRoute, searchRoute, useActiveRoute } from '@/hooks/useAc
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { router, Tabs } from 'expo-router';
-import { SizableText, YStack } from 'tamagui';
+import { SizableText, Stack } from 'tamagui';
 
 export default function TabsLayout() {
     const { cartItemCount } = useShoppingCartContext();
@@ -69,22 +69,28 @@ export default function TabsLayout() {
                 options={{
                     title: 'Handlekurv',
                     tabBarIcon: ({ color }) => (
-                        <YStack>
+                        <Stack theme="secondary">
                             <ShoppingCart color={color} size="$3" />
                             {cartItemCount > 0 && (
-                                <YStack
+                                <Stack
+                                    theme="primary"
                                     position="absolute"
                                     top={-5}
                                     right={-10}
-                                    backgroundColor="$red10"
+                                    backgroundColor="$background"
+                                    borderWidth={1}
+                                    borderColor="$borderColor"
+                                    width={18}
+                                    height={18}
+                                    alignItems="center"
+                                    justifyContent="center"
                                     borderRadius={999}
-                                    px="$1.5"
-                                    py="$0.5"
+
                                 >
-                                    <SizableText size="$1" color="$color1">{cartItemCount}</SizableText>
-                                </YStack>
+                                    <SizableText size="$1" color="$color">{cartItemCount}</SizableText>
+                                </Stack>
                             )}
-                        </YStack>
+                        </Stack>
                     ),
                     tabBarLabel: ({ children, color }) => (
                         <SizableText size="$1" color={color}>{children}</SizableText>
