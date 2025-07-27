@@ -1,6 +1,5 @@
 import { Category } from '@/models/Category';
-import { Product, ProductData, ProductType } from '@/models/Product';
-import { ProductVariation } from '@/models/ProductVariation';
+import { Product, ProductData, ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
 import { cleanHtml, cleanNumber } from '@/utils/helpers';
 import { InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
@@ -63,25 +62,28 @@ export const mapToProduct = (item: any): Product | ProductVariation => {
             images: item.image ? [item.image] : item.images || [], // Needed for non-standard api response when getting product variations 
             attributes: (item.attributes || []).map((attr: any) => ({
                 ...attr,
-                options: (attr.options || []).map(cleanHtml),
+                options: attr.options ? attr.options.map((opt: any) => cleanHtml(opt)) : []
             })),
             variations: item.variations || [],
             related_ids: item.related_ids || [],
-            type: item.type as ProductType,
-            default_attributes: (item.default_attributes || []).map((attr: any) => ({
-                ...attr,
-                options: (attr.options || []).map(cleanHtml),
-            })),
-            parent_id: item.parent_id,
+            type: item.type,
+            default_attributes: item.default_attributes || [],
+            parent_id: item.parent_id || 0,
         };
 
-        if (productData.type === 'variation') {
-            return new ProductVariation(productData);
+        switch (productData.type) {
+            case 'simple':
+                return new SimpleProduct(productData);
+            case 'variable':
+                return new VariableProduct(productData);
+            case 'variation':
+                return new ProductVariation(productData);
+            default:
+                throw new Error(`Unknown product type: ${productData.type}`);
         }
 
-        return new Product(productData);
     } catch (error) {
-        console.error('Failed to map product. Item:', item, 'Error:', error);
-        throw new Error(`Failed to map product with ID ${item.id}.`);
+        console.error("Failed to map product:", item, error);
+        throw error; // re-throw the error to be handled by the caller
     }
 };

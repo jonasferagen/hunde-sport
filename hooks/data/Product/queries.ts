@@ -7,6 +7,7 @@ import {
 } from './api';
 
 import { PAGE_SIZE } from '@/config/api';
+import { VariableProduct } from '@/types';
 
 export const productQueryOptions = (productId: number) =>
     queryOptions({
@@ -26,10 +27,10 @@ export const productsQueryOptions = (query: ProductListParams) => {
     });
 }
 
-export const productVariationsQueryOptions = (productId: number) => {
+export const productVariationsQueryOptions = (variableProduct: VariableProduct) => {
     return infiniteQueryOptions({
-        queryKey: ['productVariations', productId],
-        queryFn: ({ pageParam = 1 }) => fetchProductVariations(pageParam, productId),
+        queryKey: ['productVariations', variableProduct.id],
+        queryFn: ({ pageParam = 1 }) => fetchProductVariations(pageParam, variableProduct),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;

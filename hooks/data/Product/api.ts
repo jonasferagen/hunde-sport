@@ -1,5 +1,5 @@
 import { ENDPOINTS, PAGE_SIZE } from '@/config/api';
-import { Product } from '@/models/Product';
+import { Product, VariableProduct } from '@/models/Product';
 import apiClient from '@/utils/apiClient';
 
 import { mapToProduct } from '@/hooks/data/util';
@@ -36,9 +36,9 @@ export async function fetchProduct(id: number): Promise<Product> {
     return mapToProduct(data);
 }
 
-export async function fetchProductVariations(page: number, productId: number): Promise<Product[]> {
+export async function fetchProductVariations(page: number, variableProduct: VariableProduct): Promise<Product[]> {
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.VARIATIONS(productId) + `?page=${page}&per_page=${PAGE_SIZE} `
+        ENDPOINTS.PRODUCTS.VARIATIONS(variableProduct.id) + `?page=${page}&per_page=${PAGE_SIZE} `
     );
 
     if (error) throw new Error(error);

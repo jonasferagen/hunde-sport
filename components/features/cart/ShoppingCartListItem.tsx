@@ -12,7 +12,8 @@ interface ShoppingCartListItemProps {
 
 const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
     const { increaseQuantity, decreaseQuantity, removeItem } = useShoppingCartContext();
-    const { product, productVariation, quantity } = item;
+    const { purchasable, quantity } = item;
+    const { product, productVariation } = purchasable;
     const activeProduct = productVariation || product;
 
     return (
@@ -30,7 +31,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                         <Button
                             theme="secondary"
                             icon={<X />}
-                            onPress={() => removeItem(product, productVariation, { silent: true })}
+                            onPress={() => removeItem(purchasable, { silent: true })}
                             size="$6"
                             circular
                         />
@@ -41,7 +42,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                             <Button
                                 theme="accent"
                                 icon={<Minus size="$4" />}
-                                onPress={() => decreaseQuantity(product, productVariation, { silent: true })}
+                                onPress={() => decreaseQuantity(purchasable, { silent: true })}
                                 size="$6"
                                 circular
                             />
@@ -52,7 +53,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                             <Button
                                 theme="accent"
                                 icon={<Plus size="$4" />}
-                                onPress={() => increaseQuantity(product, productVariation, { silent: true })}
+                                onPress={() => increaseQuantity(purchasable, { silent: true })}
                                 size="$6"
                                 circular
                             />
@@ -66,7 +67,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
 export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
     return (
-        <ProductProvider product={item.product}>
+        <ProductProvider product={item.purchasable.product} productVariation={item.purchasable.productVariation}>
             <ShoppingCartListItemContent item={item} />
         </ProductProvider>
     );

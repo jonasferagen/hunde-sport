@@ -30,7 +30,7 @@ export interface ProductData {
   parent_id: number;
 }
 
-export class Product {
+export abstract class Product {
   id: number;
   name: string;
   price: number;
@@ -52,10 +52,6 @@ export class Product {
   parent_id: number;
 
   constructor(data: ProductData) {
-    if (this.constructor === Product && data.type === 'variation') {
-      throw new Error('Cannot construct Product with type "variation". Use ProductVariation instead.');
-    }
-
     this.id = data.id;
     this.name = data.name;
     this.on_sale = data.on_sale;
@@ -94,15 +90,68 @@ export class Product {
     return this.stock_status === 'instock';
   }
 
-  hasVariations(): boolean {
-    return this.type === 'variable';
-  }
+  abstract hasVariations(): boolean;
 
-  isPurchasable(): boolean {
-    return this.isInStock() && (this.type === 'simple' || this.type === 'variation');
-  }
+  abstract isPurchasable(): boolean;
 
   toString() {
     return 'Product ' + this.id + ': ' + this.name;
   }
+}
+
+
+export class SimpleProduct extends Product {
+  constructor(data: ProductData) {
+    if (data.type !== 'simple') {
+      throw new Error('Cannot construct SimpleProduct with type other than "simple".');
+    }
+    super(data);
+    this.type = 'simple';
+  }
+
+  hasVariations(): boolean {
+    return false;
+  }
+
+  isPurchasable(): boolean {
+    return this.isInStock();
+  }
+}
+
+export class VariableProduct extends Product {
+  constructor(data: ProductData) {
+    if (data.type !== 'variable') {
+      throw new Error('Cannot construct VariableProduct with type other than "variable".');
+    }
+    super(data);
+    this.type = 'variable';
+  }
+
+  hasVariations(): boolean {
+    return true;
+  }
+
+  isPurchasable(): boolean {
+    return false;
+  }
+}
+
+export class ProductVariation extends Product {
+  constructor(data: ProductData) {
+    if (data.type !== 'variation') {
+      throw new Error('Cannot construct ProductVariation with type other than "variation".');
+    }
+    super(data);
+    this.type = 'variation';
+  }
+
+  hasVariations(): boolean {
+    return false;
+  }
+
+  isPurchasable(): boolean {
+    return this.isInStock();
+  }
+
+
 }

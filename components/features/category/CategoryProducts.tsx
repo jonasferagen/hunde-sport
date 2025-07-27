@@ -15,7 +15,7 @@ export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Eleme
         isLoading,
         isFetchingNextPage,
         fetchNextPage } = useProductsByCategory(
-            category.id,
+            category,
             { autoload: false }
         );
 

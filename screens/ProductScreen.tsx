@@ -16,7 +16,6 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Button, SizableText, XStack, YStack } from 'tamagui';
 
-
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const productId = Number(id);
@@ -49,6 +48,16 @@ const ProductScreenContent = () => {
 
   const activeProduct = productVariation || product;
 
+  const handleAddToCart = () => {
+    if (product.type === 'simple') {
+      increaseQuantity({ product });
+    } else if (product.type === 'variable' && productVariation) {
+      increaseQuantity({ product, productVariation });
+    } else {
+      console.warn('Cannot add to cart, invalid product configuration');
+    }
+  };
+
   return (
     <>
       <PageSection scrollable>
@@ -67,7 +76,7 @@ const ProductScreenContent = () => {
           <YStack theme="primary">
             <Button
               icon={<ShoppingCart />}
-              onPress={() => increaseQuantity(product, productVariation || undefined)}
+              onPress={handleAddToCart}
               disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
             >
               Legg i handlekurv

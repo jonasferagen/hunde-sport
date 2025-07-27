@@ -1,7 +1,5 @@
 import { routes } from '@/config/routes';
-import type { Product } from '@/models/Product';
-import type { ProductVariation } from '@/models/ProductVariation';
-import { ShoppingCartItem } from '@/types';
+import { Purchasable, ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import { useStatusContext } from './StatusContext';
@@ -14,10 +12,10 @@ interface ShoppingCartContextType {
     items: ShoppingCartItem[];
     cartItemCount: number;
     cartTotal: number;
-    getQuantity: (product: Product, productVariation?: ProductVariation) => number;
-    increaseQuantity: (product: Product, productVariation?: ProductVariation, options?: CartItemOptions) => void;
-    decreaseQuantity: (product: Product, productVariation?: ProductVariation, options?: CartItemOptions) => void;
-    removeItem: (product: Product, productVariation?: ProductVariation, options?: CartItemOptions) => void;
+    getQuantity: (purchasable: Purchasable) => number;
+    increaseQuantity: (purchasable: Purchasable, options?: CartItemOptions) => void;
+    decreaseQuantity: (purchasable: Purchasable, options?: CartItemOptions) => void;
+    removeItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
     clearCart: () => void;
 }
 
@@ -28,21 +26,25 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const { showMessage } = useStatusContext();
 
     const getQuantity = useCallback(
-        (product: Product, productVariation?: ProductVariation) => {
-            const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
+        (purchasable: Purchasable) => {
+            const key = purchasable.productVariation
+                ? `${purchasable.product.id}-${purchasable.productVariation.id}`
+                : `${purchasable.product.id}-simple`;
             const cartItem = items.find((item) => item.key === key);
             return cartItem?.quantity ?? 0;
         },
         [items]
     );
 
-    const decreaseQuantity = useCallback((product: Product, productVariation?: ProductVariation, options: CartItemOptions = { silent: false }) => {
-        const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
+    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
+        const key = purchasable.productVariation
+            ? `${purchasable.product.id}-${purchasable.productVariation.id}`
+            : `${purchasable.product.id}-simple`;
         setItems((prevItems) =>
             prevItems
                 .map((item) => {
                     if (item.key === key) {
-                        return new ShoppingCartItem(item.product, item.productVariation, item.quantity - 1);
+                        return new ShoppingCartItem(purchasable, item.quantity - 1);
                     }
                     return item;
                 })
@@ -51,34 +53,41 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }, []);
 
     const increaseQuantity = useCallback(
-        (product: Product, productVariation?: ProductVariation, options: CartItemOptions = { silent: false }) => {
+        (purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
             const { silent } = options;
-            const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
+
+            const key = purchasable.productVariation
+                ? `${purchasable.product.id}-${purchasable.productVariation.id}`
+                : `${purchasable.product.id}-simple`;
+
+
             setItems((prevItems) => {
                 const existingItem = prevItems.find((item) => item.key === key);
 
                 if (existingItem) {
                     return prevItems.map((item) =>
                         item.key === key
-                            ? new ShoppingCartItem(item.product, item.productVariation, item.quantity + 1)
+                            ? new ShoppingCartItem(purchasable, item.quantity + 1)
                             : item
                     );
                 } else {
-                    const newItem = new ShoppingCartItem(product, productVariation, 1);
+                    const newItem = new ShoppingCartItem(purchasable, 1);
                     return [...prevItems, newItem];
                 }
             });
 
             if (!silent) {
-                const title = productVariation ? `${product.name} - ${productVariation.name}` : product.name;
+                const title = purchasable.productVariation ? `${purchasable.product.name} - ${purchasable.productVariation.name}` : purchasable.product.name;
                 showMessage({ text: `${title} er lagt til i handlekurven`, type: 'info' });
             }
         },
         [showMessage]
     );
 
-    const removeItem = useCallback((product: Product, productVariation?: ProductVariation, options: CartItemOptions = { silent: false }) => {
-        const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
+    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
+        const key = purchasable.productVariation
+            ? `${purchasable.product.id}-${purchasable.productVariation.id}`
+            : `${purchasable.product.id}-simple`;
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
     }, []);
 
@@ -110,8 +119,8 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const cartTotal = useMemo(() => {
         return items.reduce((sum, item) => {
-            const itemProduct = item.productVariation || item.product;
-            const price = itemProduct.price ?? item.product.price ?? 0;
+            const activeProduct = item.purchasable.productVariation || item.purchasable.product;
+            const price = activeProduct.price ?? 0;
             return sum + price * item.quantity;
         }, 0);
     }, [items]);

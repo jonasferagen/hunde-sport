@@ -1,4 +1,6 @@
 import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
+import { VariableProduct } from '@/models/Product';
+import { Category } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
     productQueryOptions,
@@ -10,8 +12,9 @@ export const useProduct = (id: number) => {
     return useQuery(productQueryOptions(id));
 };
 
-export const useProductVariations = (productId: number, options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productVariationsQueryOptions(productId), options);
+export const useProductVariations = (variableProduct: VariableProduct, options?: InfiniteListQueryOptions) => {
+    return useInfiniteListQuery(productVariationsQueryOptions(variableProduct), options);
+};
 
 // Specific hooks for different product lists
 export const useFeaturedProducts = (options?: InfiniteListQueryOptions) =>
@@ -23,8 +26,8 @@ export const useRecentProducts = (options?: InfiniteListQueryOptions) =>
 export const useDiscountedProducts = (options?: InfiniteListQueryOptions) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'discounted' }), options);
 
-export const useProductsByCategory = (categoryId: number, options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'category', params: categoryId }), options);
+export const useProductsByCategory = (category: Category, options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'category', params: category.id }), options);
 
 export const useProductsBySearch = (searchTerm: string, options?: InfiniteListQueryOptions) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'search', params: searchTerm }), options);

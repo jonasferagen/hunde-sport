@@ -14,6 +14,14 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
     const { increaseQuantity } = useShoppingCartContext();
     const activeProduct = productVariation || product;
 
+    const handleAddToCart = () => {
+        if (product.type === 'simple') {
+            increaseQuantity({ product });
+        } else if (product.type === 'variable' && productVariation) {
+            increaseQuantity({ product, productVariation });
+        }
+    };
+
     return (
         <XStack ai="center" jc="space-between" flex={0} gap="$2" marginHorizontal="$3">
             <XStack gap="$2" ai="center" flex={1}>
@@ -40,7 +48,7 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
                 <YStack theme="primary">
                     <Button
                         icon={<ShoppingCart fontSize="$5" fontWeight="bold" />}
-                        onPress={() => increaseQuantity(product, productVariation || undefined)}
+                        onPress={handleAddToCart}
                         circular
                         size="$6"
                         disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}

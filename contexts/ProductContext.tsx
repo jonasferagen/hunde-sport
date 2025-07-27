@@ -1,6 +1,5 @@
 import { useProductVariations } from '@/hooks/data/Product';
-import { Product } from '@/models/Product';
-import { ProductVariation } from '@/models/ProductVariation';
+import { Product, ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { ProductVariationSelectionProvider } from './ProductVariationSelectionContext';
 
@@ -18,7 +17,7 @@ export const calculatePriceRange = (productVariations: ProductVariation[]): { mi
 };
 
 interface ProductContextType {
-    product: Product;
+    product: SimpleProduct | VariableProduct;
     productVariation?: ProductVariation | null;
     setProductVariation: (variation: ProductVariation | null) => void;
     productVariations: ProductVariation[];
@@ -44,7 +43,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         isFetchingNextPage,
         hasNextPage,
 
-    } = useProductVariations(product.id, { enabled: product.type === 'variable', autoload: true });
+    } = useProductVariations(product, { enabled: product.type === 'variable', autoload: true });
 
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 
