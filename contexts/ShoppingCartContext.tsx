@@ -1,8 +1,10 @@
 import { ClearCartDialog } from '@/components/features/shoppingCart/ClearCartDialog';
 import { routes } from '@/config/routes';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
+import { getPurchasableKey } from '@/utils/purchasable';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+
 interface CartItemOptions {
     silent?: boolean;
 }
@@ -28,9 +30,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const getQuantity = useCallback(
         (purchasable: Purchasable) => {
-            const key = purchasable.productVariation
-                ? `${purchasable.product.id}-${purchasable.productVariation.id}`
-                : `${purchasable.product.id}-simple`;
+            const key = getPurchasableKey(purchasable);
             const cartItem = items.find((item) => item.key === key);
             return cartItem?.quantity ?? 0;
         },
@@ -41,10 +41,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         (purchasable: Purchasable, options: CartItemOptions = {}) => {
             const { silent } = options;
 
-            const key = purchasable.productVariation
-                ? `${purchasable.product.id}-${purchasable.productVariation.id}`
-                : `${purchasable.product.id}-simple`;
-
+            const key = getPurchasableKey(purchasable);
 
             setItems((prevItems) => {
                 const existingItem = prevItems.find((item) => item.key === key);
@@ -74,9 +71,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
         const { silent = false } = options;
-        const key = purchasable.productVariation
-            ? `${purchasable.product.id}-${purchasable.productVariation.id}`
-            : `${purchasable.product.id}-simple`;
+        const key = getPurchasableKey(purchasable);
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
 
         if (!silent) {
@@ -92,9 +87,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
 
-        const key = purchasable.productVariation
-            ? `${purchasable.product.id}-${purchasable.productVariation.id}`
-            : `${purchasable.product.id}-simple`;
+        const key = getPurchasableKey(purchasable);
 
         setItems((prevItems) => {
             const itemToDecrease = prevItems.find((item) => item.key === key);
@@ -118,7 +111,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const handleConfirmClearCart = () => {
         setItems([]);
         toastController.show('Handlekurven er tømt', {
-            theme: 'accent',
+            theme: 'yellow',
         });
         routes.home();
         setClearCartDialogOpen(false);
