@@ -1,7 +1,6 @@
 import { useSearchContext } from '@/contexts/SearchContext';
 import { Search } from '@tamagui/lucide-icons';
 import React, { forwardRef, useEffect } from 'react';
-import { TextInput } from 'react-native';
 import { Button, Input, XStack } from 'tamagui';
 
 export interface SearchBarProps {
@@ -10,7 +9,7 @@ export interface SearchBarProps {
     onSubmit?: (query: string) => void;
 }
 
-export const SearchBar = forwardRef<TextInput, SearchBarProps>((
+export const SearchBar = forwardRef<Input, SearchBarProps>((
     { placeholder = 'Hva leter du etter?', initialQuery = '', onSubmit }, ref) => {
     const { liveQuery, setLiveQuery, setQuery } = useSearchContext();
 
