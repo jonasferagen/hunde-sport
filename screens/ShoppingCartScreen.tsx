@@ -1,8 +1,8 @@
-
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader as OriginalPageHeader } from '@/components/layout/PageHeader';
 
 import { DebugSeeder } from '@/components/development/DebugSeeder';
+import { ShoppingCartListItem } from '@/components/features/cart/ShoppingCartListItem';
 import { routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
@@ -33,7 +33,7 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
                 <Button onPress={onClearCart} theme="secondary">
                     Tøm handlekurv
                 </Button>
-                <Button onPress={() => useRouter().push(routes.shipping())} theme="primary">
+                <Button onPress={() => useRouter().push(routes.shipping())} theme="primary" disabled={cartItemCount === 0}>
                     Gå til kassen
                 </Button>
             </YStack>
@@ -46,13 +46,7 @@ export const ShoppingCartScreen = () => {
     const router = useRouter();
 
     const renderItem = useCallback(
-        ({ item }: { item: ShoppingCartItem }) => <XStack ai="center" jc="space-between" flex={0}>
-            <SizableText>{item.product.name}</SizableText>
-            <SizableText>{item.productVariation?.name}</SizableText>
-            <SizableText>{formatPrice(item.product.price)}</SizableText>
-            <SizableText>{item.quantity}</SizableText>
-            <SizableText>{formatPrice(item.product.price * item.quantity)}</SizableText>
-        </XStack>,
+        ({ item }: { item: ShoppingCartItem }) => <ShoppingCartListItem item={item} />,
         []
     );
 
