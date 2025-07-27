@@ -1,5 +1,6 @@
+import { ThemedButton } from '@/components/ui/ThemedButton';
 import React, { JSX } from 'react';
-import { Button, Dialog, H3, Paragraph, XStack, YStack } from 'tamagui';
+import { Dialog, H3, Paragraph, XStack, YStack } from 'tamagui';
 
 interface ClearCartDialogProps {
     isOpen: boolean;
@@ -14,12 +15,15 @@ export const ClearCartDialog = ({ isOpen, onConfirm, onCancel }: ClearCartDialog
                 <Dialog.Overlay
                     key="overlay"
                     animation="quick"
-                    opacity={0.5}
+                    opacity={1}
                     enterStyle={{ opacity: 0 }}
                     exitStyle={{ opacity: 0 }}
                 />
                 <Dialog.Content
-                    bordered
+                    background="white"
+                    borderRadius="$4"
+                    borderWidth={1}
+                    borderColor="$borderColor"
                     elevate
                     key="content"
                     animation={[
@@ -37,7 +41,7 @@ export const ClearCartDialog = ({ isOpen, onConfirm, onCancel }: ClearCartDialog
                     opacity={1}
                     y={0}
                 >
-                    <YStack gap="$3">
+                    <YStack gap="$3" background="$background">
                         <Dialog.Title>
                             <H3>Tøm handlekurv</H3>
                         </Dialog.Title>
@@ -47,12 +51,12 @@ export const ClearCartDialog = ({ isOpen, onConfirm, onCancel }: ClearCartDialog
 
                         <XStack gap="$3" justifyContent="flex-end">
                             <Dialog.Close asChild>
-                                <Button onPress={onCancel}>Avbryt</Button>
+                                <ThemedButton onPress={onCancel}>Avbryt</ThemedButton>
                             </Dialog.Close>
                             <Dialog.Close asChild>
-                                <Button theme="red" onPress={onConfirm}>
+                                <ThemedButton theme="red" onPress={onConfirm}>
                                     Tøm
-                                </Button>
+                                </ThemedButton>
                             </Dialog.Close>
                         </XStack>
                     </YStack>
