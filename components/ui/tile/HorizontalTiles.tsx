@@ -17,7 +17,7 @@ export const HorizontalTiles = <T extends { id: number | string }>({
 
 
     if (isLoading) {
-        return <ThemedSpinner size="small" />;
+        //    return <ThemedSpinner size="small" />;
     }
 
     if (!items || items.length === 0) {

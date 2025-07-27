@@ -12,6 +12,8 @@ export const cleanNumber = (value: string) => {
     return isNaN(num) ? 0 : num;
 };
 
+export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
 export const formatPrice = (price: number): string =>
     price.toFixed(0).replace('.', ',') + ',-';
 

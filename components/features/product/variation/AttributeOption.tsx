@@ -21,8 +21,6 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
         option.name!
     );
 
-    console.log('option', option.name, isAvailable);
-
     const isDisabled = !isAvailable || isOutOfStock;
 
     return (

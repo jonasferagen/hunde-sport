@@ -1,4 +1,5 @@
 import { useProductContext, useShoppingCartContext } from '@/contexts';
+import { capitalize } from '@/utils/helpers';
 import { ChevronDown, ShoppingCart } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Button, SizableText, XStack, YStack } from 'tamagui';
@@ -15,21 +16,24 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
     const activeProduct = productVariation || product;
 
     const handleAddToCart = () => {
-        if (product.type === 'simple') {
-            increaseQuantity({ product });
-        } else if (product.type === 'variable' && productVariation) {
-            increaseQuantity({ product, productVariation });
-        }
+        increaseQuantity({ product, productVariation: productVariation || undefined });
     };
 
     return (
         <XStack ai="center" jc="space-between" flex={0} gap="$2" marginHorizontal="$3">
             <XStack gap="$2" ai="center" flex={1}>
                 <ProductStatus />
-                {product.hasVariations() && productVariation && (
-                    <SizableText fontWeight="bold">{productVariation.name}</SizableText>
+                {productVariation && (
+                    <SizableText fontWeight="bold">
+                        {capitalize(productVariation.name)}
+                    </SizableText>
                 )}
                 <PriceTag />
+                {product.hasVariations() && !productVariation && (
+                    <SizableText fontSize="$2">
+                        Velg variant
+                    </SizableText>
+                )}
             </XStack>
 
             <XStack gap="$2" ai="center">

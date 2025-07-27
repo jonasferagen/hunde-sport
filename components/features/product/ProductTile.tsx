@@ -1,7 +1,7 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { TileBadge } from "@/components/ui/tile/TileBadge";
 import { routes } from '@/config/routes';
-import { ProductProvider, useProductContext } from '@/contexts';
+import { ProductProvider } from '@/contexts';
 import { Product, ThemeVariant } from "@/types";
 import React from 'react';
 import { DimensionValue } from 'react-native';
@@ -17,12 +17,12 @@ interface ProductTileProps {
     theme?: ThemeVariant;
 }
 
-const ProductTileContent = ({
+export const ProductTile = ({
+    product,
     width = PRODUCT_TILE_WIDTH,
     height = PRODUCT_TILE_HEIGHT,
     theme = 'primary'
-}: Omit<ProductTileProps, 'product'>) => {
-    const { product } = useProductContext();
+}: ProductTileProps) => {
 
     if (!product) {
         return null;
@@ -40,16 +40,11 @@ const ProductTileContent = ({
             href={routes.product(product)}
         >
             <TileBadge theme={theme}>
-                <PriceTag />
+                <ProductProvider product={product}>
+                    <PriceTag />
+                </ProductProvider>
             </TileBadge>
         </Tile>
     );
 };
 
-export const ProductTile = ({ product, ...props }: ProductTileProps) => {
-    return (
-        <ProductProvider product={product}>
-            <ProductTileContent {...props} />
-        </ProductProvider>
-    );
-};

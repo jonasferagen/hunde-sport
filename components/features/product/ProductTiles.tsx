@@ -11,6 +11,7 @@ interface ProductTilesProps {
 }
 
 export const ProductTiles = ({ queryResult, theme = 'primary' }: ProductTilesProps): JSX.Element => {
+
     return (
         <HorizontalTiles
             queryResult={queryResult}

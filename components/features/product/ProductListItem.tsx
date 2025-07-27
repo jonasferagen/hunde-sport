@@ -29,7 +29,6 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         <YStack borderBottomWidth={1} paddingVertical="$3" borderBottomColor="$gray7">
             <ProductCard>
                 <ProductCardImage product={product} categoryId={categoryId} />
-
                 <ProductCardContent product={product} categoryId={categoryId} />
             </ProductCard>
             <ProductCardFooter onExpand={handleExpand} />
