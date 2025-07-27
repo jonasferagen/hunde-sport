@@ -15,7 +15,7 @@ interface ShoppingCartContextType {
     getQuantity: (product: Product, productVariation?: ProductVariation) => number;
     increaseQuantity: (product: Product, productVariation?: ProductVariation) => void;
     decreaseQuantity: (product: Product, productVariation?: ProductVariation) => void;
-    removeFromCart: (product: Product, productVariation?: ProductVariation) => void;
+    removeItem: (product: Product, productVariation?: ProductVariation) => void;
     clearCart: () => void;
 }
 
@@ -72,7 +72,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [showMessage]
     );
 
-    const removeFromCart = useCallback((product: Product, productVariation?: ProductVariation) => {
+    const removeItem = useCallback((product: Product, productVariation?: ProductVariation) => {
         const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
     }, []);
@@ -120,7 +120,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 getQuantity,
                 increaseQuantity,
                 decreaseQuantity,
-                removeFromCart,
+                removeItem,
                 clearCart,
             }}
         >

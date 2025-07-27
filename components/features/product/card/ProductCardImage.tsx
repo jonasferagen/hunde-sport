@@ -10,16 +10,17 @@ const IMAGE_SIZE = 80;
 interface ProductCardImageProps {
     product: Product;
     categoryId?: number;
+    imageSize?: number;
 }
 
-export const ProductCardImage = ({ product, categoryId }: ProductCardImageProps) => {
+export const ProductCardImage = ({ product, categoryId, imageSize = IMAGE_SIZE }: ProductCardImageProps) => {
     return (
         <YStack>
             <Link href={routes.product(product, categoryId)}>
                 <Image
-                    source={{ uri: getScaledImageUrl(product.images[0]?.src, IMAGE_SIZE, IMAGE_SIZE) }}
-                    width={IMAGE_SIZE}
-                    height={IMAGE_SIZE}
+                    source={{ uri: getScaledImageUrl(product.images[0]?.src, imageSize, imageSize) }}
+                    width={imageSize}
+                    height={imageSize}
                     borderRadius="$4"
                 />
             </Link>
