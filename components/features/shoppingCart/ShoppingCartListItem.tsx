@@ -16,48 +16,62 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
     const { productVariation } = purchasable;
 
     return (
-        <Theme name="secondary">
-            <YStack gap="$2" padding="$3">
-                <XStack ai="center" jc="space-between" gap="$2">
-                    <SizableText size="$5" fontWeight="bold">{product.name} {productVariation && `${capitalize(productVariation.name)}`}</SizableText>
-                    <SizableText size="$5" fontWeight="bold">{formatPrice(price)}</SizableText>
-                </XStack>
-                <XStack gap="$3" flex={1} ai="center">
-                    <Button
-                        theme="secondary"
-                        icon={<X size="$4" />}
-                        onPress={() => removeItem(purchasable, { silent: true })}
-                        size="$6"
-                        circular
-                    />
+        <Theme name="light">
+            <YStack gap="$3" padding="$3" borderBottomWidth={1} borderColor="$gray5">
+                {/* Row 1: Product name + unit price */}
+                <XStack ai="center" gap="$2">
+                    <SizableText fontSize="$5" fontWeight="bold">
+                        {product.name}
+                        {productVariation && ` - ${capitalize(productVariation.name)}`}
+                    </SizableText>
+                    <SizableText fontSize="$4" color="$gray10">
+                        {formatPrice(price)}
+                    </SizableText>
 
-                    <XStack ai="center" gap="$2" flex={1}>
-                        <SizableText fontWeight="bold">{formatPrice(quantity * price)}</SizableText>
-                    </XStack>
-                    <XStack ai="center" gap="$1" theme="secondary">
-                        <H4 width={30} textAlign="center" theme="light">
+                </XStack>
+
+                {/* Row 2: Quantity + Subtotal + Remove */}
+                <XStack jc="space-between" ai="center" gap="$4" theme="secondary">
+                    {/* Quantity Controls */}
+                    <XStack ai="center" gap="$2">
+                        <Button
+                            icon={<Minus size="$4" />}
+                            onPress={() => decreaseQuantity(purchasable, { silent: true })}
+                            size="$5"
+                            circular
+                            theme="accent"
+                        />
+                        <H4 width={30} textAlign="center">
                             {quantity}
                         </H4>
                         <Button
-                            theme="accent"
-                            icon={<Minus size="$4" />}
-                            onPress={() => decreaseQuantity(purchasable, { silent: true })}
-                            size="$6"
-                            circular
-                        />
-
-                        <Button
-                            theme="accent"
                             icon={<Plus size="$4" />}
                             onPress={() => increaseQuantity(purchasable, { silent: true })}
-                            size="$6"
+                            size="$5"
                             circular
+                            theme="accent"
                         />
                     </XStack>
+
+                    {/* Subtotal */}
+                    <SizableText fontSize="$6" fontWeight="bold" flex={1} textAlign="right">
+                        {formatPrice(quantity * price)}
+                    </SizableText>
+                    {/* Remove Button */}
+                    <Button
+                        icon={<X size="$4" />}
+                        onPress={() => removeItem(purchasable, { silent: true })}
+                        size="$5"
+                        circular
+                        theme="secondary"
+                    />
+
                 </XStack>
             </YStack>
         </Theme>
     );
+
+
 };
 
 export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
