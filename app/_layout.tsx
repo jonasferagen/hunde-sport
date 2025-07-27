@@ -33,35 +33,34 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Theme name="light">
           <PortalProvider shouldAddRootHost={true}>
-            <ToastProvider>
+            <SafeAreaProvider>
+              <ToastProvider>
+                <ToastViewport
+                  multipleToasts={false}
+                  flexDirection="column"
+                  justifyContent='space-between'
+                  position="absolute"
+                  bottom={60}
+                  left={0}
+                  padding="$2"
+                  gap="$2"
+                />
 
-              <SafeAreaProvider>
                 <QueryClientProvider client={queryClient}>
                   <OrderProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
                         <LayoutProvider>
-                          <ToastViewport
-                            multipleToasts
-                            flexDirection="column-reverse"
-                            justifyContent='flex-end'
-                            bottom={80}
-                            left={0}
 
-                            position="absolute"
-                            padding="$2"
-                            gap="$2"
-                          />
                           <AppToast />
                           {children}
                         </LayoutProvider>
                       </SearchProvider>
                     </ShoppingCartProvider>
                   </OrderProvider>
-
                 </QueryClientProvider >
-              </SafeAreaProvider >
-            </ToastProvider>
+              </ToastProvider>
+            </SafeAreaProvider >
           </PortalProvider>
         </Theme>
       </GestureHandlerRootView>

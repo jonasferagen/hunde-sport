@@ -1,50 +1,28 @@
-import { useLayoutContext } from "@/contexts/LayoutContext";
 import { Toast, useToastState } from "@tamagui/toast";
-import React, { useEffect, useState } from "react";
+import React from "react";
 export const AppToast = () => {
-    const currentToast = useToastState() // 👈 pulls the active toast being shown
+    const toast = useToastState() // 👈 pulls the active toast being shown
 
-    const { headerHeight } = useLayoutContext();
-    const [toastQueue, setToastQueue] = useState<any[]>([])
+    if (!toast || toast.isHandledNatively || toast.hide) {
+        return null;
+    }
 
-    // Add new toasts to queue
-    useEffect(() => {
-        if (!currentToast || !currentToast.id || currentToast.hide) return
-
-        setToastQueue((prev) => {
-            // Avoid duplicate by ID
-            if (prev.find((t) => t.id === currentToast.id)) return prev
-            return [...prev, currentToast]
-        })
-    }, [currentToast])
-
-    // Cleanup hidden toasts
-    useEffect(() => {
-        if (!currentToast?.hide) return
-
-        setToastQueue((prev) => prev.filter((t) => t.id !== currentToast.id))
-    }, [currentToast?.hide])
-
-    if (toastQueue.length === 0) return null
-
-    return <>
-        {toastQueue.map((toast) => (
-            <Toast
-                key={toast.id}
-                animation="quick"
-                enterStyle={{ x: -20, opacity: 0 }}
-                exitStyle={{ x: -20, opacity: 0 }}
-                opacity={1}
-                x={0}
-                theme={toast.theme ?? 'primary'}
-                borderWidth={1}
-                backgroundColor="$background"
-                borderColor="$borderColor"
-                borderRadius="$4"
-            >
-                <Toast.Title>{toast.title}</Toast.Title>
-                <Toast.Description>{toast.message}</Toast.Description>
-            </Toast>
-        ))}
-    </>
+    return (
+        <Toast
+            key={toast.id}
+            animation="lazy"
+            enterStyle={{ x: -20, opacity: 0 }}
+            exitStyle={{ x: -20, opacity: 0 }}
+            opacity={1}
+            x={0}
+            theme={toast.theme ?? 'primary'}
+            borderWidth={1}
+            backgroundColor="$background"
+            borderColor="$borderColor"
+            borderRadius="$4"
+        >
+            <Toast.Title>{toast.title}</Toast.Title>
+            <Toast.Description>{toast.message}</Toast.Description>
+        </Toast>
+    )
 }
