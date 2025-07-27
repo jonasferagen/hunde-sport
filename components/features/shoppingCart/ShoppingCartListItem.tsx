@@ -35,18 +35,19 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                             onPress={() => decreaseQuantity(purchasable, { silent: true })}
                             size="$5"
                             circular
-                            theme="accent"
+                            theme="primary"
                         />
-                        <H4 width={30} textAlign="center">
-                            {quantity}
-                        </H4>
+
                         <Button
                             icon={<Plus size="$4" />}
                             onPress={() => increaseQuantity(purchasable, { silent: true })}
                             size="$5"
                             circular
-                            theme="accent"
+                            theme="primary"
                         />
+                        <H4 width={30} textAlign="center">
+                            {quantity}
+                        </H4>
                         <SizableText fontSize="$4" color="$gray10">
                             á {formatPrice(price)}
                         </SizableText>
