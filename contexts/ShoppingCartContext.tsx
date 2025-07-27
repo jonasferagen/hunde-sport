@@ -120,9 +120,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const cartTotal = useMemo(() => {
         return items.reduce((sum, item) => {
-            const activeProduct = item.purchasable.productVariation || item.purchasable.product;
-            const price = activeProduct.price ?? 0;
-            return sum + price * item.quantity;
+            return sum + item.price * item.quantity;
         }, 0);
     }, [items]);
 

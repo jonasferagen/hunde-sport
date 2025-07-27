@@ -5,12 +5,14 @@ import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 export const ProductVariations = () => {
-    const { product, isProductVariationsLoading } = useProductContext();
+    const { product, productVariation, isProductVariationsLoading } = useProductContext();
     const { productVariationAttributes } = useProductVariationSelectionContext();
 
     if (product.type !== 'variable' || isProductVariationsLoading) {
         return null;
     }
+
+
     return (
         <XStack gap="$2" flexWrap="wrap">
             {productVariationAttributes.map((attribute) => {

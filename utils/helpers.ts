@@ -1,6 +1,8 @@
 import { decode } from 'he';
 import tinycolor from 'tinycolor2';
 
+import { ProductPriceRange } from '@/types';
+
 export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
 
 export const cleanNumber = (value: string) => {
@@ -13,7 +15,7 @@ export const cleanNumber = (value: string) => {
 export const formatPrice = (price: number): string =>
     price.toFixed(0).replace('.', ',') + ',-';
 
-export const formatPriceRange = (priceRange: PriceRange, compact: boolean = true): string => {
+export const formatPriceRange = (priceRange: ProductPriceRange, compact: boolean = true): string => {
     if (priceRange.min === priceRange.max) {
         return formatPrice(priceRange.min);
     }
@@ -32,7 +34,6 @@ export const darken = (color: string, amount: number) =>
 export const rgba = (color: string, alpha: number): string =>
     tinycolor(color).setAlpha(alpha).toString();
 
-import { PriceRange } from '@/types';
 import { parseDocument } from 'htmlparser2';
 
 const isAllWhitespace = (str: string) => /^\s*$/.test(str);

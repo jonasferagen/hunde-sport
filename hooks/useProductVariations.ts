@@ -1,5 +1,4 @@
-import { Product, ProductPriceRange } from '@/models/Product';
-import { ProductVariation } from '@/models/ProductVariation';
+import { Product, ProductPriceRange, ProductVariation } from '@/models/Product';
 import { useMemo, useState } from 'react';
 
 // Helper to get initial options from a variation
@@ -38,9 +37,23 @@ export const useProductVariations = (
     productVariations: ProductVariation[],
     initialProductVariation?: ProductVariation | null
 ) => {
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() =>
-        getOptionsFromVariation(initialProductVariation)
-    );
+    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>(() => {
+        if (initialProductVariation) {
+            return getOptionsFromVariation(initialProductVariation);
+        }
+        if (product.default_attributes && product.default_attributes.length > 0 && productVariations) {
+            const defaultVariation = productVariations.find(variation =>
+                product.default_attributes.every(defaultAttr =>
+                    variation.attributes.some(attr => attr.name === defaultAttr.name && attr.option === defaultAttr.option)
+                )
+            );
+            if (defaultVariation) {
+                return getOptionsFromVariation(defaultVariation);
+            }
+        }
+        return {};
+    });
+
 
     const defaultVariation = useMemo(() => {
         if (!product.default_attributes || product.default_attributes.length === 0) {
@@ -57,6 +70,8 @@ export const useProductVariations = (
             }) || null
         );
     }, [product.default_attributes, productVariations]);
+
+
 
     const productVariationAttributes = useMemo(() => {
         return product.attributes.filter(attr => attr.variation);

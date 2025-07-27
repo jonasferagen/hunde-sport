@@ -11,9 +11,8 @@ interface ShoppingCartListItemProps {
 
 const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
     const { increaseQuantity, decreaseQuantity, removeItem } = useShoppingCartContext();
-    const { purchasable, quantity } = item;
-    const { product, productVariation } = purchasable;
-    const activeProduct = productVariation || product;
+    const { purchasable, quantity, price } = item;
+    const { productVariation } = purchasable;
 
     return (
         <Theme name="secondary">
@@ -29,14 +28,14 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                 </XStack>
                 <XStack ai="center" gap="$2" flex={1}>
                     <SizableText fontSize="$6" fontWeight="bold">{productVariation?.name}</SizableText>
-                    <SizableText fontSize="$6" fontWeight="bold">{formatPrice(activeProduct.price)}</SizableText>
+                    <SizableText fontSize="$6" fontWeight="bold">{formatPrice(price)}</SizableText>
                 </XStack>
                 <XStack ai="center" jc="space-between">
                     <XStack ai="center" gap="$1" theme="secondary">
                         <SizableText fontSize="$6" width={30} textAlign="center" theme="light">
                             {quantity}
                         </SizableText>
-                        <SizableText fontSize="$6" fontWeight="bold">{formatPrice(activeProduct.price * quantity)}</SizableText>
+                        <SizableText fontSize="$6" fontWeight="bold">{formatPrice(price * quantity)}</SizableText>
                         <Button
                             theme="accent"
                             icon={<Minus size="$4" />}

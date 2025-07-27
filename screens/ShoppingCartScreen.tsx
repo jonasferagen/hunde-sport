@@ -27,7 +27,7 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
                     Antall: {cartItemCount}
                 </SizableText>
                 <SizableText fontWeight="bold" size="$6" textAlign="right">
-                    Total: {formatPrice(cartTotal)}
+                    Total: {cartTotal}
                 </SizableText>
             </XStack>
             <YStack gap="$3" mt="$3">
