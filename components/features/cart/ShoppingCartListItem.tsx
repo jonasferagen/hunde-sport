@@ -30,7 +30,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                         <Button
                             theme="secondary"
                             icon={<X />}
-                            onPress={() => removeItem(product, productVariation)}
+                            onPress={() => removeItem(product, productVariation, { silent: true })}
                             size="$6"
                             circular
                         />
@@ -41,7 +41,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                             <Button
                                 theme="accent"
                                 icon={<Minus size="$4" />}
-                                onPress={() => decreaseQuantity(product, productVariation)}
+                                onPress={() => decreaseQuantity(product, productVariation, { silent: true })}
                                 size="$6"
                                 circular
                             />
@@ -52,7 +52,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                             <Button
                                 theme="accent"
                                 icon={<Plus size="$4" />}
-                                onPress={() => increaseQuantity(product, productVariation)}
+                                onPress={() => increaseQuantity(product, productVariation, { silent: true })}
                                 size="$6"
                                 circular
                             />

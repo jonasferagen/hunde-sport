@@ -6,16 +6,18 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 import { Alert } from 'react-native';
 import { useStatusContext } from './StatusContext';
 
-
+interface CartItemOptions {
+    silent?: boolean;
+}
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
     cartItemCount: number;
     cartTotal: number;
     getQuantity: (product: Product, productVariation?: ProductVariation) => number;
-    increaseQuantity: (product: Product, productVariation?: ProductVariation) => void;
-    decreaseQuantity: (product: Product, productVariation?: ProductVariation) => void;
-    removeItem: (product: Product, productVariation?: ProductVariation) => void;
+    increaseQuantity: (product: Product, productVariation?: ProductVariation, options?: CartItemOptions) => void;
+    decreaseQuantity: (product: Product, productVariation?: ProductVariation, options?: CartItemOptions) => void;
+    removeItem: (product: Product, productVariation?: ProductVariation, options?: CartItemOptions) => void;
     clearCart: () => void;
 }
 
@@ -34,7 +36,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [items]
     );
 
-    const decreaseQuantity = useCallback((product: Product, productVariation?: ProductVariation) => {
+    const decreaseQuantity = useCallback((product: Product, productVariation?: ProductVariation, options: CartItemOptions = { silent: false }) => {
         const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
         setItems((prevItems) =>
             prevItems
@@ -49,7 +51,8 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }, []);
 
     const increaseQuantity = useCallback(
-        (product: Product, productVariation?: ProductVariation) => {
+        (product: Product, productVariation?: ProductVariation, options: CartItemOptions = { silent: false }) => {
+            const { silent } = options;
             const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
             setItems((prevItems) => {
                 const existingItem = prevItems.find((item) => item.key === key);
@@ -66,13 +69,15 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 }
             });
 
-            const title = productVariation ? `${product.name} - ${productVariation.name}` : product.name;
-            showMessage({ text: `${title} er lagt til i handlekurven`, type: 'info' });
+            if (!silent) {
+                const title = productVariation ? `${product.name} - ${productVariation.name}` : product.name;
+                showMessage({ text: `${title} er lagt til i handlekurven`, type: 'info' });
+            }
         },
         [showMessage]
     );
 
-    const removeItem = useCallback((product: Product, productVariation?: ProductVariation) => {
+    const removeItem = useCallback((product: Product, productVariation?: ProductVariation, options: CartItemOptions = { silent: false }) => {
         const key = `${product.id}-${productVariation?.id ?? 'simple'}`;
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
     }, []);
