@@ -1,10 +1,9 @@
-import { ProductCard, ProductCardImage } from '@/components/features/product/card';
 import { ProductProvider, useShoppingCartContext } from '@/contexts';
 import { ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Button, H5, SizableText, Theme, XStack, YStack } from 'tamagui';
+import { Button, SizableText, Theme, XStack } from 'tamagui';
 
 interface ShoppingCartListItemProps {
     item: ShoppingCartItem;
@@ -17,51 +16,46 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
     const activeProduct = productVariation || product;
 
     return (
-        <ProductCard>
-            <Theme name="secondary">
-                <YStack gap="$3" flex={1}>
-                    <XStack gap="$3" ai="center">
-                        <ProductCardImage product={product} imageSize={40} />
-                        <XStack ai="center" gap="$2" flex={1}>
-                            <H5>{product.name}</H5>
-                            {productVariation && <H5>{productVariation.name}</H5>}
-                        </XStack>
-                    </XStack>
-                    <XStack ai="center" jc="space-between">
+        <Theme name="secondary">
+            <XStack gap="$3" flex={1} padding="$3">
+                <XStack ai="center" jc="space-between">
+                    <Button
+                        theme="secondary"
+                        icon={<X />}
+                        onPress={() => removeItem(purchasable, { silent: true })}
+                        size="$6"
+                        circular
+                    />
+                </XStack>
+                <XStack ai="center" gap="$2" flex={1}>
+                    <SizableText fontSize="$6" fontWeight="bold">{productVariation?.name}</SizableText>
+                    <SizableText fontSize="$6" fontWeight="bold">{formatPrice(activeProduct.price)}</SizableText>
+                </XStack>
+                <XStack ai="center" jc="space-between">
+                    <XStack ai="center" gap="$1" theme="secondary">
+                        <SizableText fontSize="$6" width={30} textAlign="center" theme="light">
+                            {quantity}
+                        </SizableText>
+                        <SizableText fontSize="$6" fontWeight="bold">{formatPrice(activeProduct.price * quantity)}</SizableText>
                         <Button
-                            theme="secondary"
-                            icon={<X />}
-                            onPress={() => removeItem(purchasable, { silent: true })}
+                            theme="accent"
+                            icon={<Minus size="$4" />}
+                            onPress={() => decreaseQuantity(purchasable, { silent: true })}
                             size="$6"
                             circular
                         />
-                        <SizableText fontSize="$6" fontWeight="bold">
-                            {formatPrice(activeProduct.price * quantity)}
-                        </SizableText>
-                        <XStack ai="center" gap="$2" theme="secondary">
-                            <Button
-                                theme="accent"
-                                icon={<Minus size="$4" />}
-                                onPress={() => decreaseQuantity(purchasable, { silent: true })}
-                                size="$6"
-                                circular
-                            />
 
-                            <SizableText fontSize="$6" width={30} textAlign="center" theme="light">
-                                {quantity}
-                            </SizableText>
-                            <Button
-                                theme="accent"
-                                icon={<Plus size="$4" />}
-                                onPress={() => increaseQuantity(purchasable, { silent: true })}
-                                size="$6"
-                                circular
-                            />
-                        </XStack>
+                        <Button
+                            theme="accent"
+                            icon={<Plus size="$4" />}
+                            onPress={() => increaseQuantity(purchasable, { silent: true })}
+                            size="$6"
+                            circular
+                        />
                     </XStack>
-                </YStack>
-            </Theme>
-        </ProductCard>
+                </XStack>
+            </XStack>
+        </Theme>
     );
 };
 

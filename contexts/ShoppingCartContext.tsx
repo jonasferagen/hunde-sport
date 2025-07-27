@@ -1,5 +1,5 @@
 import { routes } from '@/config/routes';
-import { Purchasable, ShoppingCartItem } from '@/types';
+import { Product, Purchasable, ShoppingCartItem } from '@/types';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import { useStatusContext } from './StatusContext';
@@ -10,6 +10,7 @@ interface CartItemOptions {
 
 interface ShoppingCartContextType {
     items: ShoppingCartItem[];
+    groupedItems: { product: Product; items: ShoppingCartItem[] }[];
     cartItemCount: number;
     cartTotal: number;
     getQuantity: (purchasable: Purchasable) => number;
@@ -125,10 +126,25 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         }, 0);
     }, [items]);
 
+    const groupedItems = useMemo(() => {
+        const groups: { [key: number]: { product: Product; items: ShoppingCartItem[] } } = {};
+
+        for (const item of items) {
+            const productId = item.purchasable.product.id;
+            if (!groups[productId]) {
+                groups[productId] = { product: item.purchasable.product, items: [] };
+            }
+            groups[productId].items.push(item);
+        }
+
+        return Object.values(groups);
+    }, [items]);
+
     return (
         <ShoppingCartContext.Provider
             value={{
                 items,
+                groupedItems,
                 cartItemCount,
                 cartTotal,
                 getQuantity,

@@ -3,14 +3,15 @@ import { PageHeader as OriginalPageHeader } from '@/components/layout/PageHeader
 
 import { DebugSeeder } from '@/components/development/DebugSeeder';
 import { ShoppingCartListItem } from '@/components/features/cart/ShoppingCartListItem';
+import { ProductCardImage } from '@/components/features/product/card';
 import { routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { ShoppingCartItem } from '@/types';
+import { Product, ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import { Stack, useRouter } from 'expo-router';
 import React, { memo, useCallback } from 'react';
-import { FlatList } from 'react-native';
-import { Button, SizableText, XStack, YStack } from 'tamagui';
+import { SectionList } from 'react-native';
+import { Button, H5, SizableText, XStack, YStack } from 'tamagui';
 
 interface ShoppingCartSummaryProps {
     cartItemCount: number;
@@ -41,8 +42,19 @@ const ShoppingCartSummary = memo(({ cartItemCount, cartTotal, onClearCart }: Sho
     );
 });
 
+const ShoppingCartGroupHeader = ({ product }: { product: Product }) => {
+    return (
+        <PageContent>
+            <XStack gap="$3" ai="center">
+                <ProductCardImage product={product} imageSize={60} />
+                <H5>{product.name}</H5>
+            </XStack>
+        </PageContent>
+    );
+};
+
 export const ShoppingCartScreen = () => {
-    const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
+    const { groupedItems, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
     const router = useRouter();
 
     const renderItem = useCallback(
@@ -50,16 +62,24 @@ export const ShoppingCartScreen = () => {
         []
     );
 
+    const renderSectionHeader = useCallback(
+        ({ section: { product } }: { section: { product: Product } }) => <ShoppingCartGroupHeader product={product} />,
+        []
+    );
+
+    const sections = groupedItems.map(group => ({ product: group.product, data: group.items }));
+
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
             <OriginalPageHeader title="Handlekurv" />
             <PageSection flex={1}>
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
-                    <FlatList
-                        data={items}
+                    <SectionList
+                        sections={sections}
                         keyExtractor={(item) => item.key}
                         renderItem={renderItem}
+                        renderSectionHeader={renderSectionHeader}
                         ListEmptyComponent={
                             <SizableText textAlign="center" marginTop="$4" color="$color.secondary">
                                 Handlekurven er tom.
@@ -69,12 +89,6 @@ export const ShoppingCartScreen = () => {
                 </PageContent>
                 <PageContent secondary>
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
-                </PageContent>
-                <PageContent>
-                    <CartTotals cartTotal={cartTotal} />
-                    <Button onPress={() => router.push(routes.shipping())} disabled={cartItemCount === 0}>
-                        Gå til kassen
-                    </Button>
                     <DebugSeeder />
                 </PageContent>
             </PageSection>
