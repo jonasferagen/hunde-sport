@@ -62,7 +62,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 const product = getPurchasableTitle(purchasable);
                 toastController.show('Lagt til i handlekurven', {
                     message: product,
-                    theme: 'primary',
+                    theme: 'dark_green',
                 });
             }
         },
@@ -78,7 +78,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const title = getPurchasableTitle(purchasable);
             toastController.show('Fjernet fra handlekurven', {
                 message: title,
-                theme: 'accent',
+                theme: 'dark_yellow',
             });
         }
     }, [toastController]);
@@ -109,7 +109,8 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const handleConfirmClearCart = () => {
         setItems([]);
         toastController.show('Handlekurven er tømt', {
-            theme: 'yellow',
+            message: 'Du har ingen produkter i handlekurven',
+            theme: 'dark_yellow',
         });
         routes.home();
         setClearCartDialogOpen(false);

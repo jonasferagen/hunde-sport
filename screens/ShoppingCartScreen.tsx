@@ -49,7 +49,7 @@ export const ShoppingCartScreen = () => {
                         <ThemedButton onPress={handleCheckout} theme="primary" disabled={cartItemCount === 0}>
                             Gå til kassen
                         </ThemedButton>
-                        <ThemedButton onPress={clearCart} theme="secondary">
+                        <ThemedButton onPress={clearCart} theme="secondary" disabled={cartItemCount === 0}>
                             Tøm handlekurv
                         </ThemedButton>
                     </YStack>
