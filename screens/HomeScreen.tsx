@@ -16,7 +16,7 @@ export const HomeScreen = () => {
     const handleSearch = (query: string) => {
         query && router.push(routes.search(query));
     };
-    const debugProducts = useProductsByIds([35961, 27445]);
+    const debugProducts = useProductsByIds([247691, 35961, 27445]);
     const recentProducts = useRecentProducts();
     const discountedProducts = useDiscountedProducts();
     const featuredProducts = useFeaturedProducts();

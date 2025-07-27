@@ -34,11 +34,16 @@ export const ProductVariationSelectionProvider: React.FC<{
 
     useEffect(() => {
 
-        if (selectedVariation !== undefined) {
+        if (selectedVariation) {
+            console.log("setting selected variation to ", selectedVariation.name)
             setProductVariation(selectedVariation);
             return;
         }
-        setProductVariation(defaultVariation);
+        if (defaultVariation) {
+            console.log("setting default variation to ", defaultVariation.name)
+            setProductVariation(defaultVariation);
+            return;
+        }
 
     }, [selectedVariation, setProductVariation, defaultVariation]);
 
