@@ -24,10 +24,6 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                         {product.name}
                         {productVariation && ` - ${capitalize(productVariation.name)}`}
                     </SizableText>
-                    <SizableText fontSize="$4" color="$gray10">
-                        {formatPrice(price)}
-                    </SizableText>
-
                 </XStack>
 
                 {/* Row 2: Quantity + Subtotal + Remove */}
@@ -51,6 +47,9 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                             circular
                             theme="accent"
                         />
+                        <SizableText fontSize="$4" color="$gray10">
+                            á {formatPrice(price)}
+                        </SizableText>
                     </XStack>
 
                     {/* Subtotal */}
