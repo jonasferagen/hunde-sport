@@ -1,32 +1,49 @@
 import { useLayoutContext } from "@/contexts/LayoutContext";
 import { Toast, useToastState } from "@tamagui/toast";
-import React from "react";
-import { YStack } from "tamagui";
+import React, { useEffect, useState } from "react";
 export const AppToast = () => {
-    const toastState = useToastState() // 👈 pulls the active toast being shown
+    const currentToast = useToastState() // 👈 pulls the active toast being shown
+
     const { headerHeight } = useLayoutContext();
-    if (!toastState) return null // No toast to show
+    const [toastQueue, setToastQueue] = useState<any[]>([])
 
-    return (
-        <YStack ai="center">
+    // Add new toasts to queue
+    useEffect(() => {
+        if (!currentToast || !currentToast.id || currentToast.hide) return
 
+        setToastQueue((prev) => {
+            // Avoid duplicate by ID
+            if (prev.find((t) => t.id === currentToast.id)) return prev
+            return [...prev, currentToast]
+        })
+    }, [currentToast])
+
+    // Cleanup hidden toasts
+    useEffect(() => {
+        if (!currentToast?.hide) return
+
+        setToastQueue((prev) => prev.filter((t) => t.id !== currentToast.id))
+    }, [currentToast?.hide])
+
+    if (toastQueue.length === 0) return null
+
+    return <>
+        {toastQueue.map((toast) => (
             <Toast
-                key={toastState.id}
-                animation={toastState.animation}
+                key={toast.id}
+                animation="quick"
                 enterStyle={{ x: -20, opacity: 0 }}
                 exitStyle={{ x: -20, opacity: 0 }}
                 opacity={1}
                 x={0}
-                y={headerHeight}
                 theme="green"
                 borderWidth={1}
                 borderColor="$green8"
                 borderRadius="$4"
             >
-                <Toast.Title>{toastState.title}</Toast.Title>
-                <Toast.Description>{toastState.message}</Toast.Description>
+                <Toast.Title>{toast?.title}</Toast.Title>
+                <Toast.Description>{toast?.message}</Toast.Description>
             </Toast>
-
-        </YStack>
-    )
+        ))}
+    </>
 }

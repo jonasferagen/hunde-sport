@@ -3,7 +3,6 @@ import { routes } from '@/config/routes';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-
 interface CartItemOptions {
     silent?: boolean;
 }
@@ -24,7 +23,7 @@ const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(u
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
-    const toast = useToastController();
+    const toastController = useToastController();
     const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
 
     const getQuantity = useCallback(
@@ -64,14 +63,12 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
             if (!silent) {
                 const title = purchasable.productVariation ? `${purchasable.product.name} - ${purchasable.productVariation.name}` : purchasable.product.name;
-
-
-                toast.show('Lagt til i handlekurven', {
+                toastController.show('Lagt til  i handlekurven', {
                     message: title,
                 });
             }
         },
-        [toast]
+        [toastController]
     );
 
     const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
@@ -85,11 +82,11 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const title = purchasable.productVariation
                 ? `${purchasable.product.name} - ${purchasable.productVariation.name}`
                 : purchasable.product.name;
-            toast.show('Fjernet fra handlekurven', {
+            toastController.show('Fjernet fra handlekurven', {
                 message: title,
             });
         }
-    }, [toast]);
+    }, [toastController]);
 
     const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
 
@@ -114,11 +111,11 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
             return updatedItems;
         });
-    }, []);
+    }, [toastController]);
 
     const handleConfirmClearCart = () => {
         setItems([]);
-        toast.show('Handlekurven er tømt');
+        toastController.show('Handlekurven er tømt');
         routes.home();
         setClearCartDialogOpen(false);
     };

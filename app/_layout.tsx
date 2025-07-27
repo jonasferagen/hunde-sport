@@ -1,3 +1,4 @@
+import { AppToast } from '@/components/ui/Toast';
 import {
   LayoutProvider,
   OrderProvider,
@@ -7,15 +8,13 @@ import {
 import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
 
+import { ToastProvider, ToastViewport } from '@tamagui/toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import React, { JSX, memo, useState } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
-
-import { AppToast } from '@/components/ui/Toast';
-import { ToastProvider, ToastViewport } from '@tamagui/toast';
 
 const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient({
@@ -32,15 +31,25 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Theme name="light">
           <PortalProvider shouldAddRootHost={true}>
-            <ToastProvider burntOptions={{ from: 'bottom' }}>
+            <ToastProvider>
+
               <SafeAreaProvider>
                 <QueryClientProvider client={queryClient}>
-
                   <OrderProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
                         <LayoutProvider>
-                          <ToastViewport />
+                          <ToastViewport
+                            multipleToasts
+                            flexDirection="column-reverse"
+                            justifyContent='flex-end'
+                            bottom={80}
+                            left={0}
+
+                            position="absolute"
+                            padding="$2"
+                            gap="$2"
+                          />
                           <AppToast />
                           {children}
                         </LayoutProvider>
