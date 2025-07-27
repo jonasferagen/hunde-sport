@@ -41,3 +41,5 @@ export type Purchasable =
     product: VariableProduct;
     productVariation: ProductVariation; // Required for variable products
   };
+
+

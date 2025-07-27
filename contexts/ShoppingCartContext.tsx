@@ -1,7 +1,7 @@
 import { ClearCartDialog } from '@/components/features/shoppingCart/ClearCartDialog';
 import { routes } from '@/config/routes';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
-import { getPurchasableKey } from '@/utils/purchasable';
+import { getPurchasableKey, getPurchasableTitle } from '@/utils/purchasable';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
@@ -59,7 +59,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             });
 
             if (!silent) {
-                const product = purchasable.productVariation ? `${purchasable.product.name} - ${purchasable.productVariation.name}` : purchasable.product.name;
+                const product = getPurchasableTitle(purchasable);
                 toastController.show('Lagt til i handlekurven', {
                     message: product,
                     theme: 'primary',
@@ -75,9 +75,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
 
         if (!silent) {
-            const title = purchasable.productVariation
-                ? `${purchasable.product.name} - ${purchasable.productVariation.name}`
-                : purchasable.product.name;
+            const title = getPurchasableTitle(purchasable);
             toastController.show('Fjernet fra handlekurven', {
                 message: title,
                 theme: 'accent',

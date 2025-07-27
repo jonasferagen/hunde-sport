@@ -14,3 +14,9 @@ export const getPurchasableKey = (purchasable: Purchasable): string => {
         ? `${purchasable.product.id}-${purchasable.productVariation.id}`
         : `${purchasable.product.id}-simple`;
 };
+
+export const getPurchasableTitle = (purchasable: Purchasable): string => {
+    return purchasable.productVariation
+        ? `${purchasable.product.name} - ${purchasable.productVariation.name}`
+        : purchasable.product.name;
+};
