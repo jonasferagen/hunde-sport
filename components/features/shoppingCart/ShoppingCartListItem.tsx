@@ -1,9 +1,9 @@
-import { ProductProvider, useShoppingCartContext } from '@/contexts';
+import { ProductProvider, useProductContext, useShoppingCartContext } from '@/contexts';
 import { ShoppingCartItem } from '@/types';
-import { formatPrice } from '@/utils/helpers';
+import { capitalize, formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Button, SizableText, Theme, XStack } from 'tamagui';
+import { Button, H4, SizableText, Theme, XStack, YStack } from 'tamagui';
 
 interface ShoppingCartListItemProps {
     item: ShoppingCartItem;
@@ -11,31 +11,33 @@ interface ShoppingCartListItemProps {
 
 const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
     const { increaseQuantity, decreaseQuantity, removeItem } = useShoppingCartContext();
+    const { product } = useProductContext();
     const { purchasable, quantity, price } = item;
     const { productVariation } = purchasable;
 
     return (
         <Theme name="secondary">
-            <XStack gap="$3" flex={1} padding="$3">
-                <XStack ai="center" jc="space-between">
+            <YStack gap="$2" padding="$3">
+                <XStack ai="center" jc="space-between" gap="$2">
+                    <SizableText size="$5" fontWeight="bold">{product.name} {productVariation && `${capitalize(productVariation.name)}`}</SizableText>
+                    <SizableText size="$5" fontWeight="bold">{formatPrice(price)}</SizableText>
+                </XStack>
+                <XStack gap="$3" flex={1} ai="center">
                     <Button
                         theme="secondary"
-                        icon={<X />}
+                        icon={<X size="$4" />}
                         onPress={() => removeItem(purchasable, { silent: true })}
                         size="$6"
                         circular
                     />
-                </XStack>
-                <XStack ai="center" gap="$2" flex={1}>
-                    <SizableText fontSize="$6" fontWeight="bold">{productVariation?.name}</SizableText>
-                    <SizableText fontSize="$6" fontWeight="bold">{formatPrice(price)}</SizableText>
-                </XStack>
-                <XStack ai="center" jc="space-between">
+
+                    <XStack ai="center" gap="$2" flex={1}>
+                        <SizableText fontWeight="bold">{formatPrice(quantity * price)}</SizableText>
+                    </XStack>
                     <XStack ai="center" gap="$1" theme="secondary">
-                        <SizableText fontSize="$6" width={30} textAlign="center" theme="light">
+                        <H4 width={30} textAlign="center" theme="light">
                             {quantity}
-                        </SizableText>
-                        <SizableText fontSize="$6" fontWeight="bold">{formatPrice(price * quantity)}</SizableText>
+                        </H4>
                         <Button
                             theme="accent"
                             icon={<Minus size="$4" />}
@@ -53,7 +55,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                         />
                     </XStack>
                 </XStack>
-            </XStack>
+            </YStack>
         </Theme>
     );
 };

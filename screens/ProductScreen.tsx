@@ -1,5 +1,6 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { PriceTag } from '@/components/features/product/display/PriceTag';
+import { ProductStatus } from '@/components/features/product/display/ProductStatus';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
@@ -46,11 +47,12 @@ const ProductScreenContent = () => {
   const { product, productVariation } = useProductContext();
   const { increaseQuantity } = useShoppingCartContext();
 
-  const activeProduct = productVariation || product;
 
   const handleAddToCart = () => {
     increaseQuantity({ product, productVariation });
   };
+
+  const activeProduct = productVariation || product;
 
   return (
     <>
@@ -62,12 +64,16 @@ const ProductScreenContent = () => {
             <PriceTag fontSize="$6" />
           </XStack>
           <SizableText size="$3">{product.short_description}</SizableText>
-          {product.type === 'variable' && <ProductVariations />}
+          {product.hasVariations() && <ProductVariations />}
           <XStack ai="center" jc="space-between" mb="$3">
             <ProductTitle />
+            <ProductStatus />
             <PriceTag fontSize="$6" />
           </XStack>
           <YStack theme="primary">
+            {product.hasVariations() && !productVariation &&
+              <SizableText fontSize="$2" fontWeight="bold">Velg variant</SizableText>
+            }
             <Button
               icon={<ShoppingCart />}
               onPress={handleAddToCart}
