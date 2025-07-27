@@ -6,4 +6,9 @@ export const ThemedButton = styled(Button, {
     backgroundColor: '$background',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',
+    borderRadius: '$3',
+    fontWeight: 'bold',
+    disabledStyle: {
+        opacity: 0.5,
+    }
 });

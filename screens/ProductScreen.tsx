@@ -13,7 +13,7 @@ import { ProductProvider, useProductContext, useShoppingCartContext } from '@/co
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
-import { ShoppingCart } from '@tamagui/lucide-icons';
+import { AlertCircle, ShoppingCart } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
@@ -55,6 +55,10 @@ const ProductScreenContent = () => {
 
   const activeProduct = productVariation || product;
 
+  const needsVariant = product.hasVariations() && !productVariation;
+  const buttonTheme = needsVariant ? 'secondary' : 'accent';
+  const buttonText = needsVariant ? 'Velg variant' : 'Legg til i handlekurv';
+  const buttonIcon = needsVariant ? <AlertCircle /> : <ShoppingCart />;
   return (
     <>
 
@@ -72,19 +76,20 @@ const ProductScreenContent = () => {
             <ProductStatus />
             <PriceTag fontSize="$6" />
           </XStack>
-          <YStack theme="primary" pt="$3">
-            {product.hasVariations() && !productVariation &&
-              <SizableText fontSize="$2" fontWeight="bold">Velg variant</SizableText>
-            }
+          <YStack pt="$3">
 
             <ThemedButton
-              theme="accent"
-              icon={<ShoppingCart />}
+              theme={buttonTheme}
+              icon={buttonIcon}
               onPress={handleAddToCart}
               disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
+              fontWeight="bold"
             >
-              Legg i handlekurv
+
+              {buttonText}
+
             </ThemedButton>
+
           </YStack>
         </PageContent>
         <PageContent title="Produktbilder" flex={1}>
