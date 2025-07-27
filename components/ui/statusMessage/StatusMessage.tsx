@@ -48,7 +48,7 @@ export const StatusMessage: React.FC = () => {
                 return { backgroundColor: '$green8', borderColor: '$green10' };
             case 'warning':
             case 'info':
-                return { backgroundColor: '$blue8', borderColor: '$blue10' };
+                return { backgroundColor: '$background', borderColor: '$borderColor' };
             default:
                 return { backgroundColor: '$background', borderColor: '$borderColor' };
         }
@@ -56,17 +56,18 @@ export const StatusMessage: React.FC = () => {
 
     return (
         <AnimatedYStack
+            theme="accent"
             position="absolute"
-            left="$space.md"
-            right="$space.md"
-            padding="$space.md"
+            left="$space.2"
+            right="$space.2"
+            padding="$space.3"
             borderRadius="$4"
             zIndex={1000}
             borderWidth={1}
             {...getThemeProps()}
             style={animatedStyle}
         >
-            <SizableText color="$color.white" textAlign="center">
+            <SizableText color="$color.white" textAlign="center" fontWeight="bold">
                 {message}
             </SizableText>
         </AnimatedYStack>

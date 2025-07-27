@@ -65,9 +65,9 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
             </XStack>
             <XStack ai='center' jc='space-between' flex={0} gap="$2" marginHorizontal="$3" >
                 <XStack gap="$2" ai="center" flex={1}>
-                    <PriceTag />
                     <ProductStatus />
                     {product.hasVariations() && productVariation && <SizableText fontWeight="bold" >{productVariation.name}</SizableText>}
+                    <PriceTag />
                 </XStack>
 
                 <XStack gap="$2" ai="center">
