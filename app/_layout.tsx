@@ -1,4 +1,4 @@
-import { AppToast } from '@/components/ui/Toast';
+import { AppToast } from '@/components/ui/AppToast';
 import {
   LayoutProvider,
   OrderProvider,

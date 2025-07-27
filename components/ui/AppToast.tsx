@@ -36,13 +36,14 @@ export const AppToast = () => {
                 exitStyle={{ x: -20, opacity: 0 }}
                 opacity={1}
                 x={0}
-                theme="green"
+                theme={toast.theme ?? 'primary'}
                 borderWidth={1}
-                borderColor="$green8"
+                backgroundColor="$background"
+                borderColor="$borderColor"
                 borderRadius="$4"
             >
-                <Toast.Title>{toast?.title}</Toast.Title>
-                <Toast.Description>{toast?.message}</Toast.Description>
+                <Toast.Title>{toast.title}</Toast.Title>
+                <Toast.Description>{toast.message}</Toast.Description>
             </Toast>
         ))}
     </>

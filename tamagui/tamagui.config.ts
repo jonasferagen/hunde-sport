@@ -141,6 +141,20 @@ const appConfig = createTamagui({
             colorSubtle: customTokens.color.accentTextSubtle,
             borderColor: customTokens.color.accentBorder,
         },
+
+        success: {
+            ...themes.light_green,
+        },
+        error: {
+            ...themes.light_red,
+        },
+        info: {
+            ...themes.light_blue,
+        },
+        warning: {
+            ...themes.light_yellow,
+        },
+
     },
     tokens: customTokens,
     shorthands,

@@ -3,12 +3,14 @@ import { PageHeader as OriginalPageHeader } from '@/components/layout/PageHeader
 
 import { DebugSeeder } from '@/components/development/DebugSeeder';
 import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shoppingCart';
+import { ThemedButton } from '@/components/ui/ThemedButton';
+import { routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
 import { FlashList } from '@shopify/flash-list';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import React, { useCallback } from 'react';
-import { SizableText } from 'tamagui';
+import { SizableText, YStack } from 'tamagui';
 
 export const ShoppingCartScreen = () => {
     const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
@@ -17,6 +19,11 @@ export const ShoppingCartScreen = () => {
         ({ item }: { item: ShoppingCartItem }) => <ShoppingCartListItem item={item} />,
         []
     );
+    const router = useRouter();
+
+    const handleCheckout = () => {
+        router.push(routes.shipping());
+    };
 
     return (
         <PageView>
@@ -38,6 +45,14 @@ export const ShoppingCartScreen = () => {
                 </PageContent>
                 <PageContent secondary>
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
+                    <YStack gap="$3" mt="$3">
+                        <ThemedButton onPress={handleCheckout} theme="primary" disabled={cartItemCount === 0}>
+                            Gå til kassen
+                        </ThemedButton>
+                        <ThemedButton onPress={clearCart} theme="secondary">
+                            Tøm handlekurv
+                        </ThemedButton>
+                    </YStack>
                     <DebugSeeder />
                 </PageContent>
             </PageSection>
