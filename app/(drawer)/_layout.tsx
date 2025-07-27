@@ -1,12 +1,14 @@
 import { CategoryTree } from '@/components/features/category/CategoryTree';
+import { useLayoutContext } from '@/contexts/LayoutContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { cartRoute, homeRoute, useActiveRoute } from '@/hooks/useActiveRoute';
-import { DrawerContentScrollView, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerHeaderProps, DrawerItem, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Home, ShoppingCart, X } from '@tamagui/lucide-icons';
 import { router } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import React, { useCallback, useMemo } from 'react';
+import { LayoutChangeEvent } from 'react-native';
 import { Button, H3, H4, SizableText, Theme, XStack, YStack } from 'tamagui';
 
 
@@ -79,6 +81,30 @@ const CustomDrawerContent = React.memo((props: any) => {
     );
 });
 
+const CustomHeader = React.memo(({ options }: DrawerHeaderProps) => {
+    const { setHeaderHeight } = useLayoutContext();
+
+    const handleLayout = useCallback((event: LayoutChangeEvent) => {
+        const { height } = event.nativeEvent.layout;
+        setHeaderHeight(height);
+    }, [setHeaderHeight]);
+
+    return (
+        <Theme name="secondary">
+            <YStack
+                onLayout={handleLayout}
+                jc="center"
+                ai="center"
+                pt={32}
+                pb={16}
+                backgroundColor="$background"
+            >
+                <H3 color="$color">{options.headerTitle}</H3>
+            </YStack>
+        </Theme>
+    );
+});
+
 export default function DrawerLayout() {
 
     const headerBackground = useCallback(() => (
@@ -96,30 +122,14 @@ export default function DrawerLayout() {
 
     const screenOptions = useMemo<DrawerNavigationOptions>(
         () => ({
+            header: (props) => <CustomHeader {...props} />,
             headerTitle: 'HundeSport.no',
-            headerTitleAlign: 'center',
-            headerStyle: {
-                elevation: 0,
-                shadowOpacity: 0,
-                shadowRadius: 0,
-                shadowOffset: {
-                    height: 0,
-                    width: 0,
-                },
-            },
-            headerBackground,
-            headerTitleStyle: {
-                color: '$color',
-                fontFamily: '$body',
-                fontSize: 20,
-            },
-            headerTintColor: '$color',
             drawerStyle: {
                 backgroundColor: '$background',
                 width: '80%',
             },
         }),
-        [headerBackground]
+        []
     );
 
     return (

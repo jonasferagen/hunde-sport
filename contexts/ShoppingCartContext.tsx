@@ -1,8 +1,8 @@
+import { ClearCartDialog } from '@/components/features/shoppingCart/ClearCartDialog';
 import { routes } from '@/config/routes';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
+import { useToastController } from '@tamagui/toast';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { Alert } from 'react-native';
-import { useStatusContext } from './StatusContext';
 
 interface CartItemOptions {
     silent?: boolean;
@@ -24,7 +24,8 @@ const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(u
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
-    const { showMessage } = useStatusContext();
+    const toast = useToastController();
+    const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
 
     const getQuantity = useCallback(
         (purchasable: Purchasable) => {
@@ -36,31 +37,6 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         },
         [items]
     );
-
-    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
-
-        const key = purchasable.productVariation
-            ? `${purchasable.product.id}-${purchasable.productVariation.id}`
-            : `${purchasable.product.id}-simple`;
-
-        setItems((prevItems) => {
-            const itemToDecrease = prevItems.find((item) => item.key === key);
-
-            if (itemToDecrease && itemToDecrease.quantity <= 1) {
-                return prevItems; // Do nothing if quantity is already 1 or less
-            }
-
-            const updatedItems = prevItems.map((item) => {
-                if (item.key === key) {
-                    const newQuantity = item.quantity - 1;
-                    return new ShoppingCartItem(purchasable, newQuantity);
-                }
-                return item;
-            });
-
-            return updatedItems;
-        });
-    }, []);
 
     const increaseQuantity = useCallback(
         (purchasable: Purchasable, options: CartItemOptions = {}) => {
@@ -88,10 +64,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
             if (!silent) {
                 const title = purchasable.productVariation ? `${purchasable.product.name} - ${purchasable.productVariation.name}` : purchasable.product.name;
-                showMessage({ text: `${title} er lagt til i handlekurven`, type: 'info' });
+
+
+                toast.show('Lagt til i handlekurven', {
+                    message: title,
+                });
             }
         },
-        [showMessage]
+        [toast]
     );
 
     const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
@@ -105,31 +85,47 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const title = purchasable.productVariation
                 ? `${purchasable.product.name} - ${purchasable.productVariation.name}`
                 : purchasable.product.name;
-            showMessage({ text: `${title} er fjernet fra handlekurven`, type: 'info' });
+            toast.show('Fjernet fra handlekurven', {
+                message: title,
+            });
         }
-    }, [showMessage]);
+    }, [toast]);
+
+    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
+
+        const key = purchasable.productVariation
+            ? `${purchasable.product.id}-${purchasable.productVariation.id}`
+            : `${purchasable.product.id}-simple`;
+
+        setItems((prevItems) => {
+            const itemToDecrease = prevItems.find((item) => item.key === key);
+
+            if (itemToDecrease && itemToDecrease.quantity <= 1) {
+                return prevItems; // Do nothing if quantity is already 1 or less
+            }
+
+            const updatedItems = prevItems.map((item) => {
+                if (item.key === key) {
+                    const newQuantity = item.quantity - 1;
+                    return new ShoppingCartItem(purchasable, newQuantity);
+                }
+                return item;
+            });
+
+            return updatedItems;
+        });
+    }, []);
+
+    const handleConfirmClearCart = () => {
+        setItems([]);
+        toast.show('Handlekurven er tømt');
+        routes.home();
+        setClearCartDialogOpen(false);
+    };
 
     const clearCart = useCallback(() => {
-        Alert.alert(
-            'Tøm handlekurv',
-            'Er du sikker på at du vil tømme handlekurven?',
-            [
-                {
-                    text: 'Avbryt',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Tøm',
-                    style: 'destructive',
-                    onPress: () => {
-                        setItems([]);
-                        showMessage({ text: 'Handlekurven er tømt', type: 'info' });
-                        routes.home();
-                    },
-                },
-            ]
-        );
-    }, [showMessage]);
+        setClearCartDialogOpen(true);
+    }, []);
 
     const cartItemCount = useMemo(() => {
         return items.reduce((sum, item) => sum + item.quantity, 0);
@@ -155,21 +151,29 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         return Object.values(groups);
     }, [items]);
 
+    const value = useMemo(
+        () => ({
+            items,
+            groupedItems,
+            cartItemCount,
+            cartTotal,
+            getQuantity,
+            increaseQuantity,
+            decreaseQuantity,
+            removeItem,
+            clearCart,
+        }),
+        [items, cartItemCount, cartTotal, clearCart]
+    );
+
     return (
-        <ShoppingCartContext.Provider
-            value={{
-                items,
-                groupedItems,
-                cartItemCount,
-                cartTotal,
-                getQuantity,
-                increaseQuantity,
-                decreaseQuantity,
-                removeItem,
-                clearCart,
-            }}
-        >
+        <ShoppingCartContext.Provider value={value}>
             {children}
+            <ClearCartDialog
+                isOpen={isClearCartDialogOpen}
+                onConfirm={handleConfirmClearCart}
+                onCancel={() => setClearCartDialogOpen(false)}
+            />
         </ShoppingCartContext.Provider>
     );
 };

@@ -3,5 +3,5 @@ export * from './OrderContext';
 export * from './ProductContext';
 export * from './SearchContext';
 export * from './ShoppingCartContext';
-export * from './StatusContext';
+export * from './ToastContext';
 

@@ -12,6 +12,7 @@ import { router, Stack } from 'expo-router';
 import { TextInput } from 'react-native';
 
 export const HomeScreen = () => {
+
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const handleSearch = (query: string) => {
         query && router.push(routes.search(query));
@@ -21,6 +22,7 @@ export const HomeScreen = () => {
     const discountedProducts = useDiscountedProducts();
     const featuredProducts = useFeaturedProducts();
     const categories = useCategories(0, { autoload: true });
+
 
     return (
         <PageView>
