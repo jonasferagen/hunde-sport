@@ -33,7 +33,13 @@ export const ProductVariationSelectionProvider: React.FC<{
     } = useProductVariations(product, productVariations, initialProductVariation);
 
     useEffect(() => {
-        setProductVariation(selectedVariation || defaultVariation);
+
+        if (selectedVariation !== undefined) {
+            setProductVariation(selectedVariation);
+            return;
+        }
+        setProductVariation(defaultVariation);
+
     }, [selectedVariation, setProductVariation, defaultVariation]);
 
     const value = {

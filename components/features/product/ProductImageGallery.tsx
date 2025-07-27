@@ -1,16 +1,13 @@
 import { useProductContext } from '@/contexts';
 import { Galeria } from '@nandorojo/galeria';
 import { FlashList } from '@shopify/flash-list';
+import { Plus } from '@tamagui/lucide-icons';
 import React, { useState } from 'react';
-import { Image, YStack } from 'tamagui';
+import { Image, SizableText, YStack } from 'tamagui';
 
 export const ProductImageGallery = () => {
     const { product } = useProductContext();
     const [gallery, setGallery] = useState({ visible: false, initialIndex: 0 });
-
-    if (product.images.length <= 1) {
-        return null;
-    }
 
     const urls = product.images.map((image) => image.src);
 
@@ -25,7 +22,7 @@ export const ProductImageGallery = () => {
     return (
         <>
             <YStack height={100}>
-                <Galeria urls={urls}>
+                <Galeria urls={urls} closeIconName="xmark.circle.fill">
                     <FlashList
                         data={urls}
                         renderItem={({ item, index }) => (
@@ -40,7 +37,11 @@ export const ProductImageGallery = () => {
                                 marginRight="$2"
                             >
                                 <Galeria.Image index={index}>
-                                    <Image source={{ uri: item }} style={{ height: '100%', width: '100%' }} />
+                                    <YStack>
+                                        <Image source={{ uri: item }} style={{ height: '100%', width: '100%' }} />
+                                        {gallery.visible && <Plus size={24} color="red" />}
+                                        <SizableText size="$6" color="blue">xxxx</SizableText>
+                                    </YStack>
                                 </Galeria.Image>
                             </YStack>
                         )}

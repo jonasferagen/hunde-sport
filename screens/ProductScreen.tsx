@@ -49,13 +49,7 @@ const ProductScreenContent = () => {
   const activeProduct = productVariation || product;
 
   const handleAddToCart = () => {
-    if (product.type === 'simple') {
-      increaseQuantity({ product });
-    } else if (product.type === 'variable' && productVariation) {
-      increaseQuantity({ product, productVariation });
-    } else {
-      console.warn('Cannot add to cart, invalid product configuration');
-    }
+    increaseQuantity({ product, productVariation: productVariation || undefined });
   };
 
   return (
@@ -83,8 +77,8 @@ const ProductScreenContent = () => {
             </Button>
           </YStack>
         </PageContent>
-        <PageContent title="Produktbilder" style={{ flex: 1 }}>
-          <ProductImageGallery />
+        <PageContent title="Produktbilder" flex={1}>
+          {product.images.length > 1 && <ProductImageGallery images={product.images} />}
         </PageContent>
         <PageContent theme="primary" title="Relaterte produkter">
           <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />

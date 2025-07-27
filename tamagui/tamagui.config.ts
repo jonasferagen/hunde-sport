@@ -112,6 +112,7 @@ const appConfig = createTamagui({
             ...themes.light,
             background: customTokens.color.white0,
             backgroundPress: themes.light.gray3,
+            borderColor: customTokens.color.white5,
             color: customTokens.color.colorHighContrast,
             colorSubtle: customTokens.color.colorLowContrast,
             primary: customTokens.color.primary,

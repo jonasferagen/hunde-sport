@@ -24,7 +24,9 @@ export const PageContent = (props: PageContentProps) => {
     ...stackProps
   } = props;
 
-  if (!children) {
+  const validChildren = React.Children.toArray(children).filter(Boolean);
+
+  if (validChildren.length === 0) {
     return null;
   }
 
@@ -38,10 +40,10 @@ export const PageContent = (props: PageContentProps) => {
       )}
       {horizontal ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {children}
+          {validChildren}
         </ScrollView>
       ) : (
-        children
+        validChildren
       )}
     </>
   );
