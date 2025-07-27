@@ -48,6 +48,8 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
 
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 
+    const isProductVariationsLoading = isLoading || isFetchingNextPage || hasNextPage;
+
     const value = {
         product,
         productVariation,
@@ -55,20 +57,20 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         productVariations: productVariations || [],
         priceRange,
         isLoading,
-        isProductVariationsLoading: isLoading || isFetchingNextPage || hasNextPage,
+        isProductVariationsLoading,
 
     };
 
-    const content = product.type === 'variable' ? (
+    const content = product.type === 'variable' && !isProductVariationsLoading ? (
         <ProductVariationSelectionProvider
-            product={product}
+            product={product as VariableProduct}
             productVariations={productVariations || []}
             initialProductVariation={initialProductVariation}
             setProductVariation={setProductVariation}
         >
             {children}
         </ProductVariationSelectionProvider>
-    ) : children;
+    ) : product.type === 'variable' && isProductVariationsLoading ? null : children;
 
     return <ProductContext.Provider value={value}>{content}</ProductContext.Provider>;
 };
