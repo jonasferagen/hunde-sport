@@ -1,9 +1,10 @@
+import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ProductProvider, useProductContext, useShoppingCartContext } from '@/contexts';
 import { ShoppingCartItem } from '@/types';
 import { capitalize, formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Button, H4, SizableText, XStack, YStack } from 'tamagui';
+import { H4, SizableText, XStack, YStack } from 'tamagui';
 
 interface ShoppingCartListItemProps {
     item: ShoppingCartItem;
@@ -30,23 +31,19 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
             <XStack jc="space-between" ai="center" gap="$4">
                 {/* Quantity Controls */}
                 <XStack ai="center" gap="$2">
-                    <Button
+                    <ThemedButton theme="primary"
                         icon={<Minus size="$4" />}
                         onPress={() => decreaseQuantity(purchasable, { silent: true })}
                         size="$5"
                         circular
-                        borderColor="$primary"
-                        backgroundColor="$primary"
                         disabled={quantity <= 1}
                     />
 
-                    <Button
+                    <ThemedButton theme="primary"
                         icon={<Plus size="$4" />}
                         onPress={() => increaseQuantity(purchasable, { silent: true })}
                         size="$5"
                         circular
-                        borderColor="$primary"
-                        backgroundColor="$primary"
                     />
                     <H4 width={30} textAlign="center">
                         {quantity}
@@ -61,13 +58,12 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                     {formatPrice(quantity * price)}
                 </SizableText>
                 {/* Remove Button */}
-                <Button
+                <ThemedButton
+                    theme="secondary"
                     icon={<X size="$4" />}
                     onPress={() => removeItem(purchasable, { silent: false })}
                     size="$5"
                     circular
-                    borderColor="$secondary"
-                    backgroundColor="$secondary"
                 />
 
             </XStack>

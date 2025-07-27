@@ -5,11 +5,10 @@ import { DebugSeeder } from '@/components/development/DebugSeeder';
 import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shoppingCart';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
-import { formatPrice } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
 import { Stack } from 'expo-router';
 import React, { useCallback } from 'react';
-import { SizableText, XStack } from 'tamagui';
+import { SizableText } from 'tamagui';
 
 export const ShoppingCartScreen = () => {
     const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
@@ -46,15 +45,3 @@ export const ShoppingCartScreen = () => {
     );
 };
 
-interface CartTotalsProps {
-    cartTotal: number;
-}
-
-const CartTotals = ({ cartTotal }: CartTotalsProps) => {
-    return (
-        <XStack jc="space-between" ai="center" paddingVertical="$4">
-            <SizableText size="$6" fontWeight="bold">Total</SizableText>
-            <SizableText size="$6" fontWeight="bold">{formatPrice(cartTotal)}</SizableText>
-        </XStack>
-    );
-};
