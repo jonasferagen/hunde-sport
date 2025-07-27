@@ -78,7 +78,7 @@ const ProductScreenContent = () => {
             }
 
             <ThemedButton
-              theme="primary"
+              theme="accent"
               icon={<ShoppingCart />}
               onPress={handleAddToCart}
               disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
