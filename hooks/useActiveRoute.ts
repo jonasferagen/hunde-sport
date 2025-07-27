@@ -1,8 +1,10 @@
+import { routes } from '@/config/routes';
 import { useSegments } from 'expo-router';
 
-export const homeRoute = '/(drawer)/(tabs)/(home)';
-export const cartRoute = '/(drawer)/(tabs)/shopping-cart';
-export const searchRoute = '/(drawer)/(tabs)/search';
+
+export const homeRoute = routes.home();
+export const cartRoute = routes.shoppingCart();
+export const searchRoute = routes.search();
 
 export const useActiveRoute = () => {
     const segments = useSegments() as string[];

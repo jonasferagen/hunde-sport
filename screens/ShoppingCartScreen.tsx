@@ -6,9 +6,9 @@ import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
 import { formatPrice } from '@/utils/helpers';
+import { FlashList } from '@shopify/flash-list';
 import { Stack } from 'expo-router';
 import React, { useCallback } from 'react';
-import { FlatList } from 'react-native';
 import { SizableText, XStack } from 'tamagui';
 
 export const ShoppingCartScreen = () => {
@@ -25,15 +25,16 @@ export const ShoppingCartScreen = () => {
             <OriginalPageHeader title="Handlekurv" />
             <PageSection flex={1}>
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
-                    <FlatList
+                    <FlashList
                         data={items}
                         keyExtractor={(item) => item.key}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <SizableText textAlign="center" marginTop="$4" color="$color.secondary">
+                            <SizableText textAlign="center" marginTop="$4">
                                 Handlekurven er tom.
                             </SizableText>
                         }
+                        estimatedItemSize={100}
                     />
                 </PageContent>
                 <PageContent secondary>

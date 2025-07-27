@@ -115,28 +115,22 @@ const appConfig = createTamagui({
             borderColor: customTokens.color.white5,
             color: customTokens.color.colorHighContrast,
             colorSubtle: customTokens.color.colorLowContrast,
-            primary: customTokens.color.primary,
-            primaryPress: customTokens.color.primaryPress,
-            secondary: customTokens.color.secondary,
-            secondaryPress: customTokens.color.secondaryPress,
-            accent: customTokens.color.accent,
-            accentPress: customTokens.color.accentPress,
         },
-        primary: {
+        light_primary: {
             background: customTokens.color.primary,
             backgroundPress: customTokens.color.primaryPress,
             color: customTokens.color.primaryText,
             colorSubtle: customTokens.color.primaryTextSubtle,
             borderColor: customTokens.color.primaryBorder,
         },
-        secondary: {
+        light_secondary: {
             background: customTokens.color.secondary,
             backgroundPress: customTokens.color.secondaryPress,
             color: customTokens.color.secondaryText,
             colorSubtle: customTokens.color.secondaryTextSubtle,
             borderColor: customTokens.color.secondaryBorder,
         },
-        accent: {
+        light_accent: {
             background: customTokens.color.accent,
             backgroundPress: customTokens.color.accentPress,
             color: customTokens.color.accentText,

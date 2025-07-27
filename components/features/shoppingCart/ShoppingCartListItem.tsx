@@ -3,7 +3,7 @@ import { ShoppingCartItem } from '@/types';
 import { capitalize, formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Button, H4, SizableText, Theme, XStack, YStack } from 'tamagui';
+import { Button, H4, SizableText, XStack, YStack } from 'tamagui';
 
 interface ShoppingCartListItemProps {
     item: ShoppingCartItem;
@@ -16,60 +16,63 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
     const { productVariation } = purchasable;
 
     return (
-        <Theme name="light">
-            <YStack gap="$3" padding="$3" borderBottomWidth={1} borderColor="$gray5">
-                {/* Row 1: Product name + unit price */}
+
+        <YStack gap="$3" padding="$3" borderBottomWidth={1} borderColor="$gray5">
+            {/* Row 1: Product name + unit price */}
+            <XStack ai="center" gap="$2">
+                <SizableText fontSize="$5" fontWeight="bold">
+                    {product.name}
+                    {productVariation && ` - ${capitalize(productVariation.name)}`}
+                </SizableText>
+            </XStack>
+
+            {/* Row 2: Quantity + Subtotal + Remove */}
+            <XStack jc="space-between" ai="center" gap="$4">
+                {/* Quantity Controls */}
                 <XStack ai="center" gap="$2">
-                    <SizableText fontSize="$5" fontWeight="bold">
-                        {product.name}
-                        {productVariation && ` - ${capitalize(productVariation.name)}`}
-                    </SizableText>
-                </XStack>
-
-                {/* Row 2: Quantity + Subtotal + Remove */}
-                <XStack jc="space-between" ai="center" gap="$4" theme="secondary">
-                    {/* Quantity Controls */}
-                    <XStack ai="center" gap="$2">
-                        <Button
-                            icon={<Minus size="$4" />}
-                            onPress={() => decreaseQuantity(purchasable, { silent: true })}
-                            size="$5"
-                            circular
-                            theme="primary"
-                            disabled={quantity <= 1}
-                        />
-
-                        <Button
-                            icon={<Plus size="$4" />}
-                            onPress={() => increaseQuantity(purchasable, { silent: true })}
-                            size="$5"
-                            circular
-                            theme="primary"
-                        />
-                        <H4 width={30} textAlign="center">
-                            {quantity}
-                        </H4>
-                        <SizableText fontSize="$4" color="$gray10">
-                            á {formatPrice(price)}
-                        </SizableText>
-                    </XStack>
-
-                    {/* Subtotal */}
-                    <SizableText fontSize="$6" fontWeight="bold" flex={1} textAlign="right">
-                        {formatPrice(quantity * price)}
-                    </SizableText>
-                    {/* Remove Button */}
                     <Button
-                        icon={<X size="$4" />}
-                        onPress={() => removeItem(purchasable, { silent: false })}
+                        icon={<Minus size="$4" />}
+                        onPress={() => decreaseQuantity(purchasable, { silent: true })}
                         size="$5"
                         circular
-                        theme="secondary"
+                        borderColor="$primary"
+                        backgroundColor="$primary"
+                        disabled={quantity <= 1}
                     />
 
+                    <Button
+                        icon={<Plus size="$4" />}
+                        onPress={() => increaseQuantity(purchasable, { silent: true })}
+                        size="$5"
+                        circular
+                        borderColor="$primary"
+                        backgroundColor="$primary"
+                    />
+                    <H4 width={30} textAlign="center">
+                        {quantity}
+                    </H4>
+                    <SizableText fontSize="$4" color="$gray10">
+                        á {formatPrice(price)}
+                    </SizableText>
                 </XStack>
-            </YStack>
-        </Theme>
+
+                {/* Subtotal */}
+                <SizableText fontSize="$6" fontWeight="bold" flex={1} textAlign="right">
+                    {formatPrice(quantity * price)}
+                </SizableText>
+                {/* Remove Button */}
+                <Button
+                    icon={<X size="$4" />}
+                    onPress={() => removeItem(purchasable, { silent: false })}
+                    size="$5"
+                    circular
+                    borderColor="$secondary"
+                    backgroundColor="$secondary"
+                />
+
+            </XStack>
+        </YStack>
+
     );
 };
 

@@ -32,9 +32,9 @@ export default function TabsLayout() {
                 name="(home)"
                 options={{
                     title: 'Hjem',
-                    tabBarIcon: ({ color }) => <Home color={color} size="$3" />,
+                    tabBarIcon: ({ color }) => <Home color={color} size="$3" opacity={isHomeActive ? 1 : 0.7} />,
                     tabBarLabel: ({ children, color }) => (
-                        <SizableText size="$1" color={color}>{children}</SizableText>
+                        <SizableText size="$1" color={color} opacity={isHomeActive ? 1 : 0.7}>{children}</SizableText>
                     ),
                 }}
                 listeners={{
@@ -49,9 +49,9 @@ export default function TabsLayout() {
                 name="search"
                 options={{
                     title: 'Søk',
-                    tabBarIcon: ({ color }) => <Search color={color} size="$3" />,
+                    tabBarIcon: ({ color }) => <Search color={color} size="$3" opacity={isSearchActive ? 1 : 0.8} />,
                     tabBarLabel: ({ children, color }) => (
-                        <SizableText size="$1" color={color}>{children}</SizableText>
+                        <SizableText size="$1" color={color} opacity={isSearchActive ? 1 : 0.8}>{children}</SizableText>
                     ),
 
                 }}
@@ -70,7 +70,7 @@ export default function TabsLayout() {
                     title: 'Handlekurv',
                     tabBarIcon: ({ color }) => (
                         <Stack theme="secondary">
-                            <ShoppingCart color={color} size="$3" />
+                            <ShoppingCart color={color} size="$3" opacity={isCartActive ? 1 : 0.8} />
                             {cartItemCount > 0 && (
                                 <Stack
                                     theme="primary"
@@ -93,7 +93,7 @@ export default function TabsLayout() {
                         </Stack>
                     ),
                     tabBarLabel: ({ children, color }) => (
-                        <SizableText size="$1" color={color}>{children}</SizableText>
+                        <SizableText size="$1" color={color} opacity={isCartActive ? 1 : 0.8}>{children}</SizableText>
                     ),
                 }}
                 listeners={{

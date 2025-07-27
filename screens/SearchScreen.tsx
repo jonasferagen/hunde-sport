@@ -17,10 +17,10 @@ export const SearchScreen = () => {
     const { query, liveQuery } = useSearchContext();
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const isWaiting = query !== liveQuery;
-
+    console.log("searchscreen");
     return (
         <PageView>
-            <PageHeader>
+            <PageHeader style={{ borderWidth: 1, borderColor: "black" }}>
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
                 <SizableText fontSize="$3">
                     {isWaiting
@@ -30,7 +30,7 @@ export const SearchScreen = () => {
             </PageHeader>
             <PageSection flex={1}>
                 <PageContent flex={1} paddingHorizontal="none" paddingVertical="none">
-                    {query && <SearchResults />}
+                    <SearchResults />
                 </PageContent>
             </PageSection>
         </PageView>
@@ -44,7 +44,15 @@ const SearchResults = () => {
         return <LoadingScreen />;
     }
 
-    if (products.length === 0 && query) {
+    if (!query) {
+        return (
+            <YStack flex={1} ai="center" jc="center">
+                <SizableText>Søk etter produkter, merker og kategorier.</SizableText>
+            </YStack>
+        );
+    }
+
+    if (products.length === 0) {
         return (
             <YStack flex={1} ai="center" jc="center">
                 <SizableText>Ingen resultater funnet for "{query}"</SizableText>
