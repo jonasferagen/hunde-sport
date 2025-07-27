@@ -49,7 +49,7 @@ const ProductScreenContent = () => {
   const activeProduct = productVariation || product;
 
   const handleAddToCart = () => {
-    increaseQuantity({ product, productVariation: productVariation || undefined });
+    increaseQuantity({ product, productVariation });
   };
 
   return (
@@ -78,7 +78,7 @@ const ProductScreenContent = () => {
           </YStack>
         </PageContent>
         <PageContent title="Produktbilder" flex={1}>
-          {product.images.length > 1 && <ProductImageGallery images={product.images} />}
+          {product.images.length > 1 && <ProductImageGallery />}
         </PageContent>
         <PageContent theme="primary" title="Relaterte produkter">
           <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />

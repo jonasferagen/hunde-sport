@@ -16,7 +16,7 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
     const activeProduct = productVariation || product;
 
     const handleAddToCart = () => {
-        increaseQuantity({ product, productVariation: productVariation || undefined });
+        increaseQuantity({ product, productVariation });
     };
 
     return (

@@ -19,8 +19,8 @@ export const calculatePriceRange = (productVariations: ProductVariation[]): { mi
 
 interface ProductContextType {
     product: SimpleProduct | VariableProduct;
-    productVariation?: ProductVariation | null;
-    setProductVariation: (variation: ProductVariation | null) => void;
+    productVariation?: ProductVariation | undefined;
+    setProductVariation: (variation: ProductVariation | undefined) => void;
     productVariations: ProductVariation[];
     priceRange: { min: number; max: number } | undefined;
     isLoading: boolean;
@@ -31,12 +31,12 @@ interface ProductContextType {
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 
-export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation | null; children: React.ReactNode }> = ({
+export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation | undefined; children: React.ReactNode }> = ({
     product,
     productVariation: initialProductVariation,
     children,
 }) => {
-    const [productVariation, setProductVariation] = useState<ProductVariation | null | undefined>(initialProductVariation);
+    const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(initialProductVariation);
 
 
     const {

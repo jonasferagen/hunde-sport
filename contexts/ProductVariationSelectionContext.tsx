@@ -18,8 +18,8 @@ const ProductVariationSelectionContext = createContext<ProductVariationContextTy
 export const ProductVariationSelectionProvider: React.FC<{
     product: VariableProduct;
     productVariations: ProductVariation[];
-    initialProductVariation?: ProductVariation | null;
-    setProductVariation: (variation: ProductVariation | null) => void;
+    initialProductVariation?: ProductVariation | undefined;
+    setProductVariation: (variation: ProductVariation | undefined) => void;
     children: React.ReactNode;
 }> = ({ product, productVariations, initialProductVariation, setProductVariation, children }) => {
     const {
@@ -34,14 +34,12 @@ export const ProductVariationSelectionProvider: React.FC<{
 
     useEffect(() => {
 
-        if (selectedVariation !== undefined) {
-            setProductVariation(selectedVariation);
+        if (selectedVariation === null) {
+            setProductVariation(undefined);
             return;
         }
-        if (defaultVariation !== undefined) {
-            setProductVariation(defaultVariation);
-            return;
-        }
+
+        setProductVariation(selectedVariation || defaultVariation || undefined);
 
     }, [selectedVariation, setProductVariation, defaultVariation]);
 
