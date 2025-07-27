@@ -117,6 +117,7 @@ const appConfig = createTamagui({
             colorSubtle: customTokens.color.colorLowContrast,
         },
         light_primary: {
+            ...themes.light,
             background: customTokens.color.primary,
             backgroundPress: customTokens.color.primaryPress,
             color: customTokens.color.primaryText,
@@ -124,6 +125,7 @@ const appConfig = createTamagui({
             borderColor: customTokens.color.primaryBorder,
         },
         light_secondary: {
+            ...themes.light,
             background: customTokens.color.secondary,
             backgroundPress: customTokens.color.secondaryPress,
             color: customTokens.color.secondaryText,

@@ -8,6 +8,7 @@ import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { ProductVariations } from '@/components/features/product/variation/ProductVariations';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
+import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ProductProvider, useProductContext, useShoppingCartContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
@@ -15,7 +16,7 @@ import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
 import { ShoppingCart } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Button, SizableText, XStack, YStack } from 'tamagui';
+import { SizableText, XStack, YStack } from 'tamagui';
 
 export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
@@ -56,6 +57,7 @@ const ProductScreenContent = () => {
 
   return (
     <>
+
       <PageSection scrollable>
         <ProductImage />
         <PageContent>
@@ -70,17 +72,19 @@ const ProductScreenContent = () => {
             <ProductStatus />
             <PriceTag fontSize="$6" />
           </XStack>
-          <YStack theme="primary">
+          <YStack theme="primary" pt="$3">
             {product.hasVariations() && !productVariation &&
               <SizableText fontSize="$2" fontWeight="bold">Velg variant</SizableText>
             }
-            <Button
+
+            <ThemedButton
+              theme="primary"
               icon={<ShoppingCart />}
               onPress={handleAddToCart}
               disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
             >
               Legg i handlekurv
-            </Button>
+            </ThemedButton>
           </YStack>
         </PageContent>
         <PageContent title="Produktbilder" flex={1}>
@@ -96,6 +100,7 @@ const ProductScreenContent = () => {
           <CategoryChips categories={product.categories} />
         </PageContent>
       </PageSection>
+
     </>
   );
 };

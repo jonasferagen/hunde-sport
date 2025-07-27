@@ -17,10 +17,10 @@ export const SearchScreen = () => {
     const { query, liveQuery } = useSearchContext();
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const isWaiting = query !== liveQuery;
-    console.log("searchscreen");
+
     return (
         <PageView>
-            <PageHeader style={{ borderWidth: 1, borderColor: "black" }}>
+            <PageHeader>
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
                 <SizableText fontSize="$3">
                     {isWaiting

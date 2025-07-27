@@ -1,7 +1,8 @@
+import { ThemedButton } from '@/components/ui/ThemedButton';
 import { routes } from '@/config/routes';
 import { useRouter } from 'expo-router';
 import React, { JSX, memo } from 'react';
-import { Button, SizableText, XStack, YStack } from 'tamagui';
+import { SizableText, XStack, YStack } from 'tamagui';
 
 interface ShoppingCartSummaryProps {
     cartItemCount: number;
@@ -28,12 +29,12 @@ export const ShoppingCartSummary = memo(
                     </SizableText>
                 </XStack>
                 <YStack gap="$3" mt="$3">
-                    <Button onPress={onClearCart} theme="secondary">
+                    <ThemedButton onPress={onClearCart} theme="secondary">
                         Tøm handlekurv
-                    </Button>
-                    <Button onPress={handleCheckout} theme="primary" disabled={cartItemCount === 0}>
+                    </ThemedButton>
+                    <ThemedButton onPress={handleCheckout} theme="primary" disabled={cartItemCount === 0}>
                         Gå til kassen
-                    </Button>
+                    </ThemedButton>
                 </YStack>
             </>
         );
