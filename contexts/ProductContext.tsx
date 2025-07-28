@@ -1,4 +1,3 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useProductVariations } from '@/hooks/data/Product';
 import { Product, ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
 import React, { createContext, useContext, useMemo, useState } from 'react';
@@ -71,7 +70,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         >
             {children}
         </ProductVariationSelectionProvider>
-    ) : product.type === 'variable' && isProductVariationsLoading ? <ThemedSpinner /> : children;
+    ) : children;
 
     return <ProductContext.Provider value={value}>{content}</ProductContext.Provider>;
 };

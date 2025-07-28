@@ -57,16 +57,14 @@ const ProductScreenContent = () => {
 
             <PriceTag fontSize="$6" />
           </XStack>
-          <XStack flex={1} jc="flex-end">
-            <ProductStatus />
-          </XStack>
+
           <SizableText size="$3" mt="$3">{product.short_description}</SizableText>
           {product.hasVariations() && <ProductVariations />}
           <XStack ai="center" jc="space-between" mt="$3">
             <ProductTitle size="$5" />
             <PriceTag fontSize="$6" />
           </XStack>
-          <XStack flex={1} jc="flex-end">
+          <XStack flex={1} jc="flex-start">
             <ProductStatus />
           </XStack>
           <YStack mt="$3">

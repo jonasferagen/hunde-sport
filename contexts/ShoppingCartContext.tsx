@@ -38,7 +38,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     );
 
     const increaseQuantity = useCallback(
-        (purchasable: Purchasable, options: CartItemOptions = {}) => {
+        (purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
             const { silent } = options;
 
             const key = getPurchasableKey(purchasable);
@@ -70,7 +70,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         [toastController]
     );
 
-    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
+    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
         const { silent = false } = options;
         const key = getPurchasableKey(purchasable);
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
@@ -84,7 +84,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         }
     }, [toastController]);
 
-    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = {}) => {
+    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
 
         const key = getPurchasableKey(purchasable);
 

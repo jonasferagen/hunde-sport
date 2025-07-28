@@ -1,8 +1,9 @@
 // AddressForm.tsx
+import { ThemedButton } from '@/components/ui/ThemedButton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
-import { Button, Form, Input, Label, ScrollView, Text, XStack, YStack } from 'tamagui';
+import { Form, Input, Label, ScrollView, Text, XStack, YStack } from 'tamagui';
 import { z } from 'zod';
 
 const addressSchema = z.object({
@@ -158,7 +159,7 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
                     />
 
                     <Form.Trigger asChild>
-                        <Button marginTop="$4">Send inn</Button>
+                        <ThemedButton theme='primary' marginTop="$4">Send inn</ThemedButton>
                     </Form.Trigger>
                 </YStack>
             </ScrollView>

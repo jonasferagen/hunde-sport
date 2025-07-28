@@ -1,5 +1,5 @@
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { PageHeader as OriginalPageHeader } from '@/components/layout/PageHeader';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 import { DebugSeeder } from '@/components/development/DebugSeeder';
 import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shoppingCart';
@@ -8,10 +8,10 @@ import { routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
 import { FlashList } from '@shopify/flash-list';
+import { ArrowBigRight } from '@tamagui/lucide-icons';
 import { Stack, useRouter } from 'expo-router';
 import React, { useCallback } from 'react';
-import { SizableText, YStack } from 'tamagui';
-
+import { SizableText, XStack } from 'tamagui';
 export const ShoppingCartScreen = () => {
     const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
 
@@ -28,7 +28,9 @@ export const ShoppingCartScreen = () => {
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Handlekurv' }} />
-            <OriginalPageHeader title="Handlekurv" />
+            <PageHeader title="Handlekurv">
+                <DebugSeeder />
+            </PageHeader>
             <PageSection flex={1}>
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
                     <FlashList
@@ -44,16 +46,16 @@ export const ShoppingCartScreen = () => {
                     />
                 </PageContent>
                 <PageContent secondary>
-                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} onClearCart={clearCart} />
-                    <YStack gap="$3" mt="$3">
-                        <ThemedButton onPress={handleCheckout} theme="primary" disabled={cartItemCount === 0}>
-                            Gå til kassen
-                        </ThemedButton>
-                        <ThemedButton onPress={clearCart} theme="secondary" disabled={cartItemCount === 0}>
+                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} />
+                    <XStack gap="$3" mt="$3" ai="center" jc="space-between">
+                        <ThemedButton flex={0} onPress={clearCart} theme="secondary" disabled={cartItemCount === 0}>
                             Tøm handlekurv
                         </ThemedButton>
-                    </YStack>
-                    <DebugSeeder />
+                        <ThemedButton scaleIcon={1.5} iconAfter={ArrowBigRight} flex={1} onPress={handleCheckout} theme="primary" disabled={cartItemCount === 0}>
+                            Til kassen
+                        </ThemedButton>
+                    </XStack>
+
                 </PageContent>
             </PageSection>
         </PageView>

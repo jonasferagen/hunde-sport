@@ -12,7 +12,6 @@ export const ProductVariations = () => {
         return null;
     }
 
-
     return (
         <XStack gap="$2" flexWrap="wrap">
             {productVariationAttributes.map((attribute) => {

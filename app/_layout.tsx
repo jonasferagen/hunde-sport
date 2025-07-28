@@ -39,7 +39,7 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
                   position="absolute"
                   flexDirection="column-reverse"
                   bottom={80}
-                  left={0}
+                  right="$2"
                 />
 
                 <QueryClientProvider client={queryClient}>

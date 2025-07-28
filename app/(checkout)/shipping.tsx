@@ -1,3 +1,3 @@
-import ShippingScreen from '@/screens/ShippingScreen';
+import ShippingScreen from '@/screens/checkout/ShippingScreen';
 
 export default ShippingScreen;

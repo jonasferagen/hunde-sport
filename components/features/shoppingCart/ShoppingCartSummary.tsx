@@ -4,11 +4,11 @@ import { SizableText, XStack } from 'tamagui';
 interface ShoppingCartSummaryProps {
     cartItemCount: number;
     cartTotal: number;
-    onClearCart: () => void;
+
 }
 
 export const ShoppingCartSummary = memo(
-    ({ cartItemCount, cartTotal, onClearCart }: ShoppingCartSummaryProps): JSX.Element => {
+    ({ cartItemCount, cartTotal }: ShoppingCartSummaryProps): JSX.Element => {
 
         return (
             <>

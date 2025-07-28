@@ -47,7 +47,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, contentConta
         onEndReachedThreshold={0.5}
         contentContainerStyle={contentContainerStyle}
         ListFooterComponent={() =>
-            loadingMore ? <YStack flex={1} ai="center" jc="center" paddingVertical={"$space.lg"}><Spinner /></YStack> : null
+            loadingMore ? <YStack flex={1} ai="center" jc="center" paddingVertical={"$4"}><Spinner /></YStack> : null
         }
         estimatedItemSize={100}
         extraData={expandedProductId}
