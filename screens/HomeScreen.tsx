@@ -25,6 +25,7 @@ export const HomeScreen = () => {
     const categories = useCategories(0, { autoload: true });
 
     return (
+
         <PageView>
             <PageHeader>
                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />

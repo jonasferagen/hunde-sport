@@ -4,15 +4,17 @@ import {
     DrawerContentScrollView,
     DrawerItemList,
 } from '@react-navigation/drawer';
-import { YStack } from 'tamagui';
+import { Theme, YStack } from 'tamagui';
 
 export function CustomDrawerContent(props: DrawerContentComponentProps) {
     return (
         <DrawerContentScrollView {...props}>
-            <YStack gap="$1" paddingVertical="$1">
-                <DrawerItemList {...props} />
-                <CategoryTree />
-            </YStack>
+            <Theme name="primary">
+                <YStack gap="$1" paddingVertical="$1">
+                    <DrawerItemList {...props} />
+                    <CategoryTree />
+                </YStack>
+            </Theme>
         </DrawerContentScrollView>
     );
 }

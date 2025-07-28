@@ -1,17 +1,39 @@
 import { CustomHeader } from "@/components/menu/CustomHeader";
 import Drawer from "expo-router/drawer";
+import { Theme, useTheme } from "tamagui";
 import { CustomDrawerContent } from "./CustomDrawerContent";
 
-export const SideBar = ({ children }: { children: React.ReactNode }) => {
+export const SideBar = ({ children }: { children: React.ReactNode }) =>
+    <Theme name="primary">
+        <SideBarContent children={children} />
+    </Theme>
 
-    return <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
+
+const SideBarContent = ({ children }: { children: React.ReactNode }) => {
+    const theme = useTheme();
+    return <Drawer
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+        screenOptions={{
+            drawerStyle: {
+                backgroundColor: theme.background.val,
+                borderColor: theme.borderColor.val,
+                borderWidth: 1,
+            },
+            drawerActiveBackgroundColor: theme.backgroundFocus.val,
+            drawerActiveTintColor: theme.color.val,
+            drawerInactiveTintColor: theme.color10.val,
+            drawerLabelStyle: {
+                fontSize: 16,
+            },
+            headerShown: true,
+            header: (props) => <CustomHeader {...props} />,
+        }}
+    >
         <Drawer.Screen
             name="index" // This is the name of the page and must match the url from root
             options={{
                 drawerLabel: 'Hjem',
                 title: 'Hjem',
-                headerShown: true,
-                header: (props) => <CustomHeader {...props} />,
             }}
         />
         <Drawer.Screen
@@ -19,8 +41,6 @@ export const SideBar = ({ children }: { children: React.ReactNode }) => {
             options={{
                 drawerLabel: 'Handlekurv',
                 title: 'Handlekurv',
-                headerShown: true,
-                header: (props) => <CustomHeader {...props} />,
             }}
         />
         <Drawer.Screen
@@ -28,29 +48,21 @@ export const SideBar = ({ children }: { children: React.ReactNode }) => {
             options={{
                 drawerLabel: 'Søk',
                 title: 'Søk',
-                headerShown: true,
-                header: (props) => <CustomHeader {...props} />,
             }}
         />
 
         <Drawer.Screen
-            name="product" // This is the name of the page and must match the url from root
+            name="product"
             options={{
-                drawerLabel: 'Produkter',
-                title: 'Produkter',
-                headerShown: true,
-                header: (props) => <CustomHeader {...props} />,
+                drawerItemStyle: { display: 'none' },
             }}
         />
         <Drawer.Screen
-            name="category" // This is the name of the page and must match the url from root
+            name="category"
             options={{
-                drawerLabel: 'Kategorier',
-                title: 'Kategorier',
-                headerShown: true,
-                header: (props) => <CustomHeader {...props} />,
+                drawerItemStyle: { display: 'none' },
             }}
         />
         {children}
     </Drawer>
-} 
+}
