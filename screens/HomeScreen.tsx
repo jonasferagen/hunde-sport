@@ -39,7 +39,7 @@ export const HomeScreen = () => {
                     <CategoryTiles key='categories' queryResult={categories} theme="primary" />
                 </PageContent>
                 <PageContent theme="secondary" title="Nyheter">
-                    <ProductTiles key='recent' queryResult={recentProducts} theme="accent" />
+                    <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
                 </PageContent>
                 <PageContent theme="primary" title="Tilbud">
                     <ProductTiles key='discounted' queryResult={discountedProducts} theme="secondary" />
