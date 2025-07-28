@@ -1,5 +1,7 @@
-import { YStack } from 'tamagui';
+import { Theme, YStack } from 'tamagui';
 export const PageView = ({ children }: { children: React.ReactNode }) =>
-  <YStack flex={1} theme='light'>
-    {children}
-  </YStack>
+  <Theme name='light'>
+    <YStack flex={1}>
+      {children}
+    </YStack>
+  </Theme>
