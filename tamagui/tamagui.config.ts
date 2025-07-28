@@ -1,11 +1,13 @@
+//import { createAnimations } from '@tamagui/animations-css';
 
 import { createAnimations } from '@tamagui/animations-moti';
+//import { createAnimations } from '@tamagui/animations-react-native';
 import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
 import { shorthands } from '@tamagui/shorthands';
-
 import { createTamagui } from 'tamagui';
 import { augmentedLightTheme, lilacTheme, mintTheme, sageTheme } from './themes';
+
 
 const font = createInterFont({
     size: {
@@ -29,25 +31,21 @@ const font = createInterFont({
 });
 
 const animations = createAnimations({
-    bouncy: {
-        type: 'spring',
-        damping: 10,
-        mass: 0.9,
-        stiffness: 100,
-    },
-    lazy: {
-        type: 'spring',
-        damping: 20,
-        stiffness: 60,
-    },
-    quick: {
-        type: 'spring',
+    fast: {
         damping: 20,
         mass: 1.2,
         stiffness: 250,
     },
+    medium: {
+        damping: 10,
+        mass: 0.9,
+        stiffness: 100,
+    },
+    slow: {
+        damping: 20,
+        stiffness: 60,
+    }
 });
-
 
 
 const customTokens = {
@@ -87,7 +85,6 @@ const customTokens = {
     },
     zIndex: { ...tokens.zIndex, 0: 0, 1: 100, 2: 200 },
 };
-
 
 
 const appConfig = createTamagui({

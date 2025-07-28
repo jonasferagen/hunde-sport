@@ -18,25 +18,22 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
 
+
+
 const RootLayout = (): JSX.Element =>
   <QueryClientProvider client={queryClient}>
     <TamaguiProvider config={appConfig}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Theme name="light">
-          <PortalProvider shouldAddRootHost={true}>
+          <PortalProvider>
             <SafeAreaProvider>
-              <ToastProvider>
-                <ToastViewport multipleToasts={false}
-                  position="absolute"
-                  flexDirection="column-reverse"
-                  bottom={80}
-                  right="$2"
-                />
+              <ToastProvider  >
+                <AppToast />
+                <ToastViewport multipleToasts={false} bottom={0} left={0} borderWidth={10} borderColor="red" position="absolute" height="100%" width="100%" borderColor="red" borderWidth={1} />
                 <OrderProvider>
                   <ShoppingCartProvider>
                     <SearchProvider>
                       <LayoutProvider>
-                        <AppToast />
                         <SideBar children={<Slot />} />
                       </LayoutProvider>
                     </SearchProvider>
@@ -48,6 +45,6 @@ const RootLayout = (): JSX.Element =>
         </Theme>
       </GestureHandlerRootView>
     </TamaguiProvider>
-  </QueryClientProvider>
+  </QueryClientProvider >
 
 export default RootLayout;

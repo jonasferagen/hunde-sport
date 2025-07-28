@@ -1,3 +1,2 @@
-import PaymentScreen from '@/screens/checkout/PaymentScreen';
-
+import { PaymentScreen } from '@/screens/checkout/PaymentScreen';
 export default PaymentScreen;

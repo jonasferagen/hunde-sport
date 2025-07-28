@@ -17,7 +17,7 @@ const addressSchema = z.object({
     phone: z.string().min(8, { message: 'Telefonnummer er påkrevd' }),
 });
 
-type AddressFormData = z.infer<typeof addressSchema>;
+export type AddressFormData = z.infer<typeof addressSchema>;
 
 interface AddressFormProps {
     onSubmit: (data: AddressFormData) => void;

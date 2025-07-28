@@ -47,7 +47,6 @@ const ProductScreenContent = () => {
 
   return (
     <>
-
       <PageSection scrollable>
         <ProductImage />
         <PageContent>

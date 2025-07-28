@@ -1,7 +1,7 @@
 import { useProductContext, useShoppingCartContext } from '@/contexts';
 import { capitalize } from '@/utils/helpers';
 import { ChevronDown, ShoppingCart } from '@tamagui/lucide-icons';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button, SizableText, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
@@ -14,9 +14,10 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
     const { product, productVariation } = useProductContext();
     const { increaseQuantity } = useShoppingCartContext();
     const activeProduct = productVariation || product;
+    const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
-        increaseQuantity({ product, productVariation });
+        increaseQuantity({ product, productVariation }, { silent: false, triggerRef: buttonRef });
     };
 
     return (
@@ -44,8 +45,6 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
                             onPress={onExpand}
                             circular
                             size="$6"
-                            disabled={!product.hasVariations()}
-                            opacity={!product.hasVariations() ? 0.5 : 1}
                         />
                     </YStack>
                 )}
@@ -53,6 +52,7 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
                     <Button
                         icon={<ShoppingCart fontSize="$5" fontWeight="bold" />}
                         onPress={handleAddToCart}
+                        ref={buttonRef}
                         circular
                         size="$6"
                         disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}

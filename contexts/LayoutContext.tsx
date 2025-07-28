@@ -23,6 +23,7 @@ export const LayoutProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
     };
 
+
     return (
         <View style={{ flex: 1 }} onLayout={handleLayout}>
             <LayoutContext.Provider value={{ insets, layout, headerHeight, setHeaderHeight }}>

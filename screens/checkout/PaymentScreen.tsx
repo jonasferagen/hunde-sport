@@ -9,7 +9,7 @@ import * as WebBrowser from 'expo-web-browser';
 import React, { useEffect, useState } from 'react';
 import { Button, SizableText } from 'tamagui';
 
-const PaymentScreen = () => {
+export const PaymentScreen = () => {
     const router = useRouter();
     const { items: cartItems } = useShoppingCartContext();
     const { order, updateOrder, placeOrder } = useOrderContext();
@@ -20,12 +20,12 @@ const PaymentScreen = () => {
     useEffect(() => {
         const line_items: OrderLineItem[] = cartItems.map((item) => {
             const lineItem: OrderLineItem = {
-                product_id: item.product.id,
+                product_id: item.purchasable.product.id,
                 quantity: item.quantity,
             };
 
-            if (item.productVariation?.id) {
-                lineItem.variation_id = item.productVariation.id;
+            if (item.purchasable.productVariation?.id) {
+                lineItem.variation_id = item.purchasable.productVariation.id;
             }
 
             return lineItem;
@@ -67,5 +67,3 @@ const PaymentScreen = () => {
         </PageView>
     );
 };
-
-export default PaymentScreen;

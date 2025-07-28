@@ -1,10 +1,12 @@
 import { ThemedButton } from "@/components/ui/ThemedButton";
 import { useProductContext, useShoppingCartContext } from "@/contexts";
 import { AlertCircle, ShoppingCart } from "@tamagui/lucide-icons";
+import { useRef } from "react";
 
 export const BuyButton = () => {
     const { product, productVariation } = useProductContext();
     const { increaseQuantity } = useShoppingCartContext();
+    const buttonRef = useRef(null);
 
     const activeProduct = productVariation || product;
 
@@ -15,11 +17,12 @@ export const BuyButton = () => {
     const isDisabled = needsVariant || !activeProduct.isInStock();
 
     const handleAddToCart = () => {
-        increaseQuantity({ product, productVariation });
+        increaseQuantity({ product, productVariation }, { triggerRef: buttonRef });
     };
 
     return (
         <ThemedButton
+            ref={buttonRef}
             theme={buttonTheme}
             icon={buttonIcon}
             onPress={handleAddToCart}
@@ -30,4 +33,3 @@ export const BuyButton = () => {
         </ThemedButton>
     );
 };
-

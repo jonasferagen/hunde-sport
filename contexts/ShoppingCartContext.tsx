@@ -3,10 +3,12 @@ import { routes } from '@/config/routes';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
 import { getPurchasableKey, getPurchasableTitle } from '@/utils/purchasable';
 import { useToastController } from '@tamagui/toast';
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, RefObject, useCallback, useContext, useMemo, useState } from 'react';
+
 
 interface CartItemOptions {
     silent?: boolean;
+    triggerRef?: RefObject<any>;
 }
 
 interface ShoppingCartContextType {
@@ -26,7 +28,9 @@ const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(u
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const toastController = useToastController();
+
     const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
+
 
     const getQuantity = useCallback(
         (purchasable: Purchasable) => {
@@ -39,8 +43,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const increaseQuantity = useCallback(
         (purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
-            const { silent } = options;
-
+            const { silent, triggerRef } = options;
             const key = getPurchasableKey(purchasable);
 
             setItems((prevItems) => {
@@ -49,29 +52,30 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 if (existingItem) {
                     return prevItems.map((item) =>
                         item.key === key
-                            ? new ShoppingCartItem(purchasable, item.quantity + 1)
+                            ? new ShoppingCartItem(purchasable, item.quantity + 1, triggerRef)
                             : item
                     );
                 } else {
-                    const newItem = new ShoppingCartItem(purchasable, 1);
+                    const newItem = new ShoppingCartItem(purchasable, 1, triggerRef);
                     return [...prevItems, newItem];
                 }
             });
 
             if (!silent) {
                 const product = getPurchasableTitle(purchasable);
+
                 toastController.show('Lagt til i handlekurven', {
                     message: product,
                     theme: 'dark_green',
+                    triggerRef
                 });
-
             }
         },
         [toastController]
     );
 
     const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
-        const { silent = false } = options;
+        const { silent = false, triggerRef } = options;
         const key = getPurchasableKey(purchasable);
         setItems((prevItems) => prevItems.filter((item) => item.key !== key));
 
@@ -80,12 +84,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             toastController.show('Fjernet fra handlekurven', {
                 message: title,
                 theme: 'dark_yellow',
+                ref: triggerRef
             });
         }
     }, [toastController]);
 
     const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
 
+        const { triggerRef } = options;
         const key = getPurchasableKey(purchasable);
 
         setItems((prevItems) => {
@@ -98,14 +104,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const updatedItems = prevItems.map((item) => {
                 if (item.key === key) {
                     const newQuantity = item.quantity - 1;
-                    return new ShoppingCartItem(purchasable, newQuantity);
+                    return new ShoppingCartItem(purchasable, newQuantity, triggerRef);
                 }
                 return item;
             });
 
             return updatedItems;
         });
-    }, [toastController]);
+    }, []);
 
     const handleConfirmClearCart = () => {
         setItems([]);
@@ -156,6 +162,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             decreaseQuantity,
             removeItem,
             clearCart,
+
         }),
         [items, cartItemCount, cartTotal, clearCart]
     );
@@ -163,6 +170,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     return (
         <ShoppingCartContext.Provider value={value}>
             {children}
+
             <ClearCartDialog
                 isOpen={isClearCartDialogOpen}
                 onConfirm={handleConfirmClearCart}

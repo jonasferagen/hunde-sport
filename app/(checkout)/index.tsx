@@ -1,3 +1,2 @@
-import CheckoutScreen from '@/screens/checkout/CheckoutScreen';
-
+import { CheckoutScreen } from '@/screens/checkout/CheckoutScreen';
 export default CheckoutScreen;

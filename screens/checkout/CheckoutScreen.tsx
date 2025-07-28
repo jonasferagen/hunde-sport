@@ -5,7 +5,7 @@ import { useOrderContext } from '@/contexts/OrderContext';
 import { Stack, useRouter } from 'expo-router';
 import React from 'react';
 
-const CheckoutScreen = () => {
+export const CheckoutScreen = () => {
     const router = useRouter();
     const { updateOrder, order } = useOrderContext();
 
@@ -27,4 +27,4 @@ const CheckoutScreen = () => {
     );
 };
 
-export default CheckoutScreen;
+

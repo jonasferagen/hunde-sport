@@ -39,8 +39,8 @@ export abstract class Product {
   on_sale: boolean;
   featured: boolean;
   stock_status: string;
-  description: string;
-  short_description: string;
+  _description: string;
+  _short_description: string;
   categories: Category[];
   images: Image[];
   attributes: ProductAttribute[];
@@ -60,8 +60,8 @@ export abstract class Product {
     this.sale_price = data.sale_price;
     this.featured = data.featured;
     this.stock_status = data.stock_status;
-    this.description = data.description;
-    this.short_description = data.short_description;
+    this._description = data.description;
+    this._short_description = data.short_description;
     this.categories = data.categories.map(category => new Category(category));
     this.variations = data.variations;
     this.related_ids = data.related_ids;
@@ -84,6 +84,14 @@ export abstract class Product {
 
   get image(): Image {
     return this.images[0];
+  }
+
+  get description(): string {
+    return this._description || 'Ingen beskrivelse tilgjengelig';
+  }
+
+  get short_description(): string {
+    return this._short_description || 'Ingen beskrivelse tilgjengelig';
   }
 
   isInStock(): boolean {

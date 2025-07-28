@@ -3,7 +3,7 @@ import { Galeria } from '@nandorojo/galeria';
 import { FlashList } from '@shopify/flash-list';
 import { Plus } from '@tamagui/lucide-icons';
 import React, { useState } from 'react';
-import { Image, SizableText, YStack } from 'tamagui';
+import { Image, YStack } from 'tamagui';
 
 export const ProductImageGallery = () => {
     const { product } = useProductContext();
@@ -40,7 +40,6 @@ export const ProductImageGallery = () => {
                                     <YStack>
                                         <Image source={{ uri: item }} style={{ height: '100%', width: '100%' }} />
                                         {gallery.visible && <Plus size={24} color="red" />}
-                                        <SizableText size="$6" color="blue">xxxx</SizableText>
                                     </YStack>
                                 </Galeria.Image>
                             </YStack>

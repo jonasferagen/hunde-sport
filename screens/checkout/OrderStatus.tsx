@@ -6,7 +6,7 @@ import { Stack, useRouter } from 'expo-router';
 import React from 'react';
 import { Button, SizableText } from 'tamagui';
 
-const OrderStatusScreen = () => {
+export const OrderStatusScreen = () => {
     const router = useRouter();
     const title = 'Ordrestatus';
 
@@ -32,4 +32,4 @@ const OrderStatusScreen = () => {
     );
 };
 
-export default OrderStatusScreen;
+

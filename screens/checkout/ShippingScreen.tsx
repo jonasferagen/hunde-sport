@@ -1,4 +1,4 @@
-import { AddressForm } from '@/components/features/checkout/AddressForm';
+import { AddressForm, AddressFormData } from '@/components/features/checkout/AddressForm';
 import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { checkoutFlow, routes } from '@/config/routes';
@@ -7,15 +7,16 @@ import { Address, BillingAddress } from '@/models/Order';
 import { Stack, useRouter } from 'expo-router';
 import React from 'react';
 
-const ShippingScreen = () => {
+export const ShippingScreen = () => {
     const router = useRouter();
     const { updateOrder, order } = useOrderContext();
 
-    const handleShippingSubmit = (data: Omit<BillingAddress, 'address_2' | 'country'> & { address_2?: string }) => {
+    const handleShippingSubmit = (data: AddressFormData) => {
         const fullBillingAddress: BillingAddress = {
             ...data,
             address_2: data.address_2 || '',
             country: 'NO',
+            state: '',
         };
 
         const shippingAddress: Address = {
@@ -42,5 +43,3 @@ const ShippingScreen = () => {
         </PageView>
     );
 };
-
-export default ShippingScreen;
