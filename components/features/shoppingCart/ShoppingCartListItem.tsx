@@ -1,7 +1,8 @@
+import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ThemedButton } from '@/components/ui/ThemedButton';
-import { ProductProvider, useProductContext, useShoppingCartContext } from '@/contexts';
+import { ProductProvider, useShoppingCartContext } from '@/contexts';
 import { ShoppingCartItem } from '@/types';
-import { capitalize, formatPrice } from '@/utils/helpers';
+import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { H4, SizableText, XStack, YStack } from 'tamagui';
@@ -12,19 +13,15 @@ interface ShoppingCartListItemProps {
 
 const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
     const { increaseQuantity, decreaseQuantity, removeItem } = useShoppingCartContext();
-    const { product } = useProductContext();
     const { purchasable, quantity, price } = item;
-    const { productVariation } = purchasable;
+
 
     return (
 
         <YStack gap="$3" padding="$3" borderBottomWidth={1} borderColor="$gray5">
             {/* Row 1: Product name + unit price */}
             <XStack ai="center" gap="$2">
-                <SizableText fontSize="$5" fontWeight="bold">
-                    {product.name}
-                    {productVariation && ` - ${capitalize(productVariation.name)}`}
-                </SizableText>
+                <ProductTitle size="$5" />
             </XStack>
 
             {/* Row 2: Quantity + Subtotal + Remove */}
@@ -33,7 +30,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                 <XStack ai="center" gap="$2">
                     <ThemedButton theme="primary"
                         icon={<Minus size="$4" />}
-                        onPress={() => decreaseQuantity(purchasable)}
+                        onPress={() => decreaseQuantity(purchasable, { silent: true })}
                         size="$5"
                         circular
                         disabled={quantity <= 1}
@@ -41,7 +38,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
                     <ThemedButton theme="primary"
                         icon={<Plus size="$4" />}
-                        onPress={() => increaseQuantity(purchasable)}
+                        onPress={() => increaseQuantity(purchasable, { silent: true })}
                         size="$5"
                         circular
                     />

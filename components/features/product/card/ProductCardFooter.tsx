@@ -17,7 +17,7 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
-        increaseQuantity({ product, productVariation }, { silent: false, triggerRef: buttonRef });
+        increaseQuantity({ product, productVariation }, { triggerRef: buttonRef });
     };
 
     return (
