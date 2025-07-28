@@ -6,41 +6,33 @@ import {
   SearchProvider,
   ShoppingCartProvider
 } from '@/contexts';
+import { queryClient } from '@/lib/queryClient';
 import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
 import { ToastProvider, ToastViewport } from '@tamagui/toast';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 
-import React, { JSX, memo, useState } from "react";
+import React, { JSX, memo } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
 
 const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        gcTime: 1000 * 60 * 60 * 24, // 24 hours
-      },
-    },
-  }));
-
   return (
-    <TamaguiProvider config={appConfig}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Theme name="light">
-          <PortalProvider shouldAddRootHost={true}>
-            <SafeAreaProvider>
-              <ToastProvider>
-                <ToastViewport multipleToasts={false}
-                  position="absolute"
-                  flexDirection="column-reverse"
-                  bottom={80}
-                  right="$2"
-                />
-                <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <TamaguiProvider config={appConfig}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Theme name="light">
+            <PortalProvider shouldAddRootHost={true}>
+              <SafeAreaProvider>
+                <ToastProvider>
+                  <ToastViewport multipleToasts={false}
+                    position="absolute"
+                    flexDirection="column-reverse"
+                    bottom={80}
+                    right="$2"
+                  />
                   <OrderProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
@@ -51,19 +43,19 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
                       </SearchProvider>
                     </ShoppingCartProvider>
                   </OrderProvider>
-                </QueryClientProvider>
-              </ToastProvider>
-            </SafeAreaProvider>
-          </PortalProvider>
-        </Theme>
-      </GestureHandlerRootView>
-    </TamaguiProvider>
+                </ToastProvider>
+              </SafeAreaProvider>
+            </PortalProvider>
+          </Theme>
+        </GestureHandlerRootView>
+      </TamaguiProvider>
+    </QueryClientProvider>
   );
 });
 const AppContent = memo((): JSX.Element => {
-  return <SideBar>
+  return (<SideBar>
     <Slot />
-  </SideBar>;
+  </SideBar>);
 });
 
 export default function RootLayout() {

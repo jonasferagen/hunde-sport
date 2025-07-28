@@ -24,7 +24,6 @@ export const HomeScreen = () => {
     const featuredProducts = useFeaturedProducts();
     const categories = useCategories(0, { autoload: true });
 
-
     return (
         <PageView>
             <Stack.Screen options={{ title: 'Hjem' }} />
