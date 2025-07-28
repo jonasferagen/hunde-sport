@@ -7,12 +7,15 @@ interface PageHeaderProps extends YStackProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...props }) => {
+
     return (
         <YStack
+
             padding="$3"
             borderBottomWidth={1}
-            backgroundColor="$background"
-            borderColor="$borderColor"
+            backgroundColor={"$background"}
+            elevation={4}
+            borderColor={"$borderColor"}
             gap="$3"
             {...props}
         >

@@ -31,9 +31,9 @@ export const HomeScreen = () => {
                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
-                <PageContent title="Debug">
+                <PageContent theme="secondary" title="Debug">
                     <DebugSeeder />
-                    <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
+                    <ProductTiles key='debug' queryResult={debugProducts} theme="primary" />
                 </PageContent>
                 <PageContent title="Kategorier">
                     <CategoryTiles key='categories' queryResult={categories} theme="primary" />

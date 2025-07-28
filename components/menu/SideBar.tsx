@@ -24,7 +24,7 @@ const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Elemen
         drawerStyle: {
             elevation: 5
         },
-        overlayColor: theme.background075.val,
+        overlayColor: theme.overlayColor?.val,
         headerShown: true,
         header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
     }), [theme]);

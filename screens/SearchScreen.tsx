@@ -20,7 +20,7 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader>
+            <PageHeader zIndex={5} elevation={4} theme="secondary">
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
                 <SizableText fontSize="$3">
                     {isWaiting

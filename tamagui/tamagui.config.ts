@@ -1,10 +1,11 @@
 
-import { darken, lighten } from '@/utils/helpers';
 import { createAnimations } from '@tamagui/animations-moti';
 import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
 import { shorthands } from '@tamagui/shorthands';
+
 import { createTamagui } from 'tamagui';
+import { augmentedLightTheme, lilacTheme, mintTheme, sageTheme } from './themes';
 
 const font = createInterFont({
     size: {
@@ -47,31 +48,31 @@ const animations = createAnimations({
     },
 });
 
-//    accent: '#C8E6E5',
+
 
 const customTokens = {
     ...tokens,
     color: {
         ...tokens.color,
-        primary: '#D7C8E7',
-        primaryPress: '#C1B2D1',
-        primaryText: '#5f4a73',
-        primaryTextSubtle: '#a992c5',
-        primaryBorder: '#a992c5',
-        secondary: '#DDE2C3',
-        secondaryPress: '#C9D0A9',
-        secondaryText: '#444f21',
-        secondaryTextSubtle: '#b1bb87',
-        secondaryBorder: '#b1bb87',
-        accent: '#C8E6E5',
-        accentPress: '#B2D0CF',
-        accentText: '#4d7372',
-        accentTextSubtle: '#92c3c1',
-        accentBorder: '#92c3c1',
-
-        // Semantic text colors
-        colorHighContrast: tokens.color.black5,
-        colorLowContrast: tokens.color.black10,
+        /*  primary: '#D7C8E7',
+           primaryPress: '#C1B2D1',
+           primaryText: '#5f4a73',
+           primaryTextSubtle: '#a992c5',
+           primaryBorder: '#a992c5',
+           secondary: '#DDE2C3',
+           secondaryPress: '#C9D0A9',
+           secondaryText: '#444f21',
+           secondaryTextSubtle: '#b1bb87',
+           secondaryBorder: '#C9D0A9',
+           accent: '#C8E6E5',
+           accentPress: '#B2D0CF',
+           accentText: '#4d7372',
+           accentTextSubtle: '#92c3c1',
+           accentBorder: '#92c3c1',
+   
+           // Semantic text colors
+           colorHighContrast: tokens.color.black5,
+           colorLowContrast: tokens.color.black10, */
     },
     fontSize: font.size,
     radius: {
@@ -106,51 +107,61 @@ const customTokens = {
     zIndex: { ...tokens.zIndex, 0: 0, 1: 100, 2: 200 },
 };
 
+
+
 const appConfig = createTamagui({
     animations,
     themes: {
         ...themes,
-        light: {
-            ...themes.light,
-            background: customTokens.color.white5,
-            backgroundStrong: customTokens.color.white2,
-            backgroundLight: customTokens.color.white10,
-            backgroundPress: themes.light.gray3,
-            borderColor: customTokens.color.white5,
-            color: customTokens.color.colorHighContrast,
-            colorSubtle: customTokens.color.colorLowContrast,
-        },
-        primary: {
-            ...themes.light,
-            background: customTokens.color.primary,
-            backgroundStrong: darken(customTokens.color.primary, 10),
-            backgroundLight: lighten(customTokens.color.primary, 10),
-            backgroundPress: customTokens.color.primaryPress,
-            color: customTokens.color.primaryText,
-            colorSubtle: customTokens.color.primaryTextSubtle,
-            borderColor: customTokens.color.primaryBorder,
-        },
-        secondary: {
-            ...themes.light,
-            background: customTokens.color.secondary,
-            backgroundStrong: darken(customTokens.color.secondary, 10),
-            backgroundLight: lighten(customTokens.color.secondary, 10),
-            backgroundPress: customTokens.color.secondaryPress,
-            color: customTokens.color.secondaryText,
-            colorSubtle: customTokens.color.secondaryTextSubtle,
-            borderColor: customTokens.color.secondaryBorder,
-        },
-        accent: {
-            ...themes.light,
-            background: customTokens.color.accent,
-            backgroundStrong: darken(customTokens.color.accent, 10),
-            backgroundLight: lighten(customTokens.color.accent, 10),
-            backgroundPress: customTokens.color.accentPress,
-            color: customTokens.color.accentText,
-            colorSubtle: customTokens.color.accentTextSubtle,
-            borderColor: customTokens.color.accentBorder,
-        },
-
+        primary: lilacTheme,
+        secondary: sageTheme,
+        tertiary: mintTheme,
+        light: augmentedLightTheme,
+        /*
+                light: {
+                    ...themes.light,
+                    background: customTokens.color.white5,
+                    backgroundStrong: customTokens.color.white2,
+                    backgroundLight: customTokens.color.white10,
+                    backgroundPress: themes.light.gray3,
+                    borderColor: customTokens.color.white5,
+                    color: customTokens.color.colorHighContrast,
+                    colorSubtle: customTokens.color.colorLowContrast,
+                },
+        
+        /*
+                primary: {
+                    ...themes.light,
+                    background: customTokens.color.primary,
+                    backgroundStrong: darken(customTokens.color.primary, 10),
+                    backgroundLight: lighten(customTokens.color.primary, 10),
+                    backgroundPress: customTokens.color.primaryPress,
+                    color: customTokens.color.primaryText,
+                    colorSubtle: customTokens.color.primaryTextSubtle,
+                    borderColor: customTokens.color.primaryBorder,
+                },
+                secondary: {
+                    ...themes.light,
+                    background: customTokens.color.secondary,
+                    backgroundStrong: darken(customTokens.color.secondary, 10),
+                    backgroundLight: lighten(customTokens.color.secondary, 10),
+                    backgroundPress: customTokens.color.secondaryPress,
+                    color: customTokens.color.secondaryText,
+                    colorSubtle: customTokens.color.secondaryTextSubtle,
+                    borderColor: customTokens.color.secondaryBorder,
+                }, 
+        
+                accent: {
+                    ...themes.light,
+                    background: customTokens.color.accent,
+                    backgroundStrong: darken(customTokens.color.accent, 10),
+                    backgroundLight: lighten(customTokens.color.accent, 10),
+                    backgroundPress: customTokens.color.accentPress,
+                    color: customTokens.color.accentText,
+                    colorSubtle: customTokens.color.accentTextSubtle,
+                    borderColor: customTokens.color.accentBorder,
+                },
+        */
 
 
     },
