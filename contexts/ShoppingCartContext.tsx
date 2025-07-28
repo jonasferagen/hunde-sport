@@ -64,6 +64,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                     message: product,
                     theme: 'dark_green',
                 });
+
             }
         },
         [toastController]

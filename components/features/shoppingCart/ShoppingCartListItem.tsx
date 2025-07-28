@@ -33,7 +33,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                 <XStack ai="center" gap="$2">
                     <ThemedButton theme="primary"
                         icon={<Minus size="$4" />}
-                        onPress={() => decreaseQuantity(purchasable, { silent: true })}
+                        onPress={() => decreaseQuantity(purchasable, { silent: false })}
                         size="$5"
                         circular
                         disabled={quantity <= 1}
@@ -41,7 +41,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
                     <ThemedButton theme="primary"
                         icon={<Plus size="$4" />}
-                        onPress={() => increaseQuantity(purchasable, { silent: true })}
+                        onPress={() => increaseQuantity(purchasable, { silent: false })}
                         size="$5"
                         circular
                     />

@@ -35,15 +35,11 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
           <PortalProvider shouldAddRootHost={true}>
             <SafeAreaProvider>
               <ToastProvider>
-                <ToastViewport
-                  multipleToasts={false}
-                  flexDirection="column"
-                  justifyContent='space-between'
+                <ToastViewport multipleToasts={false}
                   position="absolute"
-                  bottom={60}
+                  flexDirection="column-reverse"
+                  bottom={80}
                   left={0}
-                  padding="$2"
-                  gap="$2"
                 />
 
                 <QueryClientProvider client={queryClient}>
