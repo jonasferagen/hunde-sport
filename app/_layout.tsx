@@ -27,9 +27,16 @@ const RootLayout = (): JSX.Element =>
         <Theme name="light">
           <PortalProvider>
             <SafeAreaProvider>
-              <ToastProvider  >
+              <ToastProvider>
                 <AppToast />
-                <ToastViewport multipleToasts={false} bottom={0} left={0} borderWidth={10} borderColor="red" position="absolute" height="100%" width="100%" borderColor="red" borderWidth={1} />
+                <ToastViewport
+                  multipleToasts={false}
+                  bottom={0}
+                  left={0}
+                  position="absolute"
+                  height="50"
+                  width="100%"
+                />
                 <OrderProvider>
                   <ShoppingCartProvider>
                     <SearchProvider>
@@ -39,6 +46,7 @@ const RootLayout = (): JSX.Element =>
                     </SearchProvider>
                   </ShoppingCartProvider>
                 </OrderProvider>
+
               </ToastProvider>
             </SafeAreaProvider>
           </PortalProvider>

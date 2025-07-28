@@ -23,7 +23,7 @@ export const AppToast = () => {
             backgroundColor="$background"
             opacity={1}
             position="absolute"
-            bottom={-windowHeight / 2 + 20}
+            bottom={0}
             right={-windowWidth / 2 + 20}
             zIndex={1000}
 
