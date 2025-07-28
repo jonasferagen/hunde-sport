@@ -42,6 +42,11 @@ export const ThemedButton = styled(Button, {
                     backgroundColor: '$colorAccentPress',
                 },
             },
+            active: {
+                backgroundColor: '$backgroundPress',
+                borderColor: '$borderColorStrong',
+                color: '$colorStrong',
+            },
         },
         circular: {
             true: {

@@ -24,6 +24,7 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
         colorAccentHover: darken(0.1, accentColor),
         colorAccentPress: darken(0.2, accentColor),
 
+
         backgroundHover: darken(0.03, baseColor),
         backgroundPress: darken(0.07, baseColor),
         backgroundFocus: darken(0.12, baseColor),

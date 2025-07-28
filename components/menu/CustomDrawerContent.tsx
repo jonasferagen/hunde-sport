@@ -45,8 +45,6 @@ const CategoryTreeItem = ({
     const spacing = getTokenValue('$4', 'space');
     const theme = useTheme();
 
-
-
     return (
         <XStack jc="center" ai="center" gap="$2" width="100%" >
             <View ml={level * spacing}>
@@ -74,7 +72,7 @@ const CategoryTreeItem = ({
                         pressStyle={{ backgroundColor: theme.backgroundFocus.val, borderColor: theme.backgroundFocus.val }}
                         flex={1}
                     >
-                        <ThemedText fontSize="$3"
+                        <ThemedText fontSize="$3" letterSpacing={0.5}
                         >
                             {category.name}
                         </ThemedText>
@@ -109,7 +107,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
             <DrawerContentScrollView {...props}>
                 <Theme>
-                    <XStack ai="center" paddingVertical="$3" jc="space-between" boc="$borderColor" bbw={1}>
+                    <XStack ai="center" marginVertical="$3" jc="space-between">
                         <ThemedText fontSize="$4">hunde-sport.no</ThemedText>
                         <ThemedButton
                             paddingVertical="$2"
@@ -127,7 +125,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                         {state.routes.filter(route => route.name in routeConfig)
                             .map((route, index) => {
 
-                                const isFocused = state.index === index;
+                                const isActive = state.index === index;
                                 const onPress = () => navigation.navigate(route.name);
                                 const { label, icon } = routeConfig[route.name as keyof typeof routeConfig];
 
@@ -135,25 +133,25 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                 return (
                                     <XStack key={route.key}>
                                         <ThemedButton
-
+                                            icon={icon}
                                             circular
                                             size="$6"
+                                            variant={isActive ? 'active' : undefined}
                                             onPress={onPress}
-                                        >
-                                            {icon}
-                                        </ThemedButton>
+                                        />
                                         <ThemedButton
                                             paddingVertical="$2"
                                             marginHorizontal="$2"
                                             height="$6"
                                             flex={1}
                                             bc="transparent"
-                                            boc="transparent"
+                                            variant={isActive ? 'active' : undefined}
+                                            borderColor="transparent"
                                             onPress={onPress}
                                             borderRadius="$6"
                                             jc="flex-start"
                                         >
-                                            <ThemedText variant={isFocused ? 'focused' : 'default'} fontSize="$3">
+                                            <ThemedText variant={isActive ? 'focused' : 'default'} fontSize="$3" letterSpacing={0.5}>
                                                 {label}
                                             </ThemedText>
                                         </ThemedButton>
@@ -161,9 +159,12 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
                                 );
                             })}
-                        <XStack boc="$borderColor" bbw={1} paddingVertical="$2">
-                            <ThemedText fontSize="$4" paddingVertical="$2">Kategorier</ThemedText>
-                        </XStack>
+
+
+
+                        <ThemedText marginVertical="$2" fontSize="$4">Kategorier</ThemedText>
+
+
                         <CategoryTree
                             renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}
                         />
