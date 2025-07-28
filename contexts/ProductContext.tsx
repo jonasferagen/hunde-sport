@@ -44,7 +44,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         isFetchingNextPage,
         hasNextPage,
 
-    } = useProductVariations(product, { enabled: product.type === 'variable', autoload: true });
+    } = useProductVariations(product, { enabled: product.hasVariations(), autoload: true });
 
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 

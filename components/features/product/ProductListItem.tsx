@@ -4,7 +4,6 @@ import React from 'react';
 import { StackProps, YStack } from 'tamagui';
 import { ProductCard, ProductCardContent, ProductCardFooter, ProductCardImage } from './card';
 import { ProductVariations } from './variation/ProductVariations';
-
 interface ProductListItemProps extends Omit<StackProps, 'onPress'> {
     product: Product;
     index: number;
@@ -25,6 +24,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         onPress(product.id);
     };
 
+
     return (
         <YStack borderBottomWidth={1} paddingVertical="$3" borderBottomColor="$gray7">
             <ProductCard>
@@ -33,7 +33,8 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
             </ProductCard>
             <ProductCardFooter onExpand={handleExpand} />
             {
-                product.type === 'variable' && isExpanded && (
+
+                product.hasVariations() && isExpanded && (
                     <YStack marginHorizontal="$3" mt="$2">
                         <ProductVariations />
                     </YStack>
