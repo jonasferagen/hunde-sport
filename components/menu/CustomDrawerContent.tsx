@@ -5,9 +5,10 @@ import {
     DrawerContentScrollView,
     DrawerItemList,
 } from '@react-navigation/drawer';
+import { ChevronDown, ChevronRight } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-import { H3, SizableText, Theme, useTheme, YStack } from 'tamagui';
+import { Button, H3, SizableText, Theme, useTheme, YStack } from 'tamagui';
 
 const CategoryTreeItem = ({ category, isActive, isExpanded }: RenderItemProps) => {
     const theme = useTheme();
@@ -42,7 +43,10 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
                 <YStack gap="$1" paddingVertical="$1">
                     <DrawerItemList {...props} />
                     <H3 marginHorizontal="$3.5" marginTop="$4">Våre kategorier</H3>
-                    <CategoryTree renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />} />
+                    <CategoryTree
+                        renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}
+                        iconOpen={<Button theme="secondary" circular><ChevronDown size="$4" /></Button>}
+                        iconClose={<Button theme="secondary" circular><ChevronRight size="$4" /></Button>} />
                 </YStack>
             </Theme>
         </DrawerContentScrollView>
