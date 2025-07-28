@@ -2,19 +2,19 @@ import { CustomHeader } from "@/components/menu/CustomHeader";
 import { DrawerContentComponentProps, DrawerHeaderProps } from "@react-navigation/drawer";
 import Drawer from "expo-router/drawer";
 import React, { JSX } from "react";
-import { Theme, useTheme } from "tamagui";
+import { Theme, useTheme, YStack } from "tamagui";
 import { CustomDrawerContent } from "./CustomDrawerContent";
 
-export const SideBar = ({ children }: { children: React.ReactNode }): JSX.Element =>
+export const SideBar = ({ children }: { children?: React.ReactNode }): JSX.Element =>
     <Theme name="secondary">
-        <SideBarContent children={children} />
-    </Theme>
+        <YStack flex={1} zIndex={2}>
+            <SideBarContent children={children} />
+        </YStack>
+    </Theme >
 
 
-const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Element => {
+const SideBarContent = ({ children }: { children?: React.ReactNode }): JSX.Element => {
     const theme = useTheme();
-
-
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />,
         []
@@ -30,6 +30,7 @@ const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Elemen
     }), [theme]);
 
     return <Drawer
+
         drawerContent={drawerContent}
         screenOptions={screenOptions}
     >
@@ -54,7 +55,13 @@ const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Elemen
                 title: 'Søk',
             }}
         />
+        <Drawer.Screen
+            name="(checkout)/index" // This is the name of the page and must match the url from root
+            options={{
+                drawerLabel: 'Kassen',
+                title: 'Kassen',
+            }}
+        />
 
-        {children}
     </Drawer>
 }

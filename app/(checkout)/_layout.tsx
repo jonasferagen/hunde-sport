@@ -1,13 +1,12 @@
-import Drawer from "expo-router/drawer";
+import { Stack } from "expo-router";
 import React from 'react';
 
 export default function CheckoutLayout() {
   return (
-    <Drawer.Screen
+    <Stack.Screen
       name="index" // This is the name of the page and must match the url from root
       options={{
-        drawerLabel: 'Hjem',
-        title: 'Hjem',
+        title: 'Kassen',
       }}
     />
   );

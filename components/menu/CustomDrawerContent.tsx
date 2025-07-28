@@ -84,6 +84,7 @@ const CategoryTreeItem = ({
                     </XStack>
                 </Link>
             </XStack>
+
         </XStack >
     );
 };
@@ -94,6 +95,7 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
 
     return (
         <YStack
+
             flex={1}
             borderRightWidth={1}
             borderRightColor="$borderColor"
@@ -142,6 +144,7 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
                     </YStack>
                 </Theme>
             </DrawerContentScrollView>
+
         </YStack>
     );
 }
