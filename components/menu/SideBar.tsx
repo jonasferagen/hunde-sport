@@ -24,6 +24,7 @@ const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Elemen
             backgroundColor: theme.background.val,
             borderColor: theme.borderColor.val,
             borderWidth: 1,
+            borderRadius: 4,
         },
         drawerActiveBackgroundColor: theme.backgroundFocus.val,
         drawerActiveTintColor: theme.color.val,

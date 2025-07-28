@@ -1,119 +1,78 @@
-import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
 import { Category } from '@/models/Category';
 import { ChevronDownCircle, ChevronUpCircle } from '@tamagui/lucide-icons';
-import { Link } from 'expo-router';
-import React, { useCallback, useState } from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
-import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { Button, SizableText, Spinner, View, XStack, YStack } from 'tamagui';
+import React, { JSX, useCallback, useState } from 'react';
+import Animated, { LinearTransition } from 'react-native-reanimated';
+import { SizableText, Spinner, View, XStack, YStack } from 'tamagui';
 
-interface CategoryTreeItemProps {
+export type RenderItemProps = {
     category: Category;
     level: number;
-    ancestors: Category[];
-    isExpanded: boolean;
-    onExpand: (categoryId: number) => void;
-    isActive: boolean;
 };
 
-const CategoryTreeItem = ({ category, level, ancestors, isExpanded, onExpand, isActive }: CategoryTreeItemProps) => {
-    const { items: categories } = useCategories(category.id, { autoload: true });
-    const hasChildren = categories.length > 0; // subcategories
+export type CategoryTreeProps = {
+    parentId?: number;
+    renderItem: (props: RenderItemProps) => JSX.Element;
+    iconOpen?: JSX.Element;
+    iconClose?: JSX.Element;
+};
 
-    const handleExpand = useCallback(() => {
-        onExpand(category.id);
-    }, [onExpand, category.id]);
+const DefaultIconOpen = <ChevronUpCircle fontSize="$4" />;
+const DefaultIconClose = <ChevronDownCircle fontSize="$4" />;
 
+export const CategoryTree = ({ parentId = 0, renderItem, iconOpen = DefaultIconOpen, iconClose = DefaultIconClose }: CategoryTreeProps): JSX.Element => {
+    const { items: categories, isFetchingNextPage } = useCategories(parentId, { autoload: true });
+    const [expanded, setExpanded] = useState<Record<number, boolean>>({});
 
-    return (
-        <Animated.View layout={LinearTransition} style={{ overflow: 'hidden' }}>
-            <YStack
-                backgroundColor={isExpanded ? '$backgroundFocus' : 'transparent'}
-                borderRadius="$4"
-                marginLeft={level * 20}
-            >
-                <XStack ai="center" jc='space-between' flex={1} >
-                    <Link href={routes.category(category)} asChild>
-                        <Button flex={1} alignItems="flex-start" pressStyle={{ opacity: 0.7 }}>
-                            <XStack paddingVertical="$2" flex={1}>
-                                <SizableText size="$5">{category.name}</SizableText>
-                            </XStack>
-                        </Button>
-                    </Link>
+    const handleExpand = useCallback((categoryId: number) => {
+        setExpanded(prev => ({ ...prev, [categoryId]: !prev[categoryId] }));
+    }, []);
 
-                    {hasChildren && (
-                        <YStack onPress={handleExpand} padding="$2" >
-                            {isExpanded ? <ChevronUpCircle fontSize="$4" /> : <ChevronDownCircle fontSize="$4" />}
-                        </YStack>
+    const renderCategory = (category: Category, level: number): JSX.Element => {
+        const isExpanded = !!expanded[category.id];
+        const hasChildren = category.count > 0;
+
+        return (
+            <Animated.View key={category.id} layout={LinearTransition} style={{ overflow: 'hidden' }}>
+                <YStack
+                    backgroundColor={isExpanded ? '$backgroundFocus' : 'transparent'}
+                    borderRadius="$4"
+                    marginLeft={level * 10}
+                >
+                    <XStack ai="center" jc='space-between' flex={1} >
+                        <View flex={1}>
+                            {renderItem({ category, level })}
+                        </View>
+
+                        {hasChildren && (
+                            <YStack onPress={() => handleExpand(category.id)} padding="$2" >
+                                {isExpanded ? iconOpen : iconClose}
+                                <SizableText>{category.count}</SizableText>
+                            </YStack>
+                        )}
+                    </XStack>
+
+                    {isExpanded && (
+                        <CategoryTree
+                            parentId={category.id}
+                            renderItem={renderItem}
+                            iconOpen={iconOpen}
+                            iconClose={iconClose}
+                        />
                     )}
-                </XStack>
-                {
-                    isExpanded && (
-                        <Animated.View entering={FadeIn} exiting={FadeOut} style={{ overflow: 'hidden' }}>
-                            <CategorySubTree
-                                categoryId={category.id}
-                                level={level + 1}
-                                ancestors={ancestors}
-                            />
-                        </Animated.View>
-                    )
-                }
-            </YStack >
-        </Animated.View >
-    );
-};
-
-interface CategorySubTreeProps {
-    categoryId: number;
-    level?: number;
-    ancestors?: Category[];
-};
-
-const CategorySubTree = ({ categoryId, level = 0, ancestors = [] }: CategorySubTreeProps) => {
-    const { items: categories, isFetchingNextPage } = useCategories(categoryId);
-
-    const activeChild = categories.find((c: Category) => ancestors.some(b => b.id === c.id));
-    const [expandedItemId, setExpandedItemId] = useState<number | null>(activeChild?.id ?? null);
-
-    const handleToggleExpand = (itemId: number) => {
-        setExpandedItemId(prevId => (prevId === itemId ? null : itemId));
+                </YStack>
+            </Animated.View>
+        );
     };
 
     return (
-        <YStack marginHorizontal={0}>
-            <View>
-                {categories.map((category: Category) => {
-                    return (
-                        <CategoryTreeItem
-                            key={category.id}
-                            category={category}
-                            level={level}
-                            ancestors={ancestors.concat(category)}
-                            isExpanded={expandedItemId === category.id}
-                            onExpand={handleToggleExpand}
-                            isActive={ancestors.some(b => b.id === category.id)}
-                        />
-                    );
-                })}
-                {isFetchingNextPage && (
-                    <YStack flex={1} ai="center" jc="center" marginVertical="$2">
-                        <Spinner size="small" />
-                    </YStack>
-                )}
-            </View>
+        <YStack>
+            {categories.map(category => renderCategory(category, 0))}
+            {isFetchingNextPage && (
+                <YStack flex={1} ai="center" jc="center" marginVertical="$2">
+                    <Spinner size="small" />
+                </YStack>
+            )}
         </YStack>
     );
 };
-
-interface CategoryTreeProps {
-    style?: StyleProp<ViewStyle>;
-    categoryId?: number;
-}
-
-export const CategoryTree = React.memo(({ style, categoryId = 0 }: CategoryTreeProps) => {
-
-    return <View style={style as any}>
-        <CategorySubTree categoryId={categoryId} />
-    </View>;
-});
