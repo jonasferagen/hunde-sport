@@ -2,6 +2,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 
 import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shoppingCart';
 import { ThemedButton } from '@/components/ui/ThemedButton';
+import { ThemedText } from '@/components/ui/ThemedText';
 import { routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
@@ -9,7 +10,9 @@ import { FlashList } from '@shopify/flash-list';
 import { ArrowBigRight } from '@tamagui/lucide-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback } from 'react';
-import { SizableText, XStack } from 'tamagui';
+import { XStack, YStack } from 'tamagui';
+
+
 export const ShoppingCartScreen = () => {
     const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
 
@@ -23,6 +26,16 @@ export const ShoppingCartScreen = () => {
         router.push(routes.shipping());
     };
 
+
+    if (cartItemCount === 0) {
+        return (
+            <YStack flex={1} ai="center" jc="center">
+                <ThemedText fontSize="$3">Handlekurven er tom</ThemedText>
+            </YStack>
+        );
+    }
+
+
     return (
         <PageView>
             <PageSection flex={1}>
@@ -31,11 +44,6 @@ export const ShoppingCartScreen = () => {
                         data={items}
                         keyExtractor={(item) => item.key}
                         renderItem={renderItem}
-                        ListEmptyComponent={
-                            <SizableText textAlign="center" marginTop="$4">
-                                Handlekurven er tom.
-                            </SizableText>
-                        }
                         estimatedItemSize={100}
                     />
                 </PageContent>

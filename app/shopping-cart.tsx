@@ -1,2 +1,2 @@
-import { ShoppingCartScreen } from '@/screens/checkout/ShoppingCartScreen';
+import { ShoppingCartScreen } from '@/screens/ShoppingCartScreen';
 export default ShoppingCartScreen;
