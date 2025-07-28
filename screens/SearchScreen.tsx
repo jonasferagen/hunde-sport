@@ -2,6 +2,7 @@ import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { SearchBar } from '@/components/ui';
+import { ThemedText } from '@/components/ui/ThemedText';
 import { useSearchContext } from '@/contexts/SearchContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
@@ -10,7 +11,6 @@ import React from 'react';
 import { TextInput } from 'react-native';
 import { SizableText, YStack } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
-
 export const SearchScreen = () => {
     useRenderGuard("SearchScreen")
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
@@ -47,7 +47,7 @@ const SearchResults = () => {
     if (!query) {
         return (
             <YStack flex={1} ai="center" jc="center">
-                <SizableText>Søk etter produkter, merker og kategorier.</SizableText>
+                <ThemedText fontSize="$3">Søk etter produkter, merker og kategorier.</ThemedText>
             </YStack>
         );
     }
@@ -55,7 +55,7 @@ const SearchResults = () => {
     if (products.length === 0) {
         return (
             <YStack flex={1} ai="center" jc="center">
-                <SizableText>Ingen resultater funnet for "{query}"</SizableText>
+                <ThemedText fontSize="$3">Ingen resultater funnet for "{query}"</ThemedText>
             </YStack>
         );
     }
