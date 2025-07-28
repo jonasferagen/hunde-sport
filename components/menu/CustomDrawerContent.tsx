@@ -10,6 +10,8 @@ import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Button, getTokenValue, SizableText, Theme, useTheme, View, XStack, YStack } from 'tamagui';
+import { ThemedButton } from '../ui/ThemedButton';
+import { ThemedText } from '../ui/ThemedText';
 
 
 const AnimatedChevron = ({ expanded, size }: { expanded: boolean, size: string }) => {
@@ -88,7 +90,7 @@ const CategoryTreeItem = ({
 export function CustomDrawerContent(props: DrawerContentComponentProps) {
     const { state, navigation } = props;
 
-    const allowedRoutes = ['index', 'search', '(checkout)'];
+    const allowedRoutes = ['index', 'search', 'shopping-cart'];
 
     return (
         <YStack
@@ -117,27 +119,19 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
                                 const routeLabel = props.descriptors[route.key]?.options?.drawerLabel ?? route.name;
 
                                 return (
-                                    <Button
+                                    <ThemedButton
                                         paddingVertical="$2"
                                         marginHorizontal="$2"
                                         height="$6"
                                         key={route.key}
                                         onPress={onPress}
-                                        backgroundColor={isFocused ? 'white' : '$backgroundLight'}
                                         borderRadius="$4"
-                                        borderColor="$borderColor"
-                                        pressStyle={{ backgroundColor: '$backgroundFocus' }}
-                                        borderWidth={1}
                                         jc="flex-start"
                                     >
-                                        <SizableText
-                                            color={isFocused ? '$colorSubtle' : '$color'}
-                                            fontWeight={isFocused ? 'bold' : 'normal'}
-                                            fontSize="$6"
-                                        >
+                                        <ThemedText variant={isFocused ? 'focused' : 'default'} fontSize="$3">
                                             {routeLabel}
-                                        </SizableText>
-                                    </Button>
+                                        </ThemedText>
+                                    </ThemedButton>
 
                                 );
                             })}

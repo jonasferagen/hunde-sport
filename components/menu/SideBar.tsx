@@ -41,7 +41,7 @@ const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Elemen
             }}
         />
         <Drawer.Screen
-            name="(checkout)" // This is the name of the page and must match the url from root
+            name="shopping-cart" // This is the name of the page and must match the url from root
             options={{
                 drawerLabel: 'Handlekurv',
                 title: 'Handlekurv',
@@ -55,18 +55,6 @@ const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Elemen
             }}
         />
 
-        <Drawer.Screen
-            name="product"
-            options={{
-                drawerItemStyle: { display: 'none' },
-            }}
-        />
-        <Drawer.Screen
-            name="category"
-            options={{
-                drawerItemStyle: { display: 'none' },
-            }}
-        />
         {children}
     </Drawer>
 }

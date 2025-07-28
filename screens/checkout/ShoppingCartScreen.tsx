@@ -1,5 +1,4 @@
 import { PageContent, PageSection, PageView } from '@/components/layout';
-import { PageHeader } from '@/components/layout/PageHeader';
 
 import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shoppingCart';
 import { ThemedButton } from '@/components/ui/ThemedButton';
@@ -26,7 +25,6 @@ export const ShoppingCartScreen = () => {
 
     return (
         <PageView>
-            <PageHeader title="Handlekurv" />
             <PageSection flex={1}>
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
                     <FlashList

@@ -4,7 +4,8 @@ import { LinearGradient } from '@tamagui/linear-gradient';
 import { Menu } from '@tamagui/lucide-icons';
 import { useNavigation } from 'expo-router';
 import { JSX } from 'react';
-import { Button, H3, XStack } from 'tamagui';
+import { H3, XStack } from 'tamagui';
+import { ThemedButton } from '../ui/ThemedButton';
 
 export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
     const navigation = useNavigation();
@@ -31,17 +32,14 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
                 end={[0, 0]}
                 style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
             />
-            <Button
+            <ThemedButton
                 onPress={openDrawer}
                 size="$6"
                 circular
                 padding="$3"
-                backgroundColor="transparent"
-                pressStyle={{ backgroundColor: '$backgroundFocus' }}
-                borderColor="transparent"
             >
                 <Menu />
-            </Button>
+            </ThemedButton>
             <H3>{options.title}</H3>
         </XStack>
     );
