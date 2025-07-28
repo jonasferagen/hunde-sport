@@ -14,6 +14,7 @@ export const SideBar = ({ children }: { children: React.ReactNode }): JSX.Elemen
 const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Element => {
     const theme = useTheme();
 
+
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />,
         []
@@ -21,17 +22,9 @@ const SideBarContent = ({ children }: { children: React.ReactNode }): JSX.Elemen
 
     const screenOptions = React.useMemo(() => ({
         drawerStyle: {
-            backgroundColor: theme.background.val,
-            borderColor: theme.borderColor.val,
-            borderWidth: 1,
-            borderRadius: 4,
+            elevation: 5
         },
-        drawerActiveBackgroundColor: theme.backgroundFocus.val,
-        drawerActiveTintColor: theme.color.val,
-        drawerInactiveTintColor: theme.color10.val,
-        drawerLabelStyle: {
-            fontSize: 16,
-        },
+        overlayColor: theme.background075.val,
         headerShown: true,
         header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
     }), [theme]);

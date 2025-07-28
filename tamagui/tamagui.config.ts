@@ -1,4 +1,5 @@
 
+import { darken, lighten } from '@/utils/helpers';
 import { createAnimations } from '@tamagui/animations-moti';
 import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
@@ -112,15 +113,18 @@ const appConfig = createTamagui({
         light: {
             ...themes.light,
             background: customTokens.color.white5,
+            backgroundStrong: customTokens.color.white2,
+            backgroundLight: customTokens.color.white10,
             backgroundPress: themes.light.gray3,
             borderColor: customTokens.color.white5,
             color: customTokens.color.colorHighContrast,
             colorSubtle: customTokens.color.colorLowContrast,
-            borderRadius: '$4',
         },
         primary: {
             ...themes.light,
             background: customTokens.color.primary,
+            backgroundStrong: darken(customTokens.color.primary, 10),
+            backgroundLight: lighten(customTokens.color.primary, 10),
             backgroundPress: customTokens.color.primaryPress,
             color: customTokens.color.primaryText,
             colorSubtle: customTokens.color.primaryTextSubtle,
@@ -129,6 +133,8 @@ const appConfig = createTamagui({
         secondary: {
             ...themes.light,
             background: customTokens.color.secondary,
+            backgroundStrong: darken(customTokens.color.secondary, 10),
+            backgroundLight: lighten(customTokens.color.secondary, 10),
             backgroundPress: customTokens.color.secondaryPress,
             color: customTokens.color.secondaryText,
             colorSubtle: customTokens.color.secondaryTextSubtle,
@@ -137,6 +143,8 @@ const appConfig = createTamagui({
         accent: {
             ...themes.light,
             background: customTokens.color.accent,
+            backgroundStrong: darken(customTokens.color.accent, 10),
+            backgroundLight: lighten(customTokens.color.accent, 10),
             backgroundPress: customTokens.color.accentPress,
             color: customTokens.color.accentText,
             colorSubtle: customTokens.color.accentTextSubtle,
