@@ -6,7 +6,7 @@ import { Theme, useTheme } from "tamagui";
 import { CustomDrawerContent } from "./CustomDrawerContent";
 
 export const SideBar = ({ children }: { children: React.ReactNode }): JSX.Element =>
-    <Theme name="primary">
+    <Theme name="secondary">
         <SideBarContent children={children} />
     </Theme>
 

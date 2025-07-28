@@ -3,8 +3,8 @@ import { Category } from '@/models/Category';
 import { ChevronDown, ChevronRight } from '@tamagui/lucide-icons';
 import { usePathname } from 'expo-router';
 import React, { JSX, useCallback, useState } from 'react';
-import Animated, { LinearTransition } from 'react-native-reanimated';
-import { Spinner, XStack, YStack } from 'tamagui';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+import { Spinner, View, XStack, YStack } from 'tamagui';
 
 export type RenderItemProps = {
     category: Category;
@@ -35,33 +35,40 @@ const CategoryTreeBranch = ({ category, level, isExpanded, onExpand, renderItem,
     const { items: subcategories } = useCategories(category.id, { autoload: true });
     const hasChildren = subcategories.length > 0;
 
-    const expandButton = hasChildren ? React.cloneElement(isExpanded ? iconOpen : iconClose, {
-        onPress: () => onExpand(category.id),
-    }) : null;
+    const button = isExpanded ? iconOpen : iconClose;
+
+    const expandButton = (
+        <View opacity={hasChildren ? 1 : 0}>
+            {React.cloneElement(button, {
+                onPress: () => onExpand(category.id),
+                disabled: !hasChildren,
+            })}
+        </View>
+    );
 
     return (
         <Animated.View key={category.id} layout={LinearTransition}>
-            <XStack>
-                <YStack>
-                    <XStack marginLeft="$2" ai="center" >
-                        {expandButton}
-                    </XStack>
-
-                </YStack>
-
-                <YStack flex={1}>
+            <YStack>
+                <XStack ml={level * 20} flex={1}>
                     {renderItem({ category, level, isActive, isExpanded })}
 
-                    {isExpanded && (
+                    <XStack ai="center" >
+                        {expandButton}
+                    </XStack>
+                </XStack >
+
+                {isExpanded && (
+                    <Animated.View entering={FadeIn} exiting={FadeOut}>
                         <CategoryTree
                             parentId={category.id}
                             renderItem={renderItem}
                             iconOpen={iconOpen}
                             iconClose={iconClose}
                         />
-                    )}
-                </YStack>
-            </XStack >
+                    </Animated.View>
+                )}
+
+            </YStack>
         </Animated.View >
     );
 };
