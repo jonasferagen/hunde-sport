@@ -5,11 +5,11 @@ import {
     DrawerContentScrollView
 } from '@react-navigation/drawer';
 import { LinearGradient } from '@tamagui/linear-gradient';
-import { ChevronRight } from '@tamagui/lucide-icons';
+import { ChevronRight, X } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { Button, getTokenValue, SizableText, Theme, useTheme, View, XStack, YStack } from 'tamagui';
+import { getTokenValue, SizableText, Theme, useTheme, View, XStack, YStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
 
@@ -46,19 +46,15 @@ const CategoryTreeItem = ({
     return (
         <XStack jc="center" ai="center" gap="$2" width="100%" theme="secondary">
             <View ml={level * spacing}>
-                <Button
+                <ThemedButton
                     theme="secondary"
                     circular
                     onPress={hasChildren ? () => onExpand(category.id) : undefined}
-                    opacity={hasChildren ? 1 : .2}
                     disabled={!hasChildren}
-                    borderColor="$borderColor"
-                    pressStyle={{ backgroundColor: theme.backgroundFocus.val, borderColor: theme.borderColor.val }}
-                    borderWidth={1}
                     size="$6"
                 >
                     {hasChildren ? <AnimatedChevron expanded={isExpanded} size="$4" /> : <ChevronRight size="$4" />}
-                </Button>
+                </ThemedButton>
             </View>
 
             <XStack flex={1} theme="light">
@@ -112,6 +108,17 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
 
             <DrawerContentScrollView {...props}>
                 <Theme name="secondary">
+                    <ThemedButton
+                        paddingVertical="$2"
+                        marginHorizontal="$2"
+                        height="$6"
+                        borderRadius="$4"
+                        circular
+                        onPress={() => navigation.closeDrawer()}
+                        alignSelf="flex-end"
+                    >
+                        <X />
+                    </ThemedButton>
                     <YStack gap="$2" paddingVertical="$2">
                         {state.routes.filter(route => Object.keys(allowedRoutes).includes(route.name))
                             .map((route, index) => {

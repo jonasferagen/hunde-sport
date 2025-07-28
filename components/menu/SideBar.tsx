@@ -5,15 +5,15 @@ import React, { JSX } from "react";
 import { Theme, useTheme, YStack } from "tamagui";
 import { CustomDrawerContent } from "./CustomDrawerContent";
 
-export const SideBar = ({ children }: { children?: React.ReactNode }): JSX.Element =>
+export const SideBar = (): JSX.Element =>
     <Theme name="secondary">
         <YStack flex={1} zIndex={2}>
-            <SideBarContent children={children} />
+            <SideBarContent />
         </YStack>
     </Theme >
 
 
-const SideBarContent = ({ children }: { children?: React.ReactNode }): JSX.Element => {
+const SideBarContent = (): JSX.Element => {
     const theme = useTheme();
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />,

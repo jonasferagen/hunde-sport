@@ -5,7 +5,7 @@ export const ThemedButton = styled(Button, {
 
     // Base style
     color: '$color',
-    backgroundColor: '$background',
+    backgroundColor: '$backgroundLight',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',
     borderRadius: '$3',
@@ -14,16 +14,17 @@ export const ThemedButton = styled(Button, {
     // Interactions
     hoverStyle: {
         backgroundColor: '$backgroundHover',
-        borderColor: '$borderColorStrong',
+        borderColor: '$borderColor',
     },
 
     pressStyle: {
         backgroundColor: '$backgroundPress',
+        borderColor: '$borderColor',
     },
 
     focusStyle: {
         backgroundColor: '$backgroundFocus',
-        outlineColor: '$shadowColorFocus',
+        borderColor: '$shadowColorFocus',
         outlineWidth: 2,
         outlineStyle: 'solid',
     },
@@ -42,11 +43,16 @@ export const ThemedButton = styled(Button, {
                 },
             },
         },
+        circular: {
+            true: {
+                borderRadius: 9999,
+            },
+        },
     },
 
     // Disabled
     disabledStyle: {
-        opacity: 0.5,
+        opacity: 0.3,
         pointerEvents: 'none',
     },
 })
