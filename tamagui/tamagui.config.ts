@@ -1,7 +1,4 @@
-//import { createAnimations } from '@tamagui/animations-css';
-
 import { createAnimations } from '@tamagui/animations-moti';
-//import { createAnimations } from '@tamagui/animations-react-native';
 import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
 import { shorthands } from '@tamagui/shorthands';

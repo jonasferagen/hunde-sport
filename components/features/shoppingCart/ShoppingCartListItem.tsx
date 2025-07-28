@@ -41,7 +41,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
                     <ThemedButton theme="primary"
                         icon={<Plus size="$4" />}
-                        onPress={() => increaseQuantity(purchasable, { silent: false })}
+                        onPress={() => increaseQuantity(purchasable)}
                         size="$5"
                         circular
                     />
@@ -61,7 +61,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                 <ThemedButton
                     theme="secondary"
                     icon={<X size="$4" />}
-                    onPress={() => removeItem(purchasable, { silent: false })}
+                    onPress={() => removeItem(purchasable)}
                     size="$5"
                     circular
                 />

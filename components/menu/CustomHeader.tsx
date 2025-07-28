@@ -1,30 +1,42 @@
+import { routeConfig } from '@/lib/routeConfig';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
-import { DrawerActions } from '@react-navigation/native';
+import { DrawerActions, useRoute } from '@react-navigation/native';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Menu } from '@tamagui/lucide-icons';
 import { useNavigation } from 'expo-router';
 import { JSX } from 'react';
-import { H3, XStack } from 'tamagui';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { XStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
+import { ThemedText } from '../ui/ThemedText';
 
 export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
-    const navigation = useNavigation();
 
+
+    const route = useRoute();
+    const insets = useSafeAreaInsets();
+    const routeName = route.name as keyof typeof routeConfig;
+    const theme = routeConfig[routeName]?.theme || 'primary';
+
+    const navigation = useNavigation();
     const openDrawer = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
 
+    const paddingTop = 70;
+    const height = insets.top + paddingTop + 20;
+
     return (
         <XStack
-            minHeight={140}
-            height={140}
+            minHeight={height}
+            height={height}
             ai="center"
             jc="space-between"
-            paddingTop={70}
+            paddingTop={paddingTop}
             paddingHorizontal="$3"
             borderBottomWidth={1}
             borderBottomColor="$borderColor"
-            theme="secondary"
+            theme={theme}
         >
             <LinearGradient
                 colors={['$background', '$backgroundPress']}
@@ -40,7 +52,7 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
             >
                 <Menu />
             </ThemedButton>
-            <H3>{options.title}</H3>
+            <ThemedText fontSize="$4">{options.title}</ThemedText>
         </XStack>
     );
 };

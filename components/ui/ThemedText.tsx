@@ -4,7 +4,7 @@ export const ThemedText = styled(Text, {
     name: 'ThemedText',
     color: '$color',
     fontWeight: 'normal',
-
+    letterSpacing: "$0.5",
     variants: {
         variant: {
             default: {},
