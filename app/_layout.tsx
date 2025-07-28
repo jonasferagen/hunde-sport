@@ -40,15 +40,13 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
                   flexDirection="column-reverse"
                   bottom={80}
                   right="$2"
-                />
-
+                />     <AppToast />
                 <QueryClientProvider client={queryClient}>
                   <OrderProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
                         <LayoutProvider>
 
-                          <AppToast />
                           {children}
                         </LayoutProvider>
                       </SearchProvider>

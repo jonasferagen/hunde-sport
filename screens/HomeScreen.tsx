@@ -1,3 +1,4 @@
+import { DebugSeeder } from '@/components/development/DebugSeeder';
 import { CategoryTiles } from '@/components/features/category/CategoryTiles';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
@@ -32,6 +33,7 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection scrollable>
                 <PageContent title="Debug">
+                    <DebugSeeder />
                     <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
                 </PageContent>
                 <PageContent title="Kategorier">
