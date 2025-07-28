@@ -30,7 +30,7 @@ export const CategoryTree = ({ parentId = 0, renderItem, iconOpen = DefaultIconO
 
     const renderCategory = (category: Category, level: number): JSX.Element => {
         const isExpanded = !!expanded[category.id];
-        const hasChildren = category.count > 0;
+        const hasChildren = categories.length > 0;
 
         return (
             <Animated.View key={category.id} layout={LinearTransition} style={{ overflow: 'hidden' }}>
