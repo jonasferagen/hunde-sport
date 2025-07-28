@@ -13,6 +13,7 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
 
         borderColor: darken(0.1, baseColor),
         borderColorStrong: darken(0.2, baseColor),
+        borderColorLight: lighten(0.05, baseColor),
 
         color: readableColor(baseColor, '#111', '#fff', true),
         colorSubtle: rgba(readableColor(baseColor, '#111', '#fff'), 0.6),

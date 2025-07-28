@@ -16,11 +16,11 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
 
     return (
         <XStack
-            minHeight={100}
-            height={100}
+            minHeight={140}
+            height={140}
             ai="center"
             jc="space-between"
-            paddingTop={40}
+            paddingTop={70}
             paddingHorizontal="$3"
             borderBottomWidth={1}
             borderBottomColor="$borderColor"
@@ -36,7 +36,7 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
                 onPress={openDrawer}
                 size="$6"
                 circular
-                padding="$3"
+
             >
                 <Menu />
             </ThemedButton>

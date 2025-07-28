@@ -5,7 +5,7 @@ import {
     DrawerContentScrollView
 } from '@react-navigation/drawer';
 import { LinearGradient } from '@tamagui/linear-gradient';
-import { ChevronRight, X } from '@tamagui/lucide-icons';
+import { ChevronRight, Home, Search, ShoppingCart, X } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -86,7 +86,17 @@ const CategoryTreeItem = ({
 export function CustomDrawerContent(props: DrawerContentComponentProps) {
     const { state, navigation } = props;
 
-    const allowedRoutes = { 'index': 'Hjem', 'search': 'Søk', 'shopping-cart': 'Handlekurv' };
+    const allowedRoutes = {
+        'index': {
+            label: 'Hjem', icon: <Home />
+        },
+        'search': {
+            label: 'Søk', icon: <Search />
+        },
+        'shopping-cart': {
+            label: 'Handlekurv', icon: <ShoppingCart />
+        }
+    };
 
     return (
         <YStack
@@ -108,17 +118,20 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
 
             <DrawerContentScrollView {...props}>
                 <Theme name="secondary">
-                    <ThemedButton
-                        paddingVertical="$2"
-                        marginHorizontal="$2"
-                        height="$6"
-                        borderRadius="$4"
-                        circular
-                        onPress={() => navigation.closeDrawer()}
-                        alignSelf="flex-end"
-                    >
-                        <X />
-                    </ThemedButton>
+                    <XStack ai="center" paddingVertical="$3" jc="space-between" boc="$borderColor" bbw={1}>
+                        <ThemedText fontSize="$4">hunde-sport.no</ThemedText>
+                        <ThemedButton
+                            paddingVertical="$2"
+                            marginHorizontal="$2"
+                            height="$6"
+                            borderRadius="$4"
+                            circular
+                            onPress={() => navigation.closeDrawer()}
+                            alignSelf="flex-end"
+                        >
+                            <X />
+                        </ThemedButton>
+                    </XStack>
                     <YStack gap="$2" paddingVertical="$2">
                         {state.routes.filter(route => Object.keys(allowedRoutes).includes(route.name))
                             .map((route, index) => {
@@ -127,23 +140,37 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
                                 const routeLabel = allowedRoutes[route.name as keyof typeof allowedRoutes];
 
                                 return (
-                                    <ThemedButton
-                                        paddingVertical="$2"
-                                        marginHorizontal="$2"
-                                        height="$6"
-                                        key={route.key}
-                                        onPress={onPress}
-                                        borderRadius="$4"
-                                        jc="flex-start"
-                                    >
-                                        <ThemedText variant={isFocused ? 'focused' : 'default'} fontSize="$3">
-                                            {routeLabel}
-                                        </ThemedText>
-                                    </ThemedButton>
+                                    <XStack key={route.key}>
+                                        <ThemedButton
+                                            theme="secondary"
+                                            circular
+                                            size="$6"
+                                            onPress={onPress}
+                                        >
+                                            {routeLabel.icon}
+                                        </ThemedButton>
+                                        <ThemedButton
+                                            paddingVertical="$2"
+                                            marginHorizontal="$2"
+                                            height="$6"
+                                            flex={1}
+                                            bc="transparent"
+                                            boc="transparent"
+                                            onPress={onPress}
+                                            borderRadius="$6"
+                                            jc="flex-start"
+                                        >
+                                            <ThemedText variant={isFocused ? 'focused' : 'default'} fontSize="$3">
+                                                {routeLabel.label}
+                                            </ThemedText>
+                                        </ThemedButton>
+                                    </XStack>
 
                                 );
                             })}
-
+                        <XStack boc="$borderColor" bbw={1} paddingVertical="$2">
+                            <ThemedText fontSize="$4" paddingVertical="$2">Kategorier</ThemedText>
+                        </XStack>
                         <CategoryTree
                             renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}
                         />
