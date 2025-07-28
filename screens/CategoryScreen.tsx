@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { useCategories, useCategory } from '@/hooks/data/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
 import { YStack } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
@@ -26,10 +26,8 @@ export const CategoryScreen = memo(() => {
     const { id } = useLocalSearchParams<{ id: string; }>();
     const { category, isLoading } = useCategory(Number(id));
 
-
     return (
         <PageView>
-            <Stack.Screen options={{ title: category?.name || 'Category' }} />
             <PageHeader>
                 <Breadcrumbs categoryId={Number(id)} />
                 {category && <CategoryChipsContainer category={category} />}

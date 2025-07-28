@@ -13,7 +13,7 @@ import { ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 
@@ -35,7 +35,6 @@ export const ProductScreen = () => {
   return (
     <ProductProvider product={product}>
       <PageView>
-        <Stack.Screen options={{ title: product.name }} />
         <PageHeader>{categoryId && <Breadcrumbs categoryId={categoryId} isLastClickable />}</PageHeader>
         <ProductScreenContent />
       </PageView>

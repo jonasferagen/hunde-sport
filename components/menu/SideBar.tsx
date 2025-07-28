@@ -1,14 +1,15 @@
 import { CustomHeader } from "@/components/menu/CustomHeader";
 import Drawer from "expo-router/drawer";
+import { CustomDrawerContent } from "./CustomDrawerContent";
 
 export const SideBar = ({ children }: { children: React.ReactNode }) => {
 
-    return <Drawer>
+    return <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
         <Drawer.Screen
-            name="(store)" // This is the name of the page and must match the url from root
+            name="index" // This is the name of the page and must match the url from root
             options={{
-                drawerLabel: 'Hjem1',
-                title: 'Hjem2',
+                drawerLabel: 'Hjem',
+                title: 'Hjem',
                 headerShown: true,
                 header: (props) => <CustomHeader {...props} />,
             }}
@@ -22,7 +23,34 @@ export const SideBar = ({ children }: { children: React.ReactNode }) => {
                 header: (props) => <CustomHeader {...props} />,
             }}
         />
+        <Drawer.Screen
+            name="search" // This is the name of the page and must match the url from root
+            options={{
+                drawerLabel: 'Søk',
+                title: 'Søk',
+                headerShown: true,
+                header: (props) => <CustomHeader {...props} />,
+            }}
+        />
 
+        <Drawer.Screen
+            name="product" // This is the name of the page and must match the url from root
+            options={{
+                drawerLabel: 'Produkter',
+                title: 'Produkter',
+                headerShown: true,
+                header: (props) => <CustomHeader {...props} />,
+            }}
+        />
+        <Drawer.Screen
+            name="category" // This is the name of the page and must match the url from root
+            options={{
+                drawerLabel: 'Kategorier',
+                title: 'Kategorier',
+                headerShown: true,
+                header: (props) => <CustomHeader {...props} />,
+            }}
+        />
         {children}
     </Drawer>
 } 

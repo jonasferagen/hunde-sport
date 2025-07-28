@@ -14,12 +14,12 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
 
     return (
         <XStack
-            height={140}
+            minHeight={100}
+            height={100}
             backgroundColor="$background"
             ai="center"
             jc="space-between"
 
-            flex={1}
             paddingTop={40}
             paddingHorizontal="$3"
             borderBottomWidth={1}
@@ -33,10 +33,11 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
                 chromeless
                 padding="$3"
 
+
             >
                 <Menu />
             </Button>
-            <H3>Hunde-sport.no</H3>
+            <H3>{options.title}</H3>
         </XStack>
     );
 };

@@ -9,7 +9,7 @@ import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { TextInput } from 'react-native';
 
 export const HomeScreen = () => {
@@ -26,7 +26,6 @@ export const HomeScreen = () => {
 
     return (
         <PageView>
-            <Stack.Screen options={{ title: 'Hjem' }} />
             <PageHeader>
                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
             </PageHeader>

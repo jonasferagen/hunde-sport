@@ -8,7 +8,7 @@ import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { ShoppingCartItem } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import { ArrowBigRight } from '@tamagui/lucide-icons';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useCallback } from 'react';
 import { SizableText, XStack } from 'tamagui';
 export const ShoppingCartScreen = () => {
@@ -26,7 +26,6 @@ export const ShoppingCartScreen = () => {
 
     return (
         <PageView>
-            <Stack.Screen options={{ title: 'Handlekurv' }} />
             <PageHeader title="Handlekurv" />
             <PageSection flex={1}>
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
