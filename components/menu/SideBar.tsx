@@ -34,34 +34,7 @@ const SideBarContent = ({ children }: { children?: React.ReactNode }): JSX.Eleme
         drawerContent={drawerContent}
         screenOptions={screenOptions}
     >
-        <Drawer.Screen
-            name="index" // This is the name of the page and must match the url from root
-            options={{
-                drawerLabel: 'Hjem',
-                title: 'Hjem',
-            }}
-        />
-        <Drawer.Screen
-            name="shopping-cart" // This is the name of the page and must match the url from root
-            options={{
-                drawerLabel: 'Handlekurv',
-                title: 'Handlekurv',
-            }}
-        />
-        <Drawer.Screen
-            name="search" // This is the name of the page and must match the url from root
-            options={{
-                drawerLabel: 'Søk',
-                title: 'Søk',
-            }}
-        />
-        <Drawer.Screen
-            name="(checkout)/index" // This is the name of the page and must match the url from root
-            options={{
-                drawerLabel: 'Kassen',
-                title: 'Kassen',
-            }}
-        />
+
 
     </Drawer>
 }

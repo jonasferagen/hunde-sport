@@ -1,6 +1,7 @@
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
+import { DimensionValue } from 'react-native';
 import { styled, Tabs, Text, Theme, YStack } from 'tamagui';
 
 const StyledTab = styled(Tabs.Tab, {
@@ -47,8 +48,8 @@ export const BottomBar = ({ children }: { children?: React.ReactNode }) => {
         <Theme name="secondary">
             <StyledLinearGradient
                 colors={['$background', '$backgroundPress']}
-                start={[0, 0]}
-                end={[1, 0]}
+                start={(0 as DimensionValue, 0 as DimensionValue)}
+                end={(0 as DimensionValue, 1 as DimensionValue)}
             />
             <StyledTabs>
                 <StyledTabsList>

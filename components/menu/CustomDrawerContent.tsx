@@ -73,7 +73,6 @@ const CategoryTreeItem = ({
                         borderRadius="$4"
                         backgroundColor={isActive ? theme.backgroundFocus.val : 'transparent'}
                         pressStyle={{ backgroundColor: theme.backgroundFocus.val, borderColor: theme.backgroundFocus.val }}
-
                         flex={1}
                     >
 
@@ -91,7 +90,7 @@ const CategoryTreeItem = ({
 export function CustomDrawerContent(props: DrawerContentComponentProps) {
     const { state, navigation } = props;
 
-    const allowedRoutes = ['index', 'search', 'shopping-cart'];
+    const allowedRoutes = { 'index': 'Hjem', 'search': 'Søk', 'shopping-cart': 'Handlekurv' };
 
     return (
         <YStack
@@ -114,11 +113,11 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
             <DrawerContentScrollView {...props}>
                 <Theme name="secondary">
                     <YStack gap="$2" paddingVertical="$2">
-                        {state.routes.filter(route => allowedRoutes.includes(route.name))
+                        {state.routes.filter(route => Object.keys(allowedRoutes).includes(route.name))
                             .map((route, index) => {
                                 const isFocused = state.index === index;
                                 const onPress = () => navigation.navigate(route.name);
-                                const routeLabel = props.descriptors[route.key]?.options?.drawerLabel ?? route.name;
+                                const routeLabel = allowedRoutes[route.name as keyof typeof allowedRoutes];
 
                                 return (
                                     <ThemedButton
