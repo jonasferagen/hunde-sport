@@ -88,6 +88,7 @@ const CategoryTreeItem = ({
 export function CustomDrawerContent(props: DrawerContentComponentProps) {
     const { state, navigation } = props;
 
+    const allowedRoutes = ['index', 'search', '(checkout)'];
 
     return (
         <YStack
@@ -108,35 +109,38 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
 
             <DrawerContentScrollView {...props}>
                 <Theme name="secondary">
-                    <YStack gap="$1" paddingVertical="$1">
-                        {state.routes.map((route, index) => {
-                            const isFocused = state.index === index;
-                            const onPress = () => navigation.navigate(route.name);
+                    <YStack gap="$2" paddingVertical="$2">
+                        {state.routes.filter(route => allowedRoutes.includes(route.name))
+                            .map((route, index) => {
+                                const isFocused = state.index === index;
+                                const onPress = () => navigation.navigate(route.name);
+                                const routeLabel = props.descriptors[route.key]?.options?.drawerLabel ?? route.name;
 
-                            return (
-                                <Button
-                                    paddingVertical="$2"
-                                    marginHorizontal="$2"
-                                    key={route.key}
-                                    onPress={onPress}
-                                    backgroundColor={isFocused ? 'white' : '$backgroundLight'}
-                                    borderRadius="$4"
-                                    borderColor="$borderColor"
-                                    pressStyle={{ backgroundColor: '$backgroundFocus' }}
-                                    borderWidth={1}
-                                    jc="flex-start"
-                                >
-                                    <SizableText
-                                        color={isFocused ? '$colorSubtle' : '$color'}
-                                        fontWeight={isFocused ? 'bold' : 'normal'}
-                                        fontSize="$6"
+                                return (
+                                    <Button
+                                        paddingVertical="$2"
+                                        marginHorizontal="$2"
+                                        height="$6"
+                                        key={route.key}
+                                        onPress={onPress}
+                                        backgroundColor={isFocused ? 'white' : '$backgroundLight'}
+                                        borderRadius="$4"
+                                        borderColor="$borderColor"
+                                        pressStyle={{ backgroundColor: '$backgroundFocus' }}
+                                        borderWidth={1}
+                                        jc="flex-start"
                                     >
-                                        {route.name}
-                                    </SizableText>
-                                </Button>
+                                        <SizableText
+                                            color={isFocused ? '$colorSubtle' : '$color'}
+                                            fontWeight={isFocused ? 'bold' : 'normal'}
+                                            fontSize="$6"
+                                        >
+                                            {routeLabel}
+                                        </SizableText>
+                                    </Button>
 
-                            );
-                        })}
+                                );
+                            })}
 
                         <CategoryTree
                             renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}

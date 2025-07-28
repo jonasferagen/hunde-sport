@@ -30,10 +30,11 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
             <Button
                 onPress={openDrawer}
                 size="$6"
-                chromeless
+                circular
                 padding="$3"
-
-
+                backgroundColor="transparent"
+                pressStyle={{ backgroundColor: '$backgroundFocus' }}
+                borderColor="transparent"
             >
                 <Menu />
             </Button>
