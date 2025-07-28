@@ -1,3 +1,4 @@
+import { SideBar } from '@/components/menu/SideBar';
 import { AppToast } from '@/components/ui/AppToast';
 import {
   LayoutProvider,
@@ -7,16 +8,14 @@ import {
 } from '@/contexts';
 import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
-
 import { ToastProvider, ToastViewport } from '@tamagui/toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
+
 import React, { JSX, memo, useState } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
-
-
 
 const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient({
@@ -40,21 +39,21 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
                   flexDirection="column-reverse"
                   bottom={80}
                   right="$2"
-                />     <AppToast />
+                />
                 <QueryClientProvider client={queryClient}>
                   <OrderProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
                         <LayoutProvider>
-
+                          <AppToast />
                           {children}
                         </LayoutProvider>
                       </SearchProvider>
                     </ShoppingCartProvider>
                   </OrderProvider>
-                </QueryClientProvider >
+                </QueryClientProvider>
               </ToastProvider>
-            </SafeAreaProvider >
+            </SafeAreaProvider>
           </PortalProvider>
         </Theme>
       </GestureHandlerRootView>
@@ -62,9 +61,9 @@ const AppProviders = memo(({ children }: { children: React.ReactNode }) => {
   );
 });
 const AppContent = memo((): JSX.Element => {
-  return (
+  return <SideBar>
     <Slot />
-  );
+  </SideBar>;
 });
 
 export default function RootLayout() {

@@ -13,8 +13,6 @@ const paths = {
     orderStatus: '/order-status',
 } as const;
 
-
-
 export const routes = {
     home: () => {
         return paths.home;
