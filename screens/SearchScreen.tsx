@@ -20,7 +20,7 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader zIndex={5} elevation={4} theme="secondary">
+            <PageHeader zIndex={5} elevation={4} theme="tertiary_soft">
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
                 <SizableText fontSize="$3">
                     {isWaiting
@@ -38,16 +38,16 @@ export const SearchScreen = () => {
 };
 
 const SearchResults = () => {
-    const { query, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
+    const { query, liveQuery, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
 
-    if (isLoading) {
+    if (isLoading || liveQuery !== query) {
         return <LoadingScreen />;
     }
 
     if (!query) {
         return (
-            <YStack flex={1} ai="center" jc="center">
-                <ThemedText fontSize="$3">Søk etter produkter, merker og kategorier.</ThemedText>
+            <YStack flex={1} ai="center" jc="center" >
+                <ThemedText fontSize="$3" ta="center">Søk etter produkter, merker og kategorier.</ThemedText>
             </YStack>
         );
     }
@@ -55,8 +55,8 @@ const SearchResults = () => {
     if (products.length === 0) {
         return (
             <YStack flex={1} ai="center" jc="center">
-                <ThemedText fontSize="$3">Ingen resultater funnet for "{query}"</ThemedText>
-            </YStack>
+                <ThemedText fontSize="$3" ta="center">Ingen resultater funnet for "{query}"</ThemedText>
+            </YStack >
         );
     }
 

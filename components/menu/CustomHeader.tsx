@@ -34,15 +34,16 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
             jc="space-between"
             paddingTop={paddingTop}
             paddingHorizontal="$3"
-            borderBottomWidth={1}
+            borderBottomWidth={2}
+            elevation={5}
             borderBottomColor="$borderColor"
             theme={theme}
-            opacity={0.5}
+
         >
             <LinearGradient
                 colors={['$background', '$backgroundPress']}
                 start={[0, 1]}
-                end={[0, 0]}
+                end={[1, 0]}
                 style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
             />
             <ThemedButton

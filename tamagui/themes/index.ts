@@ -1,4 +1,3 @@
-
 import { themes } from '@tamagui/themes'
 import { darken, lighten, readableColor, rgba } from 'polished'
 
@@ -37,6 +36,9 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
 
 
 export const sageTheme = withThemeExtras(themes.light, '#DDE2C3', '#7F924C')
+export const sageThemeSoft = withThemeExtras(themes.light, lighten(0.1, '#DDE2C3'), '#7F924C')
 export const lilacTheme = withThemeExtras(themes.light, '#D7C8E7', '#7A4DB1')
+export const lilacThemeSoft = withThemeExtras(themes.light, lighten(0.05, '#D7C8E7'), '#7A4DB1')
 export const mintTheme = withThemeExtras(themes.light, '#C8E6E5', '#2FA7A3')
+export const mintThemeSoft = withThemeExtras(themes.light, lighten(0.05, '#C8E6E5'), '#2FA7A3')
 export const augmentedLightTheme = withThemeExtras(themes.light, themes.light.background, '#3366FF')

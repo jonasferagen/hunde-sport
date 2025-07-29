@@ -25,28 +25,28 @@ export const HomeScreen = () => {
     const categories = useCategories(0, { autoload: true });
 
     return (
-
         <PageView>
-            <PageHeader>
+            <PageHeader theme="primary_soft">
                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
-                <PageContent theme="secondary" title="Debug">
-                    <DebugSeeder />
-                    <ProductTiles key='debug' queryResult={debugProducts} theme="primary" />
+                <PageContent theme="light" title="Debug">
+
+                    <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
                 </PageContent>
                 <PageContent title="Kategorier">
-                    <CategoryTiles key='categories' queryResult={categories} theme="primary" />
+                    <CategoryTiles key='categories' queryResult={categories} theme="tertiary" />
                 </PageContent>
                 <PageContent theme="secondary" title="Nyheter">
-                    <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
+                    <ProductTiles key='recent' queryResult={recentProducts} theme="primary" />
                 </PageContent>
                 <PageContent theme="primary" title="Tilbud">
-                    <ProductTiles key='discounted' queryResult={discountedProducts} theme="secondary" />
+                    <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />
                 </PageContent>
                 <PageContent theme="primary" title="Populære produkter" >
                     <ProductTiles key='featured' queryResult={featuredProducts} theme="secondary" />
                 </PageContent>
+                <DebugSeeder />
             </PageSection>
         </PageView>
 

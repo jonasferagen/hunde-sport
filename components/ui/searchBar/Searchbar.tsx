@@ -29,7 +29,7 @@ export const SearchBar = forwardRef<Input, SearchBarProps>((
 
     return (
         <XStack
-            theme="secondary"
+
             ai="center"
             backgroundColor="$white3"
             borderRadius="$4"

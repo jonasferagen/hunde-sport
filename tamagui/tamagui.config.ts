@@ -3,7 +3,7 @@ import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
 import { shorthands } from '@tamagui/shorthands';
 import { createTamagui } from 'tamagui';
-import { augmentedLightTheme, lilacTheme, mintTheme, sageTheme } from './themes';
+import { augmentedLightTheme, lilacTheme, lilacThemeSoft, mintTheme, mintThemeSoft, sageTheme, sageThemeSoft } from './themes';
 
 
 const font = createInterFont({
@@ -90,8 +90,11 @@ const appConfig = createTamagui({
     themes: {
         ...themes,
         primary: lilacTheme,
+        primary_soft: lilacThemeSoft,
         secondary: sageTheme,
+        secondary_soft: sageThemeSoft,
         tertiary: mintTheme,
+        tertiary_soft: mintThemeSoft,
         light: augmentedLightTheme,
 
     },
