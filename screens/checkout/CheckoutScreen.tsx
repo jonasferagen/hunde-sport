@@ -2,7 +2,7 @@ import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { checkoutFlow } from '@/config/routes';
 import { useOrderContext } from '@/contexts/OrderContext';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 
 export const CheckoutScreen = () => {
@@ -10,11 +10,10 @@ export const CheckoutScreen = () => {
     const { updateOrder, order } = useOrderContext();
 
 
-    const title = 'Kasse';
 
     return (
         <PageView>
-            <Stack.Screen options={{ title }} />
+
             <PageHeader>
                 <RouteTrail steps={checkoutFlow} currentStepName="shipping" />
             </PageHeader>
