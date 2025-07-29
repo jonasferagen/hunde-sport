@@ -8,7 +8,7 @@ interface PageContentProps extends YStackProps {
   title?: string;
   theme?: ThemeVariant;
   horizontal?: boolean;
-  secondary?: boolean;
+
 }
 
 export const PageContent = (props: PageContentProps) => {
@@ -16,9 +16,8 @@ export const PageContent = (props: PageContentProps) => {
   const {
     children,
     title,
-    theme,
+    theme = 'light',
     horizontal,
-    secondary,
     paddingVertical = '$3',
     paddingHorizontal = '$3',
     ...stackProps
@@ -55,7 +54,6 @@ export const PageContent = (props: PageContentProps) => {
       paddingHorizontal={paddingHorizontal}
       borderWidth={1}
       borderColor="$borderColor"
-      backgroundColor={secondary ? '$backgroundFocus' : '$background'}
       {...stackProps}
     >
       {content}

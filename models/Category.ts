@@ -5,7 +5,7 @@ export interface CategoryData {
   name: string;
   parent: number;
   image: Image;
-  count: number;
+  description: string;
 }
 
 export class Category implements CategoryData {
@@ -13,14 +13,19 @@ export class Category implements CategoryData {
   name: string;
   parent: number;
   image: Image;
-  count: number;
+  description: string;
 
   constructor(data: CategoryData) {
     this.id = data.id;
     this.name = data.name;
     this.parent = data.parent;
     this.image = data.image;
-    this.count = data.count;
+    this.description = data.description;
+  }
+
+
+  shouldDisplay(): boolean {
+    return this.description !== '#';
   }
 
   toString() {

@@ -100,7 +100,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                         </ThemedButton>
                     </XStack>
                     <DrawerContentScrollView {...props}>
-                        <YStack gap="$2" paddingVertical="$2">
+                        <YStack gap="$2" paddingVertical="$4">
                             {Object.values(routes)
                                 .filter(route => route.showInDrawer)
                                 .map((route, index) => {

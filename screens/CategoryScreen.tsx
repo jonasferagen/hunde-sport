@@ -3,6 +3,7 @@ import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { ThemedText } from '@/components/ui/ThemedText';
 import { useCategories, useCategory } from '@/hooks/data/Category';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Category } from '@/models/Category';
@@ -33,6 +34,7 @@ export const CategoryScreen = memo(() => {
                 {category && <CategoryChipsContainer category={category} />}
             </PageHeader>
             <YStack flex={1} paddingHorizontal="none" paddingVertical="none" >
+                <ThemedText>{category?.description}</ThemedText>
                 {isLoading && <LoadingScreen />}
                 {category && <CategoryProducts category={category} />}
             </YStack>

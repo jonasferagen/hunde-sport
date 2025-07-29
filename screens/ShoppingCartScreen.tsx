@@ -49,7 +49,7 @@ export const ShoppingCartScreen = () => {
                         estimatedItemSize={100}
                     />
                 </PageContent>
-                <PageContent secondary>
+                <PageContent theme='secondary'>
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} />
                     <XStack gap="$3" mt="$3" ai="center" jc="space-between">
                         <ThemedButton flex={0} onPress={clearCart} theme="secondary" disabled={cartItemCount === 0}>
