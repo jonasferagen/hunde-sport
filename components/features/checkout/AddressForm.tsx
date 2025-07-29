@@ -133,19 +133,20 @@ export const AddressForm = forwardRef<AddressFormRef, AddressFormProps>(({ onSub
 */}
 
                     <XStack gap="$4">
-                        <ControlledInput
-                            control={control}
-                            name="city"
-                            label="By"
-                            placeholder="By"
-                            idPrefix={name}
-                        />
+
                         <ControlledInput
                             control={control}
                             name="postcode"
                             label="Postnummer"
                             placeholder="Postnummer"
                             keyboardType="numeric"
+                            idPrefix={name}
+                        />
+                        <ControlledInput
+                            control={control}
+                            name="city"
+                            label="Poststed"
+                            placeholder="Poststed"
                             idPrefix={name}
                         />
                     </XStack>

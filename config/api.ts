@@ -8,7 +8,7 @@ export const API_BASE_URL = __DEV__
     ios: 'http://localhost:3001',   // iOS simulator
     web: 'http://localhost:3001',   // Web browser
   })!
-  : 'https://your-production-api.com'; // Update this for production
+  : 'https://hunde-sport.no/wp-json/wc/v3'; // Update this for production
 
 export const PAGE_SIZE = 10;
 

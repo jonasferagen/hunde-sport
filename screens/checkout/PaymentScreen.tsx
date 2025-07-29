@@ -60,14 +60,22 @@ export const PaymentScreen = () => {
             return lineItem;
         });
 
-        updateOrder({
-            line_items,
-            payment_method: 'svea_checkout',
-        });
-    }, [cartItems, updateOrder]);
+        const needsUpdate =
+            JSON.stringify(order.line_items) !== JSON.stringify(line_items) ||
+            order.payment_method !== 'svea_checkout';
+
+        if (needsUpdate) {
+            updateOrder({
+                ...order,
+                line_items,
+                payment_method: 'svea_checkout',
+            });
+        }
+    }, [cartItems, updateOrder, order]);
 
     const handlePlaceOrder = async () => {
         setIsPlacingOrder(true);
+
         const paymentUrl = await placeOrder();
         if (paymentUrl) {
             await WebBrowser.openBrowserAsync(paymentUrl);
@@ -83,16 +91,6 @@ export const PaymentScreen = () => {
                 <RouteTrail steps={checkoutFlow} currentStepName="payment" />
             </PageHeader>
             <PageSection flex={1}>
-                <PageContent flex={1} paddingHorizontal='none'>
-                    <FlashList
-                        data={cartItems}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.key}
-                        estimatedItemSize={60}
-                        ListHeaderComponent={CheckoutListHeader}
-                        ListFooterComponent={<CheckoutListFooter total={cartTotal} />}
-                    />
-                </PageContent>
                 {order.billing && (
                     <PageContent>
                         <YStack gap="$2" paddingVertical="$4">
@@ -105,6 +103,17 @@ export const PaymentScreen = () => {
                         </YStack>
                     </PageContent>
                 )}
+                <PageContent flex={1} paddingHorizontal='none'>
+                    <FlashList
+                        data={cartItems}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.key}
+                        estimatedItemSize={60}
+                        ListHeaderComponent={CheckoutListHeader}
+                        ListFooterComponent={<CheckoutListFooter total={cartTotal} />}
+                    />
+                </PageContent>
+
                 <PageContent theme="secondary_soft">
                     <XStack gap="$3" mt="$3" ai="center" jc="space-between">
                         <ThemedButton

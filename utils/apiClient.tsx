@@ -32,6 +32,7 @@ const apiClient = {
     try {
       const response = await fetch(url, {
         ...options,
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           ...options.headers,
