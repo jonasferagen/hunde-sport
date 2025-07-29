@@ -46,7 +46,6 @@ const RootLayout = (): JSX.Element =>
                     </SearchProvider>
                   </ShoppingCartProvider>
                 </OrderProvider>
-
               </ToastProvider>
             </SafeAreaProvider>
           </PortalProvider>

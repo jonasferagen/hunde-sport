@@ -79,7 +79,6 @@ export const routes: Record<string, Route> = {
             }
             return { pathname: paths.product, params };
         },
-        showInDrawer: true,
     },
     shipping: {
         name: 'shipping',

@@ -77,16 +77,14 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             borderRightColor="$borderColor"
             backgroundColor="$backgroundPress"
         >
-
             <LinearGradient
                 colors={['$background', '$backgroundPress']}
                 start={[0, 0]}
                 end={[1, 1]}
                 style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
             />
-            <SafeAreaView style={{ flex: 1 }}>
-
-                <Theme>
+            <Theme>
+                <SafeAreaView style={{ flex: 1 }}>
                     <XStack ai="center" marginHorizontal="$3" marginVertical="$3" jc="space-between">
                         <ThemedText fontSize="$4">hunde-sport.no</ThemedText>
                         <ThemedButton
@@ -137,15 +135,14 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                         </XStack>
                                     );
                                 })}
-
                             <ThemedText marginVertical="$2" fontSize="$4">Kategorier</ThemedText>
                             <CategoryTree
                                 renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}
                             />
                         </YStack>
                     </DrawerContentScrollView>
-                </Theme>
-            </SafeAreaView>
+                </SafeAreaView>
+            </Theme>
         </YStack>
     );
 }

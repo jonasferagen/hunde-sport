@@ -18,6 +18,7 @@ import React from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 
 export const ProductScreen = () => {
+
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const productId = Number(id);
   const { data: product, isLoading } = useProduct(productId);
@@ -34,6 +35,7 @@ export const ProductScreen = () => {
 
   return (
     <ProductProvider product={product}>
+
       <PageView>
         <PageHeader>{categoryId && <Breadcrumbs categoryId={categoryId} isLastClickable />}</PageHeader>
         <ProductScreenContent />
@@ -48,8 +50,7 @@ const ProductScreenContent = () => {
   return (
     <>
       <PageView >
-        <YStack mt="$6"></YStack>
-        <PageSection scrollable mt="$6">
+        <PageSection scrollable>
           <ProductImage />
           <PageContent>
             <XStack ai="center" jc="space-between" >

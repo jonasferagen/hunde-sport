@@ -19,7 +19,7 @@ export const SideBar = (): JSX.Element => {
         },
         header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
         swipeEnabled: true,
-        headerTransparent: true,
+
     }), []);
 
     return <Theme name={themeName}>
@@ -28,14 +28,18 @@ export const SideBar = (): JSX.Element => {
                 drawerContent={drawerContent}
                 screenOptions={screenOptions}
             >
-                {Object.values(routes).filter(r => r.showInDrawer).map((route) => (
+                {Object.values(routes).map((route) => (
                     <Drawer.Screen
                         key={route.name}
                         name={route.name}
-                        options={{ title: route.label }}
+                        options={({ route: navRoute }) => ({
+                            title: (navRoute.params as any)?.name || route.label,
+                            drawerLabel: route.showInDrawer ? route.label : () => null,
+                        })}
                     />
                 ))}
             </Drawer>
+
         </YStack>
     </Theme>
 };
