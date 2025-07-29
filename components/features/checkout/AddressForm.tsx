@@ -1,10 +1,11 @@
 // AddressForm.tsx
-import { ThemedButton } from '@/components/ui/ThemedButton';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
-import { Form, Input, Label, ScrollView, Text, XStack, YStack } from 'tamagui';
+import { Form, Label, ScrollView, Text, XStack, YStack } from 'tamagui';
 import { z } from 'zod';
+
+import { ThemedInput } from '@/components/ui/ThemedInput';
 
 const addressSchema = z.object({
     first_name: z.string().min(1, { message: 'Fornavn er påkrevd' }),
@@ -25,6 +26,10 @@ interface AddressFormProps {
     name: string;
 }
 
+export interface AddressFormRef {
+    submit: () => void;
+}
+
 type ControlledInputProps = {
     control: Control<any>;
     name: string;
@@ -42,30 +47,37 @@ const ControlledInput = ({
     keyboardType = 'default',
     idPrefix,
 }: ControlledInputProps) => (
-    <YStack gap="$2" flex={1}>
-        <Label htmlFor={`${idPrefix}-${name}`}>{label}</Label>
+    <YStack flex={1}>
+        <Label unstyled color="$colorSubtle" fontSize="$2" htmlFor={`${idPrefix}-${name}`}>
+            {label}
+        </Label>
         <Controller
             control={control}
             name={name}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <>
-                    <Input
+                    <ThemedInput
                         id={`${idPrefix}-${name}`}
                         onBlur={onBlur}
                         onChangeText={onChange}
                         value={value}
                         placeholder={placeholder}
                         keyboardType={keyboardType}
-                        borderColor={error ? '$red10' : undefined}
+                        error={!!error}
+                        margin={0}
                     />
-                    {error && <Text color="$red10" fontSize="$2">{error.message}</Text>}
+                    {error && (
+                        <Text color="$red10" fontSize="$2" marginTop="$1">
+                            {error.message}
+                        </Text>
+                    )}
                 </>
             )}
         />
     </YStack>
 );
 
-export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) => {
+export const AddressForm = forwardRef<AddressFormRef, AddressFormProps>(({ onSubmit, initialData, name }, ref) => {
     const {
         control,
         handleSubmit,
@@ -77,11 +89,15 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
         reValidateMode: 'onChange',
     });
 
+    useImperativeHandle(ref, () => ({
+        submit: handleSubmit(onSubmit),
+    }));
+
     return (
         <Form onSubmit={handleSubmit(onSubmit)} flex={1}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <YStack gap="$4" padding="$4">
-                    <XStack gap="$4">
+                <YStack padding="$3" gap="$3">
+                    <XStack gap="$3">
                         <ControlledInput
                             control={control}
                             name="first_name"
@@ -160,11 +176,8 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
                         idPrefix={name}
                     />
 
-                    <Form.Trigger asChild>
-                        <ThemedButton theme='primary' marginTop="$4">Send inn</ThemedButton>
-                    </Form.Trigger>
                 </YStack>
             </ScrollView>
         </Form>
     );
-};
+});

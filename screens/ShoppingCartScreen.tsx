@@ -24,7 +24,7 @@ export const ShoppingCartScreen = () => {
 
     const handleCheckout = () => {
         if (items.length > 0) {
-            router.push(routes.checkout.path());
+            router.push(routes.shipping.path());
         }
     };
 
@@ -42,7 +42,7 @@ export const ShoppingCartScreen = () => {
         <PageView>
             <PageSection flex={1}>
                 <PageHeader theme="secondary_soft" padding="none">
-                    <RouteTrail steps={checkoutFlow} currentStepName="checkout" />
+                    <RouteTrail steps={checkoutFlow} currentStepName="shopping-cart" />
                 </PageHeader>
 
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
@@ -59,7 +59,7 @@ export const ShoppingCartScreen = () => {
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} />
                     <XStack gap="$3" mt="$3" ai="center" jc="space-between">
                         <ThemedButton onPress={handleCheckout} scaleIcon={1.5} flex={1} jc="space-between" theme="primary" disabled={cartItemCount === 0}>
-                            Til kassen <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
+                            Til levering <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
                         </ThemedButton>
                     </XStack>
                 </PageContent>

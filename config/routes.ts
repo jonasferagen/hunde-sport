@@ -27,7 +27,6 @@ const paths = {
     category: '/category',
     product: '/product',
     shoppingCart: '/shopping-cart',
-    checkout: '/checkout',
     shipping: '/shipping',
     payment: '/payment',
     orderStatus: '/order-status',
@@ -81,13 +80,6 @@ export const routes: Record<string, Route> = {
             return { pathname: paths.product, params };
         },
     },
-    checkout: {
-        name: 'checkout',
-        label: 'Kasse',
-        icon: () => null,
-        theme: 'primary',
-        path: () => paths.checkout,
-    },
     shipping: {
         name: 'shipping',
         label: 'Levering',
@@ -119,7 +111,6 @@ export interface CheckoutStep {
 
 export const checkoutFlow: CheckoutStep[] = [
     { name: 'shopping-cart', title: 'Handlekurv', route: routes['shopping-cart'].path() },
-    { name: 'checkout', title: 'Kasse', route: routes.checkout.path() },
     { name: 'shipping', title: 'Levering', route: routes.shipping.path() },
     { name: 'payment', title: 'Betaling', route: routes.payment.path() },
     { name: 'order-status', title: 'Bekreftelse', route: routes['order-status'].path() },
