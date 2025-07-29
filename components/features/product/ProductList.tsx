@@ -1,9 +1,10 @@
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useLayoutContext } from '@/contexts';
 import { Product } from '@/models/Product';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback, useState } from 'react';
 import { ViewStyle } from 'react-native';
-import { Spinner, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
 import { ProductListItem } from './ProductListItem';
 
 interface ProductListProps {
@@ -47,7 +48,7 @@ export const ProductList = memo(({ products, loadMore, loadingMore, contentConta
         onEndReachedThreshold={0.5}
         contentContainerStyle={contentContainerStyle}
         ListFooterComponent={() =>
-            loadingMore ? <YStack flex={1} ai="center" jc="center" paddingVertical={"$4"}><Spinner /></YStack> : null
+            loadingMore ? <ThemedSpinner size="small" /> : null
         }
         estimatedItemSize={100}
         extraData={expandedProductId}

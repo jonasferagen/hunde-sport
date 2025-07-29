@@ -51,9 +51,9 @@ export const PageContent = (props: PageContentProps) => {
       borderBottomWidth={1}
       backgroundColor={"$background"}
       borderColor={"$borderColor"}
-      gap="$3"
       {...props}
     >
+
       {content}
     </YStack >
   );
