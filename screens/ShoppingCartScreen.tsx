@@ -1,6 +1,6 @@
 import { PageContent, PageSection, PageView } from '@/components/layout';
 
-import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shoppingCart';
+import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shopping-cart';
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { routes } from '@/config/routes';
@@ -59,7 +59,6 @@ export const ShoppingCartScreen = () => {
                             Til kassen <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
                         </ThemedButton>
                     </XStack>
-
                 </PageContent>
             </PageSection>
         </PageView>

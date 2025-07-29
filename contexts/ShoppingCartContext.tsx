@@ -1,4 +1,4 @@
-import { ClearCartDialog } from '@/components/features/shoppingCart/ClearCartDialog';
+import { ClearCartDialog } from '@/components/features/shopping-cart/ClearCartDialog';
 import { routes } from '@/config/routes';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
 import { getPurchasableKey, getPurchasableTitle } from '@/utils/purchasable';

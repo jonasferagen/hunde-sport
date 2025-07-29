@@ -4,7 +4,7 @@ import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 
-import { SearchBar } from '@/components/ui/searchBar/Searchbar';
+import { SearchBar } from '@/components/ui/search-bar/Searchbar';
 import { routes } from '@/config/routes';
 import { useCategories } from '@/hooks/data/Category';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
