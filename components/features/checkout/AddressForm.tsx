@@ -105,7 +105,7 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
                         placeholder="Adresse"
                         idPrefix={name}
                     />
-
+                    { /*
                     <ControlledInput
                         control={control}
                         name="address_2"
@@ -113,6 +113,8 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
                         placeholder="Leilighet, suite, etc."
                         idPrefix={name}
                     />
+
+*/}
 
                     <XStack gap="$4">
                         <ControlledInput
@@ -131,7 +133,7 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
                             idPrefix={name}
                         />
                     </XStack>
-
+                    {/*
                     <ControlledInput
                         control={control}
                         name="state"
@@ -139,7 +141,7 @@ export const AddressForm = ({ onSubmit, initialData, name }: AddressFormProps) =
                         placeholder="Fylke"
                         idPrefix={name}
                     />
-
+*/}
                     <ControlledInput
                         control={control}
                         name="email"

@@ -1,38 +1,70 @@
+import { ThemedButton } from '@/components/ui/ThemedButton';
 import { CheckoutStep } from '@/config/routes';
+import { ChevronRight } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
-import { SizableText, XStack } from 'tamagui';
+import { Stack, Theme, XStack } from 'tamagui';
 
 interface RouteTrailProps {
     steps: CheckoutStep[];
     currentStepName: string;
 }
 
+interface RouteStepProps {
+    step: CheckoutStep;
+    state: 'completed' | 'active' | 'inactive';
+}
+
+const RouteStep = ({ step, state }: RouteStepProps) => {
+    const isInactive = state === 'inactive';
+
+    const button = (
+        <Link href={step.route} asChild disabled={isInactive} style={{ flex: 1 }}>
+            <ThemedButton
+                f={1}
+                h="100%"
+                disabled={isInactive}
+                variant={state === 'active' ? 'active' : undefined}
+                borderRadius={0}
+                p="$2"
+                opacity={isInactive ? 0.6 : 1}
+                jc="center"
+                ai="center"
+            >
+                {step.title}
+            </ThemedButton>
+        </Link>
+    );
+
+    if (state === 'completed') {
+        return <Theme name="tertiary">{button}</Theme>;
+    }
+
+    return button;
+};
+
 export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Element => {
-    const currentStepIndex = steps.findIndex(step => step.name === currentStepName);
+    const currentStepIndex = steps.findIndex((step) => step.name === currentStepName);
 
     return (
-        <XStack ai="center" jc="center" paddingVertical="$space.sm">
+        <XStack ai="center" jc="center" w="100%" h="$5">
             {steps.map((step, index) => {
-                const isCompleted = index < currentStepIndex;
-                const isCurrent = index === currentStepIndex;
+                const state =
+                    index < currentStepIndex
+                        ? 'completed'
+                        : index === currentStepIndex
+                            ? 'active'
+                            : 'inactive';
 
                 return (
-                    <React.Fragment key={step.name}>
-                        <Link href={step.route} disabled={!isCompleted && !isCurrent} asChild>
-                            <SizableText
-                                color={isCompleted || isCurrent ? '$color.primary' : '$color.secondary'}
-                                textDecorationLine={isCurrent ? 'underline' : 'none'}
-                            >
-                                {step.title}
-                            </SizableText>
-                        </Link>
+                    <XStack key={step.name} f={1} ai="center">
+                        <RouteStep step={step} state={state} />
                         {index < steps.length - 1 && (
-                            <SizableText marginHorizontal="$space.sm" color="$color.secondary">
-                                &gt;
-                            </SizableText>
+                            <Stack bc="$background" ml="$-0.5" mr="$-0.5" zi={1}>
+                                <ChevronRight color="$gray8" />
+                            </Stack>
                         )}
-                    </React.Fragment>
+                    </XStack>
                 );
             })}
         </XStack>
