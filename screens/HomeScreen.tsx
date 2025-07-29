@@ -31,7 +31,6 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageSection scrollable>
                 <PageContent theme="light" title="Debug">
-
                     <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
                 </PageContent>
                 <PageContent title="Kategorier">

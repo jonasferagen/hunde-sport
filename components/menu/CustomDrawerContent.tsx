@@ -2,14 +2,13 @@ import { CategoryTree, RenderItemProps } from '@/components/features/category/Ca
 import { routes } from '@/config/routes';
 import {
     DrawerContentComponentProps,
-    DrawerContentScrollView
 } from '@react-navigation/drawer';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { ChevronRight, X, } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getTokenValue, Theme, useTheme, useThemeName, View, XStack, YStack } from 'tamagui';
+import { getTokenValue, ScrollView, Theme, useTheme, useThemeName, View, XStack, YStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
 import { AnimatedListExpansionIcon } from './AnimatedListExpansionIcon';
@@ -41,7 +40,7 @@ const CategoryTreeItem = ({
                 </ThemedButton>
             </View>
 
-            <XStack flex={1} theme="light">
+            <XStack flex={1} >
                 <Link href={routes.category.path(category)} asChild>
                     <XStack
                         ai="center"
@@ -74,33 +73,39 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             theme={themeName}
             flex={1}
             borderRightWidth={1}
-            borderRightColor="$borderColor"
-            backgroundColor="$backgroundPress"
         >
-            <LinearGradient
-                colors={['$background', '$backgroundPress']}
-                start={[0, 0]}
-                end={[1, 1]}
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-            />
-            <Theme>
-                <SafeAreaView style={{ flex: 1 }}>
-                    <XStack ai="center" marginHorizontal="$3" marginVertical="$3" jc="space-between">
-                        <ThemedText fontSize="$4">hunde-sport.no</ThemedText>
-                        <ThemedButton
-                            paddingVertical="$2"
-                            marginHorizontal="$2"
-                            height="$6"
-                            borderRadius="$4"
-                            circular
-                            onPress={() => navigation.closeDrawer()}
-                            alignSelf="flex-end"
+            <Theme name="primary">
+                <LinearGradient
+                    colors={['$background', '$backgroundPress']}
+                    start={[0, 0]}
+                    end={[1, 1]}
+                    style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+                />
+                <SafeAreaView style={{ flex: 1 }} >
+
+                    <YStack>
+                        <XStack
+                            jc="space-between"
+                            ai="center"
+                            marginHorizontal="$3"
+                            marginVertical="$3"
                         >
-                            <X />
-                        </ThemedButton>
-                    </XStack>
-                    <DrawerContentScrollView {...props}>
-                        <YStack gap="$2" paddingVertical="$4">
+                            <ThemedText fontSize="$4">hunde-sport.no</ThemedText>
+                            <ThemedButton
+                                paddingVertical="$2"
+                                marginHorizontal="$2"
+                                height="$6"
+                                borderRadius="$4"
+                                circular
+                                onPress={() => navigation.closeDrawer()}
+                                alignSelf="flex-end"
+                            >
+                                <X />
+                            </ThemedButton>
+                        </XStack>
+                    </YStack>
+                    <ScrollView >
+                        <YStack gap="$2" paddingVertical="$4" >
                             {Object.values(routes)
                                 .filter(route => route.showInDrawer)
                                 .map((route, index) => {
@@ -140,7 +145,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                 renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}
                             />
                         </YStack>
-                    </DrawerContentScrollView>
+                    </ScrollView>
                 </SafeAreaView>
             </Theme>
         </YStack>

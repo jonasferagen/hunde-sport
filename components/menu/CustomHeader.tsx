@@ -12,7 +12,6 @@ import { ThemedText } from '../ui/ThemedText';
 
 export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
 
-
     const route = useRoute();
     const insets = useSafeAreaInsets();
     const routeName = route.name;

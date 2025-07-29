@@ -9,14 +9,11 @@ interface ProductCardContentProps {
     categoryId?: number;
 }
 
-
-
 export const ProductCardContent = ({ product, categoryId }: ProductCardContentProps) => {
     return (
         <YStack
             flex={1}
             minHeight={80}
-
         >
             <Link href={routes.product.path(product, categoryId)} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>

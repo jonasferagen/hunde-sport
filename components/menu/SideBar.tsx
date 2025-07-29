@@ -39,7 +39,6 @@ export const SideBar = (): JSX.Element => {
                     />
                 ))}
             </Drawer>
-
         </YStack>
     </Theme>
 };
