@@ -1,5 +1,4 @@
 // Base URL for API requests
-import { Order } from '@/models/Order';
 import { Platform } from 'react-native';
 
 export const API_BASE_URL = __DEV__
@@ -12,7 +11,7 @@ export const API_BASE_URL = __DEV__
 
 export const PAGE_SIZE = 10;
 
-const ORDERS_URL = `${API_BASE_URL}/orders`;
+const EXTERNAL_CART_URL = `${API_BASE_URL}/reset-cart`;
 const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
 const PRODUCTS_URL = `${API_BASE_URL}/products`;
 const filterParams = `status=publish&per_page=${PAGE_SIZE}&hide_empty=true`;
@@ -28,8 +27,8 @@ export const ENDPOINTS = {
     LIST: (page: number, ...params: string[]) => `${PRODUCTS_URL}?page=${page}&${params.join('&')}&${filterParams}`,
     VARIATIONS: (productId: number) => `${PRODUCTS_URL}/${productId}/variations`,
   },
-  ORDERS: {
-    POST: (order: Order) => `${ORDERS_URL}`,
+  EXTERNAL_CART: {
+    POST: () => `${EXTERNAL_CART_URL}`,
   },
 };
 

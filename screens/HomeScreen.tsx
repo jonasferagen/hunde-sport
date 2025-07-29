@@ -1,4 +1,4 @@
-import { DebugSeeder } from '@/components/development/DebugSeeder';
+
 import { CategoryTiles } from '@/components/features/category/CategoryTiles';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
@@ -46,7 +46,6 @@ export const HomeScreen = () => {
                 <PageContent theme="primary" title="Populære produkter" >
                     <ProductTiles key='featured' queryResult={featuredProducts} theme="secondary" />
                 </PageContent>
-                <DebugSeeder />
             </PageSection>
         </PageView>
 

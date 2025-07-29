@@ -27,9 +27,6 @@ const paths = {
     category: '/category',
     product: '/product',
     shoppingCart: '/shopping-cart',
-    shipping: '/shipping',
-    payment: '/payment',
-    orderStatus: '/order-status',
 } as const;
 
 export const routes: Record<string, Route> = {
@@ -80,38 +77,6 @@ export const routes: Record<string, Route> = {
             return { pathname: paths.product, params };
         },
     },
-    shipping: {
-        name: 'shipping',
-        label: 'Levering',
-        icon: () => null,
-        theme: 'primary',
-        path: () => paths.shipping,
-    },
-    payment: {
-        name: 'payment',
-        label: 'Betaling',
-        icon: () => null,
-        theme: 'primary',
-        path: () => paths.payment,
-    },
-    'order-status': {
-        name: 'order-status',
-        label: 'Ordrestatus',
-        icon: () => null,
-        theme: 'primary',
-        path: () => paths.orderStatus,
-    },
+
 };
 
-export interface CheckoutStep {
-    name: string;
-    title: string;
-    route: Href;
-}
-
-export const checkoutFlow: CheckoutStep[] = [
-    { name: 'shopping-cart', title: 'Handlekurv', route: routes['shopping-cart'].path() },
-    { name: 'shipping', title: 'Levering', route: routes.shipping.path() },
-    { name: 'payment', title: 'Betaling', route: routes.payment.path() },
-    { name: 'order-status', title: 'Bekreftelse', route: routes['order-status'].path() },
-];

@@ -3,7 +3,6 @@ import { SideBar } from '@/components/menu/SideBar';
 import { AppToast } from '@/components/ui/AppToast';
 import {
   LayoutProvider,
-  OrderProvider,
   SearchProvider,
   ShoppingCartProvider
 } from '@/contexts';
@@ -36,16 +35,14 @@ const RootLayout = (): JSX.Element =>
                   height="50"
                   width="100%"
                 />
-                <OrderProvider>
-                  <ShoppingCartProvider>
-                    <SearchProvider>
-                      <LayoutProvider>
-                        <SideBar />
-                        <BottomBar />
-                      </LayoutProvider>
-                    </SearchProvider>
-                  </ShoppingCartProvider>
-                </OrderProvider>
+                <ShoppingCartProvider>
+                  <SearchProvider>
+                    <LayoutProvider>
+                      <SideBar />
+                      <BottomBar />
+                    </LayoutProvider>
+                  </SearchProvider>
+                </ShoppingCartProvider>
               </ToastProvider>
             </SafeAreaProvider>
           </PortalProvider>
