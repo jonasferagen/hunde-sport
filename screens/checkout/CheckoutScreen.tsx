@@ -9,13 +9,11 @@ export const CheckoutScreen = () => {
     const router = useRouter();
     const { updateOrder, order } = useOrderContext();
 
-
-
     return (
         <PageView>
 
             <PageHeader>
-                <RouteTrail steps={checkoutFlow} currentStepName="shipping" />
+                <RouteTrail steps={checkoutFlow} currentStepName="checkout" />
             </PageHeader>
             <PageSection flex={1}>
                 <PageContent flex={1} paddingHorizontal='none' >
