@@ -1,4 +1,3 @@
-import { ThemeVariant } from '@/types';
 import React, { ReactNode } from 'react';
 import { ScrollView } from 'react-native';
 import { H3, Spacer, YStack, YStackProps } from 'tamagui';
@@ -6,7 +5,6 @@ import { H3, Spacer, YStack, YStackProps } from 'tamagui';
 interface PageContentProps extends YStackProps {
   children: ReactNode;
   title?: string;
-  theme?: ThemeVariant;
   horizontal?: boolean;
 
 }
@@ -49,14 +47,14 @@ export const PageContent = (props: PageContentProps) => {
 
   return (
     <YStack
-      theme={theme}
-      paddingVertical={paddingVertical}
-      paddingHorizontal={paddingHorizontal}
-      borderWidth={1}
-      borderColor="$borderColor"
-      {...stackProps}
+      padding="$3"
+      borderBottomWidth={1}
+      backgroundColor={"$background"}
+      borderColor={"$borderColor"}
+      gap="$3"
+      {...props}
     >
       {content}
-    </YStack>
+    </YStack >
   );
 };

@@ -10,11 +10,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...prop
 
     return (
         <YStack
-
             padding="$3"
             borderBottomWidth={1}
             backgroundColor={"$background"}
-            elevation={4}
             borderColor={"$borderColor"}
             gap="$3"
             {...props}

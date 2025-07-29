@@ -18,10 +18,10 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
     return (
 
-        <YStack gap="$3" padding="$3" borderBottomWidth={1} borderColor="$gray5">
+        <YStack gap="$3" padding="$3" borderBottomWidth={2} borderColor="$gray5">
             {/* Row 1: Product name + unit price */}
             <XStack ai="center" gap="$2">
-                <ProductTitle size="$5" />
+                <ProductTitle size="$4" />
             </XStack>
 
             {/* Row 2: Quantity + Subtotal + Remove */}
@@ -29,7 +29,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                 {/* Quantity Controls */}
                 <XStack ai="center" gap="$2">
                     <ThemedButton theme="primary"
-                        icon={<Minus size="$4" />}
+                        icon={<Minus size="$3" />}
                         onPress={() => decreaseQuantity(purchasable, { silent: true })}
                         size="$5"
                         circular
@@ -37,7 +37,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                     />
 
                     <ThemedButton theme="primary"
-                        icon={<Plus size="$4" />}
+                        icon={<Plus size="$3" />}
                         onPress={() => increaseQuantity(purchasable, { silent: true })}
                         size="$5"
                         circular
@@ -51,13 +51,13 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                 </XStack>
 
                 {/* Subtotal */}
-                <SizableText fontSize="$6" fontWeight="bold" flex={1} textAlign="right">
+                <SizableText fontSize="$4" fontWeight="bold" flex={1} textAlign="right">
                     {formatPrice(quantity * price)}
                 </SizableText>
                 {/* Remove Button */}
                 <ThemedButton
                     theme="secondary"
-                    icon={<X size="$4" />}
+                    icon={<X size="$3" />}
                     onPress={() => removeItem(purchasable)}
                     size="$5"
                     circular
