@@ -1,6 +1,6 @@
 import { routes } from '@/config/routes';
 import { router } from 'expo-router';
-import { Button, H4, YStack } from 'tamagui';
+import { Button, H1, YStack } from 'tamagui';
 
 interface NotFoundScreenProps {
     message?: string;
@@ -8,9 +8,9 @@ interface NotFoundScreenProps {
 
 export const NotFoundScreen = ({ message = 'Siden ble ikke funnet.' }: NotFoundScreenProps) => {
     return (
-        <YStack flex={1} jc="center" ai="center">
-            <H4>{message}</H4>
-            <Button onPress={() => router.replace(routes.home())}>Gå tilbake til forsiden</Button>
+        <YStack flex={1} justifyContent="center" alignItems="center" space="$4">
+            <H1>404 - Siden finnes ikke</H1>
+            <Button onPress={() => router.replace(routes.index.path())}>Gå tilbake til forsiden</Button>
         </YStack>
     );
 };

@@ -3,6 +3,7 @@ import { routes } from '@/config/routes';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
 import { getPurchasableKey, getPurchasableTitle } from '@/utils/purchasable';
 import { useToastController } from '@tamagui/toast';
+import { router } from 'expo-router';
 import React, { createContext, RefObject, useCallback, useContext, useMemo, useState } from 'react';
 
 
@@ -119,7 +120,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             message: 'Du har ingen produkter i handlekurven',
             theme: 'dark_yellow',
         });
-        routes.home();
+        router.push(routes.index.path());
         setClearCartDialogOpen(false);
     };
 

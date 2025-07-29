@@ -24,7 +24,7 @@ export const ShippingScreen = () => {
         };
 
         updateOrder({ billing: fullBillingAddress, shipping: shippingAddress });
-        router.push(routes.payment());
+        router.push(routes.payment.path());
     };
 
     const title = 'Levering';

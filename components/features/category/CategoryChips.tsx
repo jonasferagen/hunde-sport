@@ -31,7 +31,7 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
                     key={category.id}
                     theme="primary"
                     title={category.name}
-                    href={routes.category(category)}
+                    href={routes.category.path(category)}
                 />
             ))}
             {(isLoading || isFetchingNextPage) && <Spinner />}

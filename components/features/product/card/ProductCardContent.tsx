@@ -18,7 +18,7 @@ export const ProductCardContent = ({ product, categoryId }: ProductCardContentPr
             minHeight={80}
 
         >
-            <Link href={routes.product(product, categoryId)} asChild>
+            <Link href={routes.product.path(product, categoryId)} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
                     <YStack gap="$2" jc="flex-start" flex={1} flexShrink={1}>
                         <H3 textDecorationLine="none" hoverStyle={{ color: '$colorHover' }}>{product.name}</H3>

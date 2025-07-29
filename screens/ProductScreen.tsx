@@ -47,41 +47,44 @@ const ProductScreenContent = () => {
 
   return (
     <>
-      <PageSection scrollable>
-        <ProductImage />
-        <PageContent>
-          <XStack ai="center" jc="space-between" >
-            <ProductTitle size="$6" />
+      <PageView >
+        <YStack mt="$6"></YStack>
+        <PageSection scrollable mt="$6">
+          <ProductImage />
+          <PageContent>
+            <XStack ai="center" jc="space-between" >
+              <ProductTitle size="$6" />
 
-            <PriceTag fontSize="$6" />
-          </XStack>
+              <PriceTag fontSize="$6" />
+            </XStack>
 
-          <SizableText size="$3" mt="$3">{product.short_description}</SizableText>
-          {product.hasVariations() && <ProductVariations />}
-          <XStack ai="center" jc="space-between" mt="$3">
-            <ProductTitle size="$5" />
-            <PriceTag fontSize="$6" />
-          </XStack>
-          <XStack flex={1} jc="flex-start">
-            <ProductStatus />
-          </XStack>
-          <YStack mt="$3">
-            <BuyButton />
-          </YStack>
-        </PageContent>
-        <PageContent title="Produktbilder" flex={1}>
-          {product.images.length > 1 && <ProductImageGallery />}
-        </PageContent>
-        <PageContent theme="primary" title="Relaterte produkter">
-          <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
-        </PageContent>
-        <PageContent theme="secondary" title="Produktinformasjon">
-          <SizableText size="$3">{product.description || 'Ingen beskrivelse tilgjengelig'}</SizableText>
-        </PageContent>
-        <PageContent title="Kategorier">
-          <CategoryChips categories={product.categories} />
-        </PageContent>
-      </PageSection>
+            <SizableText size="$3" mt="$3">{product.short_description}</SizableText>
+            {product.hasVariations() && <ProductVariations />}
+            <XStack ai="center" jc="space-between" mt="$3">
+              <ProductTitle size="$5" />
+              <PriceTag fontSize="$6" />
+            </XStack>
+            <XStack flex={1} jc="flex-start">
+              <ProductStatus />
+            </XStack>
+            <YStack mt="$3">
+              <BuyButton />
+            </YStack>
+          </PageContent>
+          <PageContent title="Produktbilder" flex={1}>
+            {product.images.length > 1 && <ProductImageGallery />}
+          </PageContent>
+          <PageContent theme="primary" title="Relaterte produkter">
+            <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
+          </PageContent>
+          <PageContent theme="secondary" title="Produktinformasjon">
+            <SizableText size="$3">{product.description || 'Ingen beskrivelse tilgjengelig'}</SizableText>
+          </PageContent>
+          <PageContent title="Kategorier">
+            <CategoryChips categories={product.categories} />
+          </PageContent>
+        </PageSection>
+      </PageView>
 
     </>
   );

@@ -16,7 +16,7 @@ interface ProductCardImageProps {
 export const ProductCardImage = ({ product, categoryId, imageSize = IMAGE_SIZE }: ProductCardImageProps) => {
     return (
         <YStack ai="center" jc="center">
-            <Link href={routes.product(product, categoryId)}>
+            <Link href={routes.product.path(product, categoryId)}>
                 <Image
                     source={{ uri: getScaledImageUrl(product.images[0]?.src, imageSize, imageSize) }}
                     width={imageSize}

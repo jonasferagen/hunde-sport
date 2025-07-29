@@ -16,7 +16,7 @@ export const HomeScreen = () => {
 
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const handleSearch = (query: string) => {
-        query && router.push(routes.search(query));
+        query && router.push(routes.search.path(query));
     };
     const debugProducts = useProductsByIds([247691, 35961, 27445]);
     const recentProducts = useRecentProducts();

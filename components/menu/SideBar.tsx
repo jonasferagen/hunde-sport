@@ -1,30 +1,26 @@
 import { CustomHeader } from "@/components/menu/CustomHeader";
+import { routes } from '@/config/routes';
 import { DrawerContentComponentProps, DrawerHeaderProps } from "@react-navigation/drawer";
+import { useRoute } from "@react-navigation/native";
 import Drawer from "expo-router/drawer";
 import React, { JSX } from "react";
 import { Theme, YStack } from "tamagui";
 import { CustomDrawerContent } from "./CustomDrawerContent";
 
-import { routeConfig } from "@/lib/routeConfig";
-import { useRoute } from "@react-navigation/native";
-import { getThemes } from '@tamagui/core';
-
 export const SideBar = (): JSX.Element => {
     const route = useRoute();
-    const routeName = route.name as keyof typeof routeConfig;
-    const themeName = routeConfig[routeName]?.theme || 'primary';
-    const theme = getThemes()[themeName]
+    const routeName = route.name;
+    const themeName = routes[routeName]?.theme || 'primary';
 
     const drawerContent = React.useCallback((props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />, []);
     const screenOptions = React.useMemo(() => ({
         drawerStyle: {
             elevation: 5
         },
-        overlayColor: theme.overlayColor?.val,
-        headerShown: true,
         header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
-    }), [theme]);
-
+        swipeEnabled: true,
+        headerTransparent: true,
+    }), []);
 
     return <Theme name={themeName}>
         <YStack flex={1} zIndex={5}>
@@ -32,14 +28,14 @@ export const SideBar = (): JSX.Element => {
                 drawerContent={drawerContent}
                 screenOptions={screenOptions}
             >
-                {Object.entries(routeConfig).map(([name, config]) => (
+                {Object.values(routes).filter(r => r.showInDrawer).map((route) => (
                     <Drawer.Screen
-                        key={name}
-                        name={name}
-                        options={{ title: config.label }}
+                        key={route.name}
+                        name={route.name}
+                        options={{ title: route.label }}
                     />
                 ))}
             </Drawer>
         </YStack>
     </Theme>
-};  
+};

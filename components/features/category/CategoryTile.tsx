@@ -22,7 +22,7 @@ export const CategoryTile = ({
     ...stackProps
 }: CategoryTileProps) => {
 
-    const finalHref = routes.category(category);
+    const finalHref = routes.category.path(category);
 
     return (
 

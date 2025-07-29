@@ -2,6 +2,7 @@ import { RouteTrail } from '@/components/features/checkout/RouteTrail';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 
 import { checkoutFlow, routes } from '@/config/routes';
+import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { Stack, useRouter } from 'expo-router';
 import React from 'react';
 import { Button, SizableText } from 'tamagui';
@@ -9,9 +10,11 @@ import { Button, SizableText } from 'tamagui';
 export const OrderStatusScreen = () => {
     const router = useRouter();
     const title = 'Ordrestatus';
+    const { clearCart } = useShoppingCartContext();
 
     const handleNext = () => {
-        router.replace(routes.home());
+        clearCart();
+        router.replace(routes.index.path());
     };
 
     return (
@@ -31,5 +34,3 @@ export const OrderStatusScreen = () => {
         </PageView>
     );
 };
-
-

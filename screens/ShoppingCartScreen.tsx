@@ -23,7 +23,9 @@ export const ShoppingCartScreen = () => {
     const router = useRouter();
 
     const handleCheckout = () => {
-        router.push(routes.shipping());
+        if (items.length > 0) {
+            router.push(routes.shipping.path());
+        }
     };
 
 
@@ -63,4 +65,3 @@ export const ShoppingCartScreen = () => {
         </PageView>
     );
 };
-

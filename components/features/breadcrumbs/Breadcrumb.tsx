@@ -39,7 +39,7 @@ export const Breadcrumb = React.memo(({ category,
       {isLast && !isLastClickable ? (
         breadcrumbText
       ) : (
-        <Link replace href={routes.category(category)} asChild>
+        <Link replace href={routes.category.path(category)} asChild>
           {breadcrumbText}
         </Link>
       )}

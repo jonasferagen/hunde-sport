@@ -1,4 +1,4 @@
-import { routeConfig } from '@/lib/routeConfig';
+import { routes } from '@/config/routes';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { DrawerActions, useRoute } from '@react-navigation/native';
 import { LinearGradient } from '@tamagui/linear-gradient';
@@ -15,8 +15,8 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
 
     const route = useRoute();
     const insets = useSafeAreaInsets();
-    const routeName = route.name as keyof typeof routeConfig;
-    const theme = routeConfig[routeName]?.theme || 'primary';
+    const routeName = route.name;
+    const theme = routes[routeName]?.theme || 'primary';
 
     const navigation = useNavigation();
     const openDrawer = () => {
@@ -37,6 +37,7 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
             borderBottomWidth={1}
             borderBottomColor="$borderColor"
             theme={theme}
+            opacity={0.5}
         >
             <LinearGradient
                 colors={['$background', '$backgroundPress']}
