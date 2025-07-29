@@ -3,7 +3,7 @@ import { PageContent, PageHeader, PageSection, PageView } from '@/components/lay
 
 import { checkoutFlow, routes } from '@/config/routes';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Button, SizableText } from 'tamagui';
 
@@ -19,8 +19,7 @@ export const OrderStatusScreen = () => {
 
     return (
         <PageView>
-            <Stack.Screen options={{ title }} />
-            <PageHeader>
+            <PageHeader padding="none">
                 <RouteTrail steps={checkoutFlow} currentStepName="order-status" />
             </PageHeader>
             <PageSection flex={1}>

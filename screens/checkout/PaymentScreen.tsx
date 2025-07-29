@@ -4,7 +4,7 @@ import { checkoutFlow } from '@/config/routes';
 import { useOrderContext } from '@/contexts/OrderContext';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { OrderLineItem } from '@/models/Order';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import React, { useEffect, useState } from 'react';
 import { Button, SizableText } from 'tamagui';
@@ -50,8 +50,7 @@ export const PaymentScreen = () => {
 
     return (
         <PageView>
-            <Stack.Screen options={{ title }} />
-            <PageHeader>
+            <PageHeader padding="none">
                 <RouteTrail steps={checkoutFlow} currentStepName="payment" />
             </PageHeader>
             <PageSection flex={1}>

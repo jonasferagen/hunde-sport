@@ -4,7 +4,7 @@ import { PageContent, PageHeader, PageSection, PageView } from '@/components/lay
 import { checkoutFlow, routes } from '@/config/routes';
 import { useOrderContext } from '@/contexts/OrderContext';
 import { Address, BillingAddress } from '@/models/Order';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 
 export const ShippingScreen = () => {
@@ -27,12 +27,11 @@ export const ShippingScreen = () => {
         router.push(routes.payment.path());
     };
 
-    const title = 'Levering';
+
 
     return (
         <PageView>
-            <Stack.Screen options={{ title }} />
-            <PageHeader>
+            <PageHeader padding="none">
                 <RouteTrail steps={checkoutFlow} currentStepName="shipping" />
             </PageHeader>
             <PageSection flex={1}>

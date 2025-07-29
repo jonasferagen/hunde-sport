@@ -1,9 +1,8 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { CheckoutStep } from '@/config/routes';
-import { ChevronRight } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
-import { Stack, Theme, XStack } from 'tamagui';
+import { Theme, XStack } from 'tamagui';
 
 interface RouteTrailProps {
     steps: CheckoutStep[];
@@ -22,7 +21,7 @@ const RouteStep = ({ step, state }: RouteStepProps) => {
         <Link href={step.route} asChild disabled={isInactive} style={{ flex: 1 }}>
             <ThemedButton
                 f={1}
-                h="100%"
+                h={100}
                 disabled={isInactive}
                 variant={state === 'active' ? 'active' : undefined}
                 borderRadius={0}
@@ -47,7 +46,7 @@ export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Ele
     const currentStepIndex = steps.findIndex((step) => step.name === currentStepName);
 
     return (
-        <XStack ai="center" jc="center" w="100%" h="$5">
+        <XStack ai="center" jc="center" w="100%" h={50}>
             {steps.map((step, index) => {
                 const state =
                     index < currentStepIndex
@@ -59,11 +58,6 @@ export const RouteTrail = ({ steps, currentStepName }: RouteTrailProps): JSX.Ele
                 return (
                     <XStack key={step.name} f={1} ai="center">
                         <RouteStep step={step} state={state} />
-                        {index < steps.length - 1 && (
-                            <Stack bc="$background" ml="$-0.5" mr="$-0.5" zi={1}>
-                                <ChevronRight color="$gray8" />
-                            </Stack>
-                        )}
                     </XStack>
                 );
             })}

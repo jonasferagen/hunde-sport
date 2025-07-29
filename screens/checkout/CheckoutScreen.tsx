@@ -47,7 +47,7 @@ export const CheckoutScreen = () => {
 
     return (
         <PageView>
-            <PageHeader>
+            <PageHeader padding="none">
                 <RouteTrail steps={checkoutFlow} currentStepName="checkout" />
             </PageHeader>
             <PageSection flex={1}>

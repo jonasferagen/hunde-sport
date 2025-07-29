@@ -41,7 +41,7 @@ export const ShoppingCartScreen = () => {
     return (
         <PageView>
             <PageSection flex={1}>
-                <PageHeader theme="secondary_soft">
+                <PageHeader theme="secondary_soft" padding="none">
                     <RouteTrail steps={checkoutFlow} currentStepName="checkout" />
                 </PageHeader>
 

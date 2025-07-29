@@ -35,7 +35,6 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
             paddingTop={paddingTop}
             paddingHorizontal="$3"
             borderBottomWidth={2}
-            elevation={5}
             borderBottomColor="$borderColor"
             theme={theme}
 
