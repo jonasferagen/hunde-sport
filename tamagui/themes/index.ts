@@ -7,8 +7,8 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
 
         background: baseColor,
         backgroundLight: lighten(0.05, baseColor),
-        backgroundStrong: darken(0.05, baseColor),
-        backgroundElevated: darken(0.1, baseColor),
+        backgroundStrong: darken(0.1, baseColor),
+        backgroundElevated: lighten(0.1, baseColor),
 
         borderColor: darken(0.1, baseColor),
         borderColorStrong: darken(0.2, baseColor),
@@ -22,7 +22,6 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
         colorAccent: accentColor,
         colorAccentHover: darken(0.1, accentColor),
         colorAccentPress: darken(0.2, accentColor),
-
 
         backgroundHover: darken(0.03, baseColor),
         backgroundPress: darken(0.07, baseColor),

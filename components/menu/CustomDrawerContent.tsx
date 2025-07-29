@@ -7,7 +7,7 @@ import { LinearGradient } from '@tamagui/linear-gradient';
 import { ChevronRight, X, } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getTokenValue, ScrollView, Theme, useTheme, useThemeName, View, XStack, YStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
@@ -67,45 +67,46 @@ const CategoryTreeItem = ({
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const themeName = useThemeName();
+    const { top } = useSafeAreaInsets();
 
     return (
         <YStack
             theme={themeName}
             flex={1}
-            borderRightWidth={1}
+            borderRightWidth={2}
+            borderRightColor="$borderColor"
         >
             <Theme name="primary">
-                <LinearGradient
-                    colors={['$background', '$backgroundPress']}
-                    start={[0, 0]}
-                    end={[1, 1]}
-                    style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-                />
-                <SafeAreaView style={{ flex: 1 }} >
 
-                    <YStack>
-                        <XStack
-                            jc="space-between"
-                            ai="center"
-                            marginHorizontal="$3"
-                            marginVertical="$3"
+                <YStack flex={1} backgroundColor="$background">
+
+                    <XStack
+                        ai="center"
+                        jc="space-between"
+                        paddingTop={top + 30}
+                        paddingHorizontal="$4"
+                        paddingBottom="$3"
+
+
+                    >
+                        <ThemedText fontSize="$4">hunde-sport.no</ThemedText>
+                        <ThemedButton
+                            circular
+                            onPress={() => navigation.closeDrawer()}
                         >
-                            <ThemedText fontSize="$4">hunde-sport.no</ThemedText>
-                            <ThemedButton
-                                paddingVertical="$2"
-                                marginHorizontal="$2"
-                                height="$6"
-                                borderRadius="$4"
-                                circular
-                                onPress={() => navigation.closeDrawer()}
-                                alignSelf="flex-end"
-                            >
-                                <X />
-                            </ThemedButton>
-                        </XStack>
-                    </YStack>
-                    <ScrollView >
-                        <YStack gap="$2" paddingVertical="$4" >
+                            <X />
+                        </ThemedButton>
+                    </XStack>
+
+                    <ScrollView>
+
+                        <LinearGradient
+                            colors={['$background', '$backgroundPress']}
+                            start={[0, 0]}
+                            end={[1, 1]}
+                            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+                        />
+                        <YStack gap="$2" paddingVertical="$4" paddingHorizontal="$4">
                             {Object.values(routes)
                                 .filter(route => route.showInDrawer)
                                 .map((route, index) => {
@@ -146,7 +147,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                             />
                         </YStack>
                     </ScrollView>
-                </SafeAreaView>
+                </YStack>
             </Theme>
         </YStack>
     );

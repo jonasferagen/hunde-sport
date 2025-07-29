@@ -2,15 +2,18 @@ import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { SearchBar } from '@/components/ui';
-import { ThemedText } from '@/components/ui/ThemedText';
+import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { useSearchContext } from '@/contexts/SearchContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { TextInput } from 'react-native';
-import { SizableText, YStack } from 'tamagui';
+import { SizableText } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
+
+
+
 export const SearchScreen = () => {
     useRenderGuard("SearchScreen")
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
@@ -20,9 +23,9 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader zIndex={5} elevation={4} theme="tertiary_soft">
+            <PageHeader zIndex={5} theme="tertiary_soft">
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
-                <SizableText fontSize="$3">
+                <SizableText>
                     {isWaiting
                         ? `Leter etter "${liveQuery}"...`
                         : (query ? `Søkeresultater for "${query}"` : ' ')}
@@ -46,17 +49,13 @@ const SearchResults = () => {
 
     if (!query) {
         return (
-            <YStack flex={1} ai="center" jc="center" >
-                <ThemedText fontSize="$3" ta="center">Søk etter produkter, merker og kategorier.</ThemedText>
-            </YStack>
+            <DefaultTextContent>Søk etter produkter, merker og kategorier.</DefaultTextContent>
         );
     }
 
     if (products.length === 0) {
         return (
-            <YStack flex={1} ai="center" jc="center">
-                <ThemedText fontSize="$3" ta="center">Ingen resultater funnet for "{query}"</ThemedText>
-            </YStack >
+            <DefaultTextContent>Ingen resultater funnet for "{query}"</DefaultTextContent>
         );
     }
 
