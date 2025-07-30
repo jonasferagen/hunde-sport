@@ -5,7 +5,7 @@ export const API_BASE_URL = 'https://hunde-sport.no/wp-json/hundesport/v1';
 export const PAGE_SIZE = 10;
 
 const EXTERNAL_CART_URL = `${API_BASE_URL}/reset-cart`;
-const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
+const CATEGORIES_URL = `${API_BASE_URL}/categories`;
 const PRODUCTS_URL = `${API_BASE_URL}/products`;
 const filterParams = `status=publish&per_page=${PAGE_SIZE}&hide_empty=true`;
 
