@@ -21,11 +21,9 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
         option.name!
     );
 
-    const isDisabled = !isAvailable || isOutOfStock;
-
-    return (
+    return isAvailable && (
         <Pressable
-            onPress={() => !isDisabled && selectOption(attribute.id, option.name!)}
+            onPress={() => !isOutOfStock && selectOption(attribute.id, option.name!)}
             style={{
                 flex: 1,
             }}
@@ -39,14 +37,14 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
                 borderRadius="$4"
                 borderColor={isSelected ? '$borderColor' : 'transparent'}
                 backgroundColor={isSelected ? '$background' : 'white'}
-                cursor={isDisabled ? 'not-allowed' : 'pointer'}
-                opacity={isDisabled ? 0.5 : 1}
+                cursor={isOutOfStock ? 'not-allowed' : 'pointer'}
+                opacity={isOutOfStock ? 0.5 : 1}
                 jc='space-between'
             >
                 <XStack gap="$2">
                     <SizableText
                         fontWeight={isSelected ? 'bold' : 'normal'}
-                        textDecorationLine={!isAvailable ? 'line-through' : 'none'}
+                        textDecorationLine={isOutOfStock ? 'line-through' : 'none'}
                         color={'$color'}
                     >
                         {option.label}

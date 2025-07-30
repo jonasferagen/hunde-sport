@@ -14,13 +14,7 @@ export const ProductVariations = (): JSX.Element => {
 };
 const ProductVariationsContent = (): JSX.Element => {
 
-    const { product } = useProductContext();
-
-    const { productVariationAttributes, availableOptions } = useProductVariationSelectionContext();
-    if (product.id === 247691) {
-        console.log(productVariationAttributes)
-        console.log(availableOptions)
-    }
+    const { productVariationAttributes } = useProductVariationSelectionContext();
 
     return (
         <XStack gap="$2" flexWrap="wrap">
