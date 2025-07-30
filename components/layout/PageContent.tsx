@@ -1,13 +1,12 @@
 import { LinearGradient } from '@tamagui/linear-gradient';
 import React, { ReactNode } from 'react';
 import { ScrollView } from 'react-native';
-import { H3, Spacer, YStack, YStackProps } from 'tamagui';
+import { H3, Stack, YStack, YStackProps } from 'tamagui';
 
 interface PageContentProps extends YStackProps {
   children: ReactNode;
   title?: string;
   horizontal?: boolean;
-
 }
 
 export const PageContent = (props: PageContentProps) => {
@@ -17,9 +16,8 @@ export const PageContent = (props: PageContentProps) => {
     title,
     theme = 'light',
     horizontal,
-    paddingVertical = '$3',
-    paddingHorizontal = '$3',
     ...stackProps
+
   } = props;
 
   const validChildren = React.Children.toArray(children).filter(Boolean);
@@ -28,41 +26,23 @@ export const PageContent = (props: PageContentProps) => {
     return null;
   }
 
-  const content = (
-    <>
-      {title && (
-        <>
-          <H3>{title}</H3>
-          <Spacer size="$3" />
-        </>
-      )}
-      {horizontal ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {validChildren}
-        </ScrollView>
-      ) : (
-        validChildren
-      )}
-    </>
-  );
-
-  return (
-
+  return <Stack theme={theme}>
     <LinearGradient
-      theme={theme}
       colors={["$background", "$backgroundPress"]}
       start={[0, 0]}
       end={[1, 1]}
     >
+      {title && <H3 p="$3" pb="none">{title}</H3>}
       <YStack
-        padding="$3"
-        borderBottomWidth={1}
-        borderColor={"$borderColor"}
-        {...props}
+
+        p="$3"
+        bbw={1}
+        boc="$borderColor"
+        {...stackProps}
       >
-        {content}
+
+        <ScrollView horizontal={horizontal} showsHorizontalScrollIndicator={horizontal}>{validChildren}</ScrollView>
       </YStack >
     </LinearGradient>
-
-  );
+  </Stack>
 };
