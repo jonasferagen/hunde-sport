@@ -17,7 +17,7 @@ export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
     }
 
     if (isProductVariationsLoading) {
-        return <ThemedSpinner alignSelf='flex-end' size="small" />;
+        return <ThemedSpinner alignSelf='flex-end' size="small" marginVertical="none" />;
     }
 
     return <PriceRange fontSize={fontSize} />;

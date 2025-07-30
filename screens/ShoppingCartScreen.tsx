@@ -53,7 +53,7 @@ export const ShoppingCartScreen = () => {
     return (
         <PageView>
             <PageSection flex={1}>
-                <PageHeader theme="secondary_soft" padding="none">
+                <PageHeader theme="secondary_soft">
                     <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} />
                 </PageHeader>
 
@@ -68,7 +68,7 @@ export const ShoppingCartScreen = () => {
 
                 </PageContent>
                 <PageContent theme='secondary_soft'>
-                    <XStack gap="$3" mt="$3" ai="center" jc="space-between">
+                    <XStack gap="$3" ai="center" jc="space-between">
                         <ThemedButton onPress={handleCheckout} scaleIcon={1.5} flex={1} jc="space-between" theme="primary" disabled={cartItemCount === 0}>
                             Til kassen <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
                         </ThemedButton>

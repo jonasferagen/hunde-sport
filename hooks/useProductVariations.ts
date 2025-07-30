@@ -73,13 +73,10 @@ export const useProductVariations = (
 
 
 
-    const productVariationAttributes = useMemo(() => {
-        return product.attributes.filter(attr => attr.variation);
-    }, [product]);
-
-    const { availableOptions, selectedVariation } = useMemo(() => {
+    const { availableOptions, selectedVariation, productVariationAttributes } = useMemo(() => {
+        const attributes = product.attributes.filter(attr => attr.variation);
         const available = new Map<number, Map<string, ProductVariation[]>>();
-        productVariationAttributes.forEach(attribute => {
+        attributes.forEach(attribute => {
             const otherSelectedOptions = Object.entries(selectedOptions).filter(([attrId]) => attrId !== attribute.id.toString());
             const matchingVariants = productVariations.filter(variant =>
                 otherSelectedOptions.every(([attrId, optionValue]) =>
@@ -105,7 +102,7 @@ export const useProductVariations = (
             const selectedEntries = Object.entries(options);
 
             // Only find a variation if all attributes have been selected
-            if (selectedEntries.length < productVariationAttributes.length) {
+            if (selectedEntries.length < attributes.length) {
                 return null;
             }
 
@@ -120,8 +117,8 @@ export const useProductVariations = (
 
         const finalVariation = findVariation(productVariations, selectedOptions);
 
-        return { availableOptions: available, selectedVariation: finalVariation };
-    }, [product, productVariations, selectedOptions]);
+        return { availableOptions: available, selectedVariation: finalVariation, productVariationAttributes: attributes };
+    }, [product.attributes, productVariations, selectedOptions]);
 
     const selectOption = (attributeId: number, optionName: string) => {
         setSelectedOptions(prev => {

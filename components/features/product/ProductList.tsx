@@ -15,7 +15,13 @@ interface ProductListProps {
     categoryId?: number;
 }
 
-export const ProductList = memo(({ products, loadMore, loadingMore, contentContainerStyle, categoryId }: ProductListProps) => {
+export const ProductList = memo(({
+    products,
+    loadMore,
+    loadingMore,
+    contentContainerStyle,
+    categoryId
+}: ProductListProps) => {
     const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
     const { layout } = useLayoutContext();
 

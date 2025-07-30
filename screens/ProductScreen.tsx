@@ -75,14 +75,14 @@ const ProductScreenContent = () => {
           <PageContent title="Produktbilder" flex={1}>
             {product.images.length > 1 && <ProductImageGallery />}
           </PageContent>
-          <PageContent theme="primary" title="Relaterte produkter">
-            <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
-          </PageContent>
-          <PageContent theme="secondary" title="Produktinformasjon">
-            <SizableText size="$3">{product.description || 'Ingen beskrivelse tilgjengelig'}</SizableText>
-          </PageContent>
           <PageContent title="Kategorier">
             <CategoryChips categories={product.categories} />
+          </PageContent>
+          <PageContent theme="secondary" title="Produktinformasjon">
+            <SizableText size="$3">{product.description}</SizableText>
+          </PageContent>
+          <PageContent theme="primary" title="Relaterte produkter">
+            <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
           </PageContent>
         </PageSection>
       </PageView>
