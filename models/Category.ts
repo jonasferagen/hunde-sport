@@ -25,7 +25,7 @@ export class Category implements CategoryData {
 
 
   shouldDisplay(): boolean {
-    return this.description !== '#';
+    return this.description !== '#' || this.name === 'Black Friday';
   }
 
   toString() {

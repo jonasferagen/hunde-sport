@@ -1,7 +1,7 @@
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
-import { Href } from 'expo-router';
+import { HrefObject } from 'expo-router';
 import { ThemeName } from 'tamagui';
 
 export interface Route {
@@ -9,7 +9,7 @@ export interface Route {
     label: string;
     icon: React.FC<any>;
     theme: ThemeName;
-    path: (...args: any[]) => Href;
+    path: (...args: any[]) => HrefObject;
     showInDrawer?: boolean;
 }
 
@@ -35,7 +35,7 @@ export const routes: Record<string, Route> = {
         label: 'Hjem',
         icon: Home,
         theme: 'primary',
-        path: () => paths.home,
+        path: () => ({ pathname: paths.home }),
         showInDrawer: true,
     },
     'shopping-cart': {
@@ -43,7 +43,7 @@ export const routes: Record<string, Route> = {
         label: 'Handlekurv',
         icon: ShoppingCart,
         theme: 'secondary',
-        path: () => paths.shoppingCart,
+        path: () => ({ pathname: paths.shoppingCart }),
         showInDrawer: true,
     },
     search: {

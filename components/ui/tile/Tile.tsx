@@ -7,13 +7,7 @@ import { DimensionValue } from "react-native";
 import { Image, SizableText, YStack, YStackProps } from 'tamagui';
 
 const GRADIENT_MIN_HEIGHT = 25;
-/*
-const StyledLinearGradient = styled(LinearGradient, {
-    name: 'StyledLinearGradient',
-    minHeight: GRADIENT_MIN_HEIGHT,
-    padding: '$2',
-    jc: 'center',
-}); */
+
 
 export interface TileProps extends Omit<YStackProps, 'href'> {
     title: string;

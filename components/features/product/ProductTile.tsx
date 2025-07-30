@@ -3,7 +3,6 @@ import { TileBadge } from "@/components/ui/tile/TileBadge";
 import { routes } from '@/config/routes';
 import { ProductProvider } from '@/contexts';
 import { Product, ThemeVariant } from "@/types";
-import { HrefObject } from "expo-router";
 import React from 'react';
 import { DimensionValue } from 'react-native';
 import { PriceTag } from './display/PriceTag';
@@ -37,7 +36,7 @@ export const ProductTile = ({
             title={product.name + ' ' + product.id}
             imageUrl={product.image?.src ?? ''}
             titleNumberOfLines={1}
-            href={routes.product.path(product) as HrefObject}
+            href={routes.product.path(product)}
         >
             <TileBadge theme={theme}>
                 <ProductProvider product={product}>

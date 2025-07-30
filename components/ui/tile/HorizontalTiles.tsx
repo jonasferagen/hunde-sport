@@ -1,7 +1,6 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { ChevronsRight } from '@tamagui/lucide-icons';
 import React, { JSX, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { View } from 'tamagui';
@@ -37,7 +36,7 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
             jc="flex-end"
             pe="none"
         >
-            {side === "right" && <ChevronsRight size="$5" pos='absolute' />}
+
             <LinearGradient
                 colors={['$backgroundTransparent', '$background']}
                 start={gradientStart as [number, number]}
