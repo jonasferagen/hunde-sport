@@ -55,30 +55,30 @@ export const BottomBar = ({ children }: { children?: React.ReactNode }) => {
             />
             <StyledTabs >
                 <StyledTabsList>
-                    <StyledTab value="home">
-                        <Link href="/">
+                    <Link href="/" asChild>
+                        <StyledTab value="home">
                             <YStack ai="center" >
                                 <Home />
                                 <Text>Hjem</Text>
                             </YStack>
-                        </Link>
-                    </StyledTab>
-                    <StyledTab value="search">
-                        <Link href="/search">
+                        </StyledTab>
+                    </Link>
+                    <Link href="/search" asChild>
+                        <StyledTab value="search">
                             <YStack ai="center">
                                 <Search />
                                 <Text>Søk</Text>
                             </YStack>
-                        </Link>
-                    </StyledTab>
-                    <StyledTab value="cart">
-                        <Link href="/shopping-cart">
+                        </StyledTab>
+                    </Link>
+                    <Link href="/shopping-cart" asChild>
+                        <StyledTab value="cart">
                             <YStack ai="center">
                                 <ShoppingCart />
                                 <Text>Handlekurv</Text>
                             </YStack>
-                        </Link>
-                    </StyledTab>
+                        </StyledTab>
+                    </Link>
                 </StyledTabsList>
             </StyledTabs>
         </Theme>
