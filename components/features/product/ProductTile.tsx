@@ -9,7 +9,7 @@ import { DimensionValue } from 'react-native';
 import { PriceTag } from './display/PriceTag';
 
 export const PRODUCT_TILE_WIDTH: DimensionValue = 120;
-export const PRODUCT_TILE_HEIGHT: DimensionValue = 90;
+export const PRODUCT_TILE_HEIGHT: DimensionValue = 100;
 
 interface ProductTileProps {
     product: Product;

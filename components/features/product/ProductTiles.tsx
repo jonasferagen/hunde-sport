@@ -3,7 +3,6 @@ import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { Product } from '@/models/Product';
 import { ThemeVariant } from '@/types';
 import React, { JSX } from 'react';
-import { Unspaced } from 'tamagui';
 import { HorizontalTiles } from '../../ui/tile/HorizontalTiles';
 
 interface ProductTilesProps {
@@ -13,16 +12,14 @@ interface ProductTilesProps {
 
 export const ProductTiles = ({ queryResult, theme = 'primary' }: ProductTilesProps): JSX.Element => {
 
-    return <Unspaced>
-        <HorizontalTiles
-            queryResult={queryResult}
-            renderItem={({ item }) => (
-                <ProductTile
-                    product={item}
-                    theme={theme}
-                />
-            )}
-        />
-    </Unspaced>
+    return <HorizontalTiles
+        queryResult={queryResult}
+        renderItem={({ item }) => (
+            <ProductTile
+                product={item}
+                theme={theme}
+            />
+        )}
+    />
 
 };

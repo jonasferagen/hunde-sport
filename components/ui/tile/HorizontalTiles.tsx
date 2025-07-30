@@ -1,7 +1,7 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { ChevronLeft, ChevronRight } from '@tamagui/lucide-icons';
+import { ChevronsRight } from '@tamagui/lucide-icons';
 import React, { JSX, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { View } from 'tamagui';
@@ -12,6 +12,46 @@ interface HorizontalTilesProps<T> {
     renderItem: ListRenderItem<T>;
 }
 
+interface ScrollIndicatorProps {
+    side: 'left' | 'right';
+    width: string;
+}
+
+const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
+
+    const gradientStart = side === 'left' ? [1, 0] : [0, 0];
+    const gradientEnd = side === 'left' ? [0, 0] : [1, 0];
+
+
+
+    return (
+        <View
+            pos="absolute"
+            l={side === 'left' ? 0 : undefined}
+            r={side === 'right' ? 0 : undefined}
+            t={0}
+            b={0}
+            w={width}
+            flex={1}
+            ai="center"
+            jc="flex-end"
+            pe="none"
+        >
+            {side === "right" && <ChevronsRight size="$5" pos='absolute' />}
+            <LinearGradient
+                colors={['$backgroundTransparent', '$background']}
+                start={gradientStart as [number, number]}
+                end={gradientEnd as [number, number]}
+                pos="absolute"
+                l={0}
+                r={0}
+                t={0}
+                b={0}
+            />
+
+        </View>
+    );
+};
 
 export const HorizontalTiles = <T extends { id: number | string }>({
     queryResult,
@@ -36,7 +76,6 @@ export const HorizontalTiles = <T extends { id: number | string }>({
 
     const SPACING = "$3";
 
-
     return (
         <View position="relative">
             <FlashList
@@ -57,51 +96,11 @@ export const HorizontalTiles = <T extends { id: number | string }>({
                     }
                 }}
                 onEndReachedThreshold={0.5}
-                ListHeaderComponent={<View w={SPACING} />}
-                ListFooterComponent={<View w={SPACING} flex={1} ai="center" jc="center">{isFetchingNextPage && <ThemedSpinner />}</View>}
+                ListHeaderComponent={<View w={SPACING} h="100%" />}
+                ListFooterComponent={<View w={SPACING} h="100%" >{isFetchingNextPage && <ThemedSpinner my="auto" mx={SPACING} />}</View>}
             />
-            {isScrollable && !isAtEnd && (
-                <View
-                    position="absolute"
-                    right={0}
-                    top={0}
-                    bottom={0}
-                    width={SPACING}
-                    ai="center"
-                    jc="center"
-                    pe="none"
-                >
-                    <LinearGradient
-                        colors={['$backgroundTransparent', '$background']}
-                        start={[0, 0]}
-                        end={[1, 0]}
-                        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
-                    />
-                    <ChevronRight color="$color" size="$4" />
-                </View>
-            )}
-            {isScrollable && !isAtStart && (
-                <View
-                    position="absolute"
-                    left={0}
-                    top={0}
-                    bottom={0}
-                    width={SPACING}
-                    ai="center"
-                    jc="center"
-                    pe="none"
-                >
-                    <LinearGradient
-                        colors={['$backgroundTransparent', '$background']}
-                        start={[1, 0]}
-                        end={[0, 0]}
-                        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
-                    />
-
-                    <ChevronLeft color="$color" size="$4" />
-
-                </View>
-            )}
+            {isScrollable && !isAtEnd && <ScrollIndicator side="right" width="$6" />}
+            {isScrollable && !isAtStart && <ScrollIndicator side="left" width="$6" />}
         </View>
     );
 };
