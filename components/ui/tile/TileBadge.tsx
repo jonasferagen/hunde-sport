@@ -20,8 +20,7 @@ export const TileBadge = ({ children, theme = 'primary' }: TileBadgeProps): Reac
             backgroundColor={rgba(themeValues.background.val, 0.7)}
             borderWidth={1}
             borderColor={"$borderColor"}
-            paddingVertical="$1"
-            paddingHorizontal="$2"
+            paddingHorizontal="$1"
             borderRadius="$3"
         >
             {children}

@@ -6,9 +6,12 @@ import React from 'react';
 import { DimensionValue } from "react-native";
 import { Image, SizableText, YStack, YStackProps, styled, useTheme } from 'tamagui';
 
+
+const GRADIENT_MIN_HEIGHT = 25;
+
 const StyledLinearGradient = styled(LinearGradient, {
     name: 'StyledLinearGradient',
-    minHeight: 40,
+    minHeight: GRADIENT_MIN_HEIGHT,
     padding: '$2',
     jc: 'center',
 });
@@ -36,7 +39,7 @@ export const Tile = (props: TileProps) => {
         aspectRatio,
         onPress,
         titleNumberOfLines = 1,
-        gradientMinHeight = 40,
+        gradientMinHeight = GRADIENT_MIN_HEIGHT,
         theme = 'primary',
         href,
         children,
@@ -67,7 +70,7 @@ export const Tile = (props: TileProps) => {
                 left={0}
                 right={0}
                 bottom={0}
-                resizeMode="cover"
+                objectFit="cover"
             />
             <YStack flex={1} jc="flex-end">
                 <StyledLinearGradient

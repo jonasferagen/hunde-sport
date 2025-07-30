@@ -13,12 +13,8 @@ export const HorizontalTiles = <T extends { id: number | string }>({
     queryResult,
     renderItem,
 }: HorizontalTilesProps<T>): JSX.Element => {
-    const { items, isLoading, isFetchingNextPage, fetchNextPage } = queryResult;
+    const { items, isFetchingNextPage, fetchNextPage } = queryResult;
 
-
-    if (isLoading) {
-        //    return <ThemedSpinner size="small" />;
-    }
 
     if (!items || items.length === 0) {
         return <></>;
@@ -31,15 +27,15 @@ export const HorizontalTiles = <T extends { id: number | string }>({
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
             showsHorizontalScrollIndicator={true}
-            ItemSeparatorComponent={() => <View width="$4" />}
-            estimatedItemSize={150}
+            ItemSeparatorComponent={() => <View width="$2" />}
+            estimatedItemSize={100}
             onEndReached={() => {
                 if (fetchNextPage) {
                     fetchNextPage();
                 }
             }}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={isFetchingNextPage ? <ThemedSpinner flex={1} ai="center" jc="center" size="small" /> : null}
+            ListFooterComponent={isFetchingNextPage ? <ThemedSpinner /> : null}
         />
     );
 };

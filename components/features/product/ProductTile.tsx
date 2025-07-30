@@ -8,8 +8,8 @@ import React from 'react';
 import { DimensionValue } from 'react-native';
 import { PriceTag } from './display/PriceTag';
 
-export const PRODUCT_TILE_WIDTH: DimensionValue = 200;
-export const PRODUCT_TILE_HEIGHT: DimensionValue = 150;
+export const PRODUCT_TILE_WIDTH: DimensionValue = 120;
+export const PRODUCT_TILE_HEIGHT: DimensionValue = 90;
 
 interface ProductTileProps {
     product: Product;
@@ -36,8 +36,7 @@ export const ProductTile = ({
             theme={theme}
             title={product.name + ' ' + product.id}
             imageUrl={product.image?.src ?? ''}
-            titleNumberOfLines={2}
-            gradientMinHeight={40}
+            titleNumberOfLines={1}
             href={routes.product.path(product) as HrefObject}
         >
             <TileBadge theme={theme}>
