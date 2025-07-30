@@ -30,20 +30,20 @@ export const HomeScreen = () => {
                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
             </PageHeader>
             <PageSection scrollable>
-                <PageContent theme="light" title="Debug">
-                    <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
+                <PageContent theme="tertiary_soft" title="Nyheter">
+                    <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
                 </PageContent>
-                <PageContent title="Kategorier">
-                    <CategoryTiles key='categories' queryResult={categories} theme="tertiary" />
+                <PageContent title="Kategorier" theme="light_soft">
+                    <CategoryTiles key='categories' queryResult={categories} theme="light" />
                 </PageContent>
-                <PageContent theme="secondary" title="Nyheter">
-                    <ProductTiles key='recent' queryResult={recentProducts} theme="primary" />
+                <PageContent theme="tertiary_soft" title="Tilbud">
+                    <ProductTiles key='discounted' queryResult={discountedProducts} theme="tertiary" />
                 </PageContent>
-                <PageContent theme="primary" title="Tilbud">
-                    <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />
+                <PageContent theme="primary_soft" title="Populære produkter" >
+                    <ProductTiles key='featured' queryResult={featuredProducts} theme="primary" />
                 </PageContent>
-                <PageContent theme="primary" title="Populære produkter" >
-                    <ProductTiles key='featured' queryResult={featuredProducts} theme="secondary" />
+                <PageContent theme="light_soft" title="Debug">
+                    <ProductTiles key='debug' queryResult={debugProducts} theme="light" />
                 </PageContent>
             </PageSection>
         </PageView>

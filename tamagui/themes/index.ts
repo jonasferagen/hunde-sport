@@ -9,6 +9,7 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
         backgroundLight: lighten(0.05, baseColor),
         backgroundStrong: darken(0.1, baseColor),
         backgroundElevated: lighten(0.1, baseColor),
+        backgroundAlpha: rgba(baseColor, 0.7),
 
         borderColor: darken(0.1, baseColor),
         borderColorStrong: darken(0.2, baseColor),
@@ -40,4 +41,5 @@ export const lilacTheme = withThemeExtras(themes.light, '#D7C8E7', '#7A4DB1')
 export const lilacThemeSoft = withThemeExtras(themes.light, lighten(0.05, '#D7C8E7'), '#7A4DB1')
 export const mintTheme = withThemeExtras(themes.light, '#C8E6E5', '#2FA7A3')
 export const mintThemeSoft = withThemeExtras(themes.light, lighten(0.05, '#C8E6E5'), '#2FA7A3')
-export const augmentedLightTheme = withThemeExtras(themes.light, themes.light.background, '#3366FF')
+export const augmentedLightTheme = withThemeExtras(themes.light, darken(0.05, themes.light.background), '#3366FF')
+export const augmentedLightThemeSoft = withThemeExtras(themes.light, themes.light.background, '#3366FF')

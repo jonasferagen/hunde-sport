@@ -1,3 +1,4 @@
+import { LinearGradient } from '@tamagui/linear-gradient';
 import React, { ReactNode } from 'react';
 import { ScrollView } from 'react-native';
 import { H3, Spacer, YStack, YStackProps } from 'tamagui';
@@ -46,15 +47,22 @@ export const PageContent = (props: PageContentProps) => {
   );
 
   return (
-    <YStack
-      padding="$3"
-      borderBottomWidth={1}
-      backgroundColor={"$background"}
-      borderColor={"$borderColor"}
-      {...props}
-    >
 
-      {content}
-    </YStack >
+    <LinearGradient
+      theme={theme}
+      colors={["$background", "$backgroundPress"]}
+      start={[0, 0]}
+      end={[1, 1]}
+    >
+      <YStack
+        padding="$3"
+        borderBottomWidth={1}
+        borderColor={"$borderColor"}
+        {...props}
+      >
+        {content}
+      </YStack >
+    </LinearGradient>
+
   );
 };

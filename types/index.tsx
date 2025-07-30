@@ -32,7 +32,7 @@ export interface Breadcrumb {
 // Defines the available theme variants for components
 export type ThemeVariant =
   'primary' | 'secondary' | 'tertiary' | 'light' |
-  'primary_soft' | 'secondary_soft' | 'tertiary_soft';
+  'primary_soft' | 'secondary_soft' | 'tertiary_soft' | 'light_soft';
 
 export type Purchasable =
   | {
