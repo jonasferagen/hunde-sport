@@ -23,10 +23,10 @@ export class Category implements CategoryData {
     this.description = data.description;
   }
 
-
   shouldDisplay(): boolean {
-    return this.description !== '#' || this.name === 'Black Friday';
+    return this.description !== '#' && this.name !== "Black Friday";
   }
+
 
   toString() {
     return 'Category ' + this.id + ': ' + this.name;

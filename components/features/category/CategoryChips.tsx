@@ -1,9 +1,10 @@
 import { Chip } from "@/components/ui/";
+import { ThemedSpinner } from "@/components/ui/ThemedSpinner";
 import { routes } from "@/config/routes";
 import { Category } from "@/types";
 import { useState } from "react";
 import { StyleProp, ViewStyle } from "react-native";
-import { Spinner, XStack } from "tamagui";
+import { XStack } from "tamagui";
 
 interface CategoryChipsProps {
     categories: Category[];
@@ -34,7 +35,7 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
                     href={routes.category.path(category)}
                 />
             ))}
-            {(isLoading || isFetchingNextPage) && <Spinner />}
+            {(isLoading || isFetchingNextPage) && <ThemedSpinner />}
             {!showAll && limit && categories.length > limit && (
                 <Chip
                     theme="tertiary"

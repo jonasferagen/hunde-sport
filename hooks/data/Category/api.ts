@@ -10,7 +10,9 @@ export async function fetchCategoryByCategory(page: number, categoryId: number) 
     );
 
     if (error) throw new Error(error);
-    return (data ?? []).map(mapToCategory);
+    return (data ?? [])
+        .filter((item) => item.description !== '#')
+        .map(mapToCategory);
 }
 
 export async function fetchCategoryById(id: number) {

@@ -10,6 +10,7 @@ import { ProductVariations } from '@/components/features/product/variation/Produ
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
 import { ProductProvider, useProductContext } from '@/contexts';
+import { useCategory } from '@/hooks/data/Category';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
@@ -23,7 +24,6 @@ export const ProductScreen = () => {
   const productId = Number(id);
   const { data: product, isLoading } = useProduct(productId);
 
-  const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : product?.categories[0]?.id;
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -37,12 +37,23 @@ export const ProductScreen = () => {
     <ProductProvider product={product}>
 
       <PageView>
-        <PageHeader>{categoryId && <Breadcrumbs categoryId={categoryId} isLastClickable />}</PageHeader>
+        <PageHeader>
+          {categoryIdFromParams ?
+            <BreadcrumbsContainer categoryId={Number(categoryIdFromParams)} /> :
+            <CategoryChips categories={product.categories} />
+          }
+        </PageHeader>
         <ProductScreenContent />
       </PageView>
     </ProductProvider>
   );
 };
+
+const BreadcrumbsContainer = ({ categoryId }: { categoryId: number }) => {
+  const { category } = useCategory(categoryId);
+  return category && <Breadcrumbs category={category} isLastClickable={true} />
+}
+
 
 const ProductScreenContent = () => {
   const { product } = useProductContext();

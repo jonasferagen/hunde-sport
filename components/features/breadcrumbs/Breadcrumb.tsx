@@ -29,7 +29,7 @@ export const Breadcrumb = React.memo(({ category,
   }
 
   const breadcrumbText = (
-    <SizableText fontSize="$5" fontWeight={isLast && !isLastClickable ? 'bold' : 'normal'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
+    <SizableText fontSize="$5" fontWeight={isLast && !isLastClickable ? 'normal' : 'bold'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
       {category.name}
     </SizableText>
   );

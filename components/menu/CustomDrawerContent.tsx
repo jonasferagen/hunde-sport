@@ -55,7 +55,7 @@ const CategoryTreeItem = ({
                     >
                         <ThemedText fontSize="$3" letterSpacing={0.5}
                         >
-                            {category.name}
+                            {category.name} {category.id}
                         </ThemedText>
                     </XStack>
                 </Link>

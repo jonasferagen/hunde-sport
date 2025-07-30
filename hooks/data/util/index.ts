@@ -41,7 +41,7 @@ export const mapToCategory = (item: any): Category => new Category({
     name: item.name,
     parent: item.parent,
     image: item.image,
-    count: item.count,
+    description: item.description,
 });
 
 export const mapToProduct = (item: any): Product | ProductVariation => {

@@ -17,7 +17,7 @@ const CategoryChipsContainer = ({ category }: { category: Category }) => {
     const { items: categories, isFetchingNextPage } = useCategories(category.id, { autoload: true });
 
     return (
-        <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} />
+        <CategoryChips categories={categories.filter(category => category.shouldDisplay())} isFetchingNextPage={isFetchingNextPage} limit={4} />
     );
 }
 
@@ -30,8 +30,8 @@ export const CategoryScreen = memo(() => {
     return (
         <PageView>
             <PageHeader>
-                <Breadcrumbs categoryId={Number(id)} />
-                {category && <CategoryChipsContainer category={category} />}
+                {category && category.parent !== 0 && <Breadcrumbs category={category} isLastClickable={true} />}
+                {category && category.parent === 0 && <CategoryChipsContainer category={category} />}
             </PageHeader>
             <YStack flex={1} paddingHorizontal="none" paddingVertical="none" >
                 <ThemedText>{category?.description}</ThemedText>
