@@ -14,7 +14,7 @@ export async function fetchCategoryByCategory(page: number, categoryId: number) 
         .filter((item) => item.description !== '#')
         .map(mapToCategory);
 }
-
+/*
 export async function fetchCategoryById(id: number) {
     const { data, error } = await apiClient.get<any>(
         ENDPOINTS.CATEGORIES.GET(id)
@@ -22,5 +22,6 @@ export async function fetchCategoryById(id: number) {
 
     if (error) throw new Error(error);
     if (!data) throw new Error(`Category with id ${id} not found`);
-    return mapToCategory(data);
+    return mapToCategory(data); 
 }
+*/

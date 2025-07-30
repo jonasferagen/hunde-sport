@@ -1,7 +1,6 @@
 // Base URL for API requests
 
 export const API_BASE_URL = 'https://hunde-sport.no/wp-json/hundesport/v1';
-
 export const PAGE_SIZE = 10;
 
 const EXTERNAL_CART_URL = `${API_BASE_URL}/reset-cart`;

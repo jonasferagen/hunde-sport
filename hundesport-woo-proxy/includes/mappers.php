@@ -45,12 +45,26 @@ function hundesport_map_product($p) {
                 'alt' => get_post_meta($p->get_image_id(), '_wp_attachment_image_alt', true),
             ]
         ]),
-        'attributes' => array_map(function($attr) {
+        'attributes' => array_map(function($attribute) {
+            if ($attribute->is_taxonomy()) {
+                $terms = wp_get_post_terms($attribute->get_id(), $attribute->get_name());
+                $options = array_map(function($term) {
+                    return $term->name;
+                }, $terms);
+            } else {
+                $options = $attribute->get_options();
+            }
+
             return [
-                'name' => $attr->get_name(),
-                'options' => $attr->get_options(),
+                'id' => $attribute->get_id(),
+                'name' => wc_attribute_label($attribute->get_name()),
+                'slug' => $attribute->get_name(),
+                'position' => $attribute->get_position(),
+                'visible' => $attribute->get_visible(),
+                'variation' => $attribute->get_variation(),
+                'options' => array_values($options),
             ];
-        }, $p->get_attributes() ? $p->get_attributes() : []),
+        }, $p->get_attributes() ? array_values($p->get_attributes()) : []),
         'variations' => $p->is_type('variable') ? $p->get_children() : [],
         'related_ids' => $p->get_related(),
         'type' => $p->get_type(),

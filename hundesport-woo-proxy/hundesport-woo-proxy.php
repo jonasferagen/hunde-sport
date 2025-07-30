@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Hundesport.no Woo Proxy
  * Description: Woocommerce proxy for native app
- * Version: 1.0
+ * Version: 1.0.6
  * Author: Jonas Feragen <jonas.feragen@gmail.com>
  */
 
@@ -11,11 +11,13 @@ require_once __DIR__ . '/includes/mappers.php';
 
 add_action('rest_api_init', function () {
     // Categories
+    
     register_rest_route('hundesport/v1', '/categories', [
         'methods' => 'GET',
         'callback' => 'hundesport_get_categories',
         'permission_callback' => '__return_true',
     ]);
+  
     register_rest_route('hundesport/v1', '/categories/(?P<id>\d+)', [
         'methods' => 'GET',
         'callback' => 'hundesport_get_category',
@@ -50,17 +52,26 @@ add_action('rest_api_init', function () {
 // --- Handlers ---
 
 function hundesport_get_categories(WP_REST_Request $request) {
+    $per_page = (int) ($request->get_param('per_page') ?: 10);
+    $page     = (int) ($request->get_param('page') ?: 1);
+    $offset   = ($page - 1) * $per_page;
+
     $args = [
         'taxonomy' => 'product_cat',
         'hide_empty' => true,
-        'number' => $request->get_param('per_page') ?: 10,
-        'paged' => $request->get_param('page') ?: 1,
         'orderby' => 'name',
         'order' => 'ASC',
+        'number' => $per_page,
+        'offset' => $offset,
     ];
+    // ✅ Add parent filter if provided
+    if (!is_null($request->get_param('parent'))) {
+        $args['parent'] = (int) $request->get_param('parent');
+    }
+
 
     $terms = get_terms($args);
-    $data = array_map('hundesport_map_category', $terms);
+    $data = array_values(array_map('hundesport_map_category', $terms));
     return rest_ensure_response($data);
 }
 
@@ -71,20 +82,53 @@ function hundesport_get_category($request) {
 }
 
 function hundesport_get_products($request) {
+    $per_page = (int) ($request->get_param('per_page') ?: 10);
+    $page     = (int) ($request->get_param('page') ?: 1);
+    $offset   = ($page - 1) * $per_page;
+
     $args = [
         'status' => 'publish',
-        'limit' => $request->get_param('per_page') ?: 10,
-        'page' => $request->get_param('page') ?: 1,
+        'limit' => $per_page,
+        'offset' => $offset,
     ];
 
+    // ✅ Order by date for recent
+    if ($orderby = $request->get_param('orderby')) {
+        $args['orderby'] = $orderby;
+    }
+
+    // ✅ Featured products
+    if ($request->get_param('featured') === 'true') {
+        $args['featured'] = true;
+    }
+
+    // ✅ Discounted / on sale
+    if ($request->get_param('on_sale') === 'true') {
+        $args['on_sale'] = true;
+    }
+
+    // ✅ Search by keyword
+    if ($search = $request->get_param('search')) {
+        $args['s'] = sanitize_text_field($search);
+    }
+
+    // ✅ Filter by category slug or ID
     if ($category = $request->get_param('category')) {
-        $args['category'] = [$category];
+        $args['category'] = [$category]; // Woo handles both ID or slug
+    }
+
+    // ✅ Filter by included IDs
+    if ($include = $request->get_param('include')) {
+        $ids = array_map('intval', explode(',', $include));
+        $args['include'] = $ids;
     }
 
     $products = wc_get_products($args);
     $data = array_map('hundesport_map_product', $products);
-    return rest_ensure_response($data);
+    return rest_ensure_response(array_values($data));
 }
+
+    
 
 function hundesport_get_product($request) {
     $id = (int) $request['id'];
@@ -92,14 +136,9 @@ function hundesport_get_product($request) {
     if (!$product) {
         return new WP_Error('not_found', 'Product not found', ['status' => 404]);
     }
-
-    return rest_ensure_response([
-        'id' => $product->get_id(),
-        'name' => $product->get_name(),
-        'price' => $product->get_price(),
-        'image' => wp_get_attachment_url($product->get_image_id()),
-    ]);
+    return rest_ensure_response(hundesport_map_product($product));
 }
+
 
 function hundesport_get_product_variations($request) {
     $id = (int) $request['id'];
@@ -108,13 +147,19 @@ function hundesport_get_product_variations($request) {
         return rest_ensure_response([]);
     }
 
-    $children = $product->get_children();
+    $per_page = (int) ($request->get_param('per_page') ?: 10);
+    $page     = (int) ($request->get_param('page') ?: 1);
+    $offset   = ($page - 1) * $per_page;
+
+    $children = $product->get_children(); // all variation IDs
+    $paged_children = array_slice($children, $offset, $per_page);
+
     $variations = array_map(function($vid) {
         $var = wc_get_product($vid);
         return $var ? hundesport_map_product($var) : null;
-    }, $children);
+    }, $paged_children);
 
-    return rest_ensure_response(array_filter($variations));
+    return rest_ensure_response(array_values(array_filter($variations)));
 }
 
 function hundesport_fill_cart($request) {

@@ -1,9 +1,10 @@
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useCategories } from '@/hooks/data/Category';
 import { Category } from '@/models/Category';
 import { usePathname } from 'expo-router';
 import React, { JSX, useCallback, useState } from 'react';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
-import { Spinner, XStack, YStack } from 'tamagui';
+import { XStack, YStack } from 'tamagui';
 
 export type RenderItemProps = {
     category: Category;
@@ -78,9 +79,7 @@ export const CategoryTree = ({ parentId = 0, renderItem, level = 0 }: CategoryTr
 
     if (isLoading) {
         return (
-            <YStack flex={1} ai="center" jc="center" marginVertical="$2">
-                <Spinner size="small" />
-            </YStack>
+            <ThemedSpinner />
         );
     }
 

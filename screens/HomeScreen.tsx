@@ -22,7 +22,7 @@ export const HomeScreen = () => {
     const recentProducts = useRecentProducts();
     const discountedProducts = useDiscountedProducts();
     const featuredProducts = useFeaturedProducts();
-    const categories = useCategories(0, { autoload: true });
+    const categories = useCategories(0, { autoload: false });
 
     return (
         <PageView>
