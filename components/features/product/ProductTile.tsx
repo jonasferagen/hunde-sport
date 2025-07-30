@@ -2,27 +2,25 @@ import { Tile } from "@/components/ui/tile/Tile";
 import { TileBadge } from "@/components/ui/tile/TileBadge";
 import { routes } from '@/config/routes';
 import { ProductProvider } from '@/contexts';
-import { Product, ThemeVariant } from "@/types";
+import { Product } from "@/types";
 import React from 'react';
 import { DimensionValue } from 'react-native';
+import { ThemeName, YStackProps } from "tamagui";
 import { PriceTag } from './display/PriceTag';
 
 export const PRODUCT_TILE_WIDTH: DimensionValue = 120;
 export const PRODUCT_TILE_HEIGHT: DimensionValue = 100;
 
-interface ProductTileProps {
+interface ProductTileProps extends YStackProps {
     product: Product;
-    width?: DimensionValue;
-    height?: DimensionValue;
-    theme?: ThemeVariant;
 }
 
-export const ProductTile = ({
+export const ProductTile: React.FC<ProductTileProps> = ({
     product,
     width = PRODUCT_TILE_WIDTH,
     height = PRODUCT_TILE_HEIGHT,
-    theme = 'primary'
-}: ProductTileProps) => {
+    ...stackProps
+}) => {
 
     if (!product) {
         return null;
@@ -30,15 +28,15 @@ export const ProductTile = ({
 
     return (
         <Tile
-            width={width}
-            height={height}
-            theme={theme}
+            w={width}
+            h={height}
             title={product.name + ' ' + product.id}
             imageUrl={product.image?.src ?? ''}
             titleNumberOfLines={1}
             href={routes.product.path(product)}
+            {...stackProps}
         >
-            <TileBadge theme={theme}>
+            <TileBadge theme={stackProps.theme as ThemeName}>
                 <ProductProvider product={product}>
                     <PriceTag />
                 </ProductProvider>

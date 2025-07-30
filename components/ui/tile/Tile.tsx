@@ -1,59 +1,50 @@
-import { ThemeVariant } from '@/types';
 import { getScaledImageUrl } from "@/utils/helpers";
 import { LinearGradient } from '@tamagui/linear-gradient';
-import { HrefObject, Link } from 'expo-router';
+import { Href, Link } from 'expo-router';
 import React from 'react';
-import { DimensionValue } from "react-native";
 import { Image, SizableText, YStack, YStackProps } from 'tamagui';
 
 const GRADIENT_MIN_HEIGHT = 25;
 
-
-export interface TileProps extends Omit<YStackProps, 'href'> {
+export interface TileProps extends YStackProps {
     title: string;
     imageUrl: string;
-    width?: DimensionValue;
-    height?: DimensionValue;
-    aspectRatio?: number;
-    onPress?: () => void;
+    href?: Href<any>;
     titleNumberOfLines?: number;
     gradientMinHeight?: number;
-    theme?: ThemeVariant;
-    href: HrefObject;
-    children?: React.ReactNode;
 }
 
-export const Tile = (props: TileProps) => {
-    const {
-        title,
-        imageUrl,
-        width = '100%',
-        height,
-        aspectRatio,
-        onPress,
-        titleNumberOfLines = 1,
-        gradientMinHeight = GRADIENT_MIN_HEIGHT,
-        theme = 'primary',
-        href,
-        children,
-        ...stackProps
-    } = props;
+export const Tile: React.FC<TileProps> = ({
+    title,
+    imageUrl,
+    width = '100%',
+    height,
+    aspectRatio,
+    onPress,
+    titleNumberOfLines = 1,
+    gradientMinHeight = GRADIENT_MIN_HEIGHT,
+    href,
+    children,
+    ...stackProps
+}) => {
 
-    // const themeValues = useTheme();
-    const finalImageUrl = getScaledImageUrl(imageUrl, Number(width), Number(height));
+    const isNumericWidth = typeof width === 'number';
+    const isNumericHeight = typeof height === 'number';
 
-    return <Link href={href} asChild>
+    const finalImageUrl = (isNumericWidth && isNumericHeight) ? getScaledImageUrl(imageUrl, width, height) : imageUrl;
+
+    const content = (
         <YStack
-            theme={theme}
+
             onPress={onPress}
             w={width}
             h={aspectRatio ? undefined : height || '100%'}
-            br="$3"
+            f={1}
+            br={"$3"}
+            boc="$borderColor"
+            bw={1}
             aspectRatio={aspectRatio}
             overflow="hidden"
-            bw={1}
-            boc="$borderColor"
-            flex={1}
             {...stackProps}
         >
             <Image
@@ -65,11 +56,10 @@ export const Tile = (props: TileProps) => {
                 b={0}
                 objectFit="cover"
             />
-            <YStack flex={1} jc="flex-end">
+            <YStack flex={1} justifyContent="flex-end">
                 <LinearGradient
-
                     colors={["$backgroundAlpha", "$backgroundPress"]}
-                    minHeight={gradientMinHeight}
+                    mih={gradientMinHeight}
                     p="$2"
                 >
                     <SizableText
@@ -84,5 +74,11 @@ export const Tile = (props: TileProps) => {
             </YStack>
             {children}
         </YStack>
-    </Link>;
+    );
+
+    if (href) {
+        return <Link href={href} asChild>{content}</Link>;
+    }
+
+    return content;
 }

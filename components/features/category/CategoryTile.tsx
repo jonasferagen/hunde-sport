@@ -1,43 +1,35 @@
-import { Tile, TileProps } from "@/components/ui/tile/Tile";
+import { Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
-import { ThemeVariant } from '@/types';
 import React from 'react';
 import { DimensionValue } from 'react-native';
+import { YStackProps } from "tamagui";
 
 export const CATEGORY_TILE_WIDTH: DimensionValue = 200;
 export const CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 
-interface CategoryTileProps extends Omit<TileProps, 'title' | 'imageUrl' | 'href'> {
+interface CategoryTileProps extends Omit<YStackProps, 'children'> {
     category: Category;
-    width?: DimensionValue;
-    height?: DimensionValue;
-    theme?: ThemeVariant;
 }
-export const CategoryTile = ({
+
+export const CategoryTile: React.FC<CategoryTileProps> = ({
     category,
     width = CATEGORY_TILE_WIDTH,
     height = CATEGORY_TILE_HEIGHT,
-    theme,
     ...stackProps
-}: CategoryTileProps) => {
+}) => {
 
     const finalHref = routes.category.path(category);
 
     return (
-
         <Tile
             title={category.name}
-            theme={theme}
-            imageUrl={category.image?.src}
+            imageUrl={category.image?.src ?? ''}
             href={finalHref}
             width={width}
             height={height}
             aspectRatio={1}
             {...stackProps}
-        >
-            <></>
-        </Tile>
-
+        />
     );
 };

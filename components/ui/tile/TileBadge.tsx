@@ -1,17 +1,16 @@
-import { ThemeVariant } from "@/types";
 import React from "react";
-import { YStack } from "tamagui";
+import { YStack, YStackProps } from "tamagui";
 
-interface TileBadgeProps {
+interface TileBadgeProps extends YStackProps {
     children: React.ReactNode;
-    theme?: ThemeVariant;
+
 }
 
-export const TileBadge = ({ children, theme = 'primary' }: TileBadgeProps): React.JSX.Element => {
+export const TileBadge = ({ children, ...props }: TileBadgeProps): React.JSX.Element => {
 
     return (
         <YStack
-            theme={theme}
+
             pos="absolute"
             t="$2"
             r="$2"
@@ -20,6 +19,7 @@ export const TileBadge = ({ children, theme = 'primary' }: TileBadgeProps): Reac
             boc="$borderColorStrong"
             px="$1"
             br="$3"
+            {...props}
         >
             {children}
         </YStack>
