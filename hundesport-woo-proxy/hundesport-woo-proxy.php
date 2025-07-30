@@ -6,6 +6,9 @@
  * Author: Jonas Feragen <jonas.feragen@gmail.com>
  */
 
+require_once __DIR__ . '/includes/mappers.php';
+
+
 add_action('rest_api_init', function () {
     // Categories
     register_rest_route('hundesport/v1', '/categories', [
@@ -57,13 +60,14 @@ function hundesport_get_categories(WP_REST_Request $request) {
     ];
 
     $terms = get_terms($args);
-    return rest_ensure_response($terms);
+    $data = array_map('hundesport_map_category', $terms);
+    return rest_ensure_response($data);
 }
 
 function hundesport_get_category($request) {
     $id = (int) $request['id'];
     $term = get_term($id, 'product_cat');
-    return rest_ensure_response($term ?: new WP_Error('not_found', 'Category not found', ['status' => 404]));
+    return rest_ensure_response(hundesport_map_category($term) ?: new WP_Error('not_found', 'Category not found', ['status' => 404]));
 }
 
 function hundesport_get_products($request) {
@@ -78,15 +82,7 @@ function hundesport_get_products($request) {
     }
 
     $products = wc_get_products($args);
-    $data = array_map(function($p) {
-        return [
-            'id' => $p->get_id(),
-            'name' => $p->get_name(),
-            'price' => $p->get_price(),
-            'image' => wp_get_attachment_url($p->get_image_id()),
-        ];
-    }, $products);
-
+    $data = array_map('hundesport_map_product', $products);
     return rest_ensure_response($data);
 }
 
@@ -112,8 +108,13 @@ function hundesport_get_product_variations($request) {
         return rest_ensure_response([]);
     }
 
-    $variations = $product->get_available_variations();
-    return rest_ensure_response($variations);
+    $children = $product->get_children();
+    $variations = array_map(function($vid) {
+        $var = wc_get_product($vid);
+        return $var ? hundesport_map_product($var) : null;
+    }, $children);
+
+    return rest_ensure_response(array_filter($variations));
 }
 
 function hundesport_fill_cart($request) {

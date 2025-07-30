@@ -1,13 +1,6 @@
 // Base URL for API requests
-import { Platform } from 'react-native';
 
-export const API_BASE_URL = __DEV__
-  ? Platform.select({
-    android: 'http://10.0.2.2:3001', // Android emulator
-    ios: 'http://localhost:3001',   // iOS simulator
-    web: 'http://localhost:3001',   // Web browser
-  })!
-  : 'https://hunde-sport.no/wp-json/wc/v3'; // Update this for production
+export const API_BASE_URL = 'https://hunde-sport.no/wp-json/hundesport/v1';
 
 export const PAGE_SIZE = 10;
 
