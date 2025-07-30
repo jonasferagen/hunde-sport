@@ -10,9 +10,12 @@ const StyledTab = styled(Tabs.Tab, {
     flex: 1,
     position: 'relative',
     bottom: 50,
-    height: 100,
+    height: 90,
     left: 0,
     right: 0,
+    borderColor: '$borderColorStrong',
+    borderWidth: 1,
+    backgroundColor: 'transparent',
 });
 
 const StyledLinearGradient = styled(LinearGradient, {
@@ -27,13 +30,9 @@ const StyledLinearGradient = styled(LinearGradient, {
 
 const StyledTabs = styled(Tabs, {
     name: 'StyledTabs',
-    height: 110,
-    backgroundColor: 'transparent',
-    borderTopColor: '$borderColor',
-    borderTopWidth: 1,
+    height: 100,
     position: 'relative',
     bottom: -40,
-
     left: 0,
     right: 0,
 });
@@ -49,7 +48,7 @@ export const BottomBar = ({ children }: { children?: React.ReactNode }) => {
     return (
         <Theme name="secondary" >
             <StyledLinearGradient
-                colors={['$background', '$backgroundPress']}
+                colors={['$backgroundStrong', '$backgroundPress']}
                 start={(0 as DimensionValue, 0 as DimensionValue)}
                 end={(0 as DimensionValue, 1 as DimensionValue)}
             />
