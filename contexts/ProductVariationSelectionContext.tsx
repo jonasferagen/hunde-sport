@@ -1,13 +1,11 @@
 import { OptionState, useProductVariations } from '@/hooks/useProductVariations';
 import { ProductVariation, VariableProduct } from '@/models/Product';
-import { ProductAttribute } from '@/models/ProductAttribute';
 import React, { createContext, useContext, useEffect } from 'react';
 
 interface ProductVariationContextType {
     selectOption: (attributeId: number, option: string) => void;
     getOptionState: (attributeId: number, optionName: string) => OptionState;
     selectedOptions: Record<number, string>;
-    productVariationAttributes: ProductAttribute[];
     selectedVariation: ProductVariation | null;
 }
 
@@ -24,7 +22,6 @@ export const ProductVariationSelectionProvider: React.FC<{
         selectOption,
         getOptionState,
         selectedOptions,
-        productVariationAttributes,
         selectedVariation,
     } = useProductVariations(product, productVariations, initialProductVariation);
 
@@ -36,7 +33,6 @@ export const ProductVariationSelectionProvider: React.FC<{
         selectOption,
         getOptionState,
         selectedOptions,
-        productVariationAttributes,
         selectedVariation,
     };
 
