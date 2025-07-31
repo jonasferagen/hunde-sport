@@ -16,7 +16,7 @@ const findVariations = (product: VariableProduct, selectedOptions: { [key: strin
 };
 
 export const ProductVariations = (): JSX.Element => {
-    const { product, isProductVariationsLoading } = useProductContext();
+    const { product, productVariations, isProductVariationsLoading } = useProductContext();
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
     const [matchingVariations, setMatchingVariations] = useState(() =>
         findVariations(product as VariableProduct, {})
@@ -39,6 +39,25 @@ export const ProductVariations = (): JSX.Element => {
 
         const variations = findVariations(product as VariableProduct, newSelectedOptions);
         setMatchingVariations(variations);
+
+        const totalAttributes = product.attributes.filter((attr) => attr.variation).length;
+        if (Object.keys(newSelectedOptions).length === totalAttributes && totalAttributes > 0) {
+            if (variations.length !== 1) {
+                console.error(
+                    'Expected to find exactly one variation, but found ' + variations.length,
+                    variations
+                );
+            } else {
+                const finalVariationId = variations[0].id;
+                const fullVariation = productVariations.find((v) => v.id === finalVariationId);
+                if (fullVariation) {
+                    console.log('Final selected product variation:', fullVariation);
+                    //  setProductVariation(fullVariation);
+                } else {
+                    console.error('Could not find the full variation object for id:', finalVariationId);
+                }
+            }
+        }
     };
 
     const attributes = product.attributes.filter((attribute) => attribute.variation);
