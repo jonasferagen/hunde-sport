@@ -13,6 +13,11 @@ export interface ProductPrices {
   price_range: { min_amount: string; max_amount: string } | null;
 }
 
+export interface VariationReference {
+  id: number;
+  attributes: { name: string; option: string }[];
+}
+
 export interface ProductData {
   id: number;
   name: string;
@@ -29,7 +34,7 @@ export interface ProductData {
   categories: CategoryData[];
   tags: { id: number; name: string; slug: string }[];
   attributes: ProductAttributeData[];
-  variations: number[];
+  variations: VariationReference[];
   parent_id: number;
   type: ProductType;
   is_in_stock: boolean;
@@ -53,7 +58,7 @@ export abstract class Product {
   categories: Category[];
   tags: { id: number; name: string; slug: string }[];
   attributes: ProductAttribute[];
-  variations: number[];
+  variations: VariationReference[];
   variationsData: Product[] = [];
   parent_id: number;
   type: ProductType;

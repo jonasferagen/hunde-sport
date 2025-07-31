@@ -16,8 +16,6 @@ const ProductVariationsContent = (): JSX.Element => {
 
     const { productVariationAttributes } = useProductVariationSelectionContext();
 
-    console.log(productVariationAttributes);
-
     return (
         <XStack gap="$2" flexWrap="wrap">
             {productVariationAttributes.map((attribute) => {

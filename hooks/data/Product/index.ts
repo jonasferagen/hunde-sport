@@ -11,9 +11,12 @@ export const useProduct = (id: number) => {
     return useQuery(productQueryOptions(id));
 };
 
-export const useProductVariations = (variableProduct: VariableProduct) => {
+export const useProductVariations = (variableProduct: VariableProduct, options?: { enabled?: boolean }) => {
     const results = useQueries({
-        queries: variableProduct.variations.map((variation) => productQueryOptions(variation.id)),
+        queries: (variableProduct?.variations || []).map((variation) => ({
+            ...productQueryOptions(variation.id),
+            enabled: !!options?.enabled,
+        })),
     });
 
     return {

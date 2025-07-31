@@ -1,10 +1,8 @@
 export class ProductAttributeOption {
   name: string;
-  isAvailable: boolean;
 
   constructor(name: string) {
     this.name = name;
-    this.isAvailable = true;
   }
 
   get label(): string {

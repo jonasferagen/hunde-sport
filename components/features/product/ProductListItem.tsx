@@ -18,13 +18,13 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     isExpanded,
     categoryId,
 }) => {
-    const { product } = useProductContext();
+    const { product, productVariation } = useProductContext();
 
     const handleExpand = () => {
         onPress(product.id);
     };
 
-
+    //  console.log('productVariation', productVariation);
     return (
         <YStack borderBottomWidth={1} paddingVertical="$3" borderBottomColor="$gray7">
             <ProductCard>

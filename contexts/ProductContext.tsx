@@ -1,4 +1,4 @@
-import { useProductVariations } from '@/hooks/data/Product';
+import { useProductVariations as useProductVariationsData } from '@/hooks/data/Product';
 import { Product, ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { ProductVariationSelectionProvider } from './ProductVariationSelectionContext';
@@ -23,54 +23,72 @@ export const calculatePriceRange = (productVariations: ProductVariation[]): { mi
 interface ProductContextType {
     product: SimpleProduct | VariableProduct;
     productVariation?: ProductVariation | undefined;
-    setProductVariation: (variation: ProductVariation | undefined) => void;
     productVariations: ProductVariation[];
     priceRange: { min: number; max: number } | undefined;
     isLoading: boolean;
     isProductVariationsLoading: boolean;
-
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-
-export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation | undefined; children: React.ReactNode }> = ({
-    product,
-    productVariation: initialProductVariation,
-    children,
-}) => {
+const VariableProductProvider: React.FC<{
+    product: VariableProduct;
+    initialProductVariation?: ProductVariation;
+    children: React.ReactNode;
+}> = ({ product, initialProductVariation, children }) => {
     const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(initialProductVariation);
 
-
-    const { data: productVariations, isLoading: isProductVariationsLoading } = useProductVariations(product as VariableProduct);
-
+    const { data: productVariations, isLoading: isProductVariationsLoading } = useProductVariationsData(product, {
+        enabled: true,
+    });
 
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 
-    const value = {
+    const value: ProductContextType = {
         product,
         productVariation,
-        setProductVariation,
         productVariations: productVariations || [],
         priceRange,
         isLoading: false,
         isProductVariationsLoading,
-
     };
 
+    return (
+        <ProductContext.Provider value={value}>
+            <ProductVariationSelectionProvider
+                product={product}
+                productVariations={productVariations || []}
+                initialProductVariation={initialProductVariation}
+                setProductVariation={setProductVariation}
+            >
+                {children}
+            </ProductVariationSelectionProvider>
+        </ProductContext.Provider>
+    );
+};
 
-    const content = product.type === 'variable' && !isProductVariationsLoading ? (
-        <ProductVariationSelectionProvider
-            product={product as VariableProduct}
-            productVariations={productVariations || []}
-            initialProductVariation={initialProductVariation}
-            setProductVariation={setProductVariation}
-        >
-            {children}
-        </ProductVariationSelectionProvider>
-    ) : children;
+export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation; children: React.ReactNode }> = ({
+    product,
+    productVariation: initialProductVariation,
+    children,
+}) => {
+    if (product.type === 'variable') {
+        return (
+            <VariableProductProvider product={product as VariableProduct} initialProductVariation={initialProductVariation}>
+                {children}
+            </VariableProductProvider>
+        );
+    }
 
-    return <ProductContext.Provider value={value}>{content}</ProductContext.Provider>;
+    const value: ProductContextType = {
+        product: product as SimpleProduct,
+        productVariations: [],
+        priceRange: undefined,
+        isLoading: false,
+        isProductVariationsLoading: false,
+    };
+
+    return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };
 
 export const useProductContext = () => {
