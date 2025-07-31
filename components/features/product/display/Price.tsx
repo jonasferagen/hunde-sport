@@ -17,10 +17,10 @@ export const Price = ({ fontSize = "$3", productOverride }: PriceProps) => {
         return (
             <XStack ai="center">
                 <SizableText textDecorationLine="line-through" mr="$2" opacity={0.7} fontSize={fontSize}>
-                    {formatPrice(activeProduct.regular_price)}
+                    {formatPrice(activeProduct.prices.regular_price)}
                 </SizableText>
                 <SizableText fontWeight="bold" fontSize={fontSize}>
-                    {formatPrice(activeProduct.sale_price)}
+                    {formatPrice(activeProduct.prices.sale_price)}
                 </SizableText>
             </XStack>
         );
@@ -28,7 +28,7 @@ export const Price = ({ fontSize = "$3", productOverride }: PriceProps) => {
 
     return (
         <SizableText fontWeight="bold" fontSize={fontSize}>
-            {formatPrice(activeProduct.price)}
+            {formatPrice(activeProduct.prices.price)}
         </SizableText>
     );
 };

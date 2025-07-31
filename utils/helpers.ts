@@ -1,6 +1,5 @@
 import { decode } from 'he';
 
-import { ProductPriceRange } from '@/types';
 
 export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
 
@@ -13,17 +12,21 @@ export const cleanNumber = (value: string) => {
 
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const formatPrice = (price: number): string =>
-    price.toFixed(0).replace('.', ',') + ',-';
+export const formatPrice = (price: string): string => {
+    const num = parseFloat(price) / 100;
+    return num.toFixed(0).replace('.', ',') + ',-';
+};
 
-export const formatPriceRange = (priceRange: ProductPriceRange, compact: boolean = true): string => {
-    if (priceRange.min === priceRange.max) {
-        return formatPrice(priceRange.min);
+export const formatPriceRange = (priceRange: any, compact: boolean = true): string => {
+
+
+    if (priceRange.min_amount === priceRange.max_amount) {
+        return formatPrice(priceRange.min_amount);
     }
     if (compact) {
-        return `Fra ${formatPrice(priceRange.min)}`;
+        return `Fra ${formatPrice(priceRange.min_amount)}`;
     }
-    return `${formatPrice(priceRange.min)} - ${formatPrice(priceRange.max)}`;
+    return `${formatPrice(priceRange.min_amount)} - ${formatPrice(priceRange.max_amount)}`;
 };
 
 /*

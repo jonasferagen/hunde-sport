@@ -1,6 +1,6 @@
 import { Category } from '@/models/Category';
 import { Product, ProductData, ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
-import { cleanHtml, cleanNumber } from '@/utils/helpers';
+import { cleanHtml } from '@/utils/helpers';
 import { InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
@@ -50,25 +50,31 @@ export const mapToProduct = (item: any): Product | ProductVariation => {
         const productData: ProductData = {
             id: item.id,
             name: cleanHtml(item.name),
-            price: cleanNumber(item.price),
+            permalink: item.permalink,
+            slug: item.slug,
             on_sale: item.on_sale,
-            regular_price: cleanNumber(item.regular_price),
-            sale_price: cleanNumber(item.sale_price),
             featured: item.featured || false,
-            stock_status: item.stock_status,
             description: cleanHtml(item.description),
             short_description: cleanHtml(item.short_description || ''),
+            sku: item.sku,
+            price_html: item.price_html,
+            prices: item.prices,
+            images: item.images || [],
             categories: item.categories || [],
-            images: item.image ? [item.image] : item.images || [], // Needed for non-standard api response when getting product variations 
+            tags: item.tags || [],
             attributes: (item.attributes || []).map((attr: any) => ({
-                ...attr,
-                options: attr.options ? attr.options.map((opt: any) => cleanHtml(opt)) : []
+                id: attr.id,
+                name: attr.name,
+                option: attr.option,
+                options: attr.options ? attr.options.map((opt: any) => cleanHtml(opt)) : [],
+                variation: attr.variation || false,
             })),
             variations: item.variations || [],
-            related_ids: item.related_ids || [],
-            type: item.type,
-            default_attributes: item.default_attributes || [],
             parent_id: item.parent_id || 0,
+            type: item.type,
+            is_in_stock: item.is_in_stock,
+            is_purchasable: item.is_purchasable,
+            has_options: item.has_options,
         };
 
         switch (productData.type) {

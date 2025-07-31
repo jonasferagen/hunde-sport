@@ -4,74 +4,87 @@ import { ProductAttribute, ProductAttributeData } from './ProductAttribute';
 
 export type ProductType = 'simple' | 'variable' | 'variation';
 
-export interface ProductPriceRange {
-  min: number;
-  max: number;
+export interface ProductPrices {
+  currency_code: string;
+  currency_symbol: string;
+  price: string;
+  regular_price: string;
+  sale_price: string;
+  price_range: { min_amount: string; max_amount: string } | null;
 }
 
 export interface ProductData {
   id: number;
   name: string;
-  price: number,
-  regular_price: number,
-  sale_price: number,
-  on_sale: boolean,
-  featured: boolean,
-  stock_status: string,
+  permalink: string;
+  slug: string;
+  on_sale: boolean;
+  featured: boolean;
   description: string;
   short_description: string;
-  categories: CategoryData[];
+  sku: string;
+  price_html: string;
+  prices: ProductPrices;
   images: Image[];
+  categories: CategoryData[];
+  tags: { id: number; name: string; slug: string }[];
   attributes: ProductAttributeData[];
   variations: number[];
-  related_ids: number[];
-  type: ProductType;
-  default_attributes: ProductAttributeData[];
   parent_id: number;
+  type: ProductType;
+  is_in_stock: boolean;
+  is_purchasable: boolean;
+  has_options: boolean;
 }
 
 export abstract class Product {
   id: number;
   name: string;
-  price: number;
-  regular_price: number;
-  sale_price: number;
+  permalink: string;
+  slug: string;
   on_sale: boolean;
   featured: boolean;
-  stock_status: string;
   _description: string;
   _short_description: string;
-  categories: Category[];
+  sku: string;
+  price_html: string;
+  prices: ProductPrices;
   images: Image[];
+  categories: Category[];
+  tags: { id: number; name: string; slug: string }[];
   attributes: ProductAttribute[];
   variations: number[];
   variationsData: Product[] = [];
-  related_ids: number[];
-  type: ProductType;
-  default_attributes: ProductAttribute[];
   parent_id: number;
+  type: ProductType;
+  is_in_stock: boolean;
+  is_purchasable: boolean;
+  has_options: boolean;
 
   constructor(data: ProductData) {
     this.id = data.id;
     this.name = data.name;
+    this.permalink = data.permalink;
+    this.slug = data.slug;
     this.on_sale = data.on_sale;
-    this.price = data.price;
-    this.regular_price = data.regular_price;
-    this.sale_price = data.sale_price;
     this.featured = data.featured;
-    this.stock_status = data.stock_status;
     this._description = data.description;
     this._short_description = data.short_description;
-    this.categories = data.categories.map(category => new Category(category));
+    this.sku = data.sku;
+    this.price_html = data.price_html;
+    this.prices = data.prices;
+    this.images = data.images || [];
+    this.categories = data.categories.map((category) => new Category(category));
+    this.tags = data.tags;
+    this.attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
     this.variations = data.variations;
-    this.related_ids = data.related_ids;
-    this.type = data.type;
-    this.attributes = (data.attributes || []).map(attr => new ProductAttribute(attr));
-    this.default_attributes = (data.default_attributes || []).map(attr => new ProductAttribute(attr));
     this.parent_id = data.parent_id;
+    this.type = data.type;
+    this.is_in_stock = data.is_in_stock;
+    this.is_purchasable = data.is_purchasable;
+    this.has_options = data.has_options;
 
     // Add a placeholder image if none exist
-    this.images = data.images || [];
     if (this.images.length === 0) {
       this.images.push({
         id: 0,
@@ -95,7 +108,7 @@ export abstract class Product {
   }
 
   isInStock(): boolean {
-    return this.stock_status === 'instock';
+    return this.is_in_stock;
   }
 
   abstract hasVariations(): boolean;
@@ -106,7 +119,6 @@ export abstract class Product {
     return 'Product ' + this.id + ': ' + this.name;
   }
 }
-
 
 export class SimpleProduct extends Product {
   constructor(data: ProductData) {
@@ -160,6 +172,4 @@ export class ProductVariation extends Product {
   isPurchasable(): boolean {
     return this.isInStock();
   }
-
-
 }

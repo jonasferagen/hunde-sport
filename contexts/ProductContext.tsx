@@ -5,10 +5,14 @@ import { ProductVariationSelectionProvider } from './ProductVariationSelectionCo
 
 export const calculatePriceRange = (productVariations: ProductVariation[]): { min: number; max: number } | undefined => {
     if (!productVariations || productVariations.length === 0) {
-        return undefined
+        return undefined;
     }
 
-    const prices = productVariations.map((p) => p.price).filter((p) => p > 0);
+    const prices = productVariations.map((p) => parseFloat(p.prices.price)).filter((p) => p > 0);
+
+    if (prices.length === 0) {
+        return undefined;
+    }
 
     const min = Math.min(...prices);
     const max = Math.max(...prices);
@@ -38,17 +42,9 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
     const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(initialProductVariation);
 
 
-    const {
-        items: productVariations,
-        isLoading,
-        isFetchingNextPage,
-        hasNextPage,
-
-    } = useProductVariations(product, { enabled: product.hasVariations(), autoload: true });
+    const { data: productVariations, isLoading: isProductVariationsLoading } = useProductVariations(product as VariableProduct);
 
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
-
-    const isProductVariationsLoading = isLoading || isFetchingNextPage || hasNextPage;
 
     const value = {
         product,
@@ -56,7 +52,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         setProductVariation,
         productVariations: productVariations || [],
         priceRange,
-        isLoading,
+        isLoading: false,
         isProductVariationsLoading,
 
     };

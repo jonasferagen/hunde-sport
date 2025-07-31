@@ -34,7 +34,8 @@ type CategoryTreeBranchProps = {
 const CategoryTreeBranch = ({ category, level, isExpanded, onExpand, renderItem }: CategoryTreeBranchProps) => {
     const pathname = usePathname();
     const isActive = pathname.includes(`/category/${category.id}`);
-    const { items: subcategories } = useCategories(category.id, { autoload: true });
+    const { items: categories } = useCategories({ autoload: true });
+    const subcategories = categories.filter(cat => cat.parent === category.id);
     const hasChildren = subcategories.length > 0;
 
 
@@ -70,7 +71,7 @@ const CategoryTreeBranch = ({ category, level, isExpanded, onExpand, renderItem 
 };
 
 export const CategoryTree = ({ parentId = 0, renderItem, level = 0 }: CategoryTreeProps): JSX.Element => {
-    const { items: categories, isLoading } = useCategories(parentId, { autoload: true });
+    const { items: categories, isLoading } = useCategories({ autoload: true });
     const [expandedId, setExpandedId] = useState<number | null>(null);
 
     const handleExpand = useCallback((id: number) => {
@@ -85,7 +86,7 @@ export const CategoryTree = ({ parentId = 0, renderItem, level = 0 }: CategoryTr
 
     return (
         <YStack>
-            {categories.map(category => (
+            {categories.filter(cat => cat.parent === parentId).map(category => (
                 <CategoryTreeBranch
                     key={category.id}
                     category={category}

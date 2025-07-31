@@ -14,10 +14,11 @@ import { LoadingScreen } from './misc/LoadingScreen';
 
 
 const CategoryChipsContainer = ({ category }: { category: Category }) => {
-    const { items: categories, isFetchingNextPage } = useCategories(category.id, { autoload: true });
+    const { items, isFetchingNextPage } = useCategories({ autoload: true });
+    const categories = items.filter(cat => cat.parent === category.id).filter(category => category.shouldDisplay());
 
     return (
-        <CategoryChips categories={categories.filter(category => category.shouldDisplay())} isFetchingNextPage={isFetchingNextPage} limit={4} />
+        <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} />
     );
 }
 

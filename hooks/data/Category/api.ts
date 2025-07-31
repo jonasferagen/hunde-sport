@@ -3,18 +3,17 @@ import apiClient from '@/utils/apiClient';
 
 import { mapToCategory } from '@/hooks/data/util';
 
-export async function fetchCategoryByCategory(page: number, categoryId: number) {
+export async function fetchCategories(page: number) {
 
     const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.CATEGORIES.LIST(page, 'parent=' + categoryId)
+        ENDPOINTS.CATEGORIES.LIST(page)
     );
 
     if (error) throw new Error(error);
     return (data ?? [])
-        .filter((item) => item.description !== '#')
         .map(mapToCategory);
 }
-/*
+
 export async function fetchCategoryById(id: number) {
     const { data, error } = await apiClient.get<any>(
         ENDPOINTS.CATEGORIES.GET(id)
@@ -22,6 +21,5 @@ export async function fetchCategoryById(id: number) {
 
     if (error) throw new Error(error);
     if (!data) throw new Error(`Category with id ${id} not found`);
-    return mapToCategory(data); 
+    return mapToCategory(data);
 }
-*/

@@ -1,5 +1,5 @@
-import { ENDPOINTS, PAGE_SIZE } from '@/config/api';
-import { Product, VariableProduct } from '@/models/Product';
+import { ENDPOINTS } from '@/config/api';
+import { Product } from '@/models/Product';
 import apiClient from '@/utils/apiClient';
 
 import { mapToProduct } from '@/hooks/data/util';
@@ -29,28 +29,19 @@ export function getQueryStringForType({ type, params }: ProductListParams): stri
     }
 }
 
-
 export async function fetchProduct(id: number): Promise<Product> {
     const { data, error } = await apiClient.get<any>(ENDPOINTS.PRODUCTS.GET(id));
     if (error) throw new Error(error);
+
+    if (data.id === 27445) {
+        console.log(data);
+    }
+
     return mapToProduct(data);
 }
 
-export async function fetchProductVariations(page: number, variableProduct: VariableProduct): Promise<Product[]> {
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.VARIATIONS(variableProduct.id) + `?page=${page}&per_page=${PAGE_SIZE} `
-    );
-
+export const fetchProducts = async (page: number, query: ProductListParams) => {
+    const { data, error } = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
     if (error) throw new Error(error);
     return (data ?? []).map(mapToProduct);
-}
-
-export async function fetchProducts(page: number, query: ProductListParams): Promise<Product[]> {
-    const queryString = getQueryStringForType(query);
-
-    const { data, error } = await apiClient.get<any[]>(
-        ENDPOINTS.PRODUCTS.LIST(page, queryString)
-    );
-    if (error) throw new Error(error);
-    return (data ?? []).map(mapToProduct);
-}
+};

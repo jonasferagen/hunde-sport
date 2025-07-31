@@ -6,7 +6,6 @@ import { PageHeader } from '@/components/layout/PageHeader';
 
 import { SearchBar } from '@/components/ui/search-bar/Searchbar';
 import { routes } from '@/config/routes';
-import { useCategories } from '@/hooks/data/Category';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router } from 'expo-router';
@@ -22,7 +21,7 @@ export const HomeScreen = () => {
     const recentProducts = useRecentProducts();
     const discountedProducts = useDiscountedProducts();
     const featuredProducts = useFeaturedProducts();
-    const categories = useCategories(0, { autoload: false });
+
 
     return (
         <PageView>
@@ -34,7 +33,7 @@ export const HomeScreen = () => {
                     <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
                 </PageContent>
                 <PageContent theme="secondary_soft" title="Kategorier">
-                    <CategoryTiles key='categories' queryResult={categories} theme="secondary" />
+                    <CategoryTiles key='categories' categoryId={0} theme="secondary" />
                 </PageContent>
                 <PageContent theme="light_soft" title="Tilbud" px="none">
                     <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />
