@@ -5,9 +5,16 @@ import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 const findVariations = (product: VariableProduct, selectedOptions: { [key: string]: string }) => {
+    const filteredVariations = product.variations.filter((variation) => {
+        return Object.entries(selectedOptions).every(([name, value]) => {
+            return variation.attributes.some((attribute) => attribute.name === name && attribute.value === value);
+        });
+    });
 
+    const foundIds = filteredVariations.map((v) => v.id);
+    console.log('Found variation IDs:', foundIds);
+    return filteredVariations;
 };
-
 
 export const ProductVariations = (): JSX.Element => {
     const { product, isProductVariationsLoading } = useProductContext();
@@ -29,7 +36,7 @@ export const ProductVariations = (): JSX.Element => {
         setSelectedOptions(newSelectedOptions);
         console.log('All selected options:', newSelectedOptions);
 
-        console.log(product.variations[0].attributes);
+        findVariations(product as VariableProduct, newSelectedOptions);
     };
 
     const attributes = product.attributes.filter((attribute) => attribute.variation);
