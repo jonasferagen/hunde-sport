@@ -1,4 +1,10 @@
-import { ProductAttributeOption } from './ProductAttributeOption';
+
+export interface ProductAttributeTerm {
+  id: number;
+  name: string;
+  slug: string;
+  default: boolean;
+}
 
 export interface ProductAttributeData {
   id: number;
@@ -9,6 +15,9 @@ export interface ProductAttributeData {
   option?: string;
   position: number;
   visible: boolean;
+  taxonomy: string;
+  has_variations: boolean;
+  terms: ProductAttributeTerm[];
 }
 
 export class ProductAttribute {
@@ -16,35 +25,28 @@ export class ProductAttribute {
   name: string;
   slug: string;
   variation: boolean;
-  options: ProductAttributeOption[];
+  options: string[];
   option?: string;
   position: number;
   visible: boolean;
+  taxonomy: string;
+  has_variations: boolean;
+  terms: ProductAttributeTerm[];
 
   constructor(data: ProductAttributeData) {
     this.id = data.id;
     this.name = data.name;
-    this.slug = data.slug;
+    this.taxonomy = data.taxonomy;
+    this.has_variations = data.has_variations;
+    this.terms = data.terms;
+    this.options = data.options;
     this.variation = data.variation;
-    this.option = data.option;
-    this.position = data.position;
     this.visible = data.visible;
-
-    // Sort options with numeric priority
-    this.options = (data.options || []).sort((a, b) => {
-      const numA = parseInt(a.match(/^\d+/)?.[0] || '0', 10);
-      const numB = parseInt(b.match(/^\d+/)?.[0] || '0', 10);
-
-      if (numA !== 0 && numB !== 0 && numA !== numB) {
-        return numA - numB;
-      }
-
-      return 0; // Preserve original order for non-numeric options
-    }).map((option: string) => new ProductAttributeOption(option));
+    this.position = data.position;
+    this.slug = data.slug;
   }
 
   get label(): string {
-    if (!this.name) return '';
-    return this.name.charAt(0).toUpperCase() + this.name.slice(1);
+    return this.name;
   }
 }

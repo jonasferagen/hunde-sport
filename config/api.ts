@@ -17,7 +17,6 @@ export const ENDPOINTS = {
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,
     LIST: (page: number, ...params: string[]) => `${PRODUCTS_URL}?page=${page}&${params.join('&')}&${filterParams}`,
-    VARIATIONS: (productId: number) => `${PRODUCTS_URL}/${productId}/variations`,
   },
   EXTERNAL_CART: {
     POST: () => `${EXTERNAL_CART_URL}`,

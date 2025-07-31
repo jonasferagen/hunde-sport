@@ -30,12 +30,8 @@ export function getQueryStringForType({ type, params }: ProductListParams): stri
 }
 
 export async function fetchProduct(id: number): Promise<Product> {
-    const { data, error } = await apiClient.get<any>(ENDPOINTS.PRODUCTS.GET(id));
+    const { data, error } = await apiClient.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
     if (error) throw new Error(error);
-
-    if (data.id === 27445) {
-        console.log(data);
-    }
 
     return mapToProduct(data);
 }

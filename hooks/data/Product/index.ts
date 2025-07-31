@@ -13,7 +13,7 @@ export const useProduct = (id: number) => {
 
 export const useProductVariations = (variableProduct: VariableProduct) => {
     const results = useQueries({
-        queries: variableProduct.variations.map((id) => productQueryOptions(id)),
+        queries: variableProduct.variations.map((variation) => productQueryOptions(variation.id)),
     });
 
     return {

@@ -44,6 +44,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
 
     const { data: productVariations, isLoading: isProductVariationsLoading } = useProductVariations(product as VariableProduct);
 
+
     const priceRange = useMemo(() => calculatePriceRange(productVariations), [productVariations]);
 
     const value = {
@@ -56,6 +57,7 @@ export const ProductProvider: React.FC<{ product: Product; productVariation?: Pr
         isProductVariationsLoading,
 
     };
+
 
     const content = product.type === 'variable' && !isProductVariationsLoading ? (
         <ProductVariationSelectionProvider

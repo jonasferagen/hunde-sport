@@ -1,6 +1,5 @@
 import { useProductVariationSelectionContext } from '@/contexts/ProductVariationSelectionContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
-import { ProductAttributeOption as ProductAttributeOptionType } from '@/types';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, XStack } from 'tamagui';
@@ -9,21 +8,22 @@ import { PriceRange } from '../display/PriceRange';
 import { ProductStatus } from '../display/ProductStatus';
 
 interface AttributeOptionProps {
-    item: ProductAttributeOptionType;
+    option: string;
     attribute: ProductAttribute;
 }
 
-export const AttributeOption = ({ item: option, attribute }: AttributeOptionProps) => {
+export const AttributeOption = ({ option, attribute }: AttributeOptionProps) => {
     const { selectOption, getOptionState } = useProductVariationSelectionContext();
+
 
     const { isSelected, isAvailable, isOutOfStock, matchingVariation, priceRange, isFinalOption } = getOptionState(
         attribute.id,
-        option.name!
+        option
     );
 
-    return isAvailable && (
+    return (
         <Pressable
-            onPress={() => !isOutOfStock && selectOption(attribute.id, option.name!)}
+            onPress={() => !isOutOfStock && selectOption(attribute.id, option)}
             style={{
                 flex: 1,
             }}
@@ -47,7 +47,7 @@ export const AttributeOption = ({ item: option, attribute }: AttributeOptionProp
                         textDecorationLine={isOutOfStock ? 'line-through' : 'none'}
                         color={'$color'}
                     >
-                        {option.label}
+                        {option}
                     </SizableText>
                     {isFinalOption && matchingVariation && <ProductStatus productOverride={matchingVariation} showInStock={false} fontSize="$1" />}
                 </XStack>

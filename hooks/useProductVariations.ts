@@ -1,4 +1,4 @@
-import { Product, ProductPriceRange, ProductVariation } from '@/models/Product';
+import { Product, ProductVariation } from '@/models/Product';
 import { useMemo, useState } from 'react';
 
 // Helper to get initial options from a variation
@@ -23,7 +23,7 @@ export interface OptionState {
     isAvailable: boolean;
     isOutOfStock: boolean;
     matchingVariation: ProductVariation | null;
-    priceRange?: ProductPriceRange;
+    priceRange?: any;
     isFinalOption: boolean;
 }
 
@@ -41,35 +41,40 @@ export const useProductVariations = (
         if (initialProductVariation) {
             return getOptionsFromVariation(initialProductVariation);
         }
-        if (product.default_attributes && product.default_attributes.length > 0 && productVariations) {
-            const defaultVariation = productVariations.find(variation =>
-                product.default_attributes.every(defaultAttr =>
-                    variation.attributes.some(attr => attr.name === defaultAttr.name && attr.option === defaultAttr.option)
-                )
-            );
-            if (defaultVariation) {
-                return getOptionsFromVariation(defaultVariation);
+
+        const defaultOptions: Record<number, string> = {};
+        product.attributes.forEach(attr => {
+            if (attr.has_variations && attr.terms) {
+                const defaultTerm = attr.terms.find(term => term.default);
+                if (defaultTerm) {
+                    defaultOptions[attr.id] = defaultTerm.name;
+                }
             }
+        });
+
+        if (Object.keys(defaultOptions).length > 0) {
+            return defaultOptions;
         }
+
         return {};
     });
 
 
     const defaultVariation = useMemo(() => {
-        if (!product.default_attributes || product.default_attributes.length === 0) {
+        if (!product.attributes || product.attributes.length === 0) {
             return null;
         }
 
         return (
             productVariations.find(variation => {
-                return product.default_attributes.every(defaultAttr => {
+                return product.attributes.every(defaultAttr => {
                     return variation.attributes.some(
-                        vAttr => vAttr.id === defaultAttr.id && vAttr.option === defaultAttr.option
+                        vAttr => vAttr.name === defaultAttr.name && vAttr.option === defaultAttr.option
                     );
                 });
             }) || null
         );
-    }, [product.default_attributes, productVariations]);
+    }, [product.attributes, productVariations]);
 
 
 
@@ -137,7 +142,7 @@ export const useProductVariations = (
         const matchingVariations = availableOptions.get(attributeId)?.get(optionName) || [];
         const isAvailable = !!matchingVariations && matchingVariations.length > 0;
         const singleVariant = isAvailable && matchingVariations.length === 1 ? matchingVariations[0] : null;
-        const isOutOfStock = singleVariant ? singleVariant.stock_status === 'outofstock' : false;
+        const isOutOfStock = singleVariant ? !singleVariant.is_in_stock : false;
 
         const isCurrentlySelected = !!selectedOptions[attributeId];
         const potentialSelectionCount = Object.keys(selectedOptions).length + (isCurrentlySelected ? 0 : 1);
@@ -151,8 +156,8 @@ export const useProductVariations = (
             isOutOfStock,
             matchingVariation: singleVariant,
             priceRange: matchingVariations.length > 0 ? {
-                min: Math.min(...matchingVariations.map(v => v.price)),
-                max: Math.max(...matchingVariations.map(v => v.price))
+                min: Math.min(...matchingVariations.map(v => parseFloat(v.prices.price))),
+                max: Math.max(...matchingVariations.map(v => parseFloat(v.prices.price)))
             } : undefined,
             isFinalOption,
         };
