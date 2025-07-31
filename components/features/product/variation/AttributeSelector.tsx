@@ -1,4 +1,4 @@
-import { VariationReference } from '@/models/Product';
+import { ProductVariation } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
@@ -7,7 +7,7 @@ import { AttributeOption } from './AttributeOption';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
-    productVariations: VariationReference[];
+    productVariations: ProductVariation[];
     onSelectOption: (optionLabel: string) => void;
     selectedOptions: { [key: string]: string };
 }
