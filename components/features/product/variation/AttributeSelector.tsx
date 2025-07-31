@@ -1,44 +1,54 @@
+import { VariationReference } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { YStack } from 'tamagui';
-import { AttributeOptionTemp } from './AttributeOptionTemp';
+import { AttributeOption } from './AttributeOption';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
-    selectedOption: string | undefined;
+    productVariations: VariationReference[];
     onSelectOption: (optionLabel: string) => void;
+    selectedOptions: { [key: string]: string };
 }
 
 const ITEM_HEIGHT = 60; // Approximate item height
 
 export const AttributeSelector = ({
     attribute,
-    selectedOption,
+    productVariations,
     onSelectOption,
+    selectedOptions,
 }: AttributeSelectorProps) => {
     const renderItem = ({ item }: { item: string }) => {
+        const selectedOption = selectedOptions[attribute.name] ?? undefined;
+
         const term = attribute.terms.find((t) => t.name === item);
         const isSelected = !!(term && selectedOption === term.slug);
 
+        const isAvailable = productVariations.some((variation) => {
+            return variation.attributes.some((attr: any) => attr.name === attribute.name && attr.value === term?.slug)
+        });
+
         return (
-            <AttributeOptionTemp
+            <AttributeOption
                 option={item}
                 attribute={attribute}
                 selectOption={() => onSelectOption(item)}
                 isSelected={isSelected}
+                isAvailable={isAvailable}
             />
         );
     };
 
     return (
-        <YStack flex={1}>
+        <YStack>
             <FlashList
                 data={attribute.terms.map((t) => t.name)}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item}-${attribute.id}-${index}`}
                 estimatedItemSize={ITEM_HEIGHT}
-                extraData={selectedOption}
+                extraData={selectedOptions}
             />
         </YStack>
     );

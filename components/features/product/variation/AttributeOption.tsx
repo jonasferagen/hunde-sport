@@ -1,29 +1,20 @@
-import { useProductVariationSelectionContext } from '@/contexts/ProductVariationSelectionContext';
 import { ProductAttribute } from '@/models/ProductAttribute';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, XStack } from 'tamagui';
-import { Price } from '../display/Price';
-import { PriceRange } from '../display/PriceRange';
-import { ProductStatus } from '../display/ProductStatus';
 
 interface AttributeOptionProps {
     option: string;
     attribute: ProductAttribute;
+    selectOption: () => void;
+    isSelected: boolean;
+    isAvailable: boolean;
 }
 
-export const AttributeOption = ({ option, attribute }: AttributeOptionProps) => {
-    const { selectOption, getOptionState } = useProductVariationSelectionContext();
-
-
-    const { isSelected, isAvailable, isOutOfStock, matchingVariation, priceRange, isFinalOption } = getOptionState(
-        attribute.id,
-        option
-    );
-
+export const AttributeOption = ({ option, attribute, selectOption, isSelected, isAvailable }: AttributeOptionProps) => {
     return (
         <Pressable
-            onPress={() => !isOutOfStock && selectOption(attribute.id, option)}
+            onPress={() => selectOption()}
             style={{
                 flex: 1,
             }}
@@ -37,31 +28,11 @@ export const AttributeOption = ({ option, attribute }: AttributeOptionProps) => 
                 borderRadius="$4"
                 borderColor={isSelected ? '$borderColor' : 'transparent'}
                 backgroundColor={isSelected ? '$background' : 'white'}
-                cursor={isOutOfStock ? 'not-allowed' : 'pointer'}
-                opacity={isOutOfStock ? 0.5 : 1}
-                jc='space-between'
+                opacity={isAvailable ? 1 : 0.5}
             >
-                <XStack gap="$2">
-                    <SizableText
-                        fontWeight={isSelected ? 'bold' : 'normal'}
-                        textDecorationLine={isOutOfStock ? 'line-through' : 'none'}
-                        color={'$color'}
-                    >
-                        {option}
-                    </SizableText>
-                    {isFinalOption && matchingVariation && <ProductStatus productOverride={matchingVariation} showInStock={false} fontSize="$1" />}
-                </XStack>
-                <XStack ai='flex-start' jc="space-between" gap="$2">
-                    {matchingVariation && isFinalOption ? (
-                        <>
-                            <XStack ai='flex-start' jc="center" gap="$3">
-                                <Price fontSize="$5" productOverride={matchingVariation} />
-                            </XStack>
-                        </>
-                    ) : priceRange && (
-                        <PriceRange fontSize="$4" productPriceRangeOverride={priceRange} />
-                    )}
-                </XStack>
+                <SizableText fontWeight={isSelected ? 'bold' : 'normal'} color={'$color'}>
+                    {option}
+                </SizableText>
             </XStack>
         </Pressable>
     );

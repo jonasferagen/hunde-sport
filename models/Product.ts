@@ -15,7 +15,7 @@ export interface ProductPrices {
 
 export interface VariationReference {
   id: number;
-  attributes: { name: string; option: string }[];
+  attributes: { name: string; value: string }[];
 }
 
 export interface ProductData {
