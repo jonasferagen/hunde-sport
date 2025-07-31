@@ -162,12 +162,14 @@ export class VariableProduct extends Product {
 }
 
 export class ProductVariation extends Product {
+  type: 'variation' = 'variation';
+  variation_attributes?: { name: string; value: string }[];
+
   constructor(data: ProductData) {
     if (data.type !== 'variation') {
       throw new Error('Cannot construct ProductVariation with type other than "variation".');
     }
     super(data);
-    this.type = 'variation';
   }
 
   hasVariations(): boolean {

@@ -19,8 +19,20 @@ export const useProductVariations = (variableProduct: VariableProduct, options?:
         })),
     });
 
+    const data = results
+        .map((result) => {
+            if (result.data) {
+                const originalVariationRef = variableProduct.variations.find((ref) => ref.id === result.data.id);
+                if (originalVariationRef) {
+                    result.data.variation_attributes = originalVariationRef.attributes;
+                }
+            }
+            return result.data;
+        })
+        .filter(Boolean) as ProductVariation[];
+
     return {
-        data: results.map((result) => result.data).filter(Boolean) as ProductVariation[],
+        data,
         isLoading: results.some((result) => result.isLoading),
         isError: results.some((result) => result.isError),
         isSuccess: results.every((result) => result.isSuccess),

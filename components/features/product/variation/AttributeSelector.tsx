@@ -27,7 +27,9 @@ export const AttributeSelector = ({
         const isSelected = !!(term && selectedOption === term.slug);
 
         const isAvailable = productVariations.some((variation) => {
-            return variation.attributes.some((attr: any) => attr.name === attribute.name && attr.value === term?.slug)
+            return variation.variation_attributes?.some(
+                (attr: any) => attr.name === attribute.name && attr.value === term?.slug
+            );
         });
 
         return (

@@ -1,25 +1,30 @@
 import { useProductContext } from '@/contexts/ProductContext';
+import { ProductVariation, VariableProduct } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
-import { VariableProduct } from '@/types';
 import React, { JSX, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
-const findVariations = (product: VariableProduct, selectedOptions: { [key: string]: string }) => {
-    const filteredVariations = product.variations.filter((variation) => {
+const findVariations = (
+    product: VariableProduct,
+    productVariations: ProductVariation[],
+    selectedOptions: { [key: string]: string }
+): ProductVariation[] => {
+    const filteredVariationReferences = product.variations.filter((variation) => {
         return Object.entries(selectedOptions).every(([name, value]) => {
             return variation.attributes.some((attribute) => attribute.name === name && attribute.value === value);
         });
     });
 
-    return filteredVariations;
+    const foundIds = new Set(filteredVariationReferences.map((v) => v.id));
+    return productVariations.filter((v) => foundIds.has(v.id));
 };
 
 export const ProductVariations = (): JSX.Element => {
     const { product, productVariations, isProductVariationsLoading } = useProductContext();
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
-    const [matchingVariations, setMatchingVariations] = useState(() =>
-        findVariations(product as VariableProduct, {})
+    const [matchingVariations, setMatchingVariations] = useState<ProductVariation[]>(() =>
+        findVariations(product as VariableProduct, productVariations, {})
     );
 
     if (!product.hasVariations() || isProductVariationsLoading) {
@@ -37,7 +42,7 @@ export const ProductVariations = (): JSX.Element => {
 
         setSelectedOptions(newSelectedOptions);
 
-        const variations = findVariations(product as VariableProduct, newSelectedOptions);
+        const variations = findVariations(product as VariableProduct, productVariations, newSelectedOptions);
         setMatchingVariations(variations);
 
         const totalAttributes = product.attributes.filter((attr) => attr.variation).length;
