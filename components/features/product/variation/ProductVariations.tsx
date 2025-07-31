@@ -3,25 +3,25 @@ import React, { JSX, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
+
 export const ProductVariations = (): JSX.Element => {
     const { product, isProductVariationsLoading } = useProductContext();
-    const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: string }>({});
+    const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
 
     if (!product.hasVariations() || isProductVariationsLoading) {
         return <></>;
     }
 
-    const handleSelectOption = (attributeId: number, option: string) => {
+    const handleSelectOption = (attributeName: string, optionValue: string) => {
         const newSelectedOptions = { ...selectedOptions };
 
-        if (newSelectedOptions[attributeId] === option) {
-            delete newSelectedOptions[attributeId];
+        if (newSelectedOptions[attributeName] === optionValue) {
+            delete newSelectedOptions[attributeName];
         } else {
-            newSelectedOptions[attributeId] = option;
+            newSelectedOptions[attributeName] = optionValue;
         }
 
         setSelectedOptions(newSelectedOptions);
-        console.log('Selected option:', option);
         console.log('All selected options:', newSelectedOptions);
     };
 
@@ -39,9 +39,13 @@ export const ProductVariations = (): JSX.Element => {
                         )}
                         <AttributeSelector
                             attribute={attribute}
-                            options={attribute.options}
-                            selectedOptions={selectedOptions}
-                            onSelectOption={handleSelectOption}
+                            selectedOption={selectedOptions[attribute.name]}
+                            onSelectOption={(optionLabel) => {
+                                const term = attribute.terms.find((t) => t.name === optionLabel);
+                                if (term) {
+                                    handleSelectOption(attribute.name, term.slug);
+                                }
+                            }}
                         />
                     </YStack>
                 );

@@ -68,7 +68,6 @@ export const mapToProduct = (item: any): Product | ProductVariation => {
                 taxonomy: attr.taxonomy,
                 has_variations: attr.has_variations,
                 terms: attr.terms || [],
-                options: (attr.terms || []).map((term: any) => term.name),
                 variation: attr.has_variations || false,
             })),
             variations: item.variations || [],

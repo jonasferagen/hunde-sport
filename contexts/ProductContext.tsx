@@ -1,7 +1,6 @@
 import { useProductVariations as useProductVariationsData } from '@/hooks/data/Product';
 import { Product, ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { ProductVariationSelectionProvider } from './ProductVariationSelectionContext';
 
 export const calculatePriceRange = (productVariations: ProductVariation[]): { min: number; max: number } | undefined => {
     if (!productVariations || productVariations.length === 0) {
@@ -55,14 +54,7 @@ const VariableProductProvider: React.FC<{
 
     return (
         <ProductContext.Provider value={value}>
-            <ProductVariationSelectionProvider
-                product={product}
-                productVariations={productVariations || []}
-                initialProductVariation={initialProductVariation}
-                setProductVariation={setProductVariation}
-            >
-                {children}
-            </ProductVariationSelectionProvider>
+            {children}
         </ProductContext.Provider>
     );
 };

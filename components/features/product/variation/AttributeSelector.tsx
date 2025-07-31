@@ -6,26 +6,26 @@ import { AttributeOptionTemp } from './AttributeOptionTemp';
 
 interface AttributeSelectorProps {
     attribute: ProductAttribute;
-    options: string[];
-    selectedOptions: { [key: number]: string };
-    onSelectOption: (attributeId: number, option: string) => void;
+    selectedOption: string | undefined;
+    onSelectOption: (optionLabel: string) => void;
 }
 
 const ITEM_HEIGHT = 60; // Approximate item height
 
 export const AttributeSelector = ({
     attribute,
-    options,
-    selectedOptions,
+    selectedOption,
     onSelectOption,
 }: AttributeSelectorProps) => {
     const renderItem = ({ item }: { item: string }) => {
-        const isSelected = selectedOptions[attribute.id] === item;
+        const term = attribute.terms.find((t) => t.name === item);
+        const isSelected = !!(term && selectedOption === term.slug);
+
         return (
             <AttributeOptionTemp
                 option={item}
                 attribute={attribute}
-                selectOption={() => onSelectOption(attribute.id, item)}
+                selectOption={() => onSelectOption(item)}
                 isSelected={isSelected}
             />
         );
@@ -34,11 +34,11 @@ export const AttributeSelector = ({
     return (
         <YStack flex={1}>
             <FlashList
-                data={options}
+                data={attribute.terms.map((t) => t.name)}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item}-${attribute.id}-${index}`}
                 estimatedItemSize={ITEM_HEIGHT}
-                extraData={selectedOptions} // Ensures re-render when selection changes
+                extraData={selectedOption}
             />
         </YStack>
     );
