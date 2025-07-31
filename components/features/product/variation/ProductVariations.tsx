@@ -1,7 +1,12 @@
 import { useProductContext } from '@/contexts/ProductContext';
+import { VariableProduct } from '@/types';
 import React, { JSX, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
+
+const findVariations = (product: VariableProduct, selectedOptions: { [key: string]: string }) => {
+
+};
 
 
 export const ProductVariations = (): JSX.Element => {
@@ -23,6 +28,8 @@ export const ProductVariations = (): JSX.Element => {
 
         setSelectedOptions(newSelectedOptions);
         console.log('All selected options:', newSelectedOptions);
+
+        console.log(product.variations[0].attributes);
     };
 
     const attributes = product.attributes.filter((attribute) => attribute.variation);
