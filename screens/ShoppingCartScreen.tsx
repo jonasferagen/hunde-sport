@@ -6,20 +6,25 @@ import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
-import { ShoppingCartItem } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import { ArrowBigRight, ShoppingCart } from '@tamagui/lucide-icons';
 import * as WebBrowser from 'expo-web-browser';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { XStack, YStack } from 'tamagui';
 
 export const ShoppingCartScreen = () => {
-    const { items, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
+    const { items, cart, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
 
-    const renderItem = useCallback(
-        ({ item }: { item: ShoppingCartItem }) => <ShoppingCartListItem item={item} />,
-        []
-    );
+
+    if (!cart) {
+        return null;
+    }
+
+    cart.debug('SCScreen');
+
+
+
+
 
     const handleCheckout = async () => {
         if (items.length > 0) {
@@ -41,7 +46,7 @@ export const ShoppingCartScreen = () => {
     };
 
 
-    if (cartItemCount === 0) {
+    if (cart.items.length === 0) {
         return (
             <YStack flex={1} ai="center" jc="center">
                 <ThemedText fontSize="$3">Handlekurven er tom</ThemedText>
@@ -54,15 +59,15 @@ export const ShoppingCartScreen = () => {
         <PageView>
             <PageSection flex={1}>
                 <PageHeader theme="secondary_soft">
-                    <ShoppingCartSummary cartItemCount={cartItemCount} cartTotal={cartTotal} />
+                    <ShoppingCartSummary cartItemCount={cart?.items_count || 0} cartTotal={cart?.totals.total || 5} />
                 </PageHeader>
 
                 <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
 
                     <FlashList
-                        data={items}
+                        data={cart?.items || []}
                         keyExtractor={(item) => item.key}
-                        renderItem={renderItem}
+                        renderItem={({ item }) => <ShoppingCartListItem item={item} />}
                         estimatedItemSize={100}
                     />
 

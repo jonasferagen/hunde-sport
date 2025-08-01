@@ -1,12 +1,12 @@
 import { ClearCartDialog } from '@/components/features/shopping-cart/ClearCartDialog';
 import { routes } from '@/config/routes';
+import { useCart } from '@/hooks/data/Cart';
+import { Cart } from '@/models/Cart';
 import { Product, Purchasable, ShoppingCartItem } from '@/types';
 import { getPurchasableKey, getPurchasableTitle } from '@/utils/purchasable';
 import { useToastController } from '@tamagui/toast';
 import { router } from 'expo-router';
-import React, { createContext, RefObject, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-
-import { useCart } from '@/hooks/data/Cart';
+import React, { createContext, RefObject, useCallback, useContext, useMemo, useState } from 'react';
 
 interface CartItemOptions {
     silent?: boolean;
@@ -23,31 +23,29 @@ interface ShoppingCartContextType {
     decreaseQuantity: (purchasable: Purchasable, options?: CartItemOptions) => void;
     removeItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
     clearCart: () => void;
+    addItem: (purchasable: Purchasable) => void;
+    cart: Cart | undefined;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { cart: cartData, cartToken: fetchedCartToken } = useCart();
-    const [cart, setCart] = useState<any>(null);
-    const [cartToken, setCartToken] = useState<string | null>(null);
+    const { cart, addItem: addItemMutation, isAddingItem, isLoading } = useCart();
 
-    useEffect(() => {
-        if (cartData) {
-            console.log(cartData);
-            setCart(cartData);
-        }
-        if (fetchedCartToken) {
-            console.log('Cart Token found:', fetchedCartToken);
-            setCartToken(fetchedCartToken);
-        }
-    }, [cartData, fetchedCartToken]);
 
-    const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const toastController = useToastController();
+
+    const items = [] as ShoppingCartItem[];
 
     const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
 
+    const addItem = useCallback(
+        (purchasable: Purchasable) => {
+            if (!cart) return;
+            cart.addItem(purchasable, 1, [], addItemMutation);
+        },
+        [addItemMutation, cart]
+    );
 
     const getQuantity = useCallback(
         (purchasable: Purchasable) => {
@@ -63,20 +61,8 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const { silent, triggerRef } = options;
             const key = getPurchasableKey(purchasable);
 
-            setItems((prevItems) => {
-                const existingItem = prevItems.find((item) => item.key === key);
-
-                if (existingItem) {
-                    return prevItems.map((item) =>
-                        item.key === key
-                            ? new ShoppingCartItem(purchasable, item.quantity + 1, triggerRef)
-                            : item
-                    );
-                } else {
-                    const newItem = new ShoppingCartItem(purchasable, 1, triggerRef);
-                    return [...prevItems, newItem];
-                }
-            });
+            if (!cart) return;
+            cart.addItem(purchasable, getQuantity(purchasable) + 1, [], addItemMutation);
 
             if (!silent) {
                 const product = getPurchasableTitle(purchasable);
@@ -84,54 +70,39 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 toastController.show('Lagt til i handlekurven', {
                     message: product,
                     theme: 'dark_green',
-                    triggerRef
+                    triggerRef,
                 });
             }
         },
-        [toastController]
+        [toastController, getQuantity, addItemMutation, cart]
     );
-
-    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
-        const { silent = false, triggerRef } = options;
-        const key = getPurchasableKey(purchasable);
-        setItems((prevItems) => prevItems.filter((item) => item.key !== key));
-
-        if (!silent) {
-            const title = getPurchasableTitle(purchasable);
-            toastController.show('Fjernet fra handlekurven', {
-                message: title,
-                theme: 'dark_yellow',
-                ref: triggerRef
-            });
-        }
-    }, [toastController]);
 
     const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
 
         const { triggerRef } = options;
         const key = getPurchasableKey(purchasable);
 
-        setItems((prevItems) => {
-            const itemToDecrease = prevItems.find((item) => item.key === key);
 
-            if (itemToDecrease && itemToDecrease.quantity <= 1) {
-                return prevItems; // Do nothing if quantity is already 1 or less
-            }
+    }, [getQuantity, addItemMutation]);
 
-            const updatedItems = prevItems.map((item) => {
-                if (item.key === key) {
-                    const newQuantity = item.quantity - 1;
-                    return new ShoppingCartItem(purchasable, newQuantity, triggerRef);
-                }
-                return item;
+    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
+        const { silent = false, triggerRef } = options;
+        const key = getPurchasableKey(purchasable);
+
+
+
+        if (!silent) {
+            const title = getPurchasableTitle(purchasable);
+            toastController.show('Fjernet fra handlekurven', {
+                message: title,
+                theme: 'dark_yellow',
+                ref: triggerRef,
             });
-
-            return updatedItems;
-        });
-    }, []);
+        }
+    }, [toastController, addItemMutation]);
 
     const handleConfirmClearCart = () => {
-        setItems([]);
+
         toastController.show('Handlekurven er tømt', {
             message: 'Du har ingen produkter i handlekurven',
             theme: 'dark_yellow',
@@ -179,9 +150,22 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             decreaseQuantity,
             removeItem,
             clearCart,
-
+            addItem,
+            cart,
         }),
-        [items, cartItemCount, cartTotal, clearCart]
+        [
+            items,
+            groupedItems,
+            cartItemCount,
+            cartTotal,
+            getQuantity,
+            increaseQuantity,
+            decreaseQuantity,
+            removeItem,
+            clearCart,
+            addItem,
+            cart,
+        ]
     );
 
     return (

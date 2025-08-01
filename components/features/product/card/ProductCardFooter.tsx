@@ -12,12 +12,12 @@ interface ProductCardFooterProps {
 
 export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
     const { product, productVariation } = useProductContext();
-    const { increaseQuantity } = useShoppingCartContext();
+    const { increaseQuantity, addItem } = useShoppingCartContext();
     const activeProduct = productVariation || product;
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
-        increaseQuantity({ product, productVariation }, { triggerRef: buttonRef });
+        addItem({ product, productVariation });
     };
 
     return (
