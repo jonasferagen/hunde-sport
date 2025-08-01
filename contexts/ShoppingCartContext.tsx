@@ -4,8 +4,9 @@ import { Product, Purchasable, ShoppingCartItem } from '@/types';
 import { getPurchasableKey, getPurchasableTitle } from '@/utils/purchasable';
 import { useToastController } from '@tamagui/toast';
 import { router } from 'expo-router';
-import React, { createContext, RefObject, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, RefObject, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { useCart } from '@/hooks/data/Cart';
 
 interface CartItemOptions {
     silent?: boolean;
@@ -27,6 +28,21 @@ interface ShoppingCartContextType {
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const { cart: cartData, cartToken: fetchedCartToken } = useCart();
+    const [cart, setCart] = useState<any>(null);
+    const [cartToken, setCartToken] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (cartData) {
+            console.log(cartData);
+            setCart(cartData);
+        }
+        if (fetchedCartToken) {
+            console.log('Cart Token found:', fetchedCartToken);
+            setCartToken(fetchedCartToken);
+        }
+    }, [cartData, fetchedCartToken]);
+
     const [items, setItems] = useState<ShoppingCartItem[]>([]);
     const toastController = useToastController();
 

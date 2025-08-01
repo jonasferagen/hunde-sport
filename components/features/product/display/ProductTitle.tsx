@@ -10,8 +10,6 @@ export const ProductTitle = ({ size }: ProductTitleProps) => {
     const { product, productVariation } = useProductContext();
 
 
-
-
     if (!product) {
         return null;
     }
