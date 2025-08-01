@@ -29,6 +29,7 @@ export class CartItem implements CartItemData {
         this.name = data.name;
         this.variations = data.variations;
         this.prices = data.prices;
+        this.totals = data.totals;
         this.quantity = data.quantity;
     }
 }

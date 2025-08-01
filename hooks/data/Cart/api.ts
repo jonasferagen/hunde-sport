@@ -42,5 +42,8 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
         throw new Error(error);
     }
 
+
+
+
     return { data: mapToCart(data, cartToken), cartToken };
 }

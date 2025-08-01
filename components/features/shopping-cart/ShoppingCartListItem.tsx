@@ -2,6 +2,7 @@ import { ThemedButton } from '@/components/ui/ThemedButton';
 import { useShoppingCartContext } from '@/contexts';
 import { useProduct } from '@/hooks/data/Product';
 import { CartItem } from '@/models/Cart';
+import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { H4, SizableText, XStack, YStack } from 'tamagui';
@@ -20,7 +21,8 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
     if (!product) return null;
     const purchasable = { product, productVariation: undefined };
 
-    if (Math.random() < .99) return <SizableText fontSize="$4">{item.name}</SizableText>
+
+    console.log(item.totals);
 
     return (
 
@@ -49,16 +51,16 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
                         circular
                     />
                     <H4 width={30} textAlign="center">
-                   //     quantity
+                        {quantity}
                     </H4>
                     <SizableText fontSize="$4" color="$gray10">
-                        á abc
+                        á {formatPrice(item.prices.price)}
                     </SizableText>
                 </XStack>
 
                 {/* Subtotal */}
                 <SizableText fontSize="$4" fontWeight="bold" flex={1} textAlign="right">
-                    subtotal
+                    {formatPrice(Number(item.totals.line_total) + Number(item.totals.line_total_tax) + '')}
                 </SizableText>
                 {/* Remove Button */}
                 <ThemedButton
