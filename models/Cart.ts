@@ -1,6 +1,5 @@
 import { mapToCartItem } from '@/hooks/data/Cart/mapper';
 import { Product } from '@/models/Product';
-import { Purchasable } from '@/types';
 
 export interface CartItemData {
     key: string;
@@ -50,14 +49,6 @@ export interface CartData {
     shipping_rates: any;
 }
 
-export type AddItemMutationFn = (variables: {
-    cartToken: string;
-    id: number;
-    quantity: number;
-    variation: any[];
-}) => void;
-
-
 
 export class Cart {
     items: CartItem[];
@@ -78,14 +69,7 @@ export class Cart {
         this.shipping_rates = data.shipping_rates;
     }
 
-    addItem(purchasable: Purchasable, quantity: number, variation: any[], mutationFn: AddItemMutationFn) {
-        mutationFn({
-            cartToken: this.cart_token,
-            id: purchasable.product.id,
-            quantity,
-            variation,
-        });
-    }
+
 
     debug(from: string) {
         console.log(from, 'Cart token', this.cart_token);

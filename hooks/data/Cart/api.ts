@@ -30,7 +30,7 @@ export async function fetchCart(): Promise<Cart> {
  * @returns {Promise<{data: Cart, cartToken: string | null}>} An object containing the updated cart data and the cart token.
  */
 export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: Cart, cartToken: string }> {
-    console.warn('addItem', variation);
+
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.ADD_ITEM(),
         { id, quantity, variation },
