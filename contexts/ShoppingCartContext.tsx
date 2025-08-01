@@ -1,8 +1,8 @@
 import { ClearCartDialog } from '@/components/features/shopping-cart/ClearCartDialog';
 import { routes } from '@/config/routes';
 import { useCart } from '@/hooks/data/Cart';
-import { Cart, CartItem } from '@/models/Cart';
-import { Product, Purchasable } from '@/types';
+import { Cart } from '@/models/Cart';
+import { Purchasable } from '@/types';
 import { useToastController } from '@tamagui/toast';
 import { router } from 'expo-router';
 import React, { createContext, RefObject, useCallback, useMemo, useState } from 'react';
@@ -13,61 +13,52 @@ interface CartItemOptions {
 }
 
 interface ShoppingCartContextType {
-    items: CartItem[];
-    groupedItems: { product: Product; items: CartItem[] }[];
+    cart: Cart | undefined;
+    addItem: (purchasable: Purchasable) => void;
     updateItem: (key: string, quantity: number) => void;
     removeItem: (key: string, options?: CartItemOptions) => void;
-    clearCart: () => void;
-    addItem: (purchasable: Purchasable) => void;
-    cart: Cart | undefined;
+    isUpdating: boolean;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { cart, addItem: addItemMutation, updateItem: updateItemMutation, removeItem: removeItemMutation } = useCart();
+    const { cart, isUpdating } = useCart();
 
     const toastController = useToastController();
 
     const items = cart?.items ?? [];
 
     const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
-    1
+
     const addItem = useCallback(
         (purchasable: Purchasable) => {
+            if (!cart) return;
 
-            const product = purchasable.product;
-            const productVariation = purchasable.productVariation;
-            const variation = productVariation ? productVariation.variation_attributes?.map((attr) => ({ attribute: attr.name, value: attr.value })) : [];
-            const id = product.id;
 
-            if (!cart?.cart_token) return;
-
-            const title = product.name;
+            cart.addItem(purchasable);
             toastController.show('Lagt til i handlekurven', {
-                message: title,
+                message: purchasable.product.name,
                 theme: 'dark_yellow',
             });
-
-
-            addItemMutation({ cartToken: cart.cart_token, id, quantity: 1, variation });
+            //  originalAddItem({ cartToken: cart.cart_token, purchasable });
         },
-        [addItemMutation, cart]
+        [cart, toastController]
     );
 
     const updateItem = useCallback(
         (key: string, quantity: number) => {
-            if (!cart?.cart_token) return;
-            updateItemMutation({ cartToken: cart.cart_token, key, quantity });
+            if (!cart) return;
+            cart.updateItem(key, quantity);
         },
-        [updateItemMutation, cart]
+        [cart]
     );
 
     const removeItem = useCallback((key: string, options: CartItemOptions = { silent: false }) => {
         const { silent = false, triggerRef } = options;
-        if (!cart?.cart_token) return;
+        if (!cart) return;
 
-        removeItemMutation({ cartToken: cart.cart_token, key });
+        cart.removeItem(key);
 
         if (!silent) {
             const item = items.find(i => i.key === key);
@@ -80,7 +71,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 });
             }
         }
-    }, [toastController, removeItemMutation, cart, items]);
+    }, [toastController, cart]);
 
     const handleConfirmClearCart = () => {
 
@@ -92,42 +83,21 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setClearCartDialogOpen(false);
     };
 
-    const clearCart = useCallback(() => {
-        setClearCartDialogOpen(true);
-    }, []);
-
-    const groupedItems = useMemo(() => {
-        const groups: { [key: number]: { product: Product; items: CartItem[] } } = {};
-
-        for (const item of items) {
-            const productId = item.product.id;
-            if (!groups[productId]) {
-                groups[productId] = { product: item.product, items: [] };
-            }
-            groups[productId].items.push(item);
-        }
-
-        return Object.values(groups);
-    }, [items]);
 
     const value = useMemo(
         () => ({
-            items,
-            groupedItems,
-            removeItem,
-            clearCart,
+            cart,
             addItem,
             updateItem,
-            cart,
+            removeItem,
+            isUpdating,
         }),
         [
-            items,
-            groupedItems,
-            removeItem,
-            clearCart,
+            cart,
             addItem,
             updateItem,
-            cart,
+            removeItem,
+            isUpdating,
         ]
     );
 

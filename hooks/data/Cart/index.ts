@@ -27,14 +27,21 @@ export const useCart = () => {
     const { mutate: updateItem, isPending: isUpdatingItem } = useCartMutation(apiUpdateItem, 'Error updating item in cart:');
     const { mutate: removeItem, isPending: isRemovingItem } = useCartMutation(apiRemoveItem, 'Error removing item from cart:');
 
+    const isUpdating = isAddingItem || isUpdatingItem || isRemovingItem;
+
+    const cartMutation = {
+        addItem,
+        updateItem,
+        removeItem,
+    };
+    cart?.setMutations(cartMutation);
+
     return {
         cart,
         isLoading,
+        isUpdating,
         addItem,
-        isAddingItem,
         updateItem,
-        isUpdatingItem,
         removeItem,
-        isRemovingItem,
     };
 };
