@@ -10,7 +10,6 @@ export async function fetchCart(): Promise<any> {
         ENDPOINTS.CART.GET()
     );
 
-    console.log('headers', headers);
 
     if (error) {
         throw new Error(error);

@@ -8,16 +8,16 @@ import { cartQueryOptions } from './queries';
  */
 export const useCart = () => {
     const result = useQuery(cartQueryOptions());
-    const { data: cart, cartToken } = useMemo(() => ({
+    const { data, cartToken } = useMemo(() => ({
         data: result.data?.data,
         cartToken: result.data?.cartToken,
     }), [result.data]);
 
-    console.log('Cart token:', cartToken);
+    console.log(data.items);
 
     return {
         ...result,
-        cart,
+        cart: data,
         cartToken,
     };
 };

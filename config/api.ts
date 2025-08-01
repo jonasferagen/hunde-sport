@@ -21,10 +21,10 @@ export const ENDPOINTS = {
     LIST: (page: number, ...params: string[]) => `${PRODUCTS_URL}?page=${page}&${params.join('&')}&${filterParams}`,
   },
   CART: {
-    GET: () => `${CART_URL}/cart`,
-    ADD_ITEM: () => `${CART_URL}/cart/add-item`,
-    UPDATE_ITEM: () => `${CART_URL}/cart/update-item`,
-    REMOVE_ITEM: () => `${CART_URL}/cart/remove-item`,
+    GET: () => `${CART_URL}`,
+    ADD_ITEM: () => `${CART_URL}/add-item`,
+    UPDATE_ITEM: () => `${CART_URL}/update-item`,
+    REMOVE_ITEM: () => `${CART_URL}/remove-item`,
   },
   EXTERNAL_CART: {
     POST: () => `${EXTERNAL_CART_URL}`,
