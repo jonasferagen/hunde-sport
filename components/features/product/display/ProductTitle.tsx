@@ -9,10 +9,31 @@ interface ProductTitleProps {
 export const ProductTitle = ({ size }: ProductTitleProps) => {
     const { product, productVariation } = useProductContext();
 
+
+
+
     if (!product) {
         return null;
     }
 
-    const title = productVariation ? `${product.name} ${productVariation.name}` : product.name;
+    let title = product.name;
+
+    if (productVariation?.variation_attributes) {
+        const attributeNames = productVariation.variation_attributes
+            .map((variationAttr) => {
+                const parentAttribute = product.attributes.find((attr) => attr.name === variationAttr.name);
+                if (parentAttribute) {
+                    const term = parentAttribute.terms.find((t) => t.slug === variationAttr.value);
+                    return term ? term.name : null;
+                }
+                return null;
+            })
+            .filter(Boolean);
+
+        if (attributeNames.length > 0) {
+            title = `${product.name}, ${attributeNames.join(' ')}`;
+        }
+    }
+
     return <SizableText fontSize={size} fontWeight="bold">{title}</SizableText>;
 };
