@@ -42,7 +42,6 @@ export const ProductStatus = ({ productOverride, showInStock = true, ...props }:
 
     return (
         <XStack gap="$1" ai="center" >
-
             <SizableText fontSize="$3" fontWeight="bold" color={color} {...props}>⬤ {text}</SizableText>
         </XStack>
     );

@@ -1,5 +1,6 @@
 import { ProductVariation } from '@/models/Product';
 import { ProductAttribute } from '@/models/ProductAttribute';
+import { formatPrice } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { YStack } from 'tamagui';
@@ -32,6 +33,25 @@ export const AttributeSelector = ({
             );
         });
 
+        let displayPrice = '';
+        let inStock = true;
+
+        if (term && isAvailable) {
+            const potentialMatches = productVariations.filter((variation) =>
+                variation.variation_attributes?.some((attr) => attr.name === attribute.name && attr.value === term.slug)
+            );
+
+            const minPrice = Math.min(...potentialMatches.map((v) => Number(v.prices.price)));
+            const maxPrice = Math.max(...potentialMatches.map((v) => Number(v.prices.price)));
+            displayPrice = minPrice === maxPrice ? formatPrice(minPrice.toString()) : `Fra ${formatPrice(minPrice.toString())}`;
+
+            if (!potentialMatches.some((v) => v.is_in_stock)) {
+                inStock = false;
+            }
+        }
+
+
+
         return (
             <AttributeOption
                 option={item}
@@ -39,6 +59,8 @@ export const AttributeSelector = ({
                 selectOption={() => onSelectOption(item)}
                 isSelected={isSelected}
                 isAvailable={isAvailable}
+                price={displayPrice}
+                inStock={inStock}
             />
         );
     };
