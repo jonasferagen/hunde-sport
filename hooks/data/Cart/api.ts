@@ -25,12 +25,12 @@ export async function fetchCart(): Promise<Cart> {
  * Adds an item to the cart.
  * @param {number} id - The product ID.
  * @param {number} quantity - The quantity of the product to add.
- * @param {any[]} variation - The selected product variations.
+ * @param {{attribute: string, value: string}[]} variation - The selected product variations.
  * @param {string | null} [cartToken] - The cart token for the current session.
  * @returns {Promise<{data: Cart, cartToken: string | null}>} An object containing the updated cart data and the cart token.
  */
-export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: any[] }): Promise<{ data: Cart, cartToken: string }> {
-
+export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: Cart, cartToken: string }> {
+    console.warn('addItem', variation);
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.ADD_ITEM(),
         { id, quantity, variation },
@@ -42,8 +42,50 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
         throw new Error(error);
     }
 
+    return { data: mapToCart(data, cartToken), cartToken };
+}
 
+/**
+ * Updates an item in the cart.
+ * @param {string} cartToken - The cart token for the current session.
+ * @param {string} key - The key of the item to update.
+ * @param {number} quantity - The new quantity of the item.
+ * @returns {Promise<{data: Cart, cartToken: string}>} An object containing the updated cart data and the cart token.
+ */
+export async function updateItem({ cartToken, key, quantity }: { cartToken: string, key: string, quantity: number }): Promise<{ data: Cart, cartToken: string }> {
 
+    const { data, error } = await apiClient.post<CartData>(
+        ENDPOINTS.CART.UPDATE_ITEM(),
+        { key, quantity },
+        { headers: { 'Cart-Token': cartToken } }
+    );
+
+    if (error) {
+        console.error("Error", error);
+        throw new Error(error);
+    }
+
+    return { data: mapToCart(data, cartToken), cartToken };
+}
+
+/**
+ * Removes an item from the cart.
+ * @param {string} cartToken - The cart token for the current session.
+ * @param {string} key - The key of the item to remove.
+ * @returns {Promise<{data: Cart, cartToken: string}>} An object containing the updated cart data and the cart token.
+ */
+export async function removeItem({ cartToken, key }: { cartToken: string, key: string }): Promise<{ data: Cart, cartToken: string }> {
+
+    const { data, error } = await apiClient.post<CartData>(
+        ENDPOINTS.CART.REMOVE_ITEM(),
+        { key },
+        { headers: { 'Cart-Token': cartToken } }
+    );
+
+    if (error) {
+        console.error("Error", error);
+        throw new Error(error);
+    }
 
     return { data: mapToCart(data, cartToken), cartToken };
 }

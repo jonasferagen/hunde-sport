@@ -4,6 +4,7 @@ import { Product, ProductData, ProductVariation, SimpleProduct, VariableProduct 
 import { cleanHtml } from '@/utils/helpers';
 
 export const mapToProduct = (item: any): Product | ProductVariation => {
+
     try {
 
         const productData: ProductData = {

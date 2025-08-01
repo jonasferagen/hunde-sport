@@ -1,8 +1,10 @@
 import { mapToCartItem } from '@/hooks/data/Cart/mapper';
+import { Product } from '@/models/Product';
 import { Purchasable } from '@/types';
 
 export interface CartItemData {
     key: string;
+    product: Product;
     id: number;
     type: string;
     name: string;
@@ -14,6 +16,7 @@ export interface CartItemData {
 
 export class CartItem implements CartItemData {
     key: string;
+    product: Product;
     id: number;
     type: string;
     name: string;
@@ -24,6 +27,7 @@ export class CartItem implements CartItemData {
 
     constructor(data: CartItemData) {
         this.key = data.key;
+
         this.id = data.id;
         this.type = data.type;
         this.name = data.name;
@@ -31,6 +35,8 @@ export class CartItem implements CartItemData {
         this.prices = data.prices;
         this.totals = data.totals;
         this.quantity = data.quantity;
+
+        this.product = data.product;
     }
 }
 

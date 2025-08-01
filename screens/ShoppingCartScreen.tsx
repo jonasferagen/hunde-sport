@@ -8,42 +8,17 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { FlashList } from '@shopify/flash-list';
 import { ArrowBigRight, ShoppingCart } from '@tamagui/lucide-icons';
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { XStack, YStack } from 'tamagui';
 
 export const ShoppingCartScreen = () => {
-    const { items, cart, cartTotal, cartItemCount, clearCart } = useShoppingCartContext();
+    const { cart } = useShoppingCartContext();
 
 
     if (!cart) {
         return null;
     }
 
-    cart.debug('SCScreen');
-
-
-
-
-
-    const handleCheckout = async () => {
-        if (items.length > 0) {
-            try {
-                const itemsQuery = items
-                    .map((item) => {
-                        const idToAdd = item.purchasable.productVariation?.id || item.purchasable.product.id;
-                        return `${idToAdd}:${item.quantity}`;
-                    })
-                    .join(',');
-
-                const url = `https://hunde-sport.no/kassen?cart_fill=1&items=${itemsQuery}`;
-
-                await WebBrowser.openBrowserAsync(url);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };
 
 
     if (cart.items.length === 0) {
@@ -74,7 +49,7 @@ export const ShoppingCartScreen = () => {
         </PageSection>
         <PageContent theme='secondary_soft' >
             <XStack gap="$3" ai="center" jc="space-between">
-                <ThemedButton onPress={handleCheckout} scaleIcon={1.5} flex={1} jc="space-between" theme="primary" disabled={cartItemCount === 0}>
+                <ThemedButton onPress={() => { console.log("checkout") }} scaleIcon={1.5} flex={1} jc="space-between" theme="primary" disabled={cart.items_count === 0}>
                     Til kassen <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
                 </ThemedButton>
             </XStack>

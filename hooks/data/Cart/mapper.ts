@@ -1,4 +1,5 @@
 import { Cart, CartItem } from '@/models/Cart';
+import { mapToProduct } from '../Product/mapper';
 
 /**
  * Maps a raw data object to a CartItem instance.
@@ -6,9 +7,13 @@ import { Cart, CartItem } from '@/models/Cart';
  * @returns {CartItem} A new CartItem instance.
  */
 export const mapToCartItem = (item: any): CartItem => {
+
+    const product = mapToProduct(item);
+
     return new CartItem({
         key: item.key,
         id: item.id,
+        product,
         quantity: item.quantity,
         type: item.type,
         name: item.name,

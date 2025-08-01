@@ -3,10 +3,10 @@ import React from 'react';
 import { FontSizeTokens, SizableText } from 'tamagui';
 
 interface ProductTitleProps {
-    size: FontSizeTokens;
+    size?: FontSizeTokens;
 }
 
-export const ProductTitle = ({ size }: ProductTitleProps) => {
+export const ProductTitle = ({ size = "$3" }: ProductTitleProps) => {
     const { product, productVariation } = useProductContext();
 
 

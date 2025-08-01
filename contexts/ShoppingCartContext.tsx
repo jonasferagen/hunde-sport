@@ -1,12 +1,11 @@
 import { ClearCartDialog } from '@/components/features/shopping-cart/ClearCartDialog';
 import { routes } from '@/config/routes';
 import { useCart } from '@/hooks/data/Cart';
-import { Cart } from '@/models/Cart';
-import { Product, Purchasable, ShoppingCartItem } from '@/types';
-import { getPurchasableKey, getPurchasableTitle } from '@/utils/purchasable';
+import { Cart, CartItem } from '@/models/Cart';
+import { Product, Purchasable } from '@/types';
 import { useToastController } from '@tamagui/toast';
 import { router } from 'expo-router';
-import React, { createContext, RefObject, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, RefObject, useCallback, useMemo, useState } from 'react';
 
 interface CartItemOptions {
     silent?: boolean;
@@ -14,14 +13,10 @@ interface CartItemOptions {
 }
 
 interface ShoppingCartContextType {
-    items: ShoppingCartItem[];
-    groupedItems: { product: Product; items: ShoppingCartItem[] }[];
-    cartItemCount: number;
-    cartTotal: number;
-    getQuantity: (purchasable: Purchasable) => number;
-    increaseQuantity: (purchasable: Purchasable, options?: CartItemOptions) => void;
-    decreaseQuantity: (purchasable: Purchasable, options?: CartItemOptions) => void;
-    removeItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
+    items: CartItem[];
+    groupedItems: { product: Product; items: CartItem[] }[];
+    updateItem: (key: string, quantity: number) => void;
+    removeItem: (key: string, options?: CartItemOptions) => void;
     clearCart: () => void;
     addItem: (purchasable: Purchasable) => void;
     cart: Cart | undefined;
@@ -30,76 +25,62 @@ interface ShoppingCartContextType {
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { cart, addItem: addItemMutation, isAddingItem, isLoading } = useCart();
-
+    const { cart, addItem: addItemMutation, updateItem: updateItemMutation, removeItem: removeItemMutation } = useCart();
 
     const toastController = useToastController();
 
-    const items = [] as ShoppingCartItem[];
+    const items = cart?.items ?? [];
 
     const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
-
+    1
     const addItem = useCallback(
         (purchasable: Purchasable) => {
-            if (!cart) return;
-            cart.addItem(purchasable, 1, [], addItemMutation);
+
+            const product = purchasable.product;
+            const productVariation = purchasable.productVariation;
+            const variation = productVariation ? productVariation.variation_attributes?.map((attr) => ({ attribute: attr.name, value: attr.value })) : [];
+            const id = product.id;
+
+            if (!cart?.cart_token) return;
+
+            const title = product.name;
+            toastController.show('Lagt til i handlekurven', {
+                message: title,
+                theme: 'dark_yellow',
+            });
+
+
+            addItemMutation({ cartToken: cart.cart_token, id, quantity: 1, variation });
         },
         [addItemMutation, cart]
     );
 
-    const getQuantity = useCallback(
-        (purchasable: Purchasable) => {
-            const key = getPurchasableKey(purchasable);
-            const cartItem = items.find((item) => item.key === key);
-            return cartItem?.quantity ?? 0;
+    const updateItem = useCallback(
+        (key: string, quantity: number) => {
+            if (!cart?.cart_token) return;
+            updateItemMutation({ cartToken: cart.cart_token, key, quantity });
         },
-        [items]
+        [updateItemMutation, cart]
     );
 
-    const increaseQuantity = useCallback(
-        (purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
-            const { silent, triggerRef } = options;
-            const key = getPurchasableKey(purchasable);
-
-            if (!cart) return;
-            cart.addItem(purchasable, getQuantity(purchasable) + 1, [], addItemMutation);
-
-            if (!silent) {
-                const product = getPurchasableTitle(purchasable);
-
-                toastController.show('Lagt til i handlekurven', {
-                    message: product,
-                    theme: 'dark_green',
-                    triggerRef,
-                });
-            }
-        },
-        [toastController, getQuantity, addItemMutation, cart]
-    );
-
-    const decreaseQuantity = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
-
-        const { triggerRef } = options;
-        const key = getPurchasableKey(purchasable);
-
-
-    }, [getQuantity, addItemMutation]);
-
-    const removeItem = useCallback((purchasable: Purchasable, options: CartItemOptions = { silent: false }) => {
+    const removeItem = useCallback((key: string, options: CartItemOptions = { silent: false }) => {
         const { silent = false, triggerRef } = options;
-        const key = getPurchasableKey(purchasable);
+        if (!cart?.cart_token) return;
 
-
+        removeItemMutation({ cartToken: cart.cart_token, key });
 
         if (!silent) {
-            const title = getPurchasableTitle(purchasable);
-            toastController.show('Fjernet fra handlekurven', {
-                message: title,
-                theme: 'dark_yellow',
-                ref: triggerRef,
-            });
+            const item = items.find(i => i.key === key);
+            if (item) {
+                const title = item.product.name;
+                toastController.show('Fjernet fra handlekurven', {
+                    message: title,
+                    theme: 'dark_yellow',
+                    triggerRef: triggerRef,
+                });
+            }
         }
-    }, [toastController, addItemMutation]);
+    }, [toastController, removeItemMutation, cart, items]);
 
     const handleConfirmClearCart = () => {
 
@@ -115,23 +96,13 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setClearCartDialogOpen(true);
     }, []);
 
-    const cartItemCount = useMemo(() => {
-        return items.reduce((sum, item) => sum + item.quantity, 0);
-    }, [items]);
-
-    const cartTotal = useMemo(() => {
-        return items.reduce((sum, item) => {
-            return sum + item.price * item.quantity;
-        }, 0);
-    }, [items]);
-
     const groupedItems = useMemo(() => {
-        const groups: { [key: number]: { product: Product; items: ShoppingCartItem[] } } = {};
+        const groups: { [key: number]: { product: Product; items: CartItem[] } } = {};
 
         for (const item of items) {
-            const productId = item.purchasable.product.id;
+            const productId = item.product.id;
             if (!groups[productId]) {
-                groups[productId] = { product: item.purchasable.product, items: [] };
+                groups[productId] = { product: item.product, items: [] };
             }
             groups[productId].items.push(item);
         }
@@ -143,27 +114,19 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         () => ({
             items,
             groupedItems,
-            cartItemCount,
-            cartTotal,
-            getQuantity,
-            increaseQuantity,
-            decreaseQuantity,
             removeItem,
             clearCart,
             addItem,
+            updateItem,
             cart,
         }),
         [
             items,
             groupedItems,
-            cartItemCount,
-            cartTotal,
-            getQuantity,
-            increaseQuantity,
-            decreaseQuantity,
             removeItem,
             clearCart,
             addItem,
+            updateItem,
             cart,
         ]
     );
@@ -182,7 +145,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 };
 
 export const useShoppingCartContext = () => {
-    const context = useContext(ShoppingCartContext);
+    const context = React.useContext(ShoppingCartContext);
     if (context === undefined) {
         throw new Error('useShoppingCartContext must be used within a ShoppingCartProvider');
     }

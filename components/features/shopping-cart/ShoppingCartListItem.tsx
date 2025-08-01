@@ -1,6 +1,6 @@
+import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ThemedButton } from '@/components/ui/ThemedButton';
-import { useShoppingCartContext } from '@/contexts';
-import { useProduct } from '@/hooks/data/Product';
+import { ProductProvider, useShoppingCartContext } from '@/contexts';
 import { CartItem } from '@/models/Cart';
 import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
@@ -11,26 +11,25 @@ interface ShoppingCartListItemProps {
     item: CartItem;
 }
 
+
 export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
+    return (
+        <ProductProvider product={item.product}>
+            <ShoppingCartListItemContent item={item} />
+        </ProductProvider>
+    );
+}
 
-    const { increaseQuantity, decreaseQuantity, removeItem } = useShoppingCartContext();
-    const { quantity, prices } = item;
+const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
-    const { data: product } = useProduct(item.id);
-
-    if (!product) return null;
-    const purchasable = { product, productVariation: undefined };
-
-
-    console.log(item.totals);
+    const { updateItem, removeItem } = useShoppingCartContext();
+    const { quantity, key } = item;
 
     return (
 
         <YStack gap="$3" padding="$3" borderBottomWidth={2} borderColor="$gray5">
             {/* Row 1: Product name + unit price */}
-            <XStack ai="center" gap="$2">
-                <SizableText fontSize="$4" >{item.name}</SizableText>
-            </XStack>
+            <ProductTitle size="$4" />
 
             {/* Row 2: Quantity + Subtotal + Remove */}
             <XStack jc="space-between" ai="center" gap="$4">
@@ -38,7 +37,7 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
                 <XStack ai="center" gap="$2">
                     <ThemedButton theme="primary"
                         icon={<Minus size="$3" />}
-                        //   onPress={() => decreaseQuantity(purchasable, { silent: true })}
+                        onPress={() => updateItem(key, quantity - 1)}
                         size="$5"
                         circular
                         disabled={quantity <= 1}
@@ -46,7 +45,7 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
 
                     <ThemedButton theme="primary"
                         icon={<Plus size="$3" />}
-                        //   onPress={() => increaseQuantity(purchasable, { silent: true })}
+                        onPress={() => updateItem(key, quantity + 1)}
                         size="$5"
                         circular
                     />
@@ -54,7 +53,7 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
                         {quantity}
                     </H4>
                     <SizableText fontSize="$4" color="$gray10">
-                        á {formatPrice(item.prices.price)}
+                        {formatPrice(item.prices.price)}
                     </SizableText>
                 </XStack>
 
@@ -66,7 +65,7 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
                 <ThemedButton
                     theme="secondary"
                     icon={<X size="$3" />}
-                    // onPress={() => removeItem(purchasable)}
+                    onPress={() => removeItem(key)}
                     size="$5"
                     circular
                 />
@@ -76,4 +75,3 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
 
     );
 };
-
