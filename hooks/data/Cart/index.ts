@@ -40,8 +40,6 @@ export const useCart = () => {
         cart,
         isLoading,
         isUpdating,
-        addItem,
-        updateItem,
-        removeItem,
+
     };
 };

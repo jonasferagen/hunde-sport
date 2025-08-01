@@ -17,13 +17,12 @@ interface ShoppingCartContextType {
     addItem: (purchasable: Purchasable) => void;
     updateItem: (key: string, quantity: number) => void;
     removeItem: (key: string, options?: CartItemOptions) => void;
-    isUpdating: boolean;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { cart, isUpdating } = useCart();
+    const { cart } = useCart();
 
     const toastController = useToastController();
 
@@ -90,14 +89,13 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
             addItem,
             updateItem,
             removeItem,
-            isUpdating,
+
         }),
         [
             cart,
             addItem,
             updateItem,
             removeItem,
-            isUpdating,
         ]
     );
 

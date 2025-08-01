@@ -22,7 +22,7 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
 
 const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
-    const { cart, updateItem, removeItem, isUpdating } = useShoppingCartContext();
+    const { cart, updateItem, removeItem } = useShoppingCartContext();
 
     if (!cart) {
         return null;
@@ -44,7 +44,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                         onPress={() => updateItem(key, quantity - 1)}
                         size="$5"
                         circular
-                        disabled={quantity <= 1 || isUpdating}
+                        disabled={quantity <= 1}
                     />
 
                     <ThemedButton theme="primary"
@@ -52,7 +52,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                         onPress={() => updateItem(key, quantity + 1)}
                         size="$5"
                         circular
-                        disabled={isUpdating}
+                        disabled={false}
                     />
                     <H4 width={30} textAlign="center">
                         {quantity}
@@ -73,7 +73,7 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                     onPress={() => removeItem(key)}
                     size="$5"
                     circular
-                    disabled={isUpdating}
+                    disabled={false}
                 />
 
             </XStack>
