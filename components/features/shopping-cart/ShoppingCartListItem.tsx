@@ -22,11 +22,8 @@ export const ShoppingCartListItem = ({ item }: ShoppingCartListItemProps) => {
 
 const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
 
-    const { cart, updateItem, removeItem } = useShoppingCartContext();
+    const { updateItem, removeItem, isUpdating } = useShoppingCartContext();
 
-    if (!cart) {
-        return null;
-    }
     const { quantity, key } = item;
 
     return (
@@ -57,14 +54,14 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                     <H4 width={30} textAlign="center">
                         {quantity}
                     </H4>
-                    <SizableText fontSize="$4" color="$gray10">
-                        {formatPrice(item.prices.price)}
+                    <SizableText fontSize="$4" color="$gray10" >
+                        {isUpdating ? 'Oppdaterer...' : formatPrice(item.prices.price)}
                     </SizableText>
                 </XStack>
 
                 {/* Subtotal */}
                 <SizableText fontSize="$4" fontWeight="bold" flex={1} textAlign="right">
-                    {formatPrice(Number(item.totals.line_total) + Number(item.totals.line_total_tax) + '')}
+                    {isUpdating ? 'Oppdaterer...' : formatPrice(Number(item.totals.line_total) + Number(item.totals.line_total_tax) + '')}
                 </SizableText>
                 {/* Remove Button */}
                 <ThemedButton

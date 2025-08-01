@@ -1,103 +1,89 @@
 import { ClearCartDialog } from '@/components/features/shopping-cart/ClearCartDialog';
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { routes } from '@/config/routes';
 import { useCart } from '@/hooks/data/Cart';
 import { Cart } from '@/models/Cart';
 import { Purchasable } from '@/types';
 import { useToastController } from '@tamagui/toast';
 import { router } from 'expo-router';
-import React, { createContext, RefObject, useCallback, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface CartItemOptions {
     silent?: boolean;
-    triggerRef?: RefObject<any>;
+    triggerRef?: React.RefObject<any>;
 }
 
 interface ShoppingCartContextType {
     cart: Cart | undefined;
-    addItem: (purchasable: Purchasable) => void;
+    isUpdating: boolean;
+    addItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
     updateItem: (key: string, quantity: number) => void;
     removeItem: (key: string, options?: CartItemOptions) => void;
+    openClearCartDialog: () => void;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
-
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { cart } = useCart();
+    const {
+        cart,
+        isUpdating,
+        addItem: addItemMutation,
+        updateItem: updateItemMutation,
+        removeItem: removeItemMutation,
+        isLoading,
+    } = useCart();
 
     const toastController = useToastController();
-
-    const items = cart?.items ?? [];
-
     const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
 
-    const addItem = useCallback(
-        (purchasable: Purchasable) => {
-            if (!cart) return;
+    if (isLoading || !cart) {
+        return <ThemedSpinner />;
+    }
 
+    const cartToken = cart.getToken();
 
-            cart.addItem(purchasable);
+    const addItem = (
+        purchasable: Purchasable,
+        options: CartItemOptions = {}
+    ) => {
+        addItemMutation({ cartToken, purchasable });
+
+        if (!options.silent) {
             toastController.show('Lagt til i handlekurven', {
                 message: purchasable.product.name,
                 theme: 'dark_yellow',
+                triggerRef: options.triggerRef,
             });
-            //  originalAddItem({ cartToken: cart.cart_token, purchasable });
-        },
-        [cart, toastController]
-    );
+        }
+    };
 
-    const updateItem = useCallback(
-        (key: string, quantity: number) => {
-            if (!cart) return;
-            cart.updateItem(key, quantity);
-        },
-        [cart]
-    );
+    const updateItem = (key: string, quantity: number) => {
+        updateItemMutation({ cartToken, key, quantity });
+    };
 
-    const removeItem = useCallback((key: string, options: CartItemOptions = { silent: false }) => {
-        const { silent = false, triggerRef } = options;
-        if (!cart) return;
+    const removeItem = (key: string, options: CartItemOptions = {}) => {
+        removeItemMutation({ cartToken, key });
 
-        cart.removeItem(key);
-
-        if (!silent) {
-            const item = items.find(i => i.key === key);
+        if (!options.silent) {
+            const item = cart.items.find(i => i.key === key);
             if (item) {
-                const title = item.product.name;
                 toastController.show('Fjernet fra handlekurven', {
-                    message: title,
+                    message: item.product.name,
                     theme: 'dark_yellow',
-                    triggerRef: triggerRef,
+                    triggerRef: options.triggerRef,
                 });
             }
         }
-    }, [toastController, cart]);
-
-    const handleConfirmClearCart = () => {
-
-        toastController.show('Handlekurven er tømt', {
-            message: 'Du har ingen produkter i handlekurven',
-            theme: 'dark_yellow',
-        });
-        router.push(routes.index.path());
-        setClearCartDialogOpen(false);
     };
 
-
-    const value = useMemo(
-        () => ({
-            cart,
-            addItem,
-            updateItem,
-            removeItem,
-
-        }),
-        [
-            cart,
-            addItem,
-            updateItem,
-            removeItem,
-        ]
-    );
+    const value = useMemo(() => ({
+        cart,
+        isUpdating,
+        addItem,
+        updateItem,
+        removeItem,
+        openClearCartDialog: () => setClearCartDialogOpen(true),
+    }), [cart, isUpdating]);
 
     return (
         <ShoppingCartContext.Provider value={value}>
@@ -105,7 +91,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
             <ClearCartDialog
                 isOpen={isClearCartDialogOpen}
-                onConfirm={handleConfirmClearCart}
+                onConfirm={() => {
+                    toastController.show('Handlekurven er tømt', {
+                        message: 'Du har ingen produkter i handlekurven',
+                        theme: 'dark_yellow',
+                    });
+                    router.push(routes.index.path());
+                    setClearCartDialogOpen(false);
+                }}
                 onCancel={() => setClearCartDialogOpen(false)}
             />
         </ShoppingCartContext.Provider>
@@ -113,9 +106,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 };
 
 export const useShoppingCartContext = () => {
-    const context = React.useContext(ShoppingCartContext);
-    if (context === undefined) {
-        throw new Error('useShoppingCartContext must be used within a ShoppingCartProvider');
-    }
+    const context = useContext(ShoppingCartContext);
+    if (!context) throw new Error('useShoppingCartContext must be used within a ShoppingCartProvider');
     return context;
 };

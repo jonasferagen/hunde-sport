@@ -7,7 +7,7 @@ import { mapToCart } from './mapper';
  * Fetches the cart data from the API.
  * @returns {Promise<{data: Cart, cartToken: string | null}>} An object containing the cart data and the cart token.
  */
-export async function fetchCart(): Promise<Cart> {
+export async function fetchCart(): Promise<{ data: Cart }> {
     const { data, headers, error } = await apiClient.get<CartData>(ENDPOINTS.CART.GET());
     const cartToken = headers.get('cart-token');
 
@@ -17,8 +17,7 @@ export async function fetchCart(): Promise<Cart> {
     if (!cartToken) {
         throw new Error('Cart token not found');
     }
-    const cart = mapToCart(data, cartToken);
-    return cart;
+    return { data: mapToCart(data, cartToken) };
 }
 
 /**
@@ -27,9 +26,9 @@ export async function fetchCart(): Promise<Cart> {
  * @param {number} quantity - The quantity of the product to add.
  * @param {{attribute: string, value: string}[]} variation - The selected product variations.
  * @param {string | null} [cartToken] - The cart token for the current session.
- * @returns {Promise<{data: Cart, cartToken: string | null}>} An object containing the updated cart data and the cart token.
+ * @returns {Promise<{data: Cart}>} An object containing the updated cart data.
  */
-export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: Cart, cartToken: string }> {
+export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: Cart }> {
 
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.ADD_ITEM(),
@@ -42,7 +41,7 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
         throw new Error(error);
     }
 
-    return { data: mapToCart(data, cartToken), cartToken };
+    return { data: mapToCart(data, cartToken) };
 }
 
 /**
@@ -50,9 +49,9 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
  * @param {string} cartToken - The cart token for the current session.
  * @param {string} key - The key of the item to update.
  * @param {number} quantity - The new quantity of the item.
- * @returns {Promise<{data: Cart, cartToken: string}>} An object containing the updated cart data and the cart token.
+ * @returns {Promise<{data: Cart}>} An object containing the updated cart data.
  */
-export async function updateItem({ cartToken, key, quantity }: { cartToken: string, key: string, quantity: number }): Promise<{ data: Cart, cartToken: string }> {
+export async function updateItem({ cartToken, key, quantity }: { cartToken: string, key: string, quantity: number }): Promise<{ data: Cart }> {
 
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.UPDATE_ITEM(),
@@ -65,16 +64,16 @@ export async function updateItem({ cartToken, key, quantity }: { cartToken: stri
         throw new Error(error);
     }
 
-    return { data: mapToCart(data, cartToken), cartToken };
+    return { data: mapToCart(data, cartToken) };
 }
 
 /**
  * Removes an item from the cart.
  * @param {string} cartToken - The cart token for the current session.
  * @param {string} key - The key of the item to remove.
- * @returns {Promise<{data: Cart, cartToken: string}>} An object containing the updated cart data and the cart token.
+ * @returns {Promise<{data: Cart}>} An object containing the updated cart data.
  */
-export async function removeItem({ cartToken, key }: { cartToken: string, key: string }): Promise<{ data: Cart, cartToken: string }> {
+export async function removeItem({ cartToken, key }: { cartToken: string, key: string }): Promise<{ data: Cart }> {
 
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.REMOVE_ITEM(),
@@ -87,5 +86,5 @@ export async function removeItem({ cartToken, key }: { cartToken: string, key: s
         throw new Error(error);
     }
 
-    return { data: mapToCart(data, cartToken), cartToken };
+    return { data: mapToCart(data, cartToken) };
 }
