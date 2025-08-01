@@ -55,31 +55,29 @@ export const ShoppingCartScreen = () => {
     }
 
 
-    return (
-        <PageView>
-            <PageSection flex={1}>
-                <PageHeader theme="secondary_soft">
-                    <ShoppingCartSummary cartItemCount={cart?.items_count || 0} cartTotal={cart?.totals.total || 5} />
-                </PageHeader>
 
-                <PageContent paddingHorizontal="none" paddingVertical="none" flex={1}>
+    return <PageView>
+        <PageHeader theme="secondary_soft" f={0}>
+            <ShoppingCartSummary cartItemCount={cart.items_count} cartTotal={0} />
+        </PageHeader>
+        <PageSection scrollable f={1} bg="blue">
+            <PageContent theme="primary_soft" flex={1}>
 
-                    <FlashList
-                        data={cart?.items || []}
-                        keyExtractor={(item) => item.key}
-                        renderItem={({ item }) => <ShoppingCartListItem item={item} />}
-                        estimatedItemSize={100}
-                    />
-
-                </PageContent>
-                <PageContent theme='secondary_soft'>
-                    <XStack gap="$3" ai="center" jc="space-between">
-                        <ThemedButton onPress={handleCheckout} scaleIcon={1.5} flex={1} jc="space-between" theme="primary" disabled={cartItemCount === 0}>
-                            Til kassen <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
-                        </ThemedButton>
-                    </XStack>
-                </PageContent>
-            </PageSection>
-        </PageView>
-    );
+                <FlashList
+                    data={cart.items}
+                    keyExtractor={(item) => item.key}
+                    renderItem={({ item }) => <ShoppingCartListItem item={item} />}
+                    estimatedItemSize={100}
+                    scrollEnabled={true}
+                />
+            </PageContent>
+        </PageSection>
+        <PageContent theme='secondary_soft' >
+            <XStack gap="$3" ai="center" jc="space-between">
+                <ThemedButton onPress={handleCheckout} scaleIcon={1.5} flex={1} jc="space-between" theme="primary" disabled={cartItemCount === 0}>
+                    Til kassen <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
+                </ThemedButton>
+            </XStack>
+        </PageContent>
+    </PageView >
 };
