@@ -5,9 +5,9 @@ import { mapToCart } from './mapper';
 
 /**
  * Fetches the cart data from the API.
- * @returns {Promise<{data: Cart, cartToken: string | null}>} An object containing the cart data and the cart token.
+ * @returns {Promise<Cart>} The cart data.
  */
-export async function fetchCart(): Promise<{ data: Cart }> {
+export async function fetchCart(): Promise<Cart> {
     const { data, headers, error } = await apiClient.get<CartData>(ENDPOINTS.CART.GET());
     const cartToken = headers.get('cart-token');
 
@@ -17,7 +17,7 @@ export async function fetchCart(): Promise<{ data: Cart }> {
     if (!cartToken) {
         throw new Error('Cart token not found');
     }
-    return { data: mapToCart(data, cartToken) };
+    return mapToCart(data, cartToken);
 }
 
 /**

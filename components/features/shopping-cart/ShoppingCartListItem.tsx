@@ -1,5 +1,6 @@
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ThemedButton } from '@/components/ui/ThemedButton';
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ProductProvider, useShoppingCartContext } from '@/contexts';
 import { CartItem } from '@/models/Cart';
 import { formatPrice } from '@/utils/helpers';
@@ -55,13 +56,13 @@ const ShoppingCartListItemContent = ({ item }: ShoppingCartListItemProps) => {
                         {quantity}
                     </H4>
                     <SizableText fontSize="$4" color="$gray10" >
-                        {isUpdating ? 'Oppdaterer...' : formatPrice(item.prices.price)}
+                        {isUpdating ? <ThemedSpinner /> : formatPrice(item.prices.price)}
                     </SizableText>
                 </XStack>
 
                 {/* Subtotal */}
                 <SizableText fontSize="$4" fontWeight="bold" flex={1} textAlign="right">
-                    {isUpdating ? 'Oppdaterer...' : formatPrice(Number(item.totals.line_total) + Number(item.totals.line_total_tax) + '')}
+                    {isUpdating ? <ThemedSpinner /> : formatPrice(Number(item.totals.line_total) + Number(item.totals.line_total_tax) + '')}
                 </SizableText>
                 {/* Remove Button */}
                 <ThemedButton

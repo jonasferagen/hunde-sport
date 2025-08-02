@@ -26,56 +26,78 @@ const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(u
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const {
         cart,
-        isUpdating,
-        addItem: addItemMutation,
-        updateItem: updateItemMutation,
-        removeItem: removeItemMutation,
         isLoading,
     } = useCart();
-
-    const toastController = useToastController();
-    const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
 
     if (isLoading || !cart) {
         return <ThemedSpinner />;
     }
+    return <ShoppingCartInnerProvider cart={cart} >
+        {children}
+    </ShoppingCartInnerProvider>
+};
+
+const ShoppingCartInnerProvider: React.FC<{
+    children: React.ReactNode;
+    cart: Cart;
+
+}> = ({ children, cart }) => {
+
+    const {
+        isUpdating,
+        addItem: addItemMutation,
+        updateItem: updateItemMutation,
+        removeItem: removeItemMutation,
+    } = useCart();
+
+
+    const toastController = useToastController();
+    const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
 
     const cartToken = cart.getToken();
 
     const addItem = (
-        purchasable: Purchasable,
-        options: CartItemOptions = {}
-    ) => {
-        addItemMutation({ cartToken, purchasable });
+        (purchasable: Purchasable, options: CartItemOptions = {}) => {
 
-        if (!options.silent) {
-            toastController.show('Lagt til i handlekurven', {
-                message: purchasable.product.name,
-                theme: 'dark_yellow',
-                triggerRef: options.triggerRef,
-            });
-        }
-    };
+            const productVariation = purchasable.productVariation;
+            const variation = !productVariation ? [] : productVariation.variation_attributes.map((attribute) => ({ attribute: attribute.name, value: attribute.value }));
 
-    const updateItem = (key: string, quantity: number) => {
-        updateItemMutation({ cartToken, key, quantity });
-    };
 
-    const removeItem = (key: string, options: CartItemOptions = {}) => {
-        removeItemMutation({ cartToken, key });
 
-        if (!options.silent) {
-            const item = cart.items.find(i => i.key === key);
-            if (item) {
-                toastController.show('Fjernet fra handlekurven', {
-                    message: item.product.name,
+            addItemMutation({ cartToken, id: purchasable.product.id, quantity: 1, variation });
+
+            if (!options.silent) {
+                toastController.show('Lagt til i handlekurven', {
+                    message: purchasable.product.name,
                     theme: 'dark_yellow',
                     triggerRef: options.triggerRef,
                 });
             }
         }
-    };
+    );
 
+    const updateItem = (
+        (key: string, quantity: number) => {
+            updateItemMutation({ cartToken, key, quantity });
+        }
+    );
+
+    const removeItem = (
+        (key: string, options: CartItemOptions = {}) => {
+            removeItemMutation({ cartToken, key });
+
+            if (!options.silent) {
+                const item = cart.items.find(i => i.key === key);
+                if (item) {
+                    toastController.show('Fjernet fra handlekurven', {
+                        message: item.product.name,
+                        theme: 'dark_yellow',
+                        triggerRef: options.triggerRef,
+                    });
+                }
+            }
+        }
+    );
     const value = useMemo(() => ({
         cart,
         isUpdating,
@@ -104,6 +126,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         </ShoppingCartContext.Provider>
     );
 };
+
 
 export const useShoppingCartContext = () => {
     const context = useContext(ShoppingCartContext);

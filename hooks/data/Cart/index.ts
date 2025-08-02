@@ -21,7 +21,7 @@ export const useCartMutation = (mutationFn: (...args: any[]) => Promise<any>, er
  * @returns The result of the query, including the cart data, token, and functions to modify the cart.
  */
 export const useCart = () => {
-    const { data, isLoading } = useQuery(cartQueryOptions());
+    const { data: cart, isLoading } = useQuery(cartQueryOptions());
 
     const { mutate: addItem, isPending: isAddingItem } = useCartMutation(apiAddItem, 'Error adding item to cart:');
     const { mutate: updateItem, isPending: isUpdatingItem } = useCartMutation(apiUpdateItem, 'Error updating item in cart:');
@@ -29,7 +29,6 @@ export const useCart = () => {
 
     const isUpdating = isAddingItem || isUpdatingItem || isRemovingItem;
 
-    const cart = data?.data;
 
     return {
         cart,
