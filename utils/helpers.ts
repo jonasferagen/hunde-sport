@@ -19,6 +19,7 @@ export const formatPrice = (price: string): string => {
     return num.toFixed(0).replace('.', ',') + ',-';
 };
 
+
 export const formatPriceRange = (priceRange: any, compact: boolean = true): string => {
 
 

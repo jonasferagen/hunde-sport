@@ -31,9 +31,9 @@ export const ShoppingCartScreen = () => {
 
     return <PageView>
         <PageHeader theme="secondary_soft" f={0}>
-            <ShoppingCartSummary cartItemCount={cart.items_count} cartTotal={0} />
+            <ShoppingCartSummary />
         </PageHeader>
-        <PageSection scrollable f={1} bg="blue">
+        <PageSection scrollable f={1}>
             <PageContent theme="primary_soft" flex={1}>
 
                 <FlashList

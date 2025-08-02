@@ -3,7 +3,6 @@
 export const API_BASE_URL = 'https://hunde-sport.no/wp-json/wc/store/v1';
 export const PAGE_SIZE = 10;
 
-const EXTERNAL_CART_URL = `${API_BASE_URL}/reset-cart`;
 const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
 const PRODUCTS_URL = `${API_BASE_URL}/products`;
 const CART_URL = `${API_BASE_URL}/cart`;
@@ -26,9 +25,7 @@ export const ENDPOINTS = {
     UPDATE_ITEM: () => `${CART_URL}/update-item`,
     REMOVE_ITEM: () => `${CART_URL}/remove-item`,
   },
-  EXTERNAL_CART: {
-    POST: () => `${EXTERNAL_CART_URL}`,
-  },
+
 };
 
 // Helper function to get full API URL

@@ -20,9 +20,7 @@ export const ShoppingCartListItem = ({ item }: { item: CartItemData }): JSX.Elem
 
 const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
 
-
     const { updateItem, removeItem, isUpdating } = useShoppingCartContext();
-
     const { quantity, key } = item;
 
     return (
@@ -54,7 +52,7 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
                         {quantity}
                     </H4>
                     <SizableText fontSize="$4" color="$gray10" >
-                        {isUpdating ? <ThemedSpinner /> : formatPrice(item.prices.price)}
+                        {formatPrice(item.prices.price)}
                     </SizableText>
                 </XStack>
 
