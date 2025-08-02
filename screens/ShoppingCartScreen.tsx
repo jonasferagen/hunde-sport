@@ -34,7 +34,7 @@ export const ShoppingCartScreen = () => {
             <ShoppingCartSummary />
         </PageHeader>
         <PageSection scrollable f={1}>
-            <PageContent theme="primary_soft" flex={1}>
+            <PageContent theme="primary_soft" flex={1} bw={3} boc={"$borderColor"}>
 
                 <FlashList
                     data={cart.items}

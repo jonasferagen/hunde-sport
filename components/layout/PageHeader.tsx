@@ -1,6 +1,6 @@
-import { LinearGradient } from '@tamagui/linear-gradient';
 import React from 'react';
 import { H4, YStackProps } from 'tamagui';
+import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 
 interface PageHeaderProps extends YStackProps {
     title?: string;
@@ -8,21 +8,18 @@ interface PageHeaderProps extends YStackProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...props }) => {
-    const { start, end, ...rest } = props;
 
     return (
-        <LinearGradient
-            colors={["$background", "$backgroundPress"]}
-            start={[0, 0]}
-            end={[1, 1]}
+        <ThemedLinearGradient
+
             padding="$3"
             borderBottomWidth={1}
             borderColor={"$borderColor"}
             gap="$3"
-            {...rest}
+            {...props}
         >
             {title && <H4>{title}</H4>}
             {children}
-        </LinearGradient>
+        </ThemedLinearGradient>
     );
 }
