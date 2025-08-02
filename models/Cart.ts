@@ -1,10 +1,22 @@
-import { CartItemData } from '@/models/CartItem';
+import { Product } from '@/types';
 import { create } from 'zustand';
 import { mapToProduct } from './Product/ProductMapper';
 
 export type AddItemMutation = (vars: { id: number; quantity: number; variation: { attribute: string; value: string }[] }) => void;
 export type UpdateItemMutation = (vars: { key: string; quantity: number; optimisticUpdateTimestamp?: number }) => void;
 export type RemoveItemMutation = (vars: { key: string }) => void;
+
+export interface CartItemData {
+    key: string;
+    product: Product;
+    id: number;
+    type: string;
+    name: string;
+    variations: any[];
+    prices: any;
+    totals: any;
+    quantity: number;
+}
 
 export interface CartData {
     items: CartItemData[];
@@ -33,6 +45,7 @@ interface CartState {
     setCartToken: (token: string) => void;
     setMutations: (mutations: { addItem: AddItemMutation; updateItem: UpdateItemMutation; removeItem: RemoveItemMutation }) => void;
     getItem: (key: string) => CartItemData | undefined;
+    getSubtotal: (item: CartItemData) => string;
     updateItemQuantity: (key: string, newQuantity: number) => void;
     remove: (key: string) => void;
 }
@@ -77,6 +90,13 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     getItem: (key: string) => {
         return get().items.find(i => i.key === key);
+    },
+
+    getSubtotal: (cartItem: CartItemData) => {
+        if (!cartItem?.totals) {
+            return '0';
+        }
+        return (Number(cartItem.totals.line_total) + Number(cartItem.totals.line_total_tax)).toString();
     },
 
     updateItemQuantity: (key: string, newQuantity: number) => {

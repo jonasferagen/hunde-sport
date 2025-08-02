@@ -1,8 +1,9 @@
-import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
+
+import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductProvider, useShoppingCartContext } from '@/contexts';
-import { CartItemData } from '@/models/CartItem';
+import { CartItemData } from '@/models/Cart';
 import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
@@ -20,7 +21,7 @@ export const ShoppingCartListItem = ({ item }: { item: CartItemData }): JSX.Elem
 
 const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
 
-    const { updateItem, removeItem, isUpdating } = useShoppingCartContext();
+    const { cart, updateItem, removeItem, isUpdating } = useShoppingCartContext();
     const { quantity, key } = item;
 
     return (
@@ -56,10 +57,12 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
                     </SizableText>
                 </XStack>
 
-                {/* Subtotal */}
-                <SizableText fontSize="$4" fontWeight="bold" flex={1} textAlign="right">
-                    {isUpdating ? <ThemedSpinner /> : formatPrice(Number(item.totals.line_total) + Number(item.totals.line_total_tax) + '')}
-                </SizableText>
+                <XStack f={1} ai="center" jc="flex-end">
+                    <SizableText fontSize="$4" fontWeight="bold" flex={1} textAlign="right">
+                        {isUpdating ? <ThemedSpinner /> : formatPrice(cart.getSubtotal(item))}
+                    </SizableText>
+                </XStack>
+
                 {/* Remove Button */}
                 <ThemedButton
                     theme="secondary"
