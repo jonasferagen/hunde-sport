@@ -1,7 +1,8 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { SizableText, Spinner, Stack, XStack } from 'tamagui';
+import { SizableText, Stack, XStack } from 'tamagui';
 
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { ChevronRight } from '@tamagui/lucide-icons';
@@ -21,7 +22,7 @@ export const Breadcrumb = React.memo(({ category,
 
 
   if (loading) {
-    return <Spinner color="$colorSubtle" size="small" marginRight="$2" />;
+    return <ThemedSpinner />;
   }
 
   if (!category) {

@@ -1,5 +1,5 @@
 import { routes } from '@/config/routes';
-import { Product } from '@/models/Product/Product';
+import { useProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React from 'react';
@@ -8,12 +8,12 @@ import { Image, SizableText, YStack } from 'tamagui';
 const IMAGE_SIZE = 80;
 
 interface ProductCardImageProps {
-    product: Product;
     categoryId?: number;
     imageSize?: number;
 }
 
-export const ProductCardImage = ({ product, categoryId, imageSize = IMAGE_SIZE }: ProductCardImageProps) => {
+export const ProductCardImage = ({ categoryId, imageSize = IMAGE_SIZE }: ProductCardImageProps) => {
+    const { product } = useProductContext();
     return (
         <YStack ai="center" jc="center">
             <Link href={routes.product.path(product, categoryId)}>

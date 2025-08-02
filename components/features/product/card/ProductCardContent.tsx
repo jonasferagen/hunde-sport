@@ -1,15 +1,15 @@
 import { routes } from '@/config/routes';
-import { Product } from '@/models/Product/Product';
+import { useProductContext } from '@/contexts';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Button, H3, SizableText, YStack } from 'tamagui';
 
 interface ProductCardContentProps {
-    product: Product;
     categoryId?: number;
 }
 
-export const ProductCardContent = ({ product, categoryId }: ProductCardContentProps) => {
+export const ProductCardContent = ({ categoryId }: ProductCardContentProps) => {
+    const { product } = useProductContext();
     return (
         <YStack
             flex={1}

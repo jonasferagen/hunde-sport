@@ -24,12 +24,11 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
         onPress(product.id);
     };
 
-    //  console.log('productVariation', productVariation);
     return (
         <YStack borderBottomWidth={1} paddingVertical="$3" borderBottomColor="$gray7">
             <ProductCard>
-                <ProductCardImage product={product} categoryId={categoryId} />
-                <ProductCardContent product={product} categoryId={categoryId} />
+                <ProductCardImage categoryId={categoryId} />
+                <ProductCardContent categoryId={categoryId} />
             </ProductCard>
             <ProductCardFooter onExpand={handleExpand} />
             {

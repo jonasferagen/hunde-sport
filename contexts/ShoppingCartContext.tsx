@@ -25,13 +25,9 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const toastController = useToastController();
 
     const addCartItem = (purchasable: Purchasable, options: CartItemOptions = {}) => {
-        if (!cart.addItem) return;
 
         const productVariation = purchasable.productVariation;
         const variation = !productVariation ? [] : productVariation.variation_attributes.map((attribute: any) => ({ attribute: attribute.name, value: attribute.value }));
-
-        console.log("addItem");
-        console.log(cart.items);
 
         cart.addItem({ id: purchasable.product.id, quantity: 1, variation });
 
@@ -45,18 +41,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
 
     const updateCartItem = (key: string, quantity: number) => {
-
-        console.log("updateitem");
-        console.log(cart.items.length);
-
-        cart.updateItemQuantity(key, quantity);
+        cart.updateItem(key, quantity);
     };
 
     const removeCartItem = (key: string, options: CartItemOptions = {}) => {
         const item = cart.getItem(key);
         if (item) {
             const productName = item.product.name;
-            cart.remove(key);
+            cart.removeItem(key);
 
             if (!options.silent) {
                 toastController.show('Fjernet fra handlekurven', {

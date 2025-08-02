@@ -26,22 +26,23 @@ export const PageContent = (props: PageContentProps) => {
     return null;
   }
 
-  return <Stack theme={theme}>
+  return <Stack theme={theme} {...stackProps}>
     <LinearGradient
       colors={["$background", "$backgroundPress"]}
       start={[0, 0]}
       end={[1, 1]}
+      f={1}
     >
       {title && <H3 p="$3" pb="none">{title}</H3>}
       <YStack
-
+        f={1}
         p="$3"
         bbw={1}
         boc="$borderColor"
         {...stackProps}
       >
 
-        <ScrollView horizontal={horizontal} showsHorizontalScrollIndicator={horizontal}>{validChildren}</ScrollView>
+        <ScrollView contentContainerStyle={{ flex: 1 }} horizontal={horizontal} showsHorizontalScrollIndicator={horizontal}>{validChildren}</ScrollView>
       </YStack >
     </LinearGradient>
   </Stack>
