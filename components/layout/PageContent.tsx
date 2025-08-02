@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { ScrollView } from 'react-native';
 import { H3, YStack, YStackProps } from 'tamagui';
+import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 
 interface PageContentProps extends YStackProps {
   children: ReactNode;
@@ -26,6 +27,7 @@ export const PageContent = (props: PageContentProps) => {
   }
 
   return <YStack theme={theme} {...stackProps}>
+    <ThemedLinearGradient />
     {title && <H3 p="$3" pb="none">{title}</H3>}
     <YStack
       p="$3"
@@ -34,8 +36,14 @@ export const PageContent = (props: PageContentProps) => {
       flexShrink={1}
       {...stackProps}
     >
-      {!horizontal ? <ScrollView horizontal={horizontal} showsHorizontalScrollIndicator={horizontal}>{validChildren}</ScrollView> : validChildren}
+
+      <ScrollView
+        horizontal={horizontal}
+        showsHorizontalScrollIndicator={horizontal}
+      >
+        {validChildren}
+      </ScrollView>
     </YStack >
   </YStack>
 };
-//   <ThemedLinearGradient />
+//   

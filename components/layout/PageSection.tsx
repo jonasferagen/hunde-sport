@@ -15,7 +15,7 @@ export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ chi
       showsVerticalScrollIndicator={true}
       nestedScrollEnabled={true}
       scrollsToTop={true}
-      contentContainerStyle={{ flex: 1, borderWidth: 5, borderColor: "black" }} >
+    >
       <YStack {...props}>{children}</YStack>
     </ScrollView>
   }

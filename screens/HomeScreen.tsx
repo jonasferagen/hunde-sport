@@ -31,15 +31,15 @@ export const HomeScreen = () => {
                 <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
             </PageContent>
             <PageContent theme="secondary_soft" title="Kategorier">
-                <CategoryTiles key='categories' categoryId={0} theme="secondary" />
+                <CategoryTiles key='categories' categoryId={0} theme='secondary' />
             </PageContent>
-            <PageContent theme="light_soft" title="Tilbud" px="none">
-                <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />r
+            <PageContent theme="light_soft" title="Tilbud" px="none" >
+                <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />
             </PageContent>
-            <PageContent theme="primary_soft" title="Populære produkter" px="none">
+            <PageContent theme="primary_soft" title="Populære produkter" px="none" >
                 <ProductTiles key='featured' queryResult={featuredProducts} theme="primary" />
             </PageContent>
-            <PageContent theme="secondary_soft" title="Debug" px="none">
+            <PageContent theme="secondary_soft" title="Debug" px="none" >
                 <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
             </PageContent>
         </PageSection>
