@@ -1,22 +1,10 @@
 import { Category, CategoryData } from '../Category';
 import { Image } from '../Image';
 import { ProductAttribute, ProductAttributeData } from './ProductAttribute';
+import { ProductPrices } from './ProductPrices';
+import { VariationReference } from './VariationReference';
 
 export type ProductType = 'simple' | 'variable' | 'variation';
-
-export interface ProductPrices {
-  currency_code: string;
-  currency_symbol: string;
-  price: string;
-  regular_price: string;
-  sale_price: string;
-  price_range: { min_amount: string; max_amount: string } | null;
-}
-
-export interface VariationReference {
-  id: number;
-  attributes: { name: string; value: string }[];
-}
 
 export interface ProductData {
   id: number;
