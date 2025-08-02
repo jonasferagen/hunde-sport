@@ -31,9 +31,14 @@ export const SearchScreen = () => {
                         : (query ? `Søkeresultater for "${query}"` : ' ')}
                 </SizableText>}
             </PageHeader>
-            <PageSection >
-                <PageContent f={1} p="none" theme="secondary_soft">
+            <PageSection>
+                <PageContent>
+                    <SizableText>Test</SizableText>
+                </PageContent>
+                <PageContent f={1} p="none" theme="secondary_soft" boc="green" bbw={5} >
+                    <SizableText>Test</SizableText>
                     <SearchResults />
+                    <SizableText>Test</SizableText>
                 </PageContent>
             </PageSection>
         </PageView>

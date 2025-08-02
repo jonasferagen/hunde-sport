@@ -20,5 +20,5 @@ export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ chi
     </ScrollView>
   }
 
-  return <YStack {...props}>{children}</YStack>;
+  return <YStack f={1}{...props}>{children}</YStack>;
 });

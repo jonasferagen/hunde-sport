@@ -33,7 +33,6 @@ export const PageContent = (props: PageContentProps) => {
       p="$3"
       bbw={1}
       boc="$borderColor"
-      flexShrink={1}
       {...stackProps}
     >
 
