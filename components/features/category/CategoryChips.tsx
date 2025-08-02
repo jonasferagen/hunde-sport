@@ -1,27 +1,24 @@
 import { Chip } from "@/components/ui/";
 import { ThemedSpinner } from "@/components/ui/ThemedSpinner";
 import { routes } from "@/config/routes";
-import { Category } from "@/types";
+import { useCategoryContext } from "@/contexts/CategoryContext";
 import { useState } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import { XStack } from "tamagui";
 
 interface CategoryChipsProps {
-    categories: Category[];
-    isLoading?: boolean;
-    isFetchingNextPage?: boolean;
     limit?: number;
     style?: StyleProp<ViewStyle>;
 };
 
-export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit, style }: CategoryChipsProps) => {
-
+export const CategoryChips = ({ limit, style }: CategoryChipsProps) => {
+    const { category, subCategories, isSubCategoriesLoading } = useCategoryContext();
     const [showAll, setShowAll] = useState(false);
 
-    const limitedCategories = limit ? categories.slice(0, limit) : categories;
-    const displayedCategories = showAll ? categories : limitedCategories;
+    const limitedCategories = limit ? subCategories.slice(0, limit) : subCategories;
+    const displayedCategories = showAll ? subCategories : limitedCategories;
 
-    if (!categories || categories.length === 0) {
+    if (!category || !subCategories || subCategories.length === 0) {
         return null;
     }
 
@@ -35,15 +32,15 @@ export const CategoryChips = ({ categories, isLoading, isFetchingNextPage, limit
                     href={routes.category.path(category)}
                 />
             ))}
-            {(isLoading || isFetchingNextPage) && <ThemedSpinner />}
-            {!showAll && limit && categories.length > limit && (
+            {isSubCategoriesLoading && <ThemedSpinner />}
+            {!showAll && limit && subCategories.length > limit && (
                 <Chip
                     theme="tertiary"
-                    title={`Mer..(${categories.length - limit})`}
+                    title={`Mer..(${subCategories.length - limit})`}
                     onPress={() => setShowAll(true)}
                 />
             )}
-            {showAll && limit && categories.length > limit && (
+            {showAll && limit && subCategories.length > limit && (
                 <Chip theme="tertiary" title="Skjul" onPress={() => setShowAll(false)} />
             )}
         </XStack>

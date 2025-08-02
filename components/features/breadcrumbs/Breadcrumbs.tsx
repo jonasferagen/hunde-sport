@@ -1,17 +1,24 @@
-import { Category } from '@/types';
+import { useCategoryContext } from '@/contexts/CategoryContext';
 import React from 'react';
 import { XStack } from 'tamagui';
+import { Breadcrumb } from './Breadcrumb';
 import { RecursiveBreadcrumb } from './RecursiveBreadcrumb';
 
 interface BreadcrumbsProps {
-    category: Category;
     isLastClickable?: boolean;
 }
 
-export const Breadcrumbs = React.memo(({ category, isLastClickable = false }: BreadcrumbsProps) => {
+export const Breadcrumbs = React.memo(({ isLastClickable = false }: BreadcrumbsProps) => {
+
+    const { category } = useCategoryContext();
+
     return (
         <XStack ai="center" flexWrap="wrap">
-            <RecursiveBreadcrumb category={category} isLast={true} isLastClickable={isLastClickable} />
+            {category ? (
+                <RecursiveBreadcrumb category={category} isLast={true} isLastClickable={isLastClickable} />
+            ) : (
+                <Breadcrumb loading />
+            )}
         </XStack>
     );
 });

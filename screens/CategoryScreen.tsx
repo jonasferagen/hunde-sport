@@ -3,44 +3,36 @@ import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { useCategories, useCategory } from '@/hooks/data/Category';
+import { CategoryProvider, useCategoryContext } from '@/contexts/CategoryContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { Category } from '@/models/Category';
 import { useLocalSearchParams } from 'expo-router';
 import { memo } from 'react';
 import { LoadingScreen } from './misc/LoadingScreen';
 
-
-
-
-export const CategoryScreen = memo(() => {
-    useRenderGuard('CategoryScreen');
-    const { id } = useLocalSearchParams<{ id: string; }>();
-    const { category } = useCategory(Number(id));
+const CategoryScreenContent = memo(() => {
+    const { isLoading } = useCategoryContext();
 
     return (
         <PageView>
             <PageHeader>
-                {category ? <CategoryScreenHeader category={category} /> : <ThemedSpinner />}
+                <Breadcrumbs isLastClickable={true} />
+                <CategoryChips limit={4} />
             </PageHeader>
-            <PageContent f={1} p="none" >
-                {category ? <CategoryProducts category={category} /> : <LoadingScreen />}
+            <PageContent f={1} p="none">
+                {isLoading ? <LoadingScreen /> : <CategoryProducts />}
             </PageContent>
         </PageView>
     );
 });
 
-const CategoryScreenHeader = ({ category }: { category: Category }) => {
-
-    const { items, isFetchingNextPage } = useCategories({ autoload: true });
-    const categories = items.filter(cat => cat.parent === category.id).filter(category => category.shouldDisplay());
+export const CategoryScreen = memo(() => {
+    useRenderGuard('CategoryScreen');
+    const { id } = useLocalSearchParams<{ id: string }>();
 
     return (
-        <>
-            <Breadcrumbs category={category} isLastClickable={true} />
-            <CategoryChips categories={categories} isFetchingNextPage={isFetchingNextPage} limit={4} />
-        </>
+        <CategoryProvider categoryId={Number(id)}>
+            <CategoryScreenContent />
+        </CategoryProvider>
     );
-}
+});
 

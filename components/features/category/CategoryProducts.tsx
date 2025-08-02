@@ -1,16 +1,18 @@
+import { useCategoryContext } from '@/contexts/CategoryContext';
 import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { Category } from '@/models/Category';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import React, { JSX } from 'react';
 import { ProductList } from '../product/ProductList';
 
-interface CategoryProductsProps {
-    category: Category;
-}
-
-export const CategoryProducts = ({ category }: CategoryProductsProps): JSX.Element => {
+export const CategoryProducts = (): JSX.Element | null => {
     useRenderGuard('CategoryProducts');
+    const { category } = useCategoryContext();
+
+    if (!category) {
+        return null; // Category is being loaded by the provider
+    }
+
     const { items: products,
         isLoading,
         isFetchingNextPage,

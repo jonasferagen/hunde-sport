@@ -2,7 +2,6 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { SizableText, Stack, XStack } from 'tamagui';
 
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { ChevronRight } from '@tamagui/lucide-icons';
@@ -20,20 +19,19 @@ export const Breadcrumb = React.memo(({ category,
   loading = false
 }: BreadcrumbProps) => {
 
+  const breadcrumbText = (
+    <SizableText fontSize="$5" fontWeight={isLast && !isLastClickable ? 'normal' : 'bold'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
+      {category?.name}
+    </SizableText>
+  );
 
   if (loading) {
-    return <ThemedSpinner />;
+    return <SizableText fontSize="$5" color="$colorTransparent">Placeholder</SizableText>;
   }
 
   if (!category) {
     return null;
   }
-
-  const breadcrumbText = (
-    <SizableText fontSize="$5" fontWeight={isLast && !isLastClickable ? 'normal' : 'bold'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
-      {category.name}
-    </SizableText>
-  );
 
   return (
     <XStack ai="center">
