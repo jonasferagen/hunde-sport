@@ -1,4 +1,6 @@
-import { CartItem, CartItemData } from '@/models/CartItem';
+import { CartItemData } from '@/models/CartItem';
+import { create } from 'zustand';
+import { mapToProduct } from './Product/ProductMapper';
 
 export type AddItemMutation = (vars: { id: number; quantity: number; variation: { attribute: string; value: string }[] }) => void;
 export type UpdateItemMutation = (vars: { key: string; quantity: number }) => void;
@@ -14,81 +16,86 @@ export interface CartData {
     shipping_rates: any;
 }
 
-export class Cart {
-    private cartToken?: string;
-
-    public items: CartItem[] = [];
-    public items_count: number = 0;
-    public items_weight: number = 0;
-    public totals: any = {};
-    public has_calculated_shipping: boolean = false;
-    public shipping_rates: any = [];
-
-    public addItem!: AddItemMutation;
-    public updateItem!: UpdateItemMutation;
-    public removeItem!: RemoveItemMutation;
-
-    constructor() { }
-
-    public setData(data: CartData) {
-        this.items = data.items.map(itemData => new CartItem(itemData, this));
-        this.items_count = data.items_count;
-        this.items_weight = data.items_weight;
-        this.totals = data.totals;
-        this.has_calculated_shipping = data.has_calculated_shipping;
-        this.shipping_rates = data.shipping_rates;
-
-        this.items.forEach(item => {
-            if (this.updateItem) {
-                item.attachUpdater(this.updateItem);
-            }
-        });
-    }
-
-    public setCartToken(token: string) {
-        this.cartToken = token;
-    }
-
-    getItem(key: string) {
-        return this.items.find(i => i.key === key);
-    }
-
-    getCartToken(): string | undefined {
-        return this.cartToken;
-    }
-
-    updateItemQuantity(key: string, newQuantity: number) {
-        const item = this.getItem(key);
-        if (!item) {
-            return;
-        }
-
-        const oldQuantity = item.quantity;
-        this.items_count = this.items_count - oldQuantity + newQuantity;
-
-        // Delegate to the item to update its own quantity and call the mutation
-        item.updateQuantity(newQuantity);
-    }
-
-    remove(key: string) {
-        const itemToRemove = this.getItem(key);
-        if (!itemToRemove) return;
-        // Optimistic update
-        this.items = this.items.filter(i => i.key !== key);
-
-        // Call the actual mutation
-        this.removeItem({ key });
-    }
-
-    setMutations(addItem: AddItemMutation, updateItem: UpdateItemMutation, removeItem: RemoveItemMutation) {
-        this.addItem = addItem;
-        this.updateItem = updateItem;
-        this.removeItem = removeItem;
-
-        this.items.forEach(item => {
-            item.attachUpdater(updateItem);
-        });
-    }
+interface CartState {
+    cartToken?: string;
+    items: CartItemData[];
+    items_count: number;
+    items_weight: number;
+    totals: any;
+    has_calculated_shipping: boolean;
+    shipping_rates: any[];
+    addItem?: AddItemMutation;
+    updateItem?: UpdateItemMutation;
+    removeItem?: RemoveItemMutation;
+    setData: (data: CartData) => void;
+    setCartToken: (token: string) => void;
+    setMutations: (mutations: { addItem: AddItemMutation; updateItem: UpdateItemMutation; removeItem: RemoveItemMutation }) => void;
+    getItem: (key: string) => CartItemData | undefined;
+    updateItemQuantity: (key: string, newQuantity: number) => void;
+    remove: (key: string) => void;
 }
 
-export const cart = new Cart();
+export const useCart = create<CartState>((set, get) => ({
+    // State
+    cartToken: undefined,
+    items: [],
+    items_count: 0,
+    items_weight: 0,
+    totals: {},
+    has_calculated_shipping: false,
+    shipping_rates: [],
+    addItem: undefined,
+    updateItem: undefined,
+    removeItem: undefined,
+
+    // Actions
+    setData: (data: CartData) => {
+        const itemsWithProducts = data.items.map(item => ({
+            ...item,
+            product: mapToProduct(item),
+        }));
+
+        set({
+            items: itemsWithProducts,
+            items_count: data.items_count,
+            items_weight: data.items_weight,
+            totals: data.totals,
+            has_calculated_shipping: data.has_calculated_shipping,
+            shipping_rates: data.shipping_rates,
+        });
+    },
+
+    setCartToken: (token: string) => set({ cartToken: token }),
+
+    setMutations: ({ addItem, updateItem, removeItem }) => {
+        set({ addItem, updateItem, removeItem });
+    },
+
+    getItem: (key: string) => {
+        return get().items.find(i => i.key === key);
+    },
+
+    updateItemQuantity: (key: string, newQuantity: number) => {
+        const { items, items_count, updateItem } = get();
+        const item = items.find(i => i.key === key);
+        if (!item || !updateItem) return;
+
+        // Optimistic update of total item count
+        const oldQuantity = item.quantity;
+        set({ items_count: items_count - oldQuantity + newQuantity });
+
+        // Call the mutation to update the item on the server
+        updateItem({ key, quantity: newQuantity });
+    },
+
+    remove: (key: string) => {
+        const { items, removeItem } = get();
+        if (!removeItem) return;
+
+        // Optimistic update
+        set({ items: items.filter(i => i.key !== key) });
+
+        // Call the actual mutation
+        removeItem({ key });
+    },
+}));

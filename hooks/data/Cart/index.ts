@@ -1,13 +1,23 @@
-import { AddItemMutation, cart, CartData, RemoveItemMutation, UpdateItemMutation } from '@/models/Cart';
+import { AddItemMutation, CartData, RemoveItemMutation, UpdateItemMutation, useCart } from '@/models/Cart';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { addItem as apiAddItem, removeItem as apiRemoveItem, updateItem as apiUpdateItem, fetchCart } from './api';
 
 export const useCartQuery = () => {
-    return useQuery<CartData, Error>({
+    const { setData } = useCart.getState();
+    const queryResult = useQuery<CartData, Error>({
         queryKey: ['cart'],
         queryFn: fetchCart,
         enabled: true, // Fetch cart data immediately
     });
+
+    useEffect(() => {
+        if (queryResult.data) {
+            setData(queryResult.data);
+        }
+    }, [queryResult.data, setData]);
+
+    return queryResult;
 };
 
 // A generic mutation hook for cart operations
@@ -16,18 +26,19 @@ export const useCartMutation = <TVariables extends Record<string, any>>(
     errorMessage: string
 ) => {
     const queryClient = useQueryClient();
-    const cartToken = cart.getCartToken();
 
     return useMutation<CartData, Error, TVariables>({
         mutationFn: (variables: TVariables) => {
+            const { cartToken } = useCart.getState();
             if (!cartToken) {
                 return Promise.reject(new Error('Cart token not found'));
             }
             return mutationFn({ ...variables, cartToken });
         },
         onSuccess: (data) => {
+            const { setData } = useCart.getState();
             queryClient.setQueryData(['cart'], data);
-            cart.setData(data);
+            setData(data);
         },
         onError: (error) => {
             console.error(errorMessage, error);
@@ -35,31 +46,35 @@ export const useCartMutation = <TVariables extends Record<string, any>>(
     });
 };
 
+export const useInitializeCart = () => {
+    useCartQuery();
+};
+
 /**
  * Hook to fetch and manage the cart data.
  * @returns The result of the query, including the cart data, token, and functions to modify the cart.
  */
-export const useCart = () => {
-    const { data, isLoading } = useCartQuery();
-
-    if (data) {
-        cart.setData(data);
-    }
+export const useCartData = () => {
+    const state = useCart();
+    const { isLoading } = useCartQuery();
 
     const { mutate: addItem, isPending: isAddingItem } = useCartMutation(apiAddItem, 'Error adding item to cart:');
     const { mutate: updateItem, isPending: isUpdatingItem } = useCartMutation(apiUpdateItem, 'Error updating item in cart:');
     const { mutate: removeItem, isPending: isRemovingItem } = useCartMutation(apiRemoveItem, 'Error removing item from cart:');
 
-    cart.setMutations(addItem as AddItemMutation, updateItem as UpdateItemMutation, removeItem as RemoveItemMutation);
+    useEffect(() => {
+        state.setMutations({
+            addItem: addItem as AddItemMutation,
+            updateItem: updateItem as UpdateItemMutation,
+            removeItem: removeItem as RemoveItemMutation
+        });
+    }, [addItem, updateItem, removeItem, state.setMutations]);
 
     const isUpdating = isAddingItem || isUpdatingItem || isRemovingItem;
 
     return {
-        cart,
+        ...state,
         isLoading,
         isUpdating,
-        addItem,
-        updateItem,
-        removeItem,
     };
 };

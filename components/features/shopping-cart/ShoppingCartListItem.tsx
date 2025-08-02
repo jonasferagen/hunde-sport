@@ -2,14 +2,14 @@ import { ProductTitle } from '@/components/features/product/display/ProductTitle
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ProductProvider, useShoppingCartContext } from '@/contexts';
-import { CartItem } from '@/models/CartItem';
+import { CartItemData } from '@/models/CartItem';
 import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { H4, SizableText, XStack, YStack } from 'tamagui';
 
 
-export const ShoppingCartListItem = ({ item }: { item: CartItem }): JSX.Element => {
+export const ShoppingCartListItem = ({ item }: { item: CartItemData }): JSX.Element => {
 
     return (
         <ProductProvider product={item.product}>
@@ -18,7 +18,7 @@ export const ShoppingCartListItem = ({ item }: { item: CartItem }): JSX.Element 
     );
 }
 
-const ShoppingCartListItemContent = ({ item }: { item: CartItem }): JSX.Element => {
+const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
 
 
     const { updateItem, removeItem, isUpdating } = useShoppingCartContext();

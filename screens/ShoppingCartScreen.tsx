@@ -29,8 +29,6 @@ export const ShoppingCartScreen = () => {
         );
     }
 
-
-
     return <PageView>
         <PageHeader theme="secondary_soft" f={0}>
             <ShoppingCartSummary cartItemCount={cart.items_count} cartTotal={0} />

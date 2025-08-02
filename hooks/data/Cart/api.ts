@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import { cart, CartData } from '@/models/Cart';
+import { CartData, useCart } from '@/models/Cart';
 import apiClient from '@/utils/apiClient';
 
 /**
@@ -17,7 +17,11 @@ export async function fetchCart(): Promise<CartData> {
         throw new Error('Cart token not found');
     }
 
-    cart.setCartToken(cartToken);
+    useCart.getState().setCartToken(cartToken);
+
+    if (!data) {
+        throw new Error("No data returned from fetchCart");
+    }
 
     return data;
 }
@@ -43,6 +47,10 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
         throw new Error(error);
     }
 
+    if (!data) {
+        throw new Error("No data returned from addItem");
+    }
+
     return data;
 }
 
@@ -66,6 +74,10 @@ export async function updateItem({ cartToken, key, quantity }: { cartToken: stri
         throw new Error(error);
     }
 
+    if (!data) {
+        throw new Error("No data returned from updateItem");
+    }
+
     return data;
 }
 
@@ -86,6 +98,10 @@ export async function removeItem({ cartToken, key }: { cartToken: string, key: s
     if (error) {
         console.error("Error", error);
         throw new Error(error);
+    }
+
+    if (!data) {
+        throw new Error("No data returned from removeItem");
     }
 
     return data;
