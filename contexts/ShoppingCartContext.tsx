@@ -45,16 +45,11 @@ const ShoppingCartInnerProvider: React.FC<{
 
     const {
         isUpdating,
-        addItem: addItemMutation,
-        updateItem: updateItemMutation,
-        removeItem: removeItemMutation,
     } = useCart();
 
 
     const toastController = useToastController();
     const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
-
-    const cartToken = cart.getToken();
 
     const addItem = (
         (purchasable: Purchasable, options: CartItemOptions = {}) => {
@@ -62,9 +57,7 @@ const ShoppingCartInnerProvider: React.FC<{
             const productVariation = purchasable.productVariation;
             const variation = !productVariation ? [] : productVariation.variation_attributes.map((attribute) => ({ attribute: attribute.name, value: attribute.value }));
 
-
-
-            addItemMutation({ cartToken, id: purchasable.product.id, quantity: 1, variation });
+            cart.addItem({ id: purchasable.product.id, quantity: 1, variation });
 
             if (!options.silent) {
                 toastController.show('Lagt til i handlekurven', {
@@ -78,17 +71,20 @@ const ShoppingCartInnerProvider: React.FC<{
 
     const updateItem = (
         (key: string, quantity: number) => {
-            updateItemMutation({ cartToken, key, quantity });
+            const item = cart.getItem(key);
+            if (item) {
+                item.updateQuantity(quantity);
+            }
         }
     );
 
     const removeItem = (
         (key: string, options: CartItemOptions = {}) => {
-            removeItemMutation({ cartToken, key });
+            const item = cart.getItem(key);
+            if (item) {
+                cart.removeItem({ key });
 
-            if (!options.silent) {
-                const item = cart.items.find(i => i.key === key);
-                if (item) {
+                if (!options.silent) {
                     toastController.show('Fjernet fra handlekurven', {
                         message: item.product.name,
                         theme: 'dark_yellow',

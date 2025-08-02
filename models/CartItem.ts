@@ -1,5 +1,6 @@
 import { Product } from '@/models/Product/Product';
 import { mapToProduct } from '@/models/Product/ProductMapper';
+import { UpdateItemMutation } from './Cart';
 
 export interface CartItemData {
     key: string;
@@ -24,9 +25,10 @@ export class CartItem implements CartItemData {
     totals: any;
     quantity: number;
 
+    private _updateItem?: UpdateItemMutation;
+
     constructor(data: CartItemData) {
         this.key = data.key;
-
         this.id = data.id;
         this.type = data.type;
         this.name = data.name;
@@ -34,8 +36,30 @@ export class CartItem implements CartItemData {
         this.prices = data.prices;
         this.totals = data.totals;
         this.quantity = data.quantity;
-
         this.product = data.product;
+    }
+
+    attachUpdater(updateFn: UpdateItemMutation) {
+        this._updateItem = updateFn;
+    }
+
+    updateQuantity(newQuantity: number) {
+
+        console.log('Updating quantity for item:', this.key, 'from', this.quantity, 'to', newQuantity)
+
+        const prev = this.quantity;
+        this.quantity = newQuantity;
+
+        if (this._updateItem) {
+            this._updateItem({
+                key: this.key,
+                quantity: newQuantity,
+            });
+        } else {
+            console.warn('CartItem updater not attached.');
+        }
+
+        return prev; // Optional: return old quantity for potential rollback
     }
 }
 

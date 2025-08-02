@@ -1,12 +1,25 @@
+import { AddItemMutation, RemoveItemMutation, UpdateItemMutation } from '@/models/Cart';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addItem as apiAddItem, removeItem as apiRemoveItem, updateItem as apiUpdateItem } from './api';
 import { cartQueryOptions } from './queries';
 
 // A generic mutation hook for cart operations
-export const useCartMutation = (mutationFn: (...args: any[]) => Promise<any>, errorMessage: string) => {
+export const useCartMutation = <TVariables extends Record<string, any>>(
+    mutationFn: (vars: TVariables & { cartToken: string }) => Promise<any>,
+    errorMessage: string
+) => {
     const queryClient = useQueryClient();
+    // Get cart data from cache to access the token
+    const cart: any = queryClient.getQueryData(cartQueryOptions().queryKey);
+    const cartToken = cart?.getCartToken();
+
     return useMutation({
-        mutationFn,
+        mutationFn: (variables: TVariables) => {
+            if (!cartToken) {
+                return Promise.reject(new Error('Cart token not found'));
+            }
+            return mutationFn({ ...variables, cartToken });
+        },
         onSuccess: (data) => {
             queryClient.setQueryData(cartQueryOptions().queryKey, data.data);
         },
@@ -27,8 +40,9 @@ export const useCart = () => {
     const { mutate: updateItem, isPending: isUpdatingItem } = useCartMutation(apiUpdateItem, 'Error updating item in cart:');
     const { mutate: removeItem, isPending: isRemovingItem } = useCartMutation(apiRemoveItem, 'Error removing item from cart:');
 
-    const isUpdating = isAddingItem || isUpdatingItem || isRemovingItem;
+    cart?.setMutations(addItem as AddItemMutation, updateItem as UpdateItemMutation, removeItem as RemoveItemMutation);
 
+    const isUpdating = isAddingItem || isUpdatingItem || isRemovingItem;
 
     return {
         cart,
