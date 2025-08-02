@@ -1,12 +1,12 @@
 import { ENDPOINTS } from '@/config/api';
-import { Cart, CartData, mapToCart } from '@/models/Cart';
+import { cart, CartData } from '@/models/Cart';
 import apiClient from '@/utils/apiClient';
 
 /**
  * Fetches the cart data from the API.
- * @returns {Promise<Cart>} The cart data.
+ * @returns {Promise<CartData>} The cart data.
  */
-export async function fetchCart(): Promise<Cart> {
+export async function fetchCart(): Promise<CartData> {
     const { data, headers, error } = await apiClient.get<CartData>(ENDPOINTS.CART.GET());
     const cartToken = headers.get('cart-token');
 
@@ -16,7 +16,10 @@ export async function fetchCart(): Promise<Cart> {
     if (!cartToken) {
         throw new Error('Cart token not found');
     }
-    return mapToCart(data, cartToken);
+
+    cart.setCartToken(cartToken);
+
+    return data;
 }
 
 /**
@@ -25,9 +28,9 @@ export async function fetchCart(): Promise<Cart> {
  * @param {number} quantity - The quantity of the product to add.
  * @param {{attribute: string, value: string}[]} variation - The selected product variations.
  * @param {string | null} [cartToken] - The cart token for the current session.
- * @returns {Promise<{data: Cart}>} An object containing the updated cart data.
+ * @returns {Promise<CartData>} An object containing the updated cart data.
  */
-export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: Cart }> {
+export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<CartData> {
 
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.ADD_ITEM(),
@@ -40,7 +43,7 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
         throw new Error(error);
     }
 
-    return { data: mapToCart(data, cartToken) };
+    return data;
 }
 
 /**
@@ -48,9 +51,9 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
  * @param {string} cartToken - The cart token for the current session.
  * @param {string} key - The key of the item to update.
  * @param {number} quantity - The new quantity of the item.
- * @returns {Promise<{data: Cart}>} An object containing the updated cart data.
+ * @returns {Promise<CartData>} An object containing the updated cart data.
  */
-export async function updateItem({ cartToken, key, quantity }: { cartToken: string, key: string, quantity: number }): Promise<{ data: Cart }> {
+export async function updateItem({ cartToken, key, quantity }: { cartToken: string, key: string, quantity: number }): Promise<CartData> {
 
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.UPDATE_ITEM(),
@@ -63,16 +66,16 @@ export async function updateItem({ cartToken, key, quantity }: { cartToken: stri
         throw new Error(error);
     }
 
-    return { data: mapToCart(data, cartToken) };
+    return data;
 }
 
 /**
  * Removes an item from the cart.
  * @param {string} cartToken - The cart token for the current session.
  * @param {string} key - The key of the item to remove.
- * @returns {Promise<{data: Cart}>} An object containing the updated cart data.
+ * @returns {Promise<CartData>} An object containing the updated cart data.
  */
-export async function removeItem({ cartToken, key }: { cartToken: string, key: string }): Promise<{ data: Cart }> {
+export async function removeItem({ cartToken, key }: { cartToken: string, key: string }): Promise<CartData> {
 
     const { data, error } = await apiClient.post<CartData>(
         ENDPOINTS.CART.REMOVE_ITEM(),
@@ -85,5 +88,5 @@ export async function removeItem({ cartToken, key }: { cartToken: string, key: s
         throw new Error(error);
     }
 
-    return { data: mapToCart(data, cartToken) };
+    return data;
 }

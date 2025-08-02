@@ -46,8 +46,6 @@ export class CartItem implements CartItemData {
     }
 
     updateQuantity(newQuantity: number) {
-
-        console.log("Updating quantity:", newQuantity);
         const prev = this.quantity;
         this.quantity = newQuantity;
 

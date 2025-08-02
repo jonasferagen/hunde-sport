@@ -20,6 +20,7 @@ export const ShoppingCartListItem = ({ item }: { item: CartItem }): JSX.Element 
 
 const ShoppingCartListItemContent = ({ item }: { item: CartItem }): JSX.Element => {
 
+
     const { updateItem, removeItem, isUpdating } = useShoppingCartContext();
 
     const { quantity, key } = item;

@@ -15,37 +15,45 @@ export interface CartData {
 }
 
 export class Cart {
-    private readonly cartToken: string;
+    private cartToken?: string;
 
-    public items: CartItem[];
-    public items_count: number;
-    public readonly items_weight: number;
-    public readonly totals: any;
-    public readonly has_calculated_shipping: boolean;
-    public readonly shipping_rates: any;
+    public items: CartItem[] = [];
+    public items_count: number = 0;
+    public items_weight: number = 0;
+    public totals: any = {};
+    public has_calculated_shipping: boolean = false;
+    public shipping_rates: any = [];
 
     public addItem!: AddItemMutation;
     public updateItem!: UpdateItemMutation;
     public removeItem!: RemoveItemMutation;
 
-    constructor(data: CartData, cartToken: string) {
+    constructor() { }
+
+    public setData(data: CartData) {
         this.items = data.items.map(itemData => new CartItem(itemData, this));
         this.items_count = data.items_count;
         this.items_weight = data.items_weight;
         this.totals = data.totals;
         this.has_calculated_shipping = data.has_calculated_shipping;
         this.shipping_rates = data.shipping_rates;
-        this.cartToken = cartToken;
+
+        this.items.forEach(item => {
+            if (this.updateItem) {
+                item.attachUpdater(this.updateItem);
+            }
+        });
+    }
+
+    public setCartToken(token: string) {
+        this.cartToken = token;
     }
 
     getItem(key: string) {
         return this.items.find(i => i.key === key);
     }
 
-    getCartToken(): string {
-        if (!this.cartToken) {
-            throw new Error('Cart token not found!');
-        }
+    getCartToken(): string | undefined {
         return this.cartToken;
     }
 
@@ -83,6 +91,4 @@ export class Cart {
     }
 }
 
-export const mapToCart = (data: any, cartToken: string): Cart => {
-    return new Cart(data, cartToken);
-};
+export const cart = new Cart();
