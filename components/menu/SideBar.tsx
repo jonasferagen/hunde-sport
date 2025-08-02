@@ -1,16 +1,13 @@
 import { CustomHeader } from "@/components/menu/CustomHeader";
 import { routes } from '@/config/routes';
 import { DrawerContentComponentProps, DrawerHeaderProps } from "@react-navigation/drawer";
-import { useRoute } from "@react-navigation/native";
 import Drawer from "expo-router/drawer";
 import React, { JSX } from "react";
 import { Theme, YStack } from "tamagui";
 import { CustomDrawerContent } from "./CustomDrawerContent";
 
 export const SideBar = (): JSX.Element => {
-    const route = useRoute();
-    const routeName = route.name;
-    const themeName = routes[routeName]?.theme || 'primary';
+
 
     const drawerContent = React.useCallback((props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />, []);
     const screenOptions = React.useMemo(() => ({
@@ -22,7 +19,7 @@ export const SideBar = (): JSX.Element => {
 
     }), []);
 
-    return <Theme name={themeName}>
+    return <Theme name="light">
         <YStack flex={1} zIndex={5}>
             <Drawer
                 drawerContent={drawerContent}
