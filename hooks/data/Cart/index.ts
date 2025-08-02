@@ -1,10 +1,10 @@
-import { AddItemMutation, CartData, RemoveItemMutation, UpdateItemMutation, useCart } from '@/models/Cart';
+import { AddItemMutation, CartData, RemoveItemMutation, UpdateItemMutation, useCartStore } from '@/models/Cart';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { addItem as apiAddItem, removeItem as apiRemoveItem, updateItem as apiUpdateItem, fetchCart } from './api';
 
 export const useCartQuery = () => {
-    const { setData } = useCart.getState();
+    const { setData } = useCartStore.getState();
     const queryResult = useQuery<CartData, Error>({
         queryKey: ['cart'],
         queryFn: fetchCart,
@@ -29,14 +29,14 @@ export const useCartMutation = <TVariables extends Record<string, any>>(
 
     return useMutation<CartData, Error, TVariables>({
         mutationFn: (variables: TVariables) => {
-            const { cartToken } = useCart.getState();
+            const { cartToken } = useCartStore.getState();
             if (!cartToken) {
                 return Promise.reject(new Error('Cart token not found'));
             }
             return mutationFn({ ...variables, cartToken });
         },
         onSuccess: (data) => {
-            const { setData } = useCart.getState();
+            const { setData } = useCartStore.getState();
             queryClient.setQueryData(['cart'], data);
             setData(data);
         },
@@ -55,7 +55,7 @@ export const useInitializeCart = () => {
  * @returns The result of the query, including the cart data, token, and functions to modify the cart.
  */
 export const useCartData = () => {
-    const state = useCart();
+    const state = useCartStore();
     const { isLoading } = useCartQuery();
 
     const { mutate: addItem, isPending: isAddingItem } = useCartMutation(apiAddItem, 'Error adding item to cart:');

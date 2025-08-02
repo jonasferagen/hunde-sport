@@ -35,7 +35,7 @@ interface CartState {
     remove: (key: string) => void;
 }
 
-export const useCart = create<CartState>((set, get) => ({
+export const useCartStore = create<CartState>((set, get) => ({
     // State
     cartToken: undefined,
     items: [],

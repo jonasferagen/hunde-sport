@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import { CartData, useCart } from '@/models/Cart';
+import { CartData, useCartStore } from '@/models/Cart';
 import apiClient from '@/utils/apiClient';
 
 /**
@@ -17,7 +17,7 @@ export async function fetchCart(): Promise<CartData> {
         throw new Error('Cart token not found');
     }
 
-    useCart.getState().setCartToken(cartToken);
+    useCartStore.getState().setCartToken(cartToken);
 
     if (!data) {
         throw new Error("No data returned from fetchCart");
