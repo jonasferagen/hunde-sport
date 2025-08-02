@@ -9,8 +9,7 @@ import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { ProductVariations } from '@/components/features/product/variation/ProductVariations';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
-import { ProductProvider, useProductContext } from '@/contexts';
-import { useCategory } from '@/hooks/data/Category';
+import { CategoryProvider, ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
@@ -33,25 +32,37 @@ export const ProductScreen = () => {
     return <NotFoundScreen message="Beklager, produktet ble ikke funnet" />;
   }
 
-  return (
+  const content = (
     <ProductProvider product={product}>
-
-      <PageView>
-        <PageHeader>
-          {categoryIdFromParams ?
-            <BreadcrumbsContainer categoryId={Number(categoryIdFromParams)} /> :
-            <CategoryChips categories={product.categories} />
-          }
-        </PageHeader>
-        <ProductScreenContent />
-      </PageView>
+      <ProductScreenContentWrapper categoryIdFromParams={categoryIdFromParams} />
     </ProductProvider>
   );
+
+  if (categoryIdFromParams) {
+    return (
+      <CategoryProvider categoryId={Number(categoryIdFromParams)}>
+        {content}
+      </CategoryProvider>
+    );
+  }
+
+  return content;
 };
 
-const BreadcrumbsContainer = ({ categoryId }: { categoryId: number }) => {
-  const { category } = useCategory(categoryId);
-  return category && <Breadcrumbs category={category} isLastClickable={true} />
+const ProductScreenContentWrapper = ({ categoryIdFromParams }: { categoryIdFromParams?: string }) => {
+  const { product } = useProductContext();
+  return (
+    <PageView>
+      <PageHeader>
+        {categoryIdFromParams ?
+          <Breadcrumbs isLastClickable={true} />
+          :
+          <CategoryChips categories={product.categories} />
+        }
+      </PageHeader>
+      <ProductScreenContent />
+    </PageView>
+  )
 }
 
 

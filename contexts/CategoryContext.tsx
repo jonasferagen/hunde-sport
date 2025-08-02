@@ -24,7 +24,6 @@ export const CategoryProvider: React.FC<{ categoryId: number; children: React.Re
     children,
 }) => {
     const { category, isLoading } = useCategoryData(categoryId);
-
     const { items: categories, isLoading: isSubCategoriesLoading } = useCategories();
 
     const subCategories = categories ? categories.filter(cat => cat.parent === categoryId && cat.shouldDisplay()) : [];

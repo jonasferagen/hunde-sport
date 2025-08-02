@@ -22,6 +22,7 @@ export interface ProductData {
   categories: CategoryData[];
   tags: { id: number; name: string; slug: string }[];
   attributes: ProductAttributeData[];
+  related_ids: number[];
   variations: VariationReference[];
   parent_id: number;
   type: ProductType;
@@ -46,6 +47,7 @@ export abstract class Product {
   categories: Category[];
   tags: { id: number; name: string; slug: string }[];
   attributes: ProductAttribute[];
+  related_ids: number[];
   variations: VariationReference[];
   variationsData: Product[] = [];
   parent_id: number;
@@ -76,7 +78,7 @@ export abstract class Product {
     this.is_in_stock = data.is_in_stock;
     this.is_purchasable = data.is_purchasable;
     this.has_options = data.has_options;
-
+    this.related_ids = data.related_ids;
     // Add a placeholder image if none exist
     if (this.images.length === 0) {
       this.images.push({

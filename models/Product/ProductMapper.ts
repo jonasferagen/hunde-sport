@@ -37,6 +37,7 @@ export const mapToProduct = (item: any): Product | ProductVariation => {
             is_in_stock: item.is_in_stock,
             is_purchasable: item.is_purchasable,
             has_options: item.has_options,
+            related_ids: item.related_ids || [],
         };
 
         switch (productData.type) {

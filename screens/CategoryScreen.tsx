@@ -10,13 +10,13 @@ import { memo } from 'react';
 import { LoadingScreen } from './misc/LoadingScreen';
 
 const CategoryScreenContent = memo(() => {
-    const { isLoading } = useCategoryContext();
+    const { isLoading, subCategories, isSubCategoriesLoading } = useCategoryContext();
 
     return (
         <PageView>
             <PageHeader>
                 <Breadcrumbs isLastClickable={true} />
-                <CategoryChips limit={4} />
+                <CategoryChips limit={4} categories={subCategories} isLoading={isSubCategoriesLoading} />
             </PageHeader>
             <PageContent f={1} p="none">
                 {isLoading ? <LoadingScreen /> : <CategoryProducts />}
