@@ -1,24 +1,16 @@
 import { useProductContext } from '@/contexts';
 import React, { JSX } from 'react';
-import { FontSizeTokens } from 'tamagui';
+import { SizableTextProps } from 'tamagui';
 import { Price } from './Price';
 import { PriceRange } from './PriceRange';
 
-interface PriceTagProps {
-    fontSize?: FontSizeTokens;
-}
 
-export const PriceTag = ({ fontSize = "$3" }: PriceTagProps): JSX.Element => {
-    const { product, productVariation, isProductVariationsLoading } = useProductContext();
-
+export const PriceTag = ({ size = "$3", ...props }: SizableTextProps): JSX.Element => {
+    const { product, productVariation } = useProductContext();
 
     if (product.type === 'simple' || productVariation) {
-        return <Price fontSize={fontSize} />;
+        return <Price fontSize={size} {...props} />;
     }
 
-    if (isProductVariationsLoading) {
-        //   return <ThemedSpinner alignSelf='flex-end' />;
-    }
-
-    return <PriceRange productPriceRangeOverride={product?.prices.price_range} fontSize={fontSize} />;
+    return <PriceRange productPriceRangeOverride={product?.prices.price_range} fontSize={size} />;
 };

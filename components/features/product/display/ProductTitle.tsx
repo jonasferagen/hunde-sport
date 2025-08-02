@@ -1,14 +1,9 @@
 import { useProductContext } from '@/contexts';
 import React from 'react';
-import { FontSizeTokens, SizableText } from 'tamagui';
+import { SizableText, SizableTextProps } from 'tamagui';
 
-interface ProductTitleProps {
-    size?: FontSizeTokens;
-}
-
-export const ProductTitle = ({ size = "$3" }: ProductTitleProps) => {
+export const ProductTitle = ({ size = "$3", ...props }: SizableTextProps) => {
     const { product, productVariation } = useProductContext();
-
 
     if (!product) {
         return null;
@@ -33,5 +28,5 @@ export const ProductTitle = ({ size = "$3" }: ProductTitleProps) => {
         }
     }
 
-    return <SizableText fontSize={size} fontWeight="bold">{title}</SizableText>;
+    return <SizableText fontSize={size} fontWeight="bold" flexShrink={1} {...props}>{title}</SizableText>;
 };

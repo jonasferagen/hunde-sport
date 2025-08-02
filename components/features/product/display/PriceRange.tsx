@@ -18,7 +18,7 @@ export const PriceRange = ({ productPriceRangeOverride, fontSize = "$3" }: Price
     }
 
     return (
-        <SizableText fontWeight="bold" fontSize={fontSize}>
+        <SizableText fow="bold" fos={fontSize} borderWidth={2} borderColor="green">
             {formatPriceRange(productPriceRange)}
         </SizableText>
     );

@@ -1,5 +1,7 @@
 import { useProductContext } from '@/contexts';
-import { ProductVariation, SimpleProduct } from '@/types';
+import { ProductVariation } from '@/models/Product/ProductVariation';
+import { SimpleProduct } from '@/models/Product/SimpleProduct';
+
 import { formatPrice } from '@/utils/helpers';
 import { FontSizeTokens, SizableText, XStack } from 'tamagui';
 export interface PriceProps {

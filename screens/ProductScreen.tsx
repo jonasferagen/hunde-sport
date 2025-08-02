@@ -72,16 +72,15 @@ const ProductScreenContent = () => {
         <PageSection scrollable>
           <ProductImage />
           <PageContent>
-            <XStack ai="center" jc="space-between" >
+            <XStack jc="space-between" gap="$3">
               <ProductTitle size="$6" />
-
-              <PriceTag fontSize="$6" />
+              <PriceTag size="$6" />
             </XStack>
 
             <SizableText size="$3" mt="$3">{product.short_description}</SizableText>
             {product.hasVariations() && <ProductVariations />}
-            <XStack ai="center" jc="space-between" mt="$3">
-              <ProductTitle size="$5" />
+            <XStack jc="space-between" mt="$3">
+              <ProductTitle size="$6" />
               <PriceTag fontSize="$6" />
             </XStack>
             <XStack flex={1} jc="flex-start">
