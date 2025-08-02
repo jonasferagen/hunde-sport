@@ -12,5 +12,5 @@ export const PriceTag = ({ size = "$3", ...props }: SizableTextProps): JSX.Eleme
         return <Price fontSize={size} {...props} />;
     }
 
-    return <PriceRange productPriceRangeOverride={product?.prices.price_range} fontSize={size} />;
+    return <PriceRange productPriceRangeOverride={product?.prices.price_range} fos={size} />;
 };

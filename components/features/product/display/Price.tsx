@@ -3,13 +3,13 @@ import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 
 import { formatPrice } from '@/utils/helpers';
-import { FontSizeTokens, SizableText, XStack } from 'tamagui';
+import { SizableText, SizableTextProps, XStack } from 'tamagui';
+
 export interface PriceProps {
-    fontSize: FontSizeTokens;
     productOverride?: SimpleProduct | ProductVariation;
 }
 
-export const Price = ({ fontSize = "$3", productOverride }: PriceProps) => {
+export const Price = ({ productOverride, fontSize = "$3" }: PriceProps & SizableTextProps) => {
 
     const { product, productVariation } = useProductContext();
 
@@ -18,10 +18,10 @@ export const Price = ({ fontSize = "$3", productOverride }: PriceProps) => {
     if (activeProduct.on_sale) {
         return (
             <XStack ai="center">
-                <SizableText textDecorationLine="line-through" mr="$2" opacity={0.7} fontSize={fontSize}>
+                <SizableText textDecorationLine="line-through" mr="$2" opacity={0.7} fos={fontSize}>
                     {formatPrice(activeProduct.prices.regular_price)}
                 </SizableText>
-                <SizableText fontWeight="bold" fontSize={fontSize}>
+                <SizableText fow="bold" fos={fontSize}>
                     {formatPrice(activeProduct.prices.sale_price)}
                 </SizableText>
             </XStack>
@@ -29,7 +29,7 @@ export const Price = ({ fontSize = "$3", productOverride }: PriceProps) => {
     }
 
     return (
-        <SizableText fontWeight="bold" fontSize={fontSize}>
+        <SizableText fow="bold" fos={fontSize}>
             {formatPrice(activeProduct.prices.price)}
         </SizableText>
     );
