@@ -54,11 +54,8 @@ const ProductScreenContentWrapper = ({ categoryIdFromParams }: { categoryIdFromP
   return (
     <PageView>
       <PageHeader>
-        {categoryIdFromParams ?
-          <Breadcrumbs isLastClickable={true} />
-          :
-          <CategoryChips categories={product.categories} />
-        }
+        {categoryIdFromParams && <Breadcrumbs isLastClickable={true} />}
+        <CategoryChips categories={product.categories} />
       </PageHeader>
       <ProductScreenContent />
     </PageView>
@@ -96,9 +93,6 @@ const ProductScreenContent = () => {
           </PageContent>
           <PageContent title="Produktbilder" flex={1}>
             {product.images.length > 1 && <ProductImageGallery />}
-          </PageContent>
-          <PageContent title="Kategorier">
-            <CategoryChips categories={product.categories} />
           </PageContent>
           <PageContent theme="secondary" title="Produktinformasjon">
             <SizableText size="$3">{product.description}</SizableText>

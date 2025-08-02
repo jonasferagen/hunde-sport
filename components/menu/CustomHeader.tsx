@@ -27,15 +27,16 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
 
     return (
         <XStack
-            minHeight={height}
-            height={height}
+            mih={height}
+            h={height}
             ai="center"
             jc="space-between"
-            paddingTop={paddingTop}
-            paddingHorizontal="$3"
-            borderBottomWidth={2}
-            borderBottomColor="$borderColor"
-            theme={theme}
+            pt={paddingTop}
+            px="$3"
+            bbw={2}
+            boc="$borderColor"
+            gap="$3"
+            t={theme}
 
         >
             <LinearGradient
