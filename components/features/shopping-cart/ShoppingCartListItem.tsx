@@ -21,7 +21,7 @@ export const ShoppingCartListItem = ({ item }: { item: CartItemData }): JSX.Elem
 
 const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
 
-    const { cart, updateItem, removeItem, isUpdating } = useShoppingCartContext();
+    const { cart, updateCartItem, removeCartItem, isUpdating } = useShoppingCartContext();
     const { quantity, key } = item;
 
     return (
@@ -36,7 +36,7 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
                 <XStack ai="center" gap="$2">
                     <ThemedButton theme="primary"
                         icon={<Minus size="$3" />}
-                        onPress={() => updateItem(key, quantity - 1)}
+                        onPress={() => updateCartItem(key, quantity - 1)}
                         size="$5"
                         circular
                         disabled={quantity <= 1}
@@ -44,7 +44,7 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
 
                     <ThemedButton theme="primary"
                         icon={<Plus size="$3" />}
-                        onPress={() => updateItem(key, quantity + 1)}
+                        onPress={() => updateCartItem(key, quantity + 1)}
                         size="$5"
                         circular
                         disabled={false}
@@ -67,7 +67,7 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
                 <ThemedButton
                     theme="secondary"
                     icon={<X size="$3" />}
-                    onPress={() => removeItem(key)}
+                    onPress={() => removeCartItem(key)}
                     size="$5"
                     circular
                     disabled={false}
