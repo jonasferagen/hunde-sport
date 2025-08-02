@@ -23,27 +23,26 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader theme="tertiary_soft" >
+            <PageHeader >
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
-                {isWaiting || query && <SizableText>
-                    {isWaiting
-                        ? `Leter etter "${liveQuery}"...`
-                        : (query ? `Søkeresultater for "${query}"` : ' ')}
-                </SizableText>}
             </PageHeader>
             <PageSection>
                 <PageContent>
-                    <SizableText>Test</SizableText>
+                    <SizableText>
+                        {isWaiting
+                            ? `Leter etter "${liveQuery}"...`
+                            : (query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.')
+                        }
+                    </SizableText>
                 </PageContent>
-                <PageContent f={1} p="none" theme="secondary_soft" boc="green" bbw={5} >
-                    <SizableText>Test</SizableText>
+                <PageContent f={1} p="none" theme="secondary_soft">
                     <SearchResults />
-                    <SizableText>Test</SizableText>
                 </PageContent>
             </PageSection>
         </PageView>
     );
 };
+
 
 const SearchResults = () => {
     const { query, liveQuery, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
@@ -52,16 +51,8 @@ const SearchResults = () => {
         return <LoadingScreen />;
     }
 
-    if (!query) {
-        return (
-            <DefaultTextContent>Søk etter produkter, merker og kategorier.</DefaultTextContent>
-        );
-    }
-
     if (products.length === 0) {
-        return (
-            <DefaultTextContent>Ingen resultater funnet for "{query}"</DefaultTextContent>
-        );
+        return <DefaultTextContent>Ingen resultater funnet for "{query}"</DefaultTextContent>
     }
 
     return (

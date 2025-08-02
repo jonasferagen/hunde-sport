@@ -38,13 +38,13 @@ export const CategoryChips = ({ limit, style, categories, isLoading }: CategoryC
             {isLoading && <ThemedSpinner />}
             {!showAll && limit && categories.length > limit && (
                 <Chip
-                    theme="secondary"
+                    theme="tertiary"
                     title={`Mer..(${categories.length - limit})`}
                     onPress={() => setShowAll(true)}
                 />
             )}
             {showAll && limit && categories.length > limit && (
-                <Chip theme="secondary_soft" title="Skjul" onPress={() => setShowAll(false)} />
+                <Chip theme="tertiary" title="Skjul" onPress={() => setShowAll(false)} />
             )}
         </XStack>
     );

@@ -13,11 +13,11 @@ export const Chip = ({ title, theme, href, onPress, ...rest }: ChipProps) => {
     const chipContent = (
         <XStack
             theme={theme}
-            paddingVertical="$1"
-            paddingHorizontal="$2"
-            borderRadius="$2"
-            backgroundColor="$background"
-            borderWidth={1}
+            py="$1"
+            px="$2"
+            br="$3"
+            bg="$background"
+            bw={1}
             ai="center"
             jc="center"
             onPress={onPress}

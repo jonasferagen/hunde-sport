@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
-import { ScrollView } from 'react-native';
-import { H3, YStack, YStackProps } from 'tamagui';
+import { H3, ScrollView, YStack, YStackProps } from 'tamagui';
 import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 
 interface PageContentProps extends YStackProps {
   children: ReactNode;
   title?: string;
-  horizontal?: boolean;
+  scrollable?: boolean; // Add this prop
 }
 
 export const PageContent = (props: PageContentProps) => {
@@ -15,7 +14,7 @@ export const PageContent = (props: PageContentProps) => {
     children,
     title,
     theme = 'light',
-    horizontal,
+    scrollable,
     ...stackProps
 
   } = props;
@@ -33,16 +32,22 @@ export const PageContent = (props: PageContentProps) => {
       p="$3"
       bbw={1}
       boc="$borderColor"
+
       {...stackProps}
     >
-
-      <ScrollView
-        horizontal={horizontal}
-        showsHorizontalScrollIndicator={horizontal}
-      >
-        {validChildren}
-      </ScrollView>
+      {scrollable ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {validChildren}
+        </ScrollView>
+      ) : (
+        validChildren // Just render children directly
+      )}
     </YStack >
   </YStack>
 };
-//   
+/*     <ScrollView
+horizontal={horizontal}
+showsHorizontalScrollIndicator={horizontal}
+>
+{validChildren}
+</ScrollView> */
