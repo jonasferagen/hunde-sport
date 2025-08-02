@@ -2,6 +2,7 @@ import { Chip } from "@/components/ui/";
 import { ThemedSpinner } from "@/components/ui/ThemedSpinner";
 import { routes } from "@/config/routes";
 import { Category } from "@/models/Category";
+import { ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
 import { useState } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import { XStack } from "tamagui";
@@ -27,25 +28,27 @@ export const CategoryChips = ({ limit, style, categories, isLoading }: CategoryC
 
     return (
         <XStack flexWrap="wrap" ai="center" gap="$2" style={style as any}>
-            {displayedCategories.map((category) => (
-                <Chip
-                    key={category.id}
-                    theme="secondary"
-                    title={category.name}
-                    href={routes.category.path(category)}
-                />
-            ))}
+
             {isLoading && <ThemedSpinner />}
             {!showAll && limit && categories.length > limit && (
                 <Chip
-                    theme="tertiary"
-                    title={`Mer..(${categories.length - limit})`}
+                    theme="light"
+                    icon={<ChevronDown size="$4" color="black" />}
+                    title={`(${categories.length - limit})`}
                     onPress={() => setShowAll(true)}
                 />
             )}
             {showAll && limit && categories.length > limit && (
-                <Chip theme="tertiary" title="Skjul" onPress={() => setShowAll(false)} />
+                <Chip theme="light" icon={<ChevronUp size="$4" color="black" />} onPress={() => setShowAll(false)} />
             )}
+            {displayedCategories.map((category) => (
+                <Chip
+                    key={category.id}
+                    theme="primary_soft"
+                    title={category.name}
+                    href={routes.category.path(category)}
+                />
+            ))}
         </XStack>
     );
 };
