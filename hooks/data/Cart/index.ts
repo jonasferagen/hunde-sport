@@ -27,7 +27,7 @@ export const useCartMutation = <TVariables extends Record<string, any>>(
 ) => {
     const queryClient = useQueryClient();
 
-    return useMutation<CartData, Error, TVariables>({
+    return useMutation<CartData, Error, TVariables & { optimisticUpdateTimestamp?: number }>({
         mutationFn: (variables: TVariables) => {
             const { cartToken } = useCartStore.getState();
             if (!cartToken) {
@@ -35,8 +35,14 @@ export const useCartMutation = <TVariables extends Record<string, any>>(
             }
             return mutationFn({ ...variables, cartToken });
         },
-        onSuccess: (data) => {
-            const { setData } = useCartStore.getState();
+        onSuccess: (data, variables) => {
+            const { setData, lastUpdated } = useCartStore.getState();
+
+            // Only update if this mutation is not stale
+            if (variables.optimisticUpdateTimestamp && variables.optimisticUpdateTimestamp < lastUpdated) {
+                return;
+            }
+
             queryClient.setQueryData(['cart'], data);
             setData(data);
         },
