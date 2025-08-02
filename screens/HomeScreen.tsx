@@ -23,23 +23,23 @@ export const HomeScreen = () => {
     const featuredProducts = useFeaturedProducts();
 
     return <PageView>
-        <PageHeader>
+        <PageHeader theme="primary">
             <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
         </PageHeader>
         <PageSection scrollable>
-            <PageContent theme="tertiary_soft" title="Nyheter" px="none" scrollable >
-                <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
+            <PageContent theme="light_soft" title="Nyheter" px="none" scrollable >
+                <ProductTiles key='recent' queryResult={recentProducts} theme="primary" />
             </PageContent>
             <PageContent theme="secondary_soft" title="Kategorier">
                 <CategoryTiles key='categories' categoryId={0} theme='secondary' />
             </PageContent>
-            <PageContent theme="light_soft" title="Tilbud" px="none" scrollable>
+            <PageContent theme="primary_soft" title="Tilbud" px="none" scrollable>
                 <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />
             </PageContent>
-            <PageContent theme="primary_soft" title="Populære produkter" px="none" scrollable>
+            <PageContent theme="tertiary_soft" title="Populære produkter" px="none" scrollable>
                 <ProductTiles key='featured' queryResult={featuredProducts} theme="primary" />
             </PageContent>
-            <PageContent theme="secondary_soft" title="Debug" px="none" scrollable>
+            <PageContent theme="light" title="Debug" px="none" scrollable>
                 <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
             </PageContent>
         </PageSection>

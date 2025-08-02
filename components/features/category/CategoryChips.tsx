@@ -44,7 +44,7 @@ export const CategoryChips = ({ limit, style, categories, isLoading }: CategoryC
             {displayedCategories.map((category) => (
                 <Chip
                     key={category.id}
-                    theme="primary_soft"
+                    theme="secondary_soft"
                     title={category.name}
                     href={routes.category.path(category)}
                 />

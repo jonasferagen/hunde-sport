@@ -23,11 +23,11 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader >
+            <PageHeader theme="secondary">
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>
-                <PageContent>
+                <PageContent theme="secondary">
                     <SizableText>
                         {isWaiting
                             ? `Leter etter "${liveQuery}"...`

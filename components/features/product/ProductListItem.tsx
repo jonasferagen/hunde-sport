@@ -25,7 +25,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     };
 
     return (
-        <YStack borderBottomWidth={1} paddingVertical="$3" borderBottomColor="$gray7">
+        <YStack bbw={1} paddingVertical="$3" bbc="$borderColor">
             <ProductCard>
                 <ProductCardImage categoryId={categoryId} />
                 <ProductCardContent categoryId={categoryId} />
