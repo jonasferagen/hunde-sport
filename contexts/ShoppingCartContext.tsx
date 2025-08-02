@@ -1,12 +1,9 @@
-import { ClearCartDialog } from '@/components/features/shopping-cart/ClearCartDialog';
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { routes } from '@/config/routes';
 import { useCart } from '@/hooks/data/Cart';
 import { Cart } from '@/models/Cart';
 import { Purchasable } from '@/types';
 import { useToastController } from '@tamagui/toast';
-import { router } from 'expo-router';
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 
 interface CartItemOptions {
     silent?: boolean;
@@ -19,7 +16,6 @@ interface ShoppingCartContextType {
     addItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
     updateItem: (key: string, quantity: number) => void;
     removeItem: (key: string, options?: CartItemOptions) => void;
-    openClearCartDialog: () => void;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
@@ -49,13 +45,12 @@ const ShoppingCartInnerProvider: React.FC<{
 
 
     const toastController = useToastController();
-    const [isClearCartDialogOpen, setClearCartDialogOpen] = useState(false);
 
     const addItem = (
         (purchasable: Purchasable, options: CartItemOptions = {}) => {
 
             const productVariation = purchasable.productVariation;
-            const variation = !productVariation ? [] : productVariation.variation_attributes.map((attribute) => ({ attribute: attribute.name, value: attribute.value }));
+            const variation = !productVariation ? [] : productVariation.variation_attributes.map((attribute: any) => ({ attribute: attribute.name, value: attribute.value }));
 
             cart.addItem({ id: purchasable.product.id, quantity: 1, variation });
 
@@ -82,11 +77,12 @@ const ShoppingCartInnerProvider: React.FC<{
         (key: string, options: CartItemOptions = {}) => {
             const item = cart.getItem(key);
             if (item) {
-                cart.removeItem({ key });
+                const productName = item.product.name;
+                cart.remove(key);
 
                 if (!options.silent) {
                     toastController.show('Fjernet fra handlekurven', {
-                        message: item.product.name,
+                        message: productName,
                         theme: 'dark_yellow',
                         triggerRef: options.triggerRef,
                     });
@@ -100,25 +96,11 @@ const ShoppingCartInnerProvider: React.FC<{
         addItem,
         updateItem,
         removeItem,
-        openClearCartDialog: () => setClearCartDialogOpen(true),
     }), [cart, isUpdating]);
 
     return (
         <ShoppingCartContext.Provider value={value}>
             {children}
-
-            <ClearCartDialog
-                isOpen={isClearCartDialogOpen}
-                onConfirm={() => {
-                    toastController.show('Handlekurven er tømt', {
-                        message: 'Du har ingen produkter i handlekurven',
-                        theme: 'dark_yellow',
-                    });
-                    router.push(routes.index.path());
-                    setClearCartDialogOpen(false);
-                }}
-                onCancel={() => setClearCartDialogOpen(false)}
-            />
         </ShoppingCartContext.Provider>
     );
 };

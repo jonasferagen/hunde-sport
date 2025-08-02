@@ -1,6 +1,6 @@
 import { Product } from '@/models/Product/Product';
 import { mapToProduct } from '@/models/Product/ProductMapper';
-import { UpdateItemMutation } from './Cart';
+import { Cart, UpdateItemMutation } from './Cart';
 
 export interface CartItemData {
     key: string;
@@ -25,9 +25,10 @@ export class CartItem implements CartItemData {
     totals: any;
     quantity: number;
 
+
     private _updateItem?: UpdateItemMutation;
 
-    constructor(data: CartItemData) {
+    constructor(data: CartItemData, cart: Cart) {
         this.key = data.key;
         this.id = data.id;
         this.type = data.type;
@@ -36,7 +37,8 @@ export class CartItem implements CartItemData {
         this.prices = data.prices;
         this.totals = data.totals;
         this.quantity = data.quantity;
-        this.product = data.product;
+        this.product = mapToProduct(data);
+
     }
 
     attachUpdater(updateFn: UpdateItemMutation) {
@@ -45,8 +47,7 @@ export class CartItem implements CartItemData {
 
     updateQuantity(newQuantity: number) {
 
-        console.log('Updating quantity for item:', this.key, 'from', this.quantity, 'to', newQuantity)
-
+        console.log("Updating quantity:", newQuantity);
         const prev = this.quantity;
         this.quantity = newQuantity;
 
@@ -61,15 +62,18 @@ export class CartItem implements CartItemData {
 
         return prev; // Optional: return old quantity for potential rollback
     }
+
+
 }
 
 
 /**
  * Maps a raw data object to a CartItem instance.
  * @param {any} item - The raw cart item data from the API.
+ * @param {Cart} cart - The parent Cart instance.
  * @returns {CartItem} A new CartItem instance.
  */
-export const mapToCartItem = (item: any): CartItem => {
+export const mapToCartItem = (item: any, cart: Cart): CartItem => {
 
     const product = mapToProduct(item);
 
@@ -83,5 +87,5 @@ export const mapToCartItem = (item: any): CartItem => {
         variations: item.variations,
         prices: item.prices,
         totals: item.totals,
-    });
+    }, cart);
 };
