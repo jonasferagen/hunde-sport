@@ -14,7 +14,7 @@ const CategoryScreenContent = memo(() => {
 
     return (
         <PageView>
-            <PageHeader>
+            <PageHeader theme="tertiary_soft">
                 <Breadcrumbs isLastClickable={true} />
                 <CategoryChips limit={4} categories={subCategories} isLoading={isSubCategoriesLoading} />
             </PageHeader>

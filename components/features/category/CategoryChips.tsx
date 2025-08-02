@@ -30,7 +30,7 @@ export const CategoryChips = ({ limit, style, categories, isLoading }: CategoryC
             {displayedCategories.map((category) => (
                 <Chip
                     key={category.id}
-                    theme="primary"
+                    theme="secondary"
                     title={category.name}
                     href={routes.category.path(category)}
                 />
@@ -38,13 +38,13 @@ export const CategoryChips = ({ limit, style, categories, isLoading }: CategoryC
             {isLoading && <ThemedSpinner />}
             {!showAll && limit && categories.length > limit && (
                 <Chip
-                    theme="tertiary"
+                    theme="secondary"
                     title={`Mer..(${categories.length - limit})`}
                     onPress={() => setShowAll(true)}
                 />
             )}
             {showAll && limit && categories.length > limit && (
-                <Chip theme="tertiary" title="Skjul" onPress={() => setShowAll(false)} />
+                <Chip theme="secondary_soft" title="Skjul" onPress={() => setShowAll(false)} />
             )}
         </XStack>
     );

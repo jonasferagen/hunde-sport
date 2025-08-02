@@ -15,7 +15,9 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
     const route = useRoute();
     const insets = useSafeAreaInsets();
     const routeName = route.name;
-    const theme = routes[routeName]?.theme || 'primary';
+    const themeName = routes[routeName]?.theme || 'primary';
+
+
 
     const navigation = useNavigation();
     const openDrawer = () => {
@@ -36,7 +38,7 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
             bbw={2}
             boc="$borderColor"
             gap="$3"
-            t={theme}
+            t={themeName}
 
         >
             <LinearGradient

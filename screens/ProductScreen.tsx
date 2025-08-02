@@ -53,7 +53,7 @@ const ProductScreenContentWrapper = ({ categoryIdFromParams }: { categoryIdFromP
   const { product } = useProductContext();
   return (
     <PageView>
-      <PageHeader>
+      <PageHeader theme="secondary_soft">
         {categoryIdFromParams && <Breadcrumbs isLastClickable={true} />}
         <CategoryChips categories={product.categories} />
       </PageHeader>
@@ -71,7 +71,7 @@ const ProductScreenContent = () => {
       <PageView >
         <PageSection scrollable>
           <ProductImage />
-          <PageContent>
+          <PageContent theme="light_soft">
             <XStack jc="space-between" gap="$3">
               <ProductTitle size="$6" />
               <PriceTag size="$6" />
