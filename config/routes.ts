@@ -1,5 +1,6 @@
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product/Product';
+import { useRoute } from '@react-navigation/native';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { HrefObject } from 'expo-router';
 import { ThemeName } from 'tamagui';
@@ -77,6 +78,10 @@ export const routes: Record<string, Route> = {
             return { pathname: paths.product, params };
         },
     },
-
 };
 
+export const resolveTheme = (): ThemeName => {
+    const route = useRoute();
+    const routeName = route.name;
+    return routes[routeName]?.theme || 'primary';
+};

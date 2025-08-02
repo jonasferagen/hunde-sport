@@ -1,6 +1,6 @@
-import { routes } from '@/config/routes';
+import { resolveTheme } from '@/config/routes';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
-import { DrawerActions, useRoute } from '@react-navigation/native';
+import { DrawerActions } from '@react-navigation/native';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { Menu } from '@tamagui/lucide-icons';
 import { useNavigation } from 'expo-router';
@@ -10,17 +10,14 @@ import { Theme, XStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
 
-export const CustomHeader = ({ options }: DrawerHeaderProps & { theme: string }): JSX.Element => {
+export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
 
     const navigation = useNavigation();
     const openDrawer = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
 
-    const route = useRoute();
-    const routeName = route.name;
-    const theme = routes[routeName]?.theme || 'primary';
-
+    const theme = resolveTheme();
     const insets = useSafeAreaInsets();
     const paddingTop = 70;
     const height = insets.top + paddingTop + 20;

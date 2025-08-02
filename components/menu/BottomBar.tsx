@@ -1,8 +1,8 @@
-import { LinearGradient } from '@tamagui/linear-gradient';
+import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
+import { resolveTheme } from '@/config/routes';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
-import { DimensionValue } from 'react-native';
-import { styled, Tabs, Text, Theme, YStack } from 'tamagui';
+import { styled, Tabs, Text, Theme, YStack, YStackProps } from 'tamagui';
 
 const StyledTab = styled(Tabs.Tab, {
     name: 'StyledTab',
@@ -16,16 +16,6 @@ const StyledTab = styled(Tabs.Tab, {
     borderColor: '$borderColorStrong',
     borderWidth: 1,
     backgroundColor: 'transparent',
-});
-
-const StyledLinearGradient = styled(LinearGradient, {
-    name: 'StyledLinearGradient',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-
 });
 
 const StyledTabs = styled(Tabs, {
@@ -44,15 +34,15 @@ const StyledTabsList = styled(Tabs.List, {
     bottom: 0,
 });
 
-export const BottomBar = ({ children }: { children?: React.ReactNode }) => {
-    return (
-        <Theme name="secondary" >
-            <StyledLinearGradient
-                colors={['$backgroundStrong', '$backgroundPress']}
-                start={(0 as DimensionValue, 0 as DimensionValue)}
-                end={(0 as DimensionValue, 1 as DimensionValue)}
-            />
-            <StyledTabs >
+export const BottomBar = (props: YStackProps) => {
+
+    const theme = resolveTheme();
+
+    return <Theme name={theme} >
+        <YStack {...props}>
+            <ThemedLinearGradient />
+
+            <StyledTabs {...props}>
                 <StyledTabsList>
                     <Link href="/" asChild>
                         <StyledTab value="home">
@@ -80,7 +70,6 @@ export const BottomBar = ({ children }: { children?: React.ReactNode }) => {
                     </Link>
                 </StyledTabsList>
             </StyledTabs>
-        </Theme>
-
-    );
+        </YStack>
+    </Theme>
 };
