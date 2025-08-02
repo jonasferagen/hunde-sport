@@ -22,13 +22,15 @@ export const Chip = ({ title, icon, theme, href, onPress, ...rest }: ChipProps) 
             boc="$borderColorStrong"
             ai="center"
             jc="center"
+            h="$5"
+            gap="$1.5"
             onPress={onPress}
             pressStyle={onPress ? { opacity: 0.7 } : undefined}
             {...rest}
         >
             {icon}
             {title && (
-                <SizableText size="$2" numberOfLines={1}>
+                <SizableText fontSize="$3" numberOfLines={1}>
                     {title}
                 </SizableText>
             )}
