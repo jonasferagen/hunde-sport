@@ -1,6 +1,6 @@
 import { useProductsBySearch } from '@/hooks/data/Product';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 interface SearchContextType {

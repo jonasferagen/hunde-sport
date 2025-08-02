@@ -1,5 +1,5 @@
 import { BillingAddress } from '@/models/Order';
-import { ProductData } from '@/models/Product';
+import { ProductData } from '@/models/Product/Product';
 
 export const mockSimpleProductData: ProductData = {
     id: 101,

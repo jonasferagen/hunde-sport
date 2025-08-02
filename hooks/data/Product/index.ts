@@ -1,5 +1,5 @@
 import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
-import { ProductVariation, VariableProduct } from '@/models/Product';
+import { ProductVariation, VariableProduct } from '@/models/Product/Product';
 import { Category } from '@/types';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import {

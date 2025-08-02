@@ -1,6 +1,6 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useLayoutContext } from '@/contexts';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback, useState } from 'react';
 import { ViewStyle } from 'react-native';

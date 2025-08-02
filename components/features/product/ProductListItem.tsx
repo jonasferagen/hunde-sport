@@ -1,5 +1,5 @@
 import { ProductProvider, useProductContext } from '@/contexts';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import React from 'react';
 import { StackProps, YStack } from 'tamagui';
 import { ProductCard, ProductCardContent, ProductCardFooter, ProductCardImage } from './card';

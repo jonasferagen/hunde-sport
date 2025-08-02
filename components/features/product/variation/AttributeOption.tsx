@@ -1,4 +1,4 @@
-import { ProductAttribute } from '@/models/ProductAttribute';
+import { ProductAttribute } from '@/models/Product/ProductAttribute';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, XStack } from 'tamagui';

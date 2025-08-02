@@ -1,5 +1,5 @@
 import { useProductVariations as useProductVariationsData } from '@/hooks/data/Product';
-import { Product, ProductVariation } from '@/models/Product';
+import { Product, ProductVariation } from '@/models/Product/Product';
 import React, { createContext, useContext, useState } from 'react';
 
 

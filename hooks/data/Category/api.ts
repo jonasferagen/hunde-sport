@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '@/config/api';
 import apiClient from '@/utils/apiClient';
 
-import { mapToCategory } from './mapper';
+import { mapToCategory } from '@/models/Category';
 
 export async function fetchCategories(page: number) {
 

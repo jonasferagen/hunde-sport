@@ -1,5 +1,5 @@
-import { Category, CategoryData } from './Category';
-import { Image } from './Image';
+import { Category, CategoryData } from '../Category';
+import { Image } from '../Image';
 import { ProductAttribute, ProductAttributeData } from './ProductAttribute';
 
 export type ProductType = 'simple' | 'variable' | 'variation';
@@ -125,58 +125,4 @@ export abstract class Product {
   }
 }
 
-export class SimpleProduct extends Product {
-  constructor(data: ProductData) {
-    if (data.type !== 'simple') {
-      throw new Error('Cannot construct SimpleProduct with type other than "simple".');
-    }
-    super(data);
-    this.type = 'simple';
-  }
 
-  hasVariations(): boolean {
-    return false;
-  }
-
-  isPurchasable(): boolean {
-    return this.isInStock();
-  }
-}
-
-export class VariableProduct extends Product {
-  constructor(data: ProductData) {
-    if (data.type !== 'variable') {
-      throw new Error('Cannot construct VariableProduct with type other than "variable".');
-    }
-    super(data);
-    this.type = 'variable';
-  }
-
-  hasVariations(): boolean {
-    return true;
-  }
-
-  isPurchasable(): boolean {
-    return false;
-  }
-}
-
-export class ProductVariation extends Product {
-  type: 'variation' = 'variation';
-  variation_attributes: { name: string; value: string }[] = [];
-
-  constructor(data: ProductData) {
-    if (data.type !== 'variation') {
-      throw new Error('Cannot construct ProductVariation with type other than "variation".');
-    }
-    super(data);
-  }
-
-  hasVariations(): boolean {
-    return false;
-  }
-
-  isPurchasable(): boolean {
-    return this.isInStock();
-  }
-}

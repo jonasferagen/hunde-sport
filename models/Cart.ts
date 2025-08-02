@@ -1,43 +1,4 @@
-import { mapToCartItem } from '@/hooks/data/Cart/mapper';
-import { Product } from '@/models/Product';
-
-export interface CartItemData {
-    key: string;
-    product: Product;
-    id: number;
-    type: string;
-    name: string;
-    variations: any[];
-    prices: any;
-    totals: any;
-    quantity: number;
-}
-
-export class CartItem implements CartItemData {
-    key: string;
-    product: Product;
-    id: number;
-    type: string;
-    name: string;
-    variations: any[];
-    prices: any;
-    totals: any;
-    quantity: number;
-
-    constructor(data: CartItemData) {
-        this.key = data.key;
-
-        this.id = data.id;
-        this.type = data.type;
-        this.name = data.name;
-        this.variations = data.variations;
-        this.prices = data.prices;
-        this.totals = data.totals;
-        this.quantity = data.quantity;
-
-        this.product = data.product;
-    }
-}
+import { CartItem, mapToCartItem } from '@/models/CartItem';
 
 export interface CartData {
     items: CartItem[];
@@ -82,3 +43,7 @@ export class Cart {
         return this.cartToken;
     }
 }
+
+export const mapToCart = (data: any, cartToken: string): Cart => {
+    return new Cart(data, cartToken);
+};

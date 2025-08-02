@@ -1,7 +1,8 @@
-
-
-import { Product, ProductData, ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
 import { cleanHtml } from '@/utils/helpers';
+import { Product, ProductData } from './Product';
+import { ProductVariation } from './ProductVariation';
+import { SimpleProduct } from './SimpleProduct';
+import { VariableProduct } from './VariableProduct';
 
 export const mapToProduct = (item: any): Product | ProductVariation => {
 

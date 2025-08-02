@@ -1,6 +1,6 @@
 import { ProductTile } from '@/components/features/product/ProductTile';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import React, { JSX } from 'react';
 import { ThemeName } from 'tamagui';
 import { HorizontalTiles } from '../../ui/tile/HorizontalTiles';

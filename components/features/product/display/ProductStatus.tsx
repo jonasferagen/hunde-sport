@@ -1,5 +1,5 @@
 import { useProductContext } from '@/contexts';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import React from 'react';
 import { SizableText, SizableTextProps, XStack, getThemes } from 'tamagui';

@@ -1,8 +1,8 @@
 import { ENDPOINTS } from '@/config/api';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import apiClient from '@/utils/apiClient';
 
-import { mapToProduct } from './mapper';
+import { mapToProduct } from '@/models/Product/ProductMapper';
 
 export type ProductListParams =
     | { type: 'recent' | 'featured' | 'discounted', params?: undefined }

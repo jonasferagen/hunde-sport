@@ -1,13 +1,13 @@
 // Re-export models
 export * from '@/models/Category';
 export * from '@/models/Image';
-export * from '@/models/Product';
-export * from '@/models/ProductAttribute';
-export * from '@/models/ProductAttributeOption';
+export * from '@/models/Product/Product';
+export * from '@/models/Product/ProductAttribute';
+export * from '@/models/Product/ProductAttributeOption';
 export * from '@/models/ShoppingCart';
 export * from './tamagui';
 
-import { ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product';
+import { ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product/Product';
 
 // API-related types
 export type ApiResponse<T> = {

@@ -1,5 +1,5 @@
 import { Category } from '@/models/Category';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { HrefObject } from 'expo-router';
 import { ThemeName } from 'tamagui';

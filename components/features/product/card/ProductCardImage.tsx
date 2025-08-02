@@ -1,5 +1,5 @@
 import { routes } from '@/config/routes';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React from 'react';

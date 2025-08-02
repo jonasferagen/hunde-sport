@@ -1,6 +1,6 @@
 import { useProductContext } from '@/contexts/ProductContext';
-import { ProductVariation, VariableProduct } from '@/models/Product';
-import { ProductAttribute } from '@/models/ProductAttribute';
+import { ProductVariation, VariableProduct } from '@/models/Product/Product';
+import { ProductAttribute } from '@/models/Product/ProductAttribute';
 import React, { JSX, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';

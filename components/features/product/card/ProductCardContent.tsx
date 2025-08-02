@@ -1,5 +1,5 @@
 import { routes } from '@/config/routes';
-import { Product } from '@/models/Product';
+import { Product } from '@/models/Product/Product';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Button, H3, SizableText, YStack } from 'tamagui';

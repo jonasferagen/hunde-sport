@@ -1,7 +1,6 @@
 import { ENDPOINTS } from '@/config/api';
-import { Cart, CartData } from '@/models/Cart';
+import { Cart, CartData, mapToCart } from '@/models/Cart';
 import apiClient from '@/utils/apiClient';
-import { mapToCart } from './mapper';
 
 /**
  * Fetches the cart data from the API.
