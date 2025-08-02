@@ -23,7 +23,7 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader zIndex={5} theme="tertiary_soft">
+            <PageHeader theme="tertiary_soft" >
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
                 {isWaiting || query && <SizableText>
                     {isWaiting
@@ -31,7 +31,7 @@ export const SearchScreen = () => {
                         : (query ? `Søkeresultater for "${query}"` : ' ')}
                 </SizableText>}
             </PageHeader>
-            <PageSection f={1}>
+            <PageSection >
                 <PageContent f={1} p="none" theme="secondary_soft">
                     <SearchResults />
                 </PageContent>

@@ -22,30 +22,30 @@ export const HomeScreen = () => {
     const discountedProducts = useDiscountedProducts();
     const featuredProducts = useFeaturedProducts();
 
-
-    return (
-        <PageView>
-            <PageHeader theme="primary">
-                <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
-            </PageHeader>
-            <PageSection scrollable>
-                <PageContent theme="tertiary_soft" title="Nyheter" px="none">
-                    <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
-                </PageContent>
-                <PageContent theme="secondary_soft" title="Kategorier">
-                    <CategoryTiles key='categories' categoryId={0} theme="secondary" />
-                </PageContent>
-                <PageContent theme="light_soft" title="Tilbud" px="none">
-                    <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />
-                </PageContent>
-                <PageContent theme="primary_soft" title="Populære produkter" px="none">
-                    <ProductTiles key='featured' queryResult={featuredProducts} theme="primary" />
-                </PageContent>
-                <PageContent theme="secondary_soft" title="Debug" px="none">
-                    <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
-                </PageContent>
-            </PageSection>
-        </PageView>
-
-    );
+    return <PageView>
+        <PageHeader theme="primary">
+            <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
+        </PageHeader>
+        <PageSection scrollable>
+            <PageContent theme="tertiary_soft" title="Nyheter" px="none" >
+                <ProductTiles key='recent' queryResult={recentProducts} theme="tertiary" />
+            </PageContent>
+            <PageContent theme="secondary_soft" title="Kategorier">
+                <CategoryTiles key='categories' categoryId={0} theme="secondary" />
+            </PageContent>
+            <PageContent theme="light_soft" title="Tilbud" px="none">
+                <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />r
+            </PageContent>
+            <PageContent theme="primary_soft" title="Populære produkter" px="none">
+                <ProductTiles key='featured' queryResult={featuredProducts} theme="primary" />
+            </PageContent>
+            <PageContent theme="secondary_soft" title="Debug" px="none">
+                <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
+            </PageContent>
+        </PageSection>
+    </PageView>
 }
+
+/* 
+           
+           */

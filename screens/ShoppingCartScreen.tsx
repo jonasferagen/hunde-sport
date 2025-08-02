@@ -30,20 +30,16 @@ export const ShoppingCartScreen = () => {
     }
 
     return <PageView>
-        <PageHeader theme="secondary_soft" f={0}>
+        <PageHeader theme="secondary_soft" bbw={2} boc={"black"}>
             <ShoppingCartSummary />
         </PageHeader>
-        <PageSection scrollable f={1}>
-            <PageContent theme="primary_soft" flex={1} bw={3} boc={"$borderColor"}>
-
-                <FlashList
-                    data={cart.items}
-                    keyExtractor={(item) => item.key}
-                    renderItem={({ item }) => <ShoppingCartListItem item={item} />}
-                    estimatedItemSize={100}
-                    scrollEnabled={true}
-                />
-            </PageContent>
+        <PageSection theme="primary_soft" p="$3">
+            <FlashList
+                data={cart.items}
+                keyExtractor={(item) => item.key}
+                renderItem={({ item }) => <ShoppingCartListItem item={item} />}
+                estimatedItemSize={100}
+            />
         </PageSection>
         <PageContent theme='secondary_soft' >
             <XStack gap="$3" ai="center" jc="space-between">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { H4, YStackProps } from 'tamagui';
+import { H4, YStack, YStackProps } from 'tamagui';
 import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 
 interface PageHeaderProps extends YStackProps {
@@ -9,17 +9,15 @@ interface PageHeaderProps extends YStackProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...props }) => {
 
-    return (
-        <ThemedLinearGradient
-
-            padding="$3"
-            borderBottomWidth={1}
-            borderColor={"$borderColor"}
-            gap="$3"
-            {...props}
-        >
-            {title && <H4>{title}</H4>}
-            {children}
-        </ThemedLinearGradient>
-    );
+    return <YStack
+        p="$3"
+        bbw={1}
+        boc={"$borderColor"}
+        gap="$3"
+        {...props}
+    >
+        <ThemedLinearGradient />
+        {title && <H4>{title}</H4>}
+        {children}
+    </YStack>
 }
