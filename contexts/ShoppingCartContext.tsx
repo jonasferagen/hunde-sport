@@ -66,10 +66,7 @@ const ShoppingCartInnerProvider: React.FC<{
 
     const updateItem = (
         (key: string, quantity: number) => {
-            const item = cart.getItem(key);
-            if (item) {
-                item.updateQuantity(quantity);
-            }
+            cart.updateItemQuantity(key, quantity);
         }
     );
 

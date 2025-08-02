@@ -18,7 +18,7 @@ export class Cart {
     private readonly cartToken: string;
 
     public items: CartItem[];
-    public readonly items_count: number;
+    public items_count: number;
     public readonly items_weight: number;
     public readonly totals: any;
     public readonly has_calculated_shipping: boolean;
@@ -47,6 +47,19 @@ export class Cart {
             throw new Error('Cart token not found!');
         }
         return this.cartToken;
+    }
+
+    updateItemQuantity(key: string, newQuantity: number) {
+        const item = this.getItem(key);
+        if (!item) {
+            return;
+        }
+
+        const oldQuantity = item.quantity;
+        this.items_count = this.items_count - oldQuantity + newQuantity;
+
+        // Delegate to the item to update its own quantity and call the mutation
+        item.updateQuantity(newQuantity);
     }
 
     remove(key: string) {
