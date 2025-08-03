@@ -20,16 +20,16 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
 
 
     return <YStack gap="$2" {...props}>
-        <XStack jc="space-between" gap="$2">
+        <XStack jc="space-between" gap="$3">
             <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                 <ProductStatus size="$2" />
             </XStack>
-            <XStack f={1} fs={1} gap="$2" ai="center" jc="space-between" >
+            <XStack f={1} fs={1} gap="$3" ai="center" jc="space-between" >
                 <SizableText numberOfLines={1} allowFontScaling fos="$3" fow="bold">{displayName}</SizableText>
                 <DisplayPrice productPrices={productVariation ? productVariation.prices : product.prices} />
             </XStack>
         </XStack>
-        <XStack gap="$2" ai="center" jc="space-between" theme={PurchaseButtonTheme}>
+        <XStack gap="$3" ai="center" jc="space-between" theme={PurchaseButtonTheme}>
 
             <ThemedButton
                 onPress={handleExpand}

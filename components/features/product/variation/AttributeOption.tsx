@@ -20,13 +20,8 @@ export const AttributeOption = ({ option, attribute, price, selectOption, isSele
 
     return <Pressable
         onPress={() => selectOption()}
-        style={{
-            flex: 1,
-        }}
         disabled={disabled}
-
     >
-
         <XStack
             f={1}
             theme={isSelected ? "secondary_alt1" : "secondary_soft"}

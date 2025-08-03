@@ -17,9 +17,9 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
 
     const href: HrefObject = routes.product.path(product, category?.id);
 
-    return <YStack {...props} gap="$2" p="$3">
+    return <YStack {...props} p="$3">
         <ThemedLinearGradient />
-        <XStack f={1} gap="$2" ai="center" jc="space-between">
+        <XStack f={1} gap="$3">
             <ProductCardLeft href={href} />
             <ProductCardRight href={href} />
         </XStack>
