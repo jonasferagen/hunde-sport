@@ -27,27 +27,32 @@ export const AttributeSelector = ({
         const term = attribute.terms.find((t) => t.name === item);
         const isSelected = !!(term && selectedOption === term.slug);
 
-
         console.log(productVariations.length);
 
-        // Create a temporary selection object that includes the current option being evaluated.
-        const potentialSelection = {
-            ...selectedOptions,
-            [attribute.name]: term?.slug ?? '',
-        };
+        // To determine if an option is available, we first find all variations that match the *other* selected attributes.
+        const otherSelectedOptions = { ...selectedOptions };
+        delete otherSelectedOptions[attribute.name];
 
-        const isAvailable = productVariations.some((variation) =>
-            variation.matchesAttributes(potentialSelection)
+        const compatibleVariations = productVariations.filter((variation) =>
+            variation.matchesAttributes(otherSelectedOptions)
         );
 
-
+        // Then, within that compatible set, we check if any variation contains the current option.
+        const isAvailable = compatibleVariations.some((variation) =>
+            variation.variation_attributes.some(
+                (attr) => attr.name === attribute.name && attr.value === term?.slug
+            )
+        );
 
         let displayPrice = '';
         let inStock = true;
 
-        if (term) {
-            const potentialMatches = productVariations.filter((variation) =>
-                variation.variation_attributes?.some((attr) => attr.name === attribute.name && attr.value === term.slug)
+        if (term && isAvailable) {
+            // The potential matches are the same as the compatible variations that also have the current option.
+            const potentialMatches = compatibleVariations.filter((variation) =>
+                variation.variation_attributes.some(
+                    (attr) => attr.name === attribute.name && attr.value === term.slug
+                )
             );
 
             const minPrice = Math.min(...potentialMatches.map((v) => Number(v.prices.price)));
@@ -57,8 +62,6 @@ export const AttributeSelector = ({
             if (!potentialMatches.some((v) => v.is_in_stock)) {
                 inStock = false;
             }
-
-
         }
 
         return <AttributeOption
@@ -66,7 +69,7 @@ export const AttributeSelector = ({
             attribute={attribute}
             selectOption={() => onSelectOption(item)}
             isSelected={isSelected}
-            isAvailable={true}
+            isAvailable={isAvailable}
             price={displayPrice}
             inStock={inStock}
         />

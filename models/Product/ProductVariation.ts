@@ -44,11 +44,15 @@ export class ProductVariation extends Product {
      * @returns True if the variation's attributes match the selected attributes, false otherwise.
      */
     matchesAttributes(selectedAttributes: { [key: string]: string }): boolean {
+        // For each attribute in the potential selection (e.g., { color: 'red', size: 'large' }),
+        // we must find a matching attribute in this specific variation.
         return Object.entries(selectedAttributes).every(([key, value]) => {
-            // If the value is empty, it means no option is selected for this attribute, so we can ignore it.
+            // If a value is not set for an attribute, we don't need to match it.
             if (!value) {
                 return true;
             }
+
+            // Check if this variation has an attribute that matches the key-value pair.
             return this.variation_attributes.some(
                 (variationAttr) => variationAttr.name === key && variationAttr.value === value
             );
