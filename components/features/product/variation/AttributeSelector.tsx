@@ -1,5 +1,5 @@
-import { ProductVariation } from '@/models/Product/Product';
 import { ProductAttribute } from '@/models/Product/ProductAttribute';
+import { ProductVariation } from '@/models/Product/ProductVariation';
 import { formatPrice } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';

@@ -1,7 +1,7 @@
 import { useProductVariations as useProductVariationsData } from '@/hooks/data/Product';
 import { Product } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 /**
  * Generates a display name for a product, including its variation attributes.
@@ -40,18 +40,42 @@ export const useProductContext = () => {
     return context;
 };
 
-export const ProductProvider: React.FC<{ product: Product; productVariation?: ProductVariation; children: React.ReactNode }> = ({
+export const ProductProvider: React.FC<{ product: Product; children: React.ReactNode }> = ({
     product,
-    productVariation: initialProductVariation,
     children,
 }) => {
-    const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(initialProductVariation);
+    const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(undefined);
 
     const isVariable = product.type === 'variable';
 
     const { data: productVariations, isLoading: isProductVariationsLoading } = useProductVariationsData(product, {
         enabled: isVariable,
     });
+
+    useEffect(() => {
+        if (isVariable && productVariations && productVariations.length > 0 && !productVariation) {
+            const defaultAttributes: { [key: string]: string } = {};
+            product.attributes.forEach((attribute) => {
+                if (attribute.variation) {
+                    const defaultTerm = attribute.terms.find((term) => term.default);
+                    if (defaultTerm) {
+                        defaultAttributes[attribute.name] = defaultTerm.slug;
+                    }
+                }
+            });
+
+            if (Object.keys(defaultAttributes).length > 0) {
+                const defaultVariation = productVariations.find((variation) =>
+                    variation.matchesAttributes(defaultAttributes)
+                );
+
+                if (defaultVariation) {
+                    console.log('Default variation found and set:', defaultVariation.id);
+                    setProductVariation(defaultVariation);
+                }
+            }
+        }
+    }, [isVariable, productVariations, productVariation, product.attributes]);
 
     const displayName = useMemo(() => getDisplayName(product, productVariation), [product, productVariation]);
 

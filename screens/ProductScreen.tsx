@@ -55,7 +55,7 @@ const ProductScreenContentWrapper = ({ categoryIdFromParams }: { categoryIdFromP
     <PageView>
       <PageHeader theme="secondary_soft">
         {categoryIdFromParams && <Breadcrumbs isLastClickable={true} />}
-        <CategoryChips categories={product.categories} />
+        <CategoryChips categories={product.categories} showAll={true} />
       </PageHeader>
       <ProductScreenContent />
     </PageView>
@@ -64,7 +64,7 @@ const ProductScreenContentWrapper = ({ categoryIdFromParams }: { categoryIdFromP
 
 
 const ProductScreenContent = () => {
-  const { product } = useProductContext();
+  const { product, productVariation } = useProductContext();
 
   return (
     <>
@@ -78,7 +78,7 @@ const ProductScreenContent = () => {
             </XStack>
 
             <SizableText size="$3" my="$3">{product.short_description}</SizableText>
-            {product.hasVariations() && <ProductVariations />}
+            {product.hasVariations() && productVariation && <ProductVariations />}
             <XStack jc="space-between" mt="$3">
               <ProductTitle size="$6" />
               <PriceTag fontSize="$6" />
