@@ -91,7 +91,7 @@ export const ProductVariations = (): JSX.Element => {
                     )}
                     <AttributeSelector
                         attribute={filteredAttribute}
-                        productVariations={matchingVariations}
+                        productVariations={productVariations}
                         selectedOptions={selectedOptions}
                         onSelectOption={(optionLabel) => {
                             const term = attribute.terms.find((t) => t.name === optionLabel);

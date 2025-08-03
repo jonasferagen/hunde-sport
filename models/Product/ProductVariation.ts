@@ -37,4 +37,21 @@ export class ProductVariation extends Product {
     isPurchasable(): boolean {
         return this.isInStock();
     }
+
+    /**
+     * Checks if the variation matches a given set of selected attributes.
+     * @param selectedAttributes A dictionary of attribute names and their selected option slugs.
+     * @returns True if the variation's attributes match the selected attributes, false otherwise.
+     */
+    matchesAttributes(selectedAttributes: { [key: string]: string }): boolean {
+        return Object.entries(selectedAttributes).every(([key, value]) => {
+            // If the value is empty, it means no option is selected for this attribute, so we can ignore it.
+            if (!value) {
+                return true;
+            }
+            return this.variation_attributes.some(
+                (variationAttr) => variationAttr.name === key && variationAttr.value === value
+            );
+        });
+    }
 }

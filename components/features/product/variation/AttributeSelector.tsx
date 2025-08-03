@@ -27,16 +27,25 @@ export const AttributeSelector = ({
         const term = attribute.terms.find((t) => t.name === item);
         const isSelected = !!(term && selectedOption === term.slug);
 
-        const isAvailable = productVariations.some((variation) => {
-            return variation.variation_attributes?.some(
-                (attr: any) => attr.name === attribute.name && attr.value === term?.slug
-            );
-        });
+
+        console.log(productVariations.length);
+
+        // Create a temporary selection object that includes the current option being evaluated.
+        const potentialSelection = {
+            ...selectedOptions,
+            [attribute.name]: term?.slug ?? '',
+        };
+
+        const isAvailable = productVariations.some((variation) =>
+            variation.matchesAttributes(potentialSelection)
+        );
+
+
 
         let displayPrice = '';
         let inStock = true;
 
-        if (term && isAvailable) {
+        if (term) {
             const potentialMatches = productVariations.filter((variation) =>
                 variation.variation_attributes?.some((attr) => attr.name === attribute.name && attr.value === term.slug)
             );
@@ -48,32 +57,28 @@ export const AttributeSelector = ({
             if (!potentialMatches.some((v) => v.is_in_stock)) {
                 inStock = false;
             }
+
+
         }
 
-
-
-        return (
-            <AttributeOption
-                option={item}
-                attribute={attribute}
-                selectOption={() => onSelectOption(item)}
-                isSelected={isSelected}
-                isAvailable={isAvailable}
-                price={displayPrice}
-                inStock={inStock}
-            />
-        );
+        return <AttributeOption
+            option={item}
+            attribute={attribute}
+            selectOption={() => onSelectOption(item)}
+            isSelected={isSelected}
+            isAvailable={true}
+            price={displayPrice}
+            inStock={inStock}
+        />
     };
 
-    return (
-        <YStack>
-            <FlashList
-                data={attribute.terms.map((t) => t.name)}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => `${item}-${attribute.id}-${index}`}
-                estimatedItemSize={ITEM_HEIGHT}
-                extraData={selectedOptions}
-            />
-        </YStack>
-    );
+    return <YStack>
+        <FlashList
+            data={attribute.terms.map((t) => t.name)}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => `${item}-${attribute.id}-${index}`}
+            estimatedItemSize={ITEM_HEIGHT}
+            extraData={selectedOptions}
+        />
+    </YStack>
 };
