@@ -27,7 +27,6 @@ export const AttributeSelector = ({
         const term = attribute.terms.find((t) => t.name === item);
         const isSelected = !!(term && selectedOption === term.slug);
 
-        console.log(productVariations.length);
 
         // To determine if an option is available, we first find all variations that match the *other* selected attributes.
         const otherSelectedOptions = { ...selectedOptions };
@@ -40,7 +39,7 @@ export const AttributeSelector = ({
         // Then, within that compatible set, we check if any variation contains the current option.
         const isAvailable = compatibleVariations.some((variation) =>
             variation.variation_attributes.some(
-                (attr) => attr.name === attribute.name && attr.value === term?.slug
+                (attr: { name: string; value: string }) => attr.name === attribute.name && attr.value === term?.slug
             )
         );
 
@@ -51,7 +50,7 @@ export const AttributeSelector = ({
             // The potential matches are the same as the compatible variations that also have the current option.
             const potentialMatches = compatibleVariations.filter((variation) =>
                 variation.variation_attributes.some(
-                    (attr) => attr.name === attribute.name && attr.value === term.slug
+                    (attr: { name: string; value: string }) => attr.name === attribute.name && attr.value === term.slug
                 )
             );
 
