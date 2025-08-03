@@ -1,5 +1,5 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { BuyButton } from '@/components/features/product/display/BuyButton';
+import { ProductCardFooter } from '@/components/features/product/card/ProductCardFooter';
 import { PriceTag } from '@/components/features/product/display/PriceTag';
 import { ProductStatus } from '@/components/features/product/display/ProductStatus';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
@@ -15,7 +15,7 @@ import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { SizableText, XStack, YStack } from 'tamagui';
+import { SizableText, XStack } from 'tamagui';
 
 export const ProductScreen = () => {
 
@@ -86,9 +86,7 @@ const ProductScreenContent = () => {
             <XStack f={1} jc="flex-start">
               <ProductStatus />
             </XStack>
-            <YStack mt="$3">
-              <BuyButton />
-            </YStack>
+            <ProductCardFooter />
           </PageContent>
           <PageContent title="Produktbilder" flex={1}>
             {product.images.length > 1 && <ProductImageGallery />}

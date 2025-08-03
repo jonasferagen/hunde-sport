@@ -16,7 +16,6 @@ export interface ProductData {
   featured: boolean;
   description: string;
   short_description: string;
-  sku: string;
   price_html: string;
   prices: ProductPrices;
   images: Image[];
@@ -33,29 +32,28 @@ export interface ProductData {
 }
 
 export abstract class Product {
-  id: number;
-  name: string;
-  permalink: string;
-  slug: string;
-  on_sale: boolean;
-  featured: boolean;
-  description: string;
-  short_description: string;
-  sku: string;
-  price_html: string;
-  prices: ProductPrices;
-  images: Image[];
-  categories: Category[];
-  tags: { id: number; name: string; slug: string }[];
-  attributes: ProductAttribute[];
-  related_ids: number[];
-  variations: VariationReference[];
-  variationsData: Product[] = [];
-  parent_id: number;
-  type: ProductType;
-  is_in_stock: boolean;
-  is_purchasable: boolean;
-  has_options: boolean;
+  readonly id: number;
+  readonly name: string;
+  readonly permalink: string;
+  readonly slug: string;
+  readonly on_sale: boolean;
+  readonly featured: boolean;
+  readonly description: string;
+  readonly short_description: string;
+  readonly price_html: string;
+  readonly prices: ProductPrices;
+  readonly images: Image[];
+  readonly categories: Category[];
+  readonly tags: { id: number; name: string; slug: string }[];
+  readonly attributes: ProductAttribute[];
+  readonly related_ids: number[];
+  readonly variations: VariationReference[];
+  readonly variationsData: Product[] = [];
+  readonly parent_id: number;
+  readonly type: ProductType;
+  readonly is_in_stock: boolean;
+  readonly is_purchasable: boolean;
+  readonly has_options: boolean;
 
   constructor(data: ProductData) {
     this.id = data.id;
@@ -66,7 +64,6 @@ export abstract class Product {
     this.featured = data.featured;
     this.description = cleanHtml(data.description || 'Ingen beskrivelse tilgjengelig');
     this.short_description = cleanHtml(data.short_description || 'Ingen kort beskrivelse tilgjengelig');
-    this.sku = data.sku;
     this.price_html = data.price_html;
     this.prices = data.prices;
     this.images = data.images || [];

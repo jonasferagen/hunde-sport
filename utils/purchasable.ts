@@ -1,22 +1,16 @@
 import { Purchasable } from '@/types';
 
-/**
- * Gets the correct price for a purchasable item.
- * It returns the variation price if it exists, otherwise the product price.
- */
-export const getPurchasablePrice = (purchasable: Purchasable): number => {
-    const activeProduct = purchasable.productVariation || purchasable.product;
-    return activeProduct.price ?? 0;
-};
+export const getPurchasableReason = (purchasable: Purchasable) => {
+    const product = purchasable.product;
+    if (product.is_in_stock === false) {
+        return "Ikke på lager";
+    }
+    if (!product.prices.price || product.prices.price === "") {
+        return "Pris ikke tilgjengelig";
+    }
+    if (product.type === "variable" && !purchasable.productVariation) {
+        return "Velg en variant først";
+    }
 
-export const getPurchasableKey = (purchasable: Purchasable): string => {
-    return purchasable.productVariation
-        ? `${purchasable.product.id}-${purchasable.productVariation.id}`
-        : `${purchasable.product.id}-simple`;
-};
-
-export const getPurchasableTitle = (purchasable: Purchasable): string => {
-    return purchasable.productVariation
-        ? `${purchasable.product.name} - ${purchasable.productVariation.name}`
-        : purchasable.product.name;
-};
+    return "Ikke tilgjengelig for kjøp";
+}

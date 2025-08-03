@@ -23,7 +23,6 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
     };
 
     const buttonText = !activeProduct.isPurchasable() ? 'Velg en variant' : activeProduct.is_in_stock ? 'Legg til i handlekurv' : 'Utsolgt';
-
     const disabled = !activeProduct.isPurchasable() || !activeProduct.is_in_stock;
 
     return <YStack gap="$2">
@@ -58,7 +57,6 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
                 ref={buttonRef}
                 disabled={disabled}
                 jc="space-between"
-
                 variant="accent"
                 scaleIcon={1.5}
                 iconAfter={<ArrowBigRightDash />}

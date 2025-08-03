@@ -16,7 +16,6 @@ export const mapToProduct = (item: any): Product | ProductVariation => {
             featured: item.featured || false,
             description: item.description,
             short_description: item.short_description || '',
-            sku: item.sku,
             price_html: item.price_html,
             prices: item.prices,
             images: item.images || [],

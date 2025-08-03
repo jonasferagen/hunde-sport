@@ -55,6 +55,12 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
     useEffect(() => {
         if (isVariable && productVariations && productVariations.length > 0 && !productVariation) {
             const defaultAttributes: { [key: string]: string } = {};
+
+            if (!product.attributes) {
+                console.error("No attributes found for product");
+                return;
+            }
+
             product.attributes.forEach((attribute) => {
                 if (attribute.variation) {
                     const defaultTerm = attribute.terms.find((term) => term.default);
