@@ -57,7 +57,6 @@ export const ProductVariations = (): JSX.Element => {
                 const finalVariationId = variations[0].id;
                 const fullVariation = productVariations.find((v) => v.id === finalVariationId);
                 if (fullVariation) {
-                    console.log('Final selected product variation:', fullVariation);
                     setProductVariation(fullVariation);
                 } else {
                     console.error('Could not find the full variation object for id:', finalVariationId);
