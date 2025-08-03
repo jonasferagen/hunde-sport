@@ -12,15 +12,13 @@ interface ProductListProps {
     loadMore?: () => void;
     loadingMore: boolean;
     contentContainerStyle?: ViewStyle;
-    categoryId?: number;
 }
 
 export const ProductList = memo(({
     products,
     loadMore,
     loadingMore,
-    contentContainerStyle,
-    categoryId
+    contentContainerStyle
 }: ProductListProps) => {
     const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
     const { layout } = useLayoutContext();
@@ -33,16 +31,14 @@ export const ProductList = memo(({
         const expandedHeight = layout.height * 0.6;
         return (
             <ProductListItem
-
                 product={item}
                 index={index}
                 onPress={handleItemPress}
                 isExpanded={expandedProductId === item.id}
                 expandedHeight={expandedHeight}
-                categoryId={categoryId}
             />
         );
-    }, [expandedProductId, handleItemPress, layout.height, categoryId]);
+    }, [expandedProductId, handleItemPress, layout.height]);
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 

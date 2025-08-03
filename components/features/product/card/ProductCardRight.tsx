@@ -5,6 +5,7 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { Button, H6, SizableText, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
+import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './index';
 
 interface ProductCardContentProps {
     categoryId?: number;
@@ -13,9 +14,6 @@ interface ProductCardContentProps {
 export const ProductCardRight = ({ categoryId }: ProductCardContentProps) => {
     const { product, displayName, productVariation } = useProductContext();
 
-    if (productVariation) {
-        console.log(productVariation.prices);
-    }
 
     return <YStack f={1}>
         <Link href={routes.product.path(product, categoryId)} asChild>
@@ -26,7 +24,7 @@ export const ProductCardRight = ({ categoryId }: ProductCardContentProps) => {
                             {product.name}
                         </H6>
                         <YStack gap="$1" jc="center" ai="center">
-                            <Chip theme="tertiary" minWidth={80}>
+                            <Chip theme="tertiary" minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                                 <DisplayPrice productPrices={product.prices} size="$2" />
                             </Chip>
                         </YStack>

@@ -15,8 +15,6 @@ export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.El
     const { items, isLoading, isFetchingNextPage } = useCategories({ autoload: false });
     const categories = items.filter(cat => cat.parent === categoryId);
 
-
-
     if (isLoading) {
         return <ThemedSpinner size="large" />;
     }

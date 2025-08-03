@@ -1,26 +1,16 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
-import { Product, ProductVariation } from '@/types';
 import { ChevronDown, ChevronUp, ShoppingCart } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
-import { SizableText, StackProps, XStack } from 'tamagui';
+import { SizableText, StackProps, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
 import { ProductStatus } from '../display/ProductStatus';
+import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './index';
 
 interface ProductCardFooterProps {
     isExpanded?: boolean;
     handleExpand?: () => void;
 }
-
-const BuyInfo = ({ product, productVariation }: { product: Product, productVariation?: ProductVariation }) => {
-    const { displayName } = useProductContext();
-    return <XStack f={1} fs={1} gap="$2" ai="center" jc="space-between" >
-        <SizableText numberOfLines={1} allowFontScaling fos="$3" fow="bold">{displayName}</SizableText>
-        <DisplayPrice productPrices={productVariation ? productVariation.prices : product.prices} />
-    </XStack>
-
-}
-
 
 export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFooterProps & StackProps) => {
     const { product, productVariation, displayName } = useProductContext();
@@ -29,51 +19,43 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
-        addCartItem({ product, productVariation });
+        addCartItem({ product, productVariation }, { triggerRef: buttonRef });
     };
 
-
-    return <>
-
+    return <YStack gap="$2" theme="secondary_soft">
         <XStack jc="space-between" gap="$2">
-            <XStack w={80}>
+            <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                 <ProductStatus size="$2" />
             </XStack>
-            <BuyInfo product={product} productVariation={productVariation} />
+            <XStack f={1} fs={1} gap="$2" ai="center" jc="space-between" >
+                <SizableText numberOfLines={1} allowFontScaling fos="$3" fow="bold">{displayName}</SizableText>
+                <DisplayPrice productPrices={productVariation ? productVariation.prices : product.prices} />
+            </XStack>
         </XStack>
-        <XStack f={1} w="100%" gap="$2" ai="center" jc="space-between">
+        <XStack f={1} gap="$2" ai="center" jc="space-between">
             <ThemedButton
-                w={80}
-                theme="blue_alt1"
+                w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
                 onPress={handleExpand}
                 disabled={!product.hasVariations()}
                 gap={0}
                 ai="center"
                 jc="center"
+                variant="accent"
             >
                 {isExpanded ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
-
             </ThemedButton>
 
             <ThemedButton
                 f={1}
-                theme="orange_alt1"
                 onPress={handleAddToCart}
                 ref={buttonRef}
                 disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
-                o={!activeProduct.isPurchasable() || !activeProduct.isInStock() ? 0.5 : 1}
                 jc="space-between"
+                variant="accent"
             >
-
                 <SizableText>Legg til i handlekurv</SizableText>
-
-                <XStack>
-                    <ShoppingCart size="$4" />
-
-                </XStack>
+                <ShoppingCart size="$4" />
             </ThemedButton>
         </XStack>
-
-
-    </>
+    </YStack>
 };

@@ -26,5 +26,9 @@ export const CategoryProducts = (): JSX.Element | null => {
     }
 
 
-    return <ProductList products={products} categoryId={category.id} loadingMore={isFetchingNextPage} loadMore={fetchNextPage} />;
+    return <ProductList
+        products={products}
+        loadingMore={isFetchingNextPage}
+        loadMore={fetchNextPage}
+    />;
 };

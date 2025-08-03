@@ -1,32 +1,31 @@
 import { routes } from '@/config/routes';
 import { useProductContext } from '@/contexts';
+import { useCategoryContext } from '@/contexts/CategoryContext';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Image, YStack } from 'tamagui';
-
-const IMAGE_SIZE = 80;
+import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './index';
 
 interface ProductCardImageProps {
-    categoryId?: number;
     imageSize?: number;
     isExpanded?: boolean;
     handleExpand?: () => void;
 }
 
-export const ProductCardLeft = ({ isExpanded, handleExpand, categoryId, imageSize = IMAGE_SIZE }: ProductCardImageProps) => {
+export const ProductCardLeft = ({ isExpanded, handleExpand, imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH }: ProductCardImageProps) => {
     const { product } = useProductContext();
-    return (
-        <YStack ai="center" jc="center">
-            <Link href={routes.product.path(product, categoryId)}>
-                <Image
-                    source={{ uri: getScaledImageUrl(product.images[0]?.src, imageSize, imageSize) }}
-                    width={imageSize}
-                    height={imageSize}
-                    borderRadius="$3"
-                />
-            </Link>
+    const { category } = useCategoryContext();
 
-        </YStack>
-    );
+    return <YStack ai="center" jc="center">
+        <Link href={routes.product.path(product, category?.id)}>
+            <Image
+                source={{ uri: getScaledImageUrl(product.images[0]?.src, imageSize, imageSize) }}
+                width={imageSize}
+                height={imageSize}
+                borderRadius="$3"
+            />
+        </Link>
+    </YStack>
+
 };
