@@ -3,7 +3,7 @@ import { ProductProvider, useProductContext } from '@/contexts';
 import { Product } from '@/models/Product/Product';
 import React from 'react';
 import { StackProps, YStack } from 'tamagui';
-import { ProductCard, ProductCardContent, ProductCardFooter, ProductCardImage } from './card';
+import { ProductCard } from './card';
 
 interface ProductListItemProps extends Omit<StackProps, 'onPress'> {
     product: Product;
@@ -28,12 +28,7 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
 
     return <YStack theme={index % 2 === 0 ? 'light' : 'light_soft'} p="$3" bbc="$borderColor" bbw={1} >
         <ThemedLinearGradient />
-        <ProductCard>
-            <ProductCardImage categoryId={categoryId} />
-            <ProductCardContent categoryId={categoryId} />
-        </ProductCard>
-        <ProductCardFooter isExpanded={isExpanded} onExpand={handleExpand} />
-
+        <ProductCard isExpanded={isExpanded} handleExpand={handleExpand} categoryId={categoryId} />
     </YStack >
 };
 
@@ -42,5 +37,3 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, ...pr
     <ProductProvider product={product}>
         <ProductListItemContent {...props} />
     </ProductProvider>
-
-

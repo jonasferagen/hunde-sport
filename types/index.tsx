@@ -4,10 +4,12 @@ export * from '@/models/Image';
 export * from '@/models/Product/Product';
 export * from '@/models/Product/ProductAttribute';
 export * from '@/models/Product/ProductAttributeOption';
-export * from '@/models/ShoppingCart';
+export * from '@/models/Product/ProductVariation';
 export * from './tamagui';
 
-import { ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product/Product';
+import { ProductVariation } from '@/models/Product/ProductVariation';
+import { SimpleProduct } from '@/models/Product/SimpleProduct';
+import { VariableProduct } from '@/models/Product/VariableProduct';
 
 // API-related types
 export type ApiResponse<T> = {

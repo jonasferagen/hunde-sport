@@ -10,7 +10,7 @@ interface ProductCardContentProps {
     categoryId?: number;
 }
 
-export const ProductCardContent = ({ categoryId }: ProductCardContentProps) => {
+export const ProductCardRight = ({ categoryId }: ProductCardContentProps) => {
     const { product, displayName, productVariation } = useProductContext();
 
     if (productVariation) {

@@ -10,9 +10,11 @@ const IMAGE_SIZE = 80;
 interface ProductCardImageProps {
     categoryId?: number;
     imageSize?: number;
+    isExpanded?: boolean;
+    handleExpand?: () => void;
 }
 
-export const ProductCardImage = ({ categoryId, imageSize = IMAGE_SIZE }: ProductCardImageProps) => {
+export const ProductCardLeft = ({ isExpanded, handleExpand, categoryId, imageSize = IMAGE_SIZE }: ProductCardImageProps) => {
     const { product } = useProductContext();
     return (
         <YStack ai="center" jc="center">
