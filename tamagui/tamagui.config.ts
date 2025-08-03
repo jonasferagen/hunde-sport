@@ -3,7 +3,27 @@ import { themes, tokens } from '@tamagui/config/v3';
 import { createInterFont } from '@tamagui/font-inter';
 import { shorthands } from '@tamagui/shorthands';
 import { createTamagui } from 'tamagui';
-import { augmentedLightTheme, augmentedLightThemeSoft, lilacTheme, lilacThemeSoft, mintTheme, mintThemeSoft, sageTheme, sageThemeSoft } from './themes';
+import {
+    augmentedLightTheme,
+    augmentedLightThemeAlt1,
+    augmentedLightThemeAlt2,
+    augmentedLightThemeSoft,
+    lilacTheme,
+    lilacThemeAlt1,
+    lilacThemeAlt2,
+    lilacThemeAlt3,
+    lilacThemeSoft,
+    mintTheme,
+    mintThemeAlt1,
+    mintThemeAlt2,
+    mintThemeAlt3,
+    mintThemeSoft,
+    sageTheme,
+    sageThemeAlt1,
+    sageThemeAlt2,
+    sageThemeAlt3,
+    sageThemeSoft
+} from './themes';
 
 
 const font = createInterFont({
@@ -94,13 +114,23 @@ const appConfig = createTamagui({
         ...themes,
         primary: lilacTheme,
         primary_soft: lilacThemeSoft,
+        primary_alt1: lilacThemeAlt1,
+        primary_alt2: lilacThemeAlt2,
+        primary_alt3: lilacThemeAlt3,
         secondary: sageTheme,
         secondary_soft: sageThemeSoft,
+        secondary_alt1: sageThemeAlt1,
+        secondary_alt2: sageThemeAlt2,
+        secondary_alt3: sageThemeAlt3,
         tertiary: mintTheme,
         tertiary_soft: mintThemeSoft,
+        tertiary_alt1: mintThemeAlt1,
+        tertiary_alt2: mintThemeAlt2,
+        tertiary_alt3: mintThemeAlt3,
         light: augmentedLightTheme,
         light_soft: augmentedLightThemeSoft,
-
+        light_alt1: augmentedLightThemeAlt1,
+        light_alt2: augmentedLightThemeAlt2,
     },
     tokens: customTokens,
     shorthands,

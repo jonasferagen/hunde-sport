@@ -22,7 +22,7 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
         addCartItem({ product, productVariation }, { triggerRef: buttonRef });
     };
 
-    return <YStack gap="$2" theme="secondary_soft">
+    return <YStack gap="$2">
         <XStack jc="space-between" gap="$2">
             <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                 <ProductStatus size="$2" />
@@ -33,29 +33,33 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
             </XStack>
         </XStack>
         <XStack f={1} gap="$2" ai="center" jc="space-between">
-            <ThemedButton
-                w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
-                onPress={handleExpand}
-                disabled={!product.hasVariations()}
-                gap={0}
-                ai="center"
-                jc="center"
-                variant="accent"
-            >
-                {isExpanded ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
-            </ThemedButton>
+            <YStack theme="primary_alt1" w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
 
-            <ThemedButton
-                f={1}
-                onPress={handleAddToCart}
-                ref={buttonRef}
-                disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
-                jc="space-between"
-                variant="accent"
-            >
-                <SizableText>Legg til i handlekurv</SizableText>
-                <ShoppingCart size="$4" />
-            </ThemedButton>
+                <ThemedButton
+                    onPress={handleExpand}
+                    disabled={!product.hasVariations()}
+                    gap={0}
+                    ai="center"
+                    jc="center"
+                    variant="accent"
+                >
+                    {isExpanded ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
+                </ThemedButton>
+            </YStack>
+            <YStack theme="primary_alt1" f={1} >
+                <ThemedButton
+                    f={1}
+                    onPress={handleAddToCart}
+                    ref={buttonRef}
+                    disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
+                    jc="space-between"
+                    variant="accent"
+                >
+                    <SizableText fos="$3" fow="bold" >Legg til i handlekurv</SizableText>
+                    <ShoppingCart size="$4" />
+                </ThemedButton>
+            </YStack>
+
         </XStack>
     </YStack>
 };

@@ -3,6 +3,7 @@ import { Button, styled } from 'tamagui'
 export const ThemedButton = styled(Button, {
     name: 'ThemedButton',
 
+    elevation: 1,
     // Base style
     color: '$colorAccent',
     backgroundColor: '$colorPrimary',
@@ -34,7 +35,7 @@ export const ThemedButton = styled(Button, {
         variant: {
             accent: {
                 backgroundColor: '$colorAccent',
-                color: '$color',
+                color: 'white',
                 hoverStyle: {
                     backgroundColor: '$colorAccentHover',
                 },
