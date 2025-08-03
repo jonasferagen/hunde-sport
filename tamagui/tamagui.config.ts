@@ -75,6 +75,7 @@ const customTokens = {
         ...tokens.color,
     },
     fontSize: font.size,
+    lineHeight: font.lineHeight,
     radius: {
         0: 0,
         1: 2,
@@ -141,6 +142,7 @@ const appConfig = createTamagui({
         body: font,
     },
     size: font.size,
+    lineHeight: font.lineHeight,
 });
 
 export default appConfig;
