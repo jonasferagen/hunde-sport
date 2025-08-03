@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Chip } from '@/components/ui';
 import { CategoryProvider, useCategoryContext } from '@/contexts/CategoryContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { ChevronUp, Ellipsis } from '@tamagui/lucide-icons';
+import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { memo, useState } from 'react';
 import { XStack } from 'tamagui';
@@ -20,14 +20,14 @@ const CategoryScreenContent = memo(() => {
     const showToggleButton = subCategories && subCategories.length > limit;
 
     return <PageView>
-        <PageHeader theme="secondary_soft">
+        <PageHeader theme="primary_alt1">
             <XStack jc="space-between" ai="center">
                 <Breadcrumbs isLastClickable={true} />
                 {showToggleButton && (
                     <Chip
                         theme="light"
                         onPress={() => setShowAll(!showAll)}
-                        icon={showAll ? <ChevronUp size="$4" /> : <Ellipsis size="$4" />}
+                        icon={showAll ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
                     />
                 )}
             </XStack>
@@ -39,7 +39,7 @@ const CategoryScreenContent = memo(() => {
                 showAll={showAll}
             />
         </PageHeader>
-        <PageContent f={1} p="none">
+        <PageContent f={1} p="none" theme="primary_alt2">
             {isLoading ? <LoadingScreen /> : <CategoryProducts />}
         </PageContent>
     </PageView>
