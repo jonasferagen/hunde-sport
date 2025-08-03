@@ -43,6 +43,8 @@ export const AttributeSelector = ({
             )
         );
 
+
+
         let displayPrice = '';
         let inStock = true;
 

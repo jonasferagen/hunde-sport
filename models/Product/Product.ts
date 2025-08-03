@@ -46,7 +46,7 @@ export abstract class Product {
   images: Image[];
   categories: Category[];
   tags: { id: number; name: string; slug: string }[];
-  attributes: ProductAttribute[];
+  _attributes: ProductAttribute[];
   related_ids: number[];
   variations: VariationReference[];
   variationsData: Product[] = [];
@@ -71,7 +71,7 @@ export abstract class Product {
     this.images = data.images || [];
     this.categories = data.categories.map((category) => new Category(category));
     this.tags = data.tags;
-    this.attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
+    this._attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
     this.variations = data.variations;
     this.parent_id = data.parent_id;
     this.type = data.type;
@@ -102,6 +102,27 @@ export abstract class Product {
     return this._short_description || 'Ingen beskrivelse tilgjengelig';
   }
 
+  get attributes(): ProductAttribute[] {
+    return this._attributes.map((attribute) => {
+
+      console.log(attribute);
+
+      const newAttribute = new ProductAttribute(attribute);
+      newAttribute.terms.sort((a, b) => {
+        const numA = parseInt(a.slug, 10);
+        const numB = parseInt(b.slug, 10);
+
+        if (!isNaN(numA) && !isNaN(numB)) {
+          if (numA !== numB) {
+            return numA - numB;
+          }
+        }
+
+        return a.slug.localeCompare(b.slug);
+      });
+      return newAttribute;
+    });
+  }
   isInStock(): boolean {
     return this.is_in_stock;
   }

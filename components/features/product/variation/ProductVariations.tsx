@@ -70,43 +70,45 @@ export const ProductVariations = (): JSX.Element => {
         }
     };
 
+
+
     const attributes = product.attributes.filter((attribute) => attribute.variation);
     const allVariationAttributes = (product as VariableProduct).variations.flatMap((v) => v.attributes);
 
-    return (
-        <XStack gap="$2" flexWrap="wrap" mt="$2">
-            {attributes.map((attribute) => {
-                const availableTerms = attribute.terms.filter((term) =>
-                    allVariationAttributes.some((varAttr) => varAttr.name === attribute.name && varAttr.value === term.slug)
-                );
 
-                if (availableTerms.length === 0) {
-                    return null;
-                }
+    return <XStack gap="$2" flexWrap="wrap" mt="$2">
+        {attributes.map((attribute) => {
+            const availableTerms = attribute.terms.filter((term) =>
+                allVariationAttributes.some((varAttr) => varAttr.name === attribute.name && varAttr.value === term.slug)
+            );
 
-                const filteredAttribute = new ProductAttribute({ ...attribute, terms: availableTerms });
+            if (availableTerms.length === 0) {
+                return null;
+            }
 
-                return (
-                    <YStack key={attribute.id} flex={1}>
-                        {attributes.length > 1 && (
-                            <SizableText fos="$3" fow="bold" textTransform="capitalize" mb="$2" ml="$1">
-                                {attribute.name}
-                            </SizableText>
-                        )}
-                        <AttributeSelector
-                            attribute={filteredAttribute}
-                            productVariations={productVariations}
-                            selectedOptions={selectedOptions}
-                            onSelectOption={(optionLabel) => {
-                                const term = attribute.terms.find((t) => t.name === optionLabel);
-                                if (term) {
-                                    handleSelectOption(attribute.name, term.slug);
-                                }
-                            }}
-                        />
-                    </YStack>
-                );
-            })}
-        </XStack>
-    );
+            const filteredAttribute = new ProductAttribute({ ...attribute, terms: availableTerms });
+
+            return (
+                <YStack key={attribute.id} flex={1}>
+                    {attributes.length > 1 && (
+                        <SizableText fos="$3" fow="bold" textTransform="capitalize" mb="$2" ml="$1">
+                            {attribute.name}
+                        </SizableText>
+                    )}
+                    <AttributeSelector
+                        attribute={filteredAttribute}
+                        productVariations={productVariations}
+                        selectedOptions={selectedOptions}
+                        onSelectOption={(optionLabel) => {
+                            const term = attribute.terms.find((t) => t.name === optionLabel);
+                            if (term) {
+                                handleSelectOption(attribute.name, term.slug);
+                            }
+                        }}
+                    />
+                </YStack>
+            );
+        })}
+    </XStack>;
+
 };
