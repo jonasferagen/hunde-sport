@@ -34,13 +34,13 @@ export const ThemedButton = styled(Button, {
         variant: {
             accent: {
                 backgroundColor: '$colorAccentElevated',
-                borderColor: '$colorAccent',
+                borderColor: '$colorAccentStrong',
                 color: '$colorAccentStrong',
-                hoverStyle: {
-                    backgroundColor: '$colorAccentHover',
-                },
+
                 pressStyle: {
-                    backgroundColor: '$colorAccentHover',
+                    backgroundColor: '$colorAccent',
+                    borderColor: '$colorAccentHover',
+                    color: '$colorAccentStrong'
                 },
             },
             active: {

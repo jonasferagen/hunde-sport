@@ -21,10 +21,10 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
         overlayColor: rgba(baseColor, 0.5),
 
         colorAccent: accentColor,
-        colorAccentStrong: darken(0.2, accentColor),
         colorAccentHover: lighten(0.1, accentColor),
-        colorAccentPress: lighten(0.3, accentColor),
+        colorAccentStrong: darken(0.2, accentColor),
         colorAccentElevated: lighten(0.2, accentColor),
+        colorAccentPress: lighten(0.3, accentColor),
 
         backgroundHover: darken(0.03, baseColor),
         backgroundPress: darken(0.07, baseColor),
