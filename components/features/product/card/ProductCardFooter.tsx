@@ -32,16 +32,15 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
                 <DisplayPrice productPrices={productVariation ? productVariation.prices : product.prices} />
             </XStack>
         </XStack>
-        <XStack f={1} gap="$2" ai="center" jc="space-between">
-            <YStack theme="primary_alt1" w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
-
+        <XStack als="stretch" gap="$2" ai="center" jc="space-between">
+            <YStack theme="secondary_alt1" w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                 <ThemedButton
                     onPress={handleExpand}
                     disabled={!product.hasVariations()}
                     gap={0}
                     ai="center"
                     jc="center"
-                    variant="accent"
+                    f={1}
                 >
                     {isExpanded ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
                 </ThemedButton>
@@ -54,12 +53,13 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
                     disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
                     jc="space-between"
                     variant="accent"
+                    iconAfter={ShoppingCart}
+                    color="$colorAccentStrong"
+                    fontWeight="bold"
                 >
-                    <SizableText fos="$3" fow="bold" >Legg til i handlekurv</SizableText>
-                    <ShoppingCart size="$4" />
+                    Legg til i handlekurv
                 </ThemedButton>
             </YStack>
-
         </XStack>
     </YStack>
 };

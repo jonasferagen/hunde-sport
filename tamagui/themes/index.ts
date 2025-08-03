@@ -21,6 +21,7 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
         overlayColor: rgba(baseColor, 0.5),
 
         colorAccent: accentColor,
+        colorAccentStrong: darken(0.3, accentColor),
         colorAccentHover: darken(0.1, accentColor),
         colorAccentPress: darken(0.2, accentColor),
         colorAccentElevated: lighten(0.2, accentColor),
@@ -38,9 +39,10 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
 
 export const sageTheme = withThemeExtras(themes.light, '#DDE2C3', '#7F924C')
 export const sageThemeSoft = withThemeExtras(themes.light, lighten(0.1, '#DDE2C3'), '#6B8E6B')
-export const sageThemeAlt1 = withThemeExtras(themes.light, lighten(0.1, '#DDE2C3'), '#8B7355')
-export const sageThemeAlt2 = withThemeExtras(themes.light, lighten(0.1, '#DDE2C3'), '#A67B5B')
-export const sageThemeAlt3 = withThemeExtras(themes.light, lighten(0.1, '#DDE2C3'), '#6B8E6B')
+export const sageThemeElevated = withThemeExtras(themes.light, lighten(0.2, '#DDE2C3'), '#6B8E6B')
+export const sageThemeAlt1 = withThemeExtras(themes.light, darken(0.1, '#DDE2C3'), '#8B7355')
+export const sageThemeAlt2 = withThemeExtras(themes.light, darken(0.2, '#DDE2C3'), '#A67B5B')
+export const sageThemeAlt3 = withThemeExtras(themes.light, darken(0.3, '#DDE2C3'), '#6B8E6B')
 
 
 export const lilacTheme = withThemeExtras(themes.light, '#D7C8E7', '#7A4DB1')

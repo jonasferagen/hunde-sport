@@ -1,5 +1,5 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useCartData, useInitializeCart } from '@/hooks/data/Cart';
+import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { Purchasable } from '@/types';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
@@ -69,7 +69,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }), [cart, cart.isUpdating]);
 
     if (cart.isLoading) {
-        return <ThemedSpinner />;
+        return <LoadingScreen />
     }
 
     return (

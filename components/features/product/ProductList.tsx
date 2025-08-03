@@ -1,11 +1,11 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { useLayoutContext } from '@/contexts';
+import { ProductProvider } from '@/contexts';
 import { Product } from '@/models/Product/Product';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback, useState } from 'react';
 import { ViewStyle } from 'react-native';
 import { YStack } from 'tamagui';
-import { ProductListItem } from './ProductListItem';
+import { ProductCard } from './card';
 
 interface ProductListProps {
     products: Product[];
@@ -21,24 +21,26 @@ export const ProductList = memo(({
     contentContainerStyle
 }: ProductListProps) => {
     const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
-    const { layout } = useLayoutContext();
 
     const handleItemPress = useCallback((id: number) => {
         setExpandedProductId(prevId => (prevId === id ? null : id));
     }, []);
 
     const renderItem = useCallback(({ item, index }: { item: Product, index: number }) => {
-        const expandedHeight = layout.height * 0.6;
+        const isExpanded = expandedProductId === item.id;
+
         return (
-            <ProductListItem
-                product={item}
-                index={index}
-                onPress={handleItemPress}
-                isExpanded={expandedProductId === item.id}
-                expandedHeight={expandedHeight}
-            />
+            <ProductProvider product={item}>
+                <ProductCard
+                    theme={index % 2 === 0 ? 'secondary_elevated' : 'secondary_soft'}
+                    bbc="$borderColor"
+                    bbw={1}
+                    isExpanded={isExpanded}
+                    handleExpand={() => handleItemPress(item.id)}
+                />
+            </ProductProvider>
         );
-    }, [expandedProductId, handleItemPress, layout.height]);
+    }, [expandedProductId, handleItemPress]);
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 

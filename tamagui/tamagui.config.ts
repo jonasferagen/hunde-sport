@@ -22,6 +22,7 @@ import {
     sageThemeAlt1,
     sageThemeAlt2,
     sageThemeAlt3,
+    sageThemeElevated,
     sageThemeSoft
 } from './themes';
 
@@ -119,6 +120,7 @@ const appConfig = createTamagui({
         primary_alt3: lilacThemeAlt3,
         secondary: sageTheme,
         secondary_soft: sageThemeSoft,
+        secondary_elevated: sageThemeElevated,
         secondary_alt1: sageThemeAlt1,
         secondary_alt2: sageThemeAlt2,
         secondary_alt3: sageThemeAlt3,

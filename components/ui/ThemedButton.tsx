@@ -2,7 +2,6 @@ import { Button, styled } from 'tamagui'
 
 export const ThemedButton = styled(Button, {
     name: 'ThemedButton',
-
     elevation: 1,
     // Base style
     color: '$colorAccent',

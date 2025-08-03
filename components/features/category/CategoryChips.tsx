@@ -2,18 +2,16 @@ import { Chip } from "@/components/ui/";
 import { ThemedSpinner } from "@/components/ui/ThemedSpinner";
 import { routes } from "@/config/routes";
 import { Category } from "@/models/Category";
-import { StyleProp, ViewStyle } from "react-native";
-import { XStack } from "tamagui";
+import { StackProps, XStack } from "tamagui";
 
 interface CategoryChipsProps {
     categories: Category[];
     limit?: number;
-    style?: StyleProp<ViewStyle>;
     isLoading?: boolean;
     showAll: boolean;
 };
 
-export const CategoryChips = ({ limit, style, categories, isLoading, showAll }: CategoryChipsProps) => {
+export const CategoryChips = ({ limit, categories, isLoading, showAll, ...stackProps }: StackProps & CategoryChipsProps) => {
 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
@@ -27,7 +25,7 @@ export const CategoryChips = ({ limit, style, categories, isLoading, showAll }: 
     }
 
     return (
-        <XStack flexWrap="wrap" ai="center" gap="$2" style={style as any}>
+        <XStack flexWrap="wrap" ai="center" gap="$2" {...stackProps}>
             {displayedCategories.map((category) => (
                 <Chip
                     key={category.id}

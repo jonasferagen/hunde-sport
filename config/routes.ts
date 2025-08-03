@@ -58,7 +58,7 @@ export const routes: Record<string, Route> = {
         name: 'category',
         label: 'Kategori',
         icon: () => null, // No icon for category in drawer
-        theme: 'primary',
+        theme: 'secondary',
         path: (category: Category) => ({ pathname: paths.category, params: { id: category.id.toString(), name: category.name } }),
     },
     product: {

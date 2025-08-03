@@ -9,11 +9,9 @@ import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './index';
 
 interface ProductCardImageProps {
     imageSize?: number;
-    isExpanded?: boolean;
-    handleExpand?: () => void;
 }
 
-export const ProductCardLeft = ({ isExpanded, handleExpand, imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH }: ProductCardImageProps) => {
+export const ProductCardLeft = ({ imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH }: ProductCardImageProps) => {
     const { product } = useProductContext();
     const { category } = useCategoryContext();
 

@@ -12,7 +12,7 @@ interface ProductCardContentProps {
 }
 
 export const ProductCardRight = ({ categoryId }: ProductCardContentProps) => {
-    const { product, displayName, productVariation } = useProductContext();
+    const { product } = useProductContext();
 
 
     return <YStack f={1}>
@@ -24,7 +24,7 @@ export const ProductCardRight = ({ categoryId }: ProductCardContentProps) => {
                             {product.name}
                         </H6>
                         <YStack gap="$1" jc="center" ai="center">
-                            <Chip theme="tertiary" minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
+                            <Chip theme="secondary_alt3" minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                                 <DisplayPrice productPrices={product.prices} size="$2" />
                             </Chip>
                         </YStack>
