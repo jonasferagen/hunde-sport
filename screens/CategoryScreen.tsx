@@ -12,27 +12,23 @@ import { LoadingScreen } from './misc/LoadingScreen';
 const CategoryScreenContent = memo(() => {
     const { isLoading, subCategories, isSubCategoriesLoading } = useCategoryContext();
 
-    return (
-        <PageView>
-            <PageHeader theme="secondary_soft">
-                <Breadcrumbs isLastClickable={true} />
-                <CategoryChips limit={3} categories={subCategories} isLoading={isSubCategoriesLoading} />
-            </PageHeader>
-            <PageContent f={1} p="none">
-                {isLoading ? <LoadingScreen /> : <CategoryProducts />}
-            </PageContent>
-        </PageView>
-    );
+    return <PageView>
+        <PageHeader theme="secondary_soft">
+            <Breadcrumbs isLastClickable={true} />
+            <CategoryChips limit={3} categories={subCategories} isLoading={isSubCategoriesLoading} />
+        </PageHeader>
+        <PageContent f={1} p="none">
+            {isLoading ? <LoadingScreen /> : <CategoryProducts />}
+        </PageContent>
+    </PageView>
 });
 
 export const CategoryScreen = memo(() => {
     useRenderGuard('CategoryScreen');
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    return (
-        <CategoryProvider categoryId={Number(id)}>
-            <CategoryScreenContent />
-        </CategoryProvider>
-    );
+    return <CategoryProvider categoryId={Number(id)}>
+        <CategoryScreenContent />
+    </CategoryProvider>
 });
 

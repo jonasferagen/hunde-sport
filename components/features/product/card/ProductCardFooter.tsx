@@ -1,10 +1,8 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
-import { capitalize } from '@/utils/helpers';
 import { ChevronsDown, ShoppingCart } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
-import { SizableText, StackProps, XStack } from 'tamagui';
-import { PriceTag } from '../display/PriceTag';
+import { StackProps, XStack } from 'tamagui';
 import { ProductStatus } from '../display/ProductStatus';
 
 interface ProductCardFooterProps {
@@ -21,51 +19,29 @@ export const ProductCardFooter = ({ onExpand, ...props }: ProductCardFooterProps
         addCartItem({ product, productVariation });
     };
 
-    return (
-        <XStack f={0} ai="center" jc="space-between" gap="$3">
 
-            <XStack f={1} gap="$2" ai="center">
-                <ProductStatus />
-                <PriceTag />
+    return <XStack f={1} w="100%" gap="$2" ai="center" jc="space-between" mt="$2">
+        <XStack gap="$2">
 
-                {productVariation && (
-                    <SizableText fow="bold">
-                        {capitalize(productVariation.name)}
-                    </SizableText>
-                )
-                }
+            <ThemedButton
+                w={80}
+                theme="secondary"
+                onPress={onExpand}
+                disabled={!product.hasVariations()}
+            >
+                <ChevronsDown size="$4" fontWeight="bold" />
+            </ThemedButton>
 
-
-            </XStack >
-
-            <XStack gap="$2" ai="center">
-                {product.hasVariations() && (
-
-                    <ThemedButton
-                        theme="secondary"
-                        icon={<ChevronsDown size="$4" fontWeight="bold" />}
-                        onPress={onExpand}
-                        br="$6"
-                        circular
-                        size="$6"
-
-                    />
-
-                )}
-
-                <ThemedButton
-                    theme="secondary"
-                    icon={<ShoppingCart size="$4" fontWeight="bold" />}
-                    onPress={handleAddToCart}
-                    ref={buttonRef}
-                    circular
-                    size="$6"
-                    disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
-                    o={!activeProduct.isPurchasable() || !activeProduct.isInStock() ? 0.5 : 1}
-
-                />
-
-            </XStack>
-        </XStack >
-    );
+            <ProductStatus />
+        </XStack>
+        <ThemedButton
+            w={80}
+            theme="secondary"
+            onPress={handleAddToCart}
+            ref={buttonRef}
+            disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
+            o={!activeProduct.isPurchasable() || !activeProduct.isInStock() ? 0.5 : 1}
+        ><ShoppingCart size="$4" fontWeight="bold" />
+        </ThemedButton>
+    </XStack>
 };

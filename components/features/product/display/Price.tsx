@@ -12,20 +12,17 @@ export interface PriceProps {
 export const Price = ({ productOverride, fontSize = "$5" }: PriceProps & SizableTextProps) => {
 
     const { product, productVariation } = useProductContext();
-
     const activeProduct = productOverride || productVariation || product;
 
     if (activeProduct.on_sale) {
-        return (
-            <XStack ai="center" gap="$2">
-                <SizableText textDecorationLine="line-through" opacity={0.7} fos={fontSize}>
-                    {formatPrice(activeProduct.prices.regular_price)}
-                </SizableText>
-                <SizableText fow="bold" fos={fontSize}>
-                    {formatPrice(activeProduct.prices.sale_price)}
-                </SizableText>
-            </XStack>
-        );
+        return <XStack ai="center" gap="$2">
+            <SizableText textDecorationLine="line-through" opacity={0.7} fos={fontSize}>
+                {formatPrice(activeProduct.prices.regular_price)}
+            </SizableText>
+            <SizableText fow="bold" fos={fontSize}>
+                {formatPrice(activeProduct.prices.sale_price)}
+            </SizableText>
+        </XStack>
     }
 
     return (

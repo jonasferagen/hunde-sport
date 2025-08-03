@@ -9,10 +9,9 @@ export const ProductCard = ({ children, ...props }: ProductCardProps) => {
     return (
         <YStack {...props}>
             <XStack
-                alignSelf="stretch"
+                als="stretch"
                 jc="flex-start"
                 gap="$3"
-
             >
                 {children}
             </XStack>

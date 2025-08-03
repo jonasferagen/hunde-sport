@@ -1,23 +1,24 @@
 import { HrefObject, Link } from 'expo-router';
-import React from 'react';
 import { SizableText, ThemeName, XStack, XStackProps } from 'tamagui';
+import { ThemedLinearGradient } from '../ThemedLinearGradient';
 
 interface ChipProps extends Omit<XStackProps, 'href'> {
     title?: string;
     icon?: React.ReactNode;
+    children?: React.ReactNode;
     theme: ThemeName;
     href?: HrefObject;
     onPress?: () => void;
 }
 
-export const Chip = ({ title, icon, theme, href, onPress, ...rest }: ChipProps) => {
+export const Chip = ({ title, icon, children, theme, href, onPress, ...rest }: ChipProps) => {
     const chipContent = (
         <XStack
             theme={theme}
             py="$1"
             px="$2"
             br="$3"
-            bg="$background"
+            bg="$backgroundPress"
             bw={1}
             boc="$borderColorStrong"
             ai="center"
@@ -26,23 +27,25 @@ export const Chip = ({ title, icon, theme, href, onPress, ...rest }: ChipProps) 
             gap="$1.5"
             onPress={onPress}
             pressStyle={onPress ? { opacity: 0.7 } : undefined}
+            elevation={1}
             {...rest}
         >
+            <ThemedLinearGradient br="$3" colors={['$background', '$backgroundPress']} />
             {icon}
-            {title && (
+            {children}
+            {title && !children && (
                 <SizableText fontSize="$3" numberOfLines={1}>
                     {title}
                 </SizableText>
             )}
+
         </XStack>
     );
 
     if (href) {
-        return (
-            <Link replace href={href} asChild>
-                {chipContent}
-            </Link>
-        );
+        return <Link replace href={href} asChild>
+            {chipContent}
+        </Link>
     }
 
     return chipContent;
