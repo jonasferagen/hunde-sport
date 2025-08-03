@@ -3,7 +3,7 @@ import { formatPriceRange } from '@/utils/helpers';
 import { SizableText, SizableTextProps } from 'tamagui';
 
 
-export const PriceRange = ({ productPriceRangeOverride, fontSize = "$2" }: any & SizableTextProps) => {
+export const PriceRange = ({ productPriceRangeOverride, fontSize = "$4" }: any & SizableTextProps) => {
 
     const { product } = useProductContext();
 

@@ -32,16 +32,7 @@ export const formatPriceRange = (priceRange: any, compact: boolean = true): stri
     return `${formatPrice(priceRange.min_amount)} - ${formatPrice(priceRange.max_amount)}`;
 };
 
-/*
-export const lighten = (color: string, amount: number) =>
-    tinycolor(color).lighten(amount).toString();
 
-export const darken = (color: string, amount: number) =>
-    tinycolor(color).darken(amount).toString();
-
-export const rgba = (color: string, alpha: number): string =>
-    tinycolor(color).setAlpha(alpha).toString();
-*/
 import { parseDocument } from 'htmlparser2';
 
 const isAllWhitespace = (str: string) => /^\s*$/.test(str);

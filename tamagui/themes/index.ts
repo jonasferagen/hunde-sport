@@ -30,9 +30,9 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, a
         backgroundPress: darken(0.07, baseColor),
         backgroundFocus: darken(0.12, baseColor),
 
-        shadowColor: rgba('#000', 0.1),
-        shadowColorStrong: rgba('#000', 0.25),
-        shadowColorFocus: rgba('#000', 0.35),
+        shadowColor: darken(0.4, baseColor),
+        shadowColorAccent: darken(0.4, accentColor),
+
     }
 }
 

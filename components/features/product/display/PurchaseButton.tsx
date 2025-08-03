@@ -1,44 +1,69 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
+import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
 import { Purchasable } from '@/types';
-import { ArrowBigRightDash } from '@tamagui/lucide-icons';
+import { ArrowBigLeftDash, ShoppingBasket } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
 import { ButtonProps, YStack } from 'tamagui';
+
+const getUnPurchasableReason = (purchasable: Purchasable): string | undefined => {
+    const activeProduct = purchasable.productVariation || purchasable.product;
+    if (activeProduct.is_in_stock === false) {
+        return "Ikke på lager";
+    }
+    if (!activeProduct.prices.price || activeProduct.prices.price === "") {
+        return "Pris ikke tilgjengelig";
+    }
+    if (purchasable.product.type === "variable" && !purchasable.productVariation) {
+        return "Velg en variant først";
+    }
+
+    if (activeProduct.is_purchasable === false) {
+        return "Ikke tilgjengelig for kjøp";
+    }
+
+    return undefined
+}
+
 
 
 export const PurchaseButtonTheme = "secondary_alt3";
 export const PurchaseButton = (props: ButtonProps) => {
-    const { product, productVariation } = useProductContext();
+    const { purchasableProduct } = useProductContext();
     const { addCartItem } = useShoppingCartContext();
     const buttonRef = useRef(null);
 
-    const activeProduct = productVariation || product;
-
-    const purchasable: Purchasable = {
-        product,
-        productVariation,
-    };
-
     const handleAddToCart = () => {
-        addCartItem(purchasable, { triggerRef: buttonRef });
+        addCartItem(purchasableProduct, { triggerRef: buttonRef });
     };
 
-    const buttonText = !activeProduct.is_in_stock ? 'Velg en variant' : 'Legg til i handlekurv';
-    const disabled = !activeProduct.is_in_stock;
+    const canPurchase = getUnPurchasableReason(purchasableProduct) === undefined;
+    const buttonText = canPurchase ? "Legg til i handlekurv" : getUnPurchasableReason(purchasableProduct);
+    const disabled = !canPurchase;
 
-    return <YStack theme={PurchaseButtonTheme} f={1}><ThemedButton
-        onPress={handleAddToCart}
-        ref={buttonRef}
-        disabled={disabled}
-        jc="space-between"
-        variant="accent"
-        scaleIcon={1.5}
-        iconAfter={<ArrowBigRightDash />}
-        fontWeight="bold"
-        fontSize="$4"
-        {...props}
-    >
-        {buttonText}
-    </ThemedButton ></YStack>
+    const icon = canPurchase ? null : <ArrowBigLeftDash />;
+    const iconAfter = canPurchase ? <ShoppingBasket /> : null;
 
+
+    return (
+        <YStack theme={PurchaseButtonTheme} f={1}>
+            <ThemedButton
+                onPress={handleAddToCart}
+                ref={buttonRef}
+                disabled={disabled}
+                jc="space-between"
+                variant="accent"
+                scaleIcon={1.5}
+                icon={icon}
+                iconAfter={iconAfter}
+                fontWeight="bold"
+                fontSize="$4"
+                {...props}
+            >
+                <ThemedLinearGradient theme="secondary_alt1" br="$3" />
+                {buttonText}
+
+            </ThemedButton >
+        </YStack>
+    );
 };

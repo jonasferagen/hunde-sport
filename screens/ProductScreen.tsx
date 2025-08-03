@@ -73,13 +73,13 @@ const ProductScreenContent = () => {
           <PageContent theme="light_soft" gap="$3">
             <XStack jc="space-between" gap="$3">
               <ProductTitle size="$6" />
-              <PriceTag size="$6" />
+              <PriceTag fos="$6" />
             </XStack>
             <SizableText size="$3">{product.short_description}</SizableText>
-            {product.hasVariations() && productVariation && <ProductVariations />}
+            {product.hasVariations() && <ProductVariations />}
             <XStack jc="space-between">
               <ProductTitle size="$6" />
-              <PriceTag fontSize="$6" />
+              <PriceTag fos="$6" boc="black" bw={1} />
             </XStack>
             <PurchaseButton />
           </PageContent>

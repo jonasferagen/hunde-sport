@@ -58,7 +58,7 @@ export const ThemedButton = styled(Button, {
 
     // Disabled
     disabledStyle: {
-        opacity: 0.3,
+        opacity: .4,
         pointerEvents: 'none',
     },
 })
