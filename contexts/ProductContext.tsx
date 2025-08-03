@@ -1,6 +1,7 @@
 import { useProductVariations as useProductVariationsData } from '@/hooks/data/Product';
 import { Product } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
+import { Purchasable } from '@/types';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 /**
@@ -17,11 +18,15 @@ const getDisplayName = (product: Product, productVariation?: ProductVariation): 
     return variationName ? `${product.name}, ${variationName}` : product.name;
 };
 
+
+
 /**
  * Interface for the ProductContext
  */
 export interface ProductContextType {
     product: Product;
+    displayProduct: Product | ProductVariation;
+    purchasableProduct: Purchasable;
     displayName: string;
     productVariation?: ProductVariation | undefined;
     setProductVariation: (variation?: ProductVariation) => void;
@@ -85,8 +90,13 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
 
     const displayName = useMemo(() => getDisplayName(product, productVariation), [product, productVariation]);
 
+    const displayProduct = productVariation || product;
+    const purchasableProduct: Purchasable = { product, productVariation };
+
     const value: ProductContextType = {
         product,
+        displayProduct,
+        purchasableProduct,
         displayName,
         productVariation,
         setProductVariation,

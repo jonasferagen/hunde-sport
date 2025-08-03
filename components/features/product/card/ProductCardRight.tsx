@@ -20,7 +20,15 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
             <Button unstyled pressStyle={{ opacity: 0.7 }}>
                 <YStack f={1} jc="flex-start" gap="$2">
                     <XStack gap="$2" ai="flex-start" jc="space-between">
-                        <H6 f={0} fs={1} mih={minHeight} lh={lineHeight} numberOfLines={2} textDecorationLine="none" hoverStyle={{ color: '$colorHover' }}>
+                        <H6
+                            f={0}
+                            fs={1}
+                            mih={minHeight}
+                            lh={lineHeight}
+                            numberOfLines={2}
+                            textDecorationLine="none"
+                            hoverStyle={{ color: '$colorHover' }}
+                        >
                             {displayName}
                         </H6>
                         <YStack gap="$1" jc="center" ai="center">
@@ -29,7 +37,14 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                             </Chip>
                         </YStack>
                     </XStack>
-                    <SizableText fos="$1" col="$color" lh={"$1"} textDecorationLine="none" numberOfLines={2} hoverStyle={{ color: '$colorHover' }} >
+                    <SizableText
+                        fos="$1"
+                        col="$color"
+                        lh={lineHeight}
+                        textDecorationLine="none"
+                        numberOfLines={2}
+                        hoverStyle={{ color: '$colorHover' }}
+                    >
                         {product.short_description}
                     </SizableText>
                 </YStack>
