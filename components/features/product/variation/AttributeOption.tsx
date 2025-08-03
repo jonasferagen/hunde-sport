@@ -28,17 +28,17 @@ export const AttributeOption = ({ option, attribute, price, selectOption, isSele
 
         >
             <XStack
-                theme={isSelected ? 'primary' : 'secondary'}
-                flex={1}
-                p="$3"
-                gap="$3"
-                borderWidth={2}
-                borderRadius="$4"
-                borderColor={isSelected ? '$borderColor' : 'transparent'}
-                backgroundColor={isSelected ? '$background' : 'white'}
-                opacity={disabled ? 0.7 : 1}
+                t={isSelected ? 'primary' : 'secondary'}
+                f={1}
                 ai="center"
                 jc="space-between"
+                p="$3"
+                gap="$3"
+                bw={2}
+                br="$3"
+                boc={isSelected ? '$borderColor' : 'transparent'}
+                bg={isSelected ? '$background' : 'white'}
+                opacity={disabled ? 0.7 : 1}
             >
                 <SizableText fontWeight={isSelected ? 'bold' : 'normal'} color={'$color'}>
                     {option}

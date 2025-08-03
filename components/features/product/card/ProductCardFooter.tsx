@@ -22,7 +22,7 @@ export const ProductCardFooter = ({ onExpand, ...props }: ProductCardFooterProps
     };
 
     return (
-        <XStack f={0} ai="center" jc="space-between" gap="$3" mb="$2">
+        <XStack f={0} ai="center" jc="space-between" gap="$3">
 
             <XStack f={1} gap="$2" ai="center">
                 <ProductStatus />
