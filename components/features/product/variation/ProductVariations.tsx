@@ -84,9 +84,9 @@ export const ProductVariations = (): JSX.Element => {
                 const filteredAttribute = new ProductAttribute({ ...attribute, terms: availableTerms });
 
                 return (
-                    <YStack key={attribute.id} flex={1} mb="$3">
+                    <YStack key={attribute.id} flex={1}>
                         {attributes.length > 1 && (
-                            <SizableText fontSize="$3" fontWeight="bold" textTransform="capitalize" mb="$2" ml="$1">
+                            <SizableText fos="$3" fow="bold" textTransform="capitalize" mb="$2" ml="$1">
                                 {attribute.name}
                             </SizableText>
                         )}

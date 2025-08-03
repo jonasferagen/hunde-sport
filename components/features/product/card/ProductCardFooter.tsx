@@ -1,8 +1,9 @@
+import { ThemedButton } from '@/components/ui/ThemedButton';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
 import { capitalize } from '@/utils/helpers';
 import { ChevronDown, ShoppingCart } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
-import { Button, SizableText, XStack, YStack } from 'tamagui';
+import { SizableText, StackProps, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
 
@@ -10,7 +11,7 @@ interface ProductCardFooterProps {
     onExpand: () => void;
 }
 
-export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
+export const ProductCardFooter = ({ onExpand, ...props }: ProductCardFooterProps & StackProps) => {
     const { product, productVariation } = useProductContext();
     const { addCartItem } = useShoppingCartContext();
     const activeProduct = productVariation || product;
@@ -25,13 +26,13 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
             <XStack f={1} gap="$2" ai="center">
                 <ProductStatus />
                 {productVariation && (
-                    <SizableText fontWeight="bold">
+                    <SizableText fow="bold">
                         {capitalize(productVariation.name)}
                     </SizableText>
                 )}
                 <PriceTag />
                 {product.hasVariations() && !productVariation && (
-                    <SizableText fontSize="$2">
+                    <SizableText fos="$2">
                         Velg variant
                     </SizableText>
                 )}
@@ -39,24 +40,26 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
 
             <XStack gap="$2" ai="center">
                 {product.hasVariations() && (
-                    <YStack theme="secondary">
-                        <Button
+                    <YStack theme="light_orange">
+                        <ThemedButton
                             icon={<ChevronDown size="$4" fontWeight="bold" color="$color" />}
                             onPress={onExpand}
                             circular
                             size="$6"
+
                         />
                     </YStack>
                 )}
-                <YStack theme="primary">
-                    <Button
-                        icon={<ShoppingCart fontSize="$5" fontWeight="bold" />}
+                <YStack theme="light_green">
+                    <ThemedButton
+                        icon={<ShoppingCart size="$4" fontWeight="bold" />}
                         onPress={handleAddToCart}
                         ref={buttonRef}
                         circular
                         size="$6"
                         disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
                         opacity={!activeProduct.isPurchasable() || !activeProduct.isInStock() ? 0.5 : 1}
+
                     />
                 </YStack>
             </XStack>

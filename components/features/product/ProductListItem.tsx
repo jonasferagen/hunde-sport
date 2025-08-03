@@ -34,15 +34,8 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
                 <ProductCardImage categoryId={categoryId} />
                 <ProductCardContent categoryId={categoryId} />
             </ProductCard>
-            <ProductCardFooter onExpand={handleExpand} />
-            {
-
-                product.hasVariations() && isExpanded && (
-                    <YStack mt="$1">
-                        <ProductVariations />
-                    </YStack>
-                )
-            }
+            <ProductCardFooter onExpand={handleExpand} theme="secondary_soft" />
+            {product.hasVariations() && isExpanded && <ProductVariations />}
         </YStack >
     );
 };
