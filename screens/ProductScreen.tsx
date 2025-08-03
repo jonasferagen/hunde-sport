@@ -1,7 +1,7 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { ProductCardFooter } from '@/components/features/product/card/ProductCardFooter';
 import { PriceTag } from '@/components/features/product/display/PriceTag';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
+import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { ProductTiles } from '@/components/features/product/ProductTiles';
@@ -70,20 +70,18 @@ const ProductScreenContent = () => {
       <PageView >
         <PageSection scrollable>
           <ProductImage />
-          <PageContent theme="light_soft">
+          <PageContent theme="light_soft" gap="$3">
             <XStack jc="space-between" gap="$3">
               <ProductTitle size="$6" />
               <PriceTag size="$6" />
             </XStack>
-
-            <SizableText size="$3" my="$3">{product.short_description}</SizableText>
+            <SizableText size="$3">{product.short_description}</SizableText>
             {product.hasVariations() && productVariation && <ProductVariations />}
-            <XStack jc="space-between" mt="$3">
+            <XStack jc="space-between">
               <ProductTitle size="$6" />
               <PriceTag fontSize="$6" />
             </XStack>
-
-            <ProductCardFooter />
+            <PurchaseButton />
           </PageContent>
           <PageContent title="Produktbilder" flex={1}>
             {product.images.length > 1 && <ProductImageGallery />}
@@ -91,7 +89,7 @@ const ProductScreenContent = () => {
           <PageContent theme="secondary" title="Produktinformasjon">
             <SizableText size="$3">{product.description}</SizableText>
           </PageContent>
-          <PageContent theme="primary" title="Relaterte produkter" scrollable>
+          <PageContent px="none" theme="primary" title="Relaterte produkter" scrollable>
             <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
           </PageContent>
         </PageSection>
