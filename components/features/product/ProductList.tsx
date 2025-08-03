@@ -2,7 +2,7 @@ import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ProductProvider } from '@/contexts';
 import { Product } from '@/models/Product/Product';
 import { FlashList } from "@shopify/flash-list";
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 import { ViewStyle } from 'react-native';
 import { YStack } from 'tamagui';
 import { ProductCard } from './card';
@@ -20,14 +20,8 @@ export const ProductList = memo(({
     loadingMore,
     contentContainerStyle
 }: ProductListProps) => {
-    const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
-
-    const handleItemPress = useCallback((id: number) => {
-        setExpandedProductId(prevId => (prevId === id ? null : id));
-    }, []);
 
     const renderItem = useCallback(({ item, index }: { item: Product, index: number }) => {
-        const isExpanded = expandedProductId === item.id;
 
         return (
             <ProductProvider product={item}>
@@ -35,12 +29,10 @@ export const ProductList = memo(({
                     theme={index % 2 === 0 ? 'secondary_elevated' : 'secondary_soft'}
                     bbc="$borderColor"
                     bbw={1}
-                    isExpanded={isExpanded}
-                    handleExpand={() => handleItemPress(item.id)}
                 />
             </ProductProvider>
         );
-    }, [expandedProductId, handleItemPress]);
+    }, []);
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 
@@ -55,7 +47,6 @@ export const ProductList = memo(({
             loadingMore ? <ThemedSpinner size="small" /> : null
         }
         estimatedItemSize={100}
-        extraData={expandedProductId}
     />
     </YStack>
 });

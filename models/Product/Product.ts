@@ -95,7 +95,6 @@ export abstract class Product {
 
   abstract hasVariations(): boolean;
 
-  abstract isPurchasable(): boolean;
 
   toString() {
     return 'Product ' + this.id + ': ' + this.name;

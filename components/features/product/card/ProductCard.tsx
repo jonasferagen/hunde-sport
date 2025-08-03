@@ -5,17 +5,13 @@ import { useCategoryContext, useProductContext } from '@/contexts';
 import { HrefObject } from 'expo-router';
 import React from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
-import { ProductVariations } from '../variation/ProductVariations';
 import { ProductCardFooter } from './ProductCardFooter';
 import { ProductCardLeft } from './ProductCardLeft';
 import { ProductCardRight } from './ProductCardRight';
 
-interface ProductCardProps extends StackProps {
-    isExpanded: boolean;
-    handleExpand: () => void;
-}
+interface ProductCardProps extends StackProps { }
 
-export const ProductCard = ({ isExpanded, handleExpand, ...props }: ProductCardProps) => {
+export const ProductCard = ({ ...props }: ProductCardProps) => {
     const { product } = useProductContext();
     const { category } = useCategoryContext();
 
@@ -27,8 +23,7 @@ export const ProductCard = ({ isExpanded, handleExpand, ...props }: ProductCardP
             <ProductCardLeft href={href} />
             <ProductCardRight href={href} />
         </XStack>
-        <ProductCardFooter isExpanded={isExpanded} handleExpand={handleExpand} />
-        {isExpanded && <ProductVariations />}
+        <ProductCardFooter />
     </YStack>
 
 };

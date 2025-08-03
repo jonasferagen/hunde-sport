@@ -34,9 +34,7 @@ export class ProductVariation extends Product {
         return false;
     }
 
-    isPurchasable(): boolean {
-        return this.isInStock();
-    }
+
 
     /**
      * Checks if the variation matches a given set of selected attributes.

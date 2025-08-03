@@ -1,7 +1,6 @@
 import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { ProductCardFooter } from '@/components/features/product/card/ProductCardFooter';
 import { PriceTag } from '@/components/features/product/display/PriceTag';
-import { ProductStatus } from '@/components/features/product/display/ProductStatus';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
@@ -83,9 +82,7 @@ const ProductScreenContent = () => {
               <ProductTitle size="$6" />
               <PriceTag fontSize="$6" />
             </XStack>
-            <XStack f={1} jc="flex-start">
-              <ProductStatus />
-            </XStack>
+
             <ProductCardFooter />
           </PageContent>
           <PageContent title="Produktbilder" flex={1}>
