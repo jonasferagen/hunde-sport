@@ -17,8 +17,8 @@ export const Chip = ({ title, icon, children, theme, href, onPress, ...rest }: C
             theme={theme}
             py="$1"
             px="$2"
-            br="$3"
-            bg="$backgroundPress"
+            br="$5"
+            bg="$backgroundAlpha"
             bw={1}
             boc="$borderColorStrong"
             ai="center"
@@ -30,7 +30,7 @@ export const Chip = ({ title, icon, children, theme, href, onPress, ...rest }: C
             elevation={3}
             {...rest}
         >
-            <ThemedLinearGradient br="$3" colors={['$background', '$backgroundPress']} />
+            <ThemedLinearGradient br="$5" colors={['$backgroundAlpha', '$backgroundElevated']} />
             {icon}
             {children}
             {title && !children && (

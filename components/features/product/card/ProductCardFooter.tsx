@@ -36,37 +36,37 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
                 <DisplayPrice productPrices={productVariation ? productVariation.prices : product.prices} />
             </XStack>
         </XStack>
-        <XStack gap="$2" ai="center" jc="space-between">
-            <YStack theme="secondary_alt1" w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
-                <ThemedButton
-                    onPress={handleExpand}
-                    disabled={!product.hasVariations()}
-                    gap={0}
-                    ai="center"
-                    jc="center"
-                    p="none"
-                    m="none"
-                    icon={isExpanded ? <ChevronsUp /> : <ChevronsDown />}
-                    scaleIcon={1.5}
-                    color="$colorAccentStrong"
-                />
-            </YStack>
-            <YStack theme="secondary_alt3" f={1} >
-                <ThemedButton
-                    f={1}
-                    onPress={handleAddToCart}
-                    ref={buttonRef}
-                    disabled={disabled}
-                    jc="space-between"
-                    variant="accent"
-                    scaleIcon={1.5}
-                    iconAfter={<ArrowBigRightDash />}
-                    color="$colorAccentStrong"
-                    fontWeight="bold"
-                >
-                    {buttonText}
-                </ThemedButton>
-            </YStack>
+        <XStack gap="$2" ai="center" jc="space-between" theme="secondary_alt3">
+
+            <ThemedButton
+                onPress={handleExpand}
+                disabled={!product.hasVariations()}
+                gap={0}
+                ai="center"
+                jc="center"
+                p="none"
+                m="none"
+                icon={isExpanded ? <ChevronsUp /> : <ChevronsDown />}
+                w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
+                variant="accent"
+                scaleIcon={1.5}
+            />
+
+            <ThemedButton
+                f={1}
+                onPress={handleAddToCart}
+                ref={buttonRef}
+                disabled={disabled}
+                jc="space-between"
+
+                variant="accent"
+                scaleIcon={1.5}
+                iconAfter={<ArrowBigRightDash />}
+                fontWeight="bold"
+                fontSize="$4"
+            >
+                {buttonText}
+            </ThemedButton>
         </XStack>
     </YStack>
 };
