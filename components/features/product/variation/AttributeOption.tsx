@@ -24,7 +24,7 @@ export const AttributeOption = ({ option, attribute, price, selectOption, isSele
     >
         <XStack
             f={1}
-            theme={isSelected ? "secondary_alt1" : "secondary_soft"}
+            theme={isSelected ? "secondary_alt2" : "secondary"}
             ai="center"
             jc="space-between"
             p="$3"

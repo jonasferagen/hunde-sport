@@ -1,4 +1,4 @@
-import { ProductAttribute } from '@/models/Product/ProductAttribute';
+import { ProductAttribute, ProductAttributeTerm } from '@/models/Product/ProductAttribute';
 import { ProductVariation } from '@/models/Product/ProductVariation';
 import { formatPrice } from '@/utils/helpers';
 import { FlashList } from '@shopify/flash-list';
@@ -13,7 +13,38 @@ interface AttributeSelectorProps {
     selectedOptions: { [key: string]: string };
 }
 
-const ITEM_HEIGHT = 60; // Approximate item height
+
+
+/**
+ * Calculates the availability, price, and stock status for a single attribute option.
+ */
+const getOptionDetails = (
+    term: ProductAttributeTerm,
+    attributeName: string,
+    compatibleVariations: ProductVariation[]
+) => {
+    const potentialMatches = compatibleVariations.filter((variation) =>
+        variation.hasAttribute(attributeName, term.slug)
+    );
+
+    const isAvailable = potentialMatches.length > 0;
+    let displayPrice = '';
+    let inStock = true;
+
+    if (isAvailable) {
+        const prices = potentialMatches.map((v) => Number(v.prices.price));
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+        displayPrice =
+            minPrice === maxPrice
+                ? formatPrice(minPrice.toString())
+                : `Fra ${formatPrice(minPrice.toString())}`;
+
+        inStock = potentialMatches.some((v) => v.is_in_stock);
+    }
+
+    return { isAvailable, displayPrice, inStock };
+};
 
 export const AttributeSelector = ({
     attribute,
@@ -21,67 +52,53 @@ export const AttributeSelector = ({
     onSelectOption,
     selectedOptions,
 }: AttributeSelectorProps) => {
+    // Find variations compatible with *other* selected attributes.
+    const otherSelectedOptions = { ...selectedOptions };
+    delete otherSelectedOptions[attribute.name];
+
+    const compatibleVariations = productVariations.filter((variation) =>
+        variation.matchesAttributes(otherSelectedOptions)
+    );
+
     const renderItem = ({ item }: { item: string }) => {
-        const selectedOption = selectedOptions[attribute.name] ?? undefined;
-
         const term = attribute.terms.find((t) => t.name === item);
-        const isSelected = !!(term && selectedOption === term.slug);
-
-
-        // To determine if an option is available, we first find all variations that match the *other* selected attributes.
-        const otherSelectedOptions = { ...selectedOptions };
-        delete otherSelectedOptions[attribute.name];
-
-        const compatibleVariations = productVariations.filter((variation) =>
-            variation.matchesAttributes(otherSelectedOptions)
-        );
-
-        // Then, within that compatible set, we check if any variation contains the current option.
-        const isAvailable = compatibleVariations.some((variation) =>
-            variation.variation_attributes.some(
-                (attr: { name: string; value: string }) => attr.name === attribute.name && attr.value === term?.slug
-            )
-        );
-
-        let displayPrice = '';
-        let inStock = true;
-
-        if (term && isAvailable) {
-            // The potential matches are the same as the compatible variations that also have the current option.
-            const potentialMatches = compatibleVariations.filter((variation) =>
-                variation.variation_attributes.some(
-                    (attr: { name: string; value: string }) => attr.name === attribute.name && attr.value === term.slug
-                )
-            );
-
-            const minPrice = Math.min(...potentialMatches.map((v) => Number(v.prices.price)));
-            const maxPrice = Math.max(...potentialMatches.map((v) => Number(v.prices.price)));
-            displayPrice = minPrice === maxPrice ? formatPrice(minPrice.toString()) : `Fra ${formatPrice(minPrice.toString())}`;
-
-            if (!potentialMatches.some((v) => v.is_in_stock)) {
-                inStock = false;
-            }
+        if (!term) {
+            console.error(`Term ${item} not found for attribute ${attribute.name}`);
+            return null; // Should not happen
         }
 
-        return <AttributeOption
-            option={item}
-            attribute={attribute}
-            selectOption={() => onSelectOption(item)}
-            isSelected={isSelected}
-            isAvailable={isAvailable}
-            price={displayPrice}
-            inStock={inStock}
-        />
+        const isSelected = selectedOptions[attribute.name] === term.slug;
+
+        const { isAvailable, displayPrice, inStock } = getOptionDetails(
+            term,
+            attribute.name,
+            compatibleVariations
+        );
+
+        return (
+            <AttributeOption
+                option={item}
+                attribute={attribute}
+                selectOption={() => onSelectOption(item)}
+                isSelected={isSelected}
+                isAvailable={isAvailable}
+                price={displayPrice}
+                inStock={inStock}
+            />
+        );
     };
 
-    return <YStack>
-        <FlashList
-            data={attribute.terms.map((t) => t.name)}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => `${item}-${attribute.id}-${index}`}
-            estimatedItemSize={ITEM_HEIGHT}
-            extraData={selectedOptions}
-            ItemSeparatorComponent={() => <YStack h="$2" />}
-        />
-    </YStack>
+    const ITEM_HEIGHT = 60; // Approximate item height
+    return (
+        <YStack>
+            <FlashList
+                data={attribute.terms.map((t) => t.name)}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => `${item}-${attribute.id}-${index}`}
+                estimatedItemSize={ITEM_HEIGHT}
+                extraData={selectedOptions}
+                ItemSeparatorComponent={() => <YStack h="$2" />}
+            />
+        </YStack>
+    );
 };

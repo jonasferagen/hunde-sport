@@ -34,7 +34,17 @@ export class ProductVariation extends Product {
         return false;
     }
 
-
+    /**
+     * Checks if the variation has a specific attribute with a specific value.
+     * @param attributeName The name of the attribute (e.g., "Color").
+     * @param attributeValue The value of the attribute (e.g., "red").
+     * @returns True if the variation has the specified attribute, false otherwise.
+     */
+    hasAttribute(attributeName: string, attributeValue: string): boolean {
+        return this.variation_attributes.some(
+            (variationAttr) => variationAttr.name === attributeName && variationAttr.value === attributeValue
+        );
+    }
 
     /**
      * Checks if the variation matches a given set of selected attributes.

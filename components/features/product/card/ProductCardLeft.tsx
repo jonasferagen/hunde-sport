@@ -3,17 +3,17 @@ import { getScaledImageUrl } from '@/utils/helpers';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Image, YStack } from 'tamagui';
-import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './index';
+export const PRODUCT_CARD_LEFT_COLUMN_WIDTH = 80;
 
 interface ProductCardImageProps {
-    imageSize?: number;
     href: HrefObject;
 }
 
-export const ProductCardLeft = ({ imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH, href }: ProductCardImageProps) => {
+export const ProductCardLeft = ({ href }: ProductCardImageProps) => {
     const { product } = useProductContext();
+    const imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH;
 
-    return <YStack ai="center" jc="center">
+    return <YStack>
         <Link href={href}>
             <Image
                 source={{ uri: getScaledImageUrl(product.images[0]?.src, imageSize, imageSize) }}
