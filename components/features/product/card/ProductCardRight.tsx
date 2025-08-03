@@ -1,22 +1,21 @@
 import { Chip } from '@/components/ui';
-import { routes } from '@/config/routes';
 import { useProductContext } from '@/contexts';
-import { Link } from 'expo-router';
+import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Button, H6, SizableText, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './index';
 
 interface ProductCardContentProps {
-    categoryId?: number;
+    href: HrefObject;
 }
 
-export const ProductCardRight = ({ categoryId }: ProductCardContentProps) => {
+export const ProductCardRight = ({ href }: ProductCardContentProps) => {
     const { product } = useProductContext();
 
 
     return <YStack f={1}>
-        <Link href={routes.product.path(product, categoryId)} asChild>
+        <Link href={href} asChild>
             <Button unstyled pressStyle={{ opacity: 0.7 }}>
                 <YStack gap="$2" jc="flex-start" f={1} fs={1}>
                     <XStack gap="$2" ai="flex-start" jc="space-between">
