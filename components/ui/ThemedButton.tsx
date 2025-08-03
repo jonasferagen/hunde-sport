@@ -4,7 +4,7 @@ export const ThemedButton = styled(Button, {
     name: 'ThemedButton',
 
     // Base style
-    color: '$color',
+    color: '$colorAccent',
     backgroundColor: '$colorPrimary',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',

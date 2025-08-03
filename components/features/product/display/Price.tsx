@@ -9,7 +9,7 @@ export interface PriceProps {
     productOverride?: SimpleProduct | ProductVariation;
 }
 
-export const Price = ({ productOverride, fontSize = "$3" }: PriceProps & SizableTextProps) => {
+export const Price = ({ productOverride, fontSize = "$5" }: PriceProps & SizableTextProps) => {
 
     const { product, productVariation } = useProductContext();
 
@@ -17,8 +17,8 @@ export const Price = ({ productOverride, fontSize = "$3" }: PriceProps & Sizable
 
     if (activeProduct.on_sale) {
         return (
-            <XStack ai="center">
-                <SizableText textDecorationLine="line-through" mr="$2" opacity={0.7} fos={fontSize}>
+            <XStack ai="center" gap="$2">
+                <SizableText textDecorationLine="line-through" opacity={0.7} fos={fontSize}>
                     {formatPrice(activeProduct.prices.regular_price)}
                 </SizableText>
                 <SizableText fow="bold" fos={fontSize}>

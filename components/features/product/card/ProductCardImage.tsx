@@ -24,6 +24,7 @@ export const ProductCardImage = ({ categoryId, imageSize = IMAGE_SIZE }: Product
                     borderRadius="$3"
                 />
             </Link>
+
         </YStack>
     );
 };
