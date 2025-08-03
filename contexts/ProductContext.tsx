@@ -10,18 +10,11 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
  * @returns The generated display name as a string.
  */
 const getDisplayName = (product: Product, productVariation?: ProductVariation): string => {
-    if (!productVariation?.variation_attributes || productVariation.variation_attributes.length === 0) {
+    if (!productVariation) {
         return product.name;
     }
-
-    const attributeNames = productVariation.variation_attributes
-        .map((variationAttr) => {
-            const parentAttribute = product.attributes.find((attr) => attr.name === variationAttr.name);
-            return parentAttribute?.terms.find((t) => t.slug === variationAttr.value)?.name;
-        })
-        .filter((name): name is string => Boolean(name));
-
-    return attributeNames.length > 0 ? `${product.name}, ${attributeNames.join(' ')}` : product.name;
+    const variationName = productVariation.getVariationName(product);
+    return variationName ? `${product.name}, ${variationName}` : product.name;
 };
 
 /**
