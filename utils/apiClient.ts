@@ -1,4 +1,16 @@
-import { ApiResponse } from '../types';
+
+type ApiResponse<T> = {
+  data: T | null;
+  error: string | null;
+  status: number;
+  headers: Headers;
+};
+
+type ApiError = {
+  message: string;
+  status: number;
+};
+
 /**
  * Standardized API client for making HTTP requests
  * Handles JSON parsing, error handling, and response formatting

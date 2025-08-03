@@ -43,8 +43,6 @@ export const AttributeSelector = ({
             )
         );
 
-
-
         let displayPrice = '';
         let inStock = true;
 
@@ -83,6 +81,7 @@ export const AttributeSelector = ({
             keyExtractor={(item, index) => `${item}-${attribute.id}-${index}`}
             estimatedItemSize={ITEM_HEIGHT}
             extraData={selectedOptions}
+            ItemSeparatorComponent={() => <YStack h="$2" />}
         />
     </YStack>
 };

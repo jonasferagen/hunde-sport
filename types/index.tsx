@@ -11,26 +11,6 @@ import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
 
-// API-related types
-export type ApiResponse<T> = {
-  data: T | null;
-  error: string | null;
-  status: number;
-  headers: Headers;
-};
-
-export type ApiError = {
-  message: string;
-  status: number;
-};
-
-// App-specific types
-export interface Breadcrumb {
-  id: number | null;
-  name: string;
-  type: 'category' | 'product' | 'home';
-}
-
 
 
 export type Purchasable =

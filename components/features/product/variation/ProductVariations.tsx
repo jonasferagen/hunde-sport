@@ -91,7 +91,7 @@ export const ProductVariations = (): JSX.Element => {
             return (
                 <YStack key={attribute.id} flex={1}>
                     {attributes.length > 1 && (
-                        <SizableText fos="$3" fow="bold" textTransform="capitalize" mb="$2" ml="$1">
+                        <SizableText fos="$3" fow="bold" mb="$2" ml="$1" textTransform="capitalize">
                             {attribute.name}
                         </SizableText>
                     )}
@@ -101,9 +101,7 @@ export const ProductVariations = (): JSX.Element => {
                         selectedOptions={selectedOptions}
                         onSelectOption={(optionLabel) => {
                             const term = attribute.terms.find((t) => t.name === optionLabel);
-                            if (term) {
-                                handleSelectOption(attribute.name, term.slug);
-                            }
+                            term && handleSelectOption(attribute.name, term.slug);
                         }}
                     />
                 </YStack>

@@ -18,36 +18,36 @@ export const AttributeOption = ({ option, attribute, price, selectOption, isSele
     const stockStatus = inStock ? null : <SizableText fontSize="$2" fontWeight="bold" color={'red'}>⬤ Utsolgt</SizableText>
     const disabled = !isAvailable || !inStock;
 
-    return (
-        <Pressable
-            onPress={() => selectOption()}
-            style={{
-                flex: 1,
-            }}
-            disabled={disabled}
+    return <Pressable
+        onPress={() => selectOption()}
+        style={{
+            flex: 1,
+        }}
+        disabled={disabled}
 
+    >
+
+        <XStack
+            f={1}
+            theme={isSelected ? "secondary_alt1" : "secondary_soft"}
+            ai="center"
+            jc="space-between"
+            p="$3"
+            bw={2}
+            br="$3"
+            boc="$borderColor"
+            bg="$background"
+            opacity={disabled ? 0.7 : 1}
         >
-            <XStack
-                t={isSelected ? 'primary' : 'secondary'}
-                f={1}
-                ai="center"
-                jc="space-between"
-                p="$3"
-                gap="$3"
-                bw={2}
-                br="$3"
-                boc={isSelected ? '$borderColor' : 'transparent'}
-                bg={isSelected ? '$background' : 'white'}
-                opacity={disabled ? 0.7 : 1}
-            >
-                <SizableText fontWeight={isSelected ? 'bold' : 'normal'} color={'$color'}>
-                    {option}
-                </SizableText>
-                {stockStatus}
-                <SizableText fontWeight={isSelected ? 'bold' : 'normal'} color={'$color'}>
-                    {price}
-                </SizableText>
-            </XStack>
-        </Pressable>
-    );
+            <SizableText fow={isSelected ? "bold" : "normal"} col="$color">
+                {option}
+            </SizableText>
+            {stockStatus}
+            <SizableText fow={isSelected ? "bold" : "normal"} col="$color">
+                {price}
+            </SizableText>
+        </XStack>
+
+    </Pressable>
+
 };
