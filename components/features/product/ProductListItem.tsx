@@ -1,3 +1,4 @@
+import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { ProductProvider, useProductContext } from '@/contexts';
 import { Product } from '@/models/Product/Product';
 import React from 'react';
@@ -25,7 +26,8 @@ const ProductListItemContent: React.FC<Omit<ProductListItemProps, 'product'>> = 
     };
 
     return (
-        <YStack bbw={1} paddingVertical="$3" bbc="$borderColor">
+        <YStack theme="light_soft" py="$3" bbc="$borderColor" bbw={1} >
+            <ThemedLinearGradient />
             <ProductCard>
                 <ProductCardImage categoryId={categoryId} />
                 <ProductCardContent categoryId={categoryId} />

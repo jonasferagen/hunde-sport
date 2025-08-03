@@ -15,11 +15,11 @@ const CategoryScreenContent = memo(() => {
 
     return (
         <PageView>
-            <PageHeader theme="secondary">
+            <PageHeader theme="secondary_soft">
                 <Breadcrumbs isLastClickable={true} />
                 <CategoryChips limit={3} categories={subCategories} isLoading={isSubCategoriesLoading} />
             </PageHeader>
-            <PageContent f={1} p="none" theme="secondary_soft">
+            <PageContent f={1} p="none">
                 <ThemedLinearGradient height="$2" colors={["$backgroundAlpha", "transparent"]} start={[0, 0]} end={[0, 1]} zIndex={1} />
                 {isLoading ? <LoadingScreen /> : <CategoryProducts />}
             </PageContent>

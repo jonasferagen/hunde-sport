@@ -96,7 +96,7 @@ const ProductScreenContent = () => {
           <PageContent theme="secondary" title="Produktinformasjon">
             <SizableText size="$3">{product.description}</SizableText>
           </PageContent>
-          <PageContent theme="primary" title="Relaterte produkter">
+          <PageContent theme="primary" title="Relaterte produkter" scrollable>
             <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
           </PageContent>
         </PageSection>
