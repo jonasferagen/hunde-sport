@@ -1,4 +1,3 @@
-import { cleanHtml } from '@/utils/helpers';
 import { Product, ProductData } from './Product';
 import { ProductVariation } from './ProductVariation';
 import { SimpleProduct } from './SimpleProduct';
@@ -10,13 +9,13 @@ export const mapToProduct = (item: any): Product | ProductVariation => {
 
         const productData: ProductData = {
             id: item.id,
-            name: cleanHtml(item.name),
+            name: item.name,
             permalink: item.permalink,
             slug: item.slug,
             on_sale: item.on_sale,
             featured: item.featured || false,
-            description: cleanHtml(item.description),
-            short_description: cleanHtml(item.short_description || ''),
+            description: item.description,
+            short_description: item.short_description || '',
             sku: item.sku,
             price_html: item.price_html,
             prices: item.prices,

@@ -22,9 +22,9 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
         addCartItem({ product, productVariation }, { triggerRef: buttonRef });
     };
 
-    const buttonText = !activeProduct.isPurchasable() ? 'Velg en variant' : activeProduct.isInStock() ? 'Legg til i handlekurv' : 'Utsolgt';
+    const buttonText = !activeProduct.isPurchasable() ? 'Velg en variant' : activeProduct.is_in_stock ? 'Legg til i handlekurv' : 'Utsolgt';
 
-    const disabled = !activeProduct.isPurchasable() || !activeProduct.isInStock();
+    const disabled = !activeProduct.isPurchasable() || !activeProduct.is_in_stock;
 
     return <YStack gap="$2">
         <XStack jc="space-between" gap="$2">
