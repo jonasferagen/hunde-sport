@@ -27,7 +27,7 @@ export const Chip = ({ title, icon, children, theme, href, onPress, ...rest }: C
             gap="$1.5"
             onPress={onPress}
             pressStyle={onPress ? { opacity: 0.7 } : undefined}
-            elevation={1}
+            elevation={3}
             {...rest}
         >
             <ThemedLinearGradient br="$3" colors={['$background', '$backgroundPress']} />

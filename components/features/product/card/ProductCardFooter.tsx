@@ -1,6 +1,6 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { useProductContext, useShoppingCartContext } from '@/contexts';
-import { ChevronDown, ChevronUp, ShoppingCart } from '@tamagui/lucide-icons';
+import { ArrowBigRightDash, ChevronsDown, ChevronsUp } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
 import { SizableText, StackProps, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
@@ -22,6 +22,10 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
         addCartItem({ product, productVariation }, { triggerRef: buttonRef });
     };
 
+    const buttonText = !activeProduct.isPurchasable() ? 'Velg en variant' : activeProduct.isInStock() ? 'Legg til i handlekurv' : 'Utsolgt';
+
+    const disabled = !activeProduct.isPurchasable() || !activeProduct.isInStock();
+
     return <YStack gap="$2">
         <XStack jc="space-between" gap="$2">
             <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
@@ -32,7 +36,7 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
                 <DisplayPrice productPrices={productVariation ? productVariation.prices : product.prices} />
             </XStack>
         </XStack>
-        <XStack als="stretch" gap="$2" ai="center" jc="space-between">
+        <XStack gap="$2" ai="center" jc="space-between">
             <YStack theme="secondary_alt1" w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                 <ThemedButton
                     onPress={handleExpand}
@@ -40,24 +44,27 @@ export const ProductCardFooter = ({ isExpanded, handleExpand }: ProductCardFoote
                     gap={0}
                     ai="center"
                     jc="center"
-                    f={1}
-                >
-                    {isExpanded ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
-                </ThemedButton>
+                    p="none"
+                    m="none"
+                    icon={isExpanded ? <ChevronsUp /> : <ChevronsDown />}
+                    scaleIcon={1.5}
+                    color="$colorAccentStrong"
+                />
             </YStack>
-            <YStack theme="primary_alt1" f={1} >
+            <YStack theme="secondary_alt3" f={1} >
                 <ThemedButton
                     f={1}
                     onPress={handleAddToCart}
                     ref={buttonRef}
-                    disabled={!activeProduct.isPurchasable() || !activeProduct.isInStock()}
+                    disabled={disabled}
                     jc="space-between"
                     variant="accent"
-                    iconAfter={ShoppingCart}
+                    scaleIcon={1.5}
+                    iconAfter={<ArrowBigRightDash />}
                     color="$colorAccentStrong"
                     fontWeight="bold"
                 >
-                    Legg til i handlekurv
+                    {buttonText}
                 </ThemedButton>
             </YStack>
         </XStack>

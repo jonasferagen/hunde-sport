@@ -25,7 +25,7 @@ const CategoryScreenContent = memo(() => {
                 <Breadcrumbs isLastClickable={true} />
                 {showToggleButton && (
                     <Chip
-                        theme="light"
+                        theme="secondary_alt1"
                         onPress={() => setShowAll(!showAll)}
                         icon={showAll ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
                     />

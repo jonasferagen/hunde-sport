@@ -24,7 +24,7 @@ export const ProductCardRight = ({ categoryId }: ProductCardContentProps) => {
                             {product.name}
                         </H6>
                         <YStack gap="$1" jc="center" ai="center">
-                            <Chip theme="secondary_alt3" minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
+                            <Chip theme="secondary_alt1" minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
                                 <DisplayPrice productPrices={product.prices} size="$2" />
                             </Chip>
                         </YStack>
