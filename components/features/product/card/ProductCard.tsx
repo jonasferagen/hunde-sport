@@ -12,7 +12,7 @@ export const ProductCard = ({ children, ...props }: ProductCardProps) => {
                 alignSelf="stretch"
                 jc="flex-start"
                 gap="$3"
-                padding="$2"
+
             >
                 {children}
             </XStack>

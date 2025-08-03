@@ -21,8 +21,8 @@ export const ProductCardFooter = ({ onExpand }: ProductCardFooterProps) => {
     };
 
     return (
-        <XStack ai="center" jc="space-between" flex={0} gap="$2" marginHorizontal="$3">
-            <XStack gap="$2" ai="center" flex={1}>
+        <XStack f={0} ai="center" jc="space-between" gap="$2">
+            <XStack f={1} gap="$2" ai="center">
                 <ProductStatus />
                 {productVariation && (
                     <SizableText fontWeight="bold">

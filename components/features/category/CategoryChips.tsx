@@ -34,7 +34,6 @@ export const CategoryChips = ({ limit, style, categories, isLoading }: CategoryC
                 <Chip
                     theme="light"
                     icon={<ChevronDown size="$4" color="black" />}
-                    title={`(${categories.length - limit})`}
                     onPress={() => setShowAll(true)}
                 />
             )}

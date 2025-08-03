@@ -3,7 +3,7 @@ import { useProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Link } from 'expo-router';
 import React from 'react';
-import { Image, SizableText, YStack } from 'tamagui';
+import { Image, YStack } from 'tamagui';
 
 const IMAGE_SIZE = 80;
 
@@ -21,10 +21,9 @@ export const ProductCardImage = ({ categoryId, imageSize = IMAGE_SIZE }: Product
                     source={{ uri: getScaledImageUrl(product.images[0]?.src, imageSize, imageSize) }}
                     width={imageSize}
                     height={imageSize}
-                    borderRadius="$4"
+                    borderRadius="$3"
                 />
             </Link>
-            <SizableText size="$1">{product.id}</SizableText>
         </YStack>
     );
 };

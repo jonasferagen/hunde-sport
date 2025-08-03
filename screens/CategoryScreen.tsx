@@ -3,7 +3,6 @@ import { CategoryChips } from '@/components/features/category/CategoryChips';
 import { CategoryProducts } from '@/components/features/category/CategoryProducts';
 import { PageContent, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { CategoryProvider, useCategoryContext } from '@/contexts/CategoryContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useLocalSearchParams } from 'expo-router';
@@ -20,7 +19,6 @@ const CategoryScreenContent = memo(() => {
                 <CategoryChips limit={3} categories={subCategories} isLoading={isSubCategoriesLoading} />
             </PageHeader>
             <PageContent f={1} p="none">
-                <ThemedLinearGradient height="$2" colors={["$backgroundAlpha", "transparent"]} start={[0, 0]} end={[0, 1]} zIndex={1} />
                 {isLoading ? <LoadingScreen /> : <CategoryProducts />}
             </PageContent>
         </PageView>

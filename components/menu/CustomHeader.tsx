@@ -1,13 +1,13 @@
 import { resolveTheme } from '@/config/routes';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
-import { LinearGradient } from '@tamagui/linear-gradient';
 import { Menu } from '@tamagui/lucide-icons';
 import { useNavigation } from 'expo-router';
 import { JSX } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Theme, XStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
+import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 import { ThemedText } from '../ui/ThemedText';
 
 export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
@@ -34,12 +34,7 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
             boc="$borderColor"
             gap="$3"
         >
-            <LinearGradient
-                colors={['$background', '$backgroundPress']}
-                start={[0, 1]}
-                end={[1, 0]}
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-            />
+            <ThemedLinearGradient />
             <ThemedButton
                 onPress={openDrawer}
                 size="$6"
