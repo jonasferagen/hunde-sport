@@ -29,6 +29,7 @@ export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.El
         return <ThemedSpinner />;
     }
 
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <YStack f={1} theme={theme}>

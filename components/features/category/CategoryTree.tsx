@@ -79,9 +79,7 @@ export const CategoryTree = ({ parentId = 0, renderItem, level = 0 }: CategoryTr
     }, []);
 
     if (isLoading) {
-        return (
-            <ThemedSpinner />
-        );
+        return <ThemedSpinner />
     }
 
     const categories = getSubCategories(parentId);
