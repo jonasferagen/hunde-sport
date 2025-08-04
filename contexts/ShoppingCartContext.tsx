@@ -1,3 +1,4 @@
+import { CartItemData } from '@/models/Cart';
 import { useCartStore } from '@/stores/CartStore';
 import { Purchasable } from '@/types';
 import { useToastController } from '@tamagui/toast';
@@ -8,11 +9,19 @@ interface CartItemOptions {
     triggerRef?: React.RefObject<any>;
 }
 
-type ShoppingCartContextType = ReturnType<typeof useCartStore> & {
-    addCartItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
-    updateCartItem: (key: string, quantity: number) => void;
-    removeCartItem: (key: string, options?: CartItemOptions) => void;
-};
+// Create a new type that omits the original store methods we want to override
+type BaseCartStore = Omit<ReturnType<typeof useCartStore>, 'addItem' | 'updateItem' | 'removeItem'>;
+
+// Define the context type with the full store state and our new, enhanced methods
+interface ShoppingCartContextType extends BaseCartStore {
+    isReady: boolean;
+    items: CartItemData[];
+    items_count: number;
+    getSubtotal: (item: CartItemData) => string;
+    addItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
+    updateItem: (key: string, quantity: number) => void;
+    removeItem: (key: string, options?: CartItemOptions) => void;
+}
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
@@ -20,7 +29,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const store = useCartStore();
     const toastController = useToastController();
 
-    const addCartItem = (purchasable: Purchasable, options: CartItemOptions = {}) => {
+    const addItem = (purchasable: Purchasable, options: CartItemOptions = {}) => {
 
         const productVariation = purchasable.productVariation;
         const variation = !productVariation ? [] : productVariation.variation_attributes.map((attribute: any) => ({ attribute: attribute.name, value: attribute.value }));
@@ -36,11 +45,11 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         }
     };
 
-    const updateCartItem = (key: string, quantity: number) => {
+    const updateItem = (key: string, quantity: number) => {
         store.updateItem(key, quantity);
     };
 
-    const removeCartItem = (key: string, options: CartItemOptions = {}) => {
+    const removeItem = (key: string, options: CartItemOptions = {}) => {
         const item = store.getItem(key);
         if (item) {
             const productName = item.product.name;
@@ -58,10 +67,10 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const value = useMemo(() => ({
         ...store,
-        addCartItem,
-        updateCartItem,
-        removeCartItem,
-    }), [store]);
+        addItem,
+        updateItem,
+        removeItem,
+    }), [store, addItem, updateItem, removeItem]);
 
     return (
         <ShoppingCartContext.Provider value={value}>

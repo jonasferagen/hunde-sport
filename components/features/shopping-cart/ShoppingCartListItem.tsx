@@ -1,5 +1,4 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductProvider, useShoppingCartContext } from '@/contexts';
@@ -21,12 +20,12 @@ export const ShoppingCartListItem = ({ item }: { item: CartItemData }): JSX.Elem
 
 const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
 
-    const { cart, updateCartItem, removeCartItem, isUpdating } = useShoppingCartContext();
+    const { getSubtotal, updateItem, removeItem } = useShoppingCartContext();
     const { quantity, key } = item;
 
     return (
 
-        <YStack gap="$3" padding="$3" borderBottomWidth={2} borderColor="$gray5">
+        <YStack gap="$3" p="$3" bbw={2} borderBottomColor="$gray5">
             {/* Row 1: Product name + unit price */}
             <ProductTitle size="$4" />
 
@@ -36,7 +35,7 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
                 <XStack ai="center" gap="$2">
                     <ThemedButton theme="primary"
                         icon={<Minus size="$3" />}
-                        onPress={() => updateCartItem(key, quantity - 1)}
+                        onPress={() => updateItem(key, quantity - 1)}
                         size="$5"
                         circular
                         disabled={quantity <= 1}
@@ -44,22 +43,22 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
 
                     <ThemedButton theme="primary"
                         icon={<Plus size="$3" />}
-                        onPress={() => updateCartItem(key, quantity + 1)}
+                        onPress={() => updateItem(key, quantity + 1)}
                         size="$5"
                         circular
                         disabled={false}
                     />
-                    <H4 width={30} textAlign="center">
+                    <H4 w={30} ta="center">
                         {quantity}
                     </H4>
-                    <SizableText fontSize="$4" color="$gray10" >
+                    <SizableText fos="$4" col="$gray10" >
                         {formatPrice(item.prices.price)}
                     </SizableText>
                 </XStack>
 
                 <XStack f={1} ai="center" jc="flex-end">
-                    <SizableText fontSize="$4" fontWeight="bold" flex={1} textAlign="right">
-                        {isUpdating ? <ThemedSpinner /> : formatPrice(cart.getSubtotal(item))}
+                    <SizableText fos="$4" fow="bold" flex={1} ta="right">
+                        {formatPrice(getSubtotal(item))}
                     </SizableText>
                 </XStack>
 
@@ -67,12 +66,11 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
                 <ThemedButton
                     theme="secondary"
                     icon={<X size="$3" />}
-                    onPress={() => removeCartItem(key)}
+                    onPress={() => removeItem(key)}
                     size="$5"
                     circular
                     disabled={false}
                 />
-
             </XStack>
         </YStack>
 

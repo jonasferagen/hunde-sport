@@ -4,12 +4,12 @@ import { ProductTitle } from '@/components/features/product/display/ProductTitle
 import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
-import { ProductTiles } from '@/components/features/product/ProductTiles';
+import { RelatedProducts } from '@/components/features/product/ProductTiles';
 import { ProductVariations } from '@/components/features/product/variation/ProductVariations';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
 import { ProductCategoryProvider, ProductProvider, useProductContext } from '@/contexts';
-import { useProduct, useProductsByIds } from '@/hooks/data/Product';
+import { useProduct } from '@/hooks/data/Product';
 import { createProduct } from '@/models/Product/ProductFactory';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
@@ -83,7 +83,7 @@ const ProductScreenContent = () => {
             <SizableText size="$3">{product.description}</SizableText>
           </PageContent>
           <PageContent px="none" theme="primary" title="Relaterte produkter" scrollable>
-            <ProductTiles queryResult={useProductsByIds(product.related_ids)} theme="secondary" />
+            <RelatedProducts product={product} theme="secondary" />
           </PageContent>
         </PageSection>
       </PageView>

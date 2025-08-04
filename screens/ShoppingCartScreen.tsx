@@ -1,27 +1,22 @@
-import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
-
-
 import { ShoppingCartListItem, ShoppingCartSummary } from '@/components/features/shopping-cart';
+import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { ThemedButton } from '@/components/ui/ThemedButton';
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ThemedText } from '@/components/ui/ThemedText';
-
 import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
 import { FlashList } from '@shopify/flash-list';
-import { ArrowBigRight, ShoppingCart } from '@tamagui/lucide-icons';
+import { ArrowBigRight } from '@tamagui/lucide-icons';
 import React from 'react';
-import { XStack, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
 
 export const ShoppingCartScreen = () => {
-    const { cart } = useShoppingCartContext();
+    const { isReady, items_count, items } = useShoppingCartContext();
 
-
-    if (!cart) {
-        return null;
+    if (!isReady) {
+        return <ThemedSpinner />;
     }
 
-
-
-    if (cart.items_count === 0) {
+    if (items_count === 0) {
         return (
             <YStack flex={1} ai="center" jc="center">
                 <ThemedText fontSize="$3">Handlekurven er tom</ThemedText>
@@ -35,18 +30,18 @@ export const ShoppingCartScreen = () => {
         </PageHeader>
         <PageSection theme="primary_soft" p="$3">
             <FlashList
-                data={cart.items}
-                keyExtractor={(item) => item.key}
+                data={items}
                 renderItem={({ item }) => <ShoppingCartListItem item={item} />}
                 estimatedItemSize={100}
             />
         </PageSection>
-        <PageContent theme='secondary_soft' >
-            <XStack gap="$3" ai="center" jc="space-between">
-                <ThemedButton onPress={() => { console.log("checkout") }} scaleIcon={1.5} flex={1} jc="space-between" theme="primary" disabled={cart.items_count === 0}>
-                    Til kassen <XStack ai="center"><ShoppingCart size="$4" /><ArrowBigRight size="$3" /></XStack>
+
+        <PageContent>
+            <YStack p="$4">
+                <ThemedButton size="$6" iconAfter={ArrowBigRight}>
+                    Gå til kassen
                 </ThemedButton>
-            </XStack>
+            </YStack>
         </PageContent>
-    </PageView >
+    </PageView>
 };

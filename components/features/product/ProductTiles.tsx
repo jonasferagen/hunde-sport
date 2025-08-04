@@ -53,6 +53,21 @@ export const FeaturedProducts = ({ theme = 'primary' }: ProductListProps): JSX.E
     />
 };
 
+
+export const RelatedProducts = ({ theme = 'primary', product }: { theme?: ThemeName; product: SimpleProduct | VariableProduct }): JSX.Element => {
+    const queryResult = useProductsByIds(product.related_ids);
+
+    return <HorizontalTiles
+        queryResult={queryResult as InfiniteListQueryResult<SimpleProduct | VariableProduct>}
+        renderItem={({ item }) => (
+            <ProductTile
+                product={item}
+                theme={theme}
+            />
+        )}
+    />
+};
+
 export const DebugProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
     const queryResult = useProductsByIds([246557, 35961, 27445]);
 

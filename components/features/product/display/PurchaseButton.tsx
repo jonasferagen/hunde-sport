@@ -30,11 +30,11 @@ const getUnPurchasableReason = (purchasable: Purchasable): string | undefined =>
 export const PurchaseButtonTheme = "secondary_alt3";
 export const PurchaseButton = (props: ButtonProps) => {
     const { purchasableProduct } = useProductContext();
-    const { addCartItem } = useShoppingCartContext();
+    const { addItem } = useShoppingCartContext();
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
-        addCartItem(purchasableProduct, { triggerRef: buttonRef });
+        addItem(purchasableProduct, { triggerRef: buttonRef });
     };
 
     const canPurchase = getUnPurchasableReason(purchasableProduct) === undefined;

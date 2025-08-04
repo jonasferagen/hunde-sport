@@ -15,6 +15,7 @@ const mapData = (item: any): BaseProductData => ({
     on_sale: item.on_sale,
     featured: item.featured || false,
     is_in_stock: item.is_in_stock,
+    is_purchasable: item.is_purchasable,
     categories: item.categories || [],
     tags: item.tags || [],
     type: item.type,

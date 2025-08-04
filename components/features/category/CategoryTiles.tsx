@@ -4,7 +4,7 @@ import { useProductCategoryContext } from '@/contexts';
 import { JSX, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import { ThemeName, YStack } from 'tamagui';
-import { ProductCategoryTile } from './CategoryTile';
+import { ProductCategoryTile } from './ProductCategoryTile';
 
 interface ProductCategoryTilesProps {
 

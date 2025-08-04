@@ -33,6 +33,7 @@ export interface BaseProductData {
     on_sale: boolean;
     featured: boolean;
     is_in_stock: boolean;
+    is_purchasable: boolean;
     categories: ProductCategory[];
     tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
@@ -51,6 +52,7 @@ export class BaseProduct<T extends BaseProductData> {
     on_sale: boolean;
     featured: boolean;
     is_in_stock: boolean;
+    is_purchasable: boolean;
     categories: ProductCategory[];
     tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
@@ -68,6 +70,7 @@ export class BaseProduct<T extends BaseProductData> {
         this.on_sale = data.on_sale;
         this.featured = data.featured;
         this.is_in_stock = data.is_in_stock;
+        this.is_purchasable = data.is_purchasable;
         this.categories = data.categories;
         this.tags = data.tags;
         this.type = data.type;

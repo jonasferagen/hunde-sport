@@ -10,9 +10,9 @@ import { ProductList } from '../product/ProductList';
 
 export const CategoryProducts = (): JSX.Element | null => {
     useRenderGuard('CategoryProducts');
-    const { productCategory: category, isLoading } = useProductCategoryContext();
+    const { productCategory: category } = useProductCategoryContext();
 
-    if (isLoading || !category) {
+    if (!category) {
         return <LoadingScreen />;
     }
 
