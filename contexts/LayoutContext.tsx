@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { LayoutChangeEvent, View } from 'react-native';
+import { LayoutChangeEvent } from 'react-native';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface LayoutContextType {
@@ -25,11 +25,9 @@ export const LayoutProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 
     return (
-        <View style={{ flex: 1 }} onLayout={handleLayout}>
-            <LayoutContext.Provider value={{ insets, layout, headerHeight, setHeaderHeight }}>
-                {children}
-            </LayoutContext.Provider>
-        </View>
+        <LayoutContext.Provider value={{ insets, layout, headerHeight, setHeaderHeight }}>
+            {children}
+        </LayoutContext.Provider>
     );
 };
 
