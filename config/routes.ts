@@ -1,5 +1,5 @@
 import { ProductCategory } from '@/models/Category';
-import { Product } from '@/models/Product/Product';
+import { SimpleProduct, VariableProduct } from '@/types';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { HrefObject, useSegments } from 'expo-router';
 import { ThemeName } from 'tamagui';
@@ -66,7 +66,7 @@ export const routes: Record<string, Route> = {
         label: 'Produkt',
         icon: () => null, // No icon for product in drawer
         theme: 'primary',
-        path: (product: Product, categoryId?: number) => {
+        path: (product: SimpleProduct | VariableProduct, categoryId?: number) => {
             const params: { id: string; name: string; categoryId?: string } = {
                 id: product.id.toString(),
                 name: product.name,
@@ -79,9 +79,21 @@ export const routes: Record<string, Route> = {
     },
 };
 
-export const resolveTheme = (): ThemeName => {
+export const resolveTheme = (routeName?: string): ThemeName => {
+    // If a routeName is passed directly, use it. It's more reliable.
+    if (routeName && routes[routeName]) {
+        return routes[routeName].theme;
+    }
+    // Fallback to using segments if no routeName is provided.
     const segments = useSegments();
-    const routeName = segments[0] || 'index';
+    let lastSegment = segments[segments.length - 1] || 'index';
 
-    return routes[routeName]?.theme || 'light';
+    // Handle the edge case where the root of the group is active
+    if (lastSegment === '(app)') {
+        lastSegment = 'index';
+    }
+
+    console.log(lastSegment);
+
+    return routes[lastSegment]?.theme || 'light';
 };

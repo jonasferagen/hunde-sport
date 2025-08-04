@@ -10,14 +10,13 @@ import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 import { ThemedText } from '../ui/ThemedText';
 
-export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
+export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
 
     const navigation = useNavigation();
     const openDrawer = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
-
-    const theme = resolveTheme();
+    const theme = resolveTheme(props.route.name);
     const insets = useSafeAreaInsets();
     const paddingTop = 70;
     const height = insets.top + paddingTop + 20;
@@ -39,11 +38,10 @@ export const CustomHeader = ({ options }: DrawerHeaderProps): JSX.Element => {
                 onPress={openDrawer}
                 size="$6"
                 circular
-
             >
                 <Menu />
             </ThemedButton>
-            <ThemedText fontSize="$4">{options.title}</ThemedText>
+            <ThemedText fontSize="$4">{props.options.title}</ThemedText>
         </XStack>
     </Theme>
 };

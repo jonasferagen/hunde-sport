@@ -11,10 +11,6 @@ interface ProductListProps {
     theme?: ThemeName;
 }
 
-interface ProductTilesProps extends ProductListProps {
-    queryResult: InfiniteListQueryResult<SimpleProduct | VariableProduct>;
-}
-
 export const RecentProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
     const queryResult = useRecentProducts();
 

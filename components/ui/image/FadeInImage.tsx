@@ -20,7 +20,7 @@ export const FadeInImage = ({ source, objectFit, ...stackProps }: FadeInImagePro
                 }}
                 transition={{
                     type: 'timing',
-                    duration: 1000,
+                    duration: 500,
                 }}
             >
                 <Image
