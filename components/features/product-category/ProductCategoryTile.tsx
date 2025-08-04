@@ -4,9 +4,9 @@ import { ProductCategory } from '@/models/ProductCategory';
 import { getScaledImageUrl } from "@/utils/helpers";
 import { Link } from 'expo-router';
 import React, { memo } from 'react';
+
 import { DimensionValue } from 'react-native';
 import { YStackProps } from "tamagui";
-
 export const PRODUCT_CATEGORY_TILE_WIDTH: DimensionValue = 200;
 export const PRODUCT_CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 

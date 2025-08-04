@@ -2,7 +2,7 @@ import { ThemedButton } from '@/components/ui/ThemedButton';
 
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductProvider, useShoppingCartContext } from '@/contexts';
-import { CartItemData } from '@/models/Cart';
+import { CartItemData } from '@/models/Cart/Cart';
 import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';

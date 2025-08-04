@@ -2,8 +2,7 @@
 import { GridTiles } from '@/components/ui/tile/GridTiles';
 import { useProductCategoryContext } from '@/contexts';
 import { JSX, useMemo } from 'react';
-import { ScrollView } from 'react-native';
-import { ThemeName, YStack } from 'tamagui';
+import { ScrollView, ThemeName, YStack } from 'tamagui';
 import { ProductCategoryTile } from './ProductCategoryTile';
 
 interface ProductCategoryTilesProps {

@@ -1,8 +1,5 @@
 import { BaseProduct, BaseProductData } from '@/types';
 
-export type AddItemMutation = (vars: { id: number; quantity: number; variation: { attribute: string; value: string }[] }) => void;
-export type UpdateItemMutation = (vars: { key: string; quantity: number; optimisticUpdateTimestamp?: number }) => void;
-export type RemoveItemMutation = (vars: { key: string }) => void;
 
 export interface CartItemData {
     key: string;

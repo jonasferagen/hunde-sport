@@ -4,7 +4,6 @@ import {
   SearchProvider,
   ShoppingCartProvider,
 } from '@/contexts';
-import { useCartData } from '@/hooks/data/Cart';
 import { queryClient } from '@/lib/queryClient';
 import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
@@ -14,11 +13,6 @@ import { JSX } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
-
-const CartDataLoader = () => {
-  useCartData();
-  return null;
-};
 
 const RootLayout = (): JSX.Element => {
   return (
@@ -32,7 +26,6 @@ const RootLayout = (): JSX.Element => {
                   <ProductCategoryProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
-                        <CartDataLoader />
                         <Slot />
                       </SearchProvider>
                     </ShoppingCartProvider>
