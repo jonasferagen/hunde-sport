@@ -1,6 +1,6 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { useCategories } from '@/hooks/data/Category';
 import { Category } from '@/models/Category';
+import { useCategoryStore } from '@/stores/CategoryStore';
 import { usePathname } from 'expo-router';
 import React, { JSX, useCallback, useState } from 'react';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
@@ -34,8 +34,8 @@ type CategoryTreeBranchProps = {
 const CategoryTreeBranch = ({ category, level, isExpanded, onExpand, renderItem }: CategoryTreeBranchProps) => {
     const pathname = usePathname();
     const isActive = pathname.includes(`/category/${category.id}`);
-    const { items: categories } = useCategories({ autoload: true });
-    const subcategories = categories.filter(cat => cat.parent === category.id);
+    const getSubCategories = useCategoryStore((state) => state.getSubCategories);
+    const subcategories = getSubCategories(category.id);
     const hasChildren = subcategories.length > 0;
 
 
@@ -71,7 +71,7 @@ const CategoryTreeBranch = ({ category, level, isExpanded, onExpand, renderItem 
 };
 
 export const CategoryTree = ({ parentId = 0, renderItem, level = 0 }: CategoryTreeProps): JSX.Element => {
-    const { items: categories, isLoading } = useCategories({ autoload: true });
+    const { getSubCategories, isLoading } = useCategoryStore();
     const [expandedId, setExpandedId] = useState<number | null>(null);
 
     const handleExpand = useCallback((id: number) => {
@@ -84,9 +84,11 @@ export const CategoryTree = ({ parentId = 0, renderItem, level = 0 }: CategoryTr
         );
     }
 
+    const categories = getSubCategories(parentId);
+
     return (
         <YStack>
-            {categories.filter(cat => cat.parent === parentId).map(category => (
+            {categories.map(category => (
                 <CategoryTreeBranch
                     key={category.id}
                     category={category}

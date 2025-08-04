@@ -13,7 +13,7 @@ import { XStack } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
 
 const CategoryScreenContent = memo(() => {
-    const { isLoading, subCategories, isSubCategoriesLoading } = useCategoryContext();
+    const { isLoading, subCategories } = useCategoryContext();
     const [showAll, setShowAll] = useState(false);
     const limit = 3;
 
@@ -35,7 +35,6 @@ const CategoryScreenContent = memo(() => {
             <CategoryChips
                 limit={limit}
                 categories={subCategories}
-                isLoading={isSubCategoriesLoading}
                 showAll={showAll}
             />
         </PageHeader>

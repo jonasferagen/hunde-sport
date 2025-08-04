@@ -1,12 +1,11 @@
-import { useCategories, useCategory as useCategoryData } from '@/hooks/data/Category';
 import { Category } from '@/models/Category';
+import { useCategoryStore } from '@/stores/CategoryStore';
 import React, { createContext, useContext } from 'react';
 
 export interface CategoryContextType {
     category?: Category;
     subCategories: Category[];
     isLoading: boolean;
-    isSubCategoriesLoading: boolean;
 }
 
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
@@ -23,16 +22,19 @@ export const CategoryProvider: React.FC<{ categoryId: number; children: React.Re
     categoryId,
     children,
 }) => {
-    const { category, isLoading } = useCategoryData(categoryId);
-    const { items: categories, isLoading: isSubCategoriesLoading } = useCategories();
+    const {
+        getCategoryById,
+        getSubCategories,
+        isLoading,
+    } = useCategoryStore();
 
-    const subCategories = categories ? categories.filter(cat => cat.parent === categoryId && cat.shouldDisplay()) : [];
+    const category = getCategoryById(categoryId);
+    const subCategories = getSubCategories(categoryId);
 
     const value: CategoryContextType = {
         category,
         subCategories,
         isLoading,
-        isSubCategoriesLoading,
     };
 
     return <CategoryContext.Provider value={value}>{children}</CategoryContext.Provider>;

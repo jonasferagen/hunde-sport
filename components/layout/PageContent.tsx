@@ -46,9 +46,3 @@ export const PageContent = (props: PageContentProps) => {
     </YStack >
   </YStack>
 };
-/*     <ScrollView
-horizontal={horizontal}
-showsHorizontalScrollIndicator={horizontal}
->
-{validChildren}
-</ScrollView> */

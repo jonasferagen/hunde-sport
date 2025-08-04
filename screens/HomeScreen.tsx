@@ -37,7 +37,7 @@ export const HomeScreen = () => {
                 <ProductTiles key='discounted' queryResult={discountedProducts} theme="light" />
             </PageContent>
             <PageContent theme="tertiary_soft" title="Populære produkter" px="none" scrollable>
-                <ProductTiles key='featured' queryResult={featuredProducts} theme="primary" />
+                <ProductTiles key='featured' queryResult={featuredProducts} theme="tertiary" />
             </PageContent>
             <PageContent theme="light" title="Debug" px="none" scrollable>
                 <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />

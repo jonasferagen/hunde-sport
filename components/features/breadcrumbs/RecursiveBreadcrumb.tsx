@@ -1,5 +1,5 @@
-import { useCategory } from '@/hooks/data/Category';
-import { Category } from '@/types';
+import { Category } from '@/models/Category';
+import { useCategoryStore } from '@/stores/CategoryStore';
 import React, { JSX } from 'react';
 import { Breadcrumb } from './Breadcrumb';
 
@@ -9,25 +9,31 @@ interface RecursiveBreadcrumbProps {
     isLastClickable?: boolean;
 }
 
-export const RecursiveBreadcrumb = ({ category,
+export const RecursiveBreadcrumb = ({
+    category,
     isLast = false,
-    isLastClickable = false
+    isLastClickable = false,
 }: RecursiveBreadcrumbProps): JSX.Element | null => {
-
-    const { category: parentCategory, isLoading, isError } = useCategory(category.parent);
+    const { getCategoryById, isLoading } = useCategoryStore();
 
     if (isLoading) {
         return <Breadcrumb loading />;
     }
 
-    if (isError || !category) {
+    if (!category) {
         return null;
     }
+
+    const parentCategory = getCategoryById(category.parent);
 
     return (
         <>
             {parentCategory && parentCategory.id !== 0 ? (
-                <RecursiveBreadcrumb category={parentCategory} isLast={false} isLastClickable={isLastClickable} />
+                <RecursiveBreadcrumb
+                    category={parentCategory}
+                    isLast={false}
+                    isLastClickable={isLastClickable}
+                />
             ) : null}
             <Breadcrumb category={category} isLast={isLast} isLastClickable={isLastClickable} />
         </>

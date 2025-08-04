@@ -18,4 +18,3 @@ export const categoryQueryOptions = (categoryId: number) =>
         queryKey: ['categoryId', categoryId],
         queryFn: () => fetchCategoryById(categoryId),
     });
-
