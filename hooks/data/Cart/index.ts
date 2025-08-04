@@ -53,9 +53,6 @@ export const useCartMutation = <TVariables extends Record<string, any>>(
     });
 };
 
-export const useInitializeCart = () => {
-    return useCartData();
-};
 
 /**
  * Hook to initialize cart mutations and fetch initial cart data.

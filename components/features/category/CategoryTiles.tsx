@@ -1,14 +1,13 @@
 
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { GridTiles } from '@/components/ui/tile/GridTiles';
-import { useCategoryStore } from '@/stores/CategoryStore';
+import { useCategoryContext } from '@/contexts';
 import { JSX, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import { ThemeName, YStack } from 'tamagui';
 import { CategoryTile } from './CategoryTile';
 
 interface CategoryTilesProps {
-    categoryId: number;
+
     theme?: ThemeName;
 }
 
@@ -16,19 +15,14 @@ const NUM_COLUMNS = 3;
 const NUM_ROWS = 3;
 const MAX_CATEGORIES = NUM_COLUMNS * NUM_ROWS;
 
-export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.Element => {
-    const { getSubCategories, isLoading } = useCategoryStore();
+export const CategoryTiles = ({ theme }: CategoryTilesProps): JSX.Element => {
+    const { categories: rootCategories } = useCategoryContext();
 
     const categories = useMemo(
-        () => getSubCategories(categoryId).slice(0, MAX_CATEGORIES),
-        [getSubCategories, categoryId]
+        () => rootCategories.slice(0, MAX_CATEGORIES),
+        [rootCategories]
     );
     const placeholders = MAX_CATEGORIES - categories.length;
-
-    if (isLoading) {
-        return <ThemedSpinner />;
-    }
-
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
