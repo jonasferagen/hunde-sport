@@ -38,11 +38,6 @@ export const mapToProduct = (item: any): SimpleProduct | VariableProduct | Produ
             related_ids: item.related_ids || [],
         };
 
-        if (!item.is_in_stock) {
-            console.error("Out of stock:", item.id, item.name)
-        }
-
-
         switch (productData.type) {
             case 'simple':
                 return new SimpleProduct(productData);

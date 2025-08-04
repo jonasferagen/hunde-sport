@@ -13,21 +13,34 @@ export type ProductListParams =
 
 export type ProductListType = ProductListParams['type'];
 
+const ALL_STATUSES = '&status=any';
+const ALL_STOCK_STATUSES = '&stock_status=instock,onbackorder,outofstock';
+
 export function getQueryStringForType({ type, params }: ProductListParams): string {
+    let queryString = '';
+
     switch (type) {
         case 'recent':
-            return 'orderby=date';
+            queryString = 'orderby=date';
+            break;
         case 'featured':
-            return 'featured=true';
+            queryString = 'featured=true';
+            break;
         case 'discounted':
-            return 'on_sale=true';
+            queryString = 'on_sale=true';
+            break;
         case 'search':
-            return 'search=' + params;
+            queryString = `search=${params}${ALL_STATUSES}${ALL_STOCK_STATUSES}`;
+            break;
         case 'category':
-            return 'category=' + params;
+            queryString = `category=${params}`;
+            break;
         case 'ids':
-            return 'include=' + params.join(',');
+            queryString = `include=${params.join(',')}${ALL_STATUSES}${ALL_STOCK_STATUSES}`;
+            break;
     }
+
+    return queryString;
 }
 
 export async function fetchProduct(id: number): Promise<Product> {
@@ -50,5 +63,6 @@ export async function fetchProductVariation(id: number): Promise<ProductVariatio
 export const fetchProducts = async (page: number, query: ProductListParams) => {
     const { data, error } = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
     if (error) throw new Error(error);
+
     return (data ?? []).map(mapToProduct);
 };

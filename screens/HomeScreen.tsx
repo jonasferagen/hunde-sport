@@ -17,7 +17,7 @@ export const HomeScreen = () => {
     const handleSearch = (query: string) => {
         query && router.push(routes.search.path(query));
     };
-    const debugProducts = useProductsByIds([35961, 27445]);
+    const debugProducts = useProductsByIds([246557, 35961, 27445]);
     const recentProducts = useRecentProducts();
     const discountedProducts = useDiscountedProducts();
     const featuredProducts = useFeaturedProducts();
@@ -46,6 +46,3 @@ export const HomeScreen = () => {
     </PageView>
 }
 
-/* 
-           
-           */
