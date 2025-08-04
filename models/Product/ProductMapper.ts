@@ -1,9 +1,9 @@
-import { Product, ProductData } from './Product';
+import { ProductData } from './Product';
 import { ProductVariation } from './ProductVariation';
 import { SimpleProduct } from './SimpleProduct';
 import { VariableProduct } from './VariableProduct';
 
-export const mapToProduct = (item: any): Product | ProductVariation => {
+export const mapToProduct = (item: any): SimpleProduct | VariableProduct | ProductVariation => {
 
     try {
 
@@ -37,6 +37,11 @@ export const mapToProduct = (item: any): Product | ProductVariation => {
             has_options: item.has_options,
             related_ids: item.related_ids || [],
         };
+
+        if (!item.is_in_stock) {
+            console.error("Out of stock:", item.id, item.name)
+        }
+
 
         switch (productData.type) {
             case 'simple':

@@ -1,6 +1,7 @@
 import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
-import { ProductVariation, VariableProduct } from '@/models/Product/Product';
-import { Category } from '@/types';
+
+import { VariableProduct } from '@/models/Product/VariableProduct';
+import { Category, ProductVariation } from '@/types';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import {
     productQueryOptions,
@@ -24,6 +25,9 @@ export const useProductVariations = (variableProduct: VariableProduct, options?:
             if (result.data) {
                 const originalVariationRef = variableProduct.variations.find((ref) => ref.id === result.data.id);
                 if (originalVariationRef) {
+
+                    console.warn("Setting variation attributes", originalVariationRef.attributes)
+
                     result.data.variation_attributes = originalVariationRef.attributes;
                 }
             }

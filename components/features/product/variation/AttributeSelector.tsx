@@ -29,7 +29,7 @@ const getOptionDetails = (
 
     const isAvailable = potentialMatches.length > 0;
     let displayPrice = '';
-    let inStock = true;
+    let inStock = false;
 
     if (isAvailable) {
         const prices = potentialMatches.map((v) => Number(v.prices.price));
@@ -61,6 +61,8 @@ export const AttributeSelector = ({
     );
 
     const renderItem = ({ item }: { item: string }) => {
+
+
         const term = attribute.terms.find((t) => t.name === item);
         if (!term) {
             console.error(`Term ${item} not found for attribute ${attribute.name}`);
@@ -74,6 +76,7 @@ export const AttributeSelector = ({
             attribute.name,
             compatibleVariations
         );
+
 
         return (
             <AttributeOption

@@ -24,7 +24,7 @@ export const AttributeOption = ({ option, attribute, price, selectOption, isSele
     >
         <XStack
             f={1}
-            theme={isSelected ? "secondary_alt2" : "secondary"}
+            theme={isSelected ? "secondary" : "secondary_elevated"}
             ai="center"
             jc="space-between"
             p="$3"
@@ -34,11 +34,11 @@ export const AttributeOption = ({ option, attribute, price, selectOption, isSele
             bg="$background"
             opacity={disabled ? 0.7 : 1}
         >
-            <SizableText fow={isSelected ? "bold" : "normal"} col="$color">
+            <SizableText f={1} fow={isSelected ? "bold" : "normal"} col="$color" tt="capitalize" >
                 {option}
             </SizableText>
             {stockStatus}
-            <SizableText fow={isSelected ? "bold" : "normal"} col="$color">
+            <SizableText f={0} fow={isSelected ? "bold" : "normal"} col="$color">
                 {price}
             </SizableText>
         </XStack>
