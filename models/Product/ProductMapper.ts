@@ -6,6 +6,9 @@ import { VariableProduct } from './VariableProduct';
 export const mapToProduct = (item: any): SimpleProduct | VariableProduct | ProductVariation => {
 
     try {
+        if (item.type !== 'variation' && item.variation) {
+            throw new Error(`Product ${item.id} is of type '${item.type}' but has a variation description.`);
+        }
 
         const productData: ProductData = {
             id: item.id,
@@ -38,6 +41,7 @@ export const mapToProduct = (item: any): SimpleProduct | VariableProduct | Produ
             related_ids: item.related_ids || [],
             is_on_backorder: item.is_on_backorder || false,
             low_stock_remaining: item.low_stock_remaining || null,
+            variation: item.variation || '',
         };
 
         switch (productData.type) {

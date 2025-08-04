@@ -31,6 +31,7 @@ export interface ProductData {
   has_options: boolean;
   is_on_backorder: boolean;
   low_stock_remaining: number | null;
+  variation: string;
 }
 
 export abstract class Product implements ProductData {
@@ -58,6 +59,7 @@ export abstract class Product implements ProductData {
   readonly has_options: boolean;
   readonly is_on_backorder: boolean;
   readonly low_stock_remaining: number | null;
+  readonly variation: string;
 
   constructor(data: ProductData) {
     this.id = data.id;
@@ -83,6 +85,7 @@ export abstract class Product implements ProductData {
     this.is_on_backorder = data.is_on_backorder;
     this.low_stock_remaining = data.low_stock_remaining;
     this.related_ids = data.related_ids;
+    this.variation = data.variation;
     // Add a placeholder image if none exist
     if (this.images.length === 0) {
       this.images.push({
