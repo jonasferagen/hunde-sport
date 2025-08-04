@@ -26,7 +26,7 @@ export const ProductCategoryChips = ({ limit, showAll, ...stackProps }: StackPro
                     key={productCategory.id}
                     theme="secondary_soft"
                     title={productCategory.name}
-                    href={routes['product-cateogry'].path(productCategory)}
+                    href={routes['product-category'].path(productCategory)}
                 />
             ))}
         </XStack>
