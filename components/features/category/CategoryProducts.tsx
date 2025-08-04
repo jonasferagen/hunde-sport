@@ -3,7 +3,7 @@ import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 
-import { Category } from '@/models/Category';
+import { ProductCategory } from '@/models/Category';
 import React, { JSX } from 'react';
 import { ProductList } from '../product/ProductList';
 
@@ -20,7 +20,7 @@ export const CategoryProducts = (): JSX.Element | null => {
 };
 
 interface CategoryProductListProps {
-    category: Category;
+    category: ProductCategory;
 }
 
 const CategoryProductList = ({ category }: CategoryProductListProps): JSX.Element => {

@@ -1,4 +1,4 @@
-import { Category } from '@/models/Category';
+import { ProductCategory } from '@/models/Category';
 import { Product } from '@/models/Product/Product';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { HrefObject, useSegments } from 'expo-router';
@@ -59,7 +59,7 @@ export const routes: Record<string, Route> = {
         label: 'Kategori',
         icon: () => null, // No icon for category in drawer
         theme: 'secondary',
-        path: (category: Category) => ({ pathname: paths.category, params: { id: category.id.toString(), name: category.name } }),
+        path: (category: ProductCategory) => ({ pathname: paths.category, params: { id: category.id.toString(), name: category.name } }),
     },
     product: {
         name: 'product',

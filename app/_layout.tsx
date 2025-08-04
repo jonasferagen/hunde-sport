@@ -54,7 +54,7 @@ const RootLayout = (): JSX.Element => {
                       height="50"
                       width="100%"
                     />
-                    <CategoryProvider categoryId={0}>
+                    <CategoryProvider>
                       <ShoppingCartProvider>
                         <SearchProvider>
                           <LayoutProvider>

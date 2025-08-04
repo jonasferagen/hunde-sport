@@ -1,100 +1,105 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { Category } from '@/models/Category';
-import { useCategoryStore } from '@/stores/CategoryStore';
+import { CategoryProvider, useCategoryContext } from '@/contexts';
+import { ProductCategory } from '@/models/Category';
 import { usePathname } from 'expo-router';
-import React, { JSX, useCallback, useState } from 'react';
-import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+import React, { JSX, memo, useCallback, useState } from 'react';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import { XStack, YStack } from 'tamagui';
 
-export type RenderItemProps = {
-    category: Category;
+export interface RenderItemProps {
+    category: ProductCategory;
     level: number;
     isActive: boolean;
     isExpanded: boolean;
     hasChildren: boolean;
     onExpand: (id: number) => void;
-};
+}
 
-export type CategoryTreeProps = {
-    parentId?: number;
+export interface CategoryTreeProps {
     renderItem: (props: RenderItemProps) => JSX.Element;
-    iconOpen?: JSX.Element;
-    iconClose?: JSX.Element;
     level?: number;
-};
+}
 
-type CategoryTreeBranchProps = {
-    category: Category;
-    level: number;
-    isExpanded: boolean;
+interface CategoryBranchProps extends CategoryTreeProps {
+    category: ProductCategory;
+    expandedIds: Set<number>;
     onExpand: (id: number) => void;
+}
 
-} & Omit<CategoryTreeProps, 'parentId'>;
-
-const CategoryTreeBranch = ({ category, level, isExpanded, onExpand, renderItem }: CategoryTreeBranchProps) => {
+const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, renderItem }: CategoryBranchProps) => {
     const pathname = usePathname();
-    const isActive = pathname.includes(`/category/${category.id}`);
-    const getSubCategories = useCategoryStore((state) => state.getSubCategories);
-    const subcategories = getSubCategories(category.id);
-    const hasChildren = subcategories.length > 0;
+    const { categories: subcategories, isLoading } = useCategoryContext();
 
+    const hasChildren = subcategories.length > 0;
+    const isExpanded = expandedIds.has(category.id);
+
+    if (isLoading) {
+        return <ThemedSpinner />;
+    }
 
     return (
         <Animated.View key={category.id} layout={LinearTransition}>
             <YStack>
                 <XStack flex={1}>
-
                     {renderItem({
                         category,
                         level,
-                        isActive,
+                        isActive: pathname.includes(`/category/${category.id}`),
                         isExpanded,
                         hasChildren,
                         onExpand,
                     })}
-
-                </XStack >
-
-                {isExpanded && (
-                    <Animated.View entering={FadeIn} exiting={FadeOut}>
-                        <CategoryTree
-                            parentId={category.id}
-                            renderItem={renderItem}
-                            level={level + 1}
-                        />
-                    </Animated.View>
+                </XStack>
+                {isExpanded && hasChildren && (
+                    <YStack pl="$4">
+                        {subcategories.map((subcategory) => (
+                            <CategoryProvider key={subcategory.id} category={subcategory}>
+                                <CategoryBranch
+                                    category={subcategory}
+                                    level={level + 1}
+                                    expandedIds={expandedIds}
+                                    onExpand={onExpand}
+                                    renderItem={renderItem}
+                                />
+                            </CategoryProvider>
+                        ))}
+                    </YStack>
                 )}
-
             </YStack>
-        </Animated.View >
+        </Animated.View>
     );
-};
+});
 
-export const CategoryTree = ({ parentId = 0, renderItem, level = 0 }: CategoryTreeProps): JSX.Element => {
-    const { getSubCategories, isLoading } = useCategoryStore();
-    const [expandedId, setExpandedId] = useState<number | null>(null);
+export const CategoryTree = ({ renderItem, level = 0 }: CategoryTreeProps) => {
+    const { categories, isLoading } = useCategoryContext();
+    const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
 
     const handleExpand = useCallback((id: number) => {
-        setExpandedId(prev => (prev === id ? null : id));
+        setExpandedIds((prev) => {
+            const newIds = new Set(prev);
+            if (newIds.has(id)) {
+                newIds.delete(id);
+            } else {
+                newIds.add(id);
+            }
+            return newIds;
+        });
     }, []);
 
-    if (isLoading) {
-        return <ThemedSpinner />
-    }
-
-    const categories = getSubCategories(parentId);
+    if (isLoading) return <ThemedSpinner />;
 
     return (
         <YStack>
-            {categories.map(category => (
-                <CategoryTreeBranch
-                    key={category.id}
-                    category={category}
-                    level={level}
-                    isExpanded={expandedId === category.id}
-                    onExpand={handleExpand}
-                    renderItem={renderItem}
-                />
+            {categories.map((category) => (
+                <CategoryProvider key={category.id} category={category}>
+                    <CategoryBranch
+                        category={category}
+                        level={level}
+                        expandedIds={expandedIds}
+                        onExpand={handleExpand}
+                        renderItem={renderItem}
+                    />
+                </CategoryProvider>
             ))}
         </YStack>
     );

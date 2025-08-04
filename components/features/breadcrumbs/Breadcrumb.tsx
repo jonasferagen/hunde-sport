@@ -3,20 +3,19 @@ import React from 'react';
 import { SizableText, Stack, XStack } from 'tamagui';
 
 import { routes } from '@/config/routes';
-import { Category } from '@/models/Category';
+import { ProductCategory } from '@/models/Category';
 import { ChevronRight } from '@tamagui/lucide-icons';
 
 interface BreadcrumbProps {
-  category?: Category;
+  category?: ProductCategory;
   isLast?: boolean;
   isLastClickable?: boolean;
-  loading?: boolean;
 }
 
 export const Breadcrumb = React.memo(({ category,
   isLast = false,
   isLastClickable = false,
-  loading = false
+
 }: BreadcrumbProps) => {
 
   const breadcrumbText = (
@@ -24,10 +23,6 @@ export const Breadcrumb = React.memo(({ category,
       {category?.name}
     </SizableText>
   );
-
-  if (loading) {
-    return <SizableText fontSize="$5" color="$colorTransparent">Placeholder</SizableText>;
-  }
 
   if (!category) {
     return null;

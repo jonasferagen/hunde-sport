@@ -18,6 +18,7 @@ const mapData = (item: any): BaseProductData => ({
     categories: item.categories || [],
     tags: item.tags || [],
     type: item.type,
+    related_ids: item.related_ids || [],
 });
 
 /**

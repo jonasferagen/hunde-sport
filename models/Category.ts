@@ -1,26 +1,29 @@
 import { Image } from './Image';
 
-export interface CategoryData {
+export interface ProductCategoryData {
   id: number;
   name: string;
   parent: number;
   image: Image;
   description: string;
+  slug: string;
 }
 
-export class Category implements CategoryData {
+export class ProductCategory implements ProductCategoryData {
   id: number;
   name: string;
   parent: number;
   image: Image;
   description: string;
+  slug: string;
 
-  constructor(data: CategoryData) {
+  constructor(data: ProductCategoryData) {
     this.id = data.id;
     this.name = data.name;
     this.parent = data.parent;
     this.image = data.image;
     this.description = data.description;
+    this.slug = data.slug;
   }
 
   shouldDisplay(): boolean {
@@ -33,10 +36,11 @@ export class Category implements CategoryData {
   }
 }
 
-export const mapToCategory = (item: any): Category => new Category({
+export const mapToCategory = (item: any): ProductCategory => new ProductCategory({
   id: item.id,
   name: item.name,
   parent: item.parent,
   image: item.image,
   description: item.description,
+  slug: item.slug,
 });

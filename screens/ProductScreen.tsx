@@ -13,44 +13,19 @@ import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { createProduct } from '@/models/Product/ProductFactory';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
+import { useCategoryStore } from '@/stores/CategoryStore';
+import { SimpleProduct, VariableProduct } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { SizableText, XStack } from 'tamagui';
 
 export const ProductScreen = () => {
-
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const productId = Number(id);
-  const { data: product, isLoading } = useProduct(productId);
+  const { data: product, isLoading: isProductLoading } = useProduct(productId);
+  const { getCategoryById, isLoading: areCategoriesLoading } = useCategoryStore();
 
-
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
-  if (!product) {
-    return <NotFoundScreen message="Beklager, produktet ble ikke funnet" />;
-  }
-
-  const content = (
-    <ProductScreenContentWrapper productId={productId} categoryIdFromParams={categoryIdFromParams} />
-  );
-
-  if (categoryIdFromParams) {
-    return (
-      <CategoryProvider categoryId={Number(categoryIdFromParams)}>
-        {content}
-      </CategoryProvider>
-    );
-  }
-
-  return content;
-};
-
-const ProductScreenContentWrapper = ({ productId, categoryIdFromParams }: { productId: number, categoryIdFromParams?: string }) => {
-  const { data: product, isLoading, isError } = useProduct(productId);
-
-  if (isLoading) {
+  if (isProductLoading || areCategoriesLoading) {
     return <LoadingScreen />;
   }
 
@@ -59,13 +34,22 @@ const ProductScreenContentWrapper = ({ productId, categoryIdFromParams }: { prod
   }
 
   const productInstance = createProduct(product);
+  const category = categoryIdFromParams ? getCategoryById(Number(categoryIdFromParams)) : undefined;
 
   return (
-    <ProductProvider product={productInstance}>
+    <CategoryProvider category={category} categories={productInstance.categories}>
+      <ProductScreenContentWrapper product={productInstance} />
+    </CategoryProvider>
+  );
+};
+
+const ProductScreenContentWrapper = ({ product }: { product: SimpleProduct | VariableProduct }) => {
+  return (
+    <ProductProvider product={product}>
       <PageView>
         <PageHeader theme="secondary_soft">
-          {categoryIdFromParams && <Breadcrumbs isLastClickable={true} />}
-          <CategoryChips categories={productInstance.categories} showAll={true} />
+          <Breadcrumbs isLastClickable={true} />
+          <CategoryChips showAll={true} />
         </PageHeader>
         <ProductScreenContent />
       </PageView>
@@ -73,9 +57,8 @@ const ProductScreenContentWrapper = ({ productId, categoryIdFromParams }: { prod
   )
 }
 
-
 const ProductScreenContent = () => {
-  const { product, productVariation } = useProductContext();
+  const { product } = useProductContext();
 
   return (
     <>

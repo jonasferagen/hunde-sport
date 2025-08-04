@@ -1,10 +1,10 @@
-import { Category } from '@/models/Category';
+import { ProductCategory } from '@/models/Category';
 import { useCategoryStore } from '@/stores/CategoryStore';
 import React, { createContext, useContext } from 'react';
 
 export interface CategoryContextType {
-    category?: Category;
-    subCategories: Category[];
+    category?: ProductCategory;
+    categories: ProductCategory[];
     isLoading: boolean;
 }
 
@@ -18,22 +18,28 @@ export const useCategoryContext = () => {
     return context;
 };
 
-export const CategoryProvider: React.FC<{ categoryId: number; children: React.ReactNode }> = ({
-    categoryId,
+interface CategoryProviderProps {
+    category?: ProductCategory;
+    categories?: ProductCategory[];
+    children: React.ReactNode;
+}
+
+export const CategoryProvider: React.FC<CategoryProviderProps> = ({
+    category,
+    categories,
     children,
 }) => {
     const {
-        getCategoryById,
         getSubCategories,
         isLoading,
     } = useCategoryStore();
 
-    const category = getCategoryById(categoryId);
-    const subCategories = getSubCategories(categoryId);
+    // Use passed-in categories if available, otherwise derive from parent category
+    const contextCategories = categories ?? getSubCategories(category ? category.id : 0);
 
     const value: CategoryContextType = {
         category,
-        subCategories,
+        categories: contextCategories,
         isLoading,
     };
 

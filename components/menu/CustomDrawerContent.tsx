@@ -43,18 +43,17 @@ const CategoryTreeItem = ({
             <XStack flex={1} >
                 <Link href={routes.category.path(category)} asChild>
                     <XStack
-                        ai="center"
+                        f={1}
+                        py="$2.5"
+                        px="$3"
+                        my="$1"
+                        br="$4"
                         gap="$2"
-                        paddingVertical="$2.5"
-                        paddingHorizontal="$3"
-                        marginVertical="$1"
-                        borderRadius="$4"
-                        backgroundColor={isActive ? theme.backgroundFocus.val : 'transparent'}
+                        ai="center"
+                        bg={isActive ? theme.backgroundFocus.val : 'transparent'}
                         pressStyle={{ backgroundColor: theme.backgroundFocus.val, borderColor: theme.backgroundFocus.val }}
-                        flex={1}
                     >
-                        <ThemedText fontSize="$3" letterSpacing={0.5}
-                        >
+                        <ThemedText fontSize="$3" letterSpacing={0.5}>
                             {category.name}
                         </ThemedText>
                     </XStack>

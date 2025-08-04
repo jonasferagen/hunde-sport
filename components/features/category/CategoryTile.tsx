@@ -1,6 +1,6 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
-import { Category } from '@/models/Category';
+import { ProductCategory } from '@/models/Category';
 import { getScaledImageUrl } from "@/utils/helpers";
 import { Link } from 'expo-router';
 import React, { memo } from 'react';
@@ -11,7 +11,7 @@ export const CATEGORY_TILE_WIDTH: DimensionValue = 200;
 export const CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 
 interface CategoryTileProps extends Omit<YStackProps, 'children'> {
-    category: Category;
+    category: ProductCategory;
 }
 
 const CategoryTileBase: React.FC<CategoryTileProps> = ({

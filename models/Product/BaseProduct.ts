@@ -1,4 +1,5 @@
 import { cleanHtml } from "@/utils/helpers";
+import { ProductCategory } from "../Category";
 
 export interface ProductImage {
     id: number;
@@ -13,11 +14,6 @@ export interface Price {
     sale_price: string;
 }
 
-export interface ProductCategory {
-    id: number;
-    name: string;
-    slug: string;
-}
 
 export interface ProductTag {
     id: number;
@@ -40,6 +36,7 @@ export interface BaseProductData {
     categories: ProductCategory[];
     tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
+    related_ids: number[];
 }
 
 export class BaseProduct<T extends BaseProductData> {
@@ -57,6 +54,7 @@ export class BaseProduct<T extends BaseProductData> {
     categories: ProductCategory[];
     tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
+    related_ids: number[];
 
     constructor(data: T) {
         this.id = data.id;
@@ -73,6 +71,7 @@ export class BaseProduct<T extends BaseProductData> {
         this.categories = data.categories;
         this.tags = data.tags;
         this.type = data.type;
+        this.related_ids = data.related_ids;
     }
 
     get featuredImage(): ProductImage {

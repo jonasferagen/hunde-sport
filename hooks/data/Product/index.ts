@@ -1,7 +1,7 @@
 import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
 
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { Category } from '@/types';
+import { ProductCategory } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
     productQueryOptions,
@@ -25,7 +25,7 @@ export const useRecentProducts = (options?: InfiniteListQueryOptions) =>
 export const useDiscountedProducts = (options?: InfiniteListQueryOptions) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'discounted' }), options);
 
-export const useProductsByCategory = (category: Category, options?: InfiniteListQueryOptions) =>
+export const useProductsByCategory = (category: ProductCategory, options?: InfiniteListQueryOptions) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'category', params: category.id }), options);
 
 export const useProductsBySearch = (searchTerm: string, options?: InfiniteListQueryOptions) =>
