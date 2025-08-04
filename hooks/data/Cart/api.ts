@@ -40,7 +40,7 @@ export async function fetchCart(): Promise<{ data: CartData; token: string }> {
  * @returns {Promise<CartData>} An object containing the updated cart data.
  */
 
-export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<CartData> {
+export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: CartData; token: string }> {
     const payload = { id, quantity, variation };
     log.info('API: addItem called.');
 
@@ -60,13 +60,10 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
         throw new Error('No data returned from addItem');
     }
 
-    const newCartToken = headers.get('cart-token');
-    if (newCartToken) {
-        data.cart_token = newCartToken;
-    }
+    const token = headers.get('cart-token') || cartToken;
 
     log.info('API: addItem success.');
-    return mapCartData(data);
+    return { data: mapCartData(data), token };
 }
 
 /**

@@ -75,10 +75,10 @@ export const useCartStore = create<CartState & CartActions>()(
                 set({ isLoading: true });
 
                 try {
-                    const cartData = await apiFetchCart();
+                    const { data, token } = await apiFetchCart();
                     set({
-                        cart: cartData,
-                        cartToken: cartData.cart_token,
+                        cart: data,
+                        cartToken: token,
                         isInitialized: true,
                         isLoading: false,
                     });
@@ -112,6 +112,7 @@ export const useCartStore = create<CartState & CartActions>()(
                     log.info('CartStore: addItem success.');
                 } catch (error) {
                     log.error('CartStore: addItem failed.');
+                    log.error(error);
                     set({ cart: originalCart, isUpdating: false });
                 }
             },
