@@ -1,5 +1,4 @@
 import { formatPrice } from '@/utils/helpers';
-import { ProductAttributeTerm, ProductAttributeTermData } from './ProductAttributeTerm';
 import { ProductVariation } from './ProductVariation';
 
 export interface ProductAttributeData {
@@ -14,6 +13,12 @@ export interface ProductAttributeData {
   taxonomy: string;
   has_variations: boolean;
   terms: ProductAttributeTermData[];
+}
+
+export interface AttributeTermDetails extends ProductAttributeTerm {
+  isAvailable: boolean;
+  displayPrice: string;
+  inStock: boolean;
 }
 
 export class ProductAttribute {
@@ -46,29 +51,49 @@ export class ProductAttribute {
     return this.name;
   }
 
-  getOptionsDetails(compatibleVariations: ProductVariation[]) {
+  getOptionsDetails(compatibleVariations: ProductVariation[]): AttributeTermDetails[] {
     return this.terms.map((term: ProductAttributeTerm) => {
       const potentialMatches = compatibleVariations.filter((variation: ProductVariation) =>
         variation.hasAttribute(this.taxonomy, term.slug)
       );
 
       const isAvailable = potentialMatches.length > 0;
-      let displayPrice = '';
-      let inStock = false;
 
-      if (isAvailable) {
-        const prices = potentialMatches.map((v) => Number(v.prices.price));
-        const minPrice = Math.min(...prices);
-        const maxPrice = Math.max(...prices);
-        displayPrice =
-          minPrice === maxPrice
-            ? formatPrice(minPrice.toString())
-            : `Fra ${formatPrice(minPrice.toString())}`;
-
-        inStock = potentialMatches.some((v) => v.is_in_stock);
+      if (!isAvailable) {
+        return { ...term, isAvailable: false, displayPrice: '', inStock: false };
       }
+
+      const prices = potentialMatches.map((v) => Number(v.prices.price));
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      const displayPrice = minPrice === maxPrice
+        ? formatPrice(minPrice.toString())
+        : `Fra ${formatPrice(minPrice.toString())}`;
+
+      const inStock = potentialMatches.some((v) => v.isInStock);
 
       return { ...term, isAvailable, displayPrice, inStock };
     });
+  }
+}
+
+export interface ProductAttributeTermData {
+  id: number;
+  name: string;
+  slug: string;
+  default?: boolean;
+}
+
+export class ProductAttributeTerm {
+  id: number;
+  name: string;
+  slug: string;
+  isDefault: boolean;
+
+  constructor(data: ProductAttributeTermData) {
+    this.id = data.id;
+    this.name = data.name;
+    this.slug = data.slug;
+    this.isDefault = data.default || false;
   }
 }

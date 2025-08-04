@@ -1,5 +1,5 @@
-import { Product, ProductData } from "./Product";
-import { ProductAttributeTerm } from "./ProductAttributeTerm";
+import { BaseProduct, BaseProductData } from './BaseProduct';
+import { ProductAttribute, ProductAttributeTerm } from "./ProductAttribute";
 
 // The clean, canonical representation of a variation's attribute selection.
 export type AttributeSelectionTuple = {
@@ -13,11 +13,11 @@ export type ApiVariationAttribute = {
     value: string; // The selected term slug, e.g., "red"
 };
 
-export class ProductVariation extends Product {
+export class ProductVariation extends BaseProduct<BaseProductData> {
     type: 'variation' = 'variation';
     variation_attributes: AttributeSelectionTuple[] = [];
 
-    constructor(data: ProductData) {
+    constructor(data: BaseProductData) {
         if (data.type !== 'variation') {
             throw new Error('Cannot construct ProductVariation with type other than "variation".');
         }
@@ -26,17 +26,17 @@ export class ProductVariation extends Product {
 
     /**
      * Generates a descriptive name for the variation based on its attributes.
-     * @param parentProduct The parent product, used to look up attribute term names.
+     * @param attributes The parent product's attributes, used to look up attribute term names.
      * @returns A string of concatenated attribute names (e.g., "Red, Large").
      */
-    getVariationName(parentProduct: Product): string {
+    getVariationName(attributes: ProductAttribute[]): string {
         if (!this.variation_attributes || this.variation_attributes.length === 0) {
             return '';
         }
 
         return this.variation_attributes
             .map((variationAttr: AttributeSelectionTuple) => {
-                const parentAttribute = parentProduct.attributes.find((attr) => attr.taxonomy === variationAttr.name);
+                const parentAttribute = attributes.find((attr) => attr.taxonomy === variationAttr.name);
                 return parentAttribute?.terms.find((t: ProductAttributeTerm) => t.slug === variationAttr.option)?.name;
             })
             .filter(Boolean)

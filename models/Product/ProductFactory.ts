@@ -1,6 +1,5 @@
-import { ProductData } from './Product';
-import { SimpleProduct } from './SimpleProduct';
-import { VariableProduct } from './VariableProduct';
+import { SimpleProduct, SimpleProductData } from './SimpleProduct';
+import { VariableProduct, VariableProductData } from './VariableProduct';
 
 /**
  * Factory function to create a product instance from raw data.
@@ -9,14 +8,10 @@ import { VariableProduct } from './VariableProduct';
  * @param data The raw product data from the API.
  * @returns An instance of SimpleProduct or VariableProduct.
  */
-export const createProduct = (data: ProductData) => {
+export const createProduct = (data: SimpleProductData | VariableProductData) => {
     if (data.type === 'variable') {
-        return new VariableProduct(data);
+        return new VariableProduct(data as VariableProductData);
     }
-    if (data.type === 'simple') {
-        return new SimpleProduct(data);
-    }
-    // Fallback for other types if necessary, or throw an error.
-    // For now, we'll default to SimpleProduct for any other case.
-    return new SimpleProduct(data);
+    // All other types are treated as SimpleProduct
+    return new SimpleProduct(data as SimpleProductData);
 };

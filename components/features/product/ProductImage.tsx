@@ -10,11 +10,11 @@ export const ProductImage = () => {
     const { product, productVariation } = useProductContext();
     const activeProduct = productVariation || product;
 
-    if (!activeProduct?.image) {
+    if (!activeProduct?.featuredImage) {
         return null; // Or a placeholder
     }
 
-    const imageUrl = getScaledImageUrl(activeProduct.image.src, IMAGE_HEIGHT, IMAGE_HEIGHT);
+    const imageUrl = getScaledImageUrl(activeProduct.featuredImage.src, IMAGE_HEIGHT, IMAGE_HEIGHT);
 
     return (
         <YStack
