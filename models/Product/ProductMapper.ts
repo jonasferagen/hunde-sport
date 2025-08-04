@@ -36,6 +36,8 @@ export const mapToProduct = (item: any): SimpleProduct | VariableProduct | Produ
             is_purchasable: item.is_purchasable,
             has_options: item.has_options,
             related_ids: item.related_ids || [],
+            is_on_backorder: item.is_on_backorder || false,
+            low_stock_remaining: item.low_stock_remaining || null,
         };
 
         switch (productData.type) {

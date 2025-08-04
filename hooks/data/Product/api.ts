@@ -63,6 +63,8 @@ export async function fetchProductVariation(id: number): Promise<ProductVariatio
 export const fetchProducts = async (page: number, query: ProductListParams) => {
     const { data, error } = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
     if (error) throw new Error(error);
-
+    if (query.type === 'ids' && query.params.length > 0) {
+        console.log(data?.map(item => item.id));
+    }
     return (data ?? []).map(mapToProduct);
 };

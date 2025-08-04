@@ -29,9 +29,11 @@ export interface ProductData {
   is_in_stock: boolean;
   is_purchasable: boolean;
   has_options: boolean;
+  is_on_backorder: boolean;
+  low_stock_remaining: number | null;
 }
 
-export abstract class Product {
+export abstract class Product implements ProductData {
   readonly id: number;
   readonly name: string;
   readonly permalink: string;
@@ -54,6 +56,8 @@ export abstract class Product {
   readonly is_in_stock: boolean;
   readonly is_purchasable: boolean;
   readonly has_options: boolean;
+  readonly is_on_backorder: boolean;
+  readonly low_stock_remaining: number | null;
 
   constructor(data: ProductData) {
     this.id = data.id;
@@ -76,6 +80,8 @@ export abstract class Product {
     this.is_in_stock = data.is_in_stock;
     this.is_purchasable = data.is_purchasable;
     this.has_options = data.has_options;
+    this.is_on_backorder = data.is_on_backorder;
+    this.low_stock_remaining = data.low_stock_remaining;
     this.related_ids = data.related_ids;
     // Add a placeholder image if none exist
     if (this.images.length === 0) {
@@ -92,9 +98,7 @@ export abstract class Product {
     return this.images[0];
   }
 
-
   abstract hasVariations(): boolean;
-
 
   toString() {
     return 'Product ' + this.id + ': ' + this.name;
