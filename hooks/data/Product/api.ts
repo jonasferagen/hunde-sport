@@ -1,8 +1,9 @@
 import { ENDPOINTS } from '@/config/api';
-import { Product } from '@/models/Product/Product';
 import apiClient from '@/utils/apiClient';
 
+import { Product } from '@/models/Product/Product';
 import { mapToProduct } from '@/models/Product/ProductMapper';
+import { ProductVariation } from '@/models/Product/ProductVariation';
 
 export type ProductListParams =
     | { type: 'recent' | 'featured' | 'discounted', params?: undefined }
@@ -34,6 +35,16 @@ export async function fetchProduct(id: number): Promise<Product> {
     if (error) throw new Error(error);
 
     return mapToProduct(data);
+}
+
+export async function fetchProductVariation(id: number): Promise<ProductVariation> {
+    const product = await fetchProduct(id);
+
+    if (product.type !== 'variation') {
+        throw new Error(`Product with ID ${id} is not a variation.`);
+    }
+
+    return product as ProductVariation;
 }
 
 export const fetchProducts = async (page: number, query: ProductListParams) => {

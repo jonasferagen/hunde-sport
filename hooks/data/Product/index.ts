@@ -6,6 +6,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import {
     productQueryOptions,
     productsQueryOptions,
+    productVariationQueryOptions,
 } from './queries';
 
 export const useProduct = (id: number) => {
@@ -15,7 +16,7 @@ export const useProduct = (id: number) => {
 export const useProductVariations = (variableProduct: VariableProduct, options?: { enabled?: boolean }) => {
     const results = useQueries({
         queries: (variableProduct?.variations || []).map((variation) => ({
-            ...productQueryOptions(variation.id),
+            ...productVariationQueryOptions(variation.id),
             enabled: !!options?.enabled,
         })),
     });
@@ -25,15 +26,12 @@ export const useProductVariations = (variableProduct: VariableProduct, options?:
             if (result.data) {
                 const originalVariationRef = variableProduct.variations.find((ref) => ref.id === result.data.id);
                 if (originalVariationRef) {
-
-                    console.warn("Setting variation attributes", originalVariationRef.attributes)
-
                     result.data.variation_attributes = originalVariationRef.attributes;
                 }
             }
             return result.data;
         })
-        .filter(Boolean) as ProductVariation[];
+        .filter((p): p is ProductVariation => p !== undefined);
 
     return {
         data,

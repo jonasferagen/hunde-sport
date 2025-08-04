@@ -2,6 +2,7 @@ import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import {
     fetchProduct,
     fetchProducts,
+    fetchProductVariation,
     ProductListParams
 } from './api';
 
@@ -11,6 +12,12 @@ export const productQueryOptions = (productId: number) =>
     queryOptions({
         queryKey: ['product', productId],
         queryFn: () => fetchProduct(productId),
+    });
+
+export const productVariationQueryOptions = (productId: number) =>
+    queryOptions({
+        queryKey: ['product', 'variation', productId],
+        queryFn: () => fetchProductVariation(productId),
     });
 
 export const productsQueryOptions = (query: ProductListParams) => {
