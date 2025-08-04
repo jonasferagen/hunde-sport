@@ -53,7 +53,7 @@ const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, rende
                 {isExpanded && hasChildren && (
                     <YStack pl="$4">
                         {subcategories.map((subcategory) => (
-                            <CategoryProvider key={subcategory.id} category={subcategory}>
+                            <CategoryProvider key={subcategory.id} categoryId={subcategory.id}>
                                 <CategoryBranch
                                     category={subcategory}
                                     level={level + 1}
@@ -91,7 +91,7 @@ export const CategoryTree = ({ renderItem, level = 0 }: CategoryTreeProps) => {
     return (
         <YStack>
             {categories.map((category) => (
-                <CategoryProvider key={category.id} category={category}>
+                <CategoryProvider key={category.id} categoryId={category.id}>
                     <CategoryBranch
                         category={category}
                         level={level}

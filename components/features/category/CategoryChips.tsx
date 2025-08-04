@@ -10,7 +10,7 @@ interface CategoryChipsProps {
 
 export const CategoryChips = ({ limit, showAll, ...stackProps }: StackProps & CategoryChipsProps) => {
 
-    const categories = useCategoryContext().categories;
+    const { categories } = useCategoryContext();
 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;
