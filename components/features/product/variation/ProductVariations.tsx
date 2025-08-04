@@ -61,6 +61,7 @@ export const ProductVariations = (): JSX.Element => {
                 const availableTerms = attribute.terms.filter((term) =>
                     allVariationAttributes.some((varAttr) => varAttr.name === attribute.name && varAttr.value === term.slug)
                 );
+                console.log(availableTerms);
 
                 if (availableTerms.length === 0) {
                     return null;

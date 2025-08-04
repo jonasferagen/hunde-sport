@@ -19,30 +19,13 @@ export class VariableProduct extends Product {
 
     setVariationsData(incomingVariations: ProductVariation[]) {
         const variationRefMap = new Map(this.variations.map((ref: any) => [ref.id, ref.attributes]));
-
-        /*
-        if (incomingVariations.length !== variationRefMap.size) {
-            console.warn(`Data inconsistency: Expected ${variationRefMap.size} variations for product ${this.id}, but received ${incomingVariations.length}.`);
-        } 
-*/
         const processedVariations = incomingVariations.map((variation) => {
             const attributes = variationRefMap.get(variation.id);
             if (attributes) {
                 variation.variation_attributes = attributes;
-            } //else {
-            //      console.warn(`Data inconsistency: Variation with ID ${variation.id} not found in parent product ${this.id}'s references.`);
-            //            }
+            }
             return variation;
         });
-
-
-        const receivedIds = new Set(incomingVariations.map(v => v.id));
-        for (const expectedId of variationRefMap.keys()) {
-            if (!receivedIds.has(expectedId)) {
-                console.warn(`Data inconsistency: Expected variation with ID ${expectedId} was not found in the API response for product ${this.id}.`);
-            }
-        }
-
         this.variationsData = processedVariations;
     }
 
