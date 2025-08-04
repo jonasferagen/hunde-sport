@@ -8,7 +8,7 @@ export class VariationSelection {
     }
 
     getCompatibleVariations(allVariations: ProductVariation[]): ProductVariation[] {
-        return allVariations.filter((variation) => variation.matchesAttributes(this.selections));
+        return allVariations.filter((variation: ProductVariation) => variation.matchesAttributes(this.selections));
     }
 
     forAttribute(attributeName: string): VariationSelection {

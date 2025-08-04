@@ -1,9 +1,16 @@
 import { Product, ProductData } from "./Product";
 import { ProductAttributeTerm } from "./ProductAttributeTerm";
 
+// The clean, canonical representation of a variation's attribute selection.
 export type AttributeSelectionTuple = {
-    name: string; // The attribute slug, e.g., "pa_color"
+    name: string; // The attribute taxonomy slug, e.g., "pa_farge"
     option: string; // The selected term slug, e.g., "red"
+};
+
+// The raw representation of an attribute as it comes from the initial product API response.
+export type ApiVariationAttribute = {
+    name: string; // The attribute's "nice" name, e.g., "Farge"
+    value: string; // The selected term slug, e.g., "red"
 };
 
 export class ProductVariation extends Product {
@@ -32,8 +39,8 @@ export class ProductVariation extends Product {
                 const parentAttribute = parentProduct.attributes.find((attr) => attr.taxonomy === variationAttr.name);
                 return parentAttribute?.terms.find((t: ProductAttributeTerm) => t.slug === variationAttr.option)?.name;
             })
-            .filter((name): name is string => !!name)
-            .join(' ');
+            .filter(Boolean)
+            .join(', ');
     }
 
     hasVariations(): boolean {
@@ -41,35 +48,31 @@ export class ProductVariation extends Product {
     }
 
     /**
-     * Checks if the variation has a specific attribute with a specific value.
-     * @param attributeName The name of the attribute (e.g., "Color").
-     * @param attributeValue The value of the attribute (e.g., "red").
-     * @returns True if the variation has the specified attribute, false otherwise.
+     * Checks if this variation matches a given set of attribute selections.
+     * @param selections An object where keys are attribute taxonomies and values are term slugs.
+     * @returns True if the variation satisfies all selections, false otherwise.
      */
-    hasAttribute(attributeName: string, attributeValue: string): boolean {
-        return this.variation_attributes.some(
-            (variationAttr) => variationAttr.name === attributeName && variationAttr.option === attributeValue
+    matchesAttributes(selections: { [key: string]: string }): boolean {
+        const selectionEntries = Object.entries(selections);
+
+        if (selectionEntries.length === 0) {
+            return true;
+        }
+
+        return selectionEntries.every(([name, option]) =>
+            this.variation_attributes.some((variationAttr) => variationAttr.name === name && variationAttr.option === option)
         );
     }
 
     /**
-     * Checks if the variation matches a given set of selected attributes.
-     * @param selectedAttributes A dictionary of attribute names and their selected option slugs.
-     * @returns True if the variation's attributes match the selected attributes, false otherwise.
+     * Checks if the variation has a specific attribute-option pair.
+     * @param name The attribute taxonomy (e.g., 'pa_color').
+     * @param option The term slug (e.g., 'red').
+     * @returns True if the attribute-option pair exists, false otherwise.
      */
-    matchesAttributes(selectedAttributes: { [key: string]: string }): boolean {
-        // For each attribute in the potential selection (e.g., { color: 'red', size: 'large' }),
-        // we must find a matching attribute in this specific variation.
-        return Object.entries(selectedAttributes).every(([key, value]) => {
-            // If a value is not set for an attribute, we don't need to match it.
-            if (!value) {
-                return true;
-            }
-
-            // Check if this variation has an attribute that matches the key-value pair.
-            return this.variation_attributes.some(
-                (variationAttr) => variationAttr.name === key && variationAttr.option === value
-            );
-        });
+    hasAttribute(name: string, option: string): boolean {
+        return this.variation_attributes.some(
+            (variationAttr: AttributeSelectionTuple) => variationAttr.name === name && variationAttr.option === option
+        );
     }
 }

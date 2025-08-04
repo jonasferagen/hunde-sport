@@ -1,4 +1,5 @@
 import { useProductContext } from '@/contexts/ProductContext';
+import { useProductVariations } from '@/hooks/data/Product';
 import { ProductAttribute } from '@/models/Product/ProductAttribute';
 import { AttributeSelectionTuple } from '@/models/Product/ProductVariation';
 import { VariableProduct } from '@/models/Product/VariableProduct';
@@ -15,6 +16,12 @@ export const ProductVariations = (): JSX.Element => {
     }
 
     const variableProduct = product as VariableProduct;
+
+    const { isLoading: areVariationsLoading } = useProductVariations(variableProduct);
+
+    useEffect(() => {
+        variableProduct.setVariationsLoading(areVariationsLoading);
+    }, [variableProduct, areVariationsLoading]);
 
     const initialSelections = useMemo(() => {
         if (!productVariation) {
@@ -61,7 +68,7 @@ export const ProductVariations = (): JSX.Element => {
     return (
         <XStack gap="$2" flexWrap="wrap" mt="$2">
             {attributes.map((attribute: ProductAttribute) => {
-                const options = variableProduct.getAttributeOptions(attribute.name, selection);
+                const options = variableProduct.getAttributeOptions(attribute.taxonomy, selection);
 
                 return (
                     <YStack key={attribute.id} flex={1}>

@@ -13,8 +13,6 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
     const renderItem = ({ item }: { item: any }) => {
         const isSelected = selectedValue === item.slug;
 
-        console.log(options);
-
         return (
             <AttributeOption
                 option={item.name}
