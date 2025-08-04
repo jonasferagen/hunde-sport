@@ -60,7 +60,7 @@ export const BottomBar = (props: YStackProps) => {
                             </YStack>
                         </StyledTab>
                     </Link>
-                    <Link href="/shopping-cart" asChild>
+                    <Link href="/cart" asChild>
                         <StyledTab value="cart">
                             <YStack ai="center">
                                 <ShoppingCart />

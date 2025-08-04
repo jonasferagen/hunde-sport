@@ -1,12 +1,12 @@
 import { BottomBar } from '@/components/menu/BottomBar';
-import { ShoppingCartScreen } from '@/screens/ShoppingCartScreen';
+import { CartScreen } from '@/screens/CartScreen';
 import { JSX } from 'react';
 import { YStack } from 'tamagui';
 
 const Page = (): JSX.Element => {
     return (
         <YStack f={1}>
-            <ShoppingCartScreen />
+            <CartScreen />
             <BottomBar />
         </YStack>
     );

@@ -26,7 +26,7 @@ const paths = {
     search: '/search',
     productCategory: '/product-category',
     product: '/product',
-    shoppingCart: '/shopping-cart',
+    cart: '/cart',
 } as const;
 
 export const routes: Record<string, Route> = {
@@ -38,12 +38,12 @@ export const routes: Record<string, Route> = {
         path: () => ({ pathname: paths.home }),
         showInDrawer: true,
     },
-    'shopping-cart': {
-        name: 'shopping-cart',
+    cart: {
+        name: 'cart',
         label: 'Handlekurv',
         icon: ShoppingCart,
         theme: 'secondary',
-        path: () => ({ pathname: paths.shoppingCart }),
+        path: () => ({ pathname: paths.cart }),
         showInDrawer: true,
     },
     search: {
