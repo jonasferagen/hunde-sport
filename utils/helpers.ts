@@ -77,13 +77,9 @@ const placeholderBase64 =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAAEFJREFUCB1jYGBgYAAAAAQAAVcCkE0AAAAASUVORK5CYII=';
 
 
-export const getScaledImageUrl = (url: string, width: number, height: number): string | undefined => {
-    if (width === 0 || height === 0) {
-        return undefined; // Return undefined if url is missing or size is not measured
-    }
-
-    if (!url) {
-        return placeholderBase64;
+export const getScaledImageUrl = (url: string, width: number, height: number): string => {
+    if (!url || width === 0 || height === 0) {
+        return placeholderBase64; // Return undefined if url is missing or size is not measured
     }
 
     try {
@@ -93,6 +89,6 @@ export const getScaledImageUrl = (url: string, width: number, height: number): s
         return urlObject.toString();
     } catch (error) {
         console.error('Invalid URL:', url);
-        return undefined; // Return undefined for invalid URLs
+        return placeholderBase64; // Return undefined for invalid URLs
     }
 };

@@ -1,32 +1,28 @@
 import { useProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Galeria } from '@nandorojo/galeria';
-import React from 'react';
+import React, { JSX } from 'react';
 import { Image, YStack } from 'tamagui';
 
 const IMAGE_HEIGHT = 300;
 
-export const ProductImage = () => {
+export const ProductImage = ({ img_height = IMAGE_HEIGHT }: { img_height?: number }): JSX.Element => {
     const { product, productVariation } = useProductContext();
     const activeProduct = productVariation || product;
-
-    if (!activeProduct?.featuredImage) {
-        return null; // Or a placeholder
-    }
-
-    const imageUrl = getScaledImageUrl(activeProduct.featuredImage.src, IMAGE_HEIGHT, IMAGE_HEIGHT);
+    const image = activeProduct.featuredImage;
+    const uri = getScaledImageUrl(image.src, img_height, img_height);
 
     return (
         <YStack
-            width="100%"
-            height={IMAGE_HEIGHT}
-            overflow="hidden"
-            borderBottomWidth={1}
-            borderColor="$borderColor"
+            w="100%"
+            h={img_height}
+            ov="hidden"
+            boc="$borderColor"
+            bbw={1}
         >
-            <Galeria urls={[imageUrl!]}>
+            <Galeria urls={[uri!]}>
                 <Galeria.Image>
-                    <Image source={{ uri: imageUrl }} style={{ height: '100%', width: '100%' }} />
+                    <Image w="100%" h="100%" source={{ uri }} />
                 </Galeria.Image>
             </Galeria>
         </YStack>
