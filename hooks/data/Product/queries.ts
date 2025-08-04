@@ -20,6 +20,12 @@ export const productVariationQueryOptions = (productId: number) =>
         queryFn: () => fetchProductVariation(productId),
     });
 
+export const productVariationsQueryOptions = (parentId: number) =>
+    queryOptions({
+        queryKey: ['products', 'variations', parentId],
+        queryFn: () => fetchProducts(1, { type: 'variations', params: parentId }),
+    });
+
 export const productsQueryOptions = (query: ProductListParams) => {
 
     return infiniteQueryOptions({

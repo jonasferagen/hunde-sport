@@ -1,47 +1,21 @@
 import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
 
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { Category, ProductVariation } from '@/types';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { Category } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 import {
     productQueryOptions,
-    productsQueryOptions,
-    productVariationQueryOptions,
+    productsQueryOptions
 } from './queries';
 
 export const useProduct = (id: number) => {
     return useQuery(productQueryOptions(id));
 };
 
-export const useProductVariations = (variableProduct: VariableProduct, options?: { enabled?: boolean }) => {
-    const results = useQueries({
-        queries: (variableProduct?.variations || []).map((variation) => ({
-            ...productVariationQueryOptions(variation.id),
-            enabled: !!options?.enabled,
-        })),
-    });
-
-    const data = results
-        .map((result) => {
-            if (result.data) {
-                const originalVariationRef = variableProduct.variations.find((ref) => ref.id === result.data.id);
-                if (originalVariationRef) {
-                    result.data.variation_attributes = originalVariationRef.attributes;
-                }
-            }
-            return result.data;
-        })
-        .filter((p): p is ProductVariation => p !== undefined);
-
-    return {
-        data,
-        isLoading: results.some((result) => result.isLoading),
-        isError: results.some((result) => result.isError),
-        isSuccess: results.every((result) => result.isSuccess),
-    };
-};
-
 // Specific hooks for different product lists
+export const useProductVariations = (variableProduct: VariableProduct, options?: InfiniteListQueryOptions) =>
+    useInfiniteListQuery(productsQueryOptions({ type: 'variations', params: variableProduct.id }), options);
+
 export const useFeaturedProducts = (options?: InfiniteListQueryOptions) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'featured' }), options);
 
@@ -59,3 +33,18 @@ export const useProductsBySearch = (searchTerm: string, options?: InfiniteListQu
 
 export const useProductsByIds = (ids: number[], options?: InfiniteListQueryOptions) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'ids', params: ids }), options);
+
+/*
+const dataWithAttributes = (data as ProductVariation[] | undefined)?.map((variation) => {
+    const originalVariationRef = variableProduct.variations.find((ref) => ref.id === variation.id);
+    if (originalVariationRef) {
+        variation.variation_attributes = originalVariationRef.attributes;
+    }
+    return variation;
+});
+
+    return {
+        data: dataWithAttributes || [],
+        ...rest,
+    };
+*/

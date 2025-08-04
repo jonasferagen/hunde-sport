@@ -9,7 +9,8 @@ export type ProductListParams =
     | { type: 'recent' | 'featured' | 'discounted', params?: undefined }
     | { type: 'search', params: string }
     | { type: 'category', params: number }
-    | { type: 'ids', params: number[] };
+    | { type: 'ids', params: number[] }
+    | { type: 'variations', params: number };
 
 export type ProductListType = ProductListParams['type'];
 
@@ -37,6 +38,9 @@ export function getQueryStringForType({ type, params }: ProductListParams): stri
             break;
         case 'ids':
             queryString = `include=${params.join(',')}${ALL_STATUSES}${ALL_STOCK_STATUSES}`;
+            break;
+        case 'variations':
+            queryString = `parent=${params}&type=variation${ALL_STATUSES}${ALL_STOCK_STATUSES}`;
             break;
     }
 

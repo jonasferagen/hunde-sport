@@ -1,6 +1,7 @@
-import { useProductVariations as useProductVariationsData } from '@/hooks/data/Product';
+import { useProductVariations } from '@/hooks/data/Product';
 import { Product } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
+import { VariableProduct } from '@/models/Product/VariableProduct';
 import { Purchasable } from '@/types';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
@@ -53,12 +54,16 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
 
     const isVariable = product.type === 'variable';
 
-    const { data: productVariations, isLoading: isProductVariationsLoading } = useProductVariationsData(product, {
+    const { data, isLoading: isProductVariationsLoading } = useProductVariations(product as VariableProduct, {
         enabled: isVariable,
+        autoload: true,
     });
 
+    const productVariations = data ? data.pages.flat() as ProductVariation[] : [];
+
+
     useEffect(() => {
-        if (isVariable && productVariations && productVariations.length > 0 && !productVariation) {
+        if (productVariations && !productVariation) {
             const defaultAttributes: { [key: string]: string } = {};
 
             if (!product.attributes) {
@@ -100,7 +105,7 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
         displayName,
         productVariation,
         setProductVariation,
-        productVariations: productVariations || [],
+        productVariations: productVariations as ProductVariation[],
         isLoading: false, // This can be enhanced later if needed
         isProductVariationsLoading: isVariable ? isProductVariationsLoading : false,
     };
