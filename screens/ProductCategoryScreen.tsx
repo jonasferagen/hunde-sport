@@ -1,6 +1,6 @@
 import { Breadcrumbs } from '@/components/features/breadcrumbs/Breadcrumbs';
 import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { CategoryProducts } from '@/components/features/category/CategoryProducts';
+import { ProductCategoryProducts } from '@/components/features/category/ProductCategoryProducts';
 import { PageContent, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Chip } from '@/components/ui';
@@ -10,25 +10,21 @@ import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { memo, useState } from 'react';
 import { XStack } from 'tamagui';
-import { LoadingScreen } from './misc/LoadingScreen';
 import { NotFoundScreen } from './misc/NotFoundScreen';
 
-const CategoryScreenContent = memo(() => {
-    const { productCategory: category, isLoading, productCategories: categories } = useProductCategoryContext();
+const ProductCategoryScreenContent = memo(() => {
+    const { productCategory, productCategories } = useProductCategoryContext();
     const [showAll, setShowAll] = useState(false);
     const limit = 3;
 
-    useRenderGuard('CategoryScreenContent');
+    useRenderGuard('ProductCategoryScreenContent');
 
-    if (isLoading) {
-        return <LoadingScreen />;
-    }
 
-    if (!category) {
+    if (!productCategory) {
         return <NotFoundScreen message="Beklager, kategorien ble ikke funnet" />;
     }
 
-    const showToggleButton = categories && categories.length > limit;
+    const showToggleButton = productCategories && productCategories.length > limit;
 
     return <PageView>
         <PageHeader theme="primary_alt1">
@@ -49,16 +45,16 @@ const CategoryScreenContent = memo(() => {
             />
         </PageHeader>
         <PageContent f={1} p="none" theme="primary_alt2">
-            <CategoryProducts />
+            <ProductCategoryProducts />
         </PageContent>
     </PageView>
 });
 
-export const CategoryScreen = memo(() => {
-    useRenderGuard('CategoryScreen');
+export const ProductCategoryScreen = memo(() => {
+    useRenderGuard('ProductCategoryScreen');
     const { id } = useLocalSearchParams<{ id: string }>();
 
     return <ProductCategoryProvider productCategoryId={Number(id)}>
-        <CategoryScreenContent />
+        <ProductCategoryScreenContent />
     </ProductCategoryProvider>
 });

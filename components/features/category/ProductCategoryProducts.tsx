@@ -8,29 +8,29 @@ import React, { JSX } from 'react';
 import { ProductList } from '../product/ProductList';
 
 
-export const CategoryProducts = (): JSX.Element | null => {
-    useRenderGuard('CategoryProducts');
-    const { productCategory: category } = useProductCategoryContext();
+export const ProductCategoryProducts = (): JSX.Element | null => {
+    useRenderGuard('ProductCategoryProducts');
+    const { productCategory } = useProductCategoryContext();
 
-    if (!category) {
+    if (!productCategory) {
         return <LoadingScreen />;
     }
 
-    return <CategoryProductList category={category} />;
+    return <ProductCategoryProductList productCategory={productCategory} />;
 };
 
-interface CategoryProductListProps {
-    category: ProductCategory;
+interface ProductCategoryProductListProps {
+    productCategory: ProductCategory;
 }
 
-const CategoryProductList = ({ category }: CategoryProductListProps): JSX.Element => {
-    useRenderGuard('CategoryProductList');
+const ProductCategoryProductList = ({ productCategory }: ProductCategoryProductListProps): JSX.Element => {
+    useRenderGuard('ProductCategoryProductList');
 
     const { items: products,
         isLoading,
         isFetchingNextPage,
         fetchNextPage } = useProductsByCategory(
-            category,
+            productCategory,
             { autoload: false }
         );
 

@@ -6,7 +6,7 @@ import Animated, { LinearTransition } from 'react-native-reanimated';
 import { XStack, YStack } from 'tamagui';
 
 export interface RenderItemProps {
-    category: ProductCategory;
+    productCategory: ProductCategory;
     level: number;
     isActive: boolean;
     isExpanded: boolean;
@@ -14,33 +14,39 @@ export interface RenderItemProps {
     onExpand: (id: number) => void;
 }
 
-export interface CategoryTreeProps {
+export interface ProductCategoryTreeProps {
     renderItem: (props: RenderItemProps) => JSX.Element;
     level?: number;
 }
 
-interface CategoryBranchProps extends CategoryTreeProps {
-    category: ProductCategory;
+interface ProductCategoryBranchProps extends ProductCategoryTreeProps {
+    productCategory: ProductCategory;
     expandedIds: Set<number>;
     onExpand: (id: number) => void;
 }
 
-const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, renderItem }: CategoryBranchProps) => {
+const ProductCategoryBranch = memo(({
+    productCategory,
+    level = 0,
+    expandedIds,
+    onExpand,
+    renderItem,
+}: ProductCategoryBranchProps) => {
     const pathname = usePathname();
     const { productCategories: subproductCategories } = useProductCategoryContext();
 
     const hasChildren = subproductCategories.length > 0;
-    const isExpanded = expandedIds.has(category.id);
+    const isExpanded = expandedIds.has(productCategory.id);
 
 
     return (
-        <Animated.View key={category.id} layout={LinearTransition}>
+        <Animated.View key={productCategory.id} layout={LinearTransition}>
             <YStack>
                 <XStack flex={1}>
                     {renderItem({
-                        category,
+                        productCategory,
                         level,
-                        isActive: pathname.includes(`/category/${category.id}`),
+                        isActive: pathname.includes(`/category/${productCategory.id}`),
                         isExpanded,
                         hasChildren,
                         onExpand,
@@ -48,10 +54,10 @@ const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, rende
                 </XStack>
                 {isExpanded && hasChildren && (
                     <YStack pl="$4">
-                        {subproductCategories.map((subcategory) => (
-                            <ProductCategoryProvider key={subcategory.id} productCategoryId={subcategory.id}>
-                                <CategoryBranch
-                                    category={subcategory}
+                        {subproductCategories.map((subproductCategory) => (
+                            <ProductCategoryProvider key={subproductCategory.id} productCategoryId={subproductCategory.id}>
+                                <ProductCategoryBranch
+                                    productCategory={subproductCategory}
                                     level={level + 1}
                                     expandedIds={expandedIds}
                                     onExpand={onExpand}
@@ -66,8 +72,8 @@ const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, rende
     );
 });
 
-export const CategoryTree = ({ renderItem, level = 0 }: CategoryTreeProps) => {
-    const { productCategories: categories } = useProductCategoryContext();
+export const ProductCategoryTree = ({ renderItem, level = 0 }: ProductCategoryTreeProps) => {
+    const { productCategories: productCategories } = useProductCategoryContext();
     const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
 
     const handleExpand = useCallback((id: number) => {
@@ -84,10 +90,10 @@ export const CategoryTree = ({ renderItem, level = 0 }: CategoryTreeProps) => {
 
     return (
         <YStack>
-            {categories.map((category) => (
-                <ProductCategoryProvider key={category.id} productCategoryId={category.id}>
-                    <CategoryBranch
-                        category={category}
+            {productCategories.map((productCategory) => (
+                <ProductCategoryProvider key={productCategory.id} productCategoryId={productCategory.id}>
+                    <ProductCategoryBranch
+                        productCategory={productCategory}
                         level={level}
                         expandedIds={expandedIds}
                         onExpand={handleExpand}

@@ -18,8 +18,8 @@ export const ShoppingCartScreen = () => {
 
     if (items_count === 0) {
         return (
-            <YStack flex={1} ai="center" jc="center">
-                <ThemedText fontSize="$3">Handlekurven er tom</ThemedText>
+            <YStack f={1} ai="center" jc="center">
+                <ThemedText fos="$3">Handlekurven er tom</ThemedText>
             </YStack>
         );
     }

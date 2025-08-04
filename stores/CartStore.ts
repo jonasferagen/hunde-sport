@@ -1,5 +1,6 @@
 import { AddItemMutation, CartData, CartItemData, RemoveItemMutation, UpdateItemMutation } from '@/models/Cart';
 import { createProduct } from '@/models/Product/ProductFactory';
+import { log } from '@/services/Logger';
 import { Storage } from 'expo-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist, StateStorage } from 'zustand/middleware';
@@ -65,6 +66,7 @@ export const useCartStore = create<CartState>()(
 
             // Actions
             setData: (data: CartData) => {
+                log.debug('CartStore: setData called', { cart_token: data.cart_token, has_items: data.items.length > 0 });
                 const itemsWithProducts = data.items.map(item => ({
                     ...item,
                     product: createProduct(item), // Hydrate with full product model
@@ -82,7 +84,10 @@ export const useCartStore = create<CartState>()(
                 });
             },
 
-            setCartToken: (token: string) => set({ cartToken: token }),
+            setCartToken: (token: string) => {
+                log.debug('CartStore: setCartToken called', { token });
+                set({ cartToken: token });
+            },
 
             setMutations: ({ addItem, updateItem, removeItem }) => {
                 set({
@@ -151,7 +156,9 @@ export const useCartStore = create<CartState>()(
             storage: createJSONStorage(() => expoStorage),
             partialize: state => ({ cartToken: state.cartToken }), // Only persist the cart token
             onRehydrateStorage: () => (state) => {
+                log.debug('CartStore: onRehydrateStorage event triggered.');
                 if (state) {
+                    log.info('CartStore: rehydrated from storage.', { cartToken: state.cartToken });
                     state.isReady = true;
                 }
             },

@@ -8,6 +8,7 @@ import { Progress, SizableText, Theme, YStack } from 'tamagui';
 
 export const PreloaderScreen = (): JSX.Element => {
     const [isReadyToNavigate, setIsReadyToNavigate] = useState(false);
+    const [isCartLoading, setIsCartLoading] = useState(true);
 
     // Categories
     const {
@@ -20,7 +21,11 @@ export const PreloaderScreen = (): JSX.Element => {
     const { setCategories } = useCategoryStore();
 
     // Cart
-    const { isLoading: isCartLoading } = useCartData();
+    const { isLoading: cartIsLoading } = useCartData();
+    useEffect(() => {
+        // This effect runs only once on mount
+        setIsCartLoading(cartIsLoading);
+    }, []); // Empty dependency array ensures this runs only once
 
     const router = useRouter();
 

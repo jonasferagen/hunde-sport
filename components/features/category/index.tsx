@@ -1,3 +1,3 @@
 export { CategoryChips } from './CategoryChips';
-export { CategoryTree } from './CategoryTree';
+export { ProductCategoryTree as CategoryTree } from './ProductCategoryTree';
 

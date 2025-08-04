@@ -1,4 +1,4 @@
-import { ProductCategoryTiles } from '@/components/features/category/CategoryTiles';
+import { ProductCategoryTiles } from '@/components/features/category/ProductCategoryTiles';
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';

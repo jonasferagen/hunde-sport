@@ -1,4 +1,4 @@
-import { CategoryTree, RenderItemProps } from '@/components/features/category/CategoryTree';
+import { ProductCategoryTree, RenderItemProps } from '@/components/features/category/ProductCategoryTree';
 import { resolveTheme, routes } from '@/config/routes';
 import {
     DrawerContentComponentProps,
@@ -15,7 +15,7 @@ import { AnimatedListExpansionIcon } from './AnimatedListExpansionIcon';
 
 
 const CategoryTreeItem = ({
-    category,
+    productCategory: category,
     isActive,
     isExpanded,
     level,
@@ -138,7 +138,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                     );
                                 })}
                             <ThemedText my="$2" fos="$4">Kategorier</ThemedText>
-                            <CategoryTree
+                            <ProductCategoryTree
                                 renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}
                             />
                         </YStack>
