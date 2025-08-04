@@ -25,10 +25,13 @@ export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.El
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <YStack theme={theme} flex={1}>
+            <YStack theme={theme} f={1}>
                 <GridTiles gap="$2">
                     {categories.map((item) => (
                         <CategoryTile
+                            w="100%"
+                            h="100%"
+                            aspectRatio={1}
                             key={item.id}
                             category={item}
                         />

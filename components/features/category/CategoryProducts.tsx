@@ -7,6 +7,18 @@ import { Category } from '@/models/Category';
 import React, { JSX } from 'react';
 import { ProductList } from '../product/ProductList';
 
+
+export const CategoryProducts = (): JSX.Element | null => {
+    useRenderGuard('CategoryProducts');
+    const { category, isLoading } = useCategoryContext();
+
+    if (isLoading || !category) {
+        return <LoadingScreen />;
+    }
+
+    return <CategoryProductList category={category} />;
+};
+
 interface CategoryProductListProps {
     category: Category;
 }
@@ -31,16 +43,4 @@ const CategoryProductList = ({ category }: CategoryProductListProps): JSX.Elemen
         loadingMore={isFetchingNextPage}
         loadMore={fetchNextPage}
     />;
-};
-
-
-export const CategoryProducts = (): JSX.Element | null => {
-    useRenderGuard('CategoryProducts');
-    const { category } = useCategoryContext();
-
-    if (!category) {
-        return null; // Category is being loaded by the provider
-    }
-
-    return <CategoryProductList category={category} />;
 };

@@ -1,6 +1,8 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
+import { getScaledImageUrl } from "@/utils/helpers";
+import { Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from 'react-native';
 import { YStackProps } from "tamagui";
@@ -14,22 +16,24 @@ interface CategoryTileProps extends Omit<YStackProps, 'children'> {
 
 export const CategoryTile: React.FC<CategoryTileProps> = ({
     category,
-    width = CATEGORY_TILE_WIDTH,
-    height = CATEGORY_TILE_HEIGHT,
+    w = CATEGORY_TILE_WIDTH,
+    h = CATEGORY_TILE_HEIGHT,
+    aspectRatio = 1,
     ...stackProps
 }) => {
 
-    const finalHref = routes.category.path(category);
+    const imageUrl = getScaledImageUrl(category.image.src, CATEGORY_TILE_WIDTH, CATEGORY_TILE_HEIGHT);
 
     return (
-        <Tile
-            w={width}
-            h={height}
-            aspectRatio={1}
-            title={category.name}
-            imageUrl={category.image?.src ?? ''}
-            href={finalHref}
-            {...stackProps}
-        />
+        <Link href={routes.category.path(category)}>
+            <Tile
+                w={w}
+                h={h}
+                aspectRatio={aspectRatio}
+                title={category.name}
+                imageUrl={imageUrl}
+                {...stackProps}
+            />
+        </Link>
     );
 };

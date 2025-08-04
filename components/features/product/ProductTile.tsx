@@ -4,6 +4,7 @@ import { routes } from '@/config/routes';
 import { ProductProvider } from '@/contexts';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
+import { Link } from 'expo-router';
 import React from 'react';
 import { DimensionValue } from 'react-native';
 import { ThemeName, YStack, YStackProps } from "tamagui";
@@ -25,22 +26,23 @@ export const ProductTile: React.FC<ProductTileProps> = ({
 
 
     return (
-        <Tile
-            w={width}
-            h={height}
-            title={product.name + ' ' + product.id}
-            imageUrl={product.featuredImage.src}
-            titleNumberOfLines={1}
-            href={routes.product.path(product)}
-            {...stackProps}
-        >
-            <ProductProvider product={product}>
-                <YStack>
-                    <TileBadge theme={stackProps.theme as ThemeName} >
-                        <PriceTag />
-                    </TileBadge>
-                </YStack>
-            </ProductProvider>
-        </Tile>
+        <Link href={routes.product.path(product)}>
+            <Tile
+                w={width}
+                h={height}
+                title={product.name + ' ' + product.id}
+                imageUrl={product.featuredImage.src}
+                titleNumberOfLines={1}
+                {...stackProps}
+            >
+                <ProductProvider product={product}>
+                    <YStack>
+                        <TileBadge theme={stackProps.theme as ThemeName} >
+                            <PriceTag />
+                        </TileBadge>
+                    </YStack>
+                </ProductProvider>
+            </Tile>
+        </Link>
     );
 };
