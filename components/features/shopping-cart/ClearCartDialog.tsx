@@ -14,7 +14,7 @@ export const ClearCartDialog = ({ isOpen, onConfirm, onCancel }: ClearCartDialog
             <Dialog.Portal>
                 <Dialog.Overlay
                     key="overlay"
-                    animation="quick"
+                    animation="slow"
                     opacity={1}
                     enterStyle={{ opacity: 0 }}
                     exitStyle={{ opacity: 0 }}
@@ -27,7 +27,7 @@ export const ClearCartDialog = ({ isOpen, onConfirm, onCancel }: ClearCartDialog
                     elevate
                     key="content"
                     animation={[
-                        'quick',
+                        "slow",
                         {
                             opacity: {
                                 overshoot: true,
