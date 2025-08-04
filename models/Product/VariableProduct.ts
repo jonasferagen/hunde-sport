@@ -77,12 +77,7 @@ export class VariableProduct extends Product {
     }
 
     getAttributesForVariationSelection(): ProductAttribute[] {
-        const variationAttributes = this.attributes.filter((attribute: ProductAttribute) => attribute.variation);
-        const allVariationRefAttributes = this.variationsData.flatMap((v: ProductVariation) => v.variation_attributes);
-
-        return variationAttributes
-            .map((attribute: ProductAttribute) => attribute.withAvailableTerms(allVariationRefAttributes))
-            .filter((attribute: ProductAttribute) => attribute.terms.length > 0);
+        return this.attributes.filter((attribute) => attribute.variation);
     }
 
     getAttributeOptions(attributeName: string, selection: VariationSelection) {

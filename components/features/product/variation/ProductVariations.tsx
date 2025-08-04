@@ -37,19 +37,19 @@ export const ProductVariations = (): JSX.Element => {
         } else {
             setProductVariation(undefined as any);
         }
-    }, [selectedOptions, product, setProductVariation]);
+    }, [selectedOptions, variableProduct, setProductVariation]);
 
     if (isProductVariationsLoading) {
         return <></>;
     }
 
-    const handleSelectOption = (attributeName: string, optionValue: string) => {
+    const handleSelectOption = (attributeTaxonomy: string, optionValue: string) => {
         const newSelectedOptions = { ...selectedOptions };
 
-        if (newSelectedOptions[attributeName] === optionValue) {
-            delete newSelectedOptions[attributeName];
+        if (newSelectedOptions[attributeTaxonomy] === optionValue) {
+            delete newSelectedOptions[attributeTaxonomy];
         } else {
-            newSelectedOptions[attributeName] = optionValue;
+            newSelectedOptions[attributeTaxonomy] = optionValue;
         }
 
         setSelectedOptions(newSelectedOptions);
@@ -58,11 +58,11 @@ export const ProductVariations = (): JSX.Element => {
     const attributes = variableProduct.getAttributesForVariationSelection();
     const selection = new VariationSelection(selectedOptions);
 
-
     return (
         <XStack gap="$2" flexWrap="wrap" mt="$2">
             {attributes.map((attribute: ProductAttribute) => {
                 const options = variableProduct.getAttributeOptions(attribute.name, selection);
+
                 return (
                     <YStack key={attribute.id} flex={1}>
                         <SizableText fos="$3" fow="bold" mb="$2" ml="$1" tt="capitalize">
@@ -70,8 +70,8 @@ export const ProductVariations = (): JSX.Element => {
                         </SizableText>
                         <AttributeSelector
                             options={options}
-                            selectedValue={selectedOptions[attribute.name]}
-                            onSelect={(value) => handleSelectOption(attribute.name, value)}
+                            selectedValue={selectedOptions[attribute.taxonomy]}
+                            onSelect={(value) => handleSelectOption(attribute.taxonomy, value)}
                         />
                     </YStack>
                 );
