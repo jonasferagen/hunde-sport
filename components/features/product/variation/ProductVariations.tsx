@@ -39,9 +39,6 @@ export const ProductVariations = (): JSX.Element => {
     const { product, productVariations, productVariation, setProductVariation, isProductVariationsLoading } =
         useProductContext();
 
-
-    console.log('ProductVariations', productVariations.length)
-
     const initialSelections = useMemo(() => {
         if (!productVariation) {
             return {};

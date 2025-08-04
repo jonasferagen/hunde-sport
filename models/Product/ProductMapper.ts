@@ -33,7 +33,7 @@ export const mapToProduct = (item: any): SimpleProduct | VariableProduct | Produ
                 variation: attr.has_variations || false,
             })),
             variations: item.variations || [],
-            parent_id: item.parent_id || 0,
+            parent: item.parent_id || 0,
             type: item.type,
             is_in_stock: item.is_in_stock,
             is_purchasable: item.is_purchasable,

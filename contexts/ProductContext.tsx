@@ -54,12 +54,12 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
 
     const isVariable = product.type === 'variable';
 
-    const { data, isLoading: isProductVariationsLoading } = useProductVariations(product as VariableProduct, {
+    const { items: productVariations, isLoading: isProductVariationsLoading } = useProductVariations(product as VariableProduct, {
         enabled: isVariable,
         autoload: true,
     });
 
-    const productVariations = data ? data.pages.flat() as ProductVariation[] : [];
+    !isProductVariationsLoading && productVariations && productVariations.length && console.log(productVariations[0].variation);
 
 
     useEffect(() => {
