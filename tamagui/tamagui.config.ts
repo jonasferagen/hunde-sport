@@ -65,6 +65,14 @@ const animations = createAnimations({
     slow: {
         damping: 20,
         stiffness: 60,
+    },
+    fade: {
+        type: 'timing',
+        duration: 1000,
+    },
+    fade_slow: {
+        type: 'timing',
+        duration: 5000,
     }
 });
 

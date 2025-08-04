@@ -45,13 +45,16 @@ export const Tile: React.FC<TileProps> = ({
         >
 
             <FadeInImage
-                title={title}
+                aria-label={title}
                 source={{ uri: imageUrl }}
+                f={1}
                 pos="absolute"
                 t={0}
                 l={0}
                 r={0}
                 b={0}
+                h={h}
+                w={w}
                 objectFit="cover"
             />
 
