@@ -1,5 +1,5 @@
-import { AppToast } from '@/components/ui/AppToast';
 import {
+  AppToastProvider,
   CategoryProvider,
   SearchProvider,
   ShoppingCartProvider,
@@ -7,7 +7,6 @@ import {
 import { queryClient } from '@/lib/queryClient';
 import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
-import { ToastProvider, ToastViewport } from '@tamagui/toast';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import { JSX } from 'react';
@@ -18,21 +17,12 @@ import { TamaguiProvider, Theme } from 'tamagui';
 const RootLayout = (): JSX.Element => {
   return (
     <QueryClientProvider client={queryClient}>
-      <TamaguiProvider config={appConfig}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <TamaguiProvider config={appConfig}>
           <SafeAreaProvider>
             <PortalProvider>
               <Theme name="light">
-                <ToastProvider>
-                  <AppToast />
-                  <ToastViewport
-                    multipleToasts={false}
-                    bottom={0}
-                    left={0}
-                    position="absolute"
-                    height="50"
-                    width="100%"
-                  />
+                <AppToastProvider>
                   <CategoryProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
@@ -40,12 +30,12 @@ const RootLayout = (): JSX.Element => {
                       </SearchProvider>
                     </ShoppingCartProvider>
                   </CategoryProvider>
-                </ToastProvider>
+                </AppToastProvider>
               </Theme>
             </PortalProvider>
           </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </TamaguiProvider>
+        </TamaguiProvider>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 };
