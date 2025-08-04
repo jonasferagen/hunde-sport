@@ -1,17 +1,21 @@
-import { AddItemMutation, RemoveItemMutation, UpdateItemMutation } from '@/models/Cart';
-import { useCartStore } from '@/stores/CartStore';
+import { AddItemMutation, CartData, RemoveItemMutation, UpdateItemMutation } from '@/models/Cart';
+import { useCartStore, useIsCartReady } from '@/stores/CartStore';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { addItem as apiAddItem, removeItem as apiRemoveItem, updateItem as apiUpdateItem, fetchCart } from './api';
 
 export const useCartQuery = () => {
     const { setData } = useCartStore.getState();
-    const queryResult = useQuery({
+    const isCartReady = useIsCartReady();
+
+    const queryResult = useQuery<CartData, Error>({
         queryKey: ['cart'],
         queryFn: fetchCart,
-        enabled: true, // Fetch cart data immediately
+        enabled: isCartReady, // Only fetch cart when the store is ready and token is available
+        retry: 1,
     });
 
+    // Effect to update the store when the query successfully fetches data.
     useEffect(() => {
         if (queryResult.data) {
             setData(queryResult.data);
@@ -23,36 +27,35 @@ export const useCartQuery = () => {
 
 // A generic mutation hook for cart operations
 export const useCartMutation = <TVariables extends Record<string, any>>(
-    mutationFn: (vars: TVariables & { cartToken: string }) => Promise<any>,
+    mutationFn: (vars: TVariables & { cartToken: string }) => Promise<CartData>,
     errorMessage: string
 ) => {
     const queryClient = useQueryClient();
+    const { setData } = useCartStore.getState();
 
-    return useMutation({
+    return useMutation<CartData, Error, TVariables & { optimisticUpdateTimestamp?: number }>({
         mutationFn: (variables: TVariables) => {
             const { cartToken } = useCartStore.getState();
             if (!cartToken) {
-                return Promise.reject(new Error('Cart token not found'));
+                throw new Error('Cart token not found for mutation');
             }
             return mutationFn({ ...variables, cartToken });
         },
         onSuccess: (data, variables) => {
-            const { setData, lastUpdated } = useCartStore.getState();
+            const { lastUpdated } = useCartStore.getState();
 
             // Only update if this mutation is not stale
             if (variables.optimisticUpdateTimestamp && variables.optimisticUpdateTimestamp < lastUpdated) {
                 return;
             }
-
-            queryClient.setQueryData(['cart'], data);
             setData(data);
+            queryClient.setQueryData(['cart'], data);
         },
         onError: (error) => {
             console.error(errorMessage, error);
         },
     });
 };
-
 
 /**
  * Hook to initialize cart mutations and fetch initial cart data.

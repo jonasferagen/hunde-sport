@@ -5,26 +5,20 @@ import { mapToCategory } from '@/models/Category';
 
 export async function fetchCategories(page: number) {
 
-    const { data, error } = await apiClient.get<any[]>(
+    const { data, headers, error } = await apiClient.get<any[]>(
         ENDPOINTS.CATEGORIES.LIST(page)
     );
 
-    console.log("loading categories");
+    const total = headers.get('X-WP-Total');
+    const totalPages = headers.get('X-WP-TotalPages');
+
+    //console.log("loading categories", total, totalPages);
 
 
     if (error) throw new Error(error);
-    return (data ?? [])
-        .map(mapToCategory);
-}
 
-export async function fetchCategoryById(id: number) {
-    const { data, error } = await apiClient.get<any>(
-        ENDPOINTS.CATEGORIES.GET(id)
-    );
-
-    console.log("loading category by id", id);
-
-    if (error) throw new Error(error);
-    if (!data) throw new Error(`Category with id ${id} not found`);
-    return mapToCategory(data);
+    return {
+        items: (data ?? []).map(mapToCategory),
+        total: total ? parseInt(total, 10) : 0,
+    };
 }

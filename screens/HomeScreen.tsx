@@ -22,6 +22,7 @@ export const HomeScreen = () => {
     const discountedProducts = useDiscountedProducts();
     const featuredProducts = useFeaturedProducts();
 
+
     return <PageView>
         <PageHeader theme="primary">
             <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
@@ -43,6 +44,6 @@ export const HomeScreen = () => {
                 <ProductTiles key='debug' queryResult={debugProducts} theme="secondary" />
             </PageContent>
         </PageSection>
-    </PageView>
+    </PageView >
 }
 

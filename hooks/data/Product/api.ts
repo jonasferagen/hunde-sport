@@ -53,12 +53,14 @@ export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductD
     return createProduct(data);
 }
 
-
 export const fetchProducts = async (page: number, query: ProductListParams) => {
-    const { data, error } = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
+    const { data, headers, error } = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
     if (error) throw new Error(error);
-    if (query.type === 'ids' && query.params.length > 0) {
-        console.log(data?.map(item => item.id));
-    }
-    return (data ?? []).map(createProduct);
+
+    const total = headers.get('x-wp-total');
+
+    return {
+        items: (data ?? []).map(createProduct),
+        total: total ? parseInt(total, 10) : 0,
+    };
 };

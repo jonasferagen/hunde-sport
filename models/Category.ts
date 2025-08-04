@@ -27,7 +27,7 @@ export class ProductCategory implements ProductCategoryData {
   }
 
   shouldDisplay(): boolean {
-    return this.description !== '#' && this.name !== "Black Friday";
+    return this.description !== '#';
   }
 
 

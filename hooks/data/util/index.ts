@@ -1,8 +1,7 @@
-
 import { InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
-export type InfiniteListQueryResult<T> = UseInfiniteQueryResult<InfiniteData<T[]>, Error> & { items: T[] };
+export type InfiniteListQueryResult<T> = UseInfiniteQueryResult<InfiniteData<{ items: T[], total: number }>, Error> & { items: T[], total: number };
 
 export interface InfiniteListQueryOptions {
     autoload: boolean;
@@ -10,7 +9,7 @@ export interface InfiniteListQueryOptions {
 }
 
 export const useInfiniteListQuery = <T>(
-    queryOptions: UseInfiniteQueryOptions<T[], Error, InfiniteData<T[]>, any, number>,
+    queryOptions: UseInfiniteQueryOptions<{ items: T[], total: number }, Error, InfiniteData<{ items: T[], total: number }>, any, number>,
     options: InfiniteListQueryOptions = { autoload: false },
 ): InfiniteListQueryResult<T> => {
     const queryResult = useInfiniteQuery(queryOptions);
@@ -28,8 +27,8 @@ export const useInfiniteListQuery = <T>(
     }, [queryResult]);
 
 
-    const items = useMemo(() => queryResult.data?.pages.flat() ?? [], [queryResult.data]);
+    const items = useMemo(() => queryResult.data?.pages.flatMap(page => page.items) ?? [], [queryResult.data]);
+    const total = useMemo(() => queryResult.data?.pages[0]?.total ?? 0, [queryResult.data]);
 
-    return { ...queryResult, items };
+    return { ...queryResult, items, total };
 };
-

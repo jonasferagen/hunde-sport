@@ -34,17 +34,3 @@ export const useProductsBySearch = (searchTerm: string, options?: InfiniteListQu
 export const useProductsByIds = (ids: number[], options?: InfiniteListQueryOptions) =>
     useInfiniteListQuery(productsQueryOptions({ type: 'ids', params: ids }), options);
 
-/*
-const dataWithAttributes = (data as ProductVariation[] | undefined)?.map((variation) => {
-    const originalVariationRef = variableProduct.variations.find((ref) => ref.id === variation.id);
-    if (originalVariationRef) {
-        variation.variation_attributes = originalVariationRef.attributes;
-    }
-    return variation;
-});
-
-    return {
-        data: dataWithAttributes || [],
-        ...rest,
-    };
-*/

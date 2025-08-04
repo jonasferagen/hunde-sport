@@ -44,6 +44,7 @@ interface CartState {
     addItem: (itemToAdd: { id: number; quantity: number; variation: { attribute: string; value: string }[] }) => void;
     updateItem: (key: string, newQuantity: number) => void;
     removeItem: (key: string) => void;
+    isReady: boolean;
 }
 
 export const useCartStore = create<CartState>()(
@@ -60,6 +61,7 @@ export const useCartStore = create<CartState>()(
             _updateItem: undefined,
             _removeItem: undefined,
             lastUpdated: 0,
+            isReady: false,
 
             // Actions
             setData: (data: CartData) => {
@@ -148,6 +150,16 @@ export const useCartStore = create<CartState>()(
             name: 'cart-storage', // Key for persisted data in AsyncStorage
             storage: createJSONStorage(() => expoStorage),
             partialize: state => ({ cartToken: state.cartToken }), // Only persist the cart token
+            onRehydrateStorage: () => (state) => {
+                if (state) {
+                    state.isReady = true;
+                }
+            },
         }
     )
 );
+
+/**
+ * Hook to check if the cart store has been rehydrated.
+ */
+export const useIsCartReady = () => useCartStore(state => state.isReady);
