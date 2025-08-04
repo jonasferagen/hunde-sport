@@ -1,6 +1,7 @@
 import { useProductVariations } from '@/hooks/data/Product';
 import { Product } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
+import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { Purchasable } from '@/types';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
@@ -59,10 +60,13 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
         autoload: true,
     });
 
-    !isProductVariationsLoading && productVariations && productVariations.length && console.log(productVariations[0].variation);
 
 
     useEffect(() => {
+        if (product.type === 'variable' && productVariations && productVariations.length > 0) {
+            (product as VariableProduct).setVariationsData(productVariations as ProductVariation[]);
+        }
+
         if (productVariations && !productVariation) {
             const defaultAttributes: { [key: string]: string } = {};
 
@@ -71,6 +75,7 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
                 return;
             }
 
+            /*
             product.attributes.forEach((attribute) => {
                 if (attribute.variation) {
                     const defaultTerm = attribute.terms.find((term) => term.default);
@@ -90,13 +95,17 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
                     setProductVariation(defaultVariation);
                 }
             }
+            */
         }
     }, [isVariable, productVariations, productVariation, product.attributes]);
 
     const displayName = useMemo(() => getDisplayName(product, productVariation), [product, productVariation]);
 
     const displayProduct = productVariation || product;
-    const purchasableProduct: Purchasable = { product, productVariation };
+
+    const purchasableProduct: Purchasable = product.type === "variable" ?
+        { product: product as VariableProduct, productVariation } :
+        { product: product as SimpleProduct };
 
     const value: ProductContextType = {
         product,

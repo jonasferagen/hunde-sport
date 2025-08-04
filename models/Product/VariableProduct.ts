@@ -1,4 +1,5 @@
 import { Product, ProductData } from "./Product";
+import { ProductVariation } from "./ProductVariation";
 
 export class VariableProduct extends Product {
     constructor(data: ProductData) {
@@ -10,6 +11,16 @@ export class VariableProduct extends Product {
 
     hasVariations(): boolean {
         return true;
+    }
+
+    setVariationsData(variations: ProductVariation[]) {
+        this.variationsData = variations.map((variation) => {
+            const originalVariationRef = this.variations.find((ref) => ref.id === variation.id);
+            if (originalVariationRef) {
+                variation.variation_attributes = originalVariationRef.attributes;
+            }
+            return variation;
+        });
     }
 
 }

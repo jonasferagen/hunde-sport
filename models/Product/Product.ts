@@ -48,7 +48,7 @@ export abstract class Product implements ProductData {
   readonly tags: { id: number; name: string; slug: string }[];
   readonly attributes: any[];
   readonly variations: any[];
-  readonly variationsData: Product[] = [];
+  variationsData: Product[] = [];
   readonly related_ids: number[];
   readonly parent: number;
   readonly type: string;
