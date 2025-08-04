@@ -36,10 +36,6 @@ export const ClearCartDialog = ({ isOpen, onConfirm, onCancel }: ClearCartDialog
                     ]}
                     enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
                     exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
-                    x={0}
-                    scale={1}
-                    opacity={1}
-                    y={0}
                 >
                     <YStack gap="$3" background="$background">
                         <Dialog.Title>

@@ -1,6 +1,7 @@
 import { LinearGradient } from '@tamagui/linear-gradient';
 import React from 'react';
-import { Image, SizableText, YStack, YStackProps } from 'tamagui';
+import { SizableText, YStack, YStackProps } from 'tamagui';
+import { FadeInImage } from '../image/FadeInImage';
 
 const GRADIENT_MIN_HEIGHT = 25;
 
@@ -27,7 +28,10 @@ export const Tile: React.FC<TileProps> = ({
     ...stackProps
 }) => {
 
-    const content = (
+
+
+
+    return (
         <YStack
             w={w}
             h={h}
@@ -40,7 +44,8 @@ export const Tile: React.FC<TileProps> = ({
             {...stackProps}
         >
 
-            <Image
+            <FadeInImage
+                title={title}
                 source={{ uri: imageUrl }}
                 pos="absolute"
                 t={0}
@@ -82,5 +87,4 @@ export const Tile: React.FC<TileProps> = ({
         </YStack>
     );
 
-    return content;
 }

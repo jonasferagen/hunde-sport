@@ -3,7 +3,7 @@ import { routes } from '@/config/routes';
 import { Category } from '@/models/Category';
 import { getScaledImageUrl } from "@/utils/helpers";
 import { Link } from 'expo-router';
-import React from 'react';
+import React, { memo } from 'react';
 import { DimensionValue } from 'react-native';
 import { YStackProps } from "tamagui";
 
@@ -14,7 +14,7 @@ interface CategoryTileProps extends Omit<YStackProps, 'children'> {
     category: Category;
 }
 
-export const CategoryTile: React.FC<CategoryTileProps> = ({
+const CategoryTileBase: React.FC<CategoryTileProps> = ({
     category,
     ...stackProps
 }) => {
@@ -33,3 +33,5 @@ export const CategoryTile: React.FC<CategoryTileProps> = ({
         </Link>
     );
 };
+
+export const CategoryTile = memo(CategoryTileBase);

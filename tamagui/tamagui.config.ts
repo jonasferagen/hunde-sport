@@ -68,7 +68,6 @@ const animations = createAnimations({
     }
 });
 
-
 const customTokens = {
     ...tokens,
     color: {
