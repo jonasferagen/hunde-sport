@@ -16,20 +16,16 @@ interface CategoryTileProps extends Omit<YStackProps, 'children'> {
 
 export const CategoryTile: React.FC<CategoryTileProps> = ({
     category,
-    w = CATEGORY_TILE_WIDTH,
-    h = CATEGORY_TILE_HEIGHT,
-    aspectRatio = 1,
     ...stackProps
 }) => {
 
     const imageUrl = getScaledImageUrl(category.image.src, CATEGORY_TILE_WIDTH, CATEGORY_TILE_HEIGHT);
 
     return (
-        <Link href={routes.category.path(category)}>
+        <Link href={routes.category.path(category)} asChild>
             <Tile
-                w={w}
-                h={h}
-                aspectRatio={aspectRatio}
+                f={1}
+                aspectRatio={1}
                 title={category.name}
                 imageUrl={imageUrl}
                 {...stackProps}

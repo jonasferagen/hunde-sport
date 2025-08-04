@@ -1,6 +1,7 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { GridTiles } from '@/components/ui/tile/GridTiles';
 import { useCategories } from '@/hooks/data/Category';
+import { Category } from '@/types';
 import React, { JSX } from 'react';
 import { ScrollView } from 'react-native';
 import { ThemeName, YStack } from 'tamagui';
@@ -12,10 +13,10 @@ interface CategoryTilesProps {
 }
 
 export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.Element => {
-    const { items, isLoading, isFetchingNextPage } = useCategories({ autoload: false });
-    const categories = items.filter(cat => cat.parent === categoryId);
+    const { items, isLoading, isFetchingNextPage } = useCategories({ autoload: true });
+    const categories = items.filter((cat: Category) => cat.parent === categoryId);
 
-    if (isLoading) {
+    if (isLoading || isFetchingNextPage) {
         return <ThemedSpinner size="large" />;
     }
 
@@ -25,19 +26,15 @@ export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.El
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <YStack theme={theme} f={1}>
+            <YStack f={1} theme={theme}>
                 <GridTiles gap="$2">
                     {categories.map((item) => (
                         <CategoryTile
-                            w="100%"
-                            h="100%"
-                            aspectRatio={1}
                             key={item.id}
                             category={item}
                         />
                     ))}
                 </GridTiles>
-                {isFetchingNextPage && <ThemedSpinner />}
             </YStack>
         </ScrollView>
     );

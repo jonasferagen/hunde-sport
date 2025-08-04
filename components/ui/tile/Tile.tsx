@@ -50,9 +50,11 @@ export const Tile: React.FC<TileProps> = ({
                 objectFit="cover"
             />
 
-            <YStack flex={1} justifyContent="flex-end">
+            <YStack f={1} jc="flex-end">
                 <LinearGradient
-                    colors={["$backgroundAlpha", "$backgroundPress"]}
+                    colors={["$backgroundAlpha", "$backgroundStrong"]}
+                    boc="$borderColorStrong"
+                    btw={1}
                     mih={gradientMinHeight}
                     p="$2"
                 >

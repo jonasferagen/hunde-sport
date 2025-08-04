@@ -29,9 +29,9 @@ export const GridTiles = ({
     }, [] as React.ReactNode[][]);
 
     return (
-        <YStack gap={gap} flex={1} {...stackProps}>
+        <YStack f={1} gap={gap} {...stackProps}>
             {rows.map((row, rowIndex) => (
-                <XStack key={rowIndex} gap={gap} flex={1}>
+                <XStack key={rowIndex} f={1} gap={gap} >
                     {row.map((item, itemIndex) => (
                         <React.Fragment key={itemIndex}>
                             {item}
