@@ -1,43 +1,14 @@
 import { useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/Product/ProductAttribute';
-import { ProductVariation } from '@/models/Product/ProductVariation';
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import React, { JSX, useMemo, useState } from 'react';
+import React, { JSX, useEffect, useMemo, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
-/**
- * Finds product variations that strictly match the set of selected attribute options.
- * An empty selection will result in no matches.
- */
-const findVariations = (
-    product: VariableProduct,
-    productVariations: ProductVariation[],
-    selectedOptions: { [key: string]: string }
-): ProductVariation[] => {
-    // If no options are selected, no specific variation can be matched.
-    if (Object.keys(selectedOptions).length === 0) {
-        return [];
-    }
-
-    const selectedEntries = Object.entries(selectedOptions);
-
-    const filteredVariationReferences = product.variations.filter((variation) =>
-        // The variation must have the same number of attributes as the selection.
-        variation.attributes.length === selectedEntries.length &&
-        // And every selected option must be present in the variation's attributes.
-        selectedEntries.every(([name, value]) =>
-            variation.attributes.some((attr) => attr.name === name && attr.value === value)
-        )
-    );
-
-    const foundIds = new Set(filteredVariationReferences.map((v) => v.id));
-    return productVariations.filter((v) => foundIds.has(v.id));
-};
-
 export const ProductVariations = (): JSX.Element => {
-    const { product, productVariations, productVariation, setProductVariation, isProductVariationsLoading } =
-        useProductContext();
+    const { product, productVariation, setProductVariation, isProductVariationsLoading } = useProductContext();
+
+    const productVariations = (product as VariableProduct).getVariations();
 
     const initialSelections = useMemo(() => {
         if (!productVariation) {
@@ -50,6 +21,20 @@ export const ProductVariations = (): JSX.Element => {
     }, [productVariation]);
 
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>(initialSelections);
+
+    useEffect(() => {
+        if (!(product instanceof VariableProduct)) {
+            return;
+        }
+        const attributes = Object.entries(selectedOptions).map(([name, option]) => new ProductAttribute({ id: 0, name, option }));
+        const matchingVariations = product.findVariations(attributes);
+
+        if (matchingVariations.length === 1) {
+            setProductVariation(matchingVariations[0]);
+        } else {
+            setProductVariation(undefined as any);
+        }
+    }, [selectedOptions, product, productVariations, setProductVariation]);
 
     if (!product.hasVariations() || isProductVariationsLoading) {
         return <></>;
@@ -65,20 +50,6 @@ export const ProductVariations = (): JSX.Element => {
         }
 
         setSelectedOptions(newSelectedOptions);
-
-        const matchingVariations = findVariations(
-            product as VariableProduct,
-            productVariations,
-            newSelectedOptions
-        );
-
-        // If exactly one variation matches the selection, set it.
-        // Otherwise, clear the selection.
-        if (matchingVariations.length === 1) {
-            setProductVariation(matchingVariations[0]);
-        } else {
-            setProductVariation(undefined);
-        }
     };
 
     const attributes = product.attributes.filter((attribute) => attribute.variation);

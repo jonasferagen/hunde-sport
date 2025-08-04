@@ -20,20 +20,16 @@ const getDisplayName = (product: Product, productVariation?: ProductVariation): 
     return variationName ? `${product.name}, ${variationName}` : product.name;
 };
 
-
-
 /**
  * Interface for the ProductContext
  */
 export interface ProductContextType {
     product: Product;
-    displayProduct: Product | ProductVariation;
-    purchasableProduct: Purchasable;
+    displayProduct: Product;
+    purchasableProduct: Purchasable | undefined;
     displayName: string;
-    productVariation?: ProductVariation | undefined;
-    setProductVariation: (variation?: ProductVariation) => void;
-    productVariations: ProductVariation[];
-    isLoading: boolean;
+    productVariation: ProductVariation | undefined;
+    setProductVariation: (variation: ProductVariation) => void;
     isProductVariationsLoading: boolean;
 }
 
@@ -53,58 +49,32 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
 }) => {
     const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(undefined);
 
-    const isVariable = product.type === 'variable';
+    const isVariable = product instanceof VariableProduct;
 
     const { items: productVariations, isLoading: isProductVariationsLoading } = useProductVariations(product as VariableProduct, {
         enabled: isVariable,
         autoload: true,
     });
 
-
-
     useEffect(() => {
-        if (product.type === 'variable' && productVariations && productVariations.length > 0) {
-            (product as VariableProduct).setVariationsData(productVariations as ProductVariation[]);
-        }
+        if (product instanceof VariableProduct && productVariations) {
+            product.setVariationsData(productVariations as ProductVariation[]);
 
-        if (productVariations && !productVariation) {
-            const defaultAttributes: { [key: string]: string } = {};
-
-            if (!product.attributes) {
-                console.error("No attributes found for product");
-                return;
-            }
-
-            /*
-            product.attributes.forEach((attribute) => {
-                if (attribute.variation) {
-                    const defaultTerm = attribute.terms.find((term) => term.default);
-                    if (defaultTerm) {
-                        defaultAttributes[attribute.name] = defaultTerm.slug;
-                    }
-                }
-            });
-
-            if (Object.keys(defaultAttributes).length > 0) {
-                const defaultVariation = productVariations.find((variation) =>
-                    variation.matchesAttributes(defaultAttributes)
-                );
-
+            if (!productVariation) {
+                const defaultVariation = product.getDefaultVariation();
                 if (defaultVariation) {
-                    console.log('Default variation found and set:', defaultVariation.id);
                     setProductVariation(defaultVariation);
                 }
             }
-            */
         }
-    }, [isVariable, productVariations, productVariation, product.attributes]);
+    }, [isVariable, productVariations, productVariation, product]);
 
     const displayName = useMemo(() => getDisplayName(product, productVariation), [product, productVariation]);
 
     const displayProduct = productVariation || product;
 
-    const purchasableProduct: Purchasable = product.type === "variable" ?
-        { product: product as VariableProduct, productVariation } :
+    const purchasableProduct: Purchasable | undefined = product instanceof VariableProduct ?
+        { product, productVariation } :
         { product: product as SimpleProduct };
 
     const value: ProductContextType = {
@@ -114,8 +84,6 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
         displayName,
         productVariation,
         setProductVariation,
-        productVariations: productVariations as ProductVariation[],
-        isLoading: false, // This can be enhanced later if needed
         isProductVariationsLoading: isVariable ? isProductVariationsLoading : false,
     };
 
