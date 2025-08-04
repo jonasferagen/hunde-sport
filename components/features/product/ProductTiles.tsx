@@ -1,19 +1,25 @@
-import { ProductTile } from '@/components/features/product/ProductTile';
+import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import React, { JSX } from 'react';
+import { JSX } from 'react';
 import { ThemeName } from 'tamagui';
 import { HorizontalTiles } from '../../ui/tile/HorizontalTiles';
-interface ProductTilesProps {
-    queryResult: InfiniteListQueryResult<SimpleProduct | VariableProduct>;
+import { ProductTile } from './ProductTile';
+
+interface ProductListProps {
     theme?: ThemeName;
 }
 
-export const ProductTiles = ({ queryResult, theme = 'primary' }: ProductTilesProps): JSX.Element => {
+interface ProductTilesProps extends ProductListProps {
+    queryResult: InfiniteListQueryResult<SimpleProduct | VariableProduct>;
+}
+
+export const RecentProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
+    const queryResult = useRecentProducts();
 
     return <HorizontalTiles
-        queryResult={queryResult}
+        queryResult={queryResult as InfiniteListQueryResult<SimpleProduct | VariableProduct>}
         renderItem={({ item }) => (
             <ProductTile
                 product={item}
@@ -21,5 +27,46 @@ export const ProductTiles = ({ queryResult, theme = 'primary' }: ProductTilesPro
             />
         )}
     />
+};
 
+export const DiscountedProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
+    const queryResult = useDiscountedProducts();
+
+    return <HorizontalTiles
+        queryResult={queryResult as InfiniteListQueryResult<SimpleProduct | VariableProduct>}
+        renderItem={({ item }) => (
+            <ProductTile
+                product={item}
+                theme={theme}
+            />
+        )}
+    />
+};
+
+export const FeaturedProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
+    const queryResult = useFeaturedProducts();
+
+    return <HorizontalTiles
+        queryResult={queryResult as InfiniteListQueryResult<SimpleProduct | VariableProduct>}
+        renderItem={({ item }) => (
+            <ProductTile
+                product={item}
+                theme={theme}
+            />
+        )}
+    />
+};
+
+export const DebugProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
+    const queryResult = useProductsByIds([246557, 35961, 27445]);
+
+    return <HorizontalTiles
+        queryResult={queryResult as InfiniteListQueryResult<SimpleProduct | VariableProduct>}
+        renderItem={({ item }) => (
+            <ProductTile
+                product={item}
+                theme={theme}
+            />
+        )}
+    />
 };

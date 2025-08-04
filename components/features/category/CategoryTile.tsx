@@ -7,26 +7,26 @@ import React, { memo } from 'react';
 import { DimensionValue } from 'react-native';
 import { YStackProps } from "tamagui";
 
-export const CATEGORY_TILE_WIDTH: DimensionValue = 200;
-export const CATEGORY_TILE_HEIGHT: DimensionValue = 200;
+export const PRODUCT_CATEGORY_TILE_WIDTH: DimensionValue = 200;
+export const PRODUCT_CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 
-interface CategoryTileProps extends Omit<YStackProps, 'children'> {
+interface ProductCategoryTileProps extends Omit<YStackProps, 'children'> {
     productCategory: ProductCategory;
 }
 
-const CategoryTileBase: React.FC<CategoryTileProps> = ({
-    productCategory: category,
+const ProductCategoryTileBase: React.FC<ProductCategoryTileProps> = ({
+    productCategory,
     ...stackProps
 }) => {
 
-    const imageUrl = getScaledImageUrl(category.image.src, CATEGORY_TILE_WIDTH, CATEGORY_TILE_HEIGHT);
+    const imageUrl = getScaledImageUrl(productCategory.image.src, PRODUCT_CATEGORY_TILE_WIDTH, PRODUCT_CATEGORY_TILE_HEIGHT);
 
     return (
-        <Link href={routes.category.path(category)} asChild>
+        <Link href={routes.category.path(productCategory)} asChild>
             <Tile
                 f={1}
                 aspectRatio={1}
-                title={category.name}
+                title={productCategory.name}
                 imageUrl={imageUrl}
                 {...stackProps}
             />
@@ -34,4 +34,4 @@ const CategoryTileBase: React.FC<CategoryTileProps> = ({
     );
 };
 
-export const ProductCategoryTile = memo(CategoryTileBase);
+export const ProductCategoryTile = memo(ProductCategoryTileBase);
