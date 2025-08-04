@@ -15,11 +15,11 @@ export interface TileProps extends YStackProps {
 }
 
 export const Tile: React.FC<TileProps> = ({
+    w,
+    h,
     title,
     imageUrl,
-    width = '100%',
-    height,
-    aspectRatio,
+    aspectRatio = 1,
     onPress,
     titleNumberOfLines = 1,
     gradientMinHeight = GRADIENT_MIN_HEIGHT,
@@ -27,29 +27,30 @@ export const Tile: React.FC<TileProps> = ({
     children,
     ...stackProps
 }) => {
+    const isNumericWidth = typeof w === 'number';
+    const isNumericHeight = typeof h === 'number';
+    if (!isNumericWidth || !isNumericHeight) {
+        throw new Error('Tile: unsupported width or height type, must be numeric');
+    }
 
-    const isNumericWidth = typeof width === 'number';
-    const isNumericHeight = typeof height === 'number';
-
-    const finalImageUrl = (isNumericWidth && isNumericHeight) ? getScaledImageUrl(imageUrl, width, height) : imageUrl;
+    const uri = getScaledImageUrl(imageUrl, w, h);
 
     const content = (
         <YStack
-
-            onPress={onPress}
-            w={width}
-            h={aspectRatio ? undefined : height || '100%'}
+            w={w}
+            h={aspectRatio ? undefined : h || '100%'}
             f={1}
             br={"$3"}
             boc="$borderColor"
             bw={1}
             aspectRatio={aspectRatio}
             overflow="hidden"
+            onPress={onPress}
             {...stackProps}
         >
             <Image
-                source={{ uri: finalImageUrl }}
-                position="absolute"
+                source={{ uri }}
+                pos="absolute"
                 t={0}
                 l={0}
                 r={0}
@@ -63,9 +64,9 @@ export const Tile: React.FC<TileProps> = ({
                     p="$2"
                 >
                     <SizableText
-                        fontSize="$1"
-                        color="$color"
-                        textAlign="center"
+                        fos="$1"
+                        col="$color"
+                        ta="center"
                         numberOfLines={titleNumberOfLines}
                     >
                         {title}

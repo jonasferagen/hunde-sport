@@ -23,12 +23,12 @@ export const CategoryTile: React.FC<CategoryTileProps> = ({
 
     return (
         <Tile
+            w={width}
+            h={height}
+            aspectRatio={1}
             title={category.name}
             imageUrl={category.image?.src ?? ''}
             href={finalHref}
-            width={width}
-            height={height}
-            aspectRatio={1}
             {...stackProps}
         />
     );
