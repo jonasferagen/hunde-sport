@@ -15,11 +15,11 @@ import { LoadingScreen } from './misc/LoadingScreen';
 import { NotFoundScreen } from './misc/NotFoundScreen';
 
 const CategoryScreenContent = memo(() => {
-    const { subCategories } = useCategoryContext();
+    const { categories } = useCategoryContext();
     const [showAll, setShowAll] = useState(false);
     const limit = 3;
 
-    const showToggleButton = subCategories && subCategories.length > limit;
+    const showToggleButton = categories && categories.length > limit;
 
     return <PageView>
         <PageHeader theme="primary_alt1">
