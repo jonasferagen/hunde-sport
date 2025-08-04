@@ -12,17 +12,15 @@ interface CategoryTilesProps {
     theme?: ThemeName;
 }
 
+const NUM_COLUMNS = 3;
+const NUM_ROWS = 3;
+
 export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.Element => {
-    const { items, isLoading, isFetchingNextPage } = useCategories({ autoload: true });
-    const categories = items.filter((cat: Category) => cat.parent === categoryId);
+    const { items, isLoading, isFetchingNextPage, isFetching } = useCategories({ autoload: true });
+    const MAX_CATEGORIES = NUM_COLUMNS * NUM_ROWS;
 
-    if (isLoading || isFetchingNextPage) {
-        return <ThemedSpinner size="large" />;
-    }
-
-    if (!categories || categories.length === 0) {
-        return <></>;
-    }
+    const categories = items.filter((cat: Category) => cat.parent === categoryId).slice(0, MAX_CATEGORIES);
+    const placeholders = MAX_CATEGORIES - categories.length;
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -34,7 +32,20 @@ export const CategoryTiles = ({ theme, categoryId }: CategoryTilesProps): JSX.El
                             category={item}
                         />
                     ))}
+                    {placeholders > 0 && Array.from({ length: placeholders }).map((_, index) => (
+                        <YStack
+                            key={index}
+                            f={1}
+                            aspectRatio={1}
+                            ac="center"
+                            jc="center"
+                            theme="secondary_soft"
+                        >
+                            <ThemedSpinner />
+                        </YStack>
+                    ))}
                 </GridTiles>
+                {isLoading || isFetchingNextPage || isFetching && <ThemedSpinner />}
             </YStack>
         </ScrollView>
     );
