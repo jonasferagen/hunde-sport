@@ -1,5 +1,5 @@
-import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
-import { fetchCategories, fetchCategoryById } from './api';
+import { infiniteQueryOptions } from '@tanstack/react-query';
+import { fetchCategories } from './api';
 
 import { PAGE_SIZE } from '@/config/api';
 
@@ -13,8 +13,3 @@ export const categoriesQueryOptions = () =>
         },
     });
 
-export const categoryQueryOptions = (categoryId: number) =>
-    queryOptions({
-        queryKey: ['categoryId', categoryId],
-        queryFn: () => fetchCategoryById(categoryId),
-    });

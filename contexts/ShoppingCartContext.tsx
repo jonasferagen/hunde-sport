@@ -1,5 +1,4 @@
-import { useCartData, useInitializeCart } from '@/hooks/data/Cart';
-import { LoadingScreen } from '@/screens/misc/LoadingScreen';
+import { useCartStore } from '@/stores/CartStore';
 import { Purchasable } from '@/types';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
@@ -9,19 +8,16 @@ interface CartItemOptions {
     triggerRef?: React.RefObject<any>;
 }
 
-interface ShoppingCartContextType {
-    cart: ReturnType<typeof useCartData>;
-    isUpdating: boolean;
+type ShoppingCartContextType = ReturnType<typeof useCartStore> & {
     addCartItem: (purchasable: Purchasable, options?: CartItemOptions) => void;
     updateCartItem: (key: string, quantity: number) => void;
     removeCartItem: (key: string, options?: CartItemOptions) => void;
-}
+};
 
 const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
 
 export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    useInitializeCart();
-    const cart = useCartData();
+    const store = useCartStore();
     const toastController = useToastController();
 
     const addCartItem = (purchasable: Purchasable, options: CartItemOptions = {}) => {
@@ -29,7 +25,7 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
         const productVariation = purchasable.productVariation;
         const variation = !productVariation ? [] : productVariation.variation_attributes.map((attribute: any) => ({ attribute: attribute.name, value: attribute.value }));
 
-        cart.addItem({ id: purchasable.product.id, quantity: 1, variation });
+        store.addItem({ id: purchasable.product.id, quantity: 1, variation });
 
         if (!options.silent) {
             toastController.show('Lagt til i handlekurven', {
@@ -41,14 +37,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
 
     const updateCartItem = (key: string, quantity: number) => {
-        cart.updateItem(key, quantity);
+        store.updateItem(key, quantity);
     };
 
     const removeCartItem = (key: string, options: CartItemOptions = {}) => {
-        const item = cart.getItem(key);
+        const item = store.getItem(key);
         if (item) {
             const productName = item.product.name;
-            cart.removeItem(key);
+            store.removeItem(key);
 
             if (!options.silent) {
                 toastController.show('Fjernet fra handlekurven', {
@@ -61,16 +57,11 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
 
     const value = useMemo(() => ({
-        cart,
-        isUpdating: cart.isUpdating,
+        ...store,
         addCartItem,
         updateCartItem,
         removeCartItem,
-    }), [cart, cart.isUpdating]);
-
-    if (cart.isLoading) {
-        return <LoadingScreen />
-    }
+    }), [store]);
 
     return (
         <ShoppingCartContext.Provider value={value}>

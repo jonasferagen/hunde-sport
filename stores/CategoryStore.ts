@@ -3,9 +3,7 @@ import { create } from 'zustand';
 
 interface CategoryState {
     categories: ProductCategory[];
-    isLoading: boolean;
     setCategories: (categories: ProductCategory[]) => void;
-    setIsLoading: (isLoading: boolean) => void;
     getCategoryById: (id: number) => ProductCategory | undefined;
     getSubCategories: (parentId: number) => ProductCategory[];
     getBreadcrumbTrail: (categoryId: number) => ProductCategory[];
@@ -13,10 +11,8 @@ interface CategoryState {
 
 export const useCategoryStore = create<CategoryState>((set, get) => ({
     categories: [],
-    isLoading: true, // Start with loading true
 
     setCategories: (categories: ProductCategory[]) => set({ categories }),
-    setIsLoading: (isLoading: boolean) => set({ isLoading }),
 
     getCategoryById: (id: number) => {
         return get().categories.find(c => c.id === id);

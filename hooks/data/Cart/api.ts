@@ -1,5 +1,6 @@
 import { ENDPOINTS } from '@/config/api';
-import { CartData, useCartStore } from '@/models/Cart';
+import { CartData } from '@/models/Cart';
+import { useCartStore } from '@/stores/CartStore';
 import apiClient from '@/utils/apiClient';
 
 /**
