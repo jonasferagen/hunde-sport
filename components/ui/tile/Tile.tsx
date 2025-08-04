@@ -28,9 +28,6 @@ export const Tile: React.FC<TileProps> = ({
     ...stackProps
 }) => {
 
-
-
-
     return (
         <YStack
             w={w}

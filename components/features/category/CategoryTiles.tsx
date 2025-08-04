@@ -1,12 +1,12 @@
 
 import { GridTiles } from '@/components/ui/tile/GridTiles';
-import { useCategoryContext } from '@/contexts';
+import { useProductCategoryContext } from '@/contexts';
 import { JSX, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import { ThemeName, YStack } from 'tamagui';
-import { CategoryTile } from './CategoryTile';
+import { ProductCategoryTile } from './CategoryTile';
 
-interface CategoryTilesProps {
+interface ProductCategoryTilesProps {
 
     theme?: ThemeName;
 }
@@ -15,21 +15,21 @@ const NUM_COLUMNS = 3;
 const NUM_ROWS = 3;
 const MAX_CATEGORIES = NUM_COLUMNS * NUM_ROWS;
 
-export const CategoryTiles = ({ theme }: CategoryTilesProps): JSX.Element => {
-    const { categories: rootCategories } = useCategoryContext();
+export const ProductCategoryTiles = ({ theme }: ProductCategoryTilesProps): JSX.Element => {
+    const { productCategories: rootProductCategories } = useProductCategoryContext();
 
-    const categories = useMemo(
-        () => rootCategories.slice(0, MAX_CATEGORIES),
-        [rootCategories]
+    const productCategories = useMemo(
+        () => rootProductCategories.slice(0, MAX_CATEGORIES),
+        [rootProductCategories]
     );
-    const placeholders = MAX_CATEGORIES - categories.length;
+    const placeholders = MAX_CATEGORIES - productCategories.length;
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <YStack f={1} theme={theme}>
                 <GridTiles gap="$2">
-                    {categories.map((item) => (
-                        <CategoryTile key={item.id} category={item} />
+                    {productCategories.map((item) => (
+                        <ProductCategoryTile key={item.id} productCategory={item} />
                     ))}
                     {placeholders > 0 &&
                         Array.from({ length: placeholders }).map((_, index) => (

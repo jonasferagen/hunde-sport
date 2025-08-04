@@ -8,7 +8,7 @@ import { ProductTiles } from '@/components/features/product/ProductTiles';
 import { ProductVariations } from '@/components/features/product/variation/ProductVariations';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
-import { CategoryProvider, ProductProvider, useProductContext } from '@/contexts';
+import { ProductCategoryProvider, ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { createProduct } from '@/models/Product/ProductFactory';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
@@ -35,9 +35,9 @@ export const ProductScreen = () => {
   const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : undefined;
 
   return (
-    <CategoryProvider categoryId={categoryId} categories={productInstance.categories}>
+    <ProductCategoryProvider productCategoryId={categoryId} productCategories={productInstance.categories}>
       <ProductScreenContentWrapper product={productInstance} />
-    </CategoryProvider>
+    </ProductCategoryProvider>
   );
 };
 

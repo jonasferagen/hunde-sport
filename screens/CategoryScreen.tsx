@@ -4,7 +4,7 @@ import { CategoryProducts } from '@/components/features/category/CategoryProduct
 import { PageContent, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Chip } from '@/components/ui';
-import { CategoryProvider, useCategoryContext } from '@/contexts/CategoryContext';
+import { ProductCategoryProvider, useProductCategoryContext } from '@/contexts/ProductCategoryContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import { useLocalSearchParams } from 'expo-router';
@@ -14,7 +14,7 @@ import { LoadingScreen } from './misc/LoadingScreen';
 import { NotFoundScreen } from './misc/NotFoundScreen';
 
 const CategoryScreenContent = memo(() => {
-    const { category, isLoading, categories } = useCategoryContext();
+    const { productCategory: category, isLoading, productCategories: categories } = useProductCategoryContext();
     const [showAll, setShowAll] = useState(false);
     const limit = 3;
 
@@ -58,7 +58,7 @@ export const CategoryScreen = memo(() => {
     useRenderGuard('CategoryScreen');
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    return <CategoryProvider categoryId={Number(id)}>
+    return <ProductCategoryProvider productCategoryId={Number(id)}>
         <CategoryScreenContent />
-    </CategoryProvider>
+    </ProductCategoryProvider>
 });

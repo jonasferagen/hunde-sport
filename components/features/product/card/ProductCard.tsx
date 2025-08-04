@@ -1,6 +1,6 @@
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { routes } from '@/config/routes';
-import { useCategoryContext, useProductContext } from '@/contexts';
+import { useProductCategoryContext, useProductContext } from '@/contexts';
 
 import { HrefObject } from 'expo-router';
 import React from 'react';
@@ -13,7 +13,7 @@ interface ProductCardProps extends StackProps { }
 
 export const ProductCard = ({ ...props }: ProductCardProps) => {
     const { product } = useProductContext();
-    const { category } = useCategoryContext();
+    const { productCategory: category } = useProductCategoryContext();
 
     const href: HrefObject = routes.product.path(product, category?.id);
 

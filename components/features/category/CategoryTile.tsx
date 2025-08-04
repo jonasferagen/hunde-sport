@@ -11,11 +11,11 @@ export const CATEGORY_TILE_WIDTH: DimensionValue = 200;
 export const CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 
 interface CategoryTileProps extends Omit<YStackProps, 'children'> {
-    category: ProductCategory;
+    productCategory: ProductCategory;
 }
 
 const CategoryTileBase: React.FC<CategoryTileProps> = ({
-    category,
+    productCategory: category,
     ...stackProps
 }) => {
 
@@ -34,4 +34,4 @@ const CategoryTileBase: React.FC<CategoryTileProps> = ({
     );
 };
 
-export const CategoryTile = memo(CategoryTileBase);
+export const ProductCategoryTile = memo(CategoryTileBase);

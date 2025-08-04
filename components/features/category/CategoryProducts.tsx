@@ -1,4 +1,4 @@
-import { useCategoryContext } from '@/contexts/CategoryContext';
+import { useProductCategoryContext } from '@/contexts/ProductCategoryContext';
 import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
@@ -10,7 +10,7 @@ import { ProductList } from '../product/ProductList';
 
 export const CategoryProducts = (): JSX.Element | null => {
     useRenderGuard('CategoryProducts');
-    const { category, isLoading } = useCategoryContext();
+    const { productCategory: category, isLoading } = useProductCategoryContext();
 
     if (isLoading || !category) {
         return <LoadingScreen />;

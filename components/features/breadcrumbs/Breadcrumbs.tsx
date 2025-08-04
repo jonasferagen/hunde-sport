@@ -1,5 +1,5 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { useCategoryContext } from '@/contexts/CategoryContext';
+import { useProductCategoryContext } from '@/contexts/ProductCategoryContext';
 import { useCategoryStore } from '@/stores/CategoryStore';
 import React from 'react';
 import { XStack } from 'tamagui';
@@ -10,7 +10,7 @@ interface BreadcrumbsProps {
 }
 
 export const Breadcrumbs = React.memo(({ isLastClickable = false }: BreadcrumbsProps) => {
-    const { category } = useCategoryContext();
+    const { productCategory: category } = useProductCategoryContext();
     const getBreadcrumbTrail = useCategoryStore((state) => state.getBreadcrumbTrail);
     const isLoading = useCategoryStore((state) => state.isLoading);
 

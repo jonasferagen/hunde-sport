@@ -1,6 +1,6 @@
 import { Chip } from "@/components/ui/";
 import { routes } from "@/config/routes";
-import { useCategoryContext } from "@/contexts";
+import { useProductCategoryContext } from "@/contexts";
 import { StackProps, XStack } from "tamagui";
 
 interface CategoryChipsProps {
@@ -10,7 +10,7 @@ interface CategoryChipsProps {
 
 export const CategoryChips = ({ limit, showAll, ...stackProps }: StackProps & CategoryChipsProps) => {
 
-    const { categories } = useCategoryContext();
+    const { productCategories: categories } = useProductCategoryContext();
 
     const limitedCategories = limit ? categories.slice(0, limit) : categories;
     const displayedCategories = showAll ? categories : limitedCategories;

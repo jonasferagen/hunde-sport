@@ -1,5 +1,4 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { CategoryProvider, useCategoryContext } from '@/contexts';
+import { ProductCategoryProvider, useProductCategoryContext } from '@/contexts';
 import { ProductCategory } from '@/models/Category';
 import { usePathname } from 'expo-router';
 import React, { JSX, memo, useCallback, useState } from 'react';
@@ -28,14 +27,11 @@ interface CategoryBranchProps extends CategoryTreeProps {
 
 const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, renderItem }: CategoryBranchProps) => {
     const pathname = usePathname();
-    const { categories: subcategories, isLoading } = useCategoryContext();
+    const { productCategories: subproductCategories } = useProductCategoryContext();
 
-    const hasChildren = subcategories.length > 0;
+    const hasChildren = subproductCategories.length > 0;
     const isExpanded = expandedIds.has(category.id);
 
-    if (isLoading) {
-        return <ThemedSpinner />;
-    }
 
     return (
         <Animated.View key={category.id} layout={LinearTransition}>
@@ -52,8 +48,8 @@ const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, rende
                 </XStack>
                 {isExpanded && hasChildren && (
                     <YStack pl="$4">
-                        {subcategories.map((subcategory) => (
-                            <CategoryProvider key={subcategory.id} categoryId={subcategory.id}>
+                        {subproductCategories.map((subcategory) => (
+                            <ProductCategoryProvider key={subcategory.id} productCategoryId={subcategory.id}>
                                 <CategoryBranch
                                     category={subcategory}
                                     level={level + 1}
@@ -61,7 +57,7 @@ const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, rende
                                     onExpand={onExpand}
                                     renderItem={renderItem}
                                 />
-                            </CategoryProvider>
+                            </ProductCategoryProvider>
                         ))}
                     </YStack>
                 )}
@@ -71,7 +67,7 @@ const CategoryBranch = memo(({ category, level = 0, expandedIds, onExpand, rende
 });
 
 export const CategoryTree = ({ renderItem, level = 0 }: CategoryTreeProps) => {
-    const { categories, isLoading } = useCategoryContext();
+    const { productCategories: categories } = useProductCategoryContext();
     const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
 
     const handleExpand = useCallback((id: number) => {
@@ -86,12 +82,10 @@ export const CategoryTree = ({ renderItem, level = 0 }: CategoryTreeProps) => {
         });
     }, []);
 
-    if (isLoading) return <ThemedSpinner />;
-
     return (
         <YStack>
             {categories.map((category) => (
-                <CategoryProvider key={category.id} categoryId={category.id}>
+                <ProductCategoryProvider key={category.id} productCategoryId={category.id}>
                     <CategoryBranch
                         category={category}
                         level={level}
@@ -99,7 +93,7 @@ export const CategoryTree = ({ renderItem, level = 0 }: CategoryTreeProps) => {
                         onExpand={handleExpand}
                         renderItem={renderItem}
                     />
-                </CategoryProvider>
+                </ProductCategoryProvider>
             ))}
         </YStack>
     );

@@ -52,27 +52,27 @@ const font = createInterFont({
 });
 
 const animations = createAnimations({
-    fast: {
+    bouncy: {
         damping: 20,
         mass: 1.2,
         stiffness: 250,
+    },
+    lazy: {
+        damping: 20,
+        stiffness: 60,
     },
     medium: {
         damping: 10,
         mass: 0.9,
         stiffness: 100,
     },
-    slow: {
-        damping: 20,
-        stiffness: 60,
+    linear: {
+        type: 'timing',
+        duration: 300,
     },
-    fade: {
+    linearSlow: {
         type: 'timing',
         duration: 1000,
-    },
-    fade_slow: {
-        type: 'timing',
-        duration: 5000,
     }
 });
 

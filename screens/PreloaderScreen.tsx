@@ -55,7 +55,7 @@ export const PreloaderScreen = (): JSX.Element => {
                 <YStack ai="center" gap="$2">
                     <SizableText>Laster inn kategorier...</SizableText>
                     <Progress value={progress} w={200}>
-                        <Progress.Indicator animation="fade" />
+                        <Progress.Indicator animation="linearSlow" />
                     </Progress>
                     <SizableText theme="alt2">{categories.length} / {totalCategories}</SizableText>
                 </YStack>

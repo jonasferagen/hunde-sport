@@ -1,6 +1,6 @@
 import {
   AppToastProvider,
-  CategoryProvider,
+  ProductCategoryProvider,
   SearchProvider,
   ShoppingCartProvider,
 } from '@/contexts';
@@ -23,13 +23,13 @@ const RootLayout = (): JSX.Element => {
             <PortalProvider>
               <Theme name="light">
                 <AppToastProvider>
-                  <CategoryProvider>
+                  <ProductCategoryProvider>
                     <ShoppingCartProvider>
                       <SearchProvider>
                         <Slot />
                       </SearchProvider>
                     </ShoppingCartProvider>
-                  </CategoryProvider>
+                  </ProductCategoryProvider>
                 </AppToastProvider>
               </Theme>
             </PortalProvider>

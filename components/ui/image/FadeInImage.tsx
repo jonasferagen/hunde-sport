@@ -12,7 +12,7 @@ export const FadeInImage = ({ source, objectFit, ...stackProps }: FadeInImagePro
     return (
         <YStack
             {...stackProps}
-            animation="slow"
+            animation="linearSlow"
             opacity={isLoaded ? 1 : 0}
         >
             <Image
