@@ -12,20 +12,7 @@ export const productQueryOptions = (productId: number) =>
         queryKey: ['product', productId],
         queryFn: () => fetchProduct(productId),
     });
-/*
-export const productVariationQueryOptions = (productId: number) =>
-    queryOptions({
-        queryKey: ['product', 'variation', productId],
-        queryFn: () => fetchProductVariation(productId),
-    });
-*/
-/*
-export const productVariationsQueryOptions = (parentId: number) =>
-    queryOptions({
-        queryKey: ['products', 'variations', parentId],
-        queryFn: () => fetchProducts(1, { type: 'variations', params: parentId }),
-    });
-*/
+
 export const productsQueryOptions = (query: ProductListParams) => {
 
     return infiniteQueryOptions({

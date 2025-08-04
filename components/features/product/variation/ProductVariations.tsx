@@ -8,7 +8,7 @@ import { AttributeSelector } from './AttributeSelector';
 export const ProductVariations = (): JSX.Element => {
     const { product, productVariation, setProductVariation, isProductVariationsLoading } = useProductContext();
 
-    const productVariations = (product as VariableProduct).getVariations();
+    const productVariations = (product as VariableProduct).getVariationsData();
 
     const initialSelections = useMemo(() => {
         if (!productVariation) {
@@ -52,35 +52,21 @@ export const ProductVariations = (): JSX.Element => {
         setSelectedOptions(newSelectedOptions);
     };
 
-    const attributes = product.attributes.filter((attribute) => attribute.variation);
-    const allVariationAttributes = (product as VariableProduct).variations.flatMap((v) => v.attributes);
+    const attributes = (product as VariableProduct).getAttributesForVariationSelection();
+
 
     return (
         <XStack gap="$2" flexWrap="wrap" mt="$2">
             {attributes.map((attribute) => {
-                const availableTerms = attribute.terms.filter((term) =>
-                    allVariationAttributes.some((varAttr) => varAttr.name === attribute.name && varAttr.value === term.slug)
-                );
-                console.log(availableTerms);
-
-                if (availableTerms.length === 0) {
-                    return null;
-                }
-
-                const filteredAttribute = new ProductAttribute({ ...attribute, terms: availableTerms });
                 return (
                     <YStack key={attribute.id} flex={1}>
                         <SizableText fos="$3" fow="bold" mb="$2" ml="$1" tt="capitalize">
                             {attribute.name}
                         </SizableText>
                         <AttributeSelector
-                            attribute={filteredAttribute}
-                            productVariations={productVariations}
-                            selectedOptions={selectedOptions}
-                            onSelectOption={(optionLabel) => {
-                                const term = attribute.terms.find((t) => t.name === optionLabel);
-                                term && handleSelectOption(attribute.name, term.slug);
-                            }}
+                            attribute={attribute}
+                            selectedValue={selectedOptions[attribute.name]}
+                            onSelect={(value) => handleSelectOption(attribute.name, value)}
                         />
                     </YStack>
                 );

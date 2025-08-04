@@ -1,10 +1,5 @@
+import { ProductAttributeTerm, ProductAttributeTermData } from './ProductAttributeTerm';
 
-export interface ProductAttributeTerm {
-  id: number;
-  name: string;
-  slug: string;
-  default: boolean;
-}
 
 export interface ProductAttributeData {
   id: number;
@@ -17,7 +12,7 @@ export interface ProductAttributeData {
   visible: boolean;
   taxonomy: string;
   has_variations: boolean;
-  terms: ProductAttributeTerm[];
+  terms: ProductAttributeTermData[];
 }
 
 export class ProductAttribute {
@@ -38,7 +33,7 @@ export class ProductAttribute {
     this.name = data.name;
     this.taxonomy = data.taxonomy;
     this.has_variations = data.has_variations;
-    this.terms = data.terms;
+    this.terms = data.terms.map((termData) => new ProductAttributeTerm(termData));
     this.options = data.options;
     this.variation = data.variation;
     this.visible = data.visible;
@@ -48,5 +43,20 @@ export class ProductAttribute {
 
   get label(): string {
     return this.name;
+  }
+
+  withAvailableTerms(allVariationAttributes: { name: string; value: string }[]): ProductAttribute {
+    const availableTerms = this.terms.filter((term) =>
+      allVariationAttributes.some(
+        (varAttr) => varAttr.name === this.name && varAttr.value === term.slug
+      )
+    );
+
+    const newAttributeData: ProductAttributeData = {
+      ...this,
+      terms: availableTerms.map((term: ProductAttributeTerm) => ({ ...term, default: term.isDefault })),
+    };
+
+    return new ProductAttribute(newAttributeData);
   }
 }

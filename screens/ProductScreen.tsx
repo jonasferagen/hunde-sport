@@ -10,6 +10,7 @@ import { PageContent, PageHeader, PageSection, PageView } from '@/components/lay
 import { Breadcrumbs } from '@/components/ui';
 import { CategoryProvider, ProductProvider, useProductContext } from '@/contexts';
 import { useProduct, useProductsByIds } from '@/hooks/data/Product';
+import { createProduct } from '@/models/Product/ProductFactory';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
 import { useLocalSearchParams } from 'expo-router';
@@ -32,9 +33,7 @@ export const ProductScreen = () => {
   }
 
   const content = (
-    <ProductProvider product={product}>
-      <ProductScreenContentWrapper categoryIdFromParams={categoryIdFromParams} />
-    </ProductProvider>
+    <ProductScreenContentWrapper productId={productId} categoryIdFromParams={categoryIdFromParams} />
   );
 
   if (categoryIdFromParams) {
@@ -48,16 +47,29 @@ export const ProductScreen = () => {
   return content;
 };
 
-const ProductScreenContentWrapper = ({ categoryIdFromParams }: { categoryIdFromParams?: string }) => {
-  const { product } = useProductContext();
+const ProductScreenContentWrapper = ({ productId, categoryIdFromParams }: { productId: number, categoryIdFromParams?: string }) => {
+  const { data: product, isLoading, isError } = useProduct(productId);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (!product) {
+    return <NotFoundScreen message="Beklager, produktet ble ikke funnet" />;
+  }
+
+  const productInstance = createProduct(product);
+
   return (
-    <PageView>
-      <PageHeader theme="secondary_soft">
-        {categoryIdFromParams && <Breadcrumbs isLastClickable={true} />}
-        <CategoryChips categories={product.categories} showAll={true} />
-      </PageHeader>
-      <ProductScreenContent />
-    </PageView>
+    <ProductProvider product={productInstance}>
+      <PageView>
+        <PageHeader theme="secondary_soft">
+          {categoryIdFromParams && <Breadcrumbs isLastClickable={true} />}
+          <CategoryChips categories={productInstance.categories} showAll={true} />
+        </PageHeader>
+        <ProductScreenContent />
+      </PageView>
+    </ProductProvider>
   )
 }
 
