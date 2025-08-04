@@ -1,8 +1,14 @@
 import { Product, ProductData } from "./Product";
+import { ProductAttributeTerm } from "./ProductAttributeTerm";
+
+export type AttributeSelectionTuple = {
+    name: string; // The attribute slug, e.g., "pa_color"
+    option: string; // The selected term slug, e.g., "red"
+};
 
 export class ProductVariation extends Product {
     type: 'variation' = 'variation';
-    variation_attributes: { name: string; value: string }[] = [];
+    variation_attributes: AttributeSelectionTuple[] = [];
 
     constructor(data: ProductData) {
         if (data.type !== 'variation') {
@@ -22,9 +28,9 @@ export class ProductVariation extends Product {
         }
 
         return this.variation_attributes
-            .map((variationAttr) => {
-                const parentAttribute = parentProduct.attributes.find((attr) => attr.name === variationAttr.name);
-                return parentAttribute?.terms.find((t) => t.slug === variationAttr.value)?.name;
+            .map((variationAttr: AttributeSelectionTuple) => {
+                const parentAttribute = parentProduct.attributes.find((attr) => attr.taxonomy === variationAttr.name);
+                return parentAttribute?.terms.find((t: ProductAttributeTerm) => t.slug === variationAttr.option)?.name;
             })
             .filter((name): name is string => !!name)
             .join(' ');
@@ -42,7 +48,7 @@ export class ProductVariation extends Product {
      */
     hasAttribute(attributeName: string, attributeValue: string): boolean {
         return this.variation_attributes.some(
-            (variationAttr) => variationAttr.name === attributeName && variationAttr.value === attributeValue
+            (variationAttr) => variationAttr.name === attributeName && variationAttr.option === attributeValue
         );
     }
 
@@ -62,7 +68,7 @@ export class ProductVariation extends Product {
 
             // Check if this variation has an attribute that matches the key-value pair.
             return this.variation_attributes.some(
-                (variationAttr) => variationAttr.name === key && variationAttr.value === value
+                (variationAttr) => variationAttr.name === key && variationAttr.option === value
             );
         });
     }

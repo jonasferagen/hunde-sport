@@ -1,5 +1,6 @@
+import { formatPrice } from '@/utils/helpers';
 import { ProductAttributeTerm, ProductAttributeTermData } from './ProductAttributeTerm';
-
+import { AttributeSelectionTuple, ProductVariation } from './ProductVariation';
 
 export interface ProductAttributeData {
   id: number;
@@ -45,10 +46,10 @@ export class ProductAttribute {
     return this.name;
   }
 
-  withAvailableTerms(allVariationAttributes: { name: string; value: string }[]): ProductAttribute {
-    const availableTerms = this.terms.filter((term) =>
+  withAvailableTerms(allVariationAttributes: AttributeSelectionTuple[]): ProductAttribute {
+    const availableTerms = this.terms.filter((term: ProductAttributeTerm) =>
       allVariationAttributes.some(
-        (varAttr) => varAttr.name === this.name && varAttr.value === term.slug
+        (varAttr: AttributeSelectionTuple) => varAttr.name === this.taxonomy && varAttr.option === term.slug
       )
     );
 
@@ -58,5 +59,31 @@ export class ProductAttribute {
     };
 
     return new ProductAttribute(newAttributeData);
+  }
+
+  getOptionsDetails(compatibleVariations: ProductVariation[]) {
+    return this.terms.map((term: ProductAttributeTerm) => {
+      const potentialMatches = compatibleVariations.filter((variation: ProductVariation) =>
+        variation.hasAttribute(this.name, term.slug)
+      );
+
+      const isAvailable = potentialMatches.length > 0;
+      let displayPrice = '';
+      let inStock = false;
+
+      if (isAvailable) {
+        const prices = potentialMatches.map((v) => Number(v.prices.price));
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+        displayPrice =
+          minPrice === maxPrice
+            ? formatPrice(minPrice.toString())
+            : `Fra ${formatPrice(minPrice.toString())}`;
+
+        inStock = potentialMatches.some((v) => v.is_in_stock);
+      }
+
+      return { ...term, isAvailable, displayPrice, inStock };
+    });
   }
 }

@@ -1,11 +1,9 @@
-import { ProductAttribute } from '@/models/Product/ProductAttribute';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, XStack } from 'tamagui';
 
 interface AttributeOptionProps {
     option: string;
-    attribute: ProductAttribute;
     selectOption: () => void;
     isSelected: boolean;
     isAvailable: boolean;
@@ -13,7 +11,7 @@ interface AttributeOptionProps {
     inStock: boolean
 }
 
-export const AttributeOption = ({ option, attribute, price, selectOption, isSelected, isAvailable, inStock }: AttributeOptionProps) => {
+export const AttributeOption = ({ option, price, selectOption, isSelected, isAvailable, inStock }: AttributeOptionProps) => {
 
     const stockStatus = inStock ? null : <SizableText fontSize="$2" fontWeight="bold" color={'red'}>⬤ Utsolgt</SizableText>
     const disabled = !isAvailable || !inStock;

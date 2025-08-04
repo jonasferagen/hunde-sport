@@ -1,8 +1,8 @@
-import { formatPrice } from "@/utils/helpers";
 import { Product, ProductData } from "./Product";
 import { ProductAttribute } from "./ProductAttribute";
 import { ProductAttributeTerm } from "./ProductAttributeTerm";
-import { ProductVariation } from "./ProductVariation";
+import { AttributeSelectionTuple, ProductVariation } from "./ProductVariation";
+import { VariationSelection } from "./VariationSelection";
 
 export class VariableProduct extends Product {
 
@@ -44,15 +44,16 @@ export class VariableProduct extends Product {
 
         this.attributes.forEach((attribute) => {
             if (attribute.variation) {
-                const defaultTerm = attribute.terms.find((term: any) => term.default);
+                const defaultTerm = attribute.terms.find((term: ProductAttributeTerm) => term.isDefault);
                 if (defaultTerm) {
                     defaultAttributes[attribute.name] = defaultTerm.slug;
                 }
             }
         });
 
+
         if (Object.keys(defaultAttributes).length > 0) {
-            return this.variationsData.find((variation) =>
+            return this.variationsData.find((variation: ProductVariation) =>
                 variation.matchesAttributes(defaultAttributes)
             );
         }
@@ -60,82 +61,39 @@ export class VariableProduct extends Product {
         return undefined;
     }
 
-    findVariations(attributes: ProductAttribute[]): ProductVariation[] {
-        if (attributes.length === 0) {
+    findVariations(selections: AttributeSelectionTuple[]): ProductVariation[] {
+        if (selections.length === 0) {
             return [];
         }
 
-        const filteredVariationReferences = this.variations.filter((variation) => {
-            if (variation.attributes.length !== attributes.length) {
-                return false;
-            }
-
-            return attributes.every((selectedAttr: ProductAttribute) =>
-                variation.attributes.some(
-                    (variationAttr: any) => {
-
-                        console.warn(typeof variationAttr);
-
-                        return variationAttr.name === selectedAttr.name && variationAttr.value === selectedAttr.option;
-                    }
+        return this.variationsData.filter((variation: ProductVariation) => {
+            return selections.every((selection: AttributeSelectionTuple) =>
+                variation.variation_attributes.some(
+                    (variationAttr: AttributeSelectionTuple) =>
+                        variationAttr.name === selection.name && variationAttr.option === selection.option
                 )
             );
         });
-
-        const foundIds = new Set(filteredVariationReferences.map((v) => v.id));
-        return this.variationsData.filter((v) => foundIds.has(v.id));
     }
 
     getAttributesForVariationSelection(): ProductAttribute[] {
-        const variationAttributes = this.attributes.filter((attribute) => attribute.variation);
-        const allVariationRefAttributes = this.variations.flatMap((v: any) => v.attributes);
+        const variationAttributes = this.attributes.filter((attribute: ProductAttribute) => attribute.variation);
+        const allVariationRefAttributes = this.variationsData.flatMap((v: ProductVariation) => v.variation_attributes);
 
         return variationAttributes
-            .map((attribute) => attribute.withAvailableTerms(allVariationRefAttributes))
-            .filter((attribute) => attribute.terms.length > 0);
+            .map((attribute: ProductAttribute) => attribute.withAvailableTerms(allVariationRefAttributes))
+            .filter((attribute: ProductAttribute) => attribute.terms.length > 0);
     }
 
-    getAttributeOptions(attributeName: string, selectedOptions: { [key: string]: string }) {
-        const otherSelectedOptions = { ...selectedOptions };
-        delete otherSelectedOptions[attributeName];
+    getAttributeOptions(attributeName: string, selection: VariationSelection) {
+        const selectionForOthers = selection.forAttribute(attributeName);
+        const compatibleVariations = selectionForOthers.getCompatibleVariations(this.variationsData);
 
-        const otherAttributes = Object.entries(otherSelectedOptions).map(
-            ([name, option]) => { console.log(option, '---'); return new ProductAttribute({ id: 0, name, option }) }
-        );
-
-        //   console.log('---', option, '---');
-
-        const compatibleVariations = this.variationsData.filter((variation) =>
-            variation.matchesAttributes(otherAttributes)
-        );
-
-        const attribute = this.attributes.find((attr) => attr.name === attributeName);
+        const attribute = this.attributes.find((attribute: ProductAttribute) => attribute.name === attributeName);
         if (!attribute) {
             return [];
         }
 
-        return attribute.terms.map((term: ProductAttributeTerm) => {
-            const potentialMatches = compatibleVariations.filter((variation) =>
-                variation.hasAttribute(attributeName, term.slug)
-            );
-
-            const isAvailable = potentialMatches.length > 0;
-            let displayPrice = '';
-            let inStock = false;
-
-            if (isAvailable) {
-                const prices = potentialMatches.map((v) => Number(v.prices.price));
-                const minPrice = Math.min(...prices);
-                const maxPrice = Math.max(...prices);
-                displayPrice =
-                    minPrice === maxPrice
-                        ? formatPrice(minPrice.toString())
-                        : `Fra ${formatPrice(minPrice.toString())}`;
-
-                inStock = potentialMatches.some((v) => v.is_in_stock);
-            }
-
-            return { ...term, isAvailable, displayPrice, inStock };
-        });
+        return attribute.getOptionsDetails(compatibleVariations);
     }
 }

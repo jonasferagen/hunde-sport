@@ -1,6 +1,8 @@
 import { useProductContext } from '@/contexts/ProductContext';
 import { ProductAttribute } from '@/models/Product/ProductAttribute';
+import { AttributeSelectionTuple } from '@/models/Product/ProductVariation';
 import { VariableProduct } from '@/models/Product/VariableProduct';
+import { VariationSelection } from '@/models/Product/VariationSelection';
 import React, { JSX, useEffect, useMemo, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
@@ -8,14 +10,18 @@ import { AttributeSelector } from './AttributeSelector';
 export const ProductVariations = (): JSX.Element => {
     const { product, productVariation, setProductVariation, isProductVariationsLoading } = useProductContext();
 
-    const productVariations = (product as VariableProduct).getVariationsData();
+    if (!(product instanceof VariableProduct)) {
+        return <></>;
+    }
+
+    const variableProduct = product as VariableProduct;
 
     const initialSelections = useMemo(() => {
         if (!productVariation) {
             return {};
         }
         return productVariation.variation_attributes.reduce((acc, attr) => {
-            acc[attr.name] = attr.value;
+            acc[attr.name] = attr.option;
             return acc;
         }, {} as { [key: string]: string });
     }, [productVariation]);
@@ -23,20 +29,17 @@ export const ProductVariations = (): JSX.Element => {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>(initialSelections);
 
     useEffect(() => {
-        if (!(product instanceof VariableProduct)) {
-            return;
-        }
-        const attributes = Object.entries(selectedOptions).map(([name, option]) => new ProductAttribute({ id: 0, name, option }));
-        const matchingVariations = product.findVariations(attributes);
+        const selections: AttributeSelectionTuple[] = Object.entries(selectedOptions).map(([name, option]) => ({ name, option }));
+        const matchingVariations = variableProduct.findVariations(selections);
 
         if (matchingVariations.length === 1) {
             setProductVariation(matchingVariations[0]);
         } else {
             setProductVariation(undefined as any);
         }
-    }, [selectedOptions, product, productVariations, setProductVariation]);
+    }, [selectedOptions, product, setProductVariation]);
 
-    if (!product.hasVariations() || isProductVariationsLoading) {
+    if (isProductVariationsLoading) {
         return <></>;
     }
 
@@ -52,18 +55,21 @@ export const ProductVariations = (): JSX.Element => {
         setSelectedOptions(newSelectedOptions);
     };
 
-    const attributes = (product as VariableProduct).getAttributesForVariationSelection();
+    const attributes = variableProduct.getAttributesForVariationSelection();
+    const selection = new VariationSelection(selectedOptions);
+
 
     return (
         <XStack gap="$2" flexWrap="wrap" mt="$2">
-            {attributes.map((attribute) => {
+            {attributes.map((attribute: ProductAttribute) => {
+                const options = variableProduct.getAttributeOptions(attribute.name, selection);
                 return (
                     <YStack key={attribute.id} flex={1}>
                         <SizableText fos="$3" fow="bold" mb="$2" ml="$1" tt="capitalize">
                             {attribute.name}
                         </SizableText>
                         <AttributeSelector
-                            attribute={attribute}
+                            options={options}
                             selectedValue={selectedOptions[attribute.name]}
                             onSelect={(value) => handleSelectOption(attribute.name, value)}
                         />
