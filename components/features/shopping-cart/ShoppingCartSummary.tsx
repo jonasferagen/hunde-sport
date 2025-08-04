@@ -10,21 +10,22 @@ import { SizableText, XStack } from 'tamagui';
 export const ShoppingCartSummary = memo(
     (): JSX.Element => {
 
-        const { cart, isUpdating } = useShoppingCartContext();
+        const { items_count, totals, isLoading, isMutating } = useShoppingCartContext();
 
         return <>
             <XStack jc="space-between" ai="center" gap="$3">
                 <XStack ai="center" gap="$3" jc="flex-end">
                     <SizableText size="$4" textAlign="right">
-                        {cart.items_count} var(er)
+                        {items_count} var(er)
                     </SizableText>
                 </XStack>
                 <XStack gap="$3" ai='center'>
-                    <ThemedText fontSize="$3" fontWeight="bold" textAlign="right">
-                        {isUpdating ? <ThemedSpinner /> : formatPrice(cart.totals.total_price)}
+                    <ThemedText theme='alt1' size="$6" fow='bold'>
+                        {formatPrice(totals.total_price)}
                     </ThemedText>
+                    {(isLoading || isMutating) && <ThemedSpinner />}
                 </XStack>
-            </XStack >
-        </>;
+            </XStack>
+        </>
     }
 );

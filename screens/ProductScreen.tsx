@@ -1,4 +1,4 @@
-import { CategoryChips } from '@/components/features/category/CategoryChips';
+import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { PriceTag } from '@/components/features/product/display/PriceTag';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
@@ -47,7 +47,7 @@ const ProductScreenContentWrapper = ({ product }: { product: SimpleProduct | Var
       <PageView>
         <PageHeader theme="secondary_soft">
           <Breadcrumbs isLastClickable={true} />
-          <CategoryChips showAll={true} />
+          <ProductCategoryChips showAll={true} />
         </PageHeader>
         <ProductScreenContent />
       </PageView>

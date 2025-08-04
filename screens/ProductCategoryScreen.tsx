@@ -1,6 +1,6 @@
 import { Breadcrumbs } from '@/components/features/breadcrumbs/Breadcrumbs';
-import { CategoryChips } from '@/components/features/category/CategoryChips';
-import { ProductCategoryProducts } from '@/components/features/category/ProductCategoryProducts';
+import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
+import { ProductCategoryProducts } from '@/components/features/product-category/ProductCategoryProducts';
 import { PageContent, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Chip } from '@/components/ui';
@@ -39,7 +39,7 @@ const ProductCategoryScreenContent = memo(() => {
                 )}
             </XStack>
 
-            <CategoryChips
+            <ProductCategoryChips
                 limit={limit}
                 showAll={showAll}
             />

@@ -1,4 +1,4 @@
-import { ProductCategoryTree, RenderItemProps } from '@/components/features/category/ProductCategoryTree';
+import { ProductCategoryTree, RenderItemProps } from '@/components/features/product-category/ProductCategoryTree';
 import { resolveTheme, routes } from '@/config/routes';
 import {
     DrawerContentComponentProps,
@@ -14,8 +14,8 @@ import { ThemedText } from '../ui/ThemedText';
 import { AnimatedListExpansionIcon } from './AnimatedListExpansionIcon';
 
 
-const CategoryTreeItem = ({
-    productCategory: category,
+const ProductCategoryTreeItem = ({
+    productCategory,
     isActive,
     isExpanded,
     level,
@@ -31,7 +31,7 @@ const CategoryTreeItem = ({
             <View ml={level * spacing}>
                 <ThemedButton
                     circular
-                    onPress={hasChildren ? () => onExpand(category.id) : undefined}
+                    onPress={hasChildren ? () => onExpand(productCategory.id) : undefined}
                     disabled={!hasChildren}
                     size="$6"
                 >
@@ -40,7 +40,7 @@ const CategoryTreeItem = ({
             </View>
 
             <XStack flex={1} >
-                <Link href={routes.category.path(category)} asChild>
+                <Link href={routes['product-category'].path(productCategory)} asChild>
                     <XStack
                         f={1}
                         py="$2.5"
@@ -53,7 +53,7 @@ const CategoryTreeItem = ({
                         pressStyle={{ backgroundColor: theme.backgroundFocus.val, borderColor: theme.backgroundFocus.val }}
                     >
                         <ThemedText fos="$3" letterSpacing={0.5}>
-                            {category.name}
+                            {productCategory.name}
                         </ThemedText>
                     </XStack>
                 </Link>
@@ -139,7 +139,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                 })}
                             <ThemedText my="$2" fos="$4">Kategorier</ThemedText>
                             <ProductCategoryTree
-                                renderItem={(itemProps) => <CategoryTreeItem {...itemProps} />}
+                                renderItem={(itemProps) => <ProductCategoryTreeItem {...itemProps} />}
                             />
                         </YStack>
                     </ScrollView>

@@ -25,7 +25,7 @@ export const Breadcrumbs = React.memo(({ isLastClickable = false }: BreadcrumbsP
             {trail.map((breadcrumbCategory, index) => (
                 <Breadcrumb
                     key={breadcrumbCategory.id}
-                    category={breadcrumbCategory}
+                    productCategory={breadcrumbCategory}
                     isLast={index === trail.length - 1}
                     isLastClickable={isLastClickable}
                 />

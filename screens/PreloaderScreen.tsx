@@ -1,6 +1,6 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { useCartData } from '@/hooks/data/Cart';
 import { useCategories } from '@/hooks/data/Category';
+import { useIsCartReady } from '@/stores/CartStore';
 import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
 import { useRouter } from 'expo-router';
 import React, { JSX, useEffect, useState } from 'react';
@@ -8,7 +8,6 @@ import { Progress, SizableText, Theme, YStack } from 'tamagui';
 
 export const PreloaderScreen = (): JSX.Element => {
     const [isReadyToNavigate, setIsReadyToNavigate] = useState(false);
-    const [isCartLoading, setIsCartLoading] = useState(true);
 
     // Categories
     const {
@@ -21,16 +20,12 @@ export const PreloaderScreen = (): JSX.Element => {
     const { setProductCategories: setCategories } = useProductCategoryStore();
 
     // Cart
-    const { isLoading: cartIsLoading } = useCartData();
-    useEffect(() => {
-        // This effect runs only once on mount
-        setIsCartLoading(cartIsLoading);
-    }, []); // Empty dependency array ensures this runs only once
+    const isCartReady = useIsCartReady();
 
     const router = useRouter();
 
     const allCategoriesFetched = !hasNextCategoriesPage;
-    const isWaiting = isCategoriesLoading || isFetchingNextCategories || isCartLoading;
+    const isWaiting = isCategoriesLoading || isFetchingNextCategories || !isCartReady;
     const progress = totalCategories > 0 ? (categories.length / totalCategories) * 100 : 0;
 
     useEffect(() => {

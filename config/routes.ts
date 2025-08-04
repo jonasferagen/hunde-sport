@@ -66,13 +66,13 @@ export const routes: Record<string, Route> = {
         label: 'Produkt',
         icon: () => null, // No icon for product in drawer
         theme: 'primary',
-        path: (product: SimpleProduct | VariableProduct, categoryId?: number) => {
-            const params: { id: string; name: string; categoryId?: string } = {
+        path: (product: SimpleProduct | VariableProduct, productCategoryId?: number) => {
+            const params: { id: string; name: string; productCategoryId?: string } = {
                 id: product.id.toString(),
                 name: product.name,
             };
-            if (categoryId) {
-                params.categoryId = categoryId.toString();
+            if (productCategoryId) {
+                params.productCategoryId = productCategoryId.toString();
             }
             return { pathname: paths.product, params };
         },

@@ -7,12 +7,12 @@ import { ProductCategory } from '@/models/ProductCategory';
 import { ChevronRight } from '@tamagui/lucide-icons';
 
 interface BreadcrumbProps {
-  category?: ProductCategory;
+  productCategory?: ProductCategory;
   isLast?: boolean;
   isLastClickable?: boolean;
 }
 
-export const Breadcrumb = React.memo(({ category,
+export const Breadcrumb = React.memo(({ productCategory,
   isLast = false,
   isLastClickable = false,
 
@@ -20,11 +20,11 @@ export const Breadcrumb = React.memo(({ category,
 
   const breadcrumbText = (
     <SizableText fontSize="$5" fontWeight={isLast && !isLastClickable ? 'normal' : 'bold'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
-      {category?.name}
+      {productCategory?.name}
     </SizableText>
   );
 
-  if (!category) {
+  if (!productCategory) {
     return null;
   }
 
@@ -33,7 +33,7 @@ export const Breadcrumb = React.memo(({ category,
       {isLast && !isLastClickable ? (
         breadcrumbText
       ) : (
-        <Link replace href={routes.category.path(category)} asChild>
+        <Link replace href={routes['product-category'].path(productCategory)} asChild>
           {breadcrumbText}
         </Link>
       )}
