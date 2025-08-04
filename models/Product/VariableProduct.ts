@@ -1,17 +1,20 @@
 import { formatPrice } from "@/utils/helpers";
 import { Product, ProductData } from "./Product";
-import { ProductAttribute, ProductAttributeTerm } from "./ProductAttribute";
+import { ProductAttribute } from "./ProductAttribute";
+import { ProductAttributeTerm } from "./ProductAttributeTerm";
 import { ProductVariation } from "./ProductVariation";
 
 export class VariableProduct extends Product {
 
     private variationsData: ProductVariation[] = [];
+    public attributes: ProductAttribute[] = [];
 
     constructor(data: ProductData) {
         if (data.type !== 'variable') {
             throw new Error('Cannot construct VariableProduct with type other than "variable".');
         }
         super(data);
+        this.attributes = data.attributes.map((attr) => new ProductAttribute(attr));
     }
 
     hasVariations(): boolean {
@@ -69,7 +72,9 @@ export class VariableProduct extends Product {
 
             return attributes.every((selectedAttr: ProductAttribute) =>
                 variation.attributes.some(
-                    (variationAttr: ProductAttribute) => {
+                    (variationAttr: any) => {
+
+                        console.warn(typeof variationAttr);
 
                         return variationAttr.name === selectedAttr.name && variationAttr.value === selectedAttr.option;
                     }
@@ -95,8 +100,10 @@ export class VariableProduct extends Product {
         delete otherSelectedOptions[attributeName];
 
         const otherAttributes = Object.entries(otherSelectedOptions).map(
-            ([name, option]) => new ProductAttribute({ id: 0, name, option })
+            ([name, option]) => { console.log(option, '---'); return new ProductAttribute({ id: 0, name, option }) }
         );
+
+        //   console.log('---', option, '---');
 
         const compatibleVariations = this.variationsData.filter((variation) =>
             variation.matchesAttributes(otherAttributes)

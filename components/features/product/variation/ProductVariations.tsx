@@ -54,7 +54,6 @@ export const ProductVariations = (): JSX.Element => {
 
     const attributes = (product as VariableProduct).getAttributesForVariationSelection();
 
-
     return (
         <XStack gap="$2" flexWrap="wrap" mt="$2">
             {attributes.map((attribute) => {

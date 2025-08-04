@@ -72,7 +72,7 @@ export abstract class Product implements ProductData {
     this.images = data.images || [];
     this.categories = data.categories.map((category) => new Category(category));
     this.tags = data.tags;
-    this.attributes = data.attributes;
+    this.attributes = data.type !== 'variable' ? data.attributes : [];
     this.variations = data.variations;
     this.parent = data.parent;
     this.type = data.type;
