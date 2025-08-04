@@ -2,6 +2,9 @@ import { Product, ProductData } from "./Product";
 import { ProductVariation } from "./ProductVariation";
 
 export class VariableProduct extends Product {
+
+    private variationsData: ProductVariation[] = [];
+
     constructor(data: ProductData) {
         if (data.type !== 'variable') {
             throw new Error('Cannot construct VariableProduct with type other than "variable".');
