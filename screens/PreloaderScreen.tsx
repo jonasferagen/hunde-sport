@@ -1,7 +1,7 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useCartData } from '@/hooks/data/Cart';
 import { useCategories } from '@/hooks/data/Category';
-import { useCategoryStore } from '@/stores/CategoryStore';
+import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
 import { useRouter } from 'expo-router';
 import React, { JSX, useEffect, useState } from 'react';
 import { Progress, SizableText, Theme, YStack } from 'tamagui';
@@ -18,7 +18,7 @@ export const PreloaderScreen = (): JSX.Element => {
         isFetchingNextPage: isFetchingNextCategories,
         hasNextPage: hasNextCategoriesPage
     } = useCategories({ autoload: true });
-    const { setCategories } = useCategoryStore();
+    const { setProductCategories: setCategories } = useProductCategoryStore();
 
     // Cart
     const { isLoading: cartIsLoading } = useCartData();

@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '@/config/api';
 import apiClient from '@/utils/apiClient';
 
-import { mapToCategory } from '@/models/Category';
+import { mapToProductCategory } from '@/models/ProductCategory';
 
 export async function fetchCategories(page: number) {
 
@@ -18,7 +18,7 @@ export async function fetchCategories(page: number) {
     if (error) throw new Error(error);
 
     return {
-        items: (data ?? []).map(mapToCategory),
+        items: (data ?? []).map(mapToProductCategory),
         total: total ? parseInt(total, 10) : 0,
     };
 }

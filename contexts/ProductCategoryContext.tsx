@@ -1,5 +1,5 @@
-import { ProductCategory } from '@/models/Category';
-import { useCategoryStore } from '@/stores/CategoryStore';
+import { ProductCategory } from '@/models/ProductCategory';
+import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
 import React, { createContext, useContext } from 'react';
 
 export interface ProductCategoryContextType {
@@ -29,9 +29,9 @@ export const ProductCategoryProvider: React.FC<ProductCategoryProviderProps> = (
     children,
 }) => {
     const {
-        getCategoryById: getProductCategoryById,
-        getSubCategories: getSubProductCategories,
-    } = useCategoryStore();
+        getProductCategoryById: getProductCategoryById,
+        getSubProductCategories: getSubProductCategories,
+    } = useProductCategoryStore();
 
     // If categoryId is provided, it takes precedence and fetches from the store.
     const productCategory = getProductCategoryById(productCategoryId ?? 0);

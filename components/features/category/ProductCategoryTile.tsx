@@ -1,6 +1,6 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
-import { ProductCategory } from '@/models/Category';
+import { ProductCategory } from '@/models/ProductCategory';
 import { getScaledImageUrl } from "@/utils/helpers";
 import { Link } from 'expo-router';
 import React, { memo } from 'react';

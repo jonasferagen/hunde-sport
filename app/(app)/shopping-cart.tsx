@@ -5,7 +5,7 @@ import { YStack } from 'tamagui';
 
 const Page = (): JSX.Element => {
     return (
-        <YStack flex={1}>
+        <YStack f={1}>
             <ShoppingCartScreen />
             <BottomBar />
         </YStack>

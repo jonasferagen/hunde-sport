@@ -36,7 +36,7 @@ export class ProductCategory implements ProductCategoryData {
   }
 }
 
-export const mapToCategory = (item: any): ProductCategory => new ProductCategory({
+export const mapToProductCategory = (item: any): ProductCategory => new ProductCategory({
   id: item.id,
   name: item.name,
   parent: item.parent,

@@ -3,7 +3,7 @@ import React from 'react';
 import { SizableText, Stack, XStack } from 'tamagui';
 
 import { routes } from '@/config/routes';
-import { ProductCategory } from '@/models/Category';
+import { ProductCategory } from '@/models/ProductCategory';
 import { ChevronRight } from '@tamagui/lucide-icons';
 
 interface BreadcrumbProps {

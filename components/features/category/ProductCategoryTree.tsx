@@ -1,5 +1,5 @@
 import { ProductCategoryProvider, useProductCategoryContext } from '@/contexts';
-import { ProductCategory } from '@/models/Category';
+import { ProductCategory } from '@/models/ProductCategory';
 import { usePathname } from 'expo-router';
 import React, { JSX, memo, useCallback, useState } from 'react';
 import Animated, { LinearTransition } from 'react-native-reanimated';

@@ -1,4 +1,4 @@
-import { ProductCategory } from '@/models/Category';
+import { ProductCategory } from '@/models/ProductCategory';
 import { SimpleProduct, VariableProduct } from '@/types';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { HrefObject, useSegments } from 'expo-router';
@@ -24,7 +24,7 @@ export interface Route {
 const paths = {
     home: '/',
     search: '/search',
-    category: '/category',
+    productCategory: '/product-category',
     product: '/product',
     shoppingCart: '/shopping-cart',
 } as const;
@@ -54,12 +54,12 @@ export const routes: Record<string, Route> = {
         path: (query?: string) => ({ pathname: paths.search, params: { query } }),
         showInDrawer: true,
     },
-    category: {
-        name: 'category',
+    "product-category": {
+        name: 'product-category',
         label: 'Kategori',
         icon: () => null, // No icon for category in drawer
         theme: 'secondary',
-        path: (category: ProductCategory) => ({ pathname: paths.category, params: { id: category.id.toString(), name: category.name } }),
+        path: (productCategory: ProductCategory) => ({ pathname: paths.productCategory, params: { id: productCategory.id.toString(), name: productCategory.name } }),
     },
     product: {
         name: 'product',
@@ -92,8 +92,6 @@ export const resolveTheme = (routeName?: string): ThemeName => {
     if (lastSegment === '(app)') {
         lastSegment = 'index';
     }
-
-    console.log(lastSegment);
 
     return routes[lastSegment]?.theme || 'light';
 };

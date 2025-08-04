@@ -1,5 +1,5 @@
 import { cleanHtml } from "@/utils/helpers";
-import { ProductCategory } from "../Category";
+import { ProductCategory } from "../ProductCategory";
 
 export interface ProductImage {
     id: number;
