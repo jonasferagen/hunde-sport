@@ -1,8 +1,8 @@
-import { Product } from '@/types';
+import { BaseProduct, BaseProductData } from '@/types';
 import { Storage } from 'expo-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist, StateStorage } from 'zustand/middleware';
-import { mapToProduct } from './Product/ProductMapper';
+import { createProduct } from './Product/ProductFactory';
 
 const expoStorage: StateStorage = {
     getItem: async (name: string): Promise<string | null> => {
@@ -22,7 +22,7 @@ export type RemoveItemMutation = (vars: { key: string }) => void;
 
 export interface CartItemData {
     key: string;
-    product: Product;
+    product: BaseProduct<BaseProductData>;
     id: number;
     type: string;
     name: string;
@@ -84,7 +84,7 @@ export const useCartStore = create<CartState>()(
             setData: (data: CartData) => {
                 const itemsWithProducts = data.items.map(item => ({
                     ...item,
-                    product: mapToProduct(item),
+                    product: createProduct(item),
                 }));
 
                 set({

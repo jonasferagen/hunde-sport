@@ -10,8 +10,10 @@ interface ProductCardImageProps {
 }
 
 export const ProductCardLeft = ({ href }: ProductCardImageProps) => {
-    const { product, productVariation, displayProduct } = useProductContext();
+    const { displayProduct } = useProductContext();
     const imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH;
+    const src = displayProduct.featuredImage.src;
+    const uri = getScaledImageUrl(src, imageSize, imageSize);
 
     return <Link href={href}>
         <YStack
@@ -24,8 +26,7 @@ export const ProductCardLeft = ({ href }: ProductCardImageProps) => {
             overflow="hidden"
         >
             <Image
-
-                source={{ uri: getScaledImageUrl(displayProduct.image.src, imageSize, imageSize) }}
+                source={{ uri }}
                 w={imageSize}
                 h={imageSize}
             />

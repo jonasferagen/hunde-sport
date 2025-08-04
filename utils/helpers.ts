@@ -72,10 +72,20 @@ export const htmlToPlainText = (html: string): string => {
     return result.replace(/\n{3,}/g, '\n\n').trim();
 };
 
+
+const placeholderBase64 =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAAEFJREFUCB1jYGBgYAAAAAQAAVcCkE0AAAAASUVORK5CYII=';
+
+
 export const getScaledImageUrl = (url: string, width: number, height: number): string | undefined => {
-    if (!url || width === 0 || height === 0) {
+    if (width === 0 || height === 0) {
         return undefined; // Return undefined if url is missing or size is not measured
     }
+
+    if (!url) {
+        return placeholderBase64;
+    }
+
     try {
         const urlObject = new URL(url);
         // By setting the search, we remove any existing query params

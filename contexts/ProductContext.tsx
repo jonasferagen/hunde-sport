@@ -1,4 +1,3 @@
-import { useProductVariations } from '@/hooks/data/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
@@ -29,7 +28,6 @@ export interface ProductContextType {
     displayName: string;
     productVariation: ProductVariation | undefined;
     setProductVariation: (variation?: ProductVariation) => void;
-    isProductVariationsLoading: boolean;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -48,16 +46,6 @@ export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduc
 }) => {
     const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(undefined);
 
-    const isVariable = product instanceof VariableProduct;
-
-    const { items: productVariations, isLoading: isProductVariationsLoading } = useProductVariations(
-        product as VariableProduct,
-        {
-            enabled: isVariable,
-            autoload: true,
-        }
-    );
-
     const displayName = useMemo(() => getDisplayName(product, productVariation), [product, productVariation]);
 
     const displayProduct = productVariation || product;
@@ -74,7 +62,6 @@ export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduc
         displayName,
         productVariation,
         setProductVariation,
-        isProductVariationsLoading: isVariable ? isProductVariationsLoading : false,
     };
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;

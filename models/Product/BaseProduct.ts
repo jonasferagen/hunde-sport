@@ -1,6 +1,6 @@
 import { cleanHtml } from "@/utils/helpers";
 
-export interface Image {
+export interface ProductImage {
     id: number;
     src: string;
     name: string;
@@ -13,6 +13,18 @@ export interface Price {
     sale_price: string;
 }
 
+export interface ProductCategory {
+    id: number;
+    name: string;
+    slug: string;
+}
+
+export interface ProductTag {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 export interface BaseProductData {
     id: number;
     name: string;
@@ -20,9 +32,13 @@ export interface BaseProductData {
     permalink: string;
     description: string;
     short_description: string;
-    images: Image[];
+    images: ProductImage[];
     prices: Price;
+    on_sale: boolean;
+    featured: boolean;
     is_in_stock: boolean;
+    categories: ProductCategory[];
+    tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
 }
 
@@ -32,10 +48,14 @@ export class BaseProduct<T extends BaseProductData> {
     slug: string;
     permalink: string;
     description: string;
-    shortDescription: string;
-    images: Image[];
+    short_description: string;
+    images: ProductImage[];
     prices: Price;
-    isInStock: boolean;
+    on_sale: boolean;
+    featured: boolean;
+    is_in_stock: boolean;
+    categories: ProductCategory[];
+    tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
 
     constructor(data: T) {
@@ -44,14 +64,18 @@ export class BaseProduct<T extends BaseProductData> {
         this.slug = data.slug;
         this.permalink = data.permalink;
         this.description = cleanHtml(data.description || 'Ingen beskrivelse tilgjengelig');
-        this.shortDescription = cleanHtml(data.short_description || 'Ingen beskrivelse tilgjengelig');
+        this.short_description = cleanHtml(data.short_description || 'Ingen beskrivelse tilgjengelig');
         this.images = data.images;
         this.prices = data.prices;
-        this.isInStock = data.is_in_stock;
+        this.on_sale = data.on_sale;
+        this.featured = data.featured;
+        this.is_in_stock = data.is_in_stock;
+        this.categories = data.categories;
+        this.tags = data.tags;
         this.type = data.type;
     }
 
-    get featuredImage(): Image | null {
-        return this.images[0] ?? null;
+    get featuredImage(): ProductImage {
+        return this.images[0];
     }
 }
