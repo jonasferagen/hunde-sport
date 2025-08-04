@@ -13,7 +13,6 @@ import { useProduct, useProductsByIds } from '@/hooks/data/Product';
 import { createProduct } from '@/models/Product/ProductFactory';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
-import { useCategoryStore } from '@/stores/CategoryStore';
 import { SimpleProduct, VariableProduct } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -23,9 +22,8 @@ export const ProductScreen = () => {
   const { id, categoryId: categoryIdFromParams } = useLocalSearchParams<{ id: string; categoryId?: string }>();
   const productId = Number(id);
   const { data: product, isLoading: isProductLoading } = useProduct(productId);
-  const { getCategoryById, isLoading: areCategoriesLoading } = useCategoryStore();
 
-  if (isProductLoading || areCategoriesLoading) {
+  if (isProductLoading) {
     return <LoadingScreen />;
   }
 
@@ -34,10 +32,10 @@ export const ProductScreen = () => {
   }
 
   const productInstance = createProduct(product);
-  const category = categoryIdFromParams ? getCategoryById(Number(categoryIdFromParams)) : undefined;
+  const categoryId = categoryIdFromParams ? Number(categoryIdFromParams) : undefined;
 
   return (
-    <CategoryProvider category={category} categories={productInstance.categories}>
+    <CategoryProvider categoryId={categoryId} categories={productInstance.categories}>
       <ProductScreenContentWrapper product={productInstance} />
     </CategoryProvider>
   );

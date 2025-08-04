@@ -6,7 +6,6 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Chip } from '@/components/ui';
 import { CategoryProvider, useCategoryContext } from '@/contexts/CategoryContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { useCategoryStore } from '@/stores/CategoryStore';
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { memo, useState } from 'react';
@@ -15,9 +14,19 @@ import { LoadingScreen } from './misc/LoadingScreen';
 import { NotFoundScreen } from './misc/NotFoundScreen';
 
 const CategoryScreenContent = memo(() => {
-    const { categories } = useCategoryContext();
+    const { category, isLoading, categories } = useCategoryContext();
     const [showAll, setShowAll] = useState(false);
     const limit = 3;
+
+    useRenderGuard('CategoryScreenContent');
+
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
+
+    if (!category) {
+        return <NotFoundScreen message="Beklager, kategorien ble ikke funnet" />;
+    }
 
     const showToggleButton = categories && categories.length > limit;
 
@@ -48,21 +57,8 @@ const CategoryScreenContent = memo(() => {
 export const CategoryScreen = memo(() => {
     useRenderGuard('CategoryScreen');
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { getCategoryById, isLoading } = useCategoryStore();
 
-    const category = getCategoryById(Number(id));
-
-    if (isLoading) {
-        return <LoadingScreen />;
-    }
-
-    if (!category) {
-        return <NotFoundScreen message="Beklager, kategorien ble ikke funnet" />;
-    }
-
-    return (
-        <CategoryProvider category={category}>
-            <CategoryScreenContent />
-        </CategoryProvider>
-    );
+    return <CategoryProvider categoryId={Number(id)}>
+        <CategoryScreenContent />
+    </CategoryProvider>
 });

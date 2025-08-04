@@ -19,27 +19,33 @@ export const useCategoryContext = () => {
 };
 
 interface CategoryProviderProps {
+    categoryId?: number;
     category?: ProductCategory;
     categories?: ProductCategory[];
     children: React.ReactNode;
 }
 
 export const CategoryProvider: React.FC<CategoryProviderProps> = ({
-    category,
+    categoryId,
+    category: categoryFromProp,
     categories,
     children,
 }) => {
     const {
+        getCategoryById,
         getSubCategories,
         isLoading,
     } = useCategoryStore();
 
-    // Use passed-in categories if available, otherwise derive from parent category
-    const contextCategories = categories ?? getSubCategories(category ? category.id : 0);
+    // If categoryId is provided, it takes precedence and fetches from the store.
+    const category = categoryId ? getCategoryById(categoryId) : categoryFromProp;
+
+    // Use passed-in categories if available, otherwise derive from parent category.
+    const _categories = categories ?? getSubCategories(category ? category.id : 0);
 
     const value: CategoryContextType = {
         category,
-        categories: contextCategories,
+        categories: _categories,
         isLoading,
     };
 
