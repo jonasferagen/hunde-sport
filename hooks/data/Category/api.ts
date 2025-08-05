@@ -12,9 +12,6 @@ export async function fetchCategories(page: number) {
     const total = headers.get('X-WP-Total');
     const totalPages = headers.get('X-WP-TotalPages');
 
-    //console.log("loading categories", total, totalPages);
-
-
     if (error) throw new Error(error);
 
     return {

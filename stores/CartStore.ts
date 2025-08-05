@@ -102,14 +102,11 @@ export const useCartStore = create<CartState & CartActions>()(
 
                 try {
                     const { data, token: newCartToken } = await apiAddItem({ ...options, cartToken, variation: options.variation || [] });
-
                     if (cartToken !== newCartToken) {
                         log.warn(`CartStore: Cart token changed. Old: ${cartToken}, New: ${newCartToken}`);
                     }
-
                     set({ cart: data, cartToken: newCartToken, isUpdating: false });
                     log.info('CartStore: addItem success.');
-                    log.info(data);
                 } catch (error) {
                     log.error('CartStore: addItem failed.');
                     log.error(error);

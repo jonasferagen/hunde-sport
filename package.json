@@ -31,6 +31,7 @@
     "@tamagui/toast": "^1.132.15",
     "@tanstack/react-query": "^5.82.0",
     "@types/react": "19.0.0",
+    "apisauce": "^3.2.0",
     "burnt": "^0.13.0",
     "expo": "53.0.20",
     "expo-constants": "~17.1.7",
@@ -61,12 +62,12 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+    "react-native-svg": "15.11.2",
     "react-native-web": "~0.20.0",
     "tamagui": "^1.132.15",
     "tinycolor2": "^1.6.0",
     "tslib": "^2.8.1",
-    "zustand": "^5.0.7",
-    "react-native-svg": "15.11.2"
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

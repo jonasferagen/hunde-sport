@@ -82,13 +82,16 @@ export const PreloaderScreen = (): JSX.Element => {
             <CategoryLoader onReady={handleCategoriesReady} />
             <YStack f={1} jc="center" ai="center" gap="$4">
                 <ThemedSpinner size="large" />
-                <YStack ai="center" gap="$2">{/*}                <SizableText>Laster inn data...</SizableText>
-                    <Progress value={progress} w={200}>
-                        <Progress.Indicator animation="linearSlow" />
-                    </Progress>
-                    <SizableText theme="alt2">{categories.length} / {totalCategories}</SizableText>
-        */} </YStack>
             </YStack>
         </Theme>
     );
 };
+
+/*
+  <YStack ai="center" gap="$2"></YStack>
+<SizableText>Laster inn data...</SizableText>
+                    <Progress value={progress} w={200}>
+                        <Progress.Indicator animation="linearSlow" />
+                    </Progress>
+                    <SizableText theme="alt2">{categories.length} / {totalCategories}</SizableText>
+        */

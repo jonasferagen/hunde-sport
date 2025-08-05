@@ -1,3 +1,4 @@
+import { CartData } from '@/models/Cart/Cart';
 import { useCartStore } from '@/stores/CartStore';
 import { createContext, FC, JSX, ReactNode, useContext } from 'react';
 
@@ -5,7 +6,11 @@ import { createContext, FC, JSX, ReactNode, useContext } from 'react';
  * Defines the shape of the data provided by the CartContext.
  */
 interface CartContextType {
-    itemsCount: number;
+    cart: CartData;
+
+    removeItem: (key: string) => void;
+    updateItem: (key: string, quantity: number) => void;
+
 }
 
 /**
@@ -18,10 +23,21 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
  * It subscribes to the `items_count` from the Zustand store and provides it down the component tree.
  */
 export const CartProvider: FC<{ children: ReactNode }> = ({ children }): JSX.Element => {
-    const itemsCount = useCartStore((state) => state.cart?.items_count ?? 0);
+
+    const cart = useCartStore((state) => state.cart);
+
+    const updateItem = async (key: string, quantity: number) => {
+        //await storeUpdateItem(key, quantity);
+    };
+
+    const removeItem = async (key: string) => {
+        //await storeRemoveItem(key);
+    };
 
     const value = {
-        itemsCount,
+        cart: cart!,
+        removeItem,
+        updateItem,
     };
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -12,7 +12,6 @@ import { createProduct } from '@/models/Product/ProductFactory';
 export const mapCartData = (rawData: any): CartData => {
     const mappedItems = rawData.items.map((item: any): CartItemData => {
 
-
         return {
             ...item,
             product: createProduct(item),

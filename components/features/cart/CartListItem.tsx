@@ -1,7 +1,8 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
-import { ProductProvider, useShoppingCartContext } from '@/contexts';
+import { ProductProvider } from '@/contexts';
+import { useCart } from '@/contexts/CartContext';
 import { CartItemData } from '@/models/Cart/Cart';
 import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
@@ -9,18 +10,18 @@ import React, { JSX } from 'react';
 import { H4, SizableText, XStack, YStack } from 'tamagui';
 
 
-export const ShoppingCartListItem = ({ item }: { item: CartItemData }): JSX.Element => {
+export const CartListItem = ({ item }: { item: CartItemData }): JSX.Element => {
 
     return (
         <ProductProvider product={item.product}>
-            <ShoppingCartListItemContent item={item} />
+            <CartListItemContent item={item} />
         </ProductProvider>
     );
 }
 
-const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
+const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
 
-    const { getSubtotal, updateItem, removeItem } = useShoppingCartContext();
+    const { updateItem, removeItem } = useCart();
     const { quantity, key } = item;
 
     return (
@@ -58,7 +59,7 @@ const ShoppingCartListItemContent = ({ item }: { item: CartItemData }): JSX.Elem
 
                 <XStack f={1} ai="center" jc="flex-end">
                     <SizableText fos="$4" fow="bold" flex={1} ta="right">
-                        {formatPrice(getSubtotal(item))}
+                        {formatPrice(item.prices.price)}
                     </SizableText>
                 </XStack>
 
