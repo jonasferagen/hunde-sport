@@ -29,6 +29,7 @@ export const ENDPOINTS = {
     DISCOUNTED: () => `${PRODUCTS_URL}?${productsFilter}&on_sale=true`,
     SEARCH: (query: string) => `${PRODUCTS_URL}?${productsFilter}&search=${query}`,
     BY_IDS: (ids: number[]) => `${PRODUCTS_URL}?${productsFilter}&include=${ids.join(',')}`,
+    BY_CATEGORY: (id: number) => `${PRODUCTS_URL}?${productsFilter}&category=${id}`,
     VARIATIONS: (id: number) => `${PRODUCTS_URL}?${productsFilter}&parent=${id}&type=variation`,
   },
   CART: {

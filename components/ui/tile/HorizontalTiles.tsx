@@ -1,4 +1,4 @@
-import { InfiniteListQueryResult } from '@/hooks/data/util';
+
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import React, { JSX, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
@@ -48,14 +48,12 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
 };
 
 interface HorizontalTilesProps<T> {
-    queryResult?: InfiniteListQueryResult<T>;
     items?: T[];
     renderItem: ListRenderItem<T>;
 }
 
 
 export const HorizontalTiles = <T extends { id: number | string }>({
-    queryResult,
     items,
     renderItem,
 }: HorizontalTilesProps<T>): JSX.Element => {

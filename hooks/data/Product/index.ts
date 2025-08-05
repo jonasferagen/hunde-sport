@@ -1,10 +1,10 @@
-
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { useQuery } from '@tanstack/react-query';
 import {
     fetchDiscountedProducts,
     fetchFeaturedProducts,
     fetchProduct,
+    fetchProductsByCategory,
     fetchProductsByIds,
     fetchProductsBySearch,
     fetchProductVariations,
@@ -61,5 +61,13 @@ export const useDiscountedProducts = () => {
     return useQuery({
         queryKey: ['on-sale-products'],
         queryFn: () => fetchDiscountedProducts(),
+    });
+}
+
+export const useProductsByCategory = (id: number) => {
+    return useQuery({
+        queryKey: ['products-by-category', id],
+        queryFn: () => fetchProductsByCategory(id),
+        enabled: !!id,
     });
 }

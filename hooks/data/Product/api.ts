@@ -67,3 +67,11 @@ export const fetchProductVariations = async (id: number) => {
     }
     return (response.data ?? []).map(createProduct);
 }
+
+export const fetchProductsByCategory = async (id: number) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(id));
+    if (response.problem) {
+        throw new Error(response.problem);
+    }
+    return (response.data ?? []).map(createProduct);
+}
