@@ -24,7 +24,7 @@ const PRODUCTS_LIST = (pagination: PaginationOptions = {}) => {
 export const ENDPOINTS = {
   CATEGORIES: {
     GET: (id: number) => `${CATEGORIES_URL}/${id}`,
-    ALL: () => `${CATEGORIES_URL}`,
+    LIST: (pagination?: PaginationOptions) => `${CATEGORIES_URL}?${pagination}`,
   },
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,

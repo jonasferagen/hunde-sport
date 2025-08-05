@@ -6,7 +6,7 @@ import { ArrowBigLeftDash, ShoppingBasket } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
 import { ButtonProps, YStack } from 'tamagui';
 
-const getUnPurchasableReason = (purchasable: Purchasable): string | undefined => {
+const cannotPurchaseReason = (purchasable: Purchasable): string | undefined => {
     const activeProduct = purchasable.productVariation || purchasable.product;
     if (activeProduct.is_in_stock === false) {
         return "Ikke på lager";
@@ -30,6 +30,11 @@ const getUnPurchasableReason = (purchasable: Purchasable): string | undefined =>
 export const PurchaseButtonTheme = "secondary_alt3";
 export const PurchaseButton = (props: ButtonProps) => {
     const { purchasableProduct } = useProductContext();
+
+    if (!purchasableProduct) {
+        return null;
+    }
+
     const { addItem } = useShoppingCartContext();
     const buttonRef = useRef(null);
 
@@ -37,8 +42,8 @@ export const PurchaseButton = (props: ButtonProps) => {
         addItem(purchasableProduct, { triggerRef: buttonRef });
     };
 
-    const canPurchase = getUnPurchasableReason(purchasableProduct) === undefined;
-    const buttonText = canPurchase ? "Legg til i handlekurv" : getUnPurchasableReason(purchasableProduct);
+    const canPurchase = cannotPurchaseReason(purchasableProduct) === undefined;
+    const buttonText = canPurchase ? "Legg til i handlekurv" : cannotPurchaseReason(purchasableProduct);
     const disabled = !canPurchase;
 
     const icon = canPurchase ? null : <ArrowBigLeftDash />;

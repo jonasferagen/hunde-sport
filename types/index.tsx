@@ -13,6 +13,7 @@ import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
 
 
+export type Product = SimpleProduct | VariableProduct | ProductVariation;
 
 export type Purchasable =
   | {

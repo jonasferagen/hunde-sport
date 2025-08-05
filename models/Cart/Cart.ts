@@ -1,9 +1,9 @@
-import { BaseProduct, BaseProductData } from '@/types';
+import { Product } from '@/types';
 
 
 export interface CartItemData {
     key: string;
-    product: BaseProduct<BaseProductData>;
+    product: Product;
     id: number;
     type: string;
     name: string;

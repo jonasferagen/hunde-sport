@@ -1,7 +1,7 @@
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { ProductCategory } from '@/types';
-import { useInfiniteQuery, UseInfiniteQueryResult, useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { handleQueryResult, queryOptions } from '../util';
 import {
     fetchDiscountedProducts,
     fetchFeaturedProducts,
@@ -12,9 +12,6 @@ import {
     fetchProductVariations,
     fetchRecentProducts
 } from './api';
-
-
-
 
 export const useProduct = (id: number) => {
     return useQuery({
@@ -86,31 +83,4 @@ export const useProductsByCategory = (productCategory: ProductCategory) => {
         ...queryOptions
     });
     return handleQueryResult(result);
-}
-
-const queryOptions = {
-    initialPageParam: 1,
-    getNextPageParam: (lastPage: any, allPages: any[]) => {
-        if (!lastPage?.totalPages) return undefined;
-        const nextPage = allPages.length + 1;
-        return nextPage <= lastPage.totalPages ? nextPage : undefined;
-    }
-}
-
-const handleQueryResult = (result: UseInfiniteQueryResult<any, any>) => {
-
-    const { data: dataResult, ...rest } = result;
-
-    const data = useMemo(() => {
-        const page = dataResult ? dataResult.pages[dataResult.pages.length - 1] : null;
-        const total = page ? page.total : 0;
-        const totalPages = page?.totalPages ?? 0;
-        const items = dataResult?.pages.flatMap((page: any) => page.data) ?? [];
-        return { total, items, totalPages };
-    }, [dataResult]);
-
-    return {
-        ...rest,
-        ...data
-    };
 }

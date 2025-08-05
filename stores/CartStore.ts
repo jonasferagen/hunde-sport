@@ -1,6 +1,8 @@
 import {
     addItem as apiAddItem,
     fetchCart as apiFetchCart,
+    removeItem as apiRemoveItem,
+    updateItem as apiUpdateItem,
 } from '@/hooks/data/Cart/api';
 import { CartData } from '@/models/Cart/Cart';
 import { log } from '@/services/Logger';
@@ -76,9 +78,6 @@ export const useCartStore = create<CartState & CartActions>()(
 
                 try {
                     const { data } = await apiFetchCart();
-
-                    console.error(data.token);
-
                     set({
                         cart: data,
                         cartToken: data.token,
@@ -114,7 +113,7 @@ export const useCartStore = create<CartState & CartActions>()(
                 }
             },
 
-            updateItem: async (key: string, quantity: number) => { /*
+            updateItem: async (key: string, quantity: number) => {
                 const { cartToken, cart: originalCart } = get();
                 log.info('CartStore: updateItem invoked.');
 
@@ -126,16 +125,16 @@ export const useCartStore = create<CartState & CartActions>()(
                 set({ isUpdating: true });
 
                 try {
-                    const updatedCartData = await apiUpdateItem({ cartToken, key, quantity });
-                    set({ cart: updatedCartData, cartToken: updatedCartData.cart_token, isUpdating: false });
+                    const { data } = await apiUpdateItem({ cartToken, key, quantity });
+                    set({ cart: data, cartToken: data.token, isUpdating: false });
                     log.info('CartStore: updateItem success.');
                 } catch (error) {
                     log.error('CartStore: updateItem failed.');
                     set({ cart: originalCart, isUpdating: false });
-                } */
+                }
             },
 
-            removeItem: async (key: string) => { /*
+            removeItem: async (key: string) => {
                 const { cartToken, cart: originalCart } = get();
                 log.info('CartStore: removeItem invoked.');
 
@@ -147,14 +146,15 @@ export const useCartStore = create<CartState & CartActions>()(
                 set({ isUpdating: true });
 
                 try {
-                    const updatedCartData = await apiRemoveItem({ cartToken, key });
-                    set({ cart: updatedCartData, cartToken: updatedCartData.cart_token, isUpdating: false });
+                    const { data } = await apiRemoveItem({ cartToken, key });
+                    set({ cart: data, cartToken: data.token, isUpdating: false });
                     log.info('CartStore: removeItem success.');
                 } catch (error) {
                     log.error('CartStore: removeItem failed.');
+                    log.error(error);
                     // Rollback to original state on error
                     set({ cart: originalCart, isUpdating: false });
-                } */
+                }
             },
         }),
         {

@@ -1,8 +1,8 @@
 import { ENDPOINTS, PaginationOptions } from '@/config/api';
 import { apiClient } from '@/lib/apiClient';
-import { BaseProduct, BaseProductData } from '@/models/Product/BaseProduct';
 import { createProduct } from '@/models/Product/ProductFactory';
-import { ApiResponse } from 'apisauce';
+import { Product } from '@/types';
+import { responseTransformer } from '../util';
 
 /**
  * Fetch a product by ID.
@@ -10,15 +10,12 @@ import { ApiResponse } from 'apisauce';
  * @param id - The ID of the product to fetch.
  * @returns The fetched product.
  */
-export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductData>> {
+export async function fetchProduct(id: number): Promise<Product> {
     const response = await apiClient.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
     if (response.problem) {
         throw new Error(response.problem);
     }
-    if (!response.data) {
-        throw new Error('Product not found');
-    }
-
+    // Note: This is a single product fetch, so we don't use the responseTransformer here.
     return createProduct(response.data);
 }
 
@@ -30,7 +27,7 @@ export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductD
  */
 export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.FEATURED(pagination));
-    return responseTransformer(response);
+    return responseTransformer(response, createProduct);
 }
 
 /**
@@ -41,7 +38,7 @@ export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
  */
 export const fetchDiscountedProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.DISCOUNTED(pagination));
-    return responseTransformer(response);
+    return responseTransformer(response, createProduct);
 }
 
 /**
@@ -53,7 +50,7 @@ export const fetchDiscountedProducts = async (pagination?: PaginationOptions) =>
  */
 export const fetchProductsByIds = async (ids: number[], pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_IDS(ids, pagination));
-    return responseTransformer(response);
+    return responseTransformer(response, createProduct);
 }
 
 /**
@@ -65,7 +62,7 @@ export const fetchProductsByIds = async (ids: number[], pagination?: PaginationO
  */
 export const fetchProductsBySearch = async (query: string, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.SEARCH(query, pagination));
-    return responseTransformer(response);
+    return responseTransformer(response, createProduct);
 }
 
 /**
@@ -77,7 +74,7 @@ export const fetchProductsBySearch = async (query: string, pagination?: Paginati
  */
 export const fetchProductVariations = async (id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.VARIATIONS(id, pagination));
-    return responseTransformer(response);
+    return responseTransformer(response, createProduct);
 }
 
 /**
@@ -88,7 +85,7 @@ export const fetchProductVariations = async (id: number, pagination?: Pagination
  */
 export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.RECENT(pagination));
-    return responseTransformer(response);
+    return responseTransformer(response, createProduct);
 }
 
 /**
@@ -100,25 +97,5 @@ export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
  */
 export const fetchProductsByProductCategory = async (product_category_id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(product_category_id, pagination));
-    return responseTransformer(response);
-}
-
-/**
- * Transform API response to a standardized format.
- *
- * @param response - The API response to transform.
- * @returns The transformed response.
- */
-const responseTransformer = (response: ApiResponse<any>) => {
-    if (response.problem) {
-        throw new Error(response.problem);
-    }
-
-    const totalPages = Number(response.headers?.['x-wp-totalpages']);
-    const total = Number(response.headers?.['x-wp-total']);
-    return {
-        data: (response.data ?? []).map(createProduct),
-        totalPages,
-        total
-    };
+    return responseTransformer(response, createProduct);
 }

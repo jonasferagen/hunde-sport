@@ -1,5 +1,5 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { useCategories } from '@/hooks/data/Category';
+import { useProductCategories } from '@/hooks/data/ProductCategory';
 import { useCartStore } from '@/stores/CartStore';
 import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
 import { useRouter } from 'expo-router';
@@ -43,16 +43,16 @@ const CartInitializer = ({ onReady }: LoaderProps) => {
  * Handles fetching all product categories and reports when ready.
  */
 const CategoryLoader = ({ onReady }: LoaderProps) => {
-    const { data: categories, isLoading } = useCategories();
+    const { items: productCategories, isLoading } = useProductCategories();
     const setCategoriesInStore = useProductCategoryStore((state) => state.setProductCategories);
 
     useEffect(() => {
         // The loader is ready once fetching is complete and we have a definitive result.
-        if (!isLoading && categories) {
-            setCategoriesInStore(categories);
+        if (!isLoading && productCategories) {
+            setCategoriesInStore(productCategories);
             onReady();
         }
-    }, [isLoading, categories, onReady, setCategoriesInStore]);
+    }, [isLoading, productCategories, onReady, setCategoriesInStore]);
 
     return null; // Logic-only component
 };

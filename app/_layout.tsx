@@ -4,7 +4,6 @@ import {
   SearchProvider,
   ShoppingCartProvider,
 } from '@/contexts';
-import { CartProvider } from '@/contexts/CartContext';
 import { queryClient } from '@/lib/queryClient';
 import appConfig from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
@@ -23,17 +22,15 @@ const RootLayout = (): JSX.Element => {
           <SafeAreaProvider>
             <PortalProvider>
               <Theme name="light">
-                <CartProvider>
-                  <AppToastProvider>
-                    <ProductCategoryProvider>
-                      <ShoppingCartProvider>
-                        <SearchProvider>
-                          <Slot />
-                        </SearchProvider>
-                      </ShoppingCartProvider>
-                    </ProductCategoryProvider>
-                  </AppToastProvider>
-                </CartProvider>
+                <AppToastProvider>
+                  <ProductCategoryProvider>
+                    <ShoppingCartProvider>
+                      <SearchProvider>
+                        <Slot />
+                      </SearchProvider>
+                    </ShoppingCartProvider>
+                  </ProductCategoryProvider>
+                </AppToastProvider>
               </Theme>
             </PortalProvider>
           </SafeAreaProvider>

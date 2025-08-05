@@ -1,8 +1,7 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
-import { ProductProvider } from '@/contexts';
-import { useCart } from '@/contexts/CartContext';
+import { ProductProvider, useShoppingCartContext } from '@/contexts';
 import { CartItemData } from '@/models/Cart/Cart';
 import { formatPrice } from '@/utils/helpers';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
@@ -21,7 +20,7 @@ export const CartListItem = ({ item }: { item: CartItemData }): JSX.Element => {
 
 const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
 
-    const { updateItem, removeItem } = useCart();
+    const { updateItem, removeItem } = useShoppingCartContext();
     const { quantity, key } = item;
 
     return (
