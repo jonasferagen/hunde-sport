@@ -50,9 +50,6 @@ const CategoryLoader = ({ onReady }: LoaderProps) => {
         // The loader is ready once fetching is complete and we have a definitive result.
         if (!isLoading && categories) {
             setCategoriesInStore(categories);
-
-            console.log(categories.length);
-
             onReady();
         }
     }, [isLoading, categories, onReady, setCategoriesInStore]);

@@ -3,13 +3,10 @@ import { fetchCategories } from './api';
 
 export const useCategories = () => {
 
-    const queryResult = useQuery({
+    return useQuery({
         queryKey: ['categories'],
         queryFn: () => fetchCategories(),
     });
-
-    return queryResult;
-
 
 };
 

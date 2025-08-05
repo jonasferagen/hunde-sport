@@ -1,4 +1,3 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { InfiniteListQueryResult } from '@/hooks/data/util';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import React, { JSX, useState } from 'react';
@@ -6,10 +5,6 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { View } from 'tamagui';
 import { LinearGradient } from 'tamagui/linear-gradient';
 
-interface HorizontalTilesProps<T> {
-    queryResult: InfiniteListQueryResult<T>;
-    renderItem: ListRenderItem<T>;
-}
 
 interface ScrollIndicatorProps {
     side: 'left' | 'right';
@@ -52,11 +47,19 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
     );
 };
 
+interface HorizontalTilesProps<T> {
+    queryResult?: InfiniteListQueryResult<T>;
+    items?: T[];
+    renderItem: ListRenderItem<T>;
+}
+
+
 export const HorizontalTiles = <T extends { id: number | string }>({
     queryResult,
+    items,
     renderItem,
 }: HorizontalTilesProps<T>): JSX.Element => {
-    const { items, isFetchingNextPage, fetchNextPage } = queryResult;
+
     const [scrollOffset, setScrollOffset] = useState(0);
     const [contentWidth, setContentWidth] = useState(0);
     const [containerWidth, setContainerWidth] = useState(0);
@@ -89,14 +92,9 @@ export const HorizontalTiles = <T extends { id: number | string }>({
                 scrollEventThrottle={16} // Trigger onScroll every 16ms
                 onContentSizeChange={setContentWidth}
                 onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
-                onEndReached={() => {
-                    if (fetchNextPage) {
-                        fetchNextPage();
-                    }
-                }}
                 onEndReachedThreshold={0.5}
                 ListHeaderComponent={<View w={SPACING} h="100%" />}
-                ListFooterComponent={<View w={SPACING} h="100%" >{isFetchingNextPage && <ThemedSpinner my="auto" mx={SPACING} />}</View>}
+                ListFooterComponent={<View w={SPACING} h="100%" />}
             />
             {isScrollable && !isAtEnd && <ScrollIndicator side="right" width="$6" />}
             {isScrollable && !isAtStart && <ScrollIndicator side="left" width="$6" />}

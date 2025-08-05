@@ -1,36 +1,65 @@
-import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
 
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { ProductCategory } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
-    productQueryOptions,
-    productsQueryOptions
-} from './queries';
+    fetchDiscountedProducts,
+    fetchFeaturedProducts,
+    fetchProduct,
+    fetchProductsByIds,
+    fetchProductsBySearch,
+    fetchProductVariations,
+    fetchRecentProducts
+} from './api';
 
 export const useProduct = (id: number) => {
-    return useQuery(productQueryOptions(id));
+    return useQuery({
+        queryKey: ['product', id],
+        queryFn: () => fetchProduct(id),
+    });
 };
 
-// Specific hooks for different product lists
-export const useProductVariations = (variableProduct: VariableProduct, options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'variations', params: variableProduct.id }), options);
+export const useProductVariations = (variableProduct: VariableProduct) => {
+    return useQuery({
+        queryKey: ['product-variations', variableProduct.id],
+        queryFn: () => fetchProductVariations(variableProduct.id),
+    });
+};
 
-export const useFeaturedProducts = (options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'featured' }), options);
+export const useRecentProducts = () => {
 
-export const useRecentProducts = (options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'recent' }), options);
+    return useQuery({
+        queryKey: ['recent-products'],
+        queryFn: () => fetchRecentProducts(),
+    });
 
-export const useDiscountedProducts = (options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'discounted' }), options);
+}
 
-export const useProductsByCategory = (category: ProductCategory, options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'category', params: category.id }), options);
+export const useProductsByIds = (ids: number[]) => {
+    return useQuery({
+        queryKey: ['products-by-ids', ids],
+        queryFn: () => fetchProductsByIds(ids),
+        enabled: !!ids && ids.length > 0,
+    });
+}
 
-export const useProductsBySearch = (searchTerm: string, options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'search', params: searchTerm }), options);
+export const useProductsBySearch = (query: string) => {
+    return useQuery({
+        queryKey: ['products-by-search', query],
+        queryFn: () => fetchProductsBySearch(query),
+        enabled: !!query,
+    });
+}
 
-export const useProductsByIds = (ids: number[], options?: InfiniteListQueryOptions) =>
-    useInfiniteListQuery(productsQueryOptions({ type: 'ids', params: ids }), options);
+export const useFeaturedProducts = () => {
+    return useQuery({
+        queryKey: ['featured-products'],
+        queryFn: () => fetchFeaturedProducts(),
+    });
+}
 
+export const useDiscountedProducts = () => {
+    return useQuery({
+        queryKey: ['on-sale-products'],
+        queryFn: () => fetchDiscountedProducts(),
+    });
+}
