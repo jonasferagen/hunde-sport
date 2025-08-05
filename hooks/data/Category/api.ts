@@ -1,21 +1,22 @@
 import { ENDPOINTS } from '@/config/api';
-import apiClient from '@/utils/apiClient';
-
+import api from '@/lib/apiClient';
 import { mapToProductCategory } from '@/models/ProductCategory';
 
 export async function fetchCategories(page: number) {
-
-    const { data, headers, error } = await apiClient.get<any[]>(
+    const response = await api.get<any[]>(
         ENDPOINTS.CATEGORIES.LIST(page)
     );
 
-    const total = headers.get('X-WP-Total');
-    const totalPages = headers.get('X-WP-TotalPages');
+    if (response.problem) {
+        throw new Error(response.problem);
+    }
 
-    if (error) throw new Error(error);
+    const total = response.headers?.['x-wp-total'] as string | undefined;
+    const totalPages = response.headers?.['x-wp-totalpages'] as string | undefined;
 
     return {
-        items: (data ?? []).map(mapToProductCategory),
+        items: (response.data ?? []).map(mapToProductCategory),
         total: total ? parseInt(total, 10) : 0,
+        totalPages: totalPages ? parseInt(totalPages, 10) : 0,
     };
 }

@@ -1,17 +1,18 @@
 import { ENDPOINTS } from '@/config/api';
+import api from '@/lib/apiClient';
 import { CartData } from '@/models/Cart/Cart';
 import { mapCartData } from '@/models/Cart/CartMapper';
 import { log } from '@/services/Logger';
-import apiClient, { ApiResponse } from '@/utils/apiClient';
+import { ApiResponse } from 'apisauce';
 
 const handleResponse = (
     response: ApiResponse<any>,
     context: string,
     currentCartToken?: string
 ): { data: CartData; token: string } => {
-    if (response.error) {
-        log.error(`API: ${context} failed`, { error: response.error });
-        throw new Error(response.error);
+    if (response.problem) {
+        log.error(`API: ${context} failed`, { error: response.problem });
+        throw new Error(response.problem);
     }
 
     if (!response.data) {
@@ -19,7 +20,8 @@ const handleResponse = (
         throw new Error(`No data returned from ${context}`);
     }
 
-    const newCartToken = response.headers.get('cart-token');
+    // Headers are a plain object in apisauce
+    const newCartToken = response.headers?.['cart-token'] as string | undefined;
     const token = newCartToken || currentCartToken;
 
     if (!token) {
@@ -31,13 +33,15 @@ const handleResponse = (
     return { data: mapCartData(response.data), token };
 };
 
+
 /**
  * Fetches the cart from the API.
  * @returns {Promise<{data: CartData, token: string}>} The cart data and token.
  */
 export async function fetchCart(): Promise<{ data: CartData; token: string }> {
     log.info('API: Fetching new cart...');
-    const response = await apiClient.get<any>(ENDPOINTS.CART.GET());
+    // 3. Use the apisauce client
+    const response = await api.get<any>(ENDPOINTS.CART.GET());
     return handleResponse(response, 'fetchCart');
 }
 
@@ -49,15 +53,14 @@ export async function fetchCart(): Promise<{ data: CartData; token: string }> {
  * @param {object[]} variation - The product variation attributes.
  * @returns {Promise<{data: CartData, token: string}>} An object containing the updated cart data.
  */
-
 export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: CartData; token: string }> {
     const payload = { id, quantity, variation };
     log.info('API: addItem called.');
 
-    const response = await apiClient.post<any>(
+    const response = await api.post<any>(
         ENDPOINTS.CART.ADD_ITEM(),
         payload,
-        { headers: { 'cart-token': cartToken } }
+        { headers: { 'cart-token': cartToken } } // Pass headers in the config object
     );
 
     return handleResponse(response, 'addItem', cartToken);
@@ -72,7 +75,7 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
  */
 export async function updateItem({ cartToken, key, quantity }: { cartToken: string, key: string, quantity: number }): Promise<{ data: CartData; token: string }> {
     log.info('API: updateItem called.');
-    const response = await apiClient.post<any>(
+    const response = await api.post<any>(
         ENDPOINTS.CART.UPDATE_ITEM(),
         { key, quantity },
         { headers: { 'cart-token': cartToken } }
@@ -88,7 +91,9 @@ export async function updateItem({ cartToken, key, quantity }: { cartToken: stri
  */
 export async function removeItem({ cartToken, key }: { cartToken: string, key: string }): Promise<{ data: CartData; token: string }> {
     log.info('API: removeItem called.');
-    const response = await apiClient.post<any>(
+    // Note: apisauce's delete method signature is (url, params, axiosConfig)
+    // To send a body or custom headers, you pass them in the config.
+    const response = await api.post<any>( // Woocommerce uses POST for removal
         ENDPOINTS.CART.REMOVE_ITEM(),
         { key },
         { headers: { 'cart-token': cartToken } }

@@ -25,10 +25,4 @@ export const ENDPOINTS = {
     UPDATE_ITEM: () => `${CART_URL}/update-item`,
     REMOVE_ITEM: () => `${CART_URL}/remove-item`,
   },
-
-};
-
-// Helper function to get full API URL
-export const getApiUrl = (endpoint: string) => {
-  return `${API_BASE_URL}${endpoint}`;
 };

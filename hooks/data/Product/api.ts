@@ -1,6 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import apiClient from '@/utils/apiClient';
-
+import api from '@/lib/apiClient';
 import { BaseProduct, BaseProductData } from '@/models/Product/BaseProduct';
 import { createProduct } from '@/models/Product/ProductFactory';
 
@@ -47,20 +46,27 @@ export function getQueryStringForType({ type, params }: ProductListParams): stri
 }
 
 export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductData>> {
-    const { data, error } = await apiClient.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
-    if (error) throw new Error(error);
+    const response = await api.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
+    if (response.problem) {
+        throw new Error(response.problem);
+    }
+    if (!response.data) {
+        throw new Error('Product not found');
+    }
 
-    return createProduct(data);
+    return createProduct(response.data);
 }
 
 export const fetchProducts = async (page: number, query: ProductListParams) => {
-    const { data, headers, error } = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
-    if (error) throw new Error(error);
+    const response = await api.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
+    if (response.problem) {
+        throw new Error(response.problem);
+    }
 
-    const total = headers.get('x-wp-total');
+    const total = response.headers?.['x-wp-total'] as string | undefined;
 
     return {
-        items: (data ?? []).map(createProduct),
+        items: (response.data ?? []).map(createProduct),
         total: total ? parseInt(total, 10) : 0,
     };
 };
