@@ -1,7 +1,15 @@
-import { InfiniteListQueryOptions, useInfiniteListQuery } from '@/hooks/data/util';
-import { categoriesQueryOptions } from './queries';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCategories } from './api';
 
-export const useCategories = (options?: InfiniteListQueryOptions) => {
-    return useInfiniteListQuery(categoriesQueryOptions(), options);
+export const useCategories = () => {
+
+    const queryResult = useQuery({
+        queryKey: ['categories'],
+        queryFn: () => fetchCategories(),
+    });
+
+    return queryResult;
+
+
 };
 

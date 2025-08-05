@@ -43,19 +43,19 @@ const CartInitializer = ({ onReady }: LoaderProps) => {
  * Handles fetching all product categories and reports when ready.
  */
 const CategoryLoader = ({ onReady }: LoaderProps) => {
-    const { items, hasNextPage, isLoading, isFetchingNextPage } = useCategories({ autoload: true });
+    const { data: categories, isLoading } = useCategories();
     const setCategoriesInStore = useProductCategoryStore((state) => state.setProductCategories);
-
-    const allCategoriesFetched = !hasNextPage;
-    const isWorking = isLoading || isFetchingNextPage;
 
     useEffect(() => {
         // The loader is ready once fetching is complete and we have a definitive result.
-        if (!isWorking && allCategoriesFetched) {
-            setCategoriesInStore(items);
+        if (!isLoading && categories) {
+            setCategoriesInStore(categories);
+
+            console.log(categories.length);
+
             onReady();
         }
-    }, [isWorking, allCategoriesFetched, items, onReady, setCategoriesInStore]);
+    }, [isLoading, categories, onReady, setCategoriesInStore]);
 
     return null; // Logic-only component
 };

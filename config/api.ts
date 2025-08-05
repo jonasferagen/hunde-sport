@@ -13,7 +13,7 @@ const filterParams = `status=publish&per_page=${PAGE_SIZE}&hide_empty=true`;
 export const ENDPOINTS = {
   CATEGORIES: {
     GET: (id: number) => `${CATEGORIES_URL}/${id}`,
-    LIST: (page: number, ...params: string[]) => `${CATEGORIES_URL}?page=${page}&${params.join('&')}&${filterParams}`,
+    LIST: () => `${CATEGORIES_URL}`,
   },
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,

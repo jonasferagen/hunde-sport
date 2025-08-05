@@ -2,9 +2,9 @@ import { ENDPOINTS } from '@/config/api';
 import { apiClient } from '@/lib/apiClient';
 import { mapToProductCategory } from '@/models/ProductCategory';
 
-export async function fetchCategories(page: number) {
+export async function fetchCategories() {
     const response = await apiClient.get<any[]>(
-        ENDPOINTS.CATEGORIES.LIST(page)
+        ENDPOINTS.CATEGORIES.LIST()
     );
 
     if (response.problem) {
@@ -14,9 +14,5 @@ export async function fetchCategories(page: number) {
     const total = response.headers?.['x-wp-total'] as string | undefined;
     const totalPages = response.headers?.['x-wp-totalpages'] as string | undefined;
 
-    return {
-        items: (response.data ?? []).map(mapToProductCategory),
-        total: total ? parseInt(total, 10) : 0,
-        totalPages: totalPages ? parseInt(totalPages, 10) : 0,
-    };
+    return (response.data ?? []).map(mapToProductCategory);
 }
