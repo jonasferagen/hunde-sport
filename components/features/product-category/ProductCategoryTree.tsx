@@ -46,7 +46,7 @@ const ProductCategoryBranch = memo(({
                     {renderItem({
                         productCategory,
                         level,
-                        isActive: pathname.includes(`/category/${productCategory.id}`),
+                        isActive: pathname.includes(`/product-category/${productCategory.id}`),
                         isExpanded,
                         hasChildren,
                         handleExpand: onExpand,

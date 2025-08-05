@@ -97,7 +97,7 @@ const ProductCategoryTreeItem = ({
     const spacing = getTokenValue('$2', 'space');
 
     return (
-        <XStack ai="center" gap="$2" w="100%" >
+        <XStack ai="center" gap="$2" f={1}>
             <XStack flex={1} ml={level * spacing}>
                 <Link href={routes['product-category'].path(productCategory)} asChild>
                     <ThemedButton f={1}>
@@ -116,7 +116,7 @@ const ProductCategoryTreeItem = ({
                 opacity={hasChildren ? 1 : 0}
                 pointerEvents={hasChildren ? 'auto' : 'none'}
             >
-                <AnimatedListExpansionIcon expanded={isExpanded} size="$4" />
+                {hasChildren && <AnimatedListExpansionIcon expanded={isExpanded} size="$4" />}
             </ThemedButton>
         </XStack >
     );
