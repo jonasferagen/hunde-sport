@@ -7,20 +7,21 @@ const apiClient = create({
     headers: { 'Accept': 'application/json' },
 });
 
+// Log outgoing requests
+apiClient.addRequestTransform(request => {
+    const { method, url } = request;
+    log.info(method?.toUpperCase(), url?.substring(API_BASE_URL.length));
+
+});
+
+// Log responses
 apiClient.addMonitor((response: ApiResponse<any>) => {
-    const { config, problem } = response;
+    const { config, problem, duration } = response;
     const { method, url } = config || {};
 
-    const m = method?.toUpperCase();
-
     if (problem) {
-        log.error(m, url, problem, { data: response.data });
-        throw new Error(problem);
-    } else {
-        log.info(m, url);
+        log.error('API Response Error', { method, url, problem, duration, data: response.data });
     }
-
-
 });
 
 export { apiClient };
