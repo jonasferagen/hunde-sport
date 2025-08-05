@@ -1,4 +1,5 @@
 import { VariableProduct } from '@/models/Product/VariableProduct';
+import { ProductCategory } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import {
     fetchDiscountedProducts,
@@ -64,10 +65,10 @@ export const useDiscountedProducts = () => {
     });
 }
 
-export const useProductsByCategory = (id: number) => {
+export const useProductsByCategory = (productCategory: ProductCategory) => {
     return useQuery({
-        queryKey: ['products-by-category', id],
-        queryFn: () => fetchProductsByCategory(id),
-        enabled: !!id,
+        queryKey: ['products-by-category', productCategory.id],
+        queryFn: () => fetchProductsByCategory(productCategory.id),
+        enabled: !!productCategory.id,
     });
 }

@@ -26,21 +26,16 @@ interface ProductCategoryProductListProps {
 const ProductCategoryProductList = ({ productCategory }: ProductCategoryProductListProps): JSX.Element => {
     useRenderGuard('ProductCategoryProductList');
 
-    const { items: products,
-        isLoading,
-        isFetchingNextPage,
-        fetchNextPage } = useProductsByCategory(
-            productCategory,
-            { autoload: false }
-        );
-
+    const { data: products, isLoading } = useProductsByCategory(productCategory);
+    const loadingMore = false;
+    const loadMore = () => { };
     if (isLoading) {
         return <LoadingScreen />;
     }
 
     return <ProductList
-        products={products}
-        loadingMore={isFetchingNextPage}
-        loadMore={fetchNextPage}
+        products={products ?? []}
+        loadingMore={loadingMore}
+        loadMore={loadMore}
     />;
 };
