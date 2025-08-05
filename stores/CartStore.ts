@@ -63,6 +63,35 @@ const initialState: CartState = {
 };
 
 /**
+ * A generic helper function to manage cart operations by handling loading states, API calls, and state updates.
+ * @param actionName - The name of the action for logging purposes.
+ * @param get - The Zustand `get` function to access the current state.
+ * @param set - The Zustand `set` function to update the state.
+ * @param apiCall - The specific API function to execute for the cart operation.
+ * @returns A promise that resolves when the action is complete.
+ */
+const _handleCartAction = async <T>(
+    actionName: 'addItem' | 'updateItem' | 'removeItem',
+    get: () => CartState,
+    set: (partial: Partial<CartState>) => void,
+    apiCall: () => Promise<{ data: CartData }>
+) => {
+    log.info(`CartStore: ${actionName} invoked.`);
+    const { cart: originalCart } = get();
+    set({ isUpdating: true });
+
+    try {
+        const { data } = await apiCall();
+        set({ cart: data, cartToken: data.token });
+        log.info(`CartStore: ${actionName} success.`);
+    } catch (error) {
+        log.error(`CartStore: ${actionName} failed.`, error);
+        set({ cart: originalCart });
+    }
+    set({ isUpdating: false });
+};
+
+/**
  * The centralized Zustand store for managing the shopping cart.
  */
 export const useCartStore = create<CartState & CartActions>()(
@@ -82,79 +111,57 @@ export const useCartStore = create<CartState & CartActions>()(
                         cart: data,
                         cartToken: data.token,
                         isInitialized: true,
-                        isLoading: false,
                     });
                     log.info('CartStore: Initialization successful.');
                 } catch (error) {
                     log.error('CartStore: Initialization failed.');
-                    set({ isLoading: false });
                 }
+                set({ isLoading: false });
             },
 
             addItem: async (options: AddItemOptions) => {
-                const { cartToken, cart: originalCart } = get();
-                log.info('CartStore: addItem invoked.');
-
+                const { cartToken } = get();
                 if (!cartToken) {
                     log.error('CartStore: addItem failed, no cart token found.');
                     return;
                 }
 
-                set({ isUpdating: true });
-
-                try {
-                    const { data } = await apiAddItem({ ...options, cartToken, variation: options.variation || [] });
-                    set({ cart: data, cartToken: data.token, isUpdating: false });
-                    log.info('CartStore: addItem success.');
-                } catch (error) {
-                    log.error('CartStore: addItem failed.');
-                    log.error(error);
-                    set({ cart: originalCart, isUpdating: false });
-                }
+                await _handleCartAction(
+                    'addItem',
+                    get,
+                    set,
+                    () => apiAddItem({ ...options, cartToken, variation: options.variation || [] })
+                );
             },
 
             updateItem: async (key: string, quantity: number) => {
-                const { cartToken, cart: originalCart } = get();
-                log.info('CartStore: updateItem invoked.');
-
+                const { cartToken } = get();
                 if (!cartToken) {
                     log.error('CartStore: updateItem failed, no cart token found.');
                     return;
                 }
 
-                set({ isUpdating: true });
-
-                try {
-                    const { data } = await apiUpdateItem({ cartToken, key, quantity });
-                    set({ cart: data, cartToken: data.token, isUpdating: false });
-                    log.info('CartStore: updateItem success.');
-                } catch (error) {
-                    log.error('CartStore: updateItem failed.');
-                    set({ cart: originalCart, isUpdating: false });
-                }
+                await _handleCartAction(
+                    'updateItem',
+                    get,
+                    set,
+                    () => apiUpdateItem({ cartToken, key, quantity })
+                );
             },
 
             removeItem: async (key: string) => {
-                const { cartToken, cart: originalCart } = get();
-                log.info('CartStore: removeItem invoked.');
-
+                const { cartToken } = get();
                 if (!cartToken) {
                     log.error('CartStore: removeItem failed, no cart token found.');
                     return;
                 }
 
-                set({ isUpdating: true });
-
-                try {
-                    const { data } = await apiRemoveItem({ cartToken, key });
-                    set({ cart: data, cartToken: data.token, isUpdating: false });
-                    log.info('CartStore: removeItem success.');
-                } catch (error) {
-                    log.error('CartStore: removeItem failed.');
-                    log.error(error);
-                    // Rollback to original state on error
-                    set({ cart: originalCart, isUpdating: false });
-                }
+                await _handleCartAction(
+                    'removeItem',
+                    get,
+                    set,
+                    () => apiRemoveItem({ cartToken, key })
+                );
             },
         }),
         {
