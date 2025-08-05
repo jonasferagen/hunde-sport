@@ -1,36 +1,31 @@
 // Base URL for API requests
 
 export const API_BASE_URL = 'https://hunde-sport.no/wp-json/wc/store/v1';
-export const PAGE_SIZE = 10;
 
 const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
 const PRODUCTS_URL = `${API_BASE_URL}/products`;
 const CART_URL = `${API_BASE_URL}/cart`;
 
-const filterParams = `status=publish&per_page=${PAGE_SIZE}&hide_empty=true`;
-
-
-
 const ALL_STATUSES = 'status=any';
 const ALL_STOCK_STATUSES = 'stock_status=instock,onbackorder,outofstock';
-const productsFilter = `${ALL_STATUSES}&${ALL_STOCK_STATUSES}`;
+
+const PRODUCTS_FILTER = `${ALL_STATUSES}&${ALL_STOCK_STATUSES}`;
 
 // API endpoints
 export const ENDPOINTS = {
   CATEGORIES: {
     GET: (id: number) => `${CATEGORIES_URL}/${id}`,
-    LIST: () => `${CATEGORIES_URL}`,
+    ALL: () => `${CATEGORIES_URL}`,
   },
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,
-    LIST: (page: number, ...params: string[]) => `${PRODUCTS_URL}?page=${page}&${params.join('&')}&${filterParams}`,
-    RECENT: () => `${PRODUCTS_URL}?${productsFilter}&orderby=date`,
-    FEATURED: () => `${PRODUCTS_URL}?${productsFilter}&featured=true`,
-    DISCOUNTED: () => `${PRODUCTS_URL}?${productsFilter}&on_sale=true`,
-    SEARCH: (query: string) => `${PRODUCTS_URL}?${productsFilter}&search=${query}`,
-    BY_IDS: (ids: number[]) => `${PRODUCTS_URL}?${productsFilter}&include=${ids.join(',')}`,
-    BY_CATEGORY: (id: number) => `${PRODUCTS_URL}?${productsFilter}&category=${id}`,
-    VARIATIONS: (id: number) => `${PRODUCTS_URL}?${productsFilter}&parent=${id}&type=variation`,
+    RECENT: () => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&orderby=date`,
+    FEATURED: () => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&featured=true`,
+    DISCOUNTED: () => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&on_sale=true`,
+    SEARCH: (query: string) => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&search=${query}`,
+    BY_IDS: (product_ids: number[]) => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&include=${product_ids.join(',')}`,
+    BY_CATEGORY: (category_id: number, page: number = 1, per_page: number = 10) => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&category=${category_id}&page=${page}&per_page=${per_page}`,
+    VARIATIONS: (product_id: number) => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&parent=${product_id}&type=variation`,
   },
   CART: {
     GET: () => `${CART_URL}`,

@@ -1,6 +1,7 @@
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { ProductCategory } from '@/types';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import {
     fetchDiscountedProducts,
     fetchFeaturedProducts,
@@ -66,9 +67,29 @@ export const useDiscountedProducts = () => {
 }
 
 export const useProductsByCategory = (productCategory: ProductCategory) => {
-    return useQuery({
+    const result = useInfiniteQuery({
         queryKey: ['products-by-category', productCategory.id],
-        queryFn: () => fetchProductsByCategory(productCategory.id),
+        queryFn: ({ pageParam }) => fetchProductsByCategory({ category_id: productCategory.id, pageParam }),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (lastPage.totalPages > lastPage.currentPage) {
+                return lastPage.currentPage + 1;
+            }
+            return undefined;
+        },
         enabled: !!productCategory.id,
     });
+
+    const { total, items } = useMemo(() => {
+        const page = result.data ? result.data.pages[result.data.pages.length - 1] : null;
+        const total = page ? page.total : 0;
+        const items = result.data?.pages.flatMap(page => page.data) ?? [];
+        return { total, items };
+    }, [result.data]);
+
+    return {
+        ...result,
+        items,
+        total
+    };
 }

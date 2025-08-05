@@ -1,15 +1,20 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ProductProvider } from '@/contexts';
-import { Product } from '@/models/Product/Product';
+import { ProductVariation } from '@/models/Product/ProductVariation';
+import { SimpleProduct } from '@/models/Product/SimpleProduct';
+import { VariableProduct } from '@/models/Product/VariableProduct';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback } from 'react';
 import { ViewStyle } from 'react-native';
 import { YStack } from 'tamagui';
 import { ProductCard } from './card';
 
+type Product = SimpleProduct | VariableProduct | ProductVariation;
+
+
 interface ProductListProps {
     products: Product[];
-    loadMore?: () => void;
+    loadMore: () => void;
     loadingMore: boolean;
     contentContainerStyle?: ViewStyle;
 }
@@ -41,7 +46,7 @@ export const ProductList = memo(({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.2}
         contentContainerStyle={contentContainerStyle}
         ListFooterComponent={() =>
             loadingMore ? <ThemedSpinner size="small" /> : null

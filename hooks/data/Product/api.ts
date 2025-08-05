@@ -2,6 +2,7 @@ import { ENDPOINTS } from '@/config/api';
 import { apiClient } from '@/lib/apiClient';
 import { BaseProduct, BaseProductData } from '@/models/Product/BaseProduct';
 import { createProduct } from '@/models/Product/ProductFactory';
+import { ApiResponse } from 'apisauce';
 
 
 
@@ -68,10 +69,23 @@ export const fetchProductVariations = async (id: number) => {
     return (response.data ?? []).map(createProduct);
 }
 
-export const fetchProductsByCategory = async (id: number) => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(id));
+
+const responseTransformer = (response: ApiResponse<any>) => {
+    const totalPages = response.headers?.['x-wp-totalpages'] as string;
+    const total = response.headers?.['x-wp-total'] as string;
+    return {
+        data: (response.data ?? []).map(createProduct),
+        totalPages: totalPages ? parseInt(totalPages, 10) : 0,
+        total: total ? parseInt(total, 10) : 0,
+    };
+}
+
+export const fetchProductsByCategory = async ({ category_id, pageParam = 1 }: { category_id: number, pageParam?: number }) => {
+
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(category_id, pageParam));
     if (response.problem) {
         throw new Error(response.problem);
     }
-    return (response.data ?? []).map(createProduct);
+
+    return responseTransformer(response);
 }

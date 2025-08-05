@@ -4,7 +4,7 @@ import { mapToProductCategory } from '@/models/ProductCategory';
 
 export async function fetchCategories() {
     const response = await apiClient.get<any[]>(
-        ENDPOINTS.CATEGORIES.LIST()
+        ENDPOINTS.CATEGORIES.ALL()
     );
 
     if (response.problem) {
