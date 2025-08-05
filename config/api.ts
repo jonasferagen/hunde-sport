@@ -1,5 +1,10 @@
 // Base URL for API requests
 
+export type PaginationOptions = {
+  page: number;
+  per_page: number;
+}
+
 export const API_BASE_URL = 'https://hunde-sport.no/wp-json/wc/store/v1';
 
 const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
@@ -10,7 +15,7 @@ const ALL_STATUSES = 'status=any';
 const ALL_STOCK_STATUSES = 'stock_status=instock,onbackorder,outofstock';
 
 const PRODUCTS_FILTER = `${ALL_STATUSES}&${ALL_STOCK_STATUSES}`;
-const PRODUCTS_LIST = (page: number = 1, per_page: number = 10) => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&page=${page}&per_page=${per_page}`
+const PRODUCTS_LIST = (pagination: PaginationOptions) => `${PRODUCTS_URL}?${PRODUCTS_FILTER}&page=${pagination.page}&per_page=${pagination.per_page}`
 
 // API endpoints
 export const ENDPOINTS = {
@@ -20,14 +25,14 @@ export const ENDPOINTS = {
   },
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,
-    FEATURED: (page: number = 1) => `${PRODUCTS_LIST(page)}&featured=true`,
-    DISCOUNTED: (page: number = 1) => `${PRODUCTS_LIST(page)}&on_sale=true`,
-    SEARCH: (query: string, page: number = 1) => `${PRODUCTS_LIST(page)}&search=${query}`,
-    BY_IDS: (product_ids: number[], page: number = 1) => `${PRODUCTS_LIST(page)}&include=${product_ids.join(',')}`,
-    VARIATIONS: (product_id: number, page: number = 1) => `${PRODUCTS_LIST(page)}&parent=${product_id}&type=variation`,
 
-    RECENT: (page: number = 1) => `${PRODUCTS_LIST(page)}&orderby=date`,
-    BY_CATEGORY: (product_category_id: number, page: number = 1) => `${PRODUCTS_LIST(page)}&category=${product_category_id}`,
+    FEATURED: (pagination: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&featured=true`,
+    DISCOUNTED: (pagination: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&on_sale=true`,
+    SEARCH: (query: string, pagination: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&search=${query}`,
+    BY_IDS: (product_ids: number[], pagination: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&include=${product_ids.join(',')}`,
+    VARIATIONS: (product_id: number, pagination: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&parent=${product_id}&type=variation`,
+    RECENT: (pagination: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&orderby=date`,
+    BY_CATEGORY: (product_category_id: number, pagination: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&category=${product_category_id}`,
   },
   CART: {
     GET: () => `${CART_URL}`,
