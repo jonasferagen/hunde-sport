@@ -15,6 +15,7 @@ export interface CartItemData {
 
 export interface CartData {
     items: CartItemData[];
+    token: string;
     items_count: number;
     items_weight: number;
     totals: any;

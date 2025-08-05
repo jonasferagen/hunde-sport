@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import api from '@/lib/apiClient';
+import { apiClient } from '@/lib/apiClient';
 import { BaseProduct, BaseProductData } from '@/models/Product/BaseProduct';
 import { createProduct } from '@/models/Product/ProductFactory';
 
@@ -46,7 +46,7 @@ export function getQueryStringForType({ type, params }: ProductListParams): stri
 }
 
 export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductData>> {
-    const response = await api.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
+    const response = await apiClient.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
     if (response.problem) {
         throw new Error(response.problem);
     }
@@ -58,15 +58,17 @@ export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductD
 }
 
 export const fetchProducts = async (page: number, query: ProductListParams) => {
-    const response = await api.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.LIST(page, getQueryStringForType(query)));
     if (response.problem) {
         throw new Error(response.problem);
     }
 
     const total = response.headers?.['x-wp-total'] as string | undefined;
+    const totalPages = response.headers?.['x-wp-totalpages'] as string | undefined;
 
     return {
         items: (response.data ?? []).map(createProduct),
         total: total ? parseInt(total, 10) : 0,
+        totalPages: totalPages ? parseInt(totalPages, 10) : 0,
     };
 };

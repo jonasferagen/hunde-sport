@@ -7,9 +7,10 @@ import { createProduct } from '@/models/Product/ProductFactory';
  * is correctly instantiated into SimpleProduct or VariableProduct objects.
  *
  * @param {any} rawData - The raw cart data object from the API.
+ * @param {string} token - The cart token for the current session.
  * @returns {CartData} The structured and validated CartData object.
  */
-export const mapCartData = (rawData: any): CartData => {
+export const mapCartData = (rawData: any, token: string): CartData => {
     const mappedItems = rawData.items.map((item: any): CartItemData => {
 
         return {
@@ -21,6 +22,7 @@ export const mapCartData = (rawData: any): CartData => {
     return {
         ...rawData,
         items: mappedItems,
+        token,
         lastUpdated: Date.now(),
     };
 };

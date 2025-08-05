@@ -1,9 +1,9 @@
 import { ENDPOINTS } from '@/config/api';
-import api from '@/lib/apiClient';
+import { apiClient } from '@/lib/apiClient';
 import { mapToProductCategory } from '@/models/ProductCategory';
 
 export async function fetchCategories(page: number) {
-    const response = await api.get<any[]>(
+    const response = await apiClient.get<any[]>(
         ENDPOINTS.CATEGORIES.LIST(page)
     );
 

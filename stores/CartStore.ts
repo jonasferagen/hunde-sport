@@ -75,10 +75,13 @@ export const useCartStore = create<CartState & CartActions>()(
                 set({ isLoading: true });
 
                 try {
-                    const { data, token } = await apiFetchCart();
+                    const { data } = await apiFetchCart();
+
+                    console.error(data.token);
+
                     set({
                         cart: data,
-                        cartToken: token,
+                        cartToken: data.token,
                         isInitialized: true,
                         isLoading: false,
                     });
@@ -101,11 +104,8 @@ export const useCartStore = create<CartState & CartActions>()(
                 set({ isUpdating: true });
 
                 try {
-                    const { data, token: newCartToken } = await apiAddItem({ ...options, cartToken, variation: options.variation || [] });
-                    if (cartToken !== newCartToken) {
-                        log.warn(`CartStore: Cart token changed. Old: ${cartToken}, New: ${newCartToken}`);
-                    }
-                    set({ cart: data, cartToken: newCartToken, isUpdating: false });
+                    const { data } = await apiAddItem({ ...options, cartToken, variation: options.variation || [] });
+                    set({ cart: data, cartToken: data.token, isUpdating: false });
                     log.info('CartStore: addItem success.');
                 } catch (error) {
                     log.error('CartStore: addItem failed.');
