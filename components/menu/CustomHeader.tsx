@@ -18,17 +18,16 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
     };
     const theme = resolveTheme(props.route.name);
     const insets = useSafeAreaInsets();
-    const paddingTop = 70;
-    const height = insets.top + paddingTop + 20;
+    const marginTop = insets.top;
+
 
     return <Theme name={theme}>
         <XStack
-            mih={height}
-            h={height}
+
             ai="center"
             jc="space-between"
-            pt={paddingTop}
-            px="$3"
+            mt={marginTop}
+            p="$3"
             bbw={2}
             boc="$borderColor"
             gap="$3"

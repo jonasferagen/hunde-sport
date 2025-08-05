@@ -66,7 +66,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const activeRouteName = state.routes[state.index].name;
     const themeName = resolveTheme(activeRouteName);
-    const { top } = useSafeAreaInsets();
+    const { top, bottom } = useSafeAreaInsets();
 
     return (
         <YStack
@@ -76,13 +76,18 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             brc="$borderColor"
         >
             <Theme name="primary">
-                <YStack f={1} bc="$background">
+
+                <YStack f={1} bc="$background" mt={top} mb={bottom}>
+                    <LinearGradient
+                        colors={['$background', '$backgroundStrong']}
+                        start={[0, 0]}
+                        end={[1, 1]}
+                        fullscreen
+                    />
                     <XStack
                         ai="center"
                         jc="space-between"
-                        pt={top + 30}
-                        px="$4"
-                        pb="$3"
+                        p="$3"
                     >
                         <ThemedText fos="$4">hunde-sport.no</ThemedText>
                         <ThemedButton
@@ -94,12 +99,6 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                     </XStack>
 
                     <ScrollView>
-                        <LinearGradient
-                            colors={['$background', '$backgroundPress']}
-                            start={[0, 0]}
-                            end={[1, 1]}
-                            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-                        />
                         <YStack gap="$2" p="$4">
                             {Object.values(routes)
                                 .filter(route => route.showInDrawer)
@@ -138,9 +137,8 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                     );
                                 })}
                             <ThemedText my="$2" fos="$4">Kategorier</ThemedText>
-                            <ProductCategoryTree
-                                renderItem={(itemProps) => <ProductCategoryTreeItem {...itemProps} />}
-                            />
+                            <ProductCategoryTree renderItem={ProductCategoryTreeItem} />
+                            <ProductCategoryTree renderItem={ProductCategoryTreeItem} />
                         </YStack>
                     </ScrollView>
                 </YStack>
