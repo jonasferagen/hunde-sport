@@ -8,7 +8,7 @@ import { X } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getTokenValue, ScrollView, Theme, XStack, YStack } from 'tamagui';
+import { getTokenValue, H4, ScrollView, Theme, XStack, YStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
 import { AnimatedListExpansionIcon } from './AnimatedListExpansionIcon';
@@ -41,7 +41,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                         jc="space-between"
                         p="$3"
                     >
-                        <ThemedText fos="$4">hunde-sport.no</ThemedText>
+                        <H4>hunde-sport.no</H4>
                         <ThemedButton
                             circular
                             onPress={() => navigation.closeDrawer()}
@@ -60,35 +60,21 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                     return (
                                         <XStack key={route.name}>
                                             <ThemedButton
-                                                icon={route.icon}
-                                                circular
-                                                size="$6"
-                                                variant={isActive ? 'active' : undefined}
-                                                onPress={onPress}
-                                            />
-                                            <ThemedButton
-                                                py="$2"
-                                                mx="$2"
-                                                h="$6"
                                                 f={1}
-                                                bc="transparent"
-                                                variant={isActive ? 'active' : undefined}
-                                                boc="transparent"
                                                 onPress={onPress}
-                                                br="$6"
-                                                jc="flex-start"
                                             >
                                                 <ThemedText
+                                                    f={1}
                                                     variant={isActive ? 'focused' : 'default'}
-                                                    fos="$3"
-                                                    letterSpacing={0.5}>
+                                                    letterSpacing={0.5}
+                                                    fos="$4">
                                                     {route.label}
                                                 </ThemedText>
                                             </ThemedButton>
                                         </XStack>
                                     );
                                 })}
-                            <ThemedText my="$2" fos="$4">Kategorier</ThemedText>
+                            <H4 my="$2">Kategorier</H4>
                             <ProductCategoryTree renderItem={ProductCategoryTreeItem} />
 
                         </YStack>

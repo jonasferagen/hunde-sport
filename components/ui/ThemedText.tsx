@@ -1,6 +1,6 @@
-import { styled, Text } from 'tamagui';
+import { SizableText, styled } from 'tamagui';
 
-export const ThemedText = styled(Text, {
+export const ThemedText = styled(SizableText, {
     name: 'ThemedText',
     color: '$color',
     fontWeight: 'normal',
@@ -17,5 +17,5 @@ export const ThemedText = styled(Text, {
                 fontWeight: 'bold',
             },
         },
-    } as const,
+    } as const
 });
