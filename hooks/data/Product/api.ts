@@ -4,7 +4,12 @@ import { BaseProduct, BaseProductData } from '@/models/Product/BaseProduct';
 import { createProduct } from '@/models/Product/ProductFactory';
 import { ApiResponse } from 'apisauce';
 
-
+/**
+ * Fetch a product by ID.
+ *
+ * @param id - The ID of the product to fetch.
+ * @returns The fetched product.
+ */
 export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductData>> {
     const response = await apiClient.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
     if (response.problem) {
@@ -17,42 +22,93 @@ export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductD
     return createProduct(response.data);
 }
 
-
-export const fetchFeaturedProducts = async (pagination: PaginationOptions) => {
+/**
+ * Fetch featured products.
+ *
+ * @param pagination - Optional pagination options.
+ * @returns The fetched products.
+ */
+export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.FEATURED(pagination));
     return responseTransformer(response);
 }
 
-export const fetchDiscountedProducts = async (pagination: PaginationOptions) => {
+/**
+ * Fetch discounted products.
+ *
+ * @param pagination - Optional pagination options.
+ * @returns The fetched products.
+ */
+export const fetchDiscountedProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.DISCOUNTED(pagination));
     return responseTransformer(response);
 }
 
-export const fetchProductsByIds = async (ids: number[], pagination: PaginationOptions) => {
+/**
+ * Fetch products by IDs.
+ *
+ * @param ids - The IDs of the products to fetch.
+ * @param pagination - Optional pagination options.
+ * @returns The fetched products.
+ */
+export const fetchProductsByIds = async (ids: number[], pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_IDS(ids, pagination));
     return responseTransformer(response);
 }
 
-export const fetchProductsBySearch = async (query: string, pagination: PaginationOptions) => {
+/**
+ * Fetch products by search query.
+ *
+ * @param query - The search query.
+ * @param pagination - Optional pagination options.
+ * @returns The fetched products.
+ */
+export const fetchProductsBySearch = async (query: string, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.SEARCH(query, pagination));
     return responseTransformer(response);
 }
 
-export const fetchProductVariations = async (id: number, pagination: PaginationOptions) => {
+/**
+ * Fetch product variations.
+ *
+ * @param id - The ID of the product to fetch variations for.
+ * @param pagination - Optional pagination options.
+ * @returns The fetched variations.
+ */
+export const fetchProductVariations = async (id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.VARIATIONS(id, pagination));
     return responseTransformer(response);
 }
 
-export const fetchRecentProducts = async (pagination: PaginationOptions) => {
+/**
+ * Fetch recent products.
+ *
+ * @param pagination - Optional pagination options.
+ * @returns The fetched products.
+ */
+export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.RECENT(pagination));
     return responseTransformer(response);
 }
 
-export const fetchProductsByProductCategory = async (product_category_id: number, pagination: PaginationOptions) => {
+/**
+ * Fetch products by product category.
+ *
+ * @param product_category_id - The ID of the product category to fetch products for.
+ * @param pagination - Optional pagination options.
+ * @returns The fetched products.
+ */
+export const fetchProductsByProductCategory = async (product_category_id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(product_category_id, pagination));
     return responseTransformer(response);
 }
 
+/**
+ * Transform API response to a standardized format.
+ *
+ * @param response - The API response to transform.
+ * @returns The transformed response.
+ */
 const responseTransformer = (response: ApiResponse<any>) => {
     if (response.problem) {
         throw new Error(response.problem);

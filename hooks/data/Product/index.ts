@@ -13,6 +13,9 @@ import {
     fetchRecentProducts
 } from './api';
 
+
+
+
 export const useProduct = (id: number) => {
     return useQuery({
         queryKey: ['product', id],
@@ -23,7 +26,7 @@ export const useProduct = (id: number) => {
 export const useProductVariations = (variableProduct: VariableProduct) => {
     const result = useInfiniteQuery({
         queryKey: ['product-variations', variableProduct.id],
-        queryFn: ({ pageParam }) => fetchProductVariations(variableProduct.id, { page: pageParam, per_page: 10 }),
+        queryFn: ({ pageParam }) => fetchProductVariations(variableProduct.id, { page: pageParam }),
         ...queryOptions
     });
     return handleQueryResult(result);
@@ -32,7 +35,7 @@ export const useProductVariations = (variableProduct: VariableProduct) => {
 export const useProductsByIds = (ids: number[]) => {
     const result = useInfiniteQuery({
         queryKey: ['products-by-ids', ids],
-        queryFn: ({ pageParam }) => fetchProductsByIds(ids, { page: pageParam, per_page: 10 }),
+        queryFn: ({ pageParam }) => fetchProductsByIds(ids, { page: pageParam }),
         enabled: !!ids && ids.length > 0,
         ...queryOptions
     });
@@ -42,7 +45,7 @@ export const useProductsByIds = (ids: number[]) => {
 export const useProductsBySearch = (query: string) => {
     const result = useInfiniteQuery({
         queryKey: ['products-by-search', query],
-        queryFn: ({ pageParam }) => fetchProductsBySearch(query, { page: pageParam, per_page: 10 }),
+        queryFn: ({ pageParam }) => fetchProductsBySearch(query, { page: pageParam }),
         enabled: !!query,
         ...queryOptions
     });
@@ -52,7 +55,7 @@ export const useProductsBySearch = (query: string) => {
 export const useFeaturedProducts = () => {
     const result = useInfiniteQuery({
         queryKey: ['featured-products'],
-        queryFn: ({ pageParam }) => fetchFeaturedProducts({ page: pageParam, per_page: 10 }),
+        queryFn: ({ pageParam }) => fetchFeaturedProducts({ page: pageParam }),
         ...queryOptions
     });
     return handleQueryResult(result);
@@ -61,7 +64,7 @@ export const useFeaturedProducts = () => {
 export const useDiscountedProducts = () => {
     const result = useInfiniteQuery({
         queryKey: ['on-sale-products'],
-        queryFn: ({ pageParam }) => fetchDiscountedProducts({ page: pageParam, per_page: 10 }),
+        queryFn: ({ pageParam }) => fetchDiscountedProducts({ page: pageParam }),
         ...queryOptions
     });
     return handleQueryResult(result);
@@ -70,7 +73,7 @@ export const useDiscountedProducts = () => {
 export const useRecentProducts = () => {
     const result = useInfiniteQuery({
         queryKey: ['recent-products'],
-        queryFn: ({ pageParam }) => fetchRecentProducts({ page: pageParam, per_page: 10 }),
+        queryFn: ({ pageParam }) => fetchRecentProducts({ page: pageParam }),
         ...queryOptions,
     });
     return handleQueryResult(result);
@@ -79,7 +82,7 @@ export const useRecentProducts = () => {
 export const useProductsByCategory = (productCategory: ProductCategory) => {
     const result = useInfiniteQuery({
         queryKey: ['products-by-category', productCategory.id],
-        queryFn: ({ pageParam }) => fetchProductsByProductCategory(productCategory.id, { page: pageParam, per_page: 10 }),
+        queryFn: ({ pageParam }) => fetchProductsByProductCategory(productCategory.id, { page: pageParam }),
         ...queryOptions
     });
     return handleQueryResult(result);
@@ -87,27 +90,27 @@ export const useProductsByCategory = (productCategory: ProductCategory) => {
 
 const queryOptions = {
     initialPageParam: 1,
-    getNextPageParam: (lastPage: { totalPages: number }, allPages: any[]) => {
-        return lastPage.totalPages > allPages.length ? allPages.length + 1 : undefined;
-    },
+    getNextPageParam: (lastPage: any, allPages: any[]) => {
+        if (!lastPage?.totalPages) return undefined;
+        const nextPage = allPages.length + 1;
+        return nextPage <= lastPage.totalPages ? nextPage : undefined;
+    }
 }
 
 const handleQueryResult = (result: UseInfiniteQueryResult<any, any>) => {
 
-    const { data } = result;
+    const { data: dataResult, ...rest } = result;
 
-    const { total, items } = useMemo(() => {
-        const page = data ? data.pages[data.pages.length - 1] : null;
+    const data = useMemo(() => {
+        const page = dataResult ? dataResult.pages[dataResult.pages.length - 1] : null;
         const total = page ? page.total : 0;
-        const items = data?.pages.flatMap((page: any) => page.data) ?? [];
-        return { total, items };
-    }, [data]);
-
-    delete result.data;
+        const totalPages = page?.totalPages ?? 0;
+        const items = dataResult?.pages.flatMap((page: any) => page.data) ?? [];
+        return { total, items, totalPages };
+    }, [dataResult]);
 
     return {
-        ...result,
-        items,
-        total
+        ...rest,
+        ...data
     };
 }
