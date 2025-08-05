@@ -11,10 +11,10 @@ interface ProductListProps {
 }
 
 export const RecentProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
-    const { data } = useRecentProducts();
+    const result = useRecentProducts();
 
     return <HorizontalTiles
-        items={data}
+        {...result}
         renderItem={({ item }) => (
             <ProductTile
                 product={item}
@@ -25,10 +25,10 @@ export const RecentProducts = ({ theme = 'primary' }: ProductListProps): JSX.Ele
 };
 
 export const DiscountedProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
-    const { data } = useDiscountedProducts();
+    const result = useDiscountedProducts();
 
     return <HorizontalTiles
-        items={data}
+        {...result}
         renderItem={({ item }) => (
             <ProductTile
                 product={item}
@@ -39,10 +39,10 @@ export const DiscountedProducts = ({ theme = 'primary' }: ProductListProps): JSX
 };
 
 export const FeaturedProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
-    const { data } = useFeaturedProducts();
+    const result = useFeaturedProducts();
 
     return <HorizontalTiles
-        items={data}
+        {...result}
         renderItem={({ item }) => (
             <ProductTile
                 product={item}
@@ -54,9 +54,9 @@ export const FeaturedProducts = ({ theme = 'primary' }: ProductListProps): JSX.E
 
 
 export const RelatedProducts = ({ theme = 'primary', product }: { theme?: ThemeName; product: SimpleProduct | VariableProduct }): JSX.Element => {
-    const { data } = useProductsByIds(product.related_ids);
+    const result = useProductsByIds(product.related_ids);
     return <HorizontalTiles
-        items={data}
+        {...result}
         renderItem={({ item }) => (
             <ProductTile
                 product={item}
@@ -67,10 +67,10 @@ export const RelatedProducts = ({ theme = 'primary', product }: { theme?: ThemeN
 };
 
 export const DebugProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
-    const { data } = useProductsByIds([246557, 35961, 27445]);
+    const result = useProductsByIds([246557, 35961, 27445]);
 
     return <HorizontalTiles
-        items={data}
+        {...result}
         renderItem={({ item }) => (
             <ProductTile
                 product={item}

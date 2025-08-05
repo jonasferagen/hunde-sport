@@ -6,6 +6,7 @@ import { ApiResponse } from 'apisauce';
 
 
 
+
 export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductData>> {
     const response = await apiClient.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
     if (response.problem) {
@@ -20,72 +21,53 @@ export async function fetchProduct(id: number): Promise<BaseProduct<BaseProductD
 
 
 
-export const fetchRecentProducts = async () => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.RECENT());
-    if (response.problem) {
-        throw new Error(response.problem);
-    }
-    return (response.data ?? []).map(createProduct);
+
+
+export const fetchFeaturedProducts = async ({ pageParam = 1 }) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.FEATURED(pageParam));
+    return responseTransformer(response);
 }
 
-
-export const fetchFeaturedProducts = async () => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.FEATURED());
-    if (response.problem) {
-        throw new Error(response.problem);
-    }
-    return (response.data ?? []).map(createProduct);
+export const fetchDiscountedProducts = async ({ pageParam = 1 }) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.DISCOUNTED(pageParam));
+    return responseTransformer(response);
 }
 
-export const fetchDiscountedProducts = async () => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.DISCOUNTED());
-    if (response.problem) {
-        throw new Error(response.problem);
-    }
-    return (response.data ?? []).map(createProduct);
+export const fetchProductsByIds = async ({ ids, pageParam = 1 }: { ids: number[], pageParam?: number }) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_IDS(ids, pageParam));
+    return responseTransformer(response);
 }
 
-export const fetchProductsByIds = async (ids: number[]) => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_IDS(ids));
-    if (response.problem) {
-        throw new Error(response.problem);
-    }
-    return (response.data ?? []).map(createProduct);
+export const fetchProductsBySearch = async ({ query, pageParam = 1 }: { query: string, pageParam?: number }) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.SEARCH(query, pageParam));
+    return responseTransformer(response);
 }
 
-export const fetchProductsBySearch = async (query: string) => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.SEARCH(query));
-    if (response.problem) {
-        throw new Error(response.problem);
-    }
-    return (response.data ?? []).map(createProduct);
+export const fetchProductVariations = async ({ id, pageParam = 1 }: { id: number, pageParam?: number }) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.VARIATIONS(id, pageParam));
+    return responseTransformer(response);
 }
 
-export const fetchProductVariations = async (id: number) => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.VARIATIONS(id));
-    if (response.problem) {
-        throw new Error(response.problem);
-    }
-    return (response.data ?? []).map(createProduct);
+export const fetchRecentProducts = async ({ pageParam = 1 }) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.RECENT(pageParam));
+    return responseTransformer(response);
 }
 
+export const fetchProductsByProductCategory = async ({ product_category_id, pageParam = 1 }: { product_category_id: number, pageParam?: number }) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(product_category_id, pageParam));
+    return responseTransformer(response);
+}
 
 const responseTransformer = (response: ApiResponse<any>) => {
-    const totalPages = response.headers?.['x-wp-totalpages'] as string;
-    const total = response.headers?.['x-wp-total'] as string;
-    return {
-        data: (response.data ?? []).map(createProduct),
-        totalPages: totalPages ? parseInt(totalPages, 10) : 0,
-        total: total ? parseInt(total, 10) : 0,
-    };
-}
-
-export const fetchProductsByCategory = async ({ category_id, pageParam = 1 }: { category_id: number, pageParam?: number }) => {
-
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(category_id, pageParam));
     if (response.problem) {
         throw new Error(response.problem);
     }
 
-    return responseTransformer(response);
+    const totalPages = Number(response.headers?.['x-wp-totalpages']);
+    const total = Number(response.headers?.['x-wp-total']);
+    return {
+        data: (response.data ?? []).map(createProduct),
+        totalPages,
+        total
+    };
 }

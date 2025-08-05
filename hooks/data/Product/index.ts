@@ -1,13 +1,13 @@
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { ProductCategory } from '@/types';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, UseInfiniteQueryResult, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import {
     fetchDiscountedProducts,
     fetchFeaturedProducts,
     fetchProduct,
-    fetchProductsByCategory,
     fetchProductsByIds,
+    fetchProductsByProductCategory,
     fetchProductsBySearch,
     fetchProductVariations,
     fetchRecentProducts
@@ -21,71 +21,89 @@ export const useProduct = (id: number) => {
 };
 
 export const useProductVariations = (variableProduct: VariableProduct) => {
-    return useQuery({
+    const result = useInfiniteQuery({
         queryKey: ['product-variations', variableProduct.id],
-        queryFn: () => fetchProductVariations(variableProduct.id),
+        queryFn: ({ pageParam }) => fetchProductVariations({ id: variableProduct.id, pageParam }),
+        ...queryOptions
     });
+    return handleQueryResult(result);
 };
 
-export const useRecentProducts = () => {
-
-    return useQuery({
-        queryKey: ['recent-products'],
-        queryFn: () => fetchRecentProducts(),
-    });
-
-}
-
 export const useProductsByIds = (ids: number[]) => {
-    return useQuery({
+    const result = useInfiniteQuery({
         queryKey: ['products-by-ids', ids],
-        queryFn: () => fetchProductsByIds(ids),
+        queryFn: ({ pageParam }) => fetchProductsByIds({ ids, pageParam }),
         enabled: !!ids && ids.length > 0,
+        ...queryOptions
     });
+    return handleQueryResult(result);
 }
 
 export const useProductsBySearch = (query: string) => {
-    return useQuery({
+    const result = useInfiniteQuery({
         queryKey: ['products-by-search', query],
-        queryFn: () => fetchProductsBySearch(query),
+        queryFn: ({ pageParam }) => fetchProductsBySearch({ query, pageParam }),
         enabled: !!query,
+        ...queryOptions
     });
+    return handleQueryResult(result);
 }
 
 export const useFeaturedProducts = () => {
-    return useQuery({
+    const result = useInfiniteQuery({
         queryKey: ['featured-products'],
-        queryFn: () => fetchFeaturedProducts(),
+        queryFn: ({ pageParam }) => fetchFeaturedProducts({ pageParam }),
+        ...queryOptions
     });
+    return handleQueryResult(result);
 }
 
 export const useDiscountedProducts = () => {
-    return useQuery({
+    const result = useInfiniteQuery({
         queryKey: ['on-sale-products'],
-        queryFn: () => fetchDiscountedProducts(),
+        queryFn: ({ pageParam }) => fetchDiscountedProducts({ pageParam }),
+        ...queryOptions
     });
+    return handleQueryResult(result);
+}
+
+export const useRecentProducts = () => {
+    const result = useInfiniteQuery({
+        queryKey: ['recent-products'],
+        queryFn: ({ pageParam }) => fetchRecentProducts({ pageParam }),
+        ...queryOptions,
+    });
+    return handleQueryResult(result);
 }
 
 export const useProductsByCategory = (productCategory: ProductCategory) => {
     const result = useInfiniteQuery({
         queryKey: ['products-by-category', productCategory.id],
-        queryFn: ({ pageParam }) => fetchProductsByCategory({ category_id: productCategory.id, pageParam }),
-        initialPageParam: 1,
-        getNextPageParam: (lastPage) => {
-            if (lastPage.totalPages > lastPage.currentPage) {
-                return lastPage.currentPage + 1;
-            }
-            return undefined;
-        },
-        enabled: !!productCategory.id,
+        queryFn: ({ pageParam }) => fetchProductsByProductCategory({ product_category_id: productCategory.id, pageParam }),
+        ...queryOptions
     });
+    return handleQueryResult(result);
+}
+
+const queryOptions = {
+    initialPageParam: 1,
+    getNextPageParam: (lastPage: { totalPages: number }, allPages: any[]) => {
+        return lastPage.totalPages > allPages.length ? allPages.length + 1 : undefined;
+    },
+}
+
+const handleQueryResult = (result: UseInfiniteQueryResult<any, any>) => {
+
+    const { data } = result;
 
     const { total, items } = useMemo(() => {
-        const page = result.data ? result.data.pages[result.data.pages.length - 1] : null;
+        const page = data ? data.pages[data.pages.length - 1] : null;
         const total = page ? page.total : 0;
-        const items = result.data?.pages.flatMap(page => page.data) ?? [];
+        const items = data?.pages.flatMap((page: any) => page.data) ?? [];
         return { total, items };
-    }, [result.data]);
+    }, [data]);
+
+    delete result.data;
 
     return {
         ...result,

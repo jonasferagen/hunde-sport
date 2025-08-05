@@ -1,10 +1,8 @@
-
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import React, { JSX, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { View } from 'tamagui';
+import { Spinner, View } from 'tamagui';
 import { LinearGradient } from 'tamagui/linear-gradient';
-
 
 interface ScrollIndicatorProps {
     side: 'left' | 'right';
@@ -15,8 +13,6 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
 
     const gradientStart = side === 'left' ? [1, 0] : [0, 0];
     const gradientEnd = side === 'left' ? [0, 0] : [1, 0];
-
-
 
     return (
         <View
@@ -50,12 +46,17 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
 interface HorizontalTilesProps<T> {
     items?: T[];
     renderItem: ListRenderItem<T>;
+    isLoading?: boolean;
+    fetchNextPage?: () => void;
+    hasNextPage?: boolean;
 }
-
 
 export const HorizontalTiles = <T extends { id: number | string }>({
     items,
     renderItem,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
 }: HorizontalTilesProps<T>): JSX.Element => {
 
     const [scrollOffset, setScrollOffset] = useState(0);
@@ -74,7 +75,23 @@ export const HorizontalTiles = <T extends { id: number | string }>({
         setScrollOffset(event.nativeEvent.contentOffset.x);
     };
 
+    const handleEndReached = () => {
+        if (!isLoading && hasNextPage && fetchNextPage) {
+            fetchNextPage();
+        }
+    };
+
     const SPACING = "$3";
+
+    const renderFooter = () => {
+        if (!hasNextPage || !isLoading) return <View w={SPACING} h="100%" />;
+
+        return (
+            <View f={1} w="$10" ai="center" jc="center" ml={SPACING}>
+                <Spinner />
+            </View>
+        );
+    };
 
     return (
         <View position="relative">
@@ -90,9 +107,10 @@ export const HorizontalTiles = <T extends { id: number | string }>({
                 scrollEventThrottle={16} // Trigger onScroll every 16ms
                 onContentSizeChange={setContentWidth}
                 onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
+                onEndReached={handleEndReached}
                 onEndReachedThreshold={0.5}
                 ListHeaderComponent={<View w={SPACING} h="100%" />}
-                ListFooterComponent={<View w={SPACING} h="100%" />}
+                ListFooterComponent={renderFooter}
             />
             {isScrollable && !isAtEnd && <ScrollIndicator side="right" width="$6" />}
             {isScrollable && !isAtStart && <ScrollIndicator side="left" width="$6" />}
