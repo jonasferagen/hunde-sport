@@ -4,64 +4,16 @@ import {
     DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import { LinearGradient } from '@tamagui/linear-gradient';
-import { ChevronRight, X, } from '@tamagui/lucide-icons';
+import { X } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getTokenValue, ScrollView, Theme, useTheme, View, XStack, YStack } from 'tamagui';
+import { getTokenValue, ScrollView, Theme, XStack, YStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedText } from '../ui/ThemedText';
 import { AnimatedListExpansionIcon } from './AnimatedListExpansionIcon';
 
 
-const ProductCategoryTreeItem = ({
-    productCategory,
-    isActive,
-    isExpanded,
-    level,
-    hasChildren,
-    onExpand,
-}: RenderItemProps) => {
-
-    const spacing = getTokenValue('$4', 'space');
-    const theme = useTheme();
-
-    return (
-        <XStack jc="center" ai="center" gap="$2" w="100%" >
-            <View ml={level * spacing}>
-                <ThemedButton
-                    circular
-                    onPress={hasChildren ? () => onExpand(productCategory.id) : undefined}
-                    disabled={!hasChildren}
-                    size="$6"
-                >
-                    {hasChildren ? <AnimatedListExpansionIcon expanded={isExpanded} size="$4" /> : <ChevronRight size="$4" />}
-                </ThemedButton>
-            </View>
-
-            <XStack flex={1} >
-                <Link href={routes['product-category'].path(productCategory)} asChild>
-                    <XStack
-                        f={1}
-                        py="$2.5"
-                        px="$3"
-                        my="$1"
-                        br="$4"
-                        gap="$2"
-                        ai="center"
-                        bg={isActive ? theme.backgroundFocus.val : 'transparent'}
-                        pressStyle={{ backgroundColor: theme.backgroundFocus.val, borderColor: theme.backgroundFocus.val }}
-                    >
-                        <ThemedText fos="$3" letterSpacing={0.5}>
-                            {productCategory.name}
-                        </ThemedText>
-                    </XStack>
-                </Link>
-            </XStack>
-
-        </XStack >
-    );
-};
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const activeRouteName = state.routes[state.index].name;
@@ -138,7 +90,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                 })}
                             <ThemedText my="$2" fos="$4">Kategorier</ThemedText>
                             <ProductCategoryTree renderItem={ProductCategoryTreeItem} />
-                            <ProductCategoryTree renderItem={ProductCategoryTreeItem} />
+
                         </YStack>
                     </ScrollView>
                 </YStack>
@@ -146,3 +98,40 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </YStack>
     );
 }
+
+const ProductCategoryTreeItem = ({
+    productCategory,
+    isActive,
+    isExpanded,
+    level,
+    hasChildren,
+    handleExpand,
+}: RenderItemProps) => {
+
+    const spacing = getTokenValue('$2', 'space');
+
+    return (
+        <XStack ai="center" gap="$2" w="100%" >
+            <XStack flex={1} ml={level * spacing}>
+                <Link href={routes['product-category'].path(productCategory)} asChild>
+                    <ThemedButton f={1}>
+                        <ThemedText f={1} letterSpacing={0.5}>
+                            {productCategory.name}
+                        </ThemedText>
+                    </ThemedButton>
+                </Link>
+            </XStack>
+
+            <ThemedButton
+                circular
+                onPress={() => handleExpand(productCategory.id)}
+                disabled={!hasChildren}
+                size="$6"
+                opacity={hasChildren ? 1 : 0}
+                pointerEvents={hasChildren ? 'auto' : 'none'}
+            >
+                <AnimatedListExpansionIcon expanded={isExpanded} size="$4" />
+            </ThemedButton>
+        </XStack >
+    );
+};

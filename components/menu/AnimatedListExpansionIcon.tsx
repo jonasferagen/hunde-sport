@@ -1,12 +1,12 @@
-import { ChevronRight } from '@tamagui/lucide-icons';
+import { ChevronDown } from '@tamagui/lucide-icons';
 import { useEffect } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 export const AnimatedListExpansionIcon = ({ expanded, size }: { expanded: boolean, size: string }) => {
-    const rotation = useSharedValue(expanded ? 90 : 0);
+    const rotation = useSharedValue(expanded ? 180 : 0);
 
     useEffect(() => {
-        rotation.value = withTiming(expanded ? 90 : 0, { duration: 150 });
+        rotation.value = withTiming(expanded ? 180 : 0, { duration: 150 });
     }, [expanded]);
 
     const animatedStyle = useAnimatedStyle(() => ({
@@ -15,7 +15,7 @@ export const AnimatedListExpansionIcon = ({ expanded, size }: { expanded: boolea
 
     return (
         <Animated.View style={animatedStyle}>
-            <ChevronRight size={size} />
+            <ChevronDown size={size} />
         </Animated.View>
     );
 };

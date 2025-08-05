@@ -11,7 +11,7 @@ export interface RenderItemProps {
     isActive: boolean;
     isExpanded: boolean;
     hasChildren: boolean;
-    onExpand: (id: number) => void;
+    handleExpand: (id: number) => void;
 }
 
 export interface ProductCategoryTreeProps {
@@ -49,7 +49,7 @@ const ProductCategoryBranch = memo(({
                         isActive: pathname.includes(`/category/${productCategory.id}`),
                         isExpanded,
                         hasChildren,
-                        onExpand,
+                        handleExpand: onExpand,
                     })}
                 </XStack>
                 {isExpanded && hasChildren && (
