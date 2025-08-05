@@ -5,10 +5,9 @@ import { Menu } from '@tamagui/lucide-icons';
 import { useNavigation } from 'expo-router';
 import { JSX } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Theme, XStack } from 'tamagui';
+import { H4, Theme, XStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
-import { ThemedText } from '../ui/ThemedText';
 
 export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
 
@@ -40,7 +39,7 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
             >
                 <Menu />
             </ThemedButton>
-            <ThemedText fontSize="$4">{props.options.title}</ThemedText>
+            <H4>{props.options.title}</H4>
         </XStack>
     </Theme>
 };
