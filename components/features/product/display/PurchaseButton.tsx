@@ -1,9 +1,9 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { useCartContext, useProductContext } from '@/contexts';
-import { ArrowBigLeftDash, ShoppingBasket } from '@tamagui/lucide-icons';
+import { ArrowBigUpDash, ShoppingBasket } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
-import { ButtonProps, YStack } from 'tamagui';
+import { ButtonProps } from 'tamagui';
 
 
 
@@ -25,30 +25,28 @@ export const PurchaseButton = (props: ButtonProps) => {
     const { canPurchase, reason } = product.canPurchase();
 
     const buttonText = canPurchase ? "Legg til i handlekurv" : reason;
-    const icon = canPurchase ? null : <ArrowBigLeftDash />;
-    const iconAfter = canPurchase ? <ShoppingBasket /> : null;
+
+    const icon = canPurchase ? <ShoppingBasket /> : <ArrowBigUpDash />;
     const disabled = !canPurchase;
 
-
     return (
-        <YStack theme={'secondary_alt2'} f={1}>
-            <ThemedButton
-                onPress={handleAddToCart}
-                ref={buttonRef}
-                disabled={disabled}
-                jc="space-between"
-                variant="accent"
-                scaleIcon={1.5}
-                icon={icon}
-                iconAfter={iconAfter}
-                fontWeight="bold"
-                fontSize="$4"
-                {...props}
-            >
-                <ThemedLinearGradient theme="secondary_alt1" br="$3" />
-                {buttonText}
+        <ThemedButton
+            theme="secondary_alt2"
+            f={1}
+            onPress={handleAddToCart}
+            ref={buttonRef}
+            disabled={disabled}
+            jc="space-between"
+            variant="accent"
+            scaleIcon={1.5}
+            icon={icon}
+            fontWeight="bold"
+            fontSize="$4"
+            {...props}
+        >
+            <ThemedLinearGradient theme="secondary_alt1" br="$3" zIndex={-1} />
+            {buttonText}
+        </ThemedButton >
 
-            </ThemedButton >
-        </YStack>
     );
 };

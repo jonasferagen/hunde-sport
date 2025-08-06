@@ -2,7 +2,7 @@ import { Chip } from '@/components/ui';
 import { useProductContext } from '@/contexts';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
-import { Button, getTokenValue, H6, SizableText, XStack, YStack } from 'tamagui';
+import { Button, H6, SizableText, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 
@@ -13,7 +13,6 @@ interface ProductCardContentProps {
 export const ProductCardRight = ({ href }: ProductCardContentProps) => {
     const { product } = useProductContext();
     const lineHeight = '$2';
-    const minHeight = getTokenValue(lineHeight, 'lineHeight') * 2;
 
     return <YStack f={1}>
         <Link href={href} asChild>
@@ -23,7 +22,6 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                         <H6
                             f={0}
                             fs={1}
-                            mih={minHeight}
                             lh={lineHeight}
                             numberOfLines={2}
                             textDecorationLine="none"
