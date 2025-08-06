@@ -1,4 +1,4 @@
-import { Purchasable, VariableProduct } from '@/types';
+import { ProductVariation, Purchasable, PurchasableProduct, VariableProduct } from '@/types';
 
 export interface ValidationResult {
     isValid: boolean;
@@ -26,10 +26,31 @@ export const validatePurchasable = (purchasable: Purchasable): ValidationResult 
     const productToCheck = productVariation || product;
 
     // Rule 2: The product must be in stock.
-    if (!productToCheck.isInStock) {
+    if (!productToCheck.is_in_stock) {
         return { isValid: false, reason: 'OUT_OF_STOCK', message: 'Utsolgt' };
     }
 
     // All checks passed.
-    return { isValid: true, message: 'Legg til i handlekurv' };
+    return { isValid: true, message: '' };
+};
+
+
+export interface PurchasableInfo extends ValidationResult {
+    purchasable: Purchasable;
+}
+
+export const getPurchasableInfo = ({ product, selectedProductVariation }: { product: PurchasableProduct, selectedProductVariation?: ProductVariation }): PurchasableInfo => {
+
+    let purchasable: Purchasable;
+    if (product instanceof VariableProduct && selectedProductVariation) {
+        purchasable = { product, productVariation: selectedProductVariation };
+    } else {
+        purchasable = { product };
+    }
+
+    const validationResult = validatePurchasable(purchasable);
+    return {
+        purchasable,
+        ...validationResult,
+    };
 };

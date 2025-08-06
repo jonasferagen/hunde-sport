@@ -27,6 +27,7 @@ export const VariationButton = ({ isExpanded, handleExpand }: VariationButtonPro
             ai="center"
             jc="space-between"
             icon={isExpanded ? <ChevronsUp /> : <ChevronsDown />}
+            iconAfter={isExpanded ? <ChevronsUp /> : <ChevronsDown />}
             scaleIcon={1.5}
             onPress={handleExpand}
         >

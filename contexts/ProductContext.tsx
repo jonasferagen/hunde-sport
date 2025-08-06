@@ -1,8 +1,9 @@
 import { useProductVariations } from '@/hooks/data/Product';
-import { Purchasable, PurchasableProduct } from '@/models/Product/Product';
+import { PurchasableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
+import { getPurchasableInfo, PurchasableInfo } from '@/utils/purchasableUtils';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 /**
@@ -11,7 +12,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 export interface ProductContextType {
     product: PurchasableProduct;
     displayProduct: SimpleProduct | VariableProduct | ProductVariation;
-    purchasable: Purchasable;
+    purchasableInfo: PurchasableInfo;
     isLoading: boolean;
     selectedProductVariation: ProductVariation | undefined;
     setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
@@ -28,13 +29,7 @@ export const useProductContext = () => {
     return context;
 };
 
-const getPurchasable = (product: PurchasableProduct, selectedProductVariation?: ProductVariation): Purchasable => {
-    if (product instanceof VariableProduct && selectedProductVariation) {
-        return { product, productVariation: selectedProductVariation };
-    } else {
-        return { product };
-    }
-};
+
 
 export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
     product,
@@ -56,14 +51,14 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
 
     const value = useMemo(() => {
         const displayProduct = selectedProductVariation || product;
-        const purchasable = getPurchasable(product, selectedProductVariation);
+        const purchasableInfo = getPurchasableInfo({ product, selectedProductVariation });
 
 
 
         return {
             product,
             displayProduct,
-            purchasable,
+            purchasableInfo,
             isLoading,
             selectedProductVariation,
             setSelectedProductVariation,

@@ -8,15 +8,17 @@ import { ButtonProps } from 'tamagui';
 
 
 export const PurchaseButton = (props: ButtonProps) => {
-    const { purchasable } = useProductContext();
-    const { addItem, validatePurchasable } = useCartContext();
+    const { purchasableInfo, displayProduct } = useProductContext();
+    const { addItem } = useCartContext();
     const buttonRef = useRef(null);
 
+    const { purchasable, isValid, message } = purchasableInfo;
+
+
     const handleAddToCart = () => {
-        addItem(purchasable, { triggerRef: buttonRef });
+        addItem(purchasableInfo.purchasable, { triggerRef: buttonRef });
     };
 
-    const { isValid, message } = validatePurchasable(purchasable);
 
     return (
         <ThemedButton
@@ -34,7 +36,7 @@ export const PurchaseButton = (props: ButtonProps) => {
             {...props}
         >
             <ThemedLinearGradient theme="secondary_alt1" br="$3" zIndex={-1} />
-            {message}
+            {isValid ? displayProduct.name : message}
         </ThemedButton >
 
     );
