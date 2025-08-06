@@ -11,7 +11,7 @@ interface ProductCardContentProps {
 }
 
 export const ProductCardRight = ({ href }: ProductCardContentProps) => {
-    const { product, displayName } = useProductContext();
+    const { product } = useProductContext();
     const lineHeight = '$2';
     const minHeight = getTokenValue(lineHeight, 'lineHeight') * 2;
 
@@ -29,7 +29,7 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                             textDecorationLine="none"
                             hoverStyle={{ color: '$colorHover' }}
                         >
-                            {displayName}
+                            {product.name}
                         </H6>
                         <YStack gap="$1" jc="center" ai="center">
                             <Chip theme="secondary_alt1" minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>

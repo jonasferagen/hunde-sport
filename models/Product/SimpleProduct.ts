@@ -1,4 +1,5 @@
 import { BaseProduct, BaseProductData } from './BaseProduct';
+import { ProductVariation } from './ProductVariation';
 
 export interface SimpleProductData extends BaseProductData { }
 
@@ -14,4 +15,7 @@ export class SimpleProduct extends BaseProduct<SimpleProductData> {
         return false;
     }
 
+    get productVariation(): ProductVariation | undefined {
+        return undefined;
+    }
 }

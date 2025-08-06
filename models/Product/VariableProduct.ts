@@ -62,4 +62,23 @@ export class VariableProduct extends BaseProduct<VariableProductData> {
     getAttributesForVariationSelection(): ProductAttribute[] {
         return this.attributes.filter((attribute) => attribute.variation);
     }
+
+    private _productVariation: ProductVariation | undefined;
+
+    setSelectedVariation(variation: ProductVariation | undefined) {
+        this._productVariation = variation;
+    }
+    get productVariation(): ProductVariation | undefined {
+        return this._productVariation;
+    }
+
+    public clone(): VariableProduct {
+        const newProduct = new VariableProduct(this);
+        newProduct.setSelectedVariation(this.productVariation);
+        newProduct.variationsData = this.variationsData;
+        newProduct.areVariationsLoading = this.areVariationsLoading;
+        return newProduct;
+    }
 }
+
+

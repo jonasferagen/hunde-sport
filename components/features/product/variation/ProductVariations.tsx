@@ -1,5 +1,5 @@
 import { useProductContext } from '@/contexts/ProductContext';
-import { useProductVariationContext } from '@/contexts/ProductVariationContext';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { VariationSelection } from '@/models/Product/VariationSelection';
 import { ProductAttribute } from '@/types';
@@ -7,32 +7,46 @@ import React, { JSX, useEffect, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
+interface ProductVariationsProps {
+}
+
 export const ProductVariations = (): JSX.Element => {
-    const { product: originalProduct, setProductVariation } = useProductContext();
-    const { isLoading } = useProductVariationContext();
 
-    const product = originalProduct as VariableProduct;
-
-    const [selectionManager, setSelectionManager] = useState<VariationSelection | null>(null);
-
-    useEffect(() => {
-
-        if (product instanceof VariableProduct && product.getVariationsData().length > 0) {
-            setSelectionManager(product.createSelectionManager());
-        }
-    }, [product]);
-
-    useEffect(() => {
-
-        if (selectionManager) {
-            const selectedVariation = selectionManager.getSelectedVariation();
-            setProductVariation(selectedVariation);
-        }
-    }, [selectionManager, setProductVariation]);
-
-    if (!(product instanceof VariableProduct) || !selectionManager || isLoading) {
+    const { product } = useProductContext();
+    if (!(product instanceof VariableProduct)) {
         return <></>;
     }
+
+    return (
+        <>
+            <SizableText>{product.productVariation?.id}</SizableText>
+            <ProductVariationsContent />
+        </>
+    )
+}
+
+const ProductVariationsContent = (): JSX.Element => {
+
+    useRenderGuard("ProductVariationsContent")
+
+    const { product: variableProduct, setSelectedVariation } = useProductContext();
+    const product = variableProduct as VariableProduct;
+    const _selectionManager = product.createSelectionManager();
+
+    const [selectionManager, setSelectionManager] = useState<VariationSelection | null>(_selectionManager);
+
+    useEffect(() => {
+        if (selectionManager) {
+            const selectedVariation = selectionManager.getSelectedVariation();
+            setSelectedVariation(selectedVariation);
+        }
+    }, [selectionManager, setSelectedVariation]);
+
+    if (!selectionManager) {
+        return <></>;
+    }
+
+
 
     const handleSelectOption = (attributeTaxonomy: string, optionSlug: string | null) => {
         const newManager = selectionManager.select(attributeTaxonomy, optionSlug);

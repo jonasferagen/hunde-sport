@@ -1,34 +1,22 @@
+import { useProductVariations } from '@/hooks/data/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { Purchasable } from '@/types';
-import React, { createContext, useContext, useMemo, useState } from 'react';
-import { ProductVariationProvider } from './ProductVariationContext';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-/**
- * Generates a display name for a product, including its variation attributes.
- * @param product The base product.
- * @param productVariation The selected product variation.
- * @returns The generated display name as a string.
- */
-const getDisplayName = (product: SimpleProduct | VariableProduct, productVariation?: ProductVariation): string => {
-    if (!productVariation || !(product instanceof VariableProduct)) {
-        return product.name;
-    }
-    const variationName = productVariation.getVariationName(product.attributes);
-    return variationName ? `${product.name}, ${variationName}` : product.name;
-};
+
 
 /**
  * Interface for the ProductContext
  */
 export interface ProductContextType {
     product: SimpleProduct | VariableProduct;
-    displayProduct: SimpleProduct | VariableProduct | ProductVariation;
-    purchasableProduct: Purchasable | undefined;
-    displayName: string;
-    productVariation: ProductVariation | undefined;
-    setProductVariation: (variation?: ProductVariation) => void;
+    //purchasableProduct: Purchasable | undefined;
+    // Variation specific
+    isLoading: boolean;
+    // selectionManager: VariationSelection | null;
+    //setSelectionManager: (selectionManager: VariationSelection | null) => void;
+    setSelectedVariation: (variation: ProductVariation | undefined) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -41,36 +29,66 @@ export const useProductContext = () => {
     return context;
 };
 
+const VariableProductContextProvider: React.FC<{ product: VariableProduct; children: React.ReactNode }> = ({
+    product: initialProduct,
+    children,
+}) => {
+    const [product, setProduct] = useState(initialProduct);
+
+    const { isLoading, items: productVariations } = useProductVariations(product);
+
+
+    const setSelectedVariation = useCallback(
+        (variation: ProductVariation | undefined) => {
+            setProduct((currentProduct) => {
+                const newProduct = currentProduct.clone();
+                newProduct.setSelectedVariation(variation);
+                return newProduct;
+            });
+        },
+        [setProduct]
+    );
+
+
+    useEffect(() => {
+        if (!isLoading) {
+            product.setVariationsData(productVariations);
+        }
+    }, [product, isLoading, productVariations]);
+    /*
+        let purchasableProduct = { product, productVariation: undefined };
+        const productVariation = product.productVariation;
+        if (productVariation) {
+            purchasableProduct = { product, productVariation };
+        } */
+
+    const value: ProductContextType = {
+        product,
+        // purchasableProduct,
+        isLoading,
+
+        setSelectedVariation,
+    };
+
+    return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
+};
+
 export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduct; children: React.ReactNode }> = ({
     product,
     children,
 }) => {
-
-    const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(undefined);
-    const displayName = useMemo(() => getDisplayName(product, productVariation), [product, productVariation]);
-    const displayProduct = productVariation || product;
-
-    const purchasableProduct: Purchasable | undefined =
-        product instanceof VariableProduct
-            ? { product, productVariation: productVariation as ProductVariation }
-            : { product: product as SimpleProduct };
+    if (product instanceof VariableProduct) {
+        return <VariableProductContextProvider product={product}>{children}</VariableProductContextProvider>;
+    }
 
     const value: ProductContextType = {
         product,
-        displayProduct,
-        purchasableProduct,
-        displayName,
-        productVariation,
-        setProductVariation,
+        purchasableProduct: { product: product as SimpleProduct },
+        isLoading: false,
+        selectionManager: null,
+        setSelectionManager: () => { },
+        setSelectedVariation: () => { },
     };
 
-    if (!(product instanceof VariableProduct)) {
-        return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
-    }
-
-    return <ProductContext.Provider value={value}>
-        <ProductVariationProvider product={product}>
-            {children}
-        </ProductVariationProvider>
-    </ProductContext.Provider>;
+    return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };

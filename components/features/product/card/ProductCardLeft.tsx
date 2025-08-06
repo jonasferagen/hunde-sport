@@ -10,9 +10,9 @@ interface ProductCardImageProps {
 }
 
 export const ProductCardLeft = ({ href }: ProductCardImageProps) => {
-    const { displayProduct } = useProductContext();
+    const { product } = useProductContext();
     const imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH;
-    const src = displayProduct.featuredImage.src;
+    const src = product.featuredImage.src;
     const uri = getScaledImageUrl(src, imageSize, imageSize);
 
     return <Link href={href}>

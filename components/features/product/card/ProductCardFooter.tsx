@@ -3,7 +3,7 @@ import { useProductContext } from '@/contexts';
 import { VariableProduct } from '@/types';
 import { ChevronsDown, ChevronsUp } from '@tamagui/lucide-icons';
 import React, { useState } from 'react';
-import { StackProps, XStack, YStack } from 'tamagui';
+import { SizableText, StackProps, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
 import { ProductStatus } from '../display/ProductStatus';
 import { PurchaseButton } from '../display/PurchaseButton';
@@ -13,7 +13,11 @@ import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 interface ProductCardFooterProps extends StackProps { }
 
 export const ProductCardFooter = (props: ProductCardFooterProps) => {
-    const { product, productVariation } = useProductContext();
+    const { product } = useProductContext();
+
+    const productVariation = product.productVariation;
+
+
     const [isExpanded, setIsExpanded] = useState(false);
 
     const handleExpand = () => {
@@ -26,7 +30,8 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
             <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH} />
             <XStack ai="center" jc="space-between" f={1} >
                 <ProductStatus size="$2" />
-                <DisplayPrice productPrices={productVariation ? productVariation.prices : product.prices} />
+                <SizableText>   {product.name}</SizableText>
+                <DisplayPrice key={product.id + (product.productVariation?.id?.toString() || '')} productPrices={productVariation ? productVariation.prices : product.prices} />
             </XStack>
         </XStack>
         <XStack gap="$3" ai="center" jc="space-between">
