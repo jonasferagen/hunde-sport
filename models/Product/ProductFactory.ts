@@ -1,5 +1,6 @@
 import { BaseProductData } from './BaseProduct';
 import { ProductAttribute } from './ProductAttribute';
+import { ProductVariation, ProductVariationData } from './ProductVariation';
 import { SimpleProduct, SimpleProductData } from './SimpleProduct';
 import { VariableProduct, VariableProductData } from './VariableProduct';
 
@@ -27,7 +28,7 @@ const mapData = (item: any): BaseProductData => ({
  * This ensures that we are working with class instances with methods,
  * not just plain data objects.
  * @param data The raw product data from the API.
- * @returns An instance of SimpleProduct or VariableProduct.
+ * @returns An instance of SimpleProduct, VariableProduct, or ProductVariation.
  */
 export const createProduct = (data: any) => {
     if (data.type === 'variable') {
@@ -45,6 +46,15 @@ export const createProduct = (data: any) => {
             type: 'variable',
         };
         return new VariableProduct(variableProductData);
+    }
+
+    if (data.type === 'variation') {
+        const variationData: ProductVariationData = {
+            ...mapData(data),
+            type: 'variation',
+            attributes: data.attributes || [],
+        };
+        return new ProductVariation(variationData);
     }
 
     // All other types are treated as SimpleProduct

@@ -13,15 +13,23 @@ export type ApiVariationAttribute = {
     value: string; // The selected term slug, e.g., "red"
 };
 
-export class ProductVariation extends BaseProduct<BaseProductData> {
+export interface ProductVariationData extends BaseProductData {
+    attributes: { id: number; name: string; option: string }[];
+}
+
+export class ProductVariation extends BaseProduct<ProductVariationData> {
     type: 'variation' = 'variation';
     variation_attributes: AttributeSelectionTuple[] = [];
 
-    constructor(data: BaseProductData) {
+    constructor(data: ProductVariationData) {
         if (data.type !== 'variation') {
             throw new Error('Cannot construct ProductVariation with type other than "variation".');
         }
         super(data);
+        // Note: The raw attributes from the API response for a variation do not contain the taxonomy slug.
+        // The parent VariableProduct is responsible for mapping these to the correct AttributeSelectionTuple.
+        // This is a placeholder until the parent provides the full context.
+        this.variation_attributes = data.attributes.map(attr => ({ name: attr.name, option: attr.option }));
     }
 
     /**
