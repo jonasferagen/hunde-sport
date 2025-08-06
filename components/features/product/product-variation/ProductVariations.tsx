@@ -1,9 +1,9 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useProductContext } from '@/contexts';
+import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { VariationSelection } from '@/models/Product/helpers/VariationSelection';
 import { ProductVariation } from '@/types';
-import React, { JSX, useCallback, useEffect, useMemo, useState } from 'react';
+import { JSX } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
@@ -14,37 +14,12 @@ interface VariationSelectorProps {
 }
 
 const VariationSelector = ({ product, productVariations, onProductVariationSelected: onVariationSelected }: VariationSelectorProps): JSX.Element => {
-    const [selections, setSelections] = useState<Record<string, string>>({});
+    const { attributes, selectionManager, handleSelectOption } = useProductVariationSelector({
+        product,
+        productVariations,
+        onProductVariationSelected: onVariationSelected,
+    });
 
-    const baseSelectionManager = useMemo(() => VariationSelection.create(product, productVariations), [product, productVariations]);
-    const selectionManager = useMemo(() => {
-        return Object.entries(selections).reduce(
-            (manager, [taxonomy, slug]) => manager.select(taxonomy, slug),
-            baseSelectionManager
-        );
-    }, [baseSelectionManager, selections]);
-
-    useEffect(() => {
-        const selectedVariation = selectionManager.getSelectedVariation();
-        onVariationSelected(selectedVariation);
-    }, [selectionManager, onVariationSelected]);
-
-    const handleSelectOption = useCallback(
-        (attributeTaxonomy: string, optionSlug: string | null) => {
-            setSelections(prevSelections => {
-                const newSelections = { ...prevSelections };
-                if (optionSlug) {
-                    newSelections[attributeTaxonomy] = optionSlug;
-                } else {
-                    delete newSelections[attributeTaxonomy];
-                }
-                return newSelections;
-            });
-        },
-        []
-    );
-
-    const attributes = useMemo(() => product.getAttributesForVariationSelection(), [product]);
     if (attributes.length === 0) {
         return <></>;
     }

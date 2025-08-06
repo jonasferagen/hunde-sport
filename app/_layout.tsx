@@ -1,7 +1,5 @@
 import {
   AppToastProvider,
-  CartProvider,
-  ProductCategoryProvider,
   SearchProvider,
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
@@ -23,13 +21,9 @@ const RootLayout = (): JSX.Element => {
             <PortalProvider>
               <Theme name="light">
                 <AppToastProvider>
-                  <ProductCategoryProvider>
-                    <CartProvider>
-                      <SearchProvider>
-                        <Slot />
-                      </SearchProvider>
-                    </CartProvider>
-                  </ProductCategoryProvider>
+                  <SearchProvider>
+                    <Slot />
+                  </SearchProvider>
                 </AppToastProvider>
               </Theme>
             </PortalProvider>
