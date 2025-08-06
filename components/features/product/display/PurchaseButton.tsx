@@ -1,53 +1,36 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { useCartContext, useProductContext } from '@/contexts';
-import { Purchasable } from '@/types';
 import { ArrowBigLeftDash, ShoppingBasket } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
 import { ButtonProps, YStack } from 'tamagui';
-
-const cannotPurchaseReason = (purchasable: Purchasable): string | undefined => {
-    const activeProduct = purchasable.productVariation || purchasable.product;
-    if (activeProduct.is_in_stock === false) {
-        return "Ikke på lager";
-    }
-    if (!activeProduct.prices.price || activeProduct.prices.price === "") {
-        return "Pris ikke tilgjengelig";
-    }
-    if (purchasable.product.type === "variable" && !purchasable.productVariation) {
-        return "Velg en variant først";
-    }
-
-    if (activeProduct.is_purchasable === false) {
-        return "Ikke tilgjengelig for kjøp";
-    }
-
-    return undefined
-}
 
 
 
 
 export const PurchaseButton = (props: ButtonProps) => {
-    const { purchasableProduct } = useProductContext();
+    const { product } = useProductContext();
 
-    if (!purchasableProduct) {
+    if (!product) {
         return null;
     }
+
+
+
 
     const { addItem } = useCartContext();
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
-        addItem(purchasableProduct, { triggerRef: buttonRef });
+        addItem(product, { triggerRef: buttonRef });
     };
 
-    const canPurchase = cannotPurchaseReason(purchasableProduct) === undefined;
-    const buttonText = canPurchase ? "Legg til i handlekurv" : cannotPurchaseReason(purchasableProduct);
-    const disabled = !canPurchase;
+    const { canPurchase, reason } = product.canPurchase();
 
+    const buttonText = canPurchase ? "Legg til i handlekurv" : reason;
     const icon = canPurchase ? null : <ArrowBigLeftDash />;
     const iconAfter = canPurchase ? <ShoppingBasket /> : null;
+    const disabled = !canPurchase;
 
 
     return (

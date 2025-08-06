@@ -1,5 +1,7 @@
 import { cleanHtml } from "@/utils/helpers";
 import { ProductCategory } from "../ProductCategory";
+import { ProductPrices } from "./ProductPrices";
+import { ProductVariation } from "./ProductVariation";
 
 export interface ProductImage {
     id: number;
@@ -8,11 +10,6 @@ export interface ProductImage {
     alt: string;
 }
 
-export interface Price {
-    price: string;
-    regular_price: string;
-    sale_price: string;
-}
 
 
 export interface ProductTag {
@@ -29,7 +26,7 @@ export interface BaseProductData {
     description: string;
     short_description: string;
     images: ProductImage[];
-    prices: Price;
+    prices: ProductPrices;
     on_sale: boolean;
     featured: boolean;
     is_in_stock: boolean;
@@ -48,7 +45,7 @@ export class BaseProduct<T extends BaseProductData> {
     description: string;
     short_description: string;
     images: ProductImage[];
-    prices: Price;
+    prices: ProductPrices;
     on_sale: boolean;
     featured: boolean;
     is_in_stock: boolean;
@@ -80,4 +77,26 @@ export class BaseProduct<T extends BaseProductData> {
     get featuredImage(): ProductImage {
         return this.images[0];
     }
+
+    get productVariation(): ProductVariation | undefined {
+        return undefined;
+    }
+
+
+    canPurchase(): { canPurchase: boolean; reason: string | undefined } {
+        if (!this.is_in_stock) {
+            return { canPurchase: false, reason: "Ikke på lager" };
+        }
+
+        if (!this.is_purchasable) {
+            return { canPurchase: false, reason: "Ikke tilgjengelig for kjøp" };
+        }
+
+        if (!this.prices.price) {
+            return { canPurchase: false, reason: "Pris ikke tilgjengelig" };
+        }
+
+        return { canPurchase: true, reason: '' };
+    }
+
 }

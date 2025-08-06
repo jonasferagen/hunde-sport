@@ -13,7 +13,7 @@ export class VariableProduct extends BaseProduct<VariableProductData> {
     variations: { id: number; attributes: ApiVariationAttribute[] }[] = [];
     private variationsData: ProductVariation[] = [];
     public attributes: ProductAttribute[] = [];
-    public areVariationsLoading = true;
+
 
     constructor(data: VariableProductData) {
         if (data.type !== 'variable') {
@@ -63,21 +63,28 @@ export class VariableProduct extends BaseProduct<VariableProductData> {
         return this.attributes.filter((attribute) => attribute.variation);
     }
 
-    private _productVariation: ProductVariation | undefined;
+    private selectedProductVariation: ProductVariation | undefined;
 
     setSelectedVariation(variation: ProductVariation | undefined) {
-        this._productVariation = variation;
+        this.selectedProductVariation = variation;
     }
+
     get productVariation(): ProductVariation | undefined {
-        return this._productVariation;
+        return this.selectedProductVariation;
     }
 
     public clone(): VariableProduct {
         const newProduct = new VariableProduct(this);
         newProduct.setSelectedVariation(this.productVariation);
         newProduct.variationsData = this.variationsData;
-        newProduct.areVariationsLoading = this.areVariationsLoading;
         return newProduct;
+    }
+
+    canPurchase(): { canPurchase: boolean; reason: string | undefined } {
+        if (!this.productVariation) {
+            return { canPurchase: false, reason: "Velg en variant" };
+        }
+        return this.productVariation.canPurchase();
     }
 }
 

@@ -13,9 +13,7 @@ import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 interface ProductCardFooterProps extends StackProps { }
 
 export const ProductCardFooter = (props: ProductCardFooterProps) => {
-    const { product } = useProductContext();
-
-    const productVariation = product.productVariation;
+    const { product, displayProduct } = useProductContext();
 
 
     const [isExpanded, setIsExpanded] = useState(false);
@@ -30,8 +28,8 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
             <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH} />
             <XStack ai="center" jc="space-between" f={1} >
                 <ProductStatus size="$2" />
-                <SizableText>   {product.name}</SizableText>
-                <DisplayPrice key={product.id + (product.productVariation?.id?.toString() || '')} productPrices={productVariation ? productVariation.prices : product.prices} />
+                <SizableText> {displayProduct.name}</SizableText>
+                <DisplayPrice productPrices={displayProduct.prices} />
             </XStack>
         </XStack>
         <XStack gap="$3" ai="center" jc="space-between">

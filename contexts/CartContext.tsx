@@ -1,6 +1,6 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
 import { AddItemOptions, useCartStore } from '@/stores/CartStore';
-import { Purchasable } from '@/types';
+import { Product } from '@/types';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
 
@@ -14,7 +14,7 @@ interface CartContextType {
     isInitialized: boolean;
     isLoading: boolean;
     isUpdating: boolean;
-    addItem: (purchasable: Purchasable, options?: CartInteractionOptions) => void;
+    addItem: (product: Product, options?: CartInteractionOptions) => void;
     updateItem: (key: string, quantity: number) => void;
     removeItem: (key: string, options?: CartInteractionOptions) => void;
     getItem: (key: string) => CartItemData | undefined;
@@ -36,14 +36,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const getItem = (key: string) => cart?.items.find((i) => i.key === key);
 
-    const addItem = async (purchasable: Purchasable, options: CartInteractionOptions = {}) => {
-        const productVariation = purchasable.productVariation;
+    const addItem = async (product: Product, options: CartInteractionOptions = {}) => {
+        const productVariation = product.productVariation;
         const variation = !productVariation
             ? []
             : productVariation.variation_attributes.map((attribute: any) => ({ attribute: attribute.name, value: attribute.value }));
 
         const addItemOptions: AddItemOptions = {
-            id: purchasable.product.id,
+            id: product.id,
             quantity: 1,
             variation,
         };
@@ -52,7 +52,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (!options.silent) {
             toastController.show('Lagt til i handlekurven', {
-                message: purchasable.product.name,
+                message: product.name,
                 theme: 'dark_yellow',
                 triggerRef: options.triggerRef,
             });
@@ -89,7 +89,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }), [cart, isInitialized, isLoading, isUpdating]);
 
     return (
-        <CartContext.Provider value={value as CartContextType}>
+        <CartContext.Provider value={value}>
             {children}
         </CartContext.Provider>
     );
@@ -100,3 +100,7 @@ export const useCartContext = () => {
     if (!context) throw new Error('useCartContext must be used within a CartProvider');
     return context;
 };
+
+
+
+

@@ -1,37 +1,24 @@
 import { useProductContext } from '@/contexts/ProductContext';
-import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { VariationSelection } from '@/models/Product/VariationSelection';
 import { ProductAttribute } from '@/types';
-import React, { JSX, useEffect, useState } from 'react';
+import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
-
 export const ProductVariations = (): JSX.Element => {
-
     const { product } = useProductContext();
     if (!(product instanceof VariableProduct)) {
         return <></>;
     }
 
-    return (
-        <>
-            <SizableText>{product.productVariation?.id}</SizableText>
-            <ProductVariationsContent />
-        </>
-    )
-}
+    return <ProductVariationsContent />;
+};
 
 const ProductVariationsContent = (): JSX.Element => {
+    const { product: initialProduct, setSelectedVariation } = useProductContext();
+    const product = initialProduct as VariableProduct;
 
-    useRenderGuard("ProductVariationsContent")
-
-    const { product: variableProduct, setSelectedVariation } = useProductContext();
-    const product = variableProduct as VariableProduct;
-    const _selectionManager = product.createSelectionManager();
-
-    const [selectionManager, setSelectionManager] = useState<VariationSelection | null>(_selectionManager);
+    const [selectionManager, setSelectionManager] = useState(() => product.createSelectionManager());
 
     useEffect(() => {
         if (selectionManager) {
@@ -40,16 +27,19 @@ const ProductVariationsContent = (): JSX.Element => {
         }
     }, [selectionManager, setSelectedVariation]);
 
+    const handleSelectOption = useCallback(
+        (attributeTaxonomy: string, optionSlug: string | null) => {
+            if (selectionManager) {
+                const newManager = selectionManager.select(attributeTaxonomy, optionSlug);
+                setSelectionManager(newManager);
+            }
+        },
+        [selectionManager]
+    );
+
     if (!selectionManager) {
         return <></>;
     }
-
-
-
-    const handleSelectOption = (attributeTaxonomy: string, optionSlug: string | null) => {
-        const newManager = selectionManager.select(attributeTaxonomy, optionSlug);
-        setSelectionManager(newManager);
-    };
 
     const attributes = product.getAttributesForVariationSelection();
     return (

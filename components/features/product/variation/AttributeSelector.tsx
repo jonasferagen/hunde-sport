@@ -5,18 +5,22 @@ import { AttributeOption } from './AttributeOption';
 
 interface AttributeSelectorProps {
     options: any[];
-    onSelect: (value: string) => void;
-    selectedValue: string;
+    onSelect: (value: string | null) => void;
+    selectedValue: string | null | undefined;
 }
 
 export const AttributeSelector = ({ options, onSelect, selectedValue }: AttributeSelectorProps) => {
     const renderItem = ({ item }: { item: any }) => {
         const isSelected = selectedValue === item.slug;
 
+        const handlePress = () => {
+            onSelect(isSelected ? null : item.slug);
+        };
+
         return (
             <AttributeOption
                 option={item.name}
-                selectOption={() => onSelect(item.slug)}
+                selectOption={handlePress}
                 isSelected={isSelected}
                 isAvailable={item.isAvailable}
                 price={item.displayPrice}

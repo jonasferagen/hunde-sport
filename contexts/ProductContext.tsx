@@ -11,11 +11,8 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
  */
 export interface ProductContextType {
     product: SimpleProduct | VariableProduct;
-    //purchasableProduct: Purchasable | undefined;
-    // Variation specific
+    displayProduct: SimpleProduct | VariableProduct | ProductVariation;
     isLoading: boolean;
-    // selectionManager: VariationSelection | null;
-    //setSelectionManager: (selectionManager: VariationSelection | null) => void;
     setSelectedVariation: (variation: ProductVariation | undefined) => void;
 }
 
@@ -59,6 +56,7 @@ const VariableProductContextProvider: React.FC<{ product: VariableProduct; child
 
     const value: ProductContextType = {
         product,
+        displayProduct: product.productVariation ? product.productVariation : product,
         isLoading,
         setSelectedVariation,
     };
@@ -76,6 +74,7 @@ export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduc
 
     const value: ProductContextType = {
         product,
+        displayProduct: product,
         isLoading: false,
         setSelectedVariation: () => { },
     };
