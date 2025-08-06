@@ -11,53 +11,54 @@ export interface SearchBarProps {
 
 export const SearchBar = forwardRef<Input, SearchBarProps>((
     { placeholder = 'Hva leter du etter?', initialQuery = '', onSubmit }, ref) => {
-    const { liveQuery, setLiveQuery, setQuery } = useSearchContext();
+    const { query, setQuery } = useSearchContext();
 
     useEffect(() => {
-        setLiveQuery(initialQuery);
-    }, [initialQuery, setLiveQuery]);
+        setQuery(initialQuery);
+    }, [initialQuery, setQuery]);
 
     const handleSearch = () => {
-        const trimmedQuery = liveQuery.trim();
+        const trimmedQuery = query.trim();
         setQuery(trimmedQuery);
         onSubmit?.(trimmedQuery);
     };
 
     const handleChangeText = (text: string) => {
-        setLiveQuery(text);
+        setQuery(text);
     };
 
     return (
         <XStack
 
             ai="center"
-            backgroundColor="$white3"
-            borderRadius="$4"
-            paddingHorizontal="$3"
-            borderWidth={1}
-            borderColor="$borderColor"
+            bg="$white3"
+            br="$4"
+            px="$3"
+            bw={1}
+            boc="$borderColor"
         >
             <Input
+                f={1}
                 ref={ref}
-                flex={1}
-                fontSize="$3"
+                fos="$3"
                 placeholder={placeholder}
                 placeholderTextColor="$color10"
                 selectionColor="$color10"
-                value={liveQuery}
+                value={query}
                 onChangeText={handleChangeText}
                 onSubmitEditing={handleSearch}
                 unstyled
-                backgroundColor="transparent"
-                borderColor="transparent"
+                bg="transparent"
+                boc="transparent"
             />
             <Button
                 unstyled
                 pressStyle={{ opacity: 0.7 }}
                 onPress={handleSearch}
-                disabled={!liveQuery.trim()}
-                icon={<Search color="$color" />}
-                padding="$2"
+                disabled={!query.trim()}
+                scaleIcon={1.25}
+                icon={<Search />}
+                py="$2"
             />
         </XStack>
     );

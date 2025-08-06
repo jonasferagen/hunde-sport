@@ -6,10 +6,8 @@ import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useSearchContext } from '@/contexts/SearchContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { TextInput } from 'react-native';
 import { SizableText } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
 
@@ -20,7 +18,6 @@ export const SearchScreen = () => {
     const { query, queryResult } = useSearchContext();
     const { isLoading, total } = queryResult;
 
-    const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const isSearching = isLoading && query;
     const searchQuery = query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.';
     const searchTotal = isSearching ? <ThemedSpinner /> : `(${total})`;
@@ -28,7 +25,7 @@ export const SearchScreen = () => {
     return (
         <PageView>
             <PageHeader theme="tertiary">
-                <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
+                <SearchBar initialQuery={initialQuery} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>
                 <PageContent theme="tertiary_soft" ai="center" jc="space-between" fd="row">

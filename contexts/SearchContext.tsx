@@ -1,38 +1,27 @@
 import { useProductsBySearch } from '@/hooks/data/Product';
 import { QueryResult } from '@/hooks/data/util';
-import { useDebounce } from '@/hooks/useDebounce';
 import { Product } from '@/types';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface SearchContextType {
     query: string;
-    liveQuery: string;
     queryResult: QueryResult<Product>;
-    setLiveQuery: (query: string) => void;
     setQuery: (query: string) => void;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [liveQuery, setLiveQuery] = useState('');
     const [query, setQuery] = useState('');
-    const debouncedLiveQuery = useDebounce(liveQuery, 1000);
-
-    useEffect(() => {
-        setQuery(debouncedLiveQuery);
-    }, [debouncedLiveQuery]);
 
     const queryResult = useProductsBySearch(query);
 
     const value = useMemo(() => ({
         query,
-        liveQuery,
-        setLiveQuery,
         setQuery,
         queryResult,
 
-    }), [query, liveQuery, queryResult]);
+    }), [query, queryResult]);
 
     return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
 };

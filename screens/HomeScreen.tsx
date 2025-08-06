@@ -6,14 +6,15 @@ import { SearchBar } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router } from 'expo-router';
-import { TextInput } from 'react-native';
+import { Input } from 'tamagui';
 
 export const HomeScreen = () => {
 
-    const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const handleSearch = (query: string) => {
         query && router.push(routes.search.path(query));
     };
+
+    const searchInputRef = useRunOnFocus<Input>((input) => input.focus());
 
     return <PageView>
         <PageHeader theme="primary">
