@@ -9,20 +9,17 @@ import { ButtonProps, YStack } from 'tamagui';
 
 
 export const PurchaseButton = (props: ButtonProps) => {
-    const { product } = useProductContext();
+    const { product, purchasable } = useProductContext();
 
     if (!product) {
         return null;
     }
 
-
-
-
     const { addItem } = useCartContext();
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
-        addItem(product, { triggerRef: buttonRef });
+        addItem(purchasable, { triggerRef: buttonRef });
     };
 
     const { canPurchase, reason } = product.canPurchase();

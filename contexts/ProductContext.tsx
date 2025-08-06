@@ -1,4 +1,5 @@
 import { useProductVariations } from '@/hooks/data/Product';
+import { Purchasable } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
@@ -12,6 +13,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 export interface ProductContextType {
     product: SimpleProduct | VariableProduct;
     displayProduct: SimpleProduct | VariableProduct | ProductVariation;
+    purchasable: Purchasable;
     isLoading: boolean;
     setSelectedVariation: (variation: ProductVariation | undefined) => void;
 }
@@ -31,10 +33,7 @@ const VariableProductContextProvider: React.FC<{ product: VariableProduct; child
     children,
 }) => {
     const [product, setProduct] = useState(initialProduct);
-
     const { isLoading, items: productVariations } = useProductVariations(product);
-
-
     const setSelectedVariation = useCallback(
         (variation: ProductVariation | undefined) => {
             setProduct((currentProduct) => {
@@ -53,10 +52,17 @@ const VariableProductContextProvider: React.FC<{ product: VariableProduct; child
         }
     }, [product, isLoading, productVariations]);
 
+    const displayProduct = product.productVariation ? product.productVariation : product;
+
+    const purchasable: Purchasable = product.productVariation
+        ? { product: product, productVariation: product.productVariation }
+        : { product: product };
+
 
     const value: ProductContextType = {
         product,
-        displayProduct: product.productVariation ? product.productVariation : product,
+        displayProduct,
+        purchasable,
         isLoading,
         setSelectedVariation,
     };
@@ -75,6 +81,7 @@ export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduc
     const value: ProductContextType = {
         product,
         displayProduct: product,
+        purchasable: { product: product },
         isLoading: false,
         setSelectedVariation: () => { },
     };

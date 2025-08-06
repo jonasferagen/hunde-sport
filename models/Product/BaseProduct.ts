@@ -10,8 +10,6 @@ export interface ProductImage {
     alt: string;
 }
 
-
-
 export interface ProductTag {
     id: number;
     name: string;
