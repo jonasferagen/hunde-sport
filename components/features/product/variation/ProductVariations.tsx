@@ -7,8 +7,6 @@ import React, { JSX, useEffect, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
-interface ProductVariationsProps {
-}
 
 export const ProductVariations = (): JSX.Element => {
 

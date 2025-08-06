@@ -55,18 +55,11 @@ const VariableProductContextProvider: React.FC<{ product: VariableProduct; child
             product.setVariationsData(productVariations);
         }
     }, [product, isLoading, productVariations]);
-    /*
-        let purchasableProduct = { product, productVariation: undefined };
-        const productVariation = product.productVariation;
-        if (productVariation) {
-            purchasableProduct = { product, productVariation };
-        } */
+
 
     const value: ProductContextType = {
         product,
-        // purchasableProduct,
         isLoading,
-
         setSelectedVariation,
     };
 
@@ -83,10 +76,7 @@ export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduc
 
     const value: ProductContextType = {
         product,
-        purchasableProduct: { product: product as SimpleProduct },
         isLoading: false,
-        selectionManager: null,
-        setSelectionManager: () => { },
         setSelectedVariation: () => { },
     };
 
