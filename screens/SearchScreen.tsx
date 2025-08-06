@@ -17,15 +17,13 @@ import { LoadingScreen } from './misc/LoadingScreen';
 export const SearchScreen = () => {
     useRenderGuard("SearchScreen")
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
-    const { query, liveQuery, queryResult } = useSearchContext();
+    const { query, queryResult } = useSearchContext();
+    const { isLoading, total } = queryResult;
 
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
-    const isWaiting = query !== liveQuery;
-    const searchQueryText = isWaiting
-        ? `Leter etter "${liveQuery}"...`
-        : (query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.');
-
-    const { isLoading, total } = queryResult;
+    const isSearching = isLoading && query;
+    const searchQuery = query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.';
+    const searchTotal = isSearching ? <ThemedSpinner /> : `(${total})`;
 
     return (
         <PageView>
@@ -35,10 +33,10 @@ export const SearchScreen = () => {
             <PageSection>
                 <PageContent theme="tertiary_soft" ai="center" jc="space-between" fd="row">
                     <SizableText f={1}>
-                        {searchQueryText}
+                        {searchQuery}
                     </SizableText>
                     <SizableText f={0}>
-                        {isLoading || isWaiting ? <ThemedSpinner /> : query ? `(${total})` : ''}
+                        {searchTotal}
                     </SizableText>
                 </PageContent>
                 <PageContent f={1} p="none" theme="tertiary_soft">
@@ -51,7 +49,7 @@ export const SearchScreen = () => {
 
 
 const SearchResults = () => {
-    const { query, liveQuery, queryResult } = useSearchContext();
+    const { query, queryResult } = useSearchContext();
 
     const { items: products,
         isLoading,
@@ -63,7 +61,7 @@ const SearchResults = () => {
         return <></>;
     }
 
-    if (isLoading || liveQuery !== query) {
+    if (isLoading) {
         return <LoadingScreen />;
     }
 

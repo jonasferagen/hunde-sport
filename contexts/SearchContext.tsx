@@ -25,19 +25,13 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const queryResult = useProductsBySearch(query);
 
-    const isLoading = queryResult.isLoading;
-    const total = queryResult.total;
-
-    const totalResults = isLoading ? total : undefined;
-
-
     const value = useMemo(() => ({
         query,
         liveQuery,
         setLiveQuery,
         setQuery,
         queryResult,
-        totalResults,
+
     }), [query, liveQuery, queryResult]);
 
     return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
