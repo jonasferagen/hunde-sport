@@ -32,6 +32,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isFetchingNextPage
     } = useProductsBySearch(query);
 
+    console.log(products);
+
     const value = useMemo(() => ({
         query,
         liveQuery,

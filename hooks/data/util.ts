@@ -34,7 +34,15 @@ export const queryOptions = {
     }
 };
 
-export const handleQueryResult = (result: UseInfiniteQueryResult<any, any>) => {
+
+export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, 'data'> & {
+    total: number;
+    totalPages: number;
+    items: T[];
+};
+
+
+export const handleQueryResult = <T>(result: UseInfiniteQueryResult<any, any>): QueryResult<T> => {
 
     const { data: dataResult, ...rest } = result;
 
@@ -42,7 +50,7 @@ export const handleQueryResult = (result: UseInfiniteQueryResult<any, any>) => {
         const page = dataResult ? dataResult.pages[dataResult.pages.length - 1] : null;
         const total = page ? page.total : 0;
         const totalPages = page?.totalPages ?? 0;
-        const items = dataResult?.pages.flatMap((page: any) => page.data) ?? [];
+        const items = dataResult?.pages.flatMap((page: any) => page.data) as T[];
         return { total, items, totalPages };
     }, [dataResult]);
 

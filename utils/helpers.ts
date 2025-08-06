@@ -77,7 +77,7 @@ const placeholderBase64 =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAAEFJREFUCB1jYGBgYAAAAAQAAVcCkE0AAAAASUVORK5CYII=';
 
 
-export const getScaledImageUrl = (url: string, width: number, height: number): string => {
+export const getScaledImageUrl = (url: string, width: number, height: number, fit: string = 'cover'): string => {
     if (!url || width === 0 || height === 0) {
         return placeholderBase64; // Return undefined if url is missing or size is not measured
     }
@@ -85,7 +85,7 @@ export const getScaledImageUrl = (url: string, width: number, height: number): s
     try {
         const urlObject = new URL(url);
         // By setting the search, we remove any existing query params
-        urlObject.search = `?fit=${width},${height}&ssl=1`;
+        urlObject.search = `?fit=${fit}&w=${width}&h=${height}&ssl=1`;
         return urlObject.toString();
     } catch (error) {
         console.error('Invalid URL:', url);

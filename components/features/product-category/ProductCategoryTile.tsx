@@ -1,7 +1,6 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { ProductCategory } from '@/models/ProductCategory';
-import { getScaledImageUrl } from "@/utils/helpers";
 import { Link } from 'expo-router';
 import React, { memo } from 'react';
 
@@ -19,7 +18,6 @@ const ProductCategoryTileBase: React.FC<ProductCategoryTileProps> = ({
     ...stackProps
 }) => {
 
-    const imageUrl = getScaledImageUrl(productCategory.image.src, PRODUCT_CATEGORY_TILE_WIDTH, PRODUCT_CATEGORY_TILE_HEIGHT);
 
     return (
         <Link href={routes['product-category'].path(productCategory)} asChild>
@@ -27,7 +25,7 @@ const ProductCategoryTileBase: React.FC<ProductCategoryTileProps> = ({
                 f={1}
                 aspectRatio={1}
                 title={productCategory.name}
-                imageUrl={imageUrl}
+                imageUrl={productCategory.image.src}
                 {...stackProps}
             />
         </Link>

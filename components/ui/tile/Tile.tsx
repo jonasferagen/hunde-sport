@@ -1,3 +1,4 @@
+import { getScaledImageUrl } from '@/utils/helpers';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import React from 'react';
 import { SizableText, YStack, YStackProps } from 'tamagui';
@@ -8,7 +9,7 @@ const GRADIENT_MIN_HEIGHT = 25;
 export interface TileProps extends YStackProps {
     title: string;
     subtitle?: string;
-    imageUrl?: string;
+    imageUrl: string;
     aspectRatio?: number | string;
     titleNumberOfLines?: number;
     gradientMinHeight?: number;
@@ -21,29 +22,30 @@ export const Tile: React.FC<TileProps> = ({
     title,
     subtitle,
     imageUrl,
-    aspectRatio = 1,
     titleNumberOfLines = 1,
     gradientMinHeight = GRADIENT_MIN_HEIGHT,
     children,
     ...stackProps
 }) => {
 
+
+    const uri = getScaledImageUrl(imageUrl, Number(w), Number(h), 'cover');
+
     return (
         <YStack
             w={w}
             h={h}
             f={1}
-            br={"$3"}
-            boc="$borderColor"
+            br="$3"
+            boc="$borderColorStrong"
             bw={1}
-            aspectRatio={aspectRatio}
             overflow="hidden"
             {...stackProps}
         >
 
             <FadeInImage
                 aria-label={title}
-                source={{ uri: imageUrl }}
+                source={{ uri }}
                 f={1}
                 pos="absolute"
                 t={0}

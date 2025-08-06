@@ -1,5 +1,5 @@
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { ProductCategory } from '@/types';
+import { Product, ProductCategory } from '@/types';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { handleQueryResult, queryOptions } from '../util';
 import {
@@ -26,7 +26,7 @@ export const useProductVariations = (variableProduct: VariableProduct) => {
         queryFn: ({ pageParam }) => fetchProductVariations(variableProduct.id, { page: pageParam }),
         ...queryOptions
     });
-    return handleQueryResult(result);
+    return handleQueryResult<Product>(result);
 };
 
 export const useProductsByIds = (ids: number[]) => {
@@ -36,7 +36,7 @@ export const useProductsByIds = (ids: number[]) => {
         enabled: !!ids && ids.length > 0,
         ...queryOptions
     });
-    return handleQueryResult(result);
+    return handleQueryResult<Product>(result);
 }
 
 export const useProductsBySearch = (query: string) => {
@@ -46,7 +46,7 @@ export const useProductsBySearch = (query: string) => {
         enabled: !!query,
         ...queryOptions
     });
-    return handleQueryResult(result);
+    return handleQueryResult<Product>(result);
 }
 
 export const useFeaturedProducts = () => {
@@ -55,7 +55,7 @@ export const useFeaturedProducts = () => {
         queryFn: ({ pageParam }) => fetchFeaturedProducts({ page: pageParam }),
         ...queryOptions
     });
-    return handleQueryResult(result);
+    return handleQueryResult<Product>(result);
 }
 
 export const useDiscountedProducts = () => {
@@ -64,7 +64,7 @@ export const useDiscountedProducts = () => {
         queryFn: ({ pageParam }) => fetchDiscountedProducts({ page: pageParam }),
         ...queryOptions
     });
-    return handleQueryResult(result);
+    return handleQueryResult<Product>(result);
 }
 
 export const useRecentProducts = () => {
@@ -73,7 +73,7 @@ export const useRecentProducts = () => {
         queryFn: ({ pageParam }) => fetchRecentProducts({ page: pageParam }),
         ...queryOptions,
     });
-    return handleQueryResult(result);
+    return handleQueryResult<Product>(result);
 }
 
 export const useProductsByCategory = (productCategory: ProductCategory) => {
@@ -82,5 +82,5 @@ export const useProductsByCategory = (productCategory: ProductCategory) => {
         queryFn: ({ pageParam }) => fetchProductsByProductCategory(productCategory.id, { page: pageParam }),
         ...queryOptions
     });
-    return handleQueryResult(result);
+    return handleQueryResult<Product>(result);
 }

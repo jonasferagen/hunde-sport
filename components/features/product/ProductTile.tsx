@@ -2,20 +2,18 @@ import { Tile } from "@/components/ui/tile/Tile";
 import { TileBadge } from "@/components/ui/tile/TileBadge";
 import { routes } from '@/config/routes';
 import { ProductProvider } from '@/contexts';
-import { SimpleProduct } from '@/models/Product/SimpleProduct';
-import { VariableProduct } from '@/models/Product/VariableProduct';
-import { useQueryClient } from '@tanstack/react-query';
+import { Product } from '@/types';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { DimensionValue } from 'react-native';
 import { ThemeName, YStack, YStackProps } from "tamagui";
 import { PriceTag } from './display/PriceTag';
 
-export const PRODUCT_TILE_WIDTH: DimensionValue = 120;
-export const PRODUCT_TILE_HEIGHT: DimensionValue = 100;
+import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 
 interface ProductTileProps extends YStackProps {
-    product: SimpleProduct | VariableProduct
+    product: Product
+    width?: number;
+    height?: number;
 }
 
 export const ProductTile: React.FC<ProductTileProps> = ({
@@ -24,13 +22,8 @@ export const ProductTile: React.FC<ProductTileProps> = ({
     height = PRODUCT_TILE_HEIGHT,
     ...stackProps
 }) => {
-    const queryClient = useQueryClient();
     const router = useRouter();
-
     const handlePress = () => {
-        // Pre-populate the cache for the specific product query
-        queryClient.setQueryData(['product', product.id], product);
-        // Navigate to the product screen
         router.push(routes.product.path(product));
     };
 
@@ -39,7 +32,7 @@ export const ProductTile: React.FC<ProductTileProps> = ({
             onPress={handlePress}
             w={width}
             h={height}
-            title={product.name + ' ' + product.id}
+            title={product.name}
             imageUrl={product.featuredImage.src}
             titleNumberOfLines={1}
             {...stackProps}
