@@ -4,6 +4,7 @@ import { Product } from '@/types';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback } from 'react';
 import { ViewStyle } from 'react-native';
+import { XStack } from 'tamagui';
 import { ProductCard } from './card';
 
 interface ProductListProps {
@@ -32,16 +33,20 @@ export const ProductList = memo(({
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
 
-    return <FlashList style={{ flex: 1 }}
-        data={products}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        contentContainerStyle={contentContainerStyle}
-        ListFooterComponent={() =>
-            loadingMore ? <ThemedSpinner /> : null
-        }
-        estimatedItemSize={100}
-    />
-});
+    return (
+        <XStack f={1}>
+            <FlashList
+                data={products}
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
+                onEndReached={loadMore}
+                onEndReachedThreshold={0.5}
+                contentContainerStyle={contentContainerStyle}
+                ListFooterComponent={() =>
+                    loadingMore ? <ThemedSpinner /> : null
+                }
+                estimatedItemSize={100}
+            />
+        </XStack>
+    );
+}); 

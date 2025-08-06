@@ -19,6 +19,35 @@ export type Purchasable =
     };
 
 
+export const purchasableReasons = {
+    PRODUCT_VARIATION_NEEDED: "Velg en variant",
+    PRODUCT_OUT_OF_STOCK: "Produktet er utsolgt",
+    PRODUCT_UNAVAILABLE: "Produktet er ikke tilgjengelig",
+    PRODUCT_PRICE_MISSING: "Pris ikke tilgjengelig",
+};
+
+export const validatePurchasable = (purchasable: Purchasable): string => {
+    if (purchasable.product instanceof VariableProduct && !purchasable.productVariation) {
+        return purchasableReasons.PRODUCT_VARIATION_NEEDED;
+    }
+
+    const activeProduct = purchasable.productVariation || purchasable.product;
+
+    if (!activeProduct.is_in_stock) {
+        return purchasableReasons.PRODUCT_OUT_OF_STOCK;
+    }
+
+    if (!activeProduct.is_purchasable) {
+        return purchasableReasons.PRODUCT_UNAVAILABLE;
+    }
+
+    if (!activeProduct.prices.price) {
+        return purchasableReasons.PRODUCT_PRICE_MISSING;
+    }
+
+    return "";
+}
+
 
 
 const mapData = (item: any): BaseProductData => ({

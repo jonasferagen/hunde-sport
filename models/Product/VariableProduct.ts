@@ -25,7 +25,5 @@ export class VariableProduct extends BaseProduct<VariableProductData> {
         return this.attributes.filter((attribute) => attribute.variation);
     }
 
-    canPurchase(): { canPurchase: boolean; reason: string | undefined } {
-        return { canPurchase: false, reason: 'Velg en variant' };
-    }
+
 }

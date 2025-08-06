@@ -77,24 +77,10 @@ export class BaseProduct<T extends BaseProductData> {
     }
 
     get productVariation(): ProductVariation | undefined {
+        console.log("productVariation called on BaseProduct")
         return undefined;
     }
 
 
-    canPurchase(): { canPurchase: boolean; reason: string | undefined } {
-        if (!this.is_in_stock) {
-            return { canPurchase: false, reason: "Ikke på lager" };
-        }
-
-        if (!this.is_purchasable) {
-            return { canPurchase: false, reason: "Ikke tilgjengelig for kjøp" };
-        }
-
-        if (!this.prices.price) {
-            return { canPurchase: false, reason: "Pris ikke tilgjengelig" };
-        }
-
-        return { canPurchase: true, reason: '' };
-    }
 
 }

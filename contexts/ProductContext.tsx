@@ -28,6 +28,14 @@ export const useProductContext = () => {
     return context;
 };
 
+const getPurchasable = (product: PurchasableProduct, selectedProductVariation?: ProductVariation): Purchasable => {
+    if (product instanceof VariableProduct && selectedProductVariation) {
+        return { product, productVariation: selectedProductVariation };
+    } else {
+        return { product };
+    }
+};
+
 export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
     product,
     children,
@@ -48,13 +56,9 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
 
     const value = useMemo(() => {
         const displayProduct = selectedProductVariation || product;
+        const purchasable = getPurchasable(product, selectedProductVariation);
 
-        let purchasable: Purchasable;
-        if (product instanceof VariableProduct && selectedProductVariation) {
-            purchasable = { product, productVariation: selectedProductVariation };
-        } else {
-            purchasable = { product };
-        }
+
 
         return {
             product,
@@ -69,3 +73,4 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };
+

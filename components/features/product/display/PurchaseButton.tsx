@@ -1,33 +1,22 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { useCartContext, useProductContext } from '@/contexts';
-import { ArrowBigUpDash, ShoppingBasket } from '@tamagui/lucide-icons';
+import { ShoppingBasket } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
 import { ButtonProps } from 'tamagui';
 
 
 
-
 export const PurchaseButton = (props: ButtonProps) => {
-    const { product, purchasable } = useProductContext();
-
-    if (!product) {
-        return null;
-    }
-
-    const { addItem } = useCartContext();
+    const { purchasable } = useProductContext();
+    const { addItem, validatePurchasable } = useCartContext();
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
         addItem(purchasable, { triggerRef: buttonRef });
     };
 
-    const { canPurchase, reason } = product.canPurchase();
-
-    const buttonText = canPurchase ? "Legg til i handlekurv" : reason;
-
-    const icon = canPurchase ? <ShoppingBasket /> : <ArrowBigUpDash />;
-    const disabled = !canPurchase;
+    const { isValid, message } = validatePurchasable(purchasable);
 
     return (
         <ThemedButton
@@ -35,17 +24,17 @@ export const PurchaseButton = (props: ButtonProps) => {
             f={1}
             onPress={handleAddToCart}
             ref={buttonRef}
-            disabled={disabled}
+            disabled={!isValid}
             jc="space-between"
             variant="accent"
             scaleIcon={1.5}
-            icon={icon}
+            icon={isValid ? <ShoppingBasket /> : null}
             fontWeight="bold"
             fontSize="$4"
             {...props}
         >
             <ThemedLinearGradient theme="secondary_alt1" br="$3" zIndex={-1} />
-            {buttonText}
+            {message}
         </ThemedButton >
 
     );
