@@ -1,6 +1,6 @@
-import { AttributeTermDetails } from './ProductAttribute';
-import { ProductVariation } from './ProductVariation';
-import { VariableProduct } from './VariableProduct';
+import { AttributeTermDetails } from '../ProductAttribute';
+import { ProductVariation } from '../ProductVariation';
+import { VariableProduct } from '../VariableProduct';
 import { VariationDataResolver } from './VariationDataResolver';
 
 export class VariationSelection {

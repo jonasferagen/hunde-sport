@@ -1,30 +1,19 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useProductContext } from '@/contexts';
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { VariationSelection } from '@/models/Product/VariationSelection';
+import { VariationSelection } from '@/models/Product/helpers/VariationSelection';
 import { ProductAttribute } from '@/types';
 import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 export const ProductVariations = (): JSX.Element => {
-    const { product, isLoading } = useProductContext();
+    const { isLoading, product: initialProduct, setSelectedProductVariation, productVariations } = useProductContext();
 
-    if (!(product instanceof VariableProduct)) {
+    if (!(initialProduct instanceof VariableProduct)) {
         return <></>;
     }
-
-    // Do not render until variations are loaded
-    if (isLoading) {
-        return <ThemedSpinner />;
-    }
-
-    return <ProductVariationsContent product={product} />;
-};
-
-const ProductVariationsContent = ({ product }: { product: VariableProduct }): JSX.Element => {
-    const { setSelectedProductVariation, productVariations, isLoading } = useProductContext();
-
+    const product = initialProduct as VariableProduct;
     if (isLoading) {
         return <ThemedSpinner />;
     }
@@ -49,7 +38,7 @@ const ProductVariationsContent = ({ product }: { product: VariableProduct }): JS
 
     const attributes = product.getAttributesForVariationSelection();
 
-
+    console.log(productVariations?.length);
 
     return (
         <XStack gap="$2" flexWrap="wrap">

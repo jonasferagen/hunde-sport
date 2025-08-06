@@ -1,6 +1,6 @@
-import { AttributeTermDetails } from './ProductAttribute';
-import { ApiVariationAttribute, AttributeSelectionTuple, ProductVariation } from './ProductVariation';
-import { VariableProduct } from './VariableProduct';
+import { AttributeTermDetails } from '../ProductAttribute';
+import { ApiVariationAttribute, AttributeSelectionTuple, ProductVariation } from '../ProductVariation';
+import { VariableProduct } from '../VariableProduct';
 
 /**
  * A helper class to resolve variation data in the context of a parent VariableProduct.

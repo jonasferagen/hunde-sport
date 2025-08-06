@@ -32,16 +32,19 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     product,
     children,
 }) => {
-    const isVariable = product instanceof VariableProduct;
-    const { isLoading, items: variations } = useProductVariations(product);
 
+    const { isLoading, items: variations } = useProductVariations(product);
     const [productVariations, setProductVariations] = useState<ProductVariation[]>([]);
     const [selectedProductVariation, setSelectedProductVariation] = useState<ProductVariation | undefined>(undefined);
 
     useEffect(() => {
-        setProductVariations(variations || []);
-        setSelectedProductVariation(undefined);
-    }, [product, variations]);
+        if (!isLoading && variations.length) {
+            console.log("Setting product variations", variations.length);
+
+            setProductVariations(variations);
+            setSelectedProductVariation(undefined);
+        }
+    }, [product, isLoading, variations]);
 
     const value = useMemo(() => {
         const displayProduct = selectedProductVariation || product;
