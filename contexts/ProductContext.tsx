@@ -13,7 +13,9 @@ export interface ProductContextType {
     displayProduct: SimpleProduct | VariableProduct | ProductVariation;
     purchasable: Purchasable;
     isLoading: boolean;
-    setSelectedVariation: (variation: ProductVariation | undefined) => void;
+    selectedProductVariation: ProductVariation | undefined;
+    setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
+    productVariations: ProductVariation[] | undefined;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -31,28 +33,26 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     children,
 }) => {
     const isVariable = product instanceof VariableProduct;
-    const { isLoading: areVariationsLoading, items: variations } = useProductVariations(product);
+    const { isLoading, items: variations } = useProductVariations(product);
 
-    const [selectedVariation, setSelectedVariation] = useState<ProductVariation | undefined>(undefined);
+    const [productVariations, setProductVariations] = useState<ProductVariation[]>([]);
+    const [selectedProductVariation, setSelectedProductVariation] = useState<ProductVariation | undefined>(undefined);
 
-    // Effect to load variation data into the product model once fetched
     useEffect(() => {
-        if (isVariable && !areVariationsLoading) {
+        setProductVariations(variations);
+        setSelectedProductVariation(undefined);
+        if (isVariable && variations && variations.length > 0) {
             (product as VariableProduct).setVariationsData(variations);
         }
-    }, [isVariable, areVariationsLoading, product, variations]);
 
-    // Effect to reset selection when the product changes
-    useEffect(() => {
-        setSelectedVariation(undefined);
-    }, [product]);
+    }, [product, variations]);
 
     const value = useMemo(() => {
-        const displayProduct = selectedVariation || product;
+        const displayProduct = selectedProductVariation || product;
 
         let purchasable: Purchasable;
-        if (product instanceof VariableProduct && selectedVariation) {
-            purchasable = { product, productVariation: selectedVariation };
+        if (product instanceof VariableProduct && selectedProductVariation) {
+            purchasable = { product, productVariation: selectedProductVariation };
         } else {
             purchasable = { product };
         }
@@ -61,10 +61,12 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
             product,
             displayProduct,
             purchasable,
-            isLoading: areVariationsLoading,
-            setSelectedVariation,
+            isLoading,
+            selectedProductVariation,
+            setSelectedProductVariation,
+            productVariations,
         };
-    }, [product, selectedVariation, areVariationsLoading]);
+    }, [product, selectedProductVariation, isLoading, productVariations]);
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };

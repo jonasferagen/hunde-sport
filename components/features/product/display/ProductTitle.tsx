@@ -3,11 +3,13 @@ import React from 'react';
 import { SizableText, SizableTextProps } from 'tamagui';
 
 export const ProductTitle = ({ size = "$3", ...props }: SizableTextProps) => {
-    const { product, productVariation } = useProductContext();
+    const { product, displayProduct } = useProductContext();
 
     if (!product) {
         return null;
     }
+
+    const productVariation = product.productVariation || undefined;
 
     let title = product.name;
 
