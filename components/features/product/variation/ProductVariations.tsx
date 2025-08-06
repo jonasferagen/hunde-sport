@@ -8,19 +8,22 @@ import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 export const ProductVariations = (): JSX.Element => {
-    const { product, setProductVariation } = useProductContext();
-
+    const { product: originalProduct, setProductVariation } = useProductContext();
     const { isLoading } = useProductVariationContext();
+
+    const product = originalProduct as VariableProduct;
 
     const [selectionManager, setSelectionManager] = useState<VariationSelection | null>(null);
 
     useEffect(() => {
+
         if (product instanceof VariableProduct && product.getVariationsData().length > 0) {
             setSelectionManager(product.createSelectionManager());
         }
     }, [product]);
 
     useEffect(() => {
+
         if (selectionManager) {
             const selectedVariation = selectionManager.getSelectedVariation();
             setProductVariation(selectedVariation);

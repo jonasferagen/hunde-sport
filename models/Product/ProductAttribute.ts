@@ -70,7 +70,7 @@ export class ProductAttribute {
         ? formatPrice(minPrice.toString())
         : `Fra ${formatPrice(minPrice.toString())}`;
 
-      const inStock = potentialMatches.some((v) => v.isInStock);
+      const inStock = potentialMatches.some((v) => v.is_in_stock);
 
       return { ...term, isAvailable, displayPrice, inStock };
     });
