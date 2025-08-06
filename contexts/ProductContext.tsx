@@ -39,12 +39,8 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     const [selectedProductVariation, setSelectedProductVariation] = useState<ProductVariation | undefined>(undefined);
 
     useEffect(() => {
-        setProductVariations(variations);
+        setProductVariations(variations || []);
         setSelectedProductVariation(undefined);
-        if (isVariable && variations && variations.length > 0) {
-            (product as VariableProduct).setVariationsData(variations);
-        }
-
     }, [product, variations]);
 
     const value = useMemo(() => {

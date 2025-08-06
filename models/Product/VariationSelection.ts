@@ -1,11 +1,19 @@
 import { AttributeTermDetails } from './ProductAttribute';
 import { ProductVariation } from './ProductVariation';
+import { VariableProduct } from './VariableProduct';
+import { VariationDataResolver } from './VariationDataResolver';
 
 export class VariationSelection {
-    constructor(
+    private constructor(
+        private readonly resolver: VariationDataResolver,
         private readonly variations: ProductVariation[],
         public readonly selections: Record<string, string> = {}
     ) { }
+
+    static create(product: VariableProduct, variations: ProductVariation[]): VariationSelection {
+        const resolver = new VariationDataResolver(product);
+        return new VariationSelection(resolver, variations || [], {});
+    }
 
     select(taxonomy: string, slug: string | null): VariationSelection {
         const newSelections = { ...this.selections };
@@ -14,18 +22,20 @@ export class VariationSelection {
         } else {
             delete newSelections[taxonomy];
         }
-        return new VariationSelection(this.variations, newSelections);
+        return new VariationSelection(this.resolver, this.variations, newSelections);
     }
 
     getAvailableOptions(taxonomy: string): AttributeTermDetails[] {
         const selectionsForOthers = { ...this.selections };
         delete selectionsForOthers[taxonomy];
 
-        const compatibleVariations = this.variations.filter((v) => v.matchesAttributes(selectionsForOthers));
+        const compatibleVariations = this.variations.filter((v) =>
+            this.resolver.variationMatchesAttributes(v, selectionsForOthers)
+        );
 
         const options = new Map<string, AttributeTermDetails>();
         for (const variation of compatibleVariations) {
-            const term = variation.getAttributeTerm(taxonomy);
+            const term = this.resolver.getAttributeTermForVariation(variation, taxonomy);
             if (term && !options.has(term.slug)) {
                 options.set(term.slug, term);
             }
@@ -43,14 +53,14 @@ export class VariationSelection {
             return undefined;
         }
 
-        const matches = this.variations.filter((v) => v.matchesAttributes(this.selections));
+        const matches = this.variations.filter((v) => this.resolver.variationMatchesAttributes(v, this.selections));
         return matches.length === 1 ? matches[0] : undefined;
     }
 
     private getRequiredAttributeCount(): number {
         const attributeTaxonomies = new Set<string>();
         this.variations.forEach(v => {
-            v.variation_attributes.forEach(attr => {
+            this.resolver.getAttributesForVariation(v.id).forEach(attr => {
                 attributeTaxonomies.add(attr.name);
             });
         });

@@ -1,13 +1,14 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useProductContext } from '@/contexts';
 import { VariableProduct } from '@/models/Product/VariableProduct';
+import { VariationSelection } from '@/models/Product/VariationSelection';
 import { ProductAttribute } from '@/types';
 import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 export const ProductVariations = (): JSX.Element => {
-    const { product, isLoading, productVariations } = useProductContext();
+    const { product, isLoading } = useProductContext();
 
     if (!(product instanceof VariableProduct)) {
         return <></>;
@@ -22,16 +23,21 @@ export const ProductVariations = (): JSX.Element => {
 };
 
 const ProductVariationsContent = ({ product }: { product: VariableProduct }): JSX.Element => {
-    const { setSelectedProductVariation: setSelectedVariation } = useProductContext();
+    const { setSelectedProductVariation, productVariations, isLoading } = useProductContext();
 
-    // The selection manager is now an internal implementation detail of this component.
-    const [selectionManager, setSelectionManager] = useState(() => product.createSelectionManager());
+    if (isLoading) {
+        return <ThemedSpinner />;
+    }
+
+    const [selectionManager, setSelectionManager] = useState(() =>
+        VariationSelection.create(product, productVariations || [])
+    );
 
     // When the selection manager changes (i.e., a selection is made), update the context.
     useEffect(() => {
         const selectedVariation = selectionManager.getSelectedVariation();
-        setSelectedVariation(selectedVariation);
-    }, [selectionManager, setSelectedVariation]);
+        setSelectedProductVariation(selectedVariation);
+    }, [selectionManager, setSelectedProductVariation]);
 
     const handleSelectOption = useCallback(
         (attributeTaxonomy: string, optionSlug: string | null) => {
