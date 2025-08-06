@@ -11,7 +11,8 @@ import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 interface ProductCardFooterProps extends StackProps { }
 
 export const ProductCardFooter = (props: ProductCardFooterProps) => {
-    const { product, displayProduct } = useProductContext();
+    const { validatedPurchasable } = useProductContext();
+    const { displayProduct } = validatedPurchasable;
 
     const [isExpanded, setIsExpanded] = useState(false);
 

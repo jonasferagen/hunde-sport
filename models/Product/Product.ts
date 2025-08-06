@@ -8,18 +8,6 @@ export type Product = SimpleProduct | VariableProduct | ProductVariation;
 
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 
-export type Purchasable =
-    | {
-        product: SimpleProduct;
-        productVariation?: undefined;
-    }
-    | {
-        product: VariableProduct;
-        productVariation: ProductVariation;
-    };
-
-
-
 
 
 const mapData = (item: any): BaseProductData => ({
@@ -35,10 +23,10 @@ const mapData = (item: any): BaseProductData => ({
     featured: item.featured || false,
     is_in_stock: item.is_in_stock,
     is_purchasable: item.is_purchasable,
+    is_on_backorder: item.is_on_backorder,
+    parent: item.parent,
     categories: item.categories || [],
-    tags: item.tags || [],
     type: item.type,
-    related_ids: item.related_ids || [],
 });
 
 /**

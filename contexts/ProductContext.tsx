@@ -1,9 +1,7 @@
 import { useProductVariations } from '@/hooks/data/Product';
 import { PurchasableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
-import { SimpleProduct } from '@/models/Product/SimpleProduct';
-import { VariableProduct } from '@/models/Product/VariableProduct';
-import { getPurchasableInfo, PurchasableInfo } from '@/utils/purchasableUtils';
+import { createValidatedPurchasable, ValidatedPurchasable } from '@/utils/purchasableUtils';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 /**
@@ -11,12 +9,12 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
  */
 export interface ProductContextType {
     product: PurchasableProduct;
-    displayProduct: SimpleProduct | VariableProduct | ProductVariation;
-    purchasableInfo: PurchasableInfo;
+    validatedPurchasable: ValidatedPurchasable;
     isLoading: boolean;
     selectedProductVariation: ProductVariation | undefined;
     setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
     productVariations: ProductVariation[] | undefined;
+
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -50,15 +48,11 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     }, [product, isLoading, variations]);
 
     const value = useMemo(() => {
-        const displayProduct = selectedProductVariation || product;
-        const purchasableInfo = getPurchasableInfo({ product, selectedProductVariation });
-
-
+        const validatedPurchasable = createValidatedPurchasable({ product, productVariation: selectedProductVariation });
 
         return {
             product,
-            displayProduct,
-            purchasableInfo,
+            validatedPurchasable,
             isLoading,
             selectedProductVariation,
             setSelectedProductVariation,
@@ -68,4 +62,3 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };
-

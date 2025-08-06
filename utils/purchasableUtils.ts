@@ -1,4 +1,4 @@
-import { ProductVariation, Purchasable, PurchasableProduct, VariableProduct } from '@/types';
+import { Product, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
 
 export interface ValidationResult {
     isValid: boolean;
@@ -11,12 +11,14 @@ export interface ValidationResult {
  * @param purchasable The item to validate.
  * @returns A ValidationResult object.
  */
-export const validatePurchasable = (purchasable: Purchasable): ValidationResult => {
-    if (!purchasable || !purchasable.product) {
+const validatePurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): ValidationResult => {
+    if (!product || !productVariation) {
         return { isValid: false, reason: 'INVALID_PRODUCT', message: 'Produkt ikke tilgjengelig' };
     }
 
-    const { product, productVariation } = purchasable;
+    if (product instanceof SimpleProduct && productVariation) {
+        throw new Error('Simple product cannot have a product variation');
+    }
 
     // Rule 1: Variable products must have a variation selected.
     if (product instanceof VariableProduct && !productVariation) {
@@ -31,26 +33,27 @@ export const validatePurchasable = (purchasable: Purchasable): ValidationResult 
     }
 
     // All checks passed.
-    return { isValid: true, message: '' };
+    return { isValid: true, message: 'Legg til i handlekurv' };
 };
 
 
-export interface PurchasableInfo extends ValidationResult {
-    purchasable: Purchasable;
+export interface ValidatedPurchasable extends ValidationResult {
+    product: SimpleProduct | VariableProduct;
+    productVariation?: ProductVariation;
+    displayProduct: Product;
 }
 
-export const getPurchasableInfo = ({ product, selectedProductVariation }: { product: PurchasableProduct, selectedProductVariation?: ProductVariation }): PurchasableInfo => {
+export const createValidatedPurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): ValidatedPurchasable => {
 
-    let purchasable: Purchasable;
-    if (product instanceof VariableProduct && selectedProductVariation) {
-        purchasable = { product, productVariation: selectedProductVariation };
-    } else {
-        purchasable = { product };
-    }
 
-    const validationResult = validatePurchasable(purchasable);
+    const validationResult = validatePurchasable({ product, productVariation });
+
+    const displayProduct = productVariation || product;
+
     return {
-        purchasable,
+        product,
+        productVariation: productVariation,
+        displayProduct,
         ...validationResult,
     };
 };

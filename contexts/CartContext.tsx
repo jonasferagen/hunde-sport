@@ -1,7 +1,6 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
-import { Purchasable } from '@/models/Product/Product';
 import { AddItemOptions, useCartStore } from '@/stores/CartStore';
-import { validatePurchasable, ValidationResult } from '@/utils/purchasableUtils';
+import { ValidatedPurchasable } from '@/utils/purchasableUtils';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
 
@@ -13,11 +12,10 @@ interface CartInteractionOptions {
 interface CartContextType {
     cart: CartData;
     isUpdating: boolean;
-    addItem: (product: Purchasable, options?: CartInteractionOptions) => void;
+    addItem: (validatedPurchasable: ValidatedPurchasable, options?: CartInteractionOptions) => void;
     updateItem: (key: string, quantity: number) => void;
     removeItem: (key: string, options?: CartInteractionOptions) => void;
     getItem: (key: string) => CartItemData | undefined;
-    validatePurchasable: (purchasable: Purchasable) => ValidationResult;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -39,14 +37,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const getItem = (key: string) => cart.items.find((i) => i.key === key);
 
-    const addItem = async (purchasable: Purchasable, options: CartInteractionOptions = {}) => {
-        const validation = validatePurchasable(purchasable);
-        if (!validation.isValid) {
-            throw new Error(validation.message);
+    const addItem = async (validatedPurchasable: ValidatedPurchasable, options: CartInteractionOptions = {}) => {
+        if (!validatedPurchasable.isValid) {
+            throw new Error(validatedPurchasable.message);
         }
 
-        const product = purchasable.product;
-        const productVariation = purchasable.productVariation;
+        const { product, productVariation } = validatedPurchasable;
         const variation = !productVariation
             ? []
             : productVariation.variation_attributes.map((attribute: any) => ({ attribute: attribute.name, value: attribute.value }));
@@ -93,7 +89,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateItem,
         removeItem,
         getItem,
-        validatePurchasable,
     }), [cart, isUpdating]);
 
     return (

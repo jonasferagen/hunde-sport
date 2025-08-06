@@ -10,11 +10,6 @@ export interface ProductImage {
     alt: string;
 }
 
-export interface ProductTag {
-    id: number;
-    name: string;
-    slug: string;
-}
 
 export interface BaseProductData {
     id: number;
@@ -29,10 +24,10 @@ export interface BaseProductData {
     featured: boolean;
     is_in_stock: boolean;
     is_purchasable: boolean;
+    is_on_backorder: boolean;
+    parent: number;
     categories: ProductCategory[];
-    tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
-    related_ids: number[];
 }
 
 export class BaseProduct<T extends BaseProductData> {
@@ -48,10 +43,10 @@ export class BaseProduct<T extends BaseProductData> {
     featured: boolean;
     is_in_stock: boolean;
     is_purchasable: boolean;
+    is_on_backorder: boolean;
+    parent: number;
     categories: ProductCategory[];
-    tags: ProductTag[];
     type: 'simple' | 'variable' | 'variation';
-    related_ids: number[];
 
     constructor(data: T) {
         this.id = data.id;
@@ -66,10 +61,10 @@ export class BaseProduct<T extends BaseProductData> {
         this.featured = data.featured;
         this.is_in_stock = data.is_in_stock;
         this.is_purchasable = data.is_purchasable;
+        this.is_on_backorder = data.is_on_backorder;
+        this.parent = data.parent;
         this.categories = data.categories;
-        this.tags = data.tags;
         this.type = data.type;
-        this.related_ids = data.related_ids;
     }
 
     get featuredImage(): ProductImage {
@@ -77,8 +72,7 @@ export class BaseProduct<T extends BaseProductData> {
     }
 
     get productVariation(): ProductVariation | undefined {
-        console.log("productVariation called on BaseProduct")
-        return undefined;
+        throw new Error("productVariation called on BaseProduct")
     }
 
 
