@@ -3,7 +3,7 @@ import { BaseProduct, BaseProductData } from './BaseProduct';
 // The clean, canonical representation of a variation's attribute selection.
 export type AttributeSelectionTuple = {
     name: string; // The attribute taxonomy slug, e.g., "pa_farge"
-    option: string; // The selected term slug, e.g., "red"
+    value: string; // The selected term slug, e.g., "red"
 };
 
 // The raw representation of an attribute as it comes from the initial product API response.
@@ -12,9 +12,7 @@ export type ApiVariationAttribute = {
     value: string; // The selected term slug, e.g., "red"
 };
 
-export interface ProductVariationData extends BaseProductData {
-    attributes: { id: number; name: string; option: string }[];
-}
+export interface ProductVariationData extends BaseProductData { }
 
 export class ProductVariation extends BaseProduct<ProductVariationData> {
     type: 'variation' = 'variation';

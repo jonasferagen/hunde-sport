@@ -35,7 +35,7 @@ export class VariationDataResolver {
                 if (parentAttribute) {
                     return {
                         name: parentAttribute.taxonomy,
-                        option: rawAttr.value,
+                        value: rawAttr.value,
                     };
                 }
                 return null;
@@ -52,7 +52,7 @@ export class VariationDataResolver {
     public variationMatchesAttributes(variation: ProductVariation, selections: Record<string, string>): boolean {
         const attributes = this.getAttributesForVariation(variation.id);
         return Object.entries(selections).every(([taxonomy, slug]) => {
-            return attributes.some((attr) => attr.name === taxonomy && attr.option === slug);
+            return attributes.some((attr) => attr.name === taxonomy && attr.value === slug);
         });
     }
 
@@ -70,7 +70,7 @@ export class VariationDataResolver {
         }
 
         const parentAttribute = this.product.attributes.find(attr => attr.taxonomy === taxonomy);
-        const term = parentAttribute?.terms.find(term => term.slug === variationOption.option);
+        const term = parentAttribute?.terms.find(term => term.slug === variationOption.value);
 
         if (!term) {
             return undefined;

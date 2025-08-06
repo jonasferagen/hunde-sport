@@ -12,8 +12,8 @@ export interface ValidationResult {
  * @returns A ValidationResult object.
  */
 const validatePurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): ValidationResult => {
-    if (!product || !productVariation) {
-        return { isValid: false, reason: 'INVALID_PRODUCT', message: 'Produkt ikke tilgjengelig' };
+    if (!product) {
+        return { isValid: false, reason: 'INVALID_PRODUCT', message: 'Produkt utilgjengelig' };
     }
 
     if (product instanceof SimpleProduct && productVariation) {

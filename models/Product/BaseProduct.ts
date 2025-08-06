@@ -1,7 +1,8 @@
 import { cleanHtml } from "@/utils/helpers";
 import { ProductCategory } from "../ProductCategory";
+import { ProductAttribute } from "./ProductAttribute";
 import { ProductPrices } from "./ProductPrices";
-import { ProductVariation } from "./ProductVariation";
+import { ApiVariationAttribute, ProductVariation } from "./ProductVariation";
 
 export interface ProductImage {
     id: number;
@@ -10,6 +11,10 @@ export interface ProductImage {
     alt: string;
 }
 
+export type VariationReference = {
+    id: number;
+    attributes: ApiVariationAttribute[];
+};
 
 export interface BaseProductData {
     id: number;
@@ -28,6 +33,8 @@ export interface BaseProductData {
     parent: number;
     categories: ProductCategory[];
     type: 'simple' | 'variable' | 'variation';
+    attributes: ProductAttribute[];
+    variations: VariationReference[];
 }
 
 export class BaseProduct<T extends BaseProductData> {
@@ -47,6 +54,8 @@ export class BaseProduct<T extends BaseProductData> {
     parent: number;
     categories: ProductCategory[];
     type: 'simple' | 'variable' | 'variation';
+    attributes: ProductAttribute[];
+    variations: VariationReference[];
 
     constructor(data: T) {
         this.id = data.id;
@@ -65,6 +74,8 @@ export class BaseProduct<T extends BaseProductData> {
         this.parent = data.parent;
         this.categories = data.categories;
         this.type = data.type;
+        this.attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
+        this.variations = data.variations || [];
     }
 
     get featuredImage(): ProductImage {
@@ -74,7 +85,4 @@ export class BaseProduct<T extends BaseProductData> {
     get productVariation(): ProductVariation | undefined {
         throw new Error("productVariation called on BaseProduct")
     }
-
-
-
 }

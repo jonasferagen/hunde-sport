@@ -43,7 +43,9 @@ export const ProductScreen = () => {
 
 
 const ProductScreenContent = () => {
-  const { product } = useProductContext();
+  const { product, productVariations, validatedPurchasable } = useProductContext();
+
+
 
   return (
     <PageView>

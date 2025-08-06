@@ -1,5 +1,4 @@
 import { BaseProductData } from './BaseProduct';
-import { ProductAttribute } from './ProductAttribute';
 import { ProductVariation, ProductVariationData } from "./ProductVariation";
 import { SimpleProduct, SimpleProductData } from "./SimpleProduct";
 import { VariableProduct, VariableProductData } from "./VariableProduct";
@@ -27,6 +26,8 @@ const mapData = (item: any): BaseProductData => ({
     parent: item.parent,
     categories: item.categories || [],
     type: item.type,
+    attributes: item.attributes || [],
+    variations: item.variations || [],
 });
 
 /**
@@ -40,16 +41,6 @@ export const mapToProduct = (data: any) => {
     if (data.type === 'variable') {
         const variableProductData: VariableProductData = {
             ...mapData(data),
-            attributes: (data.attributes || []).map((attr: ProductAttribute) => ({
-                id: attr.id,
-                name: attr.name,
-                taxonomy: attr.taxonomy,
-                has_variations: attr.has_variations,
-                terms: attr.terms || [],
-                variation: attr.has_variations || false,
-            })),
-            variations: data.variations || [],
-            type: 'variable',
         };
         return new VariableProduct(variableProductData);
     }
@@ -58,7 +49,6 @@ export const mapToProduct = (data: any) => {
         const variationData: ProductVariationData = {
             ...mapData(data),
             type: 'variation',
-            attributes: data.attributes || [],
         };
         return new ProductVariation(variationData);
     }
