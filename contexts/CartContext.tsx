@@ -10,9 +10,7 @@ interface CartInteractionOptions {
 }
 
 interface CartContextType {
-    cart: CartData | null;
-    isInitialized: boolean;
-    isLoading: boolean;
+    cart: CartData;
     isUpdating: boolean;
     addItem: (product: Purchasable, options?: CartInteractionOptions) => void;
     updateItem: (key: string, quantity: number) => void;
@@ -26,15 +24,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const toastController = useToastController();
     const {
         cart,
-        isInitialized,
-        isLoading,
         isUpdating,
         addItem: storeAddItem,
         updateItem: storeUpdateItem,
         removeItem: storeRemoveItem,
     } = useCartStore();
 
-    const getItem = (key: string) => cart?.items.find((i) => i.key === key);
+
+    if (!cart) {
+        throw new Error('CartProvider mounted before cart was initialized.');
+    }
+
+    const getItem = (key: string) => cart.items.find((i) => i.key === key);
 
     const addItem = async (purchasable: Purchasable, options: CartInteractionOptions = {}) => {
         const product = purchasable.product;
@@ -80,14 +81,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const value = useMemo(() => ({
         cart,
-        isInitialized,
-        isLoading,
         isUpdating,
         addItem,
         updateItem,
         removeItem,
         getItem,
-    }), [cart, isInitialized, isLoading, isUpdating]);
+    }), [cart, isUpdating]);
 
     return (
         <CartContext.Provider value={value}>
@@ -101,7 +100,3 @@ export const useCartContext = () => {
     if (!context) throw new Error('useCartContext must be used within a CartProvider');
     return context;
 };
-
-
-
-

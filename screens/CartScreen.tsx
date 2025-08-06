@@ -2,7 +2,6 @@ import { CartSummary } from '@/components/features/cart';
 import { CartListItem } from '@/components/features/cart/CartListItem';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { ThemedButton } from '@/components/ui/ThemedButton';
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useCartContext } from '@/contexts/CartContext';
 import { FlashList } from '@shopify/flash-list';
@@ -12,10 +11,6 @@ import { YStack } from 'tamagui';
 
 export const CartScreen = () => {
     const { cart } = useCartContext();
-
-    if (!cart) {
-        return <ThemedSpinner />
-    }
 
     return <PageView>
         <PageHeader theme="secondary_soft">
