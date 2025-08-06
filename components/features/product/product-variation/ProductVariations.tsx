@@ -33,7 +33,7 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
 
                 return (
                     <YStack key={id} gap="$1" f={1}>
-                        <SizableText size="$3" fontWeight="bold">{name}</SizableText>
+                        <SizableText size="$3" fow="bold" tt="capitalize">{name}</SizableText>
                         <AttributeSelector
                             options={options}
                             selectedValue={selectedValue}

@@ -22,7 +22,8 @@ export const AttributeOption = ({ option, price, selectOption, isSelected, isAva
         disabled={disabled}
     >
         <XStack
-            flex={1}
+            f={1}
+            width="100%"
             theme={isSelected ? "secondary" : "secondary_elevated"}
             ai="center"
             jc="space-between"

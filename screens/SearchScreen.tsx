@@ -3,6 +3,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { SearchBar } from '@/components/ui';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
+import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useSearchContext } from '@/contexts/SearchContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
@@ -16,9 +17,15 @@ import { LoadingScreen } from './misc/LoadingScreen';
 export const SearchScreen = () => {
     useRenderGuard("SearchScreen")
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
-    const { query, liveQuery } = useSearchContext();
+    const { query, liveQuery, queryResult } = useSearchContext();
+
     const searchInputRef = useRunOnFocus<TextInput>((input) => input.focus());
     const isWaiting = query !== liveQuery;
+    const searchQueryText = isWaiting
+        ? `Leter etter "${liveQuery}"...`
+        : (query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.');
+
+    const { isLoading, total } = queryResult;
 
     return (
         <PageView>
@@ -26,12 +33,12 @@ export const SearchScreen = () => {
                 <SearchBar initialQuery={initialQuery} ref={searchInputRef} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>
-                <PageContent theme="tertiary_soft">
-                    <SizableText>
-                        {isWaiting
-                            ? `Leter etter "${liveQuery}"...`
-                            : (query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.')
-                        }
+                <PageContent theme="tertiary_soft" ai="center" jc="space-between" fd="row">
+                    <SizableText f={1}>
+                        {searchQueryText}
+                    </SizableText>
+                    <SizableText f={0}>
+                        {isLoading || isWaiting ? <ThemedSpinner /> : query ? `(${total})` : ''}
                     </SizableText>
                 </PageContent>
                 <PageContent f={1} p="none" theme="tertiary_soft">
@@ -44,8 +51,13 @@ export const SearchScreen = () => {
 
 
 const SearchResults = () => {
-    const { query, liveQuery, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
+    const { query, liveQuery, queryResult } = useSearchContext();
 
+    const { items: products,
+        isLoading,
+        fetchNextPage,
+        isFetchingNextPage
+    } = queryResult;
 
     if (!query) {
         return <></>;
