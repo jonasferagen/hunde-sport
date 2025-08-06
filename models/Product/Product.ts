@@ -1,12 +1,9 @@
-import { BaseProductData } from './BaseProduct';
-import { ProductVariation, ProductVariationData } from "./ProductVariation";
-import { SimpleProduct, SimpleProductData } from "./SimpleProduct";
-import { VariableProduct, VariableProductData } from "./VariableProduct";
+import { BaseProduct, BaseProductData } from './BaseProduct';
+import { ProductAttribute } from './ProductAttribute';
+
 
 export type Product = SimpleProduct | VariableProduct | ProductVariation;
-
 export type PurchasableProduct = SimpleProduct | VariableProduct;
-
 
 
 const mapData = (item: any): BaseProductData => ({
@@ -39,14 +36,14 @@ const mapData = (item: any): BaseProductData => ({
  */
 export const mapToProduct = (data: any) => {
     if (data.type === 'variable') {
-        const variableProductData: VariableProductData = {
+        const variableProductData: BaseProductData = {
             ...mapData(data),
         };
         return new VariableProduct(variableProductData);
     }
 
     if (data.type === 'variation') {
-        const variationData: ProductVariationData = {
+        const variationData: BaseProductData = {
             ...mapData(data),
             type: 'variation',
         };
@@ -54,9 +51,44 @@ export const mapToProduct = (data: any) => {
     }
 
     // All other types are treated as SimpleProduct
-    const simpleProductData: SimpleProductData = {
+    const simpleProductData: BaseProductData = {
         ...mapData(data),
         type: 'simple',
     };
     return new SimpleProduct(simpleProductData);
 };
+
+
+export class ProductVariation extends BaseProduct<BaseProductData> {
+    type: 'variation' = 'variation';
+    constructor(data: BaseProductData) {
+        if (data.type !== 'variation') {
+            throw new Error('Cannot construct ProductVariation with type other than "variation".');
+        }
+        super(data);
+    }
+}
+
+export class SimpleProduct extends BaseProduct<BaseProductData> {
+    constructor(data: BaseProductData) {
+        if (data.type !== 'simple') {
+            throw new Error('Cannot construct SimpleProduct with type other than "simple".');
+        }
+        super(data);
+    }
+}
+
+export class VariableProduct extends BaseProduct<BaseProductData> {
+    type: 'variable' = 'variable';
+
+    constructor(data: BaseProductData) {
+        if (data.type !== 'variable') {
+            throw new Error('Invalid data type for VariableProduct');
+        }
+        super(data);
+    }
+
+    getAttributesForVariationSelection(): ProductAttribute[] {
+        return this.attributes.filter((attribute) => attribute.has_variations);
+    }
+}

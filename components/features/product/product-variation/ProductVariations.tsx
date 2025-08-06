@@ -1,7 +1,7 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { useProductContext } from '@/contexts';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
-import { VariableProduct } from '@/models/Product/VariableProduct';
+import { VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';

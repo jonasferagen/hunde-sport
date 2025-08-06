@@ -1,7 +1,7 @@
+import { ApiVariationAttribute } from '../BaseProduct';
+import { ProductVariation, VariableProduct } from '../Product';
 import { AttributeTermDetails } from '../ProductAttribute';
-import { ApiVariationAttribute, AttributeSelectionTuple, ProductVariation } from '../ProductVariation';
-import { VariableProduct } from '../VariableProduct';
-
+import { AttributeSelectionTuple } from './VariationSelection';
 /**
  * A helper class to resolve variation data in the context of a parent VariableProduct.
  * This class handles the logic of mapping raw variation attributes to their full taxonomy

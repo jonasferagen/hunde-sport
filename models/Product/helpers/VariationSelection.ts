@@ -1,7 +1,12 @@
+import { ProductVariation, VariableProduct } from '../Product';
 import { AttributeTermDetails } from '../ProductAttribute';
-import { ProductVariation } from '../ProductVariation';
-import { VariableProduct } from '../VariableProduct';
 import { VariationDataResolver } from './VariationDataResolver';
+
+// The clean, canonical representation of a variation's attribute selection.
+export type AttributeSelectionTuple = {
+    name: string; // The attribute taxonomy slug, e.g., "pa_farge"
+    value: string; // The selected term slug, e.g., "red"
+};
 
 export class VariationSelection {
     private constructor(

@@ -2,7 +2,6 @@ import { cleanHtml } from "@/utils/helpers";
 import { ProductCategory } from "../ProductCategory";
 import { ProductAttribute } from "./ProductAttribute";
 import { ProductPrices } from "./ProductPrices";
-import { ApiVariationAttribute, ProductVariation } from "./ProductVariation";
 
 export interface ProductImage {
     id: number;
@@ -10,6 +9,12 @@ export interface ProductImage {
     name: string;
     alt: string;
 }
+
+// The raw representation of an attribute as it comes from the initial product API response.
+export type ApiVariationAttribute = {
+    name: string; // The attribute's "nice" name, e.g., "Farge"
+    value: string; // The selected term slug, e.g., "red"
+};
 
 export type VariationReference = {
     id: number;
@@ -82,7 +87,5 @@ export class BaseProduct<T extends BaseProductData> {
         return this.images[0];
     }
 
-    get productVariation(): ProductVariation | undefined {
-        throw new Error("productVariation called on BaseProduct")
-    }
+
 }
