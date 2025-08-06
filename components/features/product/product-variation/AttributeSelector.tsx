@@ -1,16 +1,17 @@
+import { AttributeTermDetails } from '@/models/Product/ProductAttribute';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
-import { YStack } from 'tamagui';
+import { XStack, YStack } from 'tamagui';
 import { AttributeOption } from './AttributeOption';
 
 interface AttributeSelectorProps {
-    options: any[];
+    options: AttributeTermDetails[];
     onSelect: (value: string | null) => void;
     selectedValue: string | null | undefined;
 }
 
 export const AttributeSelector = ({ options, onSelect, selectedValue }: AttributeSelectorProps) => {
-    const renderItem = ({ item }: { item: any }) => {
+    const renderItem = ({ item }: { item: AttributeTermDetails }) => {
         const isSelected = selectedValue === item.slug;
 
         const handlePress = () => {
@@ -31,7 +32,7 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
 
     const ITEM_HEIGHT = 60; // Approximate item height
     return (
-        <YStack>
+        <XStack f={1} >
             <FlashList
                 data={options}
                 renderItem={renderItem}
@@ -40,6 +41,6 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
                 extraData={selectedValue}
                 ItemSeparatorComponent={() => <YStack h="$2" />}
             />
-        </YStack>
+        </XStack>
     );
 };

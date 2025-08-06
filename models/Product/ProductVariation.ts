@@ -1,5 +1,5 @@
 import { BaseProduct, BaseProductData } from './BaseProduct';
-import { ProductAttribute, ProductAttributeTerm } from "./ProductAttribute";
+import { AttributeTermDetails, ProductAttribute, ProductAttributeTerm } from "./ProductAttribute";
 
 // The clean, canonical representation of a variation's attribute selection.
 export type AttributeSelectionTuple = {
@@ -20,6 +20,7 @@ export interface ProductVariationData extends BaseProductData {
 export class ProductVariation extends BaseProduct<ProductVariationData> {
     type: 'variation' = 'variation';
     variation_attributes: AttributeSelectionTuple[] = [];
+    parentAttributes: ProductAttribute[] = [];
 
     constructor(data: ProductVariationData) {
         if (data.type !== 'variation') {
@@ -34,17 +35,16 @@ export class ProductVariation extends BaseProduct<ProductVariationData> {
 
     /**
      * Generates a descriptive name for the variation based on its attributes.
-     * @param attributes The parent product's attributes, used to look up attribute term names.
      * @returns A string of concatenated attribute names (e.g., "Red, Large").
      */
-    getVariationName(attributes: ProductAttribute[]): string {
+    getVariationName(): string {
         if (!this.variation_attributes || this.variation_attributes.length === 0) {
             return '';
         }
 
         return this.variation_attributes
             .map((variationAttr: AttributeSelectionTuple) => {
-                const parentAttribute = attributes.find((attr) => attr.taxonomy === variationAttr.name);
+                const parentAttribute = this.parentAttributes.find((attr) => attr.taxonomy === variationAttr.name);
                 return parentAttribute?.terms.find((t: ProductAttributeTerm) => t.slug === variationAttr.option)?.name;
             })
             .filter(Boolean)
@@ -78,5 +78,31 @@ export class ProductVariation extends BaseProduct<ProductVariationData> {
         return this.variation_attributes.some(
             (variationAttr: AttributeSelectionTuple) => variationAttr.name === name && variationAttr.option === option
         );
+    }
+
+    /**
+     * Gets the full attribute term details for a given taxonomy.
+     * @param taxonomy The attribute taxonomy (e.g., 'pa_color').
+     * @returns The corresponding AttributeTermDetails object or undefined.
+     */
+    getAttributeTerm(taxonomy: string): AttributeTermDetails | undefined {
+        const variationOption = this.variation_attributes.find(attr => attr.name === taxonomy);
+        if (!variationOption) {
+            return undefined;
+        }
+
+        const parentAttribute = this.parentAttributes.find(attr => attr.taxonomy === taxonomy);
+        const term = parentAttribute?.terms.find(term => term.slug === variationOption.option);
+
+        if (!term) {
+            return undefined;
+        }
+
+        return {
+            ...term,
+            isAvailable: this.is_in_stock,
+            displayPrice: this.prices.price,
+            inStock: this.is_in_stock,
+        };
     }
 }

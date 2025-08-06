@@ -1,3 +1,4 @@
+import { formatPrice } from '@/utils/helpers';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, XStack } from 'tamagui';
@@ -21,7 +22,7 @@ export const AttributeOption = ({ option, price, selectOption, isSelected, isAva
         disabled={disabled}
     >
         <XStack
-            f={1}
+            flex={1}
             theme={isSelected ? "secondary" : "secondary_elevated"}
             ai="center"
             jc="space-between"
@@ -37,7 +38,7 @@ export const AttributeOption = ({ option, price, selectOption, isSelected, isAva
             </SizableText>
             {stockStatus}
             <SizableText f={0} fow={isSelected ? "bold" : "normal"} col="$color">
-                {price}
+                {formatPrice(price)}
             </SizableText>
         </XStack>
 

@@ -1,7 +1,7 @@
 import { ENDPOINTS, PaginationOptions } from '@/config/api';
 import { apiClient } from '@/lib/apiClient';
-import { createProduct } from '@/models/Product/ProductFactory';
-import { Product } from '@/types';
+
+import { Product, mapToProduct } from '@/models/Product/Product';
 import { responseTransformer } from '../util';
 
 /**
@@ -16,7 +16,7 @@ export async function fetchProduct(id: number): Promise<Product> {
         throw new Error(response.problem);
     }
     // Note: This is a single product fetch, so we don't use the responseTransformer here.
-    return createProduct(response.data);
+    return mapToProduct(response.data);
 }
 
 /**
@@ -27,7 +27,7 @@ export async function fetchProduct(id: number): Promise<Product> {
  */
 export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.FEATURED(pagination));
-    return responseTransformer(response, createProduct);
+    return responseTransformer(response, mapToProduct);
 }
 
 /**
@@ -38,7 +38,7 @@ export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
  */
 export const fetchDiscountedProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.DISCOUNTED(pagination));
-    return responseTransformer(response, createProduct);
+    return responseTransformer(response, mapToProduct);
 }
 
 /**
@@ -50,7 +50,7 @@ export const fetchDiscountedProducts = async (pagination?: PaginationOptions) =>
  */
 export const fetchProductsByIds = async (ids: number[], pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_IDS(ids, pagination));
-    return responseTransformer(response, createProduct);
+    return responseTransformer(response, mapToProduct);
 }
 
 /**
@@ -62,7 +62,7 @@ export const fetchProductsByIds = async (ids: number[], pagination?: PaginationO
  */
 export const fetchProductsBySearch = async (query: string, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.SEARCH(query, pagination));
-    return responseTransformer(response, createProduct);
+    return responseTransformer(response, mapToProduct);
 }
 
 /**
@@ -74,7 +74,7 @@ export const fetchProductsBySearch = async (query: string, pagination?: Paginati
  */
 export const fetchProductVariations = async (id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.VARIATIONS(id, pagination));
-    return responseTransformer(response, createProduct);
+    return responseTransformer(response, mapToProduct);
 }
 
 /**
@@ -85,7 +85,7 @@ export const fetchProductVariations = async (id: number, pagination?: Pagination
  */
 export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.RECENT(pagination));
-    return responseTransformer(response, createProduct);
+    return responseTransformer(response, mapToProduct);
 }
 
 /**
@@ -97,5 +97,5 @@ export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
  */
 export const fetchProductsByProductCategory = async (product_category_id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(product_category_id, pagination));
-    return responseTransformer(response, createProduct);
+    return responseTransformer(response, mapToProduct);
 }

@@ -2,9 +2,9 @@ import { ProductCategoryChips } from '@/components/features/product-category/Pro
 import { PriceTag } from '@/components/features/product/display/PriceTag';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
+import { ProductVariations } from '@/components/features/product/product-variation/ProductVariations';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
-import { ProductVariations } from '@/components/features/product/variation/ProductVariations';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
 import { ProductCategoryProvider, ProductProvider, useProductContext } from '@/contexts';

@@ -1,17 +1,15 @@
 import { useProductVariations } from '@/hooks/data/Product';
-import { Purchasable } from '@/models/Product/Product';
+import { Purchasable, PurchasableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-
-
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 /**
  * Interface for the ProductContext
  */
 export interface ProductContextType {
-    product: SimpleProduct | VariableProduct;
+    product: PurchasableProduct;
     displayProduct: SimpleProduct | VariableProduct | ProductVariation;
     purchasable: Purchasable;
     isLoading: boolean;
@@ -28,63 +26,45 @@ export const useProductContext = () => {
     return context;
 };
 
-const VariableProductContextProvider: React.FC<{ product: VariableProduct; children: React.ReactNode }> = ({
-    product: initialProduct,
-    children,
-}) => {
-    const [product, setProduct] = useState(initialProduct);
-    const { isLoading, items: productVariations } = useProductVariations(product);
-    const setSelectedVariation = useCallback(
-        (variation: ProductVariation | undefined) => {
-            setProduct((currentProduct) => {
-                const newProduct = currentProduct.clone();
-                newProduct.setSelectedVariation(variation);
-                return newProduct;
-            });
-        },
-        [setProduct]
-    );
-
-
-    useEffect(() => {
-        if (!isLoading) {
-            product.setVariationsData(productVariations);
-        }
-    }, [product, isLoading, productVariations]);
-
-    const displayProduct = product.productVariation ? product.productVariation : product;
-
-    const purchasable: Purchasable = product.productVariation
-        ? { product: product, productVariation: product.productVariation }
-        : { product: product };
-
-
-    const value: ProductContextType = {
-        product,
-        displayProduct,
-        purchasable,
-        isLoading,
-        setSelectedVariation,
-    };
-
-    return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
-};
-
-export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduct; children: React.ReactNode }> = ({
+export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
     product,
     children,
 }) => {
-    if (product instanceof VariableProduct) {
-        return <VariableProductContextProvider product={product}>{children}</VariableProductContextProvider>;
-    }
+    const isVariable = product instanceof VariableProduct;
+    const { isLoading: areVariationsLoading, items: variations } = useProductVariations(product);
 
-    const value: ProductContextType = {
-        product,
-        displayProduct: product,
-        purchasable: { product: product },
-        isLoading: false,
-        setSelectedVariation: () => { },
-    };
+    const [selectedVariation, setSelectedVariation] = useState<ProductVariation | undefined>(undefined);
+
+    // Effect to load variation data into the product model once fetched
+    useEffect(() => {
+        if (isVariable && !areVariationsLoading) {
+            (product as VariableProduct).setVariationsData(variations);
+        }
+    }, [isVariable, areVariationsLoading, product, variations]);
+
+    // Effect to reset selection when the product changes
+    useEffect(() => {
+        setSelectedVariation(undefined);
+    }, [product]);
+
+    const value = useMemo(() => {
+        const displayProduct = selectedVariation || product;
+
+        let purchasable: Purchasable;
+        if (product instanceof VariableProduct && selectedVariation) {
+            purchasable = { product, productVariation: selectedVariation };
+        } else {
+            purchasable = { product };
+        }
+
+        return {
+            product,
+            displayProduct,
+            purchasable,
+            isLoading: areVariationsLoading,
+            setSelectedVariation,
+        };
+    }, [product, selectedVariation, areVariationsLoading]);
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };

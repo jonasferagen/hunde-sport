@@ -7,7 +7,7 @@ import { SizableText, StackProps, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
 import { ProductStatus } from '../display/ProductStatus';
 import { PurchaseButton } from '../display/PurchaseButton';
-import { ProductVariations } from '../variation/ProductVariations';
+import { ProductVariations } from '../product-variation/ProductVariations';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 
 interface ProductCardFooterProps extends StackProps { }

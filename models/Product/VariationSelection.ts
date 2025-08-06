@@ -1,11 +1,10 @@
-import { AttributeTermDetails, ProductAttribute } from './ProductAttribute';
+import { AttributeTermDetails } from './ProductAttribute';
 import { ProductVariation } from './ProductVariation';
 
 export class VariationSelection {
     constructor(
-        public readonly selections: Record<string, string>,
         private readonly variations: ProductVariation[],
-        private readonly attributes: ProductAttribute[]
+        public readonly selections: Record<string, string> = {}
     ) { }
 
     select(taxonomy: string, slug: string | null): VariationSelection {
@@ -15,28 +14,46 @@ export class VariationSelection {
         } else {
             delete newSelections[taxonomy];
         }
-        return new VariationSelection(newSelections, this.variations, this.attributes);
+        return new VariationSelection(this.variations, newSelections);
     }
 
     getAvailableOptions(taxonomy: string): AttributeTermDetails[] {
-        const attribute = this.attributes.find((attr) => attr.taxonomy === taxonomy);
-        if (!attribute) return [];
-
         const selectionsForOthers = { ...this.selections };
         delete selectionsForOthers[taxonomy];
 
         const compatibleVariations = this.variations.filter((v) => v.matchesAttributes(selectionsForOthers));
 
-        return attribute.getOptionsDetails(compatibleVariations);
+        const options = new Map<string, AttributeTermDetails>();
+        for (const variation of compatibleVariations) {
+            const term = variation.getAttributeTerm(taxonomy);
+            if (term && !options.has(term.slug)) {
+                options.set(term.slug, term);
+            }
+        }
+        return Array.from(options.values());
+    }
+
+    getSelectedOption(taxonomy: string): string | null {
+        return this.selections[taxonomy] || null;
     }
 
     getSelectedVariation(): ProductVariation | undefined {
-        const requiredAttributeCount = this.attributes.filter((attr) => attr.variation).length;
+        const requiredAttributeCount = this.getRequiredAttributeCount();
         if (Object.keys(this.selections).length < requiredAttributeCount) {
             return undefined;
         }
 
         const matches = this.variations.filter((v) => v.matchesAttributes(this.selections));
         return matches.length === 1 ? matches[0] : undefined;
+    }
+
+    private getRequiredAttributeCount(): number {
+        const attributeTaxonomies = new Set<string>();
+        this.variations.forEach(v => {
+            v.variation_attributes.forEach(attr => {
+                attributeTaxonomies.add(attr.name);
+            });
+        });
+        return attributeTaxonomies.size;
     }
 }

@@ -1,5 +1,5 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
-import { createProduct } from '@/models/Product/ProductFactory';
+import { mapToProduct } from '@/models/Product/Product';
 
 /**
  * Maps raw cart data from the API to the application's CartData model.
@@ -15,7 +15,7 @@ export const mapCartData = (rawData: any, token: string): CartData => {
 
         return {
             ...item,
-            product: createProduct(item),
+            product: mapToProduct(item),
         };
     });
 
