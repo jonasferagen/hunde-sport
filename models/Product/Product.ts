@@ -1,31 +1,8 @@
 import { BaseProduct, BaseProductData } from './BaseProduct';
 import { ProductAttribute } from './ProductAttribute';
 
-
 export type Product = SimpleProduct | VariableProduct | ProductVariation;
 export type PurchasableProduct = SimpleProduct | VariableProduct;
-
-
-const mapData = (item: any): BaseProductData => ({
-    id: item.id,
-    name: item.name,
-    permalink: item.permalink,
-    slug: item.slug,
-    description: item.description,
-    short_description: item.short_description || '',
-    images: item.images || [],
-    prices: item.prices,
-    on_sale: item.on_sale,
-    featured: item.featured || false,
-    is_in_stock: item.is_in_stock,
-    is_purchasable: item.is_purchasable,
-    is_on_backorder: item.is_on_backorder,
-    parent: item.parent,
-    categories: item.categories || [],
-    type: item.type,
-    attributes: item.attributes || [],
-    variations: item.variations || [],
-});
 
 /**
  * Factory function to create a product instance from raw data.
@@ -35,32 +12,42 @@ const mapData = (item: any): BaseProductData => ({
  * @returns An instance of SimpleProduct, VariableProduct, or ProductVariation.
  */
 export const mapToProduct = (data: any) => {
+    const productData: BaseProductData = {
+        id: data.id,
+        name: data.name,
+        permalink: data.permalink,
+        slug: data.slug,
+        description: data.description,
+        short_description: data.short_description || '',
+        images: data.images || [],
+        prices: data.prices,
+        on_sale: data.on_sale,
+        featured: data.featured || false,
+        is_in_stock: data.is_in_stock,
+        is_purchasable: data.is_purchasable,
+        is_on_backorder: data.is_on_backorder,
+        parent: data.parent,
+        categories: data.categories || [],
+        attributes: data.attributes || [],
+        variations: data.variations || [],
+        type: data.type,
+    };
+
     if (data.type === 'variable') {
-        const variableProductData: BaseProductData = {
-            ...mapData(data),
-        };
-        return new VariableProduct(variableProductData);
+        return new VariableProduct(productData);
     }
 
     if (data.type === 'variation') {
-        const variationData: BaseProductData = {
-            ...mapData(data),
-            type: 'variation',
-        };
-        return new ProductVariation(variationData);
+        return new ProductVariation(productData);
     }
 
     // All other types are treated as SimpleProduct
-    const simpleProductData: BaseProductData = {
-        ...mapData(data),
-        type: 'simple',
-    };
-    return new SimpleProduct(simpleProductData);
+    return new SimpleProduct(productData);
 };
 
 
 export class ProductVariation extends BaseProduct<BaseProductData> {
-    type: 'variation' = 'variation';
+    readonly type: 'variation' = 'variation';
     constructor(data: BaseProductData) {
         if (data.type !== 'variation') {
             throw new Error('Cannot construct ProductVariation with type other than "variation".');
@@ -70,6 +57,7 @@ export class ProductVariation extends BaseProduct<BaseProductData> {
 }
 
 export class SimpleProduct extends BaseProduct<BaseProductData> {
+    readonly type: 'simple' = 'simple';
     constructor(data: BaseProductData) {
         if (data.type !== 'simple') {
             throw new Error('Cannot construct SimpleProduct with type other than "simple".');
@@ -79,7 +67,7 @@ export class SimpleProduct extends BaseProduct<BaseProductData> {
 }
 
 export class VariableProduct extends BaseProduct<BaseProductData> {
-    type: 'variable' = 'variable';
+    readonly type: 'variable' = 'variable';
 
     constructor(data: BaseProductData) {
         if (data.type !== 'variable') {
