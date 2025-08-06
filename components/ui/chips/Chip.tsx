@@ -6,7 +6,7 @@ interface ChipProps extends Omit<StackProps, 'href'> {
     title?: string;
     icon?: React.ReactNode;
     children?: React.ReactNode;
-    theme: ThemeName;
+    theme?: ThemeName;
     href?: HrefObject;
     onPress?: () => void;
     button?: boolean

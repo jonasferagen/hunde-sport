@@ -7,17 +7,17 @@ import { Image, YStack } from 'tamagui';
 
 export const ProductImageGallery = () => {
     const { product } = useProductContext();
-    const [gallery, setGallery] = useState({ visible: false, initialIndex: 0 });
+    if (product.images.length < 2) {
+        return <></>;
+    }
 
     const urls = product.images.map((image) => image.src);
 
+    const [gallery, setGallery] = useState({ visible: false, initialIndex: 0 });
     const openGallery = (index: number) => {
         setGallery({ visible: true, initialIndex: index });
     };
 
-    const closeGallery = () => {
-        setGallery({ visible: false, initialIndex: 0 });
-    };
 
     return (
         <>

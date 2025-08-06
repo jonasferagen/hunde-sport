@@ -3,6 +3,7 @@ import { SimpleProduct } from '@/models/Product/SimpleProduct';
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { Purchasable } from '@/types';
 import React, { createContext, useContext, useMemo, useState } from 'react';
+import { ProductVariationProvider } from './ProductVariationContext';
 
 /**
  * Generates a display name for a product, including its variation attributes.
@@ -44,15 +45,14 @@ export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduc
     product,
     children,
 }) => {
+
     const [productVariation, setProductVariation] = useState<ProductVariation | undefined>(undefined);
-
     const displayName = useMemo(() => getDisplayName(product, productVariation), [product, productVariation]);
-
     const displayProduct = productVariation || product;
 
     const purchasableProduct: Purchasable | undefined =
         product instanceof VariableProduct
-            ? { product, productVariation }
+            ? { product, productVariation: productVariation as ProductVariation }
             : { product: product as SimpleProduct };
 
     const value: ProductContextType = {
@@ -64,5 +64,13 @@ export const ProductProvider: React.FC<{ product: SimpleProduct | VariableProduc
         setProductVariation,
     };
 
-    return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
+    if (!(product instanceof VariableProduct)) {
+        return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
+    }
+
+    return <ProductContext.Provider value={value}>
+        <ProductVariationProvider product={product}>
+            {children}
+        </ProductVariationProvider>
+    </ProductContext.Provider>;
 };

@@ -1,8 +1,8 @@
 import {
   AppToastProvider,
+  CartProvider,
   ProductCategoryProvider,
   SearchProvider,
-  ShoppingCartProvider,
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
 import appConfig from '@/tamagui/tamagui.config';
@@ -24,11 +24,11 @@ const RootLayout = (): JSX.Element => {
               <Theme name="light">
                 <AppToastProvider>
                   <ProductCategoryProvider>
-                    <ShoppingCartProvider>
+                    <CartProvider>
                       <SearchProvider>
                         <Slot />
                       </SearchProvider>
-                    </ShoppingCartProvider>
+                    </CartProvider>
                   </ProductCategoryProvider>
                 </AppToastProvider>
               </Theme>

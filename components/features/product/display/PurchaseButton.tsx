@@ -1,6 +1,6 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
-import { useProductContext, useShoppingCartContext } from '@/contexts';
+import { useCartContext, useProductContext } from '@/contexts';
 import { Purchasable } from '@/types';
 import { ArrowBigLeftDash, ShoppingBasket } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
@@ -27,7 +27,7 @@ const cannotPurchaseReason = (purchasable: Purchasable): string | undefined => {
 
 
 
-export const PurchaseButtonTheme = "secondary_alt3";
+
 export const PurchaseButton = (props: ButtonProps) => {
     const { purchasableProduct } = useProductContext();
 
@@ -35,7 +35,7 @@ export const PurchaseButton = (props: ButtonProps) => {
         return null;
     }
 
-    const { addItem } = useShoppingCartContext();
+    const { addItem } = useCartContext();
     const buttonRef = useRef(null);
 
     const handleAddToCart = () => {
@@ -51,7 +51,7 @@ export const PurchaseButton = (props: ButtonProps) => {
 
 
     return (
-        <YStack theme={PurchaseButtonTheme} f={1}>
+        <YStack theme={'secondary_alt2'} f={1}>
             <ThemedButton
                 onPress={handleAddToCart}
                 ref={buttonRef}

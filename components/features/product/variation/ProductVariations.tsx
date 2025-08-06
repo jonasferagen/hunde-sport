@@ -1,8 +1,8 @@
 import { useProductContext } from '@/contexts/ProductContext';
-import { useProductVariations } from '@/hooks/data/Product';
-import { ProductAttribute } from '@/models/Product/ProductAttribute';
+import { useProductVariationContext } from '@/contexts/ProductVariationContext';
 import { VariableProduct } from '@/models/Product/VariableProduct';
 import { VariationSelection } from '@/models/Product/VariationSelection';
+import { ProductAttribute } from '@/types';
 import React, { JSX, useEffect, useState } from 'react';
 import { SizableText, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
@@ -10,21 +10,15 @@ import { AttributeSelector } from './AttributeSelector';
 export const ProductVariations = (): JSX.Element => {
     const { product, setProductVariation } = useProductContext();
 
-    if (!(product instanceof VariableProduct)) {
-        return <></>;
-    }
-
-    const variableProduct = product as VariableProduct;
-    const { isLoading: areVariationsLoading } = useProductVariations(variableProduct);
+    const { isLoading } = useProductVariationContext();
 
     const [selectionManager, setSelectionManager] = useState<VariationSelection | null>(null);
 
     useEffect(() => {
-        variableProduct.setVariationsLoading(areVariationsLoading);
-        if (!areVariationsLoading) {
-            setSelectionManager(variableProduct.createSelectionManager());
+        if (product instanceof VariableProduct && product.getVariationsData().length > 0) {
+            setSelectionManager(product.createSelectionManager());
         }
-    }, [variableProduct, areVariationsLoading]);
+    }, [product]);
 
     useEffect(() => {
         if (selectionManager) {
@@ -33,8 +27,8 @@ export const ProductVariations = (): JSX.Element => {
         }
     }, [selectionManager, setProductVariation]);
 
-    if (!selectionManager) {
-        return <></>; // Or a loading indicator
+    if (!(product instanceof VariableProduct) || !selectionManager || isLoading) {
+        return <></>;
     }
 
     const handleSelectOption = (attributeTaxonomy: string, optionSlug: string | null) => {
@@ -42,8 +36,7 @@ export const ProductVariations = (): JSX.Element => {
         setSelectionManager(newManager);
     };
 
-    const attributes = variableProduct.getAttributesForVariationSelection();
-
+    const attributes = product.getAttributesForVariationSelection();
     return (
         <XStack gap="$2" flexWrap="wrap" mt="$2">
             {attributes.map((attribute: ProductAttribute) => {

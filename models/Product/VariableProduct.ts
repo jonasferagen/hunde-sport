@@ -24,9 +24,6 @@ export class VariableProduct extends BaseProduct<VariableProductData> {
         this.variations = data.variations;
     }
 
-    hasVariations(): boolean {
-        return this.variations.length > 0;
-    }
 
     getVariationsData(): ProductVariation[] {
         return this.variationsData;
@@ -54,22 +51,15 @@ export class VariableProduct extends BaseProduct<VariableProductData> {
             }
             return variation;
         });
-
         this.variationsData = processedVariations;
     }
 
-    setVariationsLoading(isLoading: boolean) {
-        this.areVariationsLoading = isLoading;
-    }
 
     createSelectionManager(): VariationSelection {
         return new VariationSelection({}, this.variationsData, this.attributes);
     }
 
     getAttributesForVariationSelection(): ProductAttribute[] {
-        if (this.areVariationsLoading) {
-            return [];
-        }
         return this.attributes.filter((attribute) => attribute.variation);
     }
 }

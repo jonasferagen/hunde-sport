@@ -4,14 +4,14 @@ import { PageContent, PageHeader, PageSection, PageView } from '@/components/lay
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ThemedText } from '@/components/ui/ThemedText';
-import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
+import { useCartContext } from '@/contexts/CartContext';
 import { FlashList } from '@shopify/flash-list';
 import { ExternalLink } from '@tamagui/lucide-icons';
 import React from 'react';
 import { YStack } from 'tamagui';
 
 export const CartScreen = () => {
-    const { cart } = useShoppingCartContext();
+    const { cart } = useCartContext();
 
     if (!cart) {
         return <ThemedSpinner />

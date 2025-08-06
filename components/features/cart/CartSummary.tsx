@@ -1,6 +1,6 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ThemedText } from '@/components/ui/ThemedText';
-import { useShoppingCartContext } from '@/contexts/ShoppingCartContext';
+import { useCartContext } from '@/contexts/CartContext';
 import { formatPrice } from '@/utils/helpers';
 import React, { JSX, memo } from 'react';
 import { SizableText, XStack } from 'tamagui';
@@ -10,7 +10,7 @@ import { SizableText, XStack } from 'tamagui';
 export const CartSummary = memo(
     (): JSX.Element => {
 
-        const { cart, isUpdating } = useShoppingCartContext();
+        const { cart, isUpdating } = useCartContext();
 
         if (!cart) {
             return <ThemedSpinner />

@@ -9,7 +9,7 @@ interface CartInteractionOptions {
     triggerRef?: React.RefObject<any>;
 }
 
-interface ShoppingCartContextType {
+interface CartContextType {
     cart: CartData | null;
     isInitialized: boolean;
     isLoading: boolean;
@@ -20,9 +20,9 @@ interface ShoppingCartContextType {
     getItem: (key: string) => CartItemData | undefined;
 }
 
-const ShoppingCartContext = createContext<ShoppingCartContextType | undefined>(undefined);
+const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const toastController = useToastController();
     const {
         cart,
@@ -89,14 +89,14 @@ export const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }), [cart, isInitialized, isLoading, isUpdating]);
 
     return (
-        <ShoppingCartContext.Provider value={value as ShoppingCartContextType}>
+        <CartContext.Provider value={value as CartContextType}>
             {children}
-        </ShoppingCartContext.Provider>
+        </CartContext.Provider>
     );
 };
 
-export const useShoppingCartContext = () => {
-    const context = useContext(ShoppingCartContext);
-    if (!context) throw new Error('useShoppingCartContext must be used within a ShoppingCartProvider');
+export const useCartContext = () => {
+    const context = useContext(CartContext);
+    if (!context) throw new Error('useCartContext must be used within a CartProvider');
     return context;
 };

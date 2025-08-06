@@ -18,14 +18,10 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { top, bottom } = useSafeAreaInsets();
 
     return (
-        <YStack
-            theme={themeName}
-            flex={1}
-            brw={2}
-            brc="$borderColor"
-        >
-            <Theme name="primary">
-
+        <Theme name="primary">
+            <YStack
+                f={1}
+            >
                 <YStack f={1} bc="$background" mt={top} mb={bottom}>
                     <LinearGradient
                         colors={['$background', '$backgroundStrong']}
@@ -77,7 +73,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                         </YStack>
                     </ScrollView>
                 </YStack>
-            </Theme>
-        </YStack>
+            </YStack>
+        </Theme>
     );
 }

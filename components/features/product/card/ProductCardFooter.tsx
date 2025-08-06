@@ -1,11 +1,12 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { useProductContext } from '@/contexts';
+import { VariableProduct } from '@/types';
 import { ChevronsDown, ChevronsUp } from '@tamagui/lucide-icons';
 import React, { useState } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 import { DisplayPrice } from '../display/DisplayPrice';
 import { ProductStatus } from '../display/ProductStatus';
-import { PurchaseButton, PurchaseButtonTheme } from '../display/PurchaseButton';
+import { PurchaseButton } from '../display/PurchaseButton';
 import { ProductVariations } from '../variation/ProductVariations';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 
@@ -30,21 +31,17 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
         </XStack>
         <XStack gap="$3" ai="center" jc="space-between">
             <ThemedButton
-                theme={PurchaseButtonTheme}
-                variant="accent"
+                theme="secondary_alt2"
                 w={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
                 p="none"
                 m="none"
                 gap={0}
-
                 ai="center"
                 jc="center"
-
                 icon={isExpanded ? <ChevronsUp /> : <ChevronsDown />}
                 scaleIcon={1.5}
-
                 onPress={handleExpand}
-                disabled={!product.hasVariations()}
+                disabled={!(product instanceof VariableProduct)}
             />
             <PurchaseButton />
         </XStack>

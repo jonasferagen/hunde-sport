@@ -24,17 +24,18 @@ interface ProductCategoryProviderProps {
 }
 
 export const ProductCategoryProvider: React.FC<ProductCategoryProviderProps> = ({
-    productCategoryId,
+    productCategoryId = 0,
     productCategories,
     children,
 }) => {
     const {
-        getProductCategoryById: getProductCategoryById,
-        getSubProductCategories: getSubProductCategories,
+        getProductCategoryById,
+        getSubProductCategories,
     } = useProductCategoryStore();
 
     // If categoryId is provided, it takes precedence and fetches from the store.
     const productCategory = getProductCategoryById(productCategoryId ?? 0);
+
     // Use passed-in categories if available, otherwise derive from parent category.
     const value: ProductCategoryContextType = {
         productCategory,

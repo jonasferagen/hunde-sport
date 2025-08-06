@@ -43,10 +43,6 @@ export class ProductVariation extends BaseProduct<BaseProductData> {
             .join(', ');
     }
 
-    hasVariations(): boolean {
-        return false;
-    }
-
     /**
      * Checks if this variation matches a given set of attribute selections.
      * @param selections An object where keys are attribute taxonomies and values are term slugs.

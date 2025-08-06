@@ -27,10 +27,7 @@ export const DebugProducts = ({ theme = 'primary' }: ProductListProps): JSX.Elem
     return <ProductTiles theme={theme} queryResult={useProductsByIds([246557, 35961, 27445])} />
 };
 
-export const RelatedProducts = ({ theme = 'primary', product }: { theme?: ThemeName; product: Product }): JSX.Element => {
-    const result = useProductsByIds(product.related_ids);
-    return <ProductTiles theme={theme} queryResult={result} />
-};
+
 
 
 interface ProductTilesProps {

@@ -1,5 +1,5 @@
 import { VariableProduct } from '@/models/Product/VariableProduct';
-import { Product, ProductCategory } from '@/types';
+import { Product, ProductCategory, ProductVariation } from '@/types';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { handleQueryResult, queryOptions } from '../util';
 import {
@@ -23,10 +23,10 @@ export const useProduct = (id: number) => {
 export const useProductVariations = (variableProduct: VariableProduct) => {
     const result = useInfiniteQuery({
         queryKey: ['product-variations', variableProduct.id],
-        queryFn: ({ pageParam }) => fetchProductVariations(variableProduct.id, { page: pageParam }),
+        queryFn: ({ pageParam }) => fetchProductVariations(variableProduct.id, { page: pageParam, per_page: 100 }),
         ...queryOptions
     });
-    return handleQueryResult<Product>(result);
+    return handleQueryResult<ProductVariation>(result);
 };
 
 export const useProductsByIds = (ids: number[]) => {

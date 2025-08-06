@@ -1,14 +1,15 @@
 import { Chip } from "@/components/ui/";
 import { routes } from "@/config/routes";
 import { useProductCategoryContext } from "@/contexts";
-import { StackProps, XStack } from "tamagui";
+import { StackProps, ThemeName, XStack } from "tamagui";
 
 interface ProductCategoryChipsProps {
     limit?: number;
     showAll: boolean;
+    theme?: ThemeName;
 };
 
-export const ProductCategoryChips = ({ limit, showAll, ...stackProps }: StackProps & ProductCategoryChipsProps) => {
+export const ProductCategoryChips = ({ limit, showAll, theme, ...stackProps }: StackProps & ProductCategoryChipsProps) => {
 
     const { productCategories } = useProductCategoryContext();
 
@@ -24,7 +25,7 @@ export const ProductCategoryChips = ({ limit, showAll, ...stackProps }: StackPro
             {displayedProductCategories.map((productCategory) => (
                 <Chip
                     key={productCategory.id}
-                    theme="secondary_alt2"
+                    theme={theme}
                     title={productCategory.name}
                     href={routes['product-category'].path(productCategory)}
                 />
