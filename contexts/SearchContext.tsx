@@ -1,6 +1,6 @@
 import { useProductsBySearch } from '@/hooks/data/Product';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Product } from '@/models/Product/Product';
+import { Product } from '@/types';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 interface SearchContextType {
@@ -31,8 +31,6 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         fetchNextPage,
         isFetchingNextPage
     } = useProductsBySearch(query);
-
-    console.log(products);
 
     const value = useMemo(() => ({
         query,

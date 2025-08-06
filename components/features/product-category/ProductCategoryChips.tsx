@@ -24,7 +24,7 @@ export const ProductCategoryChips = ({ limit, showAll, ...stackProps }: StackPro
             {displayedProductCategories.map((productCategory) => (
                 <Chip
                     key={productCategory.id}
-                    theme="secondary_soft"
+                    theme="secondary_alt2"
                     title={productCategory.name}
                     href={routes['product-category'].path(productCategory)}
                 />

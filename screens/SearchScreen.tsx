@@ -13,7 +13,6 @@ import { SizableText } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
 
 
-
 export const SearchScreen = () => {
     useRenderGuard("SearchScreen")
     const { query: initialQuery } = useLocalSearchParams<{ query: string }>();
@@ -46,6 +45,11 @@ export const SearchScreen = () => {
 
 const SearchResults = () => {
     const { query, liveQuery, products, isLoading, fetchNextPage, isFetchingNextPage } = useSearchContext();
+
+
+    if (!query) {
+        return <></>;
+    }
 
     if (isLoading || liveQuery !== query) {
         return <LoadingScreen />;
