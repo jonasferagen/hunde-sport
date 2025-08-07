@@ -7,6 +7,7 @@ interface UseProductVariationSelectorProps {
     product: VariableProduct;
     productVariations: ProductVariation[];
     onProductVariationSelected: (variation: ProductVariation | undefined) => void;
+
 }
 
 export const useProductVariationSelector = ({
@@ -20,6 +21,23 @@ export const useProductVariationSelector = ({
         () => VariationSelection.create(product, productVariations),
         [product, productVariations]
     );
+    const unavailableOptions = useMemo(() => {
+        const result: Record<string, string[]> = {};
+
+        product.attributes.forEach(attribute => {
+            const unavailable = baseSelectionManager
+                .getAvailableOptions(attribute.name)
+                .filter(option => !option.isAvailable)
+                .map(option => option.name);
+
+            if (unavailable.length > 0) {
+                result[attribute.name] = unavailable;
+            }
+        });
+
+        return result;
+    }, [baseSelectionManager, product.attributes]);
+
 
     const selectionManager = useMemo(() => {
         return Object.entries(selections).reduce(
@@ -51,5 +69,6 @@ export const useProductVariationSelector = ({
         selectionManager,
         attributes,
         handleSelectOption,
+        unavailableOptions,
     };
 };

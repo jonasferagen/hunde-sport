@@ -15,7 +15,7 @@ export const AttributeOption = ({ option, selectOption, isSelected, item }: Attr
 
     const { isAvailable, isPurchasable, inStock, maxPrices, minPrices } = item;
 
-    const disabled = !isAvailable;
+    const disabled = !isAvailable || !isPurchasable;
     const minPrice = minPrices?.price ?? null;
     const maxPrice = maxPrices?.price ?? null;
 

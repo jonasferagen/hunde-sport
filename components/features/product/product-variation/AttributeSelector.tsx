@@ -11,6 +11,7 @@ interface AttributeSelectorProps {
 }
 
 export const AttributeSelector = ({ options, onSelect, selectedValue }: AttributeSelectorProps) => {
+
     return (
         <XStack f={1} gap="$2" flexWrap="wrap">
             {options.map((item) => {
