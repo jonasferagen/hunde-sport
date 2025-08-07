@@ -15,7 +15,7 @@ export class VariationDataResolver {
         const attributes = variation.getParsedVariation();
 
         return Object.entries(selections).every(([name, slug]) => {
-            return attributes.some(attr => attr.name === name && attr.value === slug);
+            return attributes.some(attr => attr.name.toLowerCase() === name.toLowerCase() && attr.value === slug);
         });
     }
 
@@ -32,12 +32,12 @@ export class VariationDataResolver {
         parentAttributes: ProductAttribute[]
     ): AttributeTermDetails | undefined {
         const attributes = variation.getParsedVariation();
-        const variationOption = attributes.find(attr => attr.name === attributeName);
+        const variationOption = attributes.find(attr => attr.name.toLowerCase() === attributeName.toLowerCase());
         if (!variationOption) {
             return undefined;
         }
 
-        const parentAttribute = parentAttributes.find(attr => attr.name === attributeName);
+        const parentAttribute = parentAttributes.find(attr => attr.name.toLowerCase() === attributeName.toLowerCase());
         const term = parentAttribute?.terms.find(term => term.slug === variationOption.value);
 
         if (!term) {

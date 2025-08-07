@@ -14,10 +14,13 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
     return (
         <XStack f={1} gap="$2" flexWrap="wrap">
             {options.map((item) => {
-                const isSelected = selectedValue === item.slug;
+
+                console.log(item);
+
+                const isSelected = selectedValue === item.name;
 
                 const handlePress = () => {
-                    onSelect(isSelected ? null : item.slug);
+                    onSelect(isSelected ? null : item.name);
                 };
 
                 return (

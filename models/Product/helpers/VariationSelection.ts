@@ -15,38 +15,51 @@ export class VariationSelection {
 
     select(attributeName: string, slug: string | null): VariationSelection {
         const newSelections = { ...this.selections };
+        const key = attributeName.toLowerCase();
         if (slug) {
-            newSelections[attributeName] = slug;
+            newSelections[key] = slug;
         } else {
-            delete newSelections[attributeName];
+            delete newSelections[key];
         }
         return new VariationSelection(this.product, this.variations, newSelections);
     }
 
     getAvailableOptions(attributeName: string): AttributeTermDetails[] {
-        const selectionsForOthers = { ...this.selections };
-        delete selectionsForOthers[attributeName];
-
-        const compatibleVariations = this.variations.filter((v) =>
-            VariationDataResolver.variationMatchesAttributes(v, selectionsForOthers)
+        const parentAttribute = this.product.attributes.find(
+            (attr) => attr.name.toLowerCase() === attributeName.toLowerCase()
         );
 
-        const options = new Map<string, AttributeTermDetails>();
-        for (const variation of compatibleVariations) {
-            const term = VariationDataResolver.getAttributeTermForVariation(
-                variation,
-                attributeName,
-                this.product.attributes
-            );
-            if (term && !options.has(term.slug)) {
-                options.set(term.slug, term);
-            }
+        if (!parentAttribute) {
+            return [];
         }
-        return Array.from(options.values());
+
+        const selectionsForOthers = { ...this.selections };
+        delete selectionsForOthers[attributeName.toLowerCase()];
+
+        return parentAttribute.terms.map((term) => {
+
+            const potentialSelection = {
+                ...selectionsForOthers,
+                [attributeName.toLowerCase()]: term.name,
+            };
+
+            const firstMatchingVariation = this.variations.find((v) =>
+                VariationDataResolver.variationMatchesAttributes(v, potentialSelection)
+            );
+
+            const isAvailable = !!firstMatchingVariation;
+
+            return {
+                ...term,
+                isAvailable,
+                displayPrice: firstMatchingVariation?.prices.price || '',
+                inStock: isAvailable,
+            };
+        });
     }
 
     getSelectedOption(attributeName: string): string | null {
-        return this.selections[attributeName] || null;
+        return this.selections[attributeName.toLowerCase()] || null;
     }
 
     getSelectedVariation(): ProductVariation | undefined {
@@ -63,7 +76,7 @@ export class VariationSelection {
         const attributeNames = new Set<string>();
         this.variations.forEach(v => {
             v.getParsedVariation().forEach(attr => {
-                attributeNames.add(attr.name);
+                attributeNames.add(attr.name.toLowerCase());
             });
         });
         return attributeNames.size;
