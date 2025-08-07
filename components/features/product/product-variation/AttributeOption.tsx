@@ -13,10 +13,13 @@ interface AttributeOptionProps {
 
 export const AttributeOption = ({ option, selectOption, isSelected, item }: AttributeOptionProps) => {
 
-    const { isPurchasable, inStock, displayPrice } = item;
+    const { isAvailable, isPurchasable, inStock, maxPrices, minPrices } = item;
 
     const stockStatus = inStock ? null : <SizableText fontSize="$2" fontWeight="bold" color={'red'}>⬤ Utsolgt</SizableText>
-    const disabled = !isPurchasable || !inStock;
+    const disabled = !isAvailable;
+    const minPrice = minPrices?.price ?? null;
+    const maxPrice = maxPrices?.price ?? null;
+
 
     return <Pressable
         onPress={() => selectOption()}
@@ -39,11 +42,13 @@ export const AttributeOption = ({ option, selectOption, isSelected, item }: Attr
                 {option}
             </SizableText>
             {stockStatus}
-            <SizableText f={0} fow={isSelected ? "bold" : "normal"} col="$color">
-                {formatPrice(displayPrice)}
+            {minPrice && <SizableText f={0} fow={isSelected ? "bold" : "normal"} col="$color">
+                {minPrice === maxPrice ? formatPrice(minPrice) : `Fra ${formatPrice(minPrice)}`}
             </SizableText>
+            }
         </XStack>
 
     </Pressable>
 
 };
+

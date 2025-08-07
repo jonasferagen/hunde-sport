@@ -43,17 +43,34 @@ export class VariationSelection {
                 [attributeName]: term.name,
             };
 
-            const firstMatchingVariation = this.variations.find((v) =>
+            const compatibleVariations = this.variations.filter((v) =>
                 VariationDataResolver.variationMatchesAttributes(v, potentialSelection)
             );
 
-            const isAvailable = !!firstMatchingVariation;
+            const isAvailable = compatibleVariations.length > 0;
+
+
+            const sortedPrices = compatibleVariations
+                .map(v => ({
+                    priceValue: parseFloat(v.prices.price),
+                    prices: v.prices
+                }))
+                .sort((a, b) => a.priceValue - b.priceValue);
+
+
+            const minPrices = sortedPrices[0]?.prices ?? null;
+            const maxPrices = sortedPrices[sortedPrices.length - 1]?.prices ?? null
+
+            const inStock = compatibleVariations.some((v) => v.is_in_stock);
+            const isPurchasable = compatibleVariations.some((v) => v.is_purchasable);
 
             return {
                 ...term,
                 isAvailable,
-                displayPrice: firstMatchingVariation?.prices.price || '',
-                inStock: isAvailable,
+                minPrices,
+                maxPrices,
+                inStock,
+                isPurchasable
             };
         });
     }

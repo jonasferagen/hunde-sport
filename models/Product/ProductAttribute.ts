@@ -1,3 +1,5 @@
+import { ProductPrices } from "./ProductPrices";
+
 export interface ProductAttributeData {
   id: number;
   name: string;
@@ -7,9 +9,11 @@ export interface ProductAttributeData {
 }
 
 export interface AttributeTermDetails extends ProductAttributeTerm {
+  isAvailable: boolean;
   isPurchasable: boolean;
-  displayPrice: string;
   inStock: boolean;
+  maxPrices: ProductPrices | null;
+  minPrices: ProductPrices | null;
 }
 
 export class ProductAttribute {

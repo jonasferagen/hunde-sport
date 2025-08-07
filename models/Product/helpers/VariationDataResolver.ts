@@ -51,8 +51,10 @@ export class VariationDataResolver {
         return {
             ...term,
             isPurchasable: variation.is_purchasable,
-            displayPrice: variation.prices.price,
             inStock: variation.is_in_stock,
+            maxPrices: variation.prices,
+            minPrices: variation.prices,
+            isAvailable: true,
         };
     }
 }
