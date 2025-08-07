@@ -32,6 +32,7 @@ export const VariationButton = ({ isExpanded, handleExpand }: VariationButtonPro
                 onPress={handleExpand}
             >
                 <ThemedLinearGradient br="$3" zIndex={-1} />
+
                 Produktet finnes i flere varianter
             </ThemedButton>
         </Theme>

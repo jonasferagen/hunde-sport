@@ -1,4 +1,4 @@
-import { Product, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
+import { Product, ProductImage, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 
 export interface ValidationResult {
@@ -43,7 +43,10 @@ export interface Purchasable extends ValidationResult {
     productVariation?: ProductVariation;
     displayProduct: Product;
     title: string;
-    image: string;
+    full_title: string;
+    short_description: string;
+    description: string;
+    image: ProductImage;
     prices: ProductPrices;
     is_in_stock: boolean;
 }
@@ -53,9 +56,10 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
     const validationResult = validate({ product, productVariation });
     const displayProduct = productVariation || product;
 
-    const image = displayProduct.featuredImage?.src || '';
+    const image = displayProduct.featuredImage;
     const prices = displayProduct.prices;
     const title = productVariation ? productVariation.variation : displayProduct.name;
+    const full_title = productVariation ? `${product.name} - ${productVariation.variation}` : product.name;
     const is_in_stock = displayProduct.is_in_stock;
 
     return {
@@ -64,7 +68,10 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
         displayProduct,
         image,
         prices,
+        description: product.description,
+        short_description: product.short_description,
         title,
+        full_title,
         is_in_stock,
         ...validationResult,
     };

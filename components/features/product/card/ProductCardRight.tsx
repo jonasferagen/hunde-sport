@@ -11,8 +11,10 @@ interface ProductCardContentProps {
 }
 
 export const ProductCardRight = ({ href }: ProductCardContentProps) => {
-    const { product } = useProductContext();
-    const lineHeight = '$2';
+    const { purchasable } = useProductContext();
+
+    const product = purchasable.product;
+
 
     return <YStack f={1}>
         <Link href={href} asChild>
@@ -22,7 +24,7 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                         <H6
                             f={0}
                             fs={1}
-                            lh={lineHeight}
+                            lh='$2'
                             numberOfLines={2}
                             textDecorationLine="none"
                             hoverStyle={{ color: '$colorHover' }}
@@ -38,12 +40,12 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                     <SizableText
                         fos="$1"
                         col="$color"
-                        lh={lineHeight}
+                        lh='$2'
                         textDecorationLine="none"
                         numberOfLines={2}
                         hoverStyle={{ color: '$colorHover' }}
                     >
-                        {product.short_description}
+                        {purchasable.short_description}
                     </SizableText>
                 </YStack>
             </Button>
