@@ -4,16 +4,17 @@ import { useProductVariationSelector } from '@/models/Product/helpers/useProduct
 import { VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
-import { SizableText, XStack, YStack } from 'tamagui';
+import { SizableText, StackProps, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 interface VariationSelectorProps {
     product: VariableProduct;
     productVariations: ProductVariation[];
     onProductVariationSelected: (variation: ProductVariation | undefined) => void;
+    stackProps?: StackProps;
 }
 
-const VariationSelector = ({ product, productVariations, onProductVariationSelected: onVariationSelected }: VariationSelectorProps): JSX.Element => {
+const VariationSelector = ({ product, productVariations, onProductVariationSelected: onVariationSelected, stackProps }: VariationSelectorProps): JSX.Element => {
     const { attributes, selectionManager, handleSelectOption } = useProductVariationSelector({
         product,
         productVariations,
@@ -25,7 +26,7 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
     }
 
     return (
-        <XStack gap="$2" fw="wrap">
+        <XStack gap="$2" fw="wrap" {...stackProps}>
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const selectedValue = selectionManager.getSelectedOption(name);
@@ -47,7 +48,7 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
     );
 };
 
-export const ProductVariations = (): JSX.Element => {
+export const ProductVariations = (stackProps: StackProps): JSX.Element => {
     const { isLoading, product: initialProduct, setSelectedProductVariation, productVariations } = useProductContext();
 
     if (!(initialProduct instanceof VariableProduct)) {
@@ -63,6 +64,7 @@ export const ProductVariations = (): JSX.Element => {
             product={product}
             productVariations={productVariations || []}
             onProductVariationSelected={setSelectedProductVariation}
+            stackProps={stackProps}
         />
     );
 };

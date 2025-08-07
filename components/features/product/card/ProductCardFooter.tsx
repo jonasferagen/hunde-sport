@@ -21,8 +21,7 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
     };
 
     return (
-
-        <YStack gap="$2" {...props} >
+        <YStack gap="$2" {...props} f={1} fg={1}>
             <XStack gap="$3">
                 <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH} >
                     <ProductStatus size="$2" />
@@ -34,16 +33,15 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
             </XStack>
 
             <VariationButton isExpanded={isExpanded} handleExpand={handleExpand} />
-            {isExpanded &&
+            {isExpanded && (
                 <Animated.View
                     entering={FadeIn}
                     exiting={FadeOut}
                 >
                     <ProductVariations />
                 </Animated.View>
-            }
+            )}
             <PurchaseButton />
-        </YStack >
-
+        </YStack>
     );
 }
