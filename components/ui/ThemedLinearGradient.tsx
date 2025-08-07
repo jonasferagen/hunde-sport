@@ -10,7 +10,7 @@ export const ThemedLinearGradient = styled(LinearGradient, {
     bottom: 0,
     start: [0, 0],
     end: [1, 1],
-    colors: ['$background', '$backgroundPress'],
+    colors: ['$background', '$backgroundFocus'],
     f: 1,
 });
 

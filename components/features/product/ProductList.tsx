@@ -1,10 +1,11 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ProductProvider } from '@/contexts';
-import { Product } from '@/types';
+import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback } from 'react';
 import { ViewStyle } from 'react-native';
-import { XStack } from 'tamagui';
+import Animated, { LinearTransition } from 'react-native-reanimated';
+import { Theme, XStack } from 'tamagui';
 import { ProductCard } from './card';
 
 interface ProductListProps {
@@ -21,14 +22,16 @@ export const ProductList = memo(({
     contentContainerStyle
 }: ProductListProps) => {
 
-    const renderItem = useCallback(({ item, index }: { item: Product, index: number }) =>
-        <ProductProvider product={item}>
-            <ProductCard
-                theme={index % 2 === 0 ? 'secondary_elevated' : 'secondary_soft'}
-                bbc="$borderColor"
-                bbw={1}
-            />
-        </ProductProvider>
+    const renderItem = useCallback(({ item, index }: { item: PurchasableProduct, index: number }) =>
+        <Animated.View
+            layout={LinearTransition}
+        >
+            <ProductProvider product={item}>
+                <Theme name={index % 2 === 0 ? 'secondary_elevated' : 'secondary_soft'}>
+                    <ProductCard />
+                </Theme>
+            </ProductProvider>
+        </Animated.View>
         , []);
 
     const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
@@ -36,7 +39,7 @@ export const ProductList = memo(({
     return (
         <XStack f={1}>
             <FlashList
-                data={products}
+                data={products} a
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 onEndReached={loadMore}
