@@ -5,15 +5,11 @@ import { SizableText, YStack, YStackProps } from 'tamagui';
 import { FadeInImage } from '../image/FadeInImage';
 import { ThemedLinearGradient } from '../ThemedLinearGradient';
 
-const GRADIENT_MIN_HEIGHT = 25;
 
 export interface TileProps extends YStackProps {
     title: string;
-    subtitle?: string;
     image: Image;
     aspectRatio?: number | string;
-    titleNumberOfLines?: number;
-    gradientMinHeight?: number;
     children?: React.ReactNode;
 }
 
@@ -21,10 +17,7 @@ export const Tile: React.FC<TileProps> = ({
     w,
     h,
     title,
-    subtitle,
     image,
-    titleNumberOfLines = 1,
-    gradientMinHeight = GRADIENT_MIN_HEIGHT,
     children,
     ...stackProps
 }) => {
@@ -54,7 +47,7 @@ export const Tile: React.FC<TileProps> = ({
                 objectFit="cover"
             />
 
-            <YStack boc="black" bw={1} f={1}>
+            <YStack f={1}>
                 {children}
             </YStack>
             <ThemedLinearGradient
@@ -66,20 +59,10 @@ export const Tile: React.FC<TileProps> = ({
                     fos="$1"
                     col="$color"
                     ta="center"
-                    numberOfLines={titleNumberOfLines}
+                    numberOfLines={2}
                 >
                     {title}
                 </SizableText>
-                {subtitle && (
-                    <SizableText
-                        fos="$2"
-                        col="$color"
-                        ta="center"
-                        numberOfLines={1}
-                    >
-                        {subtitle}
-                    </SizableText>
-                )}
             </ThemedLinearGradient>
 
         </YStack>
