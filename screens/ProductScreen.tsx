@@ -69,7 +69,7 @@ const ProductScreenContent = () => {
           <PurchaseButton />
         </PageContent>
         <PageContent title="Produktbilder" flex={1}>
-          <ProductImageGallery />
+          {product.images.length > 1 && <ProductImageGallery />}
         </PageContent>
         <PageContent theme="secondary" title="Produktinformasjon">
           <SizableText size="$3">{product.description}</SizableText>
