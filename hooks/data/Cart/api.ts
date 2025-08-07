@@ -17,9 +17,6 @@ const handleResponse = (
         throw new Error(`No data returned from ${context}`);
     }
 
-    console.log(response.headers);
-
-
     const token = response.headers?.['cart-token'] as string | undefined;
 
     if (!token) {
@@ -48,7 +45,7 @@ export async function fetchCart(): Promise<{ data: CartData }> {
  * @param {object[]} variation - The product variation attributes.
  * @returns {Promise<{data: CartData}>} An object containing the updated cart data.
  */
-export async function addItem({ cartToken, id, quantity, variation }: { cartToken: string, id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: CartData }> {
+export async function addItem(cartToken: string, { id, quantity, variation }: { id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: CartData }> {
     apiClient.headers['cart-token'] = cartToken;
 
     const payload = { id, quantity, variation };
@@ -67,7 +64,7 @@ export async function addItem({ cartToken, id, quantity, variation }: { cartToke
  * @param {number} quantity - The new quantity for the item.
  * @returns {Promise<{data: CartData}>} An object containing the updated cart data.
  */
-export async function updateItem({ cartToken, key, quantity }: { cartToken: string, key: string, quantity: number }): Promise<{ data: CartData }> {
+export async function updateItem(cartToken: string, { key, quantity }: { key: string, quantity: number }): Promise<{ data: CartData }> {
     apiClient.headers['cart-token'] = cartToken;
     const response = await apiClient.post<any>(
         ENDPOINTS.CART.UPDATE_ITEM(),
@@ -82,7 +79,7 @@ export async function updateItem({ cartToken, key, quantity }: { cartToken: stri
  * @param {string} key - The unique key of the item in the cart.
  * @returns {Promise<{data: CartData}>} An object containing the updated cart data.
  */
-export async function removeItem({ cartToken, key }: { cartToken: string, key: string }): Promise<{ data: CartData }> {
+export async function removeItem(cartToken: string, { key }: { key: string }): Promise<{ data: CartData }> {
     apiClient.headers['cart-token'] = cartToken;
     const response = await apiClient.post<any>( // Woocommerce uses POST for removal
         ENDPOINTS.CART.REMOVE_ITEM(),

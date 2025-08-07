@@ -28,7 +28,7 @@ const expoStorage = {
  */
 interface CartState {
     cart: CartData | null;
-    cartToken: string | null;
+    cartToken: string;
     isInitialized: boolean;
     isLoading: boolean;
     isUpdating: boolean;
@@ -56,7 +56,7 @@ interface CartActions {
  */
 const initialState: CartState = {
     cart: null,
-    cartToken: null,
+    cartToken: '',
     isInitialized: false,
     isLoading: false,
     isUpdating: false,
@@ -70,25 +70,50 @@ const initialState: CartState = {
  * @param apiCall - The specific API function to execute for the cart operation.
  * @returns A promise that resolves when the action is complete.
  */
-const _handleCartAction = async <T>(
+const _handleCartAction = async (
     actionName: 'addItem' | 'updateItem' | 'removeItem',
     get: () => CartState,
     set: (partial: Partial<CartState>) => void,
-    apiCall: () => Promise<{ data: CartData }>
+    apiCall: (cartToken: string) => Promise<{ data: CartData }>,
+    optimisticCart: CartData,
+
 ) => {
     log.info(`CartStore: ${actionName} invoked.`);
+    const cartToken = get().cartToken;
+    if (!cartToken) {
+        throw new Error(`CartStore: ${actionName} failed, no cart token found.`);
+    }
     const { cart: originalCart } = get();
     set({ isUpdating: true });
-
     try {
-        const { data } = await apiCall();
-        set({ cart: data, cartToken: data.token });
+        const newCart = optimisticCart;
+        const originalTimestamp = Date.now();
+        set({
+            cart: {
+                ...newCart,
+                lastUpdated: originalTimestamp,
+            },
+            isUpdating: true,
+        });
+
+        const result = await apiCall(cartToken);
+        const cart = result.data;
+
+        // Only update if response is newer
+        const current = get().cart;
+        if (current && current?.lastUpdated > cart.lastUpdated) {
+            log.info('CartStore: response ignored due to newer cart state.');
+            return;
+        }
+
+        set({ cart, cartToken: cart.token });
         log.info(`CartStore: ${actionName} success.`);
     } catch (error) {
         log.error(`CartStore: ${actionName} failed.`, error);
         set({ cart: originalCart });
+    } finally {
+        set({ isUpdating: false });
     }
-    set({ isUpdating: false });
 };
 
 /**
@@ -98,9 +123,59 @@ export const useCartStore = create<CartState & CartActions>()(
     persist(
         (set, get) => ({
             ...initialState,
+            addItem: async (options: AddItemOptions) => {
+                const { cart } = get();
+                await _handleCartAction(
+                    'addItem',
+                    get,
+                    set,
+                    (cartToken) => apiAddItem(cartToken, { ...options, variation: options.variation || [] }),
+                    cart!
+                );
+            },
 
-            initializeCart: async () => {
+            updateItem: async (key: string, quantity: number) => {
+
+                const { cart } = get();
+
+                const optimisticCart = {
+                    ...cart!,
+                    items: cart!.items.map((item) =>
+                        item.key === key ? { ...item, quantity } : item
+                    ),
+                };
+
+                await _handleCartAction(
+                    'updateItem',
+                    get,
+                    set,
+                    (cartToken) => apiUpdateItem(cartToken, { key, quantity }),
+                    optimisticCart
+                );
+            },
+
+            removeItem: async (key: string) => {
+
+                const { cart } = get();
+
+                const optimisticCart = {
+                    ...cart!,
+                    items: cart!.items.filter((item) => item.key !== key),
+                };
+                set({ cart: optimisticCart });
+
+                await _handleCartAction(
+                    'removeItem',
+                    get,
+                    set,
+                    (cartToken) => apiRemoveItem(cartToken, { key }),
+                    optimisticCart
+                );
+            }, initializeCart: async () => {
                 if (get().isInitialized) return;
+                if (get().cartToken && get().cart) {
+                    set({ isInitialized: true });
+                }
 
                 log.info('CartStore: Initializing...');
                 set({ isLoading: true });
@@ -118,52 +193,8 @@ export const useCartStore = create<CartState & CartActions>()(
                 }
                 set({ isLoading: false });
             },
-
-            addItem: async (options: AddItemOptions) => {
-                const { cartToken } = get();
-                if (!cartToken) {
-                    log.error('CartStore: addItem failed, no cart token found.');
-                    return;
-                }
-
-                await _handleCartAction(
-                    'addItem',
-                    get,
-                    set,
-                    () => apiAddItem({ ...options, cartToken, variation: options.variation || [] })
-                );
-            },
-
-            updateItem: async (key: string, quantity: number) => {
-                const { cartToken } = get();
-                if (!cartToken) {
-                    log.error('CartStore: updateItem failed, no cart token found.');
-                    return;
-                }
-
-                await _handleCartAction(
-                    'updateItem',
-                    get,
-                    set,
-                    () => apiUpdateItem({ cartToken, key, quantity })
-                );
-            },
-
-            removeItem: async (key: string) => {
-                const { cartToken } = get();
-                if (!cartToken) {
-                    log.error('CartStore: removeItem failed, no cart token found.');
-                    return;
-                }
-
-                await _handleCartAction(
-                    'removeItem',
-                    get,
-                    set,
-                    () => apiRemoveItem({ cartToken, key })
-                );
-            },
         }),
+
         {
             name: 'cart-storage',
             storage: createJSONStorage(() => expoStorage),
