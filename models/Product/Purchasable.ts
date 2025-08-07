@@ -2,10 +2,13 @@ import { Image } from '@/models/Image';
 import { Product, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 
+
+export type ValidationStatus = 'OK' | 'ACTION_NEEDED' | 'INVALID';
+
 export interface ValidationResult {
     isValid: boolean;
     reason?: 'VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT';
-    status?: 'ACTION_NEEDED' | 'INVALID' | 'OK'
+    status?: ValidationStatus
     message: string;
 }
 

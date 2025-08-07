@@ -1,17 +1,16 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { useCartContext, useProductContext } from '@/contexts';
+import { ValidationStatus } from '@/models/Product/Purchasable';
 import { formatPrice } from '@/utils/helpers';
-import { IconProps } from "@tamagui/helpers-icon";
 import { CircleX, ShoppingCart, TriangleAlert } from '@tamagui/lucide-icons';
-import React, { useRef } from 'react';
-import { ButtonProps, SizableText, XStack } from 'tamagui';
-// Define the possible validation statuses
-type ValidationStatus = 'OK' | 'ACTION_NEEDED' | 'INVALID';
+import React, { JSX, useRef } from 'react';
 
-// Define the configuration for each button state
+import { Button, ButtonProps, SizableText, ThemeName, XStack } from 'tamagui';
+
+
 interface ButtonStateConfig {
-    icon: IconProps;
-    theme: string;
+    icon: JSX.Element;
+    theme: ThemeName;
 }
 
 // Map statuses to their corresponding configurations
@@ -35,7 +34,7 @@ export const PurchaseButton = (props: ButtonProps) => {
     const { isValid, status } = purchasable;
 
     const { addItem } = useCartContext();
-    const buttonRef = useRef<Button>(null);
+    const buttonRef = useRef<React.ComponentRef<typeof Button>>(null);
 
     const handleAddToCart = () => {
         addItem(purchasable, { triggerRef: buttonRef });
