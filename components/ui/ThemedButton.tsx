@@ -1,6 +1,7 @@
-import { Button, styled } from 'tamagui'
+import React from 'react';
+import { Button, ButtonProps, styled } from 'tamagui';
 
-export const ThemedButton = styled(Button, {
+const StyledThemedButton = styled(Button, {
     name: 'ThemedButton',
     // Base style
     color: '$colorAccent',
@@ -60,4 +61,10 @@ export const ThemedButton = styled(Button, {
         opacity: .7,
         pointerEvents: 'none',
     },
-})
+});
+
+export const ThemedButton = React.forwardRef<React.ComponentRef<typeof Button>, ButtonProps>(
+    (props, ref) => {
+        return <StyledThemedButton {...props} ref={ref} />;
+    }
+);
