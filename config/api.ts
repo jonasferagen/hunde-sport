@@ -4,8 +4,10 @@ export type PaginationOptions = {
   page?: number;
   per_page?: number;
 }
+const DOMAIN = "hunde-sport.no";
+const BASE_URL = `https://${DOMAIN}`;
+export const API_BASE_URL = `${BASE_URL}/wp-json/wc/store/v1`;
 
-export const API_BASE_URL = 'https://hunde-sport.no/wp-json/wc/store/v1';
 
 const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
 const PRODUCTS_URL = `${API_BASE_URL}/products`;

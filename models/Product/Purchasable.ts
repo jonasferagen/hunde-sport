@@ -1,4 +1,4 @@
-import { Product, ProductImage, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
+import { Image, Product, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 
 export interface ValidationResult {
@@ -66,7 +66,7 @@ export interface Purchasable extends ValidationResult {
     full_title: string;
     short_description: string;
     description: string;
-    image: ProductImage;
+    image: Image;
     prices: ProductPrices;
     is_in_stock: boolean;
 }

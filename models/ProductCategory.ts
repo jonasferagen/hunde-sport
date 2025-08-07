@@ -1,4 +1,4 @@
-import { Image } from './Image';
+import { Image } from '@/models/Image';
 
 export interface ProductCategoryData {
   id: number;

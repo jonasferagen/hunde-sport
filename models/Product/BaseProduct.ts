@@ -1,14 +1,8 @@
 import { cleanHtml } from "@/utils/helpers";
+import { Image } from "../Image";
 import { ProductCategory } from "../ProductCategory";
 import { ProductAttribute } from "./ProductAttribute";
 import { ProductPrices } from "./ProductPrices";
-
-export interface ProductImage {
-    id: number;
-    src: string;
-    name: string;
-    alt: string;
-}
 
 // The raw representation of an attribute as it comes from the initial product API response.
 export type ApiVariationAttribute = {
@@ -28,7 +22,7 @@ export interface BaseProductData {
     permalink: string;
     description: string;
     short_description: string;
-    images: ProductImage[];
+    images: Image[];
     prices: ProductPrices;
     on_sale: boolean;
     featured: boolean;
@@ -50,7 +44,7 @@ export class BaseProduct<T extends BaseProductData> {
     permalink: string;
     description: string;
     short_description: string;
-    images: ProductImage[];
+    images: Image[];
     prices: ProductPrices;
     on_sale: boolean;
     featured: boolean;
@@ -71,7 +65,15 @@ export class BaseProduct<T extends BaseProductData> {
         this.permalink = data.permalink;
         this.description = cleanHtml(data.description || 'Ingen beskrivelse tilgjengelig');
         this.short_description = cleanHtml(data.short_description || 'Ingen beskrivelse tilgjengelig');
-        this.images = data.images;
+        this.images = (data.images && data.images.length > 0) ? data.images : [{
+            id: 0,
+            src: '',
+            name: '',
+            alt: '',
+            thumbnail: '',
+            srcset: '',
+            sizes: '',
+        }];
         this.prices = data.prices;
         this.on_sale = data.on_sale;
         this.featured = data.featured;
@@ -86,9 +88,8 @@ export class BaseProduct<T extends BaseProductData> {
         this.variation = data.variation;
     }
 
-    get featuredImage(): ProductImage {
+    get featuredImage(): Image {
+        console.log(this.images[0]);
         return this.images[0];
     }
-
-
 }

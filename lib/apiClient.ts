@@ -10,8 +10,7 @@ const apiClient = create({
 // Log outgoing requests
 apiClient.addRequestTransform(request => {
     const { method, url } = request;
-    log.info(method?.toUpperCase(), url?.substring(API_BASE_URL.length));
-
+    //    log.info(method?.toUpperCase(), url?.substring(API_BASE_URL.length));
 });
 
 // Log responses

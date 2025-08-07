@@ -39,8 +39,6 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
 
     useEffect(() => {
         if (!isLoading && variations.length) {
-            console.log("Setting product variations", variations.length);
-
             setProductVariations(variations);
             setSelectedProductVariation(undefined);
         }
