@@ -89,7 +89,6 @@ export class BaseProduct<T extends BaseProductData> {
     }
 
     get featuredImage(): Image {
-        console.log(this.images[0]);
         return this.images[0];
     }
 }

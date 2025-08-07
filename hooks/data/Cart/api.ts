@@ -17,6 +17,9 @@ const handleResponse = (
         throw new Error(`No data returned from ${context}`);
     }
 
+    console.log(response.headers);
+
+
     const token = response.headers?.['cart-token'] as string | undefined;
 
     if (!token) {

@@ -43,9 +43,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             throw new Error(validatedPurchasable.message);
         }
 
-        if (validatedPurchasable.productVariation) {
-            console.log(validatedPurchasable.productVariation);
-        }
 
         const { product, productVariation } = validatedPurchasable;
 

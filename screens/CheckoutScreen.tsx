@@ -1,85 +1,85 @@
 import { PageHeader, PageView } from '@/components/layout';
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { log } from '@/services/Logger';
 import { useCartStore } from '@/stores/CartStore';
-import CookieManager from '@react-native-cookies/cookies';
 import { ChevronLeft } from '@tamagui/lucide-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { YStack } from 'tamagui';
+import { LoadingScreen } from './misc/LoadingScreen';
 
-const COOKIE_DOMAIN = "hunde-sport.no";
-const COOKIE_NAME = "cart_token";
-const BASE_URL = "https://hunde-sport.no";
-const CHECKOUT_URL = `${BASE_URL}/kassen/`;
+const storeUrl = 'https://hunde-sport.no';
+
+const createRestoreToken = async (jwtToken: string) => {
+    try {
+        const response = await fetch(`${storeUrl}/wp-json/custom/v1/cart-restore-token`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                jwt_token: jwtToken,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            const checkoutUrl = `${storeUrl}/kassen?restore_token=${result.restore_token}`;
+            return checkoutUrl;
+        } else {
+            throw new Error(result.message || 'Failed to create restore token');
+        }
+    } catch (error) {
+        console.error('Error creating restore token:', error);
+        throw error;
+    }
+};
 
 export const CheckoutScreen = () => {
     const router = useRouter();
     const { cartToken } = useCartStore();
-    const [isReady, setIsReady] = useState(false);
+    const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const prepareCheckout = async () => {
-            if (cartToken) {
-                try {
-                    log.info('CheckoutScreen: Setting cartToken cookie...');
-                    await CookieManager.set(BASE_URL, {
-                        name: COOKIE_NAME,
-                        value: cartToken,
-                        domain: COOKIE_DOMAIN,
-                        path: '/',
-                        version: '1',
-                        secure: true,
-                        httpOnly: false,
-                    });
+        if (!cartToken) {
+            log.warn('CheckoutScreen: No cartToken found, redirecting back.');
+            router.back();
+            return;
+        }
 
-                    log.info('CheckoutScreen: Cookie set successfully.');
-
-                    const cookies = await CookieManager.get(BASE_URL);
-                    log.info('CheckoutScreen: Cookies:', cookies['cart_token']);
-
-
-                } catch (error) {
-                    log.error('CheckoutScreen: Failed to set cookie', error);
-                } finally {
-                    setIsReady(true);
-                }
-            } else {
-                log.warn('CheckoutScreen: No cartToken found, redirecting back.');
-                router.back();
+        const getCheckoutUrl = async () => {
+            try {
+                log.info('CheckoutScreen: Creating restore token...');
+                const url = await createRestoreToken(cartToken);
+                log.info('CheckoutScreen: Restore token created. Loading URL:', url);
+                setCheckoutUrl(url);
+            } catch (e: any) {
+                log.error('CheckoutScreen: Failed to get checkout URL', e);
+                setError(e.message || 'An unknown error occurred.');
             }
         };
 
-        prepareCheckout();
+        getCheckoutUrl();
     }, [cartToken, router]);
 
-    if (!isReady) {
+    if (error || !checkoutUrl) {
         return (
             <PageView>
                 <PageHeader
                     title="Kasse"
                     leftAction={{ icon: ChevronLeft, onPress: () => router.back() }}
                 />
-                <YStack f={1} ai="center" jc="center">
-                    <ActivityIndicator size="large" />
-                </YStack>
+                <LoadingScreen message={error ? `Error: ${error}` : 'Forbereder kassen...'} />
             </PageView>
         );
     }
 
-    log.info('CheckoutScreen: Ready to render WebView.');
-
     return (
         <PageView>
-            <PageHeader
-                title="Kasse"
-                leftAction={{ icon: ChevronLeft, onPress: () => router.back() }}
-            />
+            <PageHeader title="Kasse" />
             <WebView
-                source={{ uri: CHECKOUT_URL }}
-                sharedCookiesEnabled
+                source={{ uri: checkoutUrl }}
                 startInLoadingState={true}
                 onLoad={(syntheticEvent) => {
                     const { nativeEvent } = syntheticEvent;
@@ -96,11 +96,7 @@ export const CheckoutScreen = () => {
                 onNavigationStateChange={(navState: WebViewNavigation) => {
                     log.info('WebView onNavigationStateChange:', navState);
                 }}
-                renderLoading={() => (
-                    <YStack f={1} ai="center" jc="center" pos="absolute" t={0} l={0} r={0} b={0}>
-                        <ThemedSpinner />
-                    </YStack>
-                )}
+                renderLoading={() => <LoadingScreen />}
             />
         </PageView>
     );
