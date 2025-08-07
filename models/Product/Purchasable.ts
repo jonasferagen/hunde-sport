@@ -4,6 +4,7 @@ import { ProductPrices } from './ProductPrices';
 export interface ValidationResult {
     isValid: boolean;
     reason?: 'VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT';
+    status?: 'ACTION_NEEDED' | 'INVALID' | 'OK'
     message: string;
 }
 
@@ -14,7 +15,12 @@ export interface ValidationResult {
  */
 const validate = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): ValidationResult => {
     if (!product) {
-        return { isValid: false, reason: 'INVALID_PRODUCT', message: 'Produkt utilgjengelig' };
+        return {
+            isValid: false,
+            status: 'INVALID',
+            reason: 'INVALID_PRODUCT',
+            message: 'Produkt utilgjengelig'
+        };
     }
 
     if (product instanceof SimpleProduct && productVariation) {
@@ -23,18 +29,32 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
 
     // Rule 1: Variable products must have a variation selected.
     if (product instanceof VariableProduct && !productVariation) {
-        return { isValid: false, reason: 'VARIATION_REQUIRED', message: 'Vennligst velg en variant' };
+        return {
+            isValid: false,
+            status: 'ACTION_NEEDED',
+            reason: 'VARIATION_REQUIRED',
+            message: 'Vennligst velg en variant'
+        };
     }
 
     const productToCheck = productVariation || product;
 
     // Rule 2: The product must be in stock.
     if (!productToCheck.is_in_stock) {
-        return { isValid: false, reason: 'OUT_OF_STOCK', message: 'Utsolgt' };
+        return {
+            isValid: false,
+            status: 'INVALID',
+            reason: 'OUT_OF_STOCK',
+            message: 'Utsolgt'
+        };
     }
 
     // All checks passed.
-    return { isValid: true, message: 'Legg til i handlekurv' };
+    return {
+        isValid: true,
+        status: 'OK',
+        message: 'Legg til i handlekurv'
+    };
 };
 
 
