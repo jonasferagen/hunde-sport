@@ -70,7 +70,7 @@ const initialState: CartState = {
  * @param apiCall - The specific API function to execute for the cart operation.
  * @returns A promise that resolves when the action is complete.
  */
-const _handleCartAction = async (
+const handleCartAction = async (
     actionName: 'addItem' | 'updateItem' | 'removeItem',
     get: () => CartState,
     set: (partial: Partial<CartState>) => void,
@@ -125,7 +125,7 @@ export const useCartStore = create<CartState & CartActions>()(
             ...initialState,
             addItem: async (options: AddItemOptions) => {
                 const { cart } = get();
-                await _handleCartAction(
+                await handleCartAction(
                     'addItem',
                     get,
                     set,
@@ -138,7 +138,7 @@ export const useCartStore = create<CartState & CartActions>()(
 
                 const { cart } = get();
 
-                await _handleCartAction(
+                await handleCartAction(
                     'updateItem',
                     get,
                     set,
@@ -154,7 +154,7 @@ export const useCartStore = create<CartState & CartActions>()(
 
             removeItem: async (key: string) => {
                 const { cart } = get();
-                await _handleCartAction(
+                await handleCartAction(
                     'removeItem',
                     get,
                     set,

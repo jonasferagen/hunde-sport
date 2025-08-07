@@ -1,5 +1,6 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
 import { Purchasable } from '@/models/Product/Purchasable';
+import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { AddItemOptions, useCartStore } from '@/stores/CartStore';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
@@ -31,15 +32,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } = useCartStore();
 
 
-    const getItem = (key: string) => cart!.items.find((i) => i.key === key);
+    const getItem = (key: string) => cart ? cart.items.find((i) => i.key === key) : undefined;
 
-    const addItem = async (validatedPurchasable: Purchasable, options: CartInteractionOptions = {}) => {
-        if (!validatedPurchasable.isValid) {
-            throw new Error(validatedPurchasable.message);
+    const addItem = async (purchasable: Purchasable, options: CartInteractionOptions = {}) => {
+        if (!purchasable.isValid) {
+            throw new Error(purchasable.message);
         }
 
-
-        const { product, productVariation } = validatedPurchasable;
+        const { product, productVariation } = purchasable;
 
         const parsedVariation = productVariation?.getParsedVariation() || [];
         const variation = parsedVariation.map(attr => ({ attribute: attr.name, value: attr.value }));
@@ -79,8 +79,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
+    if (cart === null) {
+        return <LoadingScreen />;
+    }
+
     const value = useMemo(() => ({
-        cart: cart!,
+        cart,
         isUpdating,
         addItem,
         updateItem,
@@ -88,11 +92,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         getItem,
     }), [cart, isUpdating]);
 
-    return (
-        <CartContext.Provider value={value}>
-            {children}
-        </CartContext.Provider>
-    );
+    return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 };
 
 export const useCartContext = () => {

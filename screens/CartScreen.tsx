@@ -12,14 +12,13 @@ import React from 'react';
 import { YStack } from 'tamagui';
 
 export const CartScreen = () => {
-    const { cart } = useCartContext();
+    const { cart, isUpdating } = useCartContext();
     const { cartToken } = useCartStore();
     const router = useRouter();
 
+
     const handleCheckout = () => {
-        if (cartToken) {
-            router.push('/checkout'); // Navigate to the new WebView screen
-        }
+        router.push('/checkout'); // Navigate to the new WebView screen
     };
 
     return <PageView>
