@@ -15,7 +15,6 @@ export const AttributeOption = ({ option, selectOption, isSelected, item }: Attr
 
     const { isAvailable, isPurchasable, inStock, maxPrices, minPrices } = item;
 
-    const stockStatus = inStock ? null : <SizableText fontSize="$2" fontWeight="bold" color={'red'}>⬤ Utsolgt</SizableText>
     const disabled = !isAvailable;
     const minPrice = minPrices?.price ?? null;
     const maxPrice = maxPrices?.price ?? null;
@@ -33,19 +32,20 @@ export const AttributeOption = ({ option, selectOption, isSelected, item }: Attr
             jc="space-between"
             p="$3"
             bw={2}
+            gap="$1"
             br="$3"
             boc="$borderColor"
             bg="$background"
-            opacity={disabled ? 0.7 : 1}
+            opacity={disabled ? 0.5 : 1}
         >
-            <SizableText f={1} fow={isSelected ? "bold" : "normal"} col="$color" tt="capitalize" >
+            {isAvailable && <SizableText fontSize="$1" fontWeight="bold" color={inStock ? "green" : "red"}>⬤</SizableText>}
+            <SizableText f={1} fow={isSelected ? "bold" : "normal"} col="$color" tt="capitalize" textDecorationLine={disabled ? "line-through" : "none"}>
                 {option}
             </SizableText>
-            {stockStatus}
-            {minPrice && <SizableText f={0} fow={isSelected ? "bold" : "normal"} col="$color">
-                {minPrice === maxPrice ? formatPrice(minPrice) : `Fra ${formatPrice(minPrice)}`}
+            <SizableText f={0} fow={isSelected ? "bold" : "normal"} col="$color" textDecorationLine={!inStock ? "line-through" : "none"}>
+                {minPrice ? minPrice === maxPrice ? formatPrice(minPrice) : `Fra ${formatPrice(minPrice)}` : null}
             </SizableText>
-            }
+
         </XStack>
 
     </Pressable>
