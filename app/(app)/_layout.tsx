@@ -23,7 +23,6 @@ const AppLayout = (): React.ReactElement => {
     return (
         <ProductCategoryProvider>
             <CartProvider>
-
                 <Drawer drawerContent={drawerContent} screenOptions={screenOptions}>
                     {Object.values(routes).map((route) => (
                         <Drawer.Screen
@@ -36,7 +35,6 @@ const AppLayout = (): React.ReactElement => {
                         />
                     ))}
                 </Drawer>
-
             </CartProvider>
         </ProductCategoryProvider>
     );

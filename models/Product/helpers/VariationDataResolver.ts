@@ -50,9 +50,15 @@ export class VariationDataResolver {
      * @returns True if the variation matches the selections.
      */
     public variationMatchesAttributes(variation: ProductVariation, selections: Record<string, string>): boolean {
-        const attributes = this.getAttributesForVariation(variation.id);
+        const attributes = variation.getParsedVariation();
+        const parentAttributes = this.product.attributes;
+
         return Object.entries(selections).every(([taxonomy, slug]) => {
-            return attributes.some((attr) => attr.name === taxonomy && attr.value === slug);
+            const parentAttribute = parentAttributes.find(pa => pa.taxonomy === taxonomy);
+            if (!parentAttribute) {
+                return false;
+            }
+            return attributes.some(attr => attr.attribute === parentAttribute.name && attr.value === slug);
         });
     }
 

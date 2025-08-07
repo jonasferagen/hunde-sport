@@ -30,9 +30,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         removeItem: storeRemoveItem,
     } = useCartStore();
 
-
+    // Safeguard against race conditions during hot reloads in development.
+    // If the cart is not yet initialized, we'll wait before rendering the children.
     if (!cart) {
-        throw new Error('CartProvider mounted before cart was initialized.');
+        return null;
     }
 
     const getItem = (key: string) => cart.items.find((i) => i.key === key);
@@ -42,10 +43,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             throw new Error(validatedPurchasable.message);
         }
 
+        if (validatedPurchasable.productVariation) {
+            console.log(validatedPurchasable.productVariation);
+        }
+
         const { product, productVariation } = validatedPurchasable;
-        const variation = !productVariation
-            ? []
-            : productVariation.variation_attributes.map((attribute: any) => ({ attribute: attribute.name, value: attribute.value }));
+
+        const variation = productVariation?.getParsedVariation() || [];
 
         const addItemOptions: AddItemOptions = {
             id: product.id,

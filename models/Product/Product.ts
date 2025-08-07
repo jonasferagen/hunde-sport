@@ -4,6 +4,7 @@ import { ProductAttribute } from './ProductAttribute';
 export type Product = SimpleProduct | VariableProduct | ProductVariation;
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 
+
 /**
  * Factory function to create a product instance from raw data.
  * This ensures that we are working with class instances with methods,
@@ -30,6 +31,7 @@ export const mapToProduct = (data: any) => {
         categories: data.categories || [],
         attributes: data.attributes || [],
         variations: data.variations || [],
+        variation: data.variation || '',
         type: data.type,
     };
 
@@ -53,6 +55,26 @@ export class ProductVariation extends BaseProduct<BaseProductData> {
             throw new Error('Cannot construct ProductVariation with type other than "variation".');
         }
         super(data);
+    }
+
+    getParsedVariation(): { attribute: string; value: string }[] {
+        if (!this.variation) {
+            return [];
+        }
+
+        return this.variation
+            .split(',')
+            .map((pair) => {
+                const [attribute, value] = pair.split(':');
+                if (!attribute || !value) {
+                    return null;
+                }
+                return {
+                    attribute: attribute.trim(),
+                    value: value.trim(),
+                };
+            })
+            .filter((v): v is { attribute: string; value: string } => v !== null);
     }
 }
 

@@ -40,6 +40,7 @@ export interface BaseProductData {
     type: 'simple' | 'variable' | 'variation';
     attributes: ProductAttribute[];
     variations: VariationReference[];
+    variation: string;
 }
 
 export class BaseProduct<T extends BaseProductData> {
@@ -61,6 +62,7 @@ export class BaseProduct<T extends BaseProductData> {
     type: 'simple' | 'variable' | 'variation';
     attributes: ProductAttribute[];
     variations: VariationReference[];
+    variation: string;
 
     constructor(data: T) {
         this.id = data.id;
@@ -81,6 +83,7 @@ export class BaseProduct<T extends BaseProductData> {
         this.type = data.type;
         this.attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
         this.variations = data.variations || [];
+        this.variation = data.variation;
     }
 
     get featuredImage(): ProductImage {
