@@ -1,20 +1,19 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { useCartContext, useProductContext } from '@/contexts';
-import { ShoppingBasket } from '@tamagui/lucide-icons';
+import { formatPrice } from '@/utils/helpers';
+import { ArrowBigRightDash, ShoppingBasket } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
-import { ButtonProps } from 'tamagui';
+import { ButtonProps, SizableText, Theme, XStack } from 'tamagui';
 
 
 
 export const PurchaseButton = (props: ButtonProps) => {
     const { validatedPurchasable } = useProductContext();
-    const { displayProduct } = validatedPurchasable;
+    const { title, price, isValid, message } = validatedPurchasable;
 
     const { addItem } = useCartContext();
     const buttonRef = useRef(null);
-
-    const { isValid, message } = validatedPurchasable;
 
 
     const handleAddToCart = () => {
@@ -23,23 +22,35 @@ export const PurchaseButton = (props: ButtonProps) => {
 
 
     return (
-        <ThemedButton
-            theme="secondary_alt2"
-            f={1}
-            onPress={handleAddToCart}
-            ref={buttonRef}
-            disabled={!isValid}
-            jc="space-between"
-            variant="accent"
-            scaleIcon={1.5}
-            icon={isValid ? <ShoppingBasket /> : null}
-            fontWeight="bold"
-            fontSize="$4"
-            {...props}
-        >
-            <ThemedLinearGradient theme="secondary_alt1" br="$3" zIndex={-1} />
-            {message}
-        </ThemedButton >
+        <Theme name="dark_green_alt2">
+            <ThemedButton
+
+                f={1}
+                onPress={handleAddToCart}
+                ref={buttonRef}
+                disabled={!isValid}
+                ai="center"
+                jc="space-between"
+                variant="accent"
+                fontWeight="bold"
+                fontSize="$4"
+                {...props}
+            >
+                <ThemedLinearGradient br="$3" zIndex={-1} />
+                {isValid ?
+                    <XStack ai="center" gap="$2">
+                        <XStack f={1} jc="space-between">
+                            <SizableText fos="$4">{title}</SizableText>
+                            <SizableText fos="$4">{formatPrice(price)}</SizableText>
+                        </XStack>
+                        <XStack ai="center">
+                            <ArrowBigRightDash />
+                            <ShoppingBasket />
+                        </XStack>
+                    </XStack>
+                    : message}
+            </ThemedButton >
+        </Theme>
 
     );
 };

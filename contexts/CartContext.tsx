@@ -1,6 +1,6 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
+import { Purchasable } from '@/models/Product/Purchasable';
 import { AddItemOptions, useCartStore } from '@/stores/CartStore';
-import { ValidatedPurchasable } from '@/utils/purchasableUtils';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
 
@@ -12,7 +12,7 @@ interface CartInteractionOptions {
 interface CartContextType {
     cart: CartData;
     isUpdating: boolean;
-    addItem: (validatedPurchasable: ValidatedPurchasable, options?: CartInteractionOptions) => void;
+    addItem: (validatedPurchasable: Purchasable, options?: CartInteractionOptions) => void;
     updateItem: (key: string, quantity: number) => void;
     removeItem: (key: string, options?: CartInteractionOptions) => void;
     getItem: (key: string) => CartItemData | undefined;
@@ -38,7 +38,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const getItem = (key: string) => cart.items.find((i) => i.key === key);
 
-    const addItem = async (validatedPurchasable: ValidatedPurchasable, options: CartInteractionOptions = {}) => {
+    const addItem = async (validatedPurchasable: Purchasable, options: CartInteractionOptions = {}) => {
         if (!validatedPurchasable.isValid) {
             throw new Error(validatedPurchasable.message);
         }

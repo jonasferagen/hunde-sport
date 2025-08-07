@@ -1,4 +1,4 @@
-import { Product, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
+import { Product, ProductPrices, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
 
 export interface ValidationResult {
     isValid: boolean;
@@ -11,13 +11,13 @@ export interface ValidationResult {
  * @param purchasable The item to validate.
  * @returns A ValidationResult object.
  */
-const validatePurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): ValidationResult => {
+const validate = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): ValidationResult => {
     if (!product) {
         return { isValid: false, reason: 'INVALID_PRODUCT', message: 'Produkt utilgjengelig' };
     }
 
     if (product instanceof SimpleProduct && productVariation) {
-        throw new Error('Simple product cannot have a product variation');
+        throw new Error('SimpleProduct cannot have a product variation');
     }
 
     // Rule 1: Variable products must have a variation selected.
@@ -37,23 +37,31 @@ const validatePurchasable = ({ product, productVariation }: { product: Purchasab
 };
 
 
-export interface ValidatedPurchasable extends ValidationResult {
+export interface Purchasable extends ValidationResult {
     product: SimpleProduct | VariableProduct;
     productVariation?: ProductVariation;
     displayProduct: Product;
+    title: string;
+    image: string;
+    price: ProductPrices;
 }
 
-export const createValidatedPurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): ValidatedPurchasable => {
+export const createPurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): Purchasable => {
 
-
-    const validationResult = validatePurchasable({ product, productVariation });
-
+    const validationResult = validate({ product, productVariation });
     const displayProduct = productVariation || product;
+
+    const image = displayProduct.featuredImage?.src || '';
+    const price = displayProduct.prices.price;
+    const title = productVariation ? productVariation.variation : displayProduct.name;
 
     return {
         product,
         productVariation: productVariation,
         displayProduct,
+        image,
+        price,
+        title,
         ...validationResult,
     };
 };

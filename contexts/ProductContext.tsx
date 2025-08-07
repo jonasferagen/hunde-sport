@@ -1,7 +1,6 @@
 import { useProductVariations } from '@/hooks/data/Product';
-import { PurchasableProduct } from '@/models/Product/Product';
-import { ProductVariation } from '@/models/Product/ProductVariation';
-import { createValidatedPurchasable, ValidatedPurchasable } from '@/utils/purchasableUtils';
+import { ProductVariation, PurchasableProduct } from '@/models/Product/Product';
+import { createPurchasable, Purchasable } from '@/models/Product/Purchasable';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 /**
@@ -9,7 +8,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
  */
 export interface ProductContextType {
     product: PurchasableProduct;
-    validatedPurchasable: ValidatedPurchasable;
+    validatedPurchasable: Purchasable;
     isLoading: boolean;
     selectedProductVariation: ProductVariation | undefined;
     setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
@@ -48,7 +47,7 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     }, [product, isLoading, variations]);
 
     const value = useMemo(() => {
-        const validatedPurchasable = createValidatedPurchasable({ product, productVariation: selectedProductVariation });
+        const validatedPurchasable = createPurchasable({ product, productVariation: selectedProductVariation });
 
         return {
             product,
