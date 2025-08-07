@@ -30,13 +30,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         removeItem: storeRemoveItem,
     } = useCartStore();
 
-    // Safeguard against race conditions during hot reloads in development.
-    // If the cart is not yet initialized, we'll wait before rendering the children.
-    if (!cart) {
-        return null;
-    }
 
-    const getItem = (key: string) => cart.items.find((i) => i.key === key);
+    const getItem = (key: string) => cart!.items.find((i) => i.key === key);
 
     const addItem = async (validatedPurchasable: Purchasable, options: CartInteractionOptions = {}) => {
         if (!validatedPurchasable.isValid) {
@@ -85,7 +80,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const value = useMemo(() => ({
-        cart,
+        cart: cart!,
         isUpdating,
         addItem,
         updateItem,

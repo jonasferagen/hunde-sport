@@ -138,38 +138,31 @@ export const useCartStore = create<CartState & CartActions>()(
 
                 const { cart } = get();
 
-                const optimisticCart = {
-                    ...cart!,
-                    items: cart!.items.map((item) =>
-                        item.key === key ? { ...item, quantity } : item
-                    ),
-                };
-
                 await _handleCartAction(
                     'updateItem',
                     get,
                     set,
                     (cartToken) => apiUpdateItem(cartToken, { key, quantity }),
-                    optimisticCart
+                    {
+                        ...cart!,
+                        items: cart!.items.map((item) =>
+                            item.key === key ? { ...item, quantity } : item
+                        ),
+                    }
                 );
             },
 
             removeItem: async (key: string) => {
-
                 const { cart } = get();
-
-                const optimisticCart = {
-                    ...cart!,
-                    items: cart!.items.filter((item) => item.key !== key),
-                };
-                set({ cart: optimisticCart });
-
                 await _handleCartAction(
                     'removeItem',
                     get,
                     set,
                     (cartToken) => apiRemoveItem(cartToken, { key }),
-                    optimisticCart
+                    {
+                        ...cart!,
+                        items: cart!.items.filter((item) => item.key !== key),
+                    }
                 );
             }, initializeCart: async () => {
                 if (get().isInitialized) return;
