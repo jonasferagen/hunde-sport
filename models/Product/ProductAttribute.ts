@@ -7,7 +7,7 @@ export interface ProductAttributeData {
 }
 
 export interface AttributeTermDetails extends ProductAttributeTerm {
-  isAvailable: boolean;
+  isPurchasable: boolean;
   displayPrice: string;
   inStock: boolean;
 }

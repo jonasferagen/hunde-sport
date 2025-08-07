@@ -14,7 +14,7 @@ interface VariationSelectorProps {
     stackProps?: StackProps;
 }
 
-const VariationSelector = ({ product, productVariations, onProductVariationSelected: onVariationSelected, stackProps }: VariationSelectorProps): JSX.Element => {
+const VariationSelector = ({ product, productVariations, onProductVariationSelected: onVariationSelected, stackProps }: VariationSelectorProps): JSX.Element | null => {
     const { attributes, selectionManager, handleSelectOption } = useProductVariationSelector({
         product,
         productVariations,
@@ -22,7 +22,7 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
     });
 
     if (attributes.length === 0) {
-        return <></>;
+        return null;
     }
 
     return (
@@ -43,16 +43,15 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
                     </YStack>
                 );
             })}
-
         </XStack>
     );
 };
 
-export const ProductVariations = (stackProps: StackProps): JSX.Element => {
+export const ProductVariations = (stackProps: StackProps): JSX.Element | null => {
     const { isLoading, product: initialProduct, setSelectedProductVariation, productVariations } = useProductContext();
 
     if (!(initialProduct instanceof VariableProduct)) {
-        return <></>;
+        return null;
     }
     const product = initialProduct as VariableProduct;
     if (isLoading) {

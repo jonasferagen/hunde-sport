@@ -27,9 +27,7 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
                         option={item.name}
                         selectOption={handlePress}
                         isSelected={isSelected}
-                        isAvailable={item.isAvailable}
-                        price={item.displayPrice}
-                        inStock={item.inStock}
+                        item={item}
                     />
                 );
             })}

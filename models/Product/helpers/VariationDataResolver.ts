@@ -50,7 +50,7 @@ export class VariationDataResolver {
 
         return {
             ...term,
-            isAvailable: variation.is_in_stock,
+            isPurchasable: variation.is_purchasable,
             displayPrice: variation.prices.price,
             inStock: variation.is_in_stock,
         };

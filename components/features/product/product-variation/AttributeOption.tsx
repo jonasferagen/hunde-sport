@@ -1,3 +1,4 @@
+import { AttributeTermDetails } from '@/types';
 import { formatPrice } from '@/utils/helpers';
 import React from 'react';
 import { Pressable } from 'react-native';
@@ -7,15 +8,15 @@ interface AttributeOptionProps {
     option: string;
     selectOption: () => void;
     isSelected: boolean;
-    isAvailable: boolean;
-    price: string,
-    inStock: boolean
+    item: AttributeTermDetails;
 }
 
-export const AttributeOption = ({ option, price, selectOption, isSelected, isAvailable, inStock }: AttributeOptionProps) => {
+export const AttributeOption = ({ option, selectOption, isSelected, item }: AttributeOptionProps) => {
+
+    const { isPurchasable, inStock, displayPrice } = item;
 
     const stockStatus = inStock ? null : <SizableText fontSize="$2" fontWeight="bold" color={'red'}>⬤ Utsolgt</SizableText>
-    const disabled = !isAvailable || !inStock;
+    const disabled = !isPurchasable || !inStock;
 
     return <Pressable
         onPress={() => selectOption()}
@@ -39,7 +40,7 @@ export const AttributeOption = ({ option, price, selectOption, isSelected, isAva
             </SizableText>
             {stockStatus}
             <SizableText f={0} fow={isSelected ? "bold" : "normal"} col="$color">
-                {formatPrice(price)}
+                {formatPrice(displayPrice)}
             </SizableText>
         </XStack>
 
