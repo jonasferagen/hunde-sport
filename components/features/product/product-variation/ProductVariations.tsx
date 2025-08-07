@@ -14,15 +14,24 @@ interface VariationSelectorProps {
     stackProps?: StackProps;
 }
 
-const VariationSelector = ({ product, productVariations, onProductVariationSelected: onVariationSelected, stackProps }: VariationSelectorProps): JSX.Element | null => {
-    const { attributes, selectionManager, handleSelectOption, unavailableOptions } = useProductVariationSelector({
+const VariationSelector = ({ product,
+    productVariations,
+    onProductVariationSelected:
+    onVariationSelected,
+    stackProps }: VariationSelectorProps): JSX.Element => {
+    const {
+        attributes,
+        selectionManager,
+        handleSelectOption,
+        unavailableOptions
+    } = useProductVariationSelector({
         product,
         productVariations,
         onProductVariationSelected: onVariationSelected,
     });
 
     if (attributes.length === 0) {
-        return null;
+        return <></>;
     }
 
 
@@ -32,7 +41,7 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
 
-                const filteredOptions = options.filter((option) => !unavailableOptions[name].includes(option.name));
+                const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
                 const selectedValue = selectionManager.getSelectedOption(name);
                 if (filteredOptions.length === 0) return null;
 
@@ -51,11 +60,11 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
     );
 };
 
-export const ProductVariations = (stackProps: StackProps): JSX.Element | null => {
+export const ProductVariations = (stackProps: StackProps): JSX.Element => {
     const { isLoading, product: initialProduct, setSelectedProductVariation, productVariations } = useProductContext();
 
     if (!(initialProduct instanceof VariableProduct)) {
-        return null;
+        return <></>;
     }
     const product = initialProduct as VariableProduct;
     if (isLoading) {

@@ -4,13 +4,23 @@ import { PageContent, PageHeader, PageSection, PageView } from '@/components/lay
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useCartContext } from '@/contexts/CartContext';
+import { useCartStore } from '@/stores/CartStore';
 import { FlashList } from '@shopify/flash-list';
 import { ExternalLink } from '@tamagui/lucide-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { YStack } from 'tamagui';
 
 export const CartScreen = () => {
     const { cart } = useCartContext();
+    const { cartToken } = useCartStore();
+    const router = useRouter();
+
+    const handleCheckout = () => {
+        if (cartToken) {
+            router.push('/checkout'); // Navigate to the new WebView screen
+        }
+    };
 
     return <PageView>
         <PageHeader theme="secondary_soft">
@@ -31,7 +41,8 @@ export const CartScreen = () => {
         <PageContent>
             <YStack theme="primary">
                 <ThemedButton
-                    disabled={false}
+                    onPress={handleCheckout}
+                    disabled={!cart.items.length || !cartToken}
                     jc="space-between"
                     variant="accent"
                     scaleIcon={1.5}

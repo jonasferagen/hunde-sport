@@ -1,10 +1,12 @@
+import { BottomBar } from '@/components/menu/BottomBar';
 import { CustomDrawerContent } from '@/components/menu/CustomDrawerContent';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
 import { CartProvider, ProductCategoryProvider } from '@/contexts';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
-import React from 'react';
+import React, { JSX } from 'react';
+import { YStack } from 'tamagui';
 
 const AppLayout = (): React.ReactElement => {
     const drawerContent = React.useCallback(
@@ -41,3 +43,10 @@ const AppLayout = (): React.ReactElement => {
 };
 
 export default AppLayout;
+
+
+export const ScreenWrapper = (children: React.ReactNode): JSX.Element =>
+    <YStack f={1}>
+        {children}
+        <BottomBar />
+    </YStack>

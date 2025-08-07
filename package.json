@@ -67,7 +67,8 @@
     "tamagui": "^1.132.15",
     "tinycolor2": "^1.6.0",
     "tslib": "^2.8.1",
-    "zustand": "^5.0.7"
+    "zustand": "^5.0.7",
+    "react-native-webview": "13.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
