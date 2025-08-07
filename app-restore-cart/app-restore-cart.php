@@ -18,23 +18,16 @@ add_action('rest_api_init', function () {
         'methods' => 'POST',
         'callback' => 'create_cart_restore_token_rest',
         'permission_callback' => '__return_true', // Allow public access
-        'args' => array(
-            'jwt_token' => array(
-                'required' => true,
-                'type' => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ),
-        ),
     ));
 });
 
 function create_cart_restore_token_rest(WP_REST_Request $request) {
-    $jwt_token = $request->get_param('jwt_token');
+    $jwt_token = $request->get_header('cart-token');
     
     // Make an internal API call using the JWT to get cart contents
     $response = wp_remote_get(home_url('/wp-json/wc/store/v1/cart'), [
         'headers' => [
-            'Cart-Token' => $jwt_token
+            'cart-token' => $jwt_token
         ]
     ]);
     
