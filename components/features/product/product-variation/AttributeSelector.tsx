@@ -15,8 +15,6 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
         <XStack f={1} gap="$2" flexWrap="wrap">
             {options.map((item) => {
 
-                console.log(item);
-
                 const isSelected = selectedValue === item.name;
 
                 const handlePress = () => {
@@ -25,7 +23,7 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
 
                 return (
                     <AttributeOption
-                        key={item.slug}
+                        key={item.name}
                         option={item.name}
                         selectOption={handlePress}
                         isSelected={isSelected}

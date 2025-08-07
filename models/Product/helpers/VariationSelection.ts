@@ -13,11 +13,11 @@ export class VariationSelection {
         return new VariationSelection(product, variations || [], {});
     }
 
-    select(attributeName: string, slug: string | null): VariationSelection {
+    select(attributeName: string, name: string | null): VariationSelection {
         const newSelections = { ...this.selections };
-        const key = attributeName.toLowerCase();
-        if (slug) {
-            newSelections[key] = slug;
+        const key = attributeName;
+        if (name) {
+            newSelections[key] = name;
         } else {
             delete newSelections[key];
         }
@@ -26,7 +26,7 @@ export class VariationSelection {
 
     getAvailableOptions(attributeName: string): AttributeTermDetails[] {
         const parentAttribute = this.product.attributes.find(
-            (attr) => attr.name.toLowerCase() === attributeName.toLowerCase()
+            (attr) => attr.name === attributeName
         );
 
         if (!parentAttribute) {
@@ -34,13 +34,13 @@ export class VariationSelection {
         }
 
         const selectionsForOthers = { ...this.selections };
-        delete selectionsForOthers[attributeName.toLowerCase()];
+        delete selectionsForOthers[attributeName];
 
         return parentAttribute.terms.map((term) => {
 
             const potentialSelection = {
                 ...selectionsForOthers,
-                [attributeName.toLowerCase()]: term.name,
+                [attributeName]: term.name,
             };
 
             const firstMatchingVariation = this.variations.find((v) =>
@@ -59,7 +59,7 @@ export class VariationSelection {
     }
 
     getSelectedOption(attributeName: string): string | null {
-        return this.selections[attributeName.toLowerCase()] || null;
+        return this.selections[attributeName] || null;
     }
 
     getSelectedVariation(): ProductVariation | undefined {
@@ -76,7 +76,7 @@ export class VariationSelection {
         const attributeNames = new Set<string>();
         this.variations.forEach(v => {
             v.getParsedVariation().forEach(attr => {
-                attributeNames.add(attr.name.toLowerCase());
+                attributeNames.add(attr.name);
             });
         });
         return attributeNames.size;

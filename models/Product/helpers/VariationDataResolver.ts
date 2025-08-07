@@ -14,8 +14,12 @@ export class VariationDataResolver {
     public static variationMatchesAttributes(variation: ProductVariation, selections: Record<string, string>): boolean {
         const attributes = variation.getParsedVariation();
 
-        return Object.entries(selections).every(([name, slug]) => {
-            return attributes.some(attr => attr.name.toLowerCase() === name.toLowerCase() && attr.value === slug);
+        return Object.entries(selections).every(([name, value]) => {
+            return attributes.some(
+                (attr) =>
+                    attr.name === name &&
+                    attr.value === value
+            );
         });
     }
 
@@ -32,13 +36,13 @@ export class VariationDataResolver {
         parentAttributes: ProductAttribute[]
     ): AttributeTermDetails | undefined {
         const attributes = variation.getParsedVariation();
-        const variationOption = attributes.find(attr => attr.name.toLowerCase() === attributeName.toLowerCase());
+        const variationOption = attributes.find(attr => attr.name === attributeName);
         if (!variationOption) {
             return undefined;
         }
 
-        const parentAttribute = parentAttributes.find(attr => attr.name.toLowerCase() === attributeName.toLowerCase());
-        const term = parentAttribute?.terms.find(term => term.slug === variationOption.value);
+        const parentAttribute = parentAttributes.find(attr => attr.name === attributeName);
+        const term = parentAttribute?.terms.find(term => term.name === variationOption.value);
 
         if (!term) {
             return undefined;

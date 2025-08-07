@@ -23,7 +23,7 @@ export const useProductVariationSelector = ({
 
     const selectionManager = useMemo(() => {
         return Object.entries(selections).reduce(
-            (manager, [attributeName, slug]) => manager.select(attributeName, slug),
+            (manager, [attributeName, name]) => manager.select(attributeName, name),
             baseSelectionManager
         );
     }, [baseSelectionManager, selections]);
@@ -33,11 +33,11 @@ export const useProductVariationSelector = ({
         onProductVariationSelected(selectedVariation);
     }, [selectionManager, onProductVariationSelected]);
 
-    const handleSelectOption = useCallback((attributeName: string, optionSlug: string | null) => {
+    const handleSelectOption = useCallback((attributeName: string, name: string | null) => {
         setSelections(prevSelections => {
             const newSelections = { ...prevSelections };
-            if (optionSlug) {
-                newSelections[attributeName] = optionSlug;
+            if (name) {
+                newSelections[attributeName] = name;
             } else {
                 delete newSelections[attributeName];
             }
