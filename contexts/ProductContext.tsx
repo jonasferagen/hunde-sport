@@ -8,7 +8,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
  */
 export interface ProductContextType {
     product: PurchasableProduct;
-    validatedPurchasable: Purchasable;
+    purchasable: Purchasable;
     isLoading: boolean;
     selectedProductVariation: ProductVariation | undefined;
     setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
@@ -47,11 +47,11 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     }, [product, isLoading, variations]);
 
     const value = useMemo(() => {
-        const validatedPurchasable = createPurchasable({ product, productVariation: selectedProductVariation });
+        const purchasable = createPurchasable({ product, productVariation: selectedProductVariation });
 
         return {
             product,
-            validatedPurchasable,
+            purchasable,
             isLoading,
             selectedProductVariation,
             setSelectedProductVariation,

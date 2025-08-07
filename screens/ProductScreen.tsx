@@ -43,7 +43,7 @@ export const ProductScreen = () => {
 
 
 const ProductScreenContent = () => {
-  const { product, productVariations, validatedPurchasable } = useProductContext();
+  const { product, productVariations, purchasable: validatedPurchasable } = useProductContext();
 
 
 

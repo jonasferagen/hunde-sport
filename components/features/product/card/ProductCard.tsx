@@ -17,13 +17,14 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
 
     const href: HrefObject = routes.product.path(product, category?.id);
 
-    return <YStack {...props} bbc="$borderColorStrong" bbw={1} p="$3">
-        <ThemedLinearGradient />
-        <XStack f={1} gap="$3">
-            <ProductCardLeft href={href} />
-            <ProductCardRight href={href} />
-        </XStack>
-        <ProductCardFooter />
-    </YStack>
-
+    return (
+        <YStack {...props} bbc="$borderColor" bbw={1} p="$3">
+            <ThemedLinearGradient />
+            <XStack f={1} gap="$3">
+                <ProductCardLeft href={href} />
+                <ProductCardRight href={href} />
+            </XStack>
+            <ProductCardFooter />
+        </YStack>
+    );
 };

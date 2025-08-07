@@ -9,7 +9,7 @@ import { ButtonProps, SizableText, Theme, XStack } from 'tamagui';
 
 
 export const PurchaseButton = (props: ButtonProps) => {
-    const { validatedPurchasable } = useProductContext();
+    const { purchasable: validatedPurchasable } = useProductContext();
     const { title, price, isValid, message } = validatedPurchasable;
 
     const { addItem } = useCartContext();

@@ -10,7 +10,7 @@ interface ProductCardImageProps {
 }
 
 export const ProductCardLeft = ({ href }: ProductCardImageProps) => {
-    const { validatedPurchasable } = useProductContext();
+    const { purchasable: validatedPurchasable } = useProductContext();
     const { displayProduct } = validatedPurchasable;
     const src = displayProduct.featuredImage.src;
     const imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH;

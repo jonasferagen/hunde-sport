@@ -1,9 +1,8 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ProductProvider } from '@/contexts';
 import { Product, PurchasableProduct } from '@/types';
-import { FlashList } from "@shopify/flash-list";
 import React, { memo, useCallback } from 'react';
-import { ViewStyle } from 'react-native';
+import { FlatList, ViewStyle } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Theme, XStack } from 'tamagui';
 import { ProductCard } from './card';
@@ -22,10 +21,9 @@ export const ProductList = memo(({
     contentContainerStyle
 }: ProductListProps) => {
 
+
     const renderItem = useCallback(({ item, index }: { item: PurchasableProduct, index: number }) =>
-        <Animated.View
-            layout={LinearTransition}
-        >
+        <Animated.View layout={LinearTransition.duration(2000)}>
             <ProductProvider product={item}>
                 <Theme name={index % 2 === 0 ? 'secondary_elevated' : 'secondary_soft'}>
                     <ProductCard />
@@ -38,8 +36,8 @@ export const ProductList = memo(({
 
     return (
         <XStack f={1}>
-            <FlashList
-                data={products} a
+            <FlatList
+                data={products}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 onEndReached={loadMore}
@@ -48,7 +46,7 @@ export const ProductList = memo(({
                 ListFooterComponent={() =>
                     loadingMore ? <ThemedSpinner /> : null
                 }
-                estimatedItemSize={100}
+
             />
         </XStack>
     );

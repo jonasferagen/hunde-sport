@@ -25,7 +25,7 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
     }
 
     return (
-        <XStack gap="$2" flexWrap="wrap">
+        <XStack gap="$2" fw="wrap">
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const selectedValue = selectionManager.getSelectedOption(name);

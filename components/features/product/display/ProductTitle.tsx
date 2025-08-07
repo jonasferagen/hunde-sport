@@ -3,7 +3,7 @@ import React from 'react';
 import { SizableText, SizableTextProps } from 'tamagui';
 
 export const ProductTitle = ({ size = "$3", ...props }: SizableTextProps) => {
-    const { validatedPurchasable } = useProductContext();
+    const { purchasable: validatedPurchasable } = useProductContext();
     const { displayProduct, productVariation } = validatedPurchasable;
 
     if (!displayProduct) {

@@ -11,24 +11,25 @@ import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 interface ProductCardFooterProps extends StackProps { }
 
 export const ProductCardFooter = (props: ProductCardFooterProps) => {
-    const { validatedPurchasable } = useProductContext();
-    const { displayProduct } = validatedPurchasable;
+    const { purchasable } = useProductContext();
+    const { title, prices } = purchasable;
 
     const [isExpanded, setIsExpanded] = useState(false);
 
     const handleExpand = () => {
-        setIsExpanded(prev => !prev);
+        setIsExpanded(!isExpanded);
     };
 
     return (
+
         <YStack gap="$2" {...props} >
             <XStack gap="$3">
                 <XStack w={PRODUCT_CARD_LEFT_COLUMN_WIDTH} >
                     <ProductStatus size="$2" />
                 </XStack>
                 <XStack ai="center" jc="space-between" f={1} >
-                    <SizableText>{displayProduct.name}</SizableText>
-                    <DisplayPrice productPrices={displayProduct.prices} />
+                    <SizableText>{title}</SizableText>
+                    <DisplayPrice productPrices={prices} />
                 </XStack>
             </XStack>
 
@@ -43,7 +44,6 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
             }
             <PurchaseButton />
         </YStack >
-
 
     );
 }

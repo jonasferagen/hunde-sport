@@ -1,4 +1,5 @@
-import { Product, ProductPrices, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
+import { Product, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
+import { ProductPrices } from './ProductPrices';
 
 export interface ValidationResult {
     isValid: boolean;
@@ -43,7 +44,8 @@ export interface Purchasable extends ValidationResult {
     displayProduct: Product;
     title: string;
     image: string;
-    price: ProductPrices;
+    prices: ProductPrices;
+    is_in_stock: boolean;
 }
 
 export const createPurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): Purchasable => {
@@ -52,16 +54,18 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
     const displayProduct = productVariation || product;
 
     const image = displayProduct.featuredImage?.src || '';
-    const price = displayProduct.prices.price;
+    const prices = displayProduct.prices;
     const title = productVariation ? productVariation.variation : displayProduct.name;
+    const is_in_stock = displayProduct.is_in_stock;
 
     return {
         product,
         productVariation: productVariation,
         displayProduct,
         image,
-        price,
+        prices,
         title,
+        is_in_stock,
         ...validationResult,
     };
 };
