@@ -49,7 +49,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const { product, productVariation } = validatedPurchasable;
 
-        const variation = productVariation?.getParsedVariation() || [];
+        const parsedVariation = productVariation?.getParsedVariation() || [];
+        const variation = parsedVariation.map(attr => ({ attribute: attr.name, value: attr.value }));
 
         const addItemOptions: AddItemOptions = {
             id: product.id,

@@ -23,7 +23,7 @@ export const useProductVariationSelector = ({
 
     const selectionManager = useMemo(() => {
         return Object.entries(selections).reduce(
-            (manager, [taxonomy, slug]) => manager.select(taxonomy, slug),
+            (manager, [attributeName, slug]) => manager.select(attributeName, slug),
             baseSelectionManager
         );
     }, [baseSelectionManager, selections]);
@@ -33,13 +33,13 @@ export const useProductVariationSelector = ({
         onProductVariationSelected(selectedVariation);
     }, [selectionManager, onProductVariationSelected]);
 
-    const handleSelectOption = useCallback((attributeTaxonomy: string, optionSlug: string | null) => {
+    const handleSelectOption = useCallback((attributeName: string, optionSlug: string | null) => {
         setSelections(prevSelections => {
             const newSelections = { ...prevSelections };
             if (optionSlug) {
-                newSelections[attributeTaxonomy] = optionSlug;
+                newSelections[attributeName] = optionSlug;
             } else {
-                delete newSelections[attributeTaxonomy];
+                delete newSelections[attributeName];
             }
             return newSelections;
         });

@@ -1,81 +1,43 @@
-import { ApiVariationAttribute } from '../BaseProduct';
-import { ProductVariation, VariableProduct } from '../Product';
-import { AttributeTermDetails } from '../ProductAttribute';
-import { AttributeSelectionTuple } from './VariationSelection';
+import { ProductVariation } from '../Product';
+import { AttributeTermDetails, ProductAttribute } from '../ProductAttribute';
+
 /**
- * A helper class to resolve variation data in the context of a parent VariableProduct.
- * This class handles the logic of mapping raw variation attributes to their full taxonomy
- * and provides methods to query variation details.
+ * A stateless helper class to resolve variation data.
  */
 export class VariationDataResolver {
-    private readonly product: VariableProduct;
-    private readonly variationRefMap: Map<number, ApiVariationAttribute[]>;
-
-    constructor(product: VariableProduct) {
-        this.product = product;
-        this.variationRefMap = new Map<number, ApiVariationAttribute[]>(
-            product.variations.map((ref) => [ref.id, ref.attributes])
-        );
-    }
-
-    /**
-     * Gets the fully resolved attributes for a given variation ID.
-     * @param variationId The ID of the variation.
-     * @returns An array of {@link AttributeSelectionTuple}.
-     */
-    public getAttributesForVariation(variationId: number): AttributeSelectionTuple[] {
-        const rawAttributes = this.variationRefMap.get(variationId);
-        if (!rawAttributes) {
-            return [];
-        }
-
-        return rawAttributes
-            .map((rawAttr): AttributeSelectionTuple | null => {
-                const parentAttribute = this.product.attributes.find((attr) => attr.name === rawAttr.name);
-                if (parentAttribute) {
-                    return {
-                        name: parentAttribute.taxonomy,
-                        value: rawAttr.value,
-                    };
-                }
-                return null;
-            })
-            .filter((attr): attr is AttributeSelectionTuple => attr !== null);
-    }
-
     /**
      * Checks if a variation is compatible with a given set of user selections.
      * @param variation The product variation to check.
-     * @param selections A record of selected taxonomy/term pairs.
+     * @param selections A record of selected attribute name/term pairs.
      * @returns True if the variation matches the selections.
      */
-    public variationMatchesAttributes(variation: ProductVariation, selections: Record<string, string>): boolean {
+    public static variationMatchesAttributes(variation: ProductVariation, selections: Record<string, string>): boolean {
         const attributes = variation.getParsedVariation();
-        const parentAttributes = this.product.attributes;
 
-        return Object.entries(selections).every(([taxonomy, slug]) => {
-            const parentAttribute = parentAttributes.find(pa => pa.taxonomy === taxonomy);
-            if (!parentAttribute) {
-                return false;
-            }
-            return attributes.some(attr => attr.attribute === parentAttribute.name && attr.value === slug);
+        return Object.entries(selections).every(([name, slug]) => {
+            return attributes.some(attr => attr.name === name && attr.value === slug);
         });
     }
 
     /**
-     * Gets the full attribute term details for a given variation and taxonomy.
+     * Gets the full attribute term details for a given variation and attribute name.
      * @param variation The product variation.
-     * @param taxonomy The taxonomy to get the term for (e.g., 'pa_color').
+     * @param attributeName The name of the attribute to get the term for (e.g., 'Color').
+     * @param parentAttributes The attributes of the parent variable product.
      * @returns The {@link AttributeTermDetails} or undefined if not found.
      */
-    public getAttributeTermForVariation(variation: ProductVariation, taxonomy: string): AttributeTermDetails | undefined {
-        const attributes = this.getAttributesForVariation(variation.id);
-        const variationOption = attributes.find(attr => attr.name === taxonomy);
+    public static getAttributeTermForVariation(
+        variation: ProductVariation,
+        attributeName: string,
+        parentAttributes: ProductAttribute[]
+    ): AttributeTermDetails | undefined {
+        const attributes = variation.getParsedVariation();
+        const variationOption = attributes.find(attr => attr.name === attributeName);
         if (!variationOption) {
             return undefined;
         }
 
-        const parentAttribute = this.product.attributes.find(attr => attr.taxonomy === taxonomy);
+        const parentAttribute = parentAttributes.find(attr => attr.name === attributeName);
         const term = parentAttribute?.terms.find(term => term.slug === variationOption.value);
 
         if (!term) {

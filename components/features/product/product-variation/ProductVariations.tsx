@@ -26,9 +26,9 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
 
     return (
         <XStack gap="$2" flexWrap="wrap">
-            {attributes.map(({ id, taxonomy, name }) => {
-                const options = selectionManager.getAvailableOptions(taxonomy);
-                const selectedValue = selectionManager.getSelectedOption(taxonomy);
+            {attributes.map(({ id, name }) => {
+                const options = selectionManager.getAvailableOptions(name);
+                const selectedValue = selectionManager.getSelectedOption(name);
                 if (options.length === 0) return null;
 
                 return (
@@ -37,7 +37,7 @@ const VariationSelector = ({ product, productVariations, onProductVariationSelec
                         <AttributeSelector
                             options={options}
                             selectedValue={selectedValue}
-                            onSelect={(value) => handleSelectOption(taxonomy, value)}
+                            onSelect={(value) => handleSelectOption(name, value)}
                         />
                     </YStack>
                 );

@@ -57,7 +57,7 @@ export class ProductVariation extends BaseProduct<BaseProductData> {
         super(data);
     }
 
-    getParsedVariation(): { attribute: string; value: string }[] {
+    getParsedVariation(): { name: string; value: string }[] {
         if (!this.variation) {
             return [];
         }
@@ -70,11 +70,11 @@ export class ProductVariation extends BaseProduct<BaseProductData> {
                     return null;
                 }
                 return {
-                    attribute: attribute.trim(),
+                    name: attribute.trim(),
                     value: value.trim(),
                 };
             })
-            .filter((v): v is { attribute: string; value: string } => v !== null);
+            .filter((v): v is { name: string; value: string } => v !== null);
     }
 }
 
