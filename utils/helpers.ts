@@ -1,5 +1,5 @@
 import { decode } from 'he';
-
+import { DimensionValue } from 'react-native';
 
 export const logJson = (json: any) => console.log(JSON.stringify(json, null, 2));
 
@@ -19,10 +19,7 @@ export const formatPrice = (price: string): string => {
     return num.toFixed(0).replace('.', ',') + ',-';
 };
 
-
 export const formatPriceRange = (priceRange: any, compact: boolean = true): string => {
-
-
     if (priceRange.min_amount === priceRange.max_amount) {
         return formatPrice(priceRange.min_amount);
     }
@@ -31,7 +28,6 @@ export const formatPriceRange = (priceRange: any, compact: boolean = true): stri
     }
     return `${formatPrice(priceRange.min_amount)} - ${formatPrice(priceRange.max_amount)}`;
 };
-
 
 import { parseDocument } from 'htmlparser2';
 
@@ -72,23 +68,41 @@ export const htmlToPlainText = (html: string): string => {
     return result.replace(/\n{3,}/g, '\n\n').trim();
 };
 
-
 const placeholderBase64 =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAAEFJREFUCB1jYGBgYAAAAAQAAVcCkE0AAAAASUVORK5CYII=';
 
+export const getScaledImageUrl = (
+    url: string,
+    width?: DimensionValue,
+    height?: DimensionValue,
+    fit: 'cover' | 'contain' | 'fill' | 'inside' | 'outside' = 'cover'
+): string => {
+    const numWidth = typeof width === 'number' ? width : 0;
+    const numHeight = typeof height === 'number' ? height : 0;
 
-export const getScaledImageUrl = (url: string, width: number, height: number, fit: string = 'cover'): string => {
-    if (!url || width === 0 || height === 0) {
-        return placeholderBase64; // Return undefined if url is missing or size is not measured
+    if (!url || (!numWidth && !numHeight)) {
+        return placeholderBase64;
     }
 
     try {
         const urlObject = new URL(url);
-        // By setting the search, we remove any existing query params
-        urlObject.search = `?fit=${fit}&w=${width}&h=${height}&ssl=1`;
+        const params = new URLSearchParams();
+
+        if (numWidth && numHeight) {
+            params.set('resize', `${numWidth},${numHeight}`);
+        } else if (numWidth) {
+            params.set('w', String(numWidth));
+        } else if (numHeight) {
+            params.set('h', String(numHeight));
+        }
+
+        params.set('fit', fit);
+        params.set('ssl', '1');
+
+        urlObject.search = params.toString();
         return urlObject.toString();
     } catch (error) {
         console.error('Invalid URL:', url);
-        return placeholderBase64; // Return undefined for invalid URLs
+        return placeholderBase64;
     }
 };

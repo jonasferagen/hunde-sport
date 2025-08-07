@@ -1,12 +1,19 @@
 import { useProductContext } from '@/contexts';
+import { getScaledImageUrl } from '@/utils/helpers';
 import { Galeria } from '@nandorojo/galeria';
 import { FlashList } from '@shopify/flash-list';
 import React, { JSX, useState } from 'react';
-import { Image, YStack } from 'tamagui';
+import { Dimensions } from 'react-native';
+import { YStack } from 'tamagui';
+import { ThemedImage } from '../../ui/ThemedImage';
 
 export const ProductImageGallery = (): JSX.Element => {
     const { product } = useProductContext();
-    const urls = product.images.map((image) => image.src);
+    const images = product.images;
+    const { width: screenWidth } = Dimensions.get('window');
+
+    const galleryUrls = images.map((image) => getScaledImageUrl(image.src, screenWidth, screenWidth));
+    const thumbnailUrls = images.map((image) => getScaledImageUrl(image.src, 100, 100));
 
     const [gallery, setGallery] = useState({ visible: false, initialIndex: 0 });
     const openGallery = (index: number) => {
@@ -16,9 +23,9 @@ export const ProductImageGallery = (): JSX.Element => {
     return (
         <>
             <YStack h={100}>
-                <Galeria urls={urls} closeIconName="xmark.circle.fill">
+                <Galeria urls={galleryUrls}>
                     <FlashList
-                        data={urls}
+                        data={thumbnailUrls}
                         renderItem={({ item, index }) => (
                             <YStack
                                 onPress={() => openGallery(index)}
@@ -32,10 +39,7 @@ export const ProductImageGallery = (): JSX.Element => {
                             >
                                 <Galeria.Image index={index}>
                                     <YStack>
-                                        <Image
-                                            source={{ uri: item }}
-                                            h="100%"
-                                            w="100%" />
+                                        <ThemedImage source={{ uri: item }} h="100%" w="100%" />
                                     </YStack>
                                 </Galeria.Image>
                             </YStack>

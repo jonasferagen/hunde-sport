@@ -2,12 +2,12 @@ import { MotiView } from 'moti';
 import { JSX, useState } from 'react';
 import { Image, ImageProps, YStack, YStackProps } from 'tamagui';
 
-export interface FadeInImageProps extends YStackProps {
+export interface ThemedImageProps extends YStackProps {
     source: ImageProps['source'];
     objectFit?: ImageProps['objectFit'];
 }
 
-export const FadeInImage = ({ source, objectFit, ...stackProps }: FadeInImageProps): JSX.Element => {
+export const ThemedImage = ({ source, objectFit, ...stackProps }: ThemedImageProps): JSX.Element => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     return (

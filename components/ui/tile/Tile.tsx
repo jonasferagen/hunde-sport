@@ -1,92 +1,83 @@
 import { Image } from '@/models/Image';
 import { getScaledImageUrl } from '@/utils/helpers';
-import React from 'react';
+import { JSX } from 'react';
 import { SizableText, YStack, YStackProps } from 'tamagui';
-import { FadeInImage } from '../image/FadeInImage';
+import { ThemedImage } from '../ThemedImage';
 import { ThemedLinearGradient } from '../ThemedLinearGradient';
-
 
 export interface TileProps extends YStackProps {
     title: string;
     image: Image;
-    aspectRatio?: number | string;
-    children?: React.ReactNode;
 }
 
-export const Tile: React.FC<TileProps> = ({
-    w,
-    h,
+export const Tile = ({
     title,
     image,
     children,
-    ...stackProps
-}) => {
-
-
-    const uri = getScaledImageUrl(image.src, Number(w), Number(h), 'cover');
+    aspectRatio = 1,
+    ...props
+}: TileProps): JSX.Element => {
+    const uri = getScaledImageUrl(image.src, props.w, props.h, 'cover');
 
     return (
         <YStack
-            w={w}
-            h={h}
-            f={1}
-            br="$3"
-            boc="$borderColorStrong"
-            bw={1}
+            br="$4"
             overflow="hidden"
-            {...stackProps}
+            aspectRatio={aspectRatio}
+            {...props}
         >
-
-            <FadeInImage
-                aria-label={title}
-                source={{ uri }}
-                f={1}
-                h={h}
-                w={w}
+            <ThemedImage
                 pos="absolute"
-                objectFit="cover"
+                t={0}
+                l={0}
+                r={0}
+                b={0}
+                source={{ uri }}
+                aria-label={image.alt || title}
             />
 
-            <YStack f={1}>
-                {children}
-            </YStack>
-            <ThemedLinearGradient
-                pos="relative"
-                fullscreen
-                mah="30%"
-            >
+            {children}
+
+            <YStack pos="absolute" b={0} l={0} r={0} p="$2.5" jc="flex-end" f={1}>
+                <ThemedLinearGradient
+                    pos="absolute"
+                    t={0}
+                    l={0}
+                    r={0}
+                    b={0}
+                    colors={['$backgroundTransparent', '$background']}
+                    start={[0, 0.2]}
+                    end={[0, 0.9]}
+                    opacity={0.8}
+                />
                 <SizableText
-                    fos="$1"
+                    fos="$5"
+                    fow="bold"
                     col="$color"
-                    ta="center"
                     numberOfLines={2}
+                    adjustsFontSizeToFit
+                    ellipse
                 >
                     {title}
                 </SizableText>
-            </ThemedLinearGradient>
-
+            </YStack>
         </YStack>
     );
-}
+};
 
+interface TileBadgeProps extends YStackProps { }
 
-interface TileBadgeProps extends YStackProps {
-    children: React.ReactNode;
-
-}
-
-export const TileBadge = ({ children, ...props }: TileBadgeProps): React.JSX.Element => {
-
+export const TileBadge = ({ children, ...props }: TileBadgeProps): JSX.Element => {
     return (
         <YStack
             pos="absolute"
             t="$2"
             r="$2"
-            bc="$backgroundAlpha"
-            bw={1}
-            boc="$borderColorStrong"
-            px="$1"
-            br="$3"
+            px="$2"
+            py="$1"
+            br="$10"
+            bg="$backgroundStrong"
+            elevation="$2"
             {...props}
         >
             {children}
