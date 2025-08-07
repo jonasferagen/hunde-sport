@@ -13,9 +13,7 @@ interface ProductCardFooterProps extends StackProps { }
 export const ProductCardFooter = (props: ProductCardFooterProps) => {
     const { purchasable } = useProductContext();
     const { title, prices } = purchasable;
-
     const [isExpanded, setIsExpanded] = useState(false);
-
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
     };

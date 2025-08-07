@@ -1,3 +1,4 @@
+import { Image } from '@/models/Image';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { LinearGradient } from '@tamagui/linear-gradient';
 import React from 'react';
@@ -9,7 +10,7 @@ const GRADIENT_MIN_HEIGHT = 25;
 export interface TileProps extends YStackProps {
     title: string;
     subtitle?: string;
-    imageUrl: string;
+    image: Image;
     aspectRatio?: number | string;
     titleNumberOfLines?: number;
     gradientMinHeight?: number;
@@ -21,7 +22,7 @@ export const Tile: React.FC<TileProps> = ({
     h,
     title,
     subtitle,
-    imageUrl,
+    image,
     titleNumberOfLines = 1,
     gradientMinHeight = GRADIENT_MIN_HEIGHT,
     children,
@@ -29,7 +30,7 @@ export const Tile: React.FC<TileProps> = ({
 }) => {
 
 
-    const uri = getScaledImageUrl(imageUrl, Number(w), Number(h), 'cover');
+    const uri = getScaledImageUrl(image.src, Number(w), Number(h), 'cover');
 
     return (
         <YStack

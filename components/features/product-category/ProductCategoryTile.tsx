@@ -17,15 +17,13 @@ const ProductCategoryTileBase: React.FC<ProductCategoryTileProps> = ({
     productCategory,
     ...stackProps
 }) => {
-
-
     return (
         <Link href={routes['product-category'].path(productCategory)} asChild>
             <Tile
                 f={1}
                 aspectRatio={1}
                 title={productCategory.name}
-                imageUrl={productCategory.image.src}
+                image={productCategory.image}
                 {...stackProps}
             />
         </Link>

@@ -65,12 +65,11 @@ const PurchaseButtonContent = () => {
     if (!isValid) {
         return <SizableText fos="$4">{message}</SizableText>;
     }
+
     return (
-        <XStack f={1} fs={1}>
-            <XStack f={1} jc="space-between">
-                <SizableText fos="$4">{title}</SizableText>
-                <SizableText fos="$4">{formatPrice(prices.price)}</SizableText>
-            </XStack>
+        <XStack f={1} jc="space-between">
+            <SizableText fos="$4">{title}</SizableText>
+            <SizableText fos="$4">{formatPrice(prices.price)}</SizableText>
         </XStack>
     );
 };
