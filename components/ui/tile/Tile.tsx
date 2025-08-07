@@ -1,9 +1,9 @@
 import { Image } from '@/models/Image';
 import { getScaledImageUrl } from '@/utils/helpers';
-import { LinearGradient } from '@tamagui/linear-gradient';
 import React from 'react';
 import { SizableText, YStack, YStackProps } from 'tamagui';
 import { FadeInImage } from '../image/FadeInImage';
+import { ThemedLinearGradient } from '../ThemedLinearGradient';
 
 const GRADIENT_MIN_HEIGHT = 25;
 
@@ -48,46 +48,65 @@ export const Tile: React.FC<TileProps> = ({
                 aria-label={title}
                 source={{ uri }}
                 f={1}
-                pos="absolute"
-                t={0}
-                l={0}
-                r={0}
-                b={0}
                 h={h}
                 w={w}
+                pos="absolute"
                 objectFit="cover"
             />
 
-            <YStack f={1} jc="flex-end">
-                <LinearGradient
-                    colors={["$backgroundAlpha", "$backgroundStrong"]}
-                    boc="$borderColorStrong"
-                    btw={1}
-                    mih={gradientMinHeight}
-                    p="$2"
+            <YStack boc="black" bw={1} f={1}>
+                {children}
+            </YStack>
+            <ThemedLinearGradient
+                pos="relative"
+                fullscreen
+                mah="30%"
+            >
+                <SizableText
+                    fos="$1"
+                    col="$color"
+                    ta="center"
+                    numberOfLines={titleNumberOfLines}
                 >
+                    {title}
+                </SizableText>
+                {subtitle && (
                     <SizableText
-                        fos="$1"
+                        fos="$2"
                         col="$color"
                         ta="center"
-                        numberOfLines={titleNumberOfLines}
+                        numberOfLines={1}
                     >
-                        {title}
+                        {subtitle}
                     </SizableText>
-                    {subtitle && (
-                        <SizableText
-                            fos="$2"
-                            col="$color"
-                            ta="center"
-                            numberOfLines={1}
-                        >
-                            {subtitle}
-                        </SizableText>
-                    )}
-                </LinearGradient>
-            </YStack>
+                )}
+            </ThemedLinearGradient>
+
+        </YStack>
+    );
+}
+
+
+interface TileBadgeProps extends YStackProps {
+    children: React.ReactNode;
+
+}
+
+export const TileBadge = ({ children, ...props }: TileBadgeProps): React.JSX.Element => {
+
+    return (
+        <YStack
+            pos="absolute"
+            t="$2"
+            r="$2"
+            bc="$backgroundAlpha"
+            bw={1}
+            boc="$borderColorStrong"
+            px="$1"
+            br="$3"
+            {...props}
+        >
             {children}
         </YStack>
     );
-
-}
+};
