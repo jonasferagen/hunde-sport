@@ -1,11 +1,11 @@
+import { ThemedImage } from '@/components/ui/ThemedImage';
+import { GridTiles } from '@/components/ui/tile/GridTiles';
 import { useProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/utils/helpers';
 import { Galeria } from '@nandorojo/galeria';
-import { FlashList } from '@shopify/flash-list';
 import React, { JSX, useState } from 'react';
 import { Dimensions } from 'react-native';
-import { YStack } from 'tamagui';
-import { ThemedImage } from '../../ui/ThemedImage';
+import { ScrollView, YStack } from 'tamagui';
 
 export const ProductImageGallery = (): JSX.Element => {
     const { product } = useProductContext();
@@ -21,41 +21,44 @@ export const ProductImageGallery = (): JSX.Element => {
 
     return (
         <>
-            <YStack h={100}>
+            <YStack f={1}>
                 <Galeria urls={galleryUrls}>
-                    <FlashList
-                        data={images}
-                        renderItem={({ item: image, index }) => {
-                            const thumbnailUrl = getScaledImageUrl(image.src, 100, 100);
-                            return (
-                                <YStack
-                                    onPress={() => openGallery(index)}
-                                    w={100}
-                                    h={100}
-                                    br="$2"
-                                    ov="hidden"
-                                    bw={1}
-                                    boc="$borderColor"
-                                    mr="$2"
-                                >
-                                    <Galeria.Image index={index}>
-                                        <YStack>
-                                            <ThemedImage
-                                                source={{ uri: thumbnailUrl }}
-                                                image={image}
-                                                title={product.name}
-                                                h="100%"
-                                                w="100%"
-                                            />
-                                        </YStack>
-                                    </Galeria.Image>
-                                </YStack>
-                            );
-                        }}
-                        estimatedItemSize={100}
-                        horizontal
-                        showsHorizontalScrollIndicator
-                    />
+                    <ScrollView>
+                        <GridTiles
+                            data={images}
+                            numColumns={4}
+                            gap="$2"
+                            // Let content dictate height; avoid forcing 100% inside ScrollView
+                            renderItem={({ item: image, index }) => {
+                                const thumbnailUrl = getScaledImageUrl(image.src, undefined, 200);
+                                return (
+                                    <YStack
+                                        onPress={() => openGallery(index)}
+                                        br="$2"
+                                        ov="hidden"
+                                        bw={1}
+                                        boc="$borderColor"
+
+                                    // Do not force flex on grid items; let image size control height
+                                    >
+                                        <Galeria.Image index={index}>
+                                            <YStack>
+                                                <ThemedImage
+
+                                                    source={{ uri: thumbnailUrl }}
+                                                    image={image}
+                                                    title={product.name}
+
+                                                    aspectRatio={1}
+                                                    objectFit="cover"
+                                                />
+                                            </YStack>
+                                        </Galeria.Image>
+                                    </YStack>
+                                );
+                            }}
+                        />
+                    </ScrollView>
                 </Galeria>
             </YStack>
         </>

@@ -22,7 +22,7 @@ export const Tile = ({
     return (
         <YStack
             br="$4"
-            overflow="hidden"
+            ov="hidden"
             aspectRatio={aspectRatio}
             {...props}
         >
@@ -31,6 +31,7 @@ export const Tile = ({
                 source={{ uri }}
                 image={image}
                 title={title}
+
             />
 
             {children}
@@ -44,11 +45,10 @@ export const Tile = ({
                     opacity={0.8}
                 />
                 <SizableText
-                    size="$5"
+                    fos="$3"
                     fow="bold"
                     col="$color"
                     numberOfLines={2}
-                    adjustsFontSizeToFit
                     ellipse
                     ta="center"
                 >
@@ -69,7 +69,7 @@ export const TileBadge = ({ children, ...props }: TileBadgeProps): JSX.Element =
             r="$2"
             px="$2"
             py="$1"
-            br="$10"
+            br="$2"
             bg="$backgroundStrong"
             elevation="$2"
             {...props}

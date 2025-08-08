@@ -4,7 +4,7 @@ import { Button, ButtonProps, styled } from 'tamagui';
 const StyledThemedButton = styled(Button, {
     name: 'ThemedButton',
     // Base style
-    color: '$colorAccent',
+    color: '$color',
     backgroundColor: '$colorPrimary',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',
@@ -32,17 +32,6 @@ const StyledThemedButton = styled(Button, {
     // Accent variant (optional)
     variants: {
         variant: {
-            accent: {
-                backgroundColor: '$colorAccentElevated',
-                borderColor: '$colorAccentStrong',
-                color: '$colorAccentStrong',
-
-                pressStyle: {
-                    backgroundColor: '$colorAccent',
-                    borderColor: '$colorAccentHover',
-                    color: '$colorAccentStrong'
-                },
-            },
             active: {
                 backgroundColor: '$backgroundPress',
                 borderColor: '$borderColorStrong',

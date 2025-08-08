@@ -1,18 +1,25 @@
 import React, { JSX } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 
-interface GridTilesProps extends StackProps {
-    children: React.ReactNode;
+interface GridTilesProps<T = any> extends StackProps {
+    children?: React.ReactNode;
+    data?: T[];
+    renderItem?: (args: { item: T; index: number }) => React.ReactNode;
     numColumns?: number;
 }
 
-export const GridTiles = ({
+export const GridTiles = <T,>({
     children,
+    data,
+    renderItem,
     numColumns = 3,
     gap = '$2',
     ...stackProps
-}: GridTilesProps): JSX.Element => {
-    const items = React.Children.toArray(children);
+}: GridTilesProps<T>): JSX.Element => {
+    const items: React.ReactNode[] =
+        data && renderItem
+            ? data.map((item, index) => renderItem({ item, index }))
+            : React.Children.toArray(children);
 
     if (!items || items.length === 0) {
         return <></>;
@@ -31,11 +38,9 @@ export const GridTiles = ({
     return (
         <YStack f={1} gap={gap} {...stackProps}>
             {rows.map((row, rowIndex) => (
-                <XStack key={rowIndex} f={1} gap={gap} >
+                <XStack key={rowIndex} f={1} gap={gap}>
                     {row.map((item, itemIndex) => (
-                        <React.Fragment key={itemIndex}>
-                            {item}
-                        </React.Fragment>
+                        <React.Fragment key={itemIndex}>{item}</React.Fragment>
                     ))}
                 </XStack>
             ))}

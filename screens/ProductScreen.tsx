@@ -68,7 +68,7 @@ const ProductScreenContent = () => {
           </XStack>
           <PurchaseButton />
         </PageContent>
-        <PageContent title="Produktbilder" flex={1}>
+        <PageContent title="Produktbilder" f={1}>
           {product.images.length > 1 && <ProductImageGallery />}
         </PageContent>
         <PageContent theme="secondary" title="Produktinformasjon">

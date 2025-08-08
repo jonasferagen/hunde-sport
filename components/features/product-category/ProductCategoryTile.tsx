@@ -1,13 +1,10 @@
 import { Tile } from "@/components/ui/tile/Tile";
+import { PRODUCT_CATEGORY_TILE_HEIGHT, PRODUCT_CATEGORY_TILE_WIDTH } from '@/config/app';
 import { routes } from '@/config/routes';
 import { ProductCategory } from '@/models/ProductCategory';
 import { Link } from 'expo-router';
 import React, { memo } from 'react';
-
-import { DimensionValue } from 'react-native';
 import { YStackProps } from "tamagui";
-export const PRODUCT_CATEGORY_TILE_WIDTH: DimensionValue = 200;
-export const PRODUCT_CATEGORY_TILE_HEIGHT: DimensionValue = 200;
 
 interface ProductCategoryTileProps extends Omit<YStackProps, 'children'> {
     productCategory: ProductCategory;

@@ -8,6 +8,7 @@ export interface ThemedImageProps extends YStackProps {
     image: ImageModel;
     title?: string;
     objectFit?: ImageProps['objectFit'];
+    aspectRatio?: number;
 }
 
 export const ThemedImage = ({
@@ -15,6 +16,7 @@ export const ThemedImage = ({
     image,
     title,
     objectFit,
+    aspectRatio,
     ...stackProps
 }: ThemedImageProps): JSX.Element => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -23,23 +25,23 @@ export const ThemedImage = ({
     return (
         <YStack {...stackProps}>
             <MotiView
-                style={{ flex: 1, width: '100%', height: '100%' }}
+                style={{ width: '100%', height: '100%' }}
                 pointerEvents={isLoaded ? 'auto' : 'none'}
                 animate={{
                     opacity: isLoaded ? 1 : 0,
                 }}
                 transition={{
                     type: 'timing',
-                    duration: 500,
+                    duration: 200,
                 }}
             >
                 <Image
-                    f={1}
                     w="100%"
-                    h="100%"
                     source={source}
                     objectFit={objectFit}
                     aria-label={ariaLabel}
+                    aspectRatio={aspectRatio}
+                    h={aspectRatio ? undefined : '100%'}
                     onLoad={() => setIsLoaded(true)}
                     onLoadStart={() => setIsLoaded(false)}
                 />
