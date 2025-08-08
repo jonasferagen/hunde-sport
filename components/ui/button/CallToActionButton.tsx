@@ -1,8 +1,8 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
-import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import React from 'react';
 
-import { Button, ButtonProps, Theme } from 'tamagui';
+import { Button, ButtonProps, Theme, XStack } from 'tamagui';
+import { ThemedText } from '../ThemedText';
 
 interface CallToActionButtonProps extends ButtonProps {
     children: React.ReactNode;
@@ -12,21 +12,34 @@ export const CallToActionButton = React.forwardRef<
     React.ComponentRef<typeof Button>,
     CallToActionButtonProps
 >(({ children, ...props }, ref) => {
+    const { icon, iconAfter, ...restProps } = props;
+
     return (
         <Theme name={props.theme}>
             <ThemedButton
                 ref={ref}
-                gap={0}
+                position="relative"
+                gap="none"
                 ai="center"
-                jc="space-between"
-                m="none"
-                fontSize="$4"
-                scaleIcon={1.5}
-                {...props}
+                px="$2"
+                mx="none"
+                {...restProps}
             >
-                <ThemedLinearGradient br="$3" zIndex={-1} />
-                {children}
+                <XStack f={1} ai="center" gap="$2" fg={1} h="100%">
+                    {icon}
+                    <XStack ai="center" jc="space-between" f={1} fg={1} px="none">
+                        {React.Children.map(children, child => (
+                            <ThemedText fow="bold" fos="$4">
+                                {child}
+                            </ThemedText>
+                        ))}
+                    </XStack>
+                    {iconAfter}
+
+                </XStack>
             </ThemedButton>
         </Theme>
     );
 });
+
+//          <ThemedLinearGradient fullscreen br="$3" zIndex={-1} />

@@ -18,7 +18,6 @@ export const ThemedLinearGradient = ({
     return (
         <LinearGradient
             fullscreen
-            f={1}
             start={startPoint}
             end={endPoint}
             colors={colors}
