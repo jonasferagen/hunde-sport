@@ -23,9 +23,9 @@ export const ProductList = memo(({
 }: ProductListProps) => {
 
 
-    const renderItem = useCallback(({ item, index }: { item: PurchasableProduct, index: number }) =>
+    const renderItem = useCallback(({ item: product, index }: { item: PurchasableProduct, index: number }) =>
         <Animated.View layout={LinearTransition}>
-            <ProductProvider product={item}>
+            <ProductProvider product={product}>
                 <Theme name={index % 2 === 0 ? 'secondary' : 'secondary_soft'}>
                     <ProductCard />
                 </Theme>
@@ -33,7 +33,7 @@ export const ProductList = memo(({
         </Animated.View>
         , []);
 
-    const keyExtractor = useCallback((item: Product) => item.id.toString(), []);
+    const keyExtractor = useCallback((item: PurchasableProduct) => item.id.toString(), []);
 
     return (
         <XStack f={1}>

@@ -1,7 +1,10 @@
-import { useProductVariations } from '@/hooks/data/Product';
+import { useProduct, useProductVariations } from '@/hooks/data/Product';
 import { ProductVariation, PurchasableProduct } from '@/models/Product/Product';
 import { createPurchasable, Purchasable } from '@/models/Product/Purchasable';
+import { LoadingScreen } from '@/screens/misc/LoadingScreen';
+import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { ProductCategoryProvider } from './ProductCategoryContext';
 
 /**
  * Interface for the ProductContext
@@ -26,6 +29,29 @@ export const useProductContext = () => {
     return context;
 };
 
+
+export const ProductLoader: React.FC<{ id: number; productCategoryId?: number; children: React.ReactNode }> = ({
+    id,
+    productCategoryId,
+    children,
+}) => {
+    const { data: product, isLoading } = useProduct(id);
+
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
+    if (!product) {
+        return <NotFoundScreen message="Beklager, produktet ble ikke funnet" />;
+    }
+
+    if (product.type === 'variation') {
+        throw new Error('Not supported for product variations');
+    }
+
+    return <ProductCategoryProvider productCategoryId={productCategoryId} productCategories={product.categories} >
+        <ProductProvider product={product}>{children}</ProductProvider>
+    </ProductCategoryProvider>;
+};
 
 
 export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
