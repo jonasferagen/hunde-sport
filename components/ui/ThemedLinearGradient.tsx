@@ -8,6 +8,7 @@ interface ThemedLinearGradientProps
     endPoint?: [number, number];
     colors?: (string | any)[];
     strong?: boolean;
+    elevated?: boolean;
 }
 
 export const ThemedLinearGradient = ({
@@ -15,6 +16,7 @@ export const ThemedLinearGradient = ({
     endPoint = [1, 1],
     colors = ['$background', '$backgroundPress'],
     strong = false,
+    elevated = false,
     ...props
 }: ThemedLinearGradientProps): JSX.Element => {
     return (
@@ -22,7 +24,7 @@ export const ThemedLinearGradient = ({
             fullscreen
             start={startPoint}
             end={endPoint}
-            colors={strong ? ['$backgroundStrong', '$backgroundPress'] : colors}
+            colors={strong ? ['$backgroundStrong', '$backgroundPress'] : elevated ? ['$backgroundElevated', '$backgroundPress'] : colors}
             $group-focus={{ opacity: 0 }}
             {...props}
         />

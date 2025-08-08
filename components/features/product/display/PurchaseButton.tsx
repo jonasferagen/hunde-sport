@@ -49,7 +49,7 @@ export const PurchaseButton = (props: ButtonProps) => {
             theme={theme}
             onPress={handleAddToCart}
             disabled={!isValid}
-            icon={icon}
+            iconAfter={icon}
             {...props}
         >
             {isValid ? theme + ' ' + formatPrice(prices.price) : message}

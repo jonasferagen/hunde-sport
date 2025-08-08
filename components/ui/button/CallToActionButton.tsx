@@ -31,25 +31,28 @@ export const CallToActionButton = React.forwardRef<
                 boxSizing="border-box"
                 flexDirection='row'
                 ai="center"
+                group
                 {...props}
             >
                 <ThemedLinearGradient
+                    strong
                     br="$3"
                     fullscreen
-                    pressStyle={{ backgroundColor: '$backgroundPress', }}
-                    zIndex={-1}
+                    zIndex={0}
                     opacity={0}
+                    pointerEvents="none"
+                    $group-press={{ opacity: 1 }}
                 />
 
                 {icon}
-                <XStack ai="center"
-                    jc="flex-end"
+                <XStack
+                    ai="center"
                     f={1}
                     fg={1}
                     px="none"
-
+                    gap="$2"
                 >
-                    <ThemedText fow="bold" fos="$4" boc="black" bw={1} f={1} >
+                    <ThemedText fow="bold" fos="$4" f={1} textAlign='left'>
                         {children}
                     </ThemedText>
                 </XStack>
@@ -58,4 +61,3 @@ export const CallToActionButton = React.forwardRef<
         </Theme>
     );
 });
-
