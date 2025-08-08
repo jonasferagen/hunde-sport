@@ -10,7 +10,6 @@ import {
     augmentedLightThemeElevated,
     augmentedLightThemeSoft,
     augmentedLightThemeStrong,
-    dangerTheme,
     dangerThemeAlt1,
     dangerThemeAlt2,
     lilacTheme,
@@ -30,7 +29,16 @@ import {
     sageThemeAlt2,
     sageThemeElevated,
     sageThemeSoft,
-    sageThemeStrong
+    sageThemeStrong,
+    successTheme,
+    successThemeAlt1,
+    successThemeAlt2,
+    successThemeAlt3,
+    successThemeAlt4,
+    successThemeAlt5,
+    successThemeAlt6,
+    successThemeAlt7,
+    successThemeAlt8
 } from './themes';
 
 
@@ -154,9 +162,17 @@ const appConfig = createTamagui({
         light_alt2: augmentedLightThemeAlt2,
 
 
-        danger: dangerTheme,
         danger_alt1: dangerThemeAlt1,
         danger_alt2: dangerThemeAlt2,
+        success: successTheme,
+        success_alt1: successThemeAlt1,
+        success_alt2: successThemeAlt2,
+        success_alt3: successThemeAlt3,
+        success_alt4: successThemeAlt4,
+        success_alt5: successThemeAlt5,
+        success_alt6: successThemeAlt6,
+        success_alt7: successThemeAlt7,
+        success_alt8: successThemeAlt8,
 
     },
     tokens: customTokens,

@@ -66,12 +66,18 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     const [productVariations, setProductVariations] = useState<ProductVariation[]>([]);
     const [selectedProductVariation, setSelectedProductVariation] = useState<ProductVariation | undefined>(undefined);
 
+    // Reset variation state if the product itself changes
     useEffect(() => {
-        if (!isLoading && variations.length) {
+        setProductVariations([]);
+        setSelectedProductVariation(undefined);
+    }, [product]);
+
+    // Update variations when they are loaded for the current product
+    useEffect(() => {
+        if (!isLoading && variations) {
             setProductVariations(variations);
-            setSelectedProductVariation(undefined);
         }
-    }, [product, isLoading, variations]);
+    }, [isLoading, variations]);
 
     const value = useMemo(() => {
         const purchasable = createPurchasable({ product, productVariation: selectedProductVariation });

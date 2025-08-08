@@ -2,7 +2,7 @@ import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { useCartContext, useProductContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { ValidationStatus } from '@/models/Product/Purchasable';
-import { CircleX, ShoppingCart, TriangleAlert } from '@tamagui/lucide-icons';
+import { CircleX, PawPrint, TriangleAlert } from '@tamagui/lucide-icons';
 import React, { JSX, useRef, } from 'react';
 import { Button, ButtonProps, ThemeName } from 'tamagui';
 
@@ -15,16 +15,16 @@ interface ButtonStateConfig {
 // Map statuses to their corresponding configurations
 const buttonConfig: Record<ValidationStatus, ButtonStateConfig> = {
     'OK': {
-        icon: <ShoppingCart />,
-        theme: 'dark_purple_alt2',
+        icon: <PawPrint />,
+        theme: 'success_alt7' as ThemeName
     },
     'ACTION_NEEDED': {
         icon: <TriangleAlert />,
-        theme: 'secondary_soft',
+        theme: 'success_alt7' as ThemeName,
     },
     'INVALID': {
         icon: <CircleX />,
-        theme: 'danger',
+        theme: 'success_alt1' as ThemeName,
     },
 };
 
@@ -41,6 +41,8 @@ export const PurchaseButton = (props: ButtonProps) => {
     // Get the configuration for the current status
     const { icon, theme } = buttonConfig[status as ValidationStatus];
 
+
+
     return (
         <CallToActionButton
             ref={buttonRef}
@@ -50,7 +52,7 @@ export const PurchaseButton = (props: ButtonProps) => {
             icon={icon}
             {...props}
         >
-            {isValid ? formatPrice(prices.price) : message}
+            {isValid ? theme + ' ' + formatPrice(prices.price) : message}
         </CallToActionButton>
     );
 };

@@ -66,3 +66,16 @@ export const augmentedLightThemeAlt2 = withThemeExtras(themes.light, darken(0.3,
 export const dangerTheme = withThemeExtras(themes.dark, themes.dark_red.background)
 export const dangerThemeAlt1 = withThemeExtras(themes.dark, themes.dark_red_alt2.background)
 export const dangerThemeAlt2 = withThemeExtras(themes.dark, themes.dark_red_active.background)
+
+
+export const successTheme = withThemeExtras(themes.dark, themes.dark_green.background)
+export const successThemeAlt1 = withThemeExtras(themes.dark, '#0F766E')
+export const successThemeAlt2 = withThemeExtras(themes.dark, '#065F46')
+export const successThemeAlt3 = withThemeExtras(themes.dark, '#1D4ED8')
+export const successThemeAlt4 = withThemeExtras(themes.dark, '#1E3A8A')
+export const successThemeAlt5 = withThemeExtras(themes.dark, '#0B5394')
+export const successThemeAlt6 = withThemeExtras(themes.dark, '#4C1D95')
+export const successThemeAlt7 = withThemeExtras(themes.dark, '#9D174D')
+export const successThemeAlt8 = withThemeExtras(themes.dark, '#7C2D12')
+export const successThemeAlt9 = withThemeExtras(themes.dark, '#92400E')
+export const successThemeAlt10 = withThemeExtras(themes.dark, '#0F172A')

@@ -27,7 +27,7 @@ export const ProductCardLeft = ({ href, props }: ProductCardImageProps) => {
                 br="$3"
                 boc="$borderColorStrong"
                 bw={1}
-                overflow="hidden"
+                ov="hidden"
                 {...props}
             >
                 <ThemedImage
