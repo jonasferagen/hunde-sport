@@ -31,7 +31,7 @@ export const Price = ({ prices, ...props }: PriceProps & SizableTextProps) => {
     if (price_range) {
         return <PriceRange productPriceRange={price_range} {...props} />;
     }
-    const onSale = sale_price !== price;
+    const onSale = sale_price < regular_price;
 
     if (onSale) {
         return <XStack ai="center" gap="$2">

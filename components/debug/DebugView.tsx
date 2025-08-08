@@ -1,5 +1,5 @@
 import { useDebug } from '@/contexts';
-import { Ionicons } from '@expo/vector-icons';
+import { X } from '@tamagui/lucide-icons';
 import { JSX } from 'react';
 import { SizableText, YStack } from 'tamagui';
 
@@ -29,7 +29,7 @@ export const DebugView = (): JSX.Element | null => {
             elevation={5}
         >
             <YStack position="absolute" top="$2" right="$2" onPress={() => setIsOpen(false)} p="$2">
-                <Ionicons name="close-circle" size={24} color="$color" />
+                <X size={24} color="$color" />
             </YStack>
 
             <SizableText size="$6" fow="bold">
