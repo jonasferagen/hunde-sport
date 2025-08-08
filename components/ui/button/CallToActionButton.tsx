@@ -25,8 +25,7 @@ export const CallToActionButton = React.forwardRef<
                 group
                 position="relative"
                 mx="none"
-                px="$3"
-                py="$2.5"
+
                 gap="$3"
                 flexDirection='row'
                 ai="center"
