@@ -1,10 +1,11 @@
-import { ThemedText } from '@/components/ui/ThemedText';
 import { useProductContext } from '@/contexts';
+import { ProductProvider } from '@/contexts/ProductContext';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Button, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductDescription } from '../display/ProductDescription';
+import { ProductTitle } from '../display/ProductTitle';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 
 interface ProductCardContentProps {
@@ -13,7 +14,7 @@ interface ProductCardContentProps {
 
 export const ProductCardRight = ({ href }: ProductCardContentProps) => {
     const { purchasable } = useProductContext();
-    const { activeProduct } = purchasable;
+    const { product } = purchasable;
 
     return (
         <YStack f={1}>
@@ -22,27 +23,20 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                     <YStack f={1} jc="flex-start" gap="$2">
                         <XStack
                             gap="$2"
-                            ai="flex-start"
+                            ai="center"
                             jc="space-between">
 
-                            <ThemedText
-                                f={0}
-                                fs={1}
-                                lh='$2'
-                                fontSize="$5"
-                                numberOfLines={2}
-                                textDecorationLine="none"
-                            >
-                                {activeProduct.name}
-                            </ThemedText>
+                            <ProductTitle fos="$5" />
                             <YStack
                                 gap="$1"
                                 jc="center"
                                 ai="center" >
-                                <PriceTag
-                                    br="$5"
-                                    miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
-                                />
+                                <ProductProvider product={product}>
+                                    <PriceTag
+                                        br="$5"
+                                        miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
+                                    />
+                                </ProductProvider>
                             </YStack>
                         </XStack>
                         <ProductDescription

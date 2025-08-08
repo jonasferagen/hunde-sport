@@ -69,7 +69,9 @@ export const Price = ({ ...props }: SizableTextProps) => {
 
 
 
-interface PriceTagProps extends StackProps { }
+interface PriceTagProps extends StackProps {
+
+}
 
 export const PriceTag = ({ ...stackProps }: PriceTagProps): JSX.Element => {
 

@@ -76,6 +76,9 @@ export class ProductVariation extends BaseProduct<BaseProductData> {
             })
             .filter((v): v is { name: string; value: string } => v !== null);
     }
+    getLabel(): string {
+        return this.getParsedVariation().map((v) => v.value).join(', ');
+    }
 }
 
 export class SimpleProduct extends BaseProduct<BaseProductData> {

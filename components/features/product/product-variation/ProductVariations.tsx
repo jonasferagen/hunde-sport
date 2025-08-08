@@ -34,13 +34,10 @@ const VariationSelector = ({ product,
         return <></>;
     }
 
-
-
     return (
         <XStack gap="$2" fw="wrap" {...stackProps}>
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
-
                 const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
                 const selectedValue = selectionManager.getSelectedOption(name);
                 if (filteredOptions.length === 0) return null;

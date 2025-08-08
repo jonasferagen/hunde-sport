@@ -88,8 +88,8 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
     const prices = activeProduct.prices;
     const titles = {
         product: product.name,
-        variation: productVariation ? productVariation.variation : '',
-        full: product.name + (productVariation ? ` - ${productVariation.variation}` : ''),
+        variation: productVariation ? productVariation.getLabel() : '',
+        full: product.name + (productVariation ? ` - ${productVariation.getLabel()}` : ''),
     }
 
     const availability: Availability = {
