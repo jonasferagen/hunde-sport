@@ -1,19 +1,13 @@
 import { SizableText, StackProps, XStack } from 'tamagui';
 import { ThemedLinearGradient } from '../ThemedLinearGradient';
-interface ChipProps {
-    title?: string;
-    onPress?: () => void;
-}
 
-export const Chip = ({ title, onPress, children, ...stackProps }: ChipProps & StackProps) => {
+export const Chip = ({ children, ...props }: StackProps) => {
 
     const chipContent = (
         <XStack
-            t={stackProps.t}
-            onPress={onPress}
+            theme="secondary_alt2"
             py="$1"
             px="$2"
-            bg="$backgroundAlpha"
             br="$3"
             bw={1}
             boc="$borderColorStrong"
@@ -22,10 +16,17 @@ export const Chip = ({ title, onPress, children, ...stackProps }: ChipProps & St
             h="$5"
             gap="$1.5"
             elevation={3}
-            {...stackProps}
+            {...props}
         >
-            <ThemedLinearGradient br="$3" colors={['$backgroundAlpha', '$backgroundElevated']} />
-            <SizableText fos="$3" color="black" numberOfLines={1}>
+            <ThemedLinearGradient
+                br="$3"
+                colors={['$backgroundAlpha', '$backgroundElevated']}
+                {...props}
+            />
+            <SizableText
+                fos="$3"
+                color="black"
+                numberOfLines={1}>
                 {children}
             </SizableText>
         </XStack>

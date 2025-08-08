@@ -4,7 +4,6 @@ import { formatPrice, formatPriceRange } from '@/lib/helpers';
 import React, { JSX } from 'react';
 import { SizableText, SizableTextProps, StackProps, XStack } from 'tamagui';
 
-
 export const PriceRange = ({ ...props }: SizableTextProps) => {
 
     const { purchasable } = useProductContext();
@@ -37,7 +36,6 @@ export const Price = ({ ...props }: SizableTextProps) => {
     if (!isInStock || !isPurchasable) {
         return <SizableText
             color="$colorSubtle"
-            textDecorationStyle="dotted"
             textDecorationLine='line-through'
             fow="bold"
             {...props}>
@@ -46,14 +44,20 @@ export const Price = ({ ...props }: SizableTextProps) => {
     }
 
     if (isOnSale) {
-        return <XStack ai="center" gap="$2">
-            <SizableText textDecorationLine="line-through" opacity={0.7} {...props}>
-                {formatPrice(regular_price)}
-            </SizableText>
-            <SizableText fow="bold" {...props}>
-                {formatPrice(sale_price)}
-            </SizableText>
-        </XStack>
+        return (
+            <XStack ai="center" gap="$2">
+                <SizableText
+                    textDecorationLine="line-through"
+                    opacity={0.7}
+                    {...props}>
+                    {formatPrice(regular_price)}
+                </SizableText>
+                <SizableText fow="bold"
+                    {...props}>
+                    {formatPrice(sale_price)}
+                </SizableText>
+            </XStack>
+        );
     }
 
     return (
@@ -63,8 +67,6 @@ export const Price = ({ ...props }: SizableTextProps) => {
     );
 };
 
-
-
 interface PriceTagProps extends StackProps { }
 
 export const PriceTag = ({ children, ...stackProps }: PriceTagProps): JSX.Element => {
@@ -73,5 +75,7 @@ export const PriceTag = ({ children, ...stackProps }: PriceTagProps): JSX.Elemen
     const { availability } = purchasable;
     const { isInStock, isPurchasable } = availability;
 
-    return <Chip disabled={!isInStock || !isPurchasable} {...stackProps} />
+    return <Chip disabled={!isInStock || !isPurchasable} {...stackProps}>
+        <Price />
+    </Chip>;
 };
