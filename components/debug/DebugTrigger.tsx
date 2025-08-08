@@ -1,6 +1,6 @@
-import { useDebug } from '@/contexts';
+import { useDebug } from '@/contexts/DebugContext';
 import { PurchasableProduct } from '@/models/Product/Product';
-import { Ionicons } from '@expo/vector-icons';
+import { Info } from '@tamagui/lucide-icons';
 import { JSX } from 'react';
 import { YStack } from 'tamagui';
 
@@ -20,18 +20,18 @@ export const DebugTrigger = ({ product }: DebugTriggerProps): JSX.Element => {
         <YStack
             p="$2"
             position="absolute"
-            bottom="$4"
-            right="$4"
+            top="$4"
+            left="$4"
             zIndex={9999}
             bg="rgba(0,0,0,0.5)"
-            br="$12"
+            br="$4"
             onPress={handlePress}
             pressStyle={{
                 scale: 0.9,
             }}
             animateOnly={['transform']}
         >
-            <Ionicons name="information-circle-outline" size={24} color="white" />
+            <Info size={24} color="white" />
         </YStack>
     );
 };

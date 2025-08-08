@@ -27,6 +27,7 @@ const paths = {
     productCategory: '/product-category',
     product: '/product',
     cart: '/cart',
+    checkout: '/checkout',
 } as const;
 
 export const routes: Record<string, Route> = {
@@ -76,6 +77,13 @@ export const routes: Record<string, Route> = {
             }
             return { pathname: paths.product, params };
         },
+    },
+    checkout: {
+        name: 'checkout',
+        label: 'Kassen',
+        icon: () => null, // No icon for checkout in drawer
+        theme: 'primary',
+        path: () => ({ pathname: paths.checkout }),
     },
 };
 

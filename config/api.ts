@@ -6,7 +6,9 @@ export type PaginationOptions = {
 }
 const DOMAIN = "hunde-sport.no";
 const BASE_URL = `https://${DOMAIN}`;
-export const API_BASE_URL = `${BASE_URL}/wp-json/wc/store/v1`;
+const API_BASE_URL = `${BASE_URL}/wp-json/wc/store/v1`;
+const CART_RESTORE_TOKEN_URL = `${BASE_URL}/wp-json/custom/v1/cart-restore-token`;
+const CHECKOUT_URL = `${BASE_URL}/kassen`;
 
 
 const CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
@@ -30,7 +32,6 @@ export const ENDPOINTS = {
   },
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,
-
     FEATURED: (pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&featured=true`,
     DISCOUNTED: (pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&on_sale=true`,
     SEARCH: (query: string, pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&search=${query}`,
@@ -45,4 +46,10 @@ export const ENDPOINTS = {
     UPDATE_ITEM: () => `${CART_URL}/update-item`,
     REMOVE_ITEM: () => `${CART_URL}/remove-item`,
   },
+  CHECKOUT: {
+    CART_RESTORE_TOKEN: () => `${CART_RESTORE_TOKEN_URL}`,
+    CHECKOUT: (restoreToken: string) => `${CHECKOUT_URL}?restore_token=${restoreToken}`,
+  }
 };
+
+export { API_BASE_URL };

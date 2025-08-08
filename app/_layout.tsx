@@ -27,7 +27,6 @@ const RootLayout = (): JSX.Element => {
                     <SearchProvider>
                       <Stack screenOptions={{ headerShown: false }}>
                         <Stack.Screen name="(app)" />
-                        <Stack.Screen name="checkout" options={{ presentation: 'modal' }} />
                       </Stack>
                       <DebugView />
                     </SearchProvider>

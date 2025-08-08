@@ -18,7 +18,6 @@ interface LoaderProps {
 const CartInitializer = ({ onReady }: LoaderProps) => {
     const initializeCart = useCartStore((state) => state.initializeCart);
     const isInitialized = useCartStore((state) => state.isInitialized);
-    const addItem = useCartStore((state) => state.addItem);
 
     useEffect(() => {
         initializeCart();
@@ -26,15 +25,9 @@ const CartInitializer = ({ onReady }: LoaderProps) => {
 
     useEffect(() => {
         if (isInitialized) {
-            // --- TEMPORARY TEST CODE ---
-            console.log('TEST: Cart initialized. Adding test item...');
-            addItem({ id: 248212, quantity: 1, variation: [] }).finally(() => {
-                console.log('TEST: Add item call finished.');
-                onReady();
-            });
-            // --- END TEMPORARY TEST CODE ---
+            onReady();
         }
-    }, [isInitialized, onReady, addItem]);
+    }, [isInitialized, onReady]);
 
     return null; // Logic-only component
 };

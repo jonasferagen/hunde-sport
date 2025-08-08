@@ -2,21 +2,12 @@ import { CartSummary } from '@/components/features/cart';
 import { CartList } from '@/components/features/cart/CartList';
 import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
 import { PageContent, PageHeader, PageView } from '@/components/layout';
-import { useCartContext } from '@/contexts/CartContext';
-import { useCartStore } from '@/stores/CartStore';
-import { useRouter } from 'expo-router';
+import { routes } from '@/config/routes';
+import { Link } from 'expo-router';
 import React from 'react';
 import { Theme, YStack } from 'tamagui';
 
 export const CartScreen = () => {
-    const { cart, isUpdating } = useCartContext();
-    const { cartToken } = useCartStore();
-    const router = useRouter();
-
-
-    const handleCheckout = () => {
-        router.push('/checkout'); // Navigate to the new WebView screen
-    };
 
     return (
         <Theme name="secondary_soft">
@@ -29,10 +20,12 @@ export const CartScreen = () => {
                         <CartList />
                     </YStack>
                 </PageContent>
-                <PageContent>
-                    <CheckoutButton />
-                </PageContent>
+                <PageHeader>
+                    <Link href={routes.checkout.path()} asChild>
+                        <CheckoutButton />
+                    </Link>
+                </PageHeader>
             </PageView>
-        </Theme >
+        </Theme>
     )
 };

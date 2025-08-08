@@ -1,7 +1,6 @@
 import { decode } from 'he';
 import { DimensionValue } from 'react-native';
 
-export const logJson = (json: any) => console.log(JSON.stringify(json, null, 2));
 
 export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
 

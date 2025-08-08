@@ -24,7 +24,7 @@ export const Tile = ({
 
     return (
         <YStack
-            br="$4"
+            br="$3"
             ov="hidden"
             aspectRatio={aspectRatio}
             boc="$borderColor"

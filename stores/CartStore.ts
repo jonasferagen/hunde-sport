@@ -4,8 +4,8 @@ import {
     removeItem as apiRemoveItem,
     updateItem as apiUpdateItem,
 } from '@/hooks/data/Cart/api';
+import { log } from '@/lib/logger';
 import { CartData } from '@/models/Cart/Cart';
-import { log } from '@/services/Logger';
 import { Storage } from 'expo-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';

@@ -1,5 +1,5 @@
 import { PageHeader, PageView } from '@/components/layout';
-import { log } from '@/services/Logger';
+import { log } from '@/lib/logger';
 import { useCartStore } from '@/stores/CartStore';
 import { ChevronLeft } from '@tamagui/lucide-icons';
 import { useRouter } from 'expo-router';

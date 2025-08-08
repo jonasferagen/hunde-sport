@@ -1,5 +1,5 @@
 import { API_BASE_URL } from '@/config/api';
-import { log } from '@/services/Logger';
+import { log } from '@/lib/logger';
 import { ApiResponse, create } from 'apisauce';
 
 const apiClient = create({
