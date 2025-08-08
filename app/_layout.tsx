@@ -1,5 +1,7 @@
+import { DebugView } from '@/components/debug/DebugView';
 import {
   AppToastProvider,
+  DebugProvider,
   SearchProvider,
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
@@ -20,14 +22,17 @@ const RootLayout = (): JSX.Element => {
           <SafeAreaProvider>
             <PortalProvider>
               <Theme name="light">
-                <AppToastProvider>
-                  <SearchProvider>
-                    <Stack screenOptions={{ headerShown: false }}>
-                      <Stack.Screen name="(app)" />
-                      <Stack.Screen name="checkout" options={{ presentation: 'modal' }} />
-                    </Stack>
-                  </SearchProvider>
-                </AppToastProvider>
+                <DebugProvider>
+                  <AppToastProvider>
+                    <SearchProvider>
+                      <Stack screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name="(app)" />
+                        <Stack.Screen name="checkout" options={{ presentation: 'modal' }} />
+                      </Stack>
+                      <DebugView />
+                    </SearchProvider>
+                  </AppToastProvider>
+                </DebugProvider>
               </Theme>
             </PortalProvider>
           </SafeAreaProvider>

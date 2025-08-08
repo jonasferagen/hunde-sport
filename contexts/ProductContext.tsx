@@ -1,9 +1,11 @@
+import { DebugTrigger } from '@/components/debug/DebugTrigger';
 import { useProduct, useProductVariations } from '@/hooks/data/Product';
 import { ProductVariation, PurchasableProduct } from '@/models/Product/Product';
 import { createPurchasable, Purchasable } from '@/models/Product/Purchasable';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { View } from 'react-native';
 import { ProductCategoryProvider } from './ProductCategoryContext';
 
 /**
@@ -54,9 +56,10 @@ export const ProductLoader: React.FC<{ id: number; productCategoryId?: number; c
 };
 
 
-export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
+export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode; showDebug?: boolean }> = ({
     product,
     children,
+    showDebug = true,
 }) => {
 
     const { isLoading, items: variations } = useProductVariations(product);
@@ -83,5 +86,12 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
         };
     }, [product, selectedProductVariation, isLoading, productVariations]);
 
-    return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
+    return (
+        <ProductContext.Provider value={value}>
+            <View style={{ flex: 1 }}>
+                {children}
+                {showDebug && <DebugTrigger product={product} />}
+            </View>
+        </ProductContext.Provider>
+    );
 };
