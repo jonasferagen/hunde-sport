@@ -19,9 +19,9 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
 
 
     return (
-        <YStack {...props} bbc="$borderColor" bbw={1} p="$3" f={1}>
+        <YStack {...props} bbc="$borderColor" bbw={1} f={1}>
             <ThemedLinearGradient zIndex={-1} />
-            <XStack gap="$3">
+            <XStack gap="$3" p="$3">
                 <ProductCardLeft href={href} />
                 <ProductCardRight href={href} />
             </XStack>

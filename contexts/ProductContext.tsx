@@ -75,9 +75,22 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
     // Update variations when they are loaded for the current product
     useEffect(() => {
         if (!isLoading && variations) {
+            // Integrity Check: Ensure all incoming variations belong to the parent product
+            if (variations.some((v) => v.parent !== product.id)) {
+                throw new Error(`State integrity error: Attempted to load variations that do not belong to product #${product.id}.`);
+            }
             setProductVariations(variations);
         }
-    }, [isLoading, variations]);
+    }, [isLoading, variations, product.id]);
+
+    // Create a guarded setter for the selected product variation
+    const handleSetSelectedProductVariation = (variation: ProductVariation | undefined) => {
+        // Integrity Check: Ensure the variation is valid before setting it
+        if (variation && !productVariations?.find((v) => v.id === variation.id)) {
+            throw new Error(`State integrity error: Selected variation #${variation.id} is not part of the available variations.`);
+        }
+        setSelectedProductVariation(variation);
+    };
 
     const value = useMemo(() => {
         const purchasable = createPurchasable({ product, productVariation: selectedProductVariation });
@@ -87,7 +100,7 @@ export const ProductProvider: React.FC<{ product: PurchasableProduct; children: 
             purchasable,
             isLoading,
             selectedProductVariation,
-            setSelectedProductVariation,
+            setSelectedProductVariation: handleSetSelectedProductVariation,
             productVariations,
         };
     }, [product, selectedProductVariation, isLoading, productVariations]);

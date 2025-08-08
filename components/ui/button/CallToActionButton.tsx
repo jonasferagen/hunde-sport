@@ -47,8 +47,9 @@ export const CallToActionButton = React.forwardRef<
                     f={1}
                     fg={1}
                     px="none"
+
                 >
-                    <ThemedText fow="bold" fos="$4">
+                    <ThemedText fow="bold" fos="$4" boc="black" bw={1} f={1} >
                         {children}
                     </ThemedText>
                 </XStack>

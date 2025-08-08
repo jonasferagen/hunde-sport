@@ -29,7 +29,7 @@ export const Price = ({ ...props }: SizableTextProps) => {
 
     const { purchasable } = useProductContext();
     const { prices, availability } = purchasable;
-    const { inStock, isPurchasable, isOnSale } = availability;
+    const { isInStock, isPurchasable, isOnSale } = availability;
 
     const { sale_price, price, regular_price, price_range } = prices;
 
@@ -37,7 +37,7 @@ export const Price = ({ ...props }: SizableTextProps) => {
         return <PriceRange {...props} />;
     }
 
-    if (!inStock || !isPurchasable) {
+    if (!isInStock || !isPurchasable) {
         return <SizableText
             color="$colorSubtle"
             textDecorationStyle="dotted"
@@ -75,7 +75,7 @@ export const PriceTag = ({ ...stackProps }: PriceTagProps): JSX.Element => {
 
     const { purchasable } = useProductContext();
     const { availability } = purchasable;
-    const { inStock, isPurchasable } = availability;
+    const { isInStock: inStock, isPurchasable } = availability;
 
     return (
         <Chip theme="secondary_alt1" opacity={inStock && isPurchasable ? 1 : 0.5} {...stackProps} >

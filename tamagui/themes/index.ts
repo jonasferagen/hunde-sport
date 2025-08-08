@@ -34,15 +34,15 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string) =
 export const sageTheme = withThemeExtras(themes.light, '#DDE2C3')
 export const sageThemeSoft = withThemeExtras(themes.light, lighten(0.1, '#DDE2C3'))
 export const sageThemeElevated = withThemeExtras(themes.light, lighten(0.2, '#DDE2C3'))
-export const sageThemeStrong = withThemeExtras(themes.light, darken(0.1, '#DDE2C3'))
+export const sageThemeStrong = withThemeExtras(themes.light, darken(0.2, '#DDE2C3'))
 export const sageThemeAlt1 = withThemeExtras(themes.light, '#7F924C')
-export const sageThemeAlt2 = withThemeExtras(themes.light, '#6B8E6B', true)
+export const sageThemeAlt2 = withThemeExtras(themes.light, '#6B8E6B')
 
 
 export const lilacTheme = withThemeExtras(themes.light, '#D7C8E7')
 export const lilacThemeSoft = withThemeExtras(themes.light, lighten(0.1, '#D7C8E7'))
 export const lilacThemeElevated = withThemeExtras(themes.light, lighten(0.2, '#DDE2C3'))
-export const lilacThemeStrong = withThemeExtras(themes.light, darken(0.1, '#DDE2C3'))
+export const lilacThemeStrong = withThemeExtras(themes.light, darken(0.2, '#DDE2C3'))
 export const lilacThemeAlt1 = withThemeExtras(themes.light, '#7A4DB1')
 export const lilacThemeAlt2 = withThemeExtras(themes.light, '#DDE2C3')
 
@@ -50,7 +50,7 @@ export const lilacThemeAlt2 = withThemeExtras(themes.light, '#DDE2C3')
 export const mintTheme = withThemeExtras(themes.light, '#C8E6E5')
 export const mintThemeSoft = withThemeExtras(themes.light, lighten(0.1, '#C8E6E5'))
 export const mintThemeElevated = withThemeExtras(themes.light, lighten(0.2, '#DDE2C3'))
-export const mintThemeStrong = withThemeExtras(themes.light, darken(0.1, '#DDE2C3'))
+export const mintThemeStrong = withThemeExtras(themes.light, darken(0.2, '#DDE2C3'))
 export const mintThemeAlt1 = withThemeExtras(themes.light, '#2FA7A3')
 export const mintThemeAlt2 = withThemeExtras(themes.light, '#7B9B9B')
 

@@ -62,7 +62,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
 };
 
 export interface Availability {
-    inStock: boolean;
+    isInStock: boolean;
     isPurchasable: boolean;
     isOnBackOrder: boolean;
     isOnSale: boolean;
@@ -73,7 +73,7 @@ export interface Purchasable extends ValidationResult {
     product: SimpleProduct | VariableProduct;
     productVariation?: ProductVariation;
     activeProduct: Product;
-    titles: { title: string; full_title: string; };
+    titles: { product: string; variation: string, full: string; };
     image: StoreImage;
     prices: ProductPrices;
     availability: Availability;
@@ -87,12 +87,13 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
     const image = activeProduct.featuredImage;
     const prices = activeProduct.prices;
     const titles = {
-        title: productVariation ? productVariation.variation : activeProduct.name,
-        full_title: productVariation ? `${product.name} - ${productVariation.variation}` : product.name,
-    };
+        product: product.name,
+        variation: productVariation ? productVariation.variation : '',
+        full: product.name + (productVariation ? ` - ${productVariation.variation}` : ''),
+    }
 
     const availability: Availability = {
-        inStock: activeProduct.is_in_stock,
+        isInStock: activeProduct.is_in_stock,
         isPurchasable: activeProduct.is_purchasable,
         isOnBackOrder: activeProduct.is_on_backorder,
         isOnSale: activeProduct.prices.sale_price < activeProduct.prices.regular_price,
