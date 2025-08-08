@@ -36,23 +36,19 @@ export const ProductImageGallery = (): JSX.Element => {
                                         onPress={() => openGallery(index)}
                                         br="$2"
                                         ov="hidden"
-                                        bw={1}
-                                        boc="$borderColor"
-
+                                        f={1}
                                     // Do not force flex on grid items; let image size control height
                                     >
                                         <Galeria.Image index={index}>
-                                            <YStack>
-                                                <ThemedImage
+                                            <ThemedImage
 
-                                                    source={{ uri: thumbnailUrl }}
-                                                    image={image}
-                                                    title={product.name}
+                                                source={{ uri: thumbnailUrl }}
+                                                image={image}
+                                                title={product.name}
 
-                                                    aspectRatio={1}
-                                                    objectFit="cover"
-                                                />
-                                            </YStack>
+                                                aspectRatio={1}
+                                                objectFit="cover"
+                                            />
                                         </Galeria.Image>
                                     </YStack>
                                 );
