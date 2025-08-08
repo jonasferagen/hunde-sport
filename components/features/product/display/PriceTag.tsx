@@ -39,7 +39,7 @@ export const Price = ({ ...props }: SizableTextProps) => {
 
     if (!inStock || !isPurchasable) {
         return <SizableText
-            color="$red5Dark"
+            color="$colorSubtle"
             textDecorationStyle="dotted"
             textDecorationLine='line-through'
             fow="bold"
@@ -77,11 +77,10 @@ export const PriceTag = ({ ...stackProps }: PriceTagProps): JSX.Element => {
     const { availability } = purchasable;
     const { inStock, isPurchasable } = availability;
 
-    const theme = inStock && isPurchasable ? 'secondary_alt1' : 'dark_red';
-
     return (
-        <Chip theme={theme} {...stackProps} >
+        <Chip theme="secondary_alt1" opacity={inStock && isPurchasable ? 1 : 0.5} {...stackProps} >
             <Price />
         </Chip>
+
     );
 };

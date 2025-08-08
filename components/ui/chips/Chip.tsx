@@ -15,6 +15,7 @@ interface ChipProps {
 export const Chip = ({ title, icon, children, br = "$3", href, onPress, button, ...stackProps }: ChipProps & StackProps) => {
 
 
+
     const chipContent = (
         <XStack
             py="$1"

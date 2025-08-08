@@ -24,13 +24,13 @@ const buttonConfig: Record<ValidationStatus, ButtonStateConfig> = {
     },
     'INVALID': {
         icon: <CircleX />,
-        theme: 'red',
+        theme: 'danger',
     },
 };
 
 export const PurchaseButton = (props: ButtonProps) => {
     const { purchasable } = useProductContext();
-    const { isValid, title, prices, message, status } = purchasable;
+    const { isValid, prices, message, status } = purchasable;
 
     const { addItem } = useCartContext();
     const buttonRef = useRef<React.ComponentRef<typeof Button>>(null);

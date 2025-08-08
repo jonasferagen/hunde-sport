@@ -12,11 +12,10 @@ interface ProductCardContentProps {
 }
 
 export const ProductCardRight = ({ href }: ProductCardContentProps) => {
-    const { product, purchasable } = useProductContext();
+    const { purchasable } = useProductContext();
+    const { activeProduct } = purchasable;
 
-    const { availability } = purchasable;
 
-    const theme = availability.isPurchasable ? 'primary' : 'secondary_alt1';
 
     return (
         <YStack f={1}>
@@ -33,13 +32,10 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                                 numberOfLines={2}
                                 textDecorationLine="none"
                             >
-                                {product.name}
+                                {activeProduct.name}
                             </ThemedText>
-
-                            <YStack gap="$1" jc="center" ai="center">
-
-                                <PriceTag minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH} />
-
+                            <YStack gap="$1" jc="center" ai="center" >
+                                <PriceTag br="$5" miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH} />
                             </YStack>
                         </XStack>
                         <ProductDescription

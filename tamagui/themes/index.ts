@@ -1,7 +1,7 @@
 import { themes } from '@tamagui/themes'
 import { darken, lighten, readableColor, rgba } from 'polished'
 
-const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, invertText: boolean = false) => {
+const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string) => {
     return {
         ...baseTheme,
 
@@ -16,8 +16,8 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string, i
         borderColorStrong: darken(0.15, baseColor),
         borderColorElevated: lighten(0.05, baseColor),
 
-        color: invertText ? readableColor(baseColor, '#fff', '#111', true) : readableColor(baseColor, '#111', '#fff', true),
-        colorSubtle: invertText ? rgba(readableColor(baseColor, '#fff', '#111'), 0.6) : rgba(readableColor(baseColor, '#111', '#fff'), 0.6),
+        color: readableColor(baseColor, '#fff', '#111'),
+        colorSubtle: rgba(readableColor(baseColor, '#fff', '#111'), 0.6),
 
         overlayColor: rgba(baseColor, 0.5),
 
@@ -62,3 +62,7 @@ export const augmentedLightThemeStrong = withThemeExtras(themes.light, darken(0.
 export const augmentedLightThemeAlt1 = withThemeExtras(themes.light, darken(0.2, themes.light.background))
 export const augmentedLightThemeAlt2 = withThemeExtras(themes.light, darken(0.3, themes.light.background))
 
+
+export const dangerTheme = withThemeExtras(themes.dark, themes.dark_red.background)
+export const dangerThemeAlt1 = withThemeExtras(themes.dark, themes.dark_red_alt2.background)
+export const dangerThemeAlt2 = withThemeExtras(themes.dark, themes.dark_red_active.background)

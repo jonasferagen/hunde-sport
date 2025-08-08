@@ -10,6 +10,9 @@ import {
     augmentedLightThemeElevated,
     augmentedLightThemeSoft,
     augmentedLightThemeStrong,
+    dangerTheme,
+    dangerThemeAlt1,
+    dangerThemeAlt2,
     lilacTheme,
     lilacThemeAlt1,
     lilacThemeAlt2,
@@ -149,6 +152,11 @@ const appConfig = createTamagui({
         light_strong: augmentedLightThemeStrong,
         light_alt1: augmentedLightThemeAlt1,
         light_alt2: augmentedLightThemeAlt2,
+
+
+        danger: dangerTheme,
+        danger_alt1: dangerThemeAlt1,
+        danger_alt2: dangerThemeAlt2,
 
     },
     tokens: customTokens,
