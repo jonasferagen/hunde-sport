@@ -21,19 +21,19 @@ export const HomeScreen = () => {
             <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
         </PageHeader>
         <PageSection scrollable>
-            <PageContent theme="secondary_soft" title="Kategorier">
-                <ProductCategoryTiles key="categories" theme="dark_green" />
+            <PageContent theme="primary_soft" title="Kategorier">
+                <ProductCategoryTiles key="categories" theme="primary" />
             </PageContent>
-            <PageContent theme="light_soft" title="Nyheter" px="none" scrollable >
+            <PageContent theme="primary_strong" title="Nyheter" px="none" scrollable >
                 <RecentProducts key='recent' theme="primary" />
             </PageContent>
             <PageContent theme="primary_soft" title="Tilbud" px="none" scrollable>
                 <DiscountedProducts key='discounted' theme="primary_strong" />
             </PageContent>
-            <PageContent theme="tertiary" title="Utvalgte produkter" px="none" scrollable>
+            <PageContent theme="primary_soft" title="Utvalgte produkter" px="none" scrollable>
                 <FeaturedProducts key='featured' theme="light" />
             </PageContent>
-            <PageContent theme="light" title="Debug" px="none" scrollable>
+            <PageContent theme="primary" title="Debug" px="none" scrollable>
                 <DebugProducts key='debug' theme="secondary" />
             </PageContent>
         </PageSection>
