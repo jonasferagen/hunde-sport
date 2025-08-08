@@ -1,6 +1,7 @@
 import { Chip } from "@/components/ui/";
 import { routes } from "@/config/routes";
 import { useProductCategoryContext } from "@/contexts";
+import { Link } from "expo-router";
 import { StackProps, ThemeName, XStack } from "tamagui";
 
 interface ProductCategoryChipsProps {
@@ -16,19 +17,14 @@ export const ProductCategoryChips = ({ limit, showAll, theme, ...stackProps }: S
     const limitedProductCategories = limit ? productCategories.slice(0, limit) : productCategories;
     const displayedProductCategories = showAll ? productCategories : limitedProductCategories;
 
-    if (!productCategories || productCategories.length === 0) {
-        return null;
-    }
-
     return (
-        <XStack flexWrap="wrap" ai="center" gap="$2" {...stackProps}>
+        productCategories.length > 0 && <XStack fw="wrap" ai="center" gap="$2" {...stackProps}>
             {displayedProductCategories.map((productCategory) => (
-                <Chip
-                    key={productCategory.id}
-                    theme={theme}
-                    title={productCategory.name}
-                    href={routes['product-category'].path(productCategory)}
-                />
+                <Link key={productCategory.id} href={routes['product-category'].path(productCategory)} asChild>
+                    <Chip theme={theme}>
+                        {productCategory.name}
+                    </Chip>
+                </Link>
             ))}
         </XStack>
     );

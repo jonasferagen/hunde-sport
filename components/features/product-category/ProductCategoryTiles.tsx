@@ -18,6 +18,7 @@ export const ProductCategoryTiles = ({ theme }: ProductCategoryTilesProps): JSX.
         [rootProductCategories]
     );
 
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <YStack

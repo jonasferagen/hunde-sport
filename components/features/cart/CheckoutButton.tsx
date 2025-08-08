@@ -13,8 +13,7 @@ export const CheckoutButton = (props: CheckoutButtonProps): JSX.Element => {
             iconAfter={<ExternalLink />}
             {...props}
         >
-            {"Til kassen"}
-
+            Til kassen
         </CallToActionButton>
     );
 };

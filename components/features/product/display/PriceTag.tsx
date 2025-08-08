@@ -9,7 +9,6 @@ export const PriceRange = ({ ...props }: SizableTextProps) => {
 
     const { purchasable } = useProductContext();
     const { prices } = purchasable;
-
     const { price_range } = prices;
 
     if (!price_range) {
@@ -24,13 +23,11 @@ export const PriceRange = ({ ...props }: SizableTextProps) => {
 };
 
 
-
 export const Price = ({ ...props }: SizableTextProps) => {
 
     const { purchasable } = useProductContext();
     const { prices, availability } = purchasable;
     const { isInStock, isPurchasable, isOnSale } = availability;
-
     const { sale_price, price, regular_price, price_range } = prices;
 
     if (price_range) {
@@ -47,7 +44,6 @@ export const Price = ({ ...props }: SizableTextProps) => {
             {formatPrice(price)}
         </SizableText>
     }
-
 
     if (isOnSale) {
         return <XStack ai="center" gap="$2">
@@ -69,20 +65,13 @@ export const Price = ({ ...props }: SizableTextProps) => {
 
 
 
-interface PriceTagProps extends StackProps {
+interface PriceTagProps extends StackProps { }
 
-}
-
-export const PriceTag = ({ ...stackProps }: PriceTagProps): JSX.Element => {
+export const PriceTag = ({ children, ...stackProps }: PriceTagProps): JSX.Element => {
 
     const { purchasable } = useProductContext();
     const { availability } = purchasable;
-    const { isInStock: inStock, isPurchasable } = availability;
+    const { isInStock, isPurchasable } = availability;
 
-    return (
-        <Chip theme="secondary_alt1" opacity={inStock && isPurchasable ? 1 : 0.5} {...stackProps} >
-            <Price />
-        </Chip>
-
-    );
+    return <Chip disabled={!isInStock || !isPurchasable} {...stackProps} />
 };

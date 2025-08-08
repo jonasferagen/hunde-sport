@@ -19,7 +19,6 @@ const ProductCategoryScreenContent = memo(() => {
 
     useRenderGuard('ProductCategoryScreenContent');
 
-
     if (!productCategory) {
         return <NotFoundScreen message="Beklager, kategorien ble ikke funnet" />;
     }
@@ -34,8 +33,9 @@ const ProductCategoryScreenContent = memo(() => {
                     <Chip
                         theme="secondary_alt2"
                         onPress={() => setShowAll(!showAll)}
-                        icon={showAll ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
-                    />
+                    >
+                        {showAll ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
+                    </Chip>
                 )}
             </XStack>
 

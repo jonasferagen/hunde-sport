@@ -2,7 +2,7 @@ import { Tile, TileBadge } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import { ProductProvider } from '@/contexts';
 import React from 'react';
-import { ThemeName, YStackProps } from "tamagui";
+import { YStackProps } from "tamagui";
 import { PriceTag } from './display/PriceTag';
 
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
@@ -35,7 +35,7 @@ export const ProductTile: React.FC<ProductTileProps> = ({
                 {...stackProps}
             >
                 <ProductProvider product={product}>
-                    <TileBadge theme={stackProps.theme as ThemeName} >
+                    <TileBadge bg="transparent">
                         <PriceTag />
                     </TileBadge>
                 </ProductProvider>
