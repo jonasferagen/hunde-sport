@@ -18,7 +18,7 @@ export const VariationButton = ({ isExpanded, handleExpand }: VariationButtonPro
 
     return (
         <CallToActionButton
-            theme="dark_purple_mod"
+            theme="tertiary_alt2"
             icon={isExpanded ? <ChevronUp /> : <ChevronDown />}
             onPress={handleExpand}
         >

@@ -12,7 +12,7 @@ interface ThemedLinearGradientProps
 export const ThemedLinearGradient = ({
     startPoint = [0, 0],
     endPoint = [1, 1],
-    colors = ['$background', '$backgroundFocus'],
+    colors = ['$background', '$backgroundPress'],
     ...props
 }: ThemedLinearGradientProps): JSX.Element => {
     return (
@@ -21,6 +21,7 @@ export const ThemedLinearGradient = ({
             start={startPoint}
             end={endPoint}
             colors={colors}
+            $group-focus={{ opacity: 0 }}
             {...props}
         />
     );

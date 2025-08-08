@@ -1,27 +1,25 @@
-import React from 'react';
-import { YStack, YStackProps, styled } from 'tamagui';
+import React from 'react'
+import { Button, ButtonProps, styled } from 'tamagui'
 
-const StyledThemedButton = styled(YStack, {
+const StyledThemedButton = styled(Button, {
     name: 'ThemedButton',
-    tag: 'button',
+
     // Base style
-    padding: '$3',
+    padding: '$2',
     backgroundColor: '$background',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',
     borderRadius: '$3',
 
-    // Interactions
+    // Interactions (these will automatically apply on hover/press/focus)
     hoverStyle: {
         backgroundColor: '$backgroundHover',
         borderColor: '$borderColor',
     },
-
     pressStyle: {
         backgroundColor: '$backgroundPress',
         borderColor: '$borderColor',
     },
-
     focusStyle: {
         backgroundColor: '$backgroundFocus',
         borderColor: '$shadowColorFocus',
@@ -29,9 +27,9 @@ const StyledThemedButton = styled(YStack, {
         outlineStyle: 'solid',
     },
 
-    // Accent variant (optional)
+    // Variants
     variants: {
-        variant: {
+        themedVariant: {
             active: {
                 backgroundColor: '$backgroundPress',
                 borderColor: '$borderColorStrong',
@@ -45,15 +43,16 @@ const StyledThemedButton = styled(YStack, {
         },
     },
 
+
     // Disabled
     disabledStyle: {
-        opacity: .7,
+        opacity: 0.7,
         pointerEvents: 'none',
     },
-});
+})
 
-export const ThemedButton = React.forwardRef<React.ComponentRef<typeof YStack>, YStackProps>(
+export const ThemedButton = React.forwardRef<React.ComponentRef<typeof StyledThemedButton>, ButtonProps>(
     (props, ref) => {
-        return <StyledThemedButton {...props} ref={ref} />;
+        return <StyledThemedButton {...props} ref={ref} />
     }
-);
+)

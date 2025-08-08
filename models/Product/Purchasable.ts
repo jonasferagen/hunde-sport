@@ -61,38 +61,51 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     };
 };
 
+export interface Availability {
+    inStock: boolean;
+    isPurchasable: boolean;
+    isOnBackOrder: boolean;
+    isOnSale: boolean;
+}
+
 
 export interface Purchasable extends ValidationResult {
     product: SimpleProduct | VariableProduct;
     productVariation?: ProductVariation;
-    displayProduct: Product;
-    title: string;
-    full_title: string;
+    activeProduct: Product;
+    titles: { title: string; full_title: string; };
     image: StoreImage;
     prices: ProductPrices;
-    is_in_stock: boolean;
+    availability: Availability;
 }
 
 export const createPurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): Purchasable => {
 
     const validationResult = validate({ product, productVariation });
-    const displayProduct = productVariation || product;
+    const activeProduct = productVariation || product;
 
-    const image = displayProduct.featuredImage;
-    const prices = displayProduct.prices;
-    const title = productVariation ? productVariation.variation : displayProduct.name;
-    const full_title = productVariation ? `${product.name} - ${productVariation.variation}` : product.name;
-    const is_in_stock = displayProduct.is_in_stock;
+    const image = activeProduct.featuredImage;
+    const prices = activeProduct.prices;
+    const titles = {
+        title: productVariation ? productVariation.variation : activeProduct.name,
+        full_title: productVariation ? `${product.name} - ${productVariation.variation}` : product.name,
+    };
+
+    const availability: Availability = {
+        inStock: activeProduct.is_in_stock,
+        isPurchasable: activeProduct.is_purchasable,
+        isOnBackOrder: activeProduct.is_on_backorder,
+        isOnSale: activeProduct.prices.sale_price < activeProduct.prices.regular_price,
+    };
 
     return {
         product,
         productVariation: productVariation,
-        displayProduct,
+        activeProduct,
         image,
         prices,
-        title,
-        full_title,
-        is_in_stock,
+        titles,
+        availability,
         ...validationResult,
     };
 };

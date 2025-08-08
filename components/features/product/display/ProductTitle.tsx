@@ -4,7 +4,7 @@ import { SizableText, SizableTextProps } from 'tamagui';
 
 export const ProductTitle = ({ size = "$3", ...props }: SizableTextProps) => {
     const { purchasable } = useProductContext();
-    const { full_title } = purchasable;
+    const { titles } = purchasable;
 
     return <SizableText
         fos={size}
@@ -12,6 +12,6 @@ export const ProductTitle = ({ size = "$3", ...props }: SizableTextProps) => {
         fs={1}
         {...props}
     >
-        {full_title}
+        {titles.full_title}
     </SizableText>;
 };

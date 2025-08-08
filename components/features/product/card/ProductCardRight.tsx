@@ -1,8 +1,8 @@
-import { Chip } from '@/components/ui';
+import { ThemedText } from '@/components/ui/ThemedText';
 import { useProductContext } from '@/contexts';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
-import { Button, H6, XStack, YStack } from 'tamagui';
+import { Button, XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductDescription } from '../display/ProductDescription';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
@@ -12,7 +12,11 @@ interface ProductCardContentProps {
 }
 
 export const ProductCardRight = ({ href }: ProductCardContentProps) => {
-    const { product } = useProductContext();
+    const { product, purchasable } = useProductContext();
+
+    const { availability } = purchasable;
+
+    const theme = availability.isPurchasable ? 'primary' : 'secondary_alt1';
 
     return (
         <YStack f={1}>
@@ -20,20 +24,22 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
                     <YStack f={1} jc="flex-start" gap="$2">
                         <XStack gap="$2" ai="flex-start" jc="space-between">
-                            <H6
+
+                            <ThemedText
                                 f={0}
                                 fs={1}
                                 lh='$2'
+                                fontSize="$5"
                                 numberOfLines={2}
                                 textDecorationLine="none"
-                                hoverStyle={{ color: '$colorHover' }}
                             >
                                 {product.name}
-                            </H6>
+                            </ThemedText>
+
                             <YStack gap="$1" jc="center" ai="center">
-                                <Chip theme="secondary_alt1" minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH}>
-                                    <PriceTag />
-                                </Chip>
+
+                                <PriceTag minWidth={PRODUCT_CARD_LEFT_COLUMN_WIDTH} />
+
                             </YStack>
                         </XStack>
                         <ProductDescription

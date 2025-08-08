@@ -1,39 +1,55 @@
+import { Chip } from '@/components/ui/chips/Chip';
 import { useProductContext } from '@/contexts';
 import { formatPrice, formatPriceRange } from '@/lib/helpers';
-import { ProductPriceRange, ProductPrices } from '@/models/Product/ProductPrices';
 import React, { JSX } from 'react';
-import { SizableText, SizableTextProps, XStack } from 'tamagui';
+import { SizableText, SizableTextProps, StackProps, XStack } from 'tamagui';
 
 
+export const PriceRange = ({ ...props }: SizableTextProps) => {
 
-interface PriceRangeProps extends SizableTextProps {
-    productPriceRange: ProductPriceRange
-}
+    const { purchasable } = useProductContext();
+    const { prices } = purchasable;
 
-export const PriceRange = ({ productPriceRange, ...props }: PriceRangeProps & SizableTextProps) => {
+    const { price_range } = prices;
+
+    if (!price_range) {
+        return null;
+    }
 
     return (
         <SizableText fow="bold" {...props}>
-            {formatPriceRange(productPriceRange)}
+            {formatPriceRange(price_range)}
         </SizableText>
     );
 };
 
 
-interface PriceProps {
-    prices: ProductPrices;
-}
 
-export const Price = ({ prices, ...props }: PriceProps & SizableTextProps) => {
+export const Price = ({ ...props }: SizableTextProps) => {
+
+    const { purchasable } = useProductContext();
+    const { prices, availability } = purchasable;
+    const { inStock, isPurchasable, isOnSale } = availability;
 
     const { sale_price, price, regular_price, price_range } = prices;
 
     if (price_range) {
-        return <PriceRange productPriceRange={price_range} {...props} />;
+        return <PriceRange {...props} />;
     }
-    const onSale = sale_price < regular_price;
 
-    if (onSale) {
+    if (!inStock || !isPurchasable) {
+        return <SizableText
+            color="$red5Dark"
+            textDecorationStyle="dotted"
+            textDecorationLine='line-through'
+            fow="bold"
+            {...props}>
+            {formatPrice(price)}
+        </SizableText>
+    }
+
+
+    if (isOnSale) {
         return <XStack ai="center" gap="$2">
             <SizableText textDecorationLine="line-through" opacity={0.7} {...props}>
                 {formatPrice(regular_price)}
@@ -53,14 +69,19 @@ export const Price = ({ prices, ...props }: PriceProps & SizableTextProps) => {
 
 
 
-interface PriceTagProps extends SizableTextProps { }
+interface PriceTagProps extends StackProps { }
 
-export const PriceTag = ({ ...props }: PriceTagProps): JSX.Element => {
+export const PriceTag = ({ ...stackProps }: PriceTagProps): JSX.Element => {
+
     const { purchasable } = useProductContext();
-    const { product, productVariation } = purchasable;
+    const { availability } = purchasable;
+    const { inStock, isPurchasable } = availability;
 
-    if (productVariation) {
-        return <Price prices={productVariation.prices} {...props} />;
-    }
-    return <Price prices={product.prices} {...props} />;
+    const theme = inStock && isPurchasable ? 'secondary_alt1' : 'dark_red';
+
+    return (
+        <Chip theme={theme} {...stackProps} >
+            <Price />
+        </Chip>
+    );
 };

@@ -1,25 +1,22 @@
 import { HrefObject, Link } from 'expo-router';
-import { SizableText, StackProps, ThemeName, XStack } from 'tamagui';
+import { SizableText, StackProps, XStack } from 'tamagui';
 import { ThemedLinearGradient } from '../ThemedLinearGradient';
 
-interface ChipProps extends Omit<StackProps, 'href'> {
+interface ChipProps {
     title?: string;
     icon?: React.ReactNode;
     children?: React.ReactNode;
-    theme?: ThemeName;
     href?: HrefObject;
     onPress?: () => void;
     button?: boolean
+    br?: string;
 }
 
-export const Chip = ({ title, icon, children, theme, href, onPress, button, ...props }: ChipProps) => {
+export const Chip = ({ title, icon, children, br = "$3", href, onPress, button, ...stackProps }: ChipProps & StackProps) => {
 
-
-    const br = onPress || href ? "$3" : "$5";
 
     const chipContent = (
         <XStack
-            theme={theme}
             py="$1"
             px="$2"
             br={br}
@@ -33,7 +30,7 @@ export const Chip = ({ title, icon, children, theme, href, onPress, button, ...p
             onPress={onPress}
             pressStyle={onPress ? { opacity: 0.7 } : undefined}
             elevation={3}
-            {...props}
+            {...stackProps}
         >
             <ThemedLinearGradient br={br} colors={['$backgroundAlpha', '$backgroundElevated']} />
             {icon}

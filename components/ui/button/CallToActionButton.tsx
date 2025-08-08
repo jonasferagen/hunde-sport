@@ -22,28 +22,32 @@ export const CallToActionButton = React.forwardRef<
             <ThemedButton
                 f={1}
                 ref={ref}
-                group
                 position="relative"
-                mx="none"
-
-                gap="$3"
+                m="none"
+                p="none"
+                bw={0}
+                pr="$3"
+                br="$3"
+                boxSizing="border-box"
                 flexDirection='row'
                 ai="center"
                 {...props}
             >
                 <ThemedLinearGradient
-
-                    $group-focus={{ opacity: 0 }}
-                    colors={['$background', '$backgroundElevated']}
-                    fullscreen
                     br="$3"
-                    zIndex={-1} />
+                    fullscreen
+                    pressStyle={{ backgroundColor: '$backgroundPress', }}
+                    zIndex={-1}
+                    opacity={0}
+                />
+
                 {icon}
                 <XStack ai="center"
                     jc="flex-end"
                     f={1}
                     fg={1}
-                    px="none" >
+                    px="none"
+                >
                     <ThemedText fow="bold" fos="$4">
                         {children}
                     </ThemedText>

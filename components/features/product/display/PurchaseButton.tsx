@@ -16,15 +16,15 @@ interface ButtonStateConfig {
 const buttonConfig: Record<ValidationStatus, ButtonStateConfig> = {
     'OK': {
         icon: <ShoppingCart />,
-        theme: 'dark_green_mod',
+        theme: 'dark_purple_alt2',
     },
     'ACTION_NEEDED': {
         icon: <TriangleAlert />,
-        theme: 'light_yellow_alt2',
+        theme: 'secondary_soft',
     },
     'INVALID': {
         icon: <CircleX />,
-        theme: 'dark_red_mod',
+        theme: 'red',
     },
 };
 
@@ -54,20 +54,3 @@ export const PurchaseButton = (props: ButtonProps) => {
         </CallToActionButton>
     );
 };
-/*
-const PurchaseButtonContent = () => {
-
-    const { purchasable } = useProductContext();
-    const { title, prices, isValid, message } = purchasable;
-
-    if (!isValid) {
-        return <SizableText fow="bold" fos="$4">{message}</SizableText>;
-    }
-
-    return (
-        <XStack f={1} jc="space-between">
-            <SizableText fow="bold" fos="$4">{title}</SizableText>
-            <SizableText fow="bold" fos="$4">{formatPrice(prices.price)}</SizableText>
-        </XStack>
-    );
-}; */
