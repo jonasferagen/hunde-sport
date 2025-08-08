@@ -1,38 +1,41 @@
-import { useProductContext } from '@/contexts';
+import { ProductProvider, useProductContext } from '@/contexts';
 import React, { useState } from 'react';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { StackProps, XStack, YStack } from 'tamagui';
+import { Sheet, StackProps, XStack, YStack } from 'tamagui';
 import { ProductStatus } from '../display/ProductStatus';
 import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
 import { VariationButton } from '../display/VariationButton';
 import { ProductVariations } from '../product-variation/ProductVariations';
+
 interface ProductCardFooterProps extends StackProps { }
 
 export const ProductCardFooter = (props: ProductCardFooterProps) => {
-    const { purchasable } = useProductContext();
-    const [isExpanded, setIsExpanded] = useState(false);
-    const handleExpand = () => {
-        setIsExpanded(!isExpanded);
-    };
+    const { product, purchasable } = useProductContext();
+    const [sheetOpen, setSheetOpen] = useState(false);
 
     return (
         <>
             <YStack p="$3" mt="$2" gap="$2" {...props} f={1} fg={1}>
                 {purchasable.product.type === "variable" &&
-                    <VariationButton isExpanded={isExpanded} handleExpand={handleExpand} />
+                    <VariationButton onPress={() => setSheetOpen(true)} />
                 }
-                {isExpanded && (
-                    <Animated.View
-                        entering={FadeIn}
-                        exiting={FadeOut}
-                    >
-                        <YStack gap="$2" theme="secondary_soft">
+            </YStack>
+            <Sheet
+                open={sheetOpen}
+                onOpenChange={setSheetOpen}
+                modal
+                dismissOnSnapToBottom
+            >
+                <Sheet.Overlay />
+                <Sheet.Handle />
+                <Sheet.Frame f={1} p="$4" jc="center" ai="center" gap="$4">
+                    <ProductProvider product={product}>
+                        <YStack gap="$2" theme="secondary_soft" w="100%">
                             <ProductVariations />
                         </YStack>
-                    </Animated.View>
-                )}
-            </YStack>
+                    </ProductProvider>
+                </Sheet.Frame>
+            </Sheet>
             {purchasable.product.type === "variable" &&
                 <YStack mx="none">
                     <YStack p="$3" f={1}>

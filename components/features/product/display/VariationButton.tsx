@@ -1,15 +1,14 @@
-import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { useProductContext } from '@/contexts';
 import { VariableProduct } from '@/types';
-import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
+import { Button, ButtonProps } from '@tamagui/button';
+import { ChevronDown } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 
-interface VariationButtonProps {
-    isExpanded: boolean;
-    handleExpand: () => void;
+interface VariationButtonProps extends ButtonProps {
+    onPress: () => void;
 }
 
-export const VariationButton = ({ isExpanded, handleExpand }: VariationButtonProps): JSX.Element | null => {
+export const VariationButton = ({ onPress, ...props }: VariationButtonProps): JSX.Element | null => {
     const { product } = useProductContext();
 
     if (!(product instanceof VariableProduct)) {
@@ -17,13 +16,14 @@ export const VariationButton = ({ isExpanded, handleExpand }: VariationButtonPro
     }
 
     return (
-        <CallToActionButton
-            theme="success_alt5"
-            iconAfter={isExpanded ? <ChevronUp /> : <ChevronDown />}
-            onPress={handleExpand}
+        <Button
+            {...props}
+            onPress={onPress}
+            iconAfter={ChevronDown}
+            variant="outlined"
+            theme="gray"
         >
-            Produktet finnes i flere varianter
-        </CallToActionButton>
-
+            Velg variant
+        </Button>
     );
 };
