@@ -7,13 +7,16 @@ import { PriceRange } from './PriceRange';
 
 
 export const PriceTag = ({ size = "$4", ...props }: SizableTextProps): JSX.Element => {
-    const { product, displayProduct } = useProductContext();
+    const { purchasable } = useProductContext();
+    const { product } = purchasable;
 
 
-    if (displayProduct instanceof ProductVariation) {
+    const prices = product?.prices;
+
+    if (purchasable instanceof ProductVariation) {
         return <Price fos={size} {...props} />;
     }
 
 
-    return <PriceRange productPriceRangeOverride={product?.prices.price_range} fos={size} />;
+    return <PriceRange productPriceRangeOverride={prices.price_range} fos={size} />;
 };

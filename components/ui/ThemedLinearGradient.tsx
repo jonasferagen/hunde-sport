@@ -1,12 +1,28 @@
 import { LinearGradient } from '@tamagui/linear-gradient';
-import { styled } from 'tamagui';
+import type { ComponentProps } from 'react';
+import { JSX } from 'react';
 
-export const ThemedLinearGradient = styled(LinearGradient, {
-    name: 'ThemedLinearGradient',
-    fullscreen: true,
-    start: [0, 0],
-    end: [1, 1],
-    colors: ['$background', '$backgroundFocus'],
-    f: 1,
-});
+interface ThemedLinearGradientProps
+    extends Omit<ComponentProps<typeof LinearGradient>, 'start' | 'end' | 'colors'> {
+    startPoint?: [number, number];
+    endPoint?: [number, number];
+    colors?: (string | any)[];
+}
 
+export const ThemedLinearGradient = ({
+    startPoint = [0, 0],
+    endPoint = [1, 1],
+    colors = ['$background', '$backgroundFocus'],
+    ...props
+}: ThemedLinearGradientProps): JSX.Element => {
+    return (
+        <LinearGradient
+            fullscreen
+            f={1}
+            start={startPoint}
+            end={endPoint}
+            colors={colors}
+            {...props}
+        />
+    );
+};

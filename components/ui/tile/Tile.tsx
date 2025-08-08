@@ -46,8 +46,8 @@ export const Tile = ({
                 <ThemedLinearGradient
                     fullscreen
                     colors={['$backgroundPress', '$background']}
-                    start={[0, 0.2]}
-                    end={[0, 0.9]}
+                    startPoint={[0, 0.2]}
+                    endPoint={[0, 0.9]}
                     opacity={0.8}
                 />
                 <SizableText

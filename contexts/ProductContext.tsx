@@ -1,5 +1,5 @@
 import { useProduct, useProductVariations } from '@/hooks/data/Product';
-import { Product, ProductVariation } from '@/models/Product/Product';
+import { ProductVariation, PurchasableProduct } from '@/models/Product/Product';
 import { createPurchasable, Purchasable } from '@/models/Product/Purchasable';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { NotFoundScreen } from '@/screens/misc/NotFoundScreen';
@@ -10,8 +10,8 @@ import { ProductCategoryProvider } from './ProductCategoryContext';
  * Interface for the ProductContext
  */
 export interface ProductContextType {
-    product: Product;
-    purchasable: Purchasable | null;
+    product: PurchasableProduct;
+    purchasable: Purchasable;
     isLoading: boolean;
     selectedProductVariation: ProductVariation | undefined;
     setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
@@ -54,7 +54,7 @@ export const ProductLoader: React.FC<{ id: number; productCategoryId?: number; c
 };
 
 
-export const ProductProvider: React.FC<{ product: Product; children: React.ReactNode }> = ({
+export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
     product,
     children,
 }) => {
@@ -71,7 +71,7 @@ export const ProductProvider: React.FC<{ product: Product; children: React.React
     }, [product, isLoading, variations]);
 
     const value = useMemo(() => {
-        const purchasable = product instanceof ProductVariation ? null : createPurchasable({ product, productVariation: selectedProductVariation });
+        const purchasable = createPurchasable({ product, productVariation: selectedProductVariation });
 
         return {
             product,
