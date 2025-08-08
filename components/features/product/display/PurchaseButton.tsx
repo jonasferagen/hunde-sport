@@ -45,7 +45,7 @@ export const PurchaseButton = (props: ButtonProps) => {
     return (
         <CallToActionButton
             ref={buttonRef}
-            theme={"tertiary"}
+            theme={theme}
             onPress={handleAddToCart}
             disabled={!isValid}
             icon={icon}

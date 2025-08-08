@@ -4,6 +4,7 @@ import { createInterFont } from '@tamagui/font-inter';
 import { shorthands } from '@tamagui/shorthands';
 import { createTamagui } from 'tamagui';
 import {
+    augmentedDarkGreen,
     augmentedLightTheme,
     augmentedLightThemeAlt1,
     augmentedLightThemeAlt2,
@@ -149,6 +150,8 @@ const appConfig = createTamagui({
         light_strong: augmentedLightThemeStrong,
         light_alt1: augmentedLightThemeAlt1,
         light_alt2: augmentedLightThemeAlt2,
+
+        dark_green: augmentedDarkGreen,
     },
     tokens: customTokens,
     shorthands,

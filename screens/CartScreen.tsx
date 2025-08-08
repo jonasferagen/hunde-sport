@@ -9,8 +9,6 @@ import React from 'react';
 import { Theme, YStack } from 'tamagui';
 
 export const CartScreen = () => {
-
-
     const href: HrefObject = routes.checkout.path();
     return (
         <Theme name="secondary_soft">

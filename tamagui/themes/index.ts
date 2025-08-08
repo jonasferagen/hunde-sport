@@ -61,3 +61,17 @@ export const augmentedLightThemeElevated = withThemeExtras(themes.light, lighten
 export const augmentedLightThemeStrong = withThemeExtras(themes.light, darken(0.1, themes.light.background))
 export const augmentedLightThemeAlt1 = withThemeExtras(themes.light, darken(0.2, themes.light.background))
 export const augmentedLightThemeAlt2 = withThemeExtras(themes.light, darken(0.3, themes.light.background))
+
+export const augmentedDarkGreen = withThemeExtras(themes.dark, themes.dark_green_alt2.background);
+
+/*
+// Dark themes
+export const augmentedDarkGreen = withThemeExtras(themes.dark, themes.dark_green.green8)
+export const augmentedDarkRed = withThemeExtras(themes.dark, themes.dark_red.red8)
+export const augmentedDarkYellow = withThemeExtras(themes.dark, themes.dark_yellow.yellow8)
+export const augmentedDarkPurple = withThemeExtras(themes.dark, themes.dark_purple.purple8)
+export const augmentedDarkBlue = withThemeExtras(themes.dark, themes.dark_blue.blue8)
+export const augmentedDarkOrange = withThemeExtras(themes.dark, themes.dark_orange.orange8)
+export const augmentedDarkPink = withThemeExtras(themes.dark, themes.dark_pink.pink8)
+
+*/
