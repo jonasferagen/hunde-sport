@@ -1,7 +1,7 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { useCartContext, useProductContext } from '@/contexts';
+import { formatPrice } from '@/lib/helpers';
 import { ValidationStatus } from '@/models/Product/Purchasable';
-import { formatPrice } from '@/utils/helpers';
 import { CircleX, ShoppingCart, TriangleAlert } from '@tamagui/lucide-icons';
 import React, { JSX, useRef } from 'react';
 

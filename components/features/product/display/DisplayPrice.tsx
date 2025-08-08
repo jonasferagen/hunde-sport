@@ -1,5 +1,5 @@
+import { formatPrice } from '@/lib/helpers';
 import { ProductPrices } from '@/models/Product/ProductPrices';
-import { formatPrice } from '@/utils/helpers';
 import React, { JSX } from 'react';
 import { SizableText, SizableTextProps, XStack } from 'tamagui';
 

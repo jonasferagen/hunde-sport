@@ -1,6 +1,6 @@
-import { cleanHtml } from "@/utils/helpers";
-import { Image } from "../Image";
+import { cleanHtml } from "@/lib/helpers";
 import { ProductCategory } from "../ProductCategory";
+import { StoreImage } from "../StoreImage";
 import { ProductAttribute } from "./ProductAttribute";
 import { ProductPrices } from "./ProductPrices";
 
@@ -22,7 +22,7 @@ export interface BaseProductData {
     permalink: string;
     description: string;
     short_description: string;
-    images: Image[];
+    images: StoreImage[];
     prices: ProductPrices;
     on_sale: boolean;
     featured: boolean;
@@ -44,7 +44,7 @@ export class BaseProduct<T extends BaseProductData> {
     permalink: string;
     description: string;
     short_description: string;
-    images: Image[];
+    images: StoreImage[];
     prices: ProductPrices;
     on_sale: boolean;
     featured: boolean;
@@ -88,7 +88,7 @@ export class BaseProduct<T extends BaseProductData> {
         this.variation = data.variation;
     }
 
-    get featuredImage(): Image {
+    get featuredImage(): StoreImage {
         return this.images[0];
     }
 }

@@ -2,7 +2,7 @@ import { useProductContext } from '@/contexts';
 import { ProductVariation } from '@/models/Product/ProductVariation';
 import { SimpleProduct } from '@/models/Product/SimpleProduct';
 
-import { formatPrice } from '@/utils/helpers';
+import { formatPrice } from '@/lib/helpers';
 import { SizableText, SizableTextProps, XStack } from 'tamagui';
 
 export interface PriceProps {

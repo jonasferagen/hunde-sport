@@ -1,10 +1,10 @@
-import { Image } from '@/models/Image';
+import { StoreImage } from '@/models/StoreImage';
 
 export interface ProductCategoryData {
   id: number;
   name: string;
   parent: number;
-  image: Image;
+  image: StoreImage;
   description: string;
   slug: string;
 }
@@ -13,7 +13,7 @@ export class ProductCategory implements ProductCategoryData {
   id: number;
   name: string;
   parent: number;
-  image: Image;
+  image: StoreImage;
   description: string;
   slug: string;
 

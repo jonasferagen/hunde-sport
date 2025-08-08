@@ -1,7 +1,7 @@
 import { ThemedImage } from '@/components/ui/ThemedImage';
 import { GridTiles } from '@/components/ui/tile/GridTiles';
 import { useProductContext } from '@/contexts';
-import { getScaledImageUrl } from '@/utils/helpers';
+import { getScaledImageUrl } from '@/lib/helpers';
 import { Galeria } from '@nandorojo/galeria';
 import React, { JSX, useState } from 'react';
 import { Dimensions } from 'react-native';

@@ -1,7 +1,7 @@
 import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useCartContext } from '@/contexts/CartContext';
-import { formatPrice } from '@/utils/helpers';
+import { formatPrice } from '@/lib/helpers';
 import React, { JSX, memo } from 'react';
 import { SizableText, XStack } from 'tamagui';
 

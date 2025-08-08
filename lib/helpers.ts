@@ -71,17 +71,46 @@ export const htmlToPlainText = (html: string): string => {
 const placeholderBase64 =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAAEFJREFUCB1jYGBgYAAAAAQAAVcCkE0AAAAASUVORK5CYII=';
 
+// Internal: parse DimensionValue into comparable units
+// Not exported; used by image helpers below
+const parseDim = (
+    v: DimensionValue | undefined
+): { type: 'px' | 'pct'; value: number } | null => {
+    if (typeof v === 'number' && isFinite(v)) return { type: 'px', value: v };
+    if (typeof v === 'string') {
+        const s = v.trim();
+        if (/^-?\d+(?:\.\d+)?%$/.test(s)) return { type: 'pct', value: parseFloat(s) };
+        if (/^-?\d+(?:\.\d+)?$/.test(s)) return { type: 'px', value: parseFloat(s) };
+    }
+    return null;
+};
+
 export const getScaledImageUrl = (
     url: string,
     width?: DimensionValue,
     height?: DimensionValue,
     fit: 'cover' | 'contain' | 'fill' | 'inside' | 'outside' = 'cover'
 ): string => {
-    const numWidth = typeof width === 'number' ? width : 0;
-    const numHeight = typeof height === 'number' ? height : 0;
+    const w = width != null ? parseDim(width) : null;
+    const h = height != null ? parseDim(height) : null;
 
-    if (!url || (!numWidth && !numHeight)) {
+    const numWidth = w?.type === 'px' ? w.value : 0;
+    const numHeight = h?.type === 'px' ? h.value : 0;
+
+    if (!url) {
         return placeholderBase64;
+    }
+
+    // If we don't have any numeric pixel dimension, return the original URL (no resize)
+    if (!numWidth && !numHeight) {
+        try {
+            // Still validate URL format
+            const urlObject = new URL(url);
+            return urlObject.toString();
+        } catch (error) {
+            console.error('Invalid URL:', url);
+            return placeholderBase64;
+        }
     }
 
     try {
@@ -105,4 +134,20 @@ export const getScaledImageUrl = (
         console.error('Invalid URL:', url);
         return placeholderBase64;
     }
+};
+
+export const getAspectRatio = (width: DimensionValue | undefined, height: DimensionValue | undefined): number => {
+    const w = parseDim(width);
+    const h = parseDim(height);
+
+    if (!w || !h) return 1;
+    if (h.value === 0) return 1;
+
+    // Only compute when comparable units
+    if (w.type === h.type) {
+        return w.value / h.value;
+    }
+
+    // Mixed units (px vs %) — ambiguous; fallback
+    return 1;
 };

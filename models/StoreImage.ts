@@ -1,5 +1,5 @@
 
-export interface Image {
+export interface StoreImage {
     id: number;
     src: string;
     name: string;

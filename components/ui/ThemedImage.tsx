@@ -1,4 +1,4 @@
-import { Image as ImageModel } from '@/models/Image';
+import { StoreImage as ImageModel } from '@/models/StoreImage';
 import { MotiView } from 'moti';
 import { JSX, useState } from 'react';
 import { Image, ImageProps, YStack, YStackProps } from 'tamagui';

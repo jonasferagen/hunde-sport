@@ -22,7 +22,7 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
             t={0}
             b={0}
             w={width}
-            flex={1}
+            f={1}
             ai="center"
             jc="flex-end"
             pe="none"
@@ -32,11 +32,7 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
                 colors={['$backgroundTransparent', '$background']}
                 start={gradientStart as [number, number]}
                 end={gradientEnd as [number, number]}
-                pos="absolute"
-                l={0}
-                r={0}
-                t={0}
-                b={0}
+                fullscreen
             />
 
         </View>

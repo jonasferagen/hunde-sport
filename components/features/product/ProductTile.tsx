@@ -6,13 +6,14 @@ import { ThemeName, YStackProps } from "tamagui";
 import { PriceTag } from './display/PriceTag';
 
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
-import { PurchasableProduct } from '@/models/Product/Product';
+import { Product } from '@/models/Product/Product';
 import { Link } from 'expo-router';
+import { DimensionValue } from "react-native";
 
 interface ProductTileProps extends YStackProps {
-    product: PurchasableProduct
-    width?: number;
-    height?: number;
+    product: Product
+    width?: DimensionValue;
+    height?: DimensionValue;
 }
 
 export const ProductTile: React.FC<ProductTileProps> = ({
@@ -21,6 +22,9 @@ export const ProductTile: React.FC<ProductTileProps> = ({
     height = PRODUCT_TILE_HEIGHT,
     ...stackProps
 }) => {
+
+
+
     return (
         <Link href={routes['product'].path(product)} asChild>
             <Tile

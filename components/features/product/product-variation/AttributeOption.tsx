@@ -1,5 +1,5 @@
+import { formatPrice } from '@/lib/helpers';
 import { AttributeTermDetails } from '@/types';
-import { formatPrice } from '@/utils/helpers';
 import React from 'react';
 import { Pressable } from 'react-native';
 import { SizableText, XStack } from 'tamagui';

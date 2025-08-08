@@ -17,19 +17,20 @@ export const ProductCategoryTiles = ({ theme }: ProductCategoryTilesProps): JSX.
         () => rootProductCategories.slice(0, MAX_CATEGORIES),
         [rootProductCategories]
     );
-    const placeholders = MAX_CATEGORIES - productCategories.length;
-    /*
-    {placeholders > 0 &&
-        Array.from({ length: placeholders }).map((_, index) => (
-            <YStack key={index} />
-        ))} */
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <YStack f={1} theme={theme}>
-                <GridTiles gap="$2" numColumns={NUM_CATEGORY_TILE_COLUMNS} data={productCategories} renderItem={({ item }) => (
-                    <ProductCategoryTile key={item.id} productCategory={item} />
-                )}>
-                </GridTiles>
+            <YStack
+                f={1}
+                theme={theme}>
+                <GridTiles
+                    gap="$2"
+                    numColumns={NUM_CATEGORY_TILE_COLUMNS}
+                    data={productCategories}
+                    renderItem={({ item }) => (
+                        <ProductCategoryTile key={item.id} productCategory={item} />
+                    )}
+                />
             </YStack>
         </ScrollView>
     );

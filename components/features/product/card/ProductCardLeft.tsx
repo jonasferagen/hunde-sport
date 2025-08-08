@@ -1,6 +1,6 @@
 import { ThemedImage } from '@/components/ui/ThemedImage';
 import { useProductContext } from '@/contexts';
-import { getScaledImageUrl } from '@/utils/helpers';
+import { getScaledImageUrl } from '@/lib/helpers';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { YStack } from 'tamagui';

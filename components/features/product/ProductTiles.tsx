@@ -10,7 +10,6 @@ interface ProductListProps {
     theme?: ThemeName;
 }
 
-
 export const RecentProducts = ({ theme = 'primary' }: ProductListProps): JSX.Element => {
     return <ProductTiles theme={theme} queryResult={useRecentProducts()} />
 };

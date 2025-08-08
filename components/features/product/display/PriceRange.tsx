@@ -1,5 +1,5 @@
 import { useProductContext } from '@/contexts';
-import { formatPriceRange } from '@/utils/helpers';
+import { formatPriceRange } from '@/lib/helpers';
 import { SizableText, SizableTextProps } from 'tamagui';
 
 
