@@ -15,12 +15,12 @@ interface ButtonStateConfig {
 // Map statuses to their corresponding configurations
 const buttonConfig: Record<ValidationStatus, ButtonStateConfig> = {
     'OK': {
-        icon: <ShoppingCart m={0} p={0} />,
+        icon: <ShoppingCart />,
         theme: 'dark_green_mod',
     },
     'ACTION_NEEDED': {
         icon: <TriangleAlert />,
-        theme: 'light_yellow',
+        theme: 'light_yellow_alt2',
     },
     'INVALID': {
         icon: <CircleX />,
@@ -41,10 +41,6 @@ export const PurchaseButton = (props: ButtonProps) => {
     // Get the configuration for the current status
     const { icon, theme } = buttonConfig[status as ValidationStatus];
 
-    const leftContent = isValid ? title : null;
-    const rightContent = isValid ? formatPrice(prices.price) : message;
-
-
     return (
         <CallToActionButton
             ref={buttonRef}
@@ -54,8 +50,7 @@ export const PurchaseButton = (props: ButtonProps) => {
             icon={icon}
             {...props}
         >
-            {leftContent}
-            {rightContent}
+            {isValid ? formatPrice(prices.price) : message}
         </CallToActionButton>
     );
 };

@@ -3,7 +3,6 @@ import { ExternalLink } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { ButtonProps } from 'tamagui';
 
-
 interface CheckoutButtonProps extends ButtonProps { }
 
 export const CheckoutButton = (props: CheckoutButtonProps): JSX.Element => {
@@ -14,7 +13,8 @@ export const CheckoutButton = (props: CheckoutButtonProps): JSX.Element => {
             iconAfter={<ExternalLink />}
             {...props}
         >
-            Til kassen
+            {"Til kassen"}
+
         </CallToActionButton>
     );
 };

@@ -1,14 +1,14 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
-import React from 'react';
+import React, { JSX } from 'react';
 
 import { Theme, XStack, YStackProps } from 'tamagui';
 import { ThemedText } from '../ThemedText';
 
 interface CallToActionButtonProps extends YStackProps {
     children: React.ReactNode;
-    icon?: React.ReactNode;
-    iconAfter?: React.ReactNode;
+    icon?: JSX.Element;
+    iconAfter?: JSX.Element;
 }
 
 export const CallToActionButton = React.forwardRef<
@@ -16,32 +16,42 @@ export const CallToActionButton = React.forwardRef<
     CallToActionButtonProps
 >(({ children, icon, iconAfter, ...props }, ref) => {
 
+
     return (
         <Theme name={props.theme}>
             <ThemedButton
+                f={1}
                 ref={ref}
+                group
                 position="relative"
-                gap="$2"
-                ai="center"
                 mx="none"
+                px="$3"
+                py="$2.5"
+                gap="$3"
+                flexDirection='row'
+                ai="center"
                 {...props}
             >
-                <ThemedLinearGradient fullscreen br="$3" zIndex={-1} />
-                <XStack f={1} ai="center" gap="$2" fg={1} h="100%">
-                    {icon}
-                    <XStack ai="center" jc="space-between" f={1} fg={1} px="none">
-                        {React.Children.map(children, child => (
-                            <ThemedText fow="bold" fos="$4">
-                                {child}
-                            </ThemedText>
-                        ))}
-                    </XStack>
-                    {iconAfter}
+                <ThemedLinearGradient
 
+                    $group-focus={{ opacity: 0 }}
+                    colors={['$background', '$backgroundElevated']}
+                    fullscreen
+                    br="$3"
+                    zIndex={-1} />
+                {icon}
+                <XStack ai="center"
+                    jc="flex-end"
+                    f={1}
+                    fg={1}
+                    px="none" >
+                    <ThemedText fow="bold" fos="$4">
+                        {children}
+                    </ThemedText>
                 </XStack>
+                {iconAfter}
             </ThemedButton>
         </Theme>
     );
 });
 
-//          <ThemedLinearGradient fullscreen br="$3" zIndex={-1} />
