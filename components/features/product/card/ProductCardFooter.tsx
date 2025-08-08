@@ -2,7 +2,6 @@ import { useProductContext } from '@/contexts';
 import React, { useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { StackProps, XStack, YStack } from 'tamagui';
-import { Price } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
 import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
@@ -34,23 +33,17 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
                     </Animated.View>
                 )}
             </YStack>
-            <YStack mx="none">
-                <YStack p="$3" f={1}>
-                    <XStack ai="center" gap="$2" f={1} p="$2">
-                        <YStack f={1} >
-                            <ProductTitle product fos="$6" allowFontScaling minimumFontScale={.5} />
-                        </YStack>
-                        <YStack fs={1}>
-                            <Price fos="$6" ta="right" />
-                        </YStack>
-                    </XStack>
-                    <XStack ai="center" gap="$2" f={1} p="$2">
-                        <ProductTitle variation />
-                        <ProductStatus />
-                    </XStack>
-                    <PurchaseButton />
+            {purchasable.product.type === "variable" &&
+                <YStack mx="none">
+                    <YStack p="$3" f={1}>
+                        <XStack ai="center" gap="$2" f={1} p="$2">
+                            <ProductTitle variation />
+                            <ProductStatus />
+                        </XStack>
+                        <PurchaseButton />
+                    </YStack>
                 </YStack>
-            </YStack>
+            }
         </>
     );
 }

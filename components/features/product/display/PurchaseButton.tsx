@@ -41,8 +41,6 @@ export const PurchaseButton = (props: ButtonProps) => {
     // Get the configuration for the current status
     const { icon, theme } = buttonConfig[status as ValidationStatus];
 
-
-
     return (
         <CallToActionButton
             ref={buttonRef}
@@ -52,7 +50,7 @@ export const PurchaseButton = (props: ButtonProps) => {
             iconAfter={icon}
             {...props}
         >
-            {isValid ? theme + ' ' + formatPrice(prices.price) : message}
+            {isValid ? formatPrice(prices.price) : message}
         </CallToActionButton>
     );
 };

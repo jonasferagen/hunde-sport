@@ -19,7 +19,7 @@ export const VariationButton = ({ isExpanded, handleExpand }: VariationButtonPro
     return (
         <CallToActionButton
             theme="success_alt5"
-            icon={isExpanded ? <ChevronUp /> : <ChevronDown />}
+            iconAfter={isExpanded ? <ChevronUp /> : <ChevronDown />}
             onPress={handleExpand}
         >
             Produktet finnes i flere varianter
