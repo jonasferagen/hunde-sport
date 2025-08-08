@@ -1,14 +1,24 @@
+import { Image as ImageModel } from '@/models/Image';
 import { MotiView } from 'moti';
 import { JSX, useState } from 'react';
 import { Image, ImageProps, YStack, YStackProps } from 'tamagui';
 
 export interface ThemedImageProps extends YStackProps {
     source: ImageProps['source'];
+    image: ImageModel;
+    title?: string;
     objectFit?: ImageProps['objectFit'];
 }
 
-export const ThemedImage = ({ source, objectFit, ...stackProps }: ThemedImageProps): JSX.Element => {
+export const ThemedImage = ({
+    source,
+    image,
+    title,
+    objectFit,
+    ...stackProps
+}: ThemedImageProps): JSX.Element => {
     const [isLoaded, setIsLoaded] = useState(false);
+    const ariaLabel = image?.alt || title;
 
     return (
         <YStack {...stackProps}>
@@ -29,6 +39,7 @@ export const ThemedImage = ({ source, objectFit, ...stackProps }: ThemedImagePro
                     h="100%"
                     source={source}
                     objectFit={objectFit}
+                    aria-label={ariaLabel}
                     onLoad={() => setIsLoaded(true)}
                     onLoadStart={() => setIsLoaded(false)}
                 />

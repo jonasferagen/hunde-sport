@@ -13,7 +13,6 @@ export const ProductImageGallery = (): JSX.Element => {
     const { width: screenWidth } = Dimensions.get('window');
 
     const galleryUrls = images.map((image) => getScaledImageUrl(image.src, screenWidth, screenWidth));
-    const thumbnailUrls = images.map((image) => getScaledImageUrl(image.src, 100, 100));
 
     const [gallery, setGallery] = useState({ visible: false, initialIndex: 0 });
     const openGallery = (index: number) => {
@@ -25,25 +24,34 @@ export const ProductImageGallery = (): JSX.Element => {
             <YStack h={100}>
                 <Galeria urls={galleryUrls}>
                     <FlashList
-                        data={thumbnailUrls}
-                        renderItem={({ item, index }) => (
-                            <YStack
-                                onPress={() => openGallery(index)}
-                                w={100}
-                                h={100}
-                                br="$2"
-                                ov="hidden"
-                                bw={1}
-                                boc="$borderColor"
-                                mr="$2"
-                            >
-                                <Galeria.Image index={index}>
-                                    <YStack>
-                                        <ThemedImage source={{ uri: item }} h="100%" w="100%" />
-                                    </YStack>
-                                </Galeria.Image>
-                            </YStack>
-                        )}
+                        data={images}
+                        renderItem={({ item: image, index }) => {
+                            const thumbnailUrl = getScaledImageUrl(image.src, 100, 100);
+                            return (
+                                <YStack
+                                    onPress={() => openGallery(index)}
+                                    w={100}
+                                    h={100}
+                                    br="$2"
+                                    ov="hidden"
+                                    bw={1}
+                                    boc="$borderColor"
+                                    mr="$2"
+                                >
+                                    <Galeria.Image index={index}>
+                                        <YStack>
+                                            <ThemedImage
+                                                source={{ uri: thumbnailUrl }}
+                                                image={image}
+                                                title={product.name}
+                                                h="100%"
+                                                w="100%"
+                                            />
+                                        </YStack>
+                                    </Galeria.Image>
+                                </YStack>
+                            );
+                        }}
                         estimatedItemSize={100}
                         horizontal
                         showsHorizontalScrollIndicator

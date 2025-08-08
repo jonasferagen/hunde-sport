@@ -19,7 +19,7 @@ export const ProductImage = ({ img_height = IMAGE_HEIGHT }: { img_height?: numbe
         <YStack w="100%" h={img_height} ov="hidden" boc="$borderColor" bbw={1}>
             <Galeria urls={[uri!]}>
                 <Galeria.Image>
-                    <ThemedImage w="100%" h="100%" source={{ uri }} />
+                    <ThemedImage w="100%" h="100%" source={{ uri }} image={image} title={product.name} />
                 </Galeria.Image>
             </Galeria>
         </YStack>

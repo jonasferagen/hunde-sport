@@ -15,14 +15,14 @@ export const ProductCardLeft = ({ href }: ProductCardImageProps) => {
     const { purchasable: validatedPurchasable } = useProductContext();
     const { displayProduct } = validatedPurchasable;
 
-    const src = displayProduct.featuredImage.src || '';
+    const image = displayProduct.featuredImage;
     const imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH;
-    const uri = getScaledImageUrl(src, imageSize, imageSize);
+    const uri = getScaledImageUrl(image.src, imageSize, imageSize);
 
     return (
         <Link href={href}>
             <YStack w={imageSize} h={imageSize} br="$3" boc="$borderColorStrong" bw={1} overflow="hidden">
-                <ThemedImage source={{ uri }} w={imageSize} h={imageSize} />
+                <ThemedImage source={{ uri }} image={image} title={displayProduct.name} w={imageSize} h={imageSize} />
             </YStack>
         </Link>
     );

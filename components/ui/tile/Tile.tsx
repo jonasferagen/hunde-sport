@@ -27,36 +27,30 @@ export const Tile = ({
             {...props}
         >
             <ThemedImage
-                pos="absolute"
-                t={0}
-                l={0}
-                r={0}
-                b={0}
+                fullscreen
                 source={{ uri }}
-                aria-label={image.alt || title}
+                image={image}
+                title={title}
             />
 
             {children}
 
-            <YStack pos="absolute" b={0} l={0} r={0} p="$2.5" jc="flex-end" f={1}>
+            <YStack fullscreen t="auto" p="$2.5" jc="flex-end" f={1}>
                 <ThemedLinearGradient
-                    pos="absolute"
-                    t={0}
-                    l={0}
-                    r={0}
-                    b={0}
-                    colors={['$backgroundTransparent', '$background']}
+                    fullscreen
+                    colors={['$backgroundPress', '$background']}
                     start={[0, 0.2]}
                     end={[0, 0.9]}
                     opacity={0.8}
                 />
                 <SizableText
-                    fos="$5"
+                    size="$5"
                     fow="bold"
                     col="$color"
                     numberOfLines={2}
                     adjustsFontSizeToFit
                     ellipse
+                    ta="center"
                 >
                     {title}
                 </SizableText>

@@ -3,11 +3,7 @@ import { styled } from 'tamagui';
 
 export const ThemedLinearGradient = styled(LinearGradient, {
     name: 'ThemedLinearGradient',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    fullscreen: true,
     start: [0, 0],
     end: [1, 1],
     colors: ['$background', '$backgroundFocus'],
