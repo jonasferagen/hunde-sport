@@ -1,15 +1,15 @@
 import React from 'react';
-import { Button, ButtonProps, styled } from 'tamagui';
+import { YStack, YStackProps, styled } from 'tamagui';
 
-const StyledThemedButton = styled(Button, {
+const StyledThemedButton = styled(YStack, {
     name: 'ThemedButton',
+    tag: 'button',
     // Base style
-    color: '$color',
+    padding: '$3',
     backgroundColor: '$background',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',
     borderRadius: '$3',
-    fontWeight: 'bold',
 
     // Interactions
     hoverStyle: {
@@ -52,7 +52,7 @@ const StyledThemedButton = styled(Button, {
     },
 });
 
-export const ThemedButton = React.forwardRef<React.ComponentRef<typeof Button>, ButtonProps>(
+export const ThemedButton = React.forwardRef<React.ComponentRef<typeof YStack>, YStackProps>(
     (props, ref) => {
         return <StyledThemedButton {...props} ref={ref} />;
     }
