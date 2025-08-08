@@ -5,7 +5,7 @@ const StyledThemedButton = styled(Button, {
     name: 'ThemedButton',
     // Base style
     color: '$color',
-    backgroundColor: '$colorPrimary',
+    backgroundColor: '$background',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',
     borderRadius: '$3',
