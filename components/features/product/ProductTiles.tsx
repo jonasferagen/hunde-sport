@@ -38,7 +38,7 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ theme = 'primary', queryRes
 
     return <HorizontalTiles
         {...queryResult}
-        renderItem={({ item }) => (
+        renderItem={({ item }: { item: Product }) => (
             <ProductTile
                 product={item}
                 theme={theme}

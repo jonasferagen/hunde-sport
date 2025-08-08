@@ -7,7 +7,6 @@ import { ThemedImage } from '../ThemedImage';
 import { ThemedLinearGradient } from '../ThemedLinearGradient';
 
 export interface TileProps extends YStackProps {
-
     title: string;
     image: StoreImage;
 }
