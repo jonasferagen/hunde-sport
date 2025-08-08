@@ -22,7 +22,7 @@ const withThemeExtras = (baseTheme: Record<string, string>, baseColor: string) =
         overlayColor: rgba(baseColor, 0.5),
 
         backgroundHover: darken(0.03, baseColor),
-        backgroundPress: darken(0.07, baseColor),
+        backgroundPress: darken(0.1, baseColor),
         backgroundFocus: darken(0.12, baseColor),
 
         shadowColor: darken(0.4, baseColor),
@@ -61,4 +61,3 @@ export const augmentedLightThemeElevated = withThemeExtras(themes.light, lighten
 export const augmentedLightThemeStrong = withThemeExtras(themes.light, darken(0.1, themes.light.background))
 export const augmentedLightThemeAlt1 = withThemeExtras(themes.light, darken(0.2, themes.light.background))
 export const augmentedLightThemeAlt2 = withThemeExtras(themes.light, darken(0.3, themes.light.background))
-

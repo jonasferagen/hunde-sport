@@ -2,13 +2,16 @@ import { CartSummary } from '@/components/features/cart';
 import { CartList } from '@/components/features/cart/CartList';
 import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
 import { PageContent, PageHeader, PageView } from '@/components/layout';
+import { PageFooter } from '@/components/layout/PageFooter';
 import { routes } from '@/config/routes';
-import { Link } from 'expo-router';
+import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Theme, YStack } from 'tamagui';
 
 export const CartScreen = () => {
 
+
+    const href: HrefObject = routes.checkout.path();
     return (
         <Theme name="secondary_soft">
             <PageView>
@@ -20,11 +23,11 @@ export const CartScreen = () => {
                         <CartList />
                     </YStack>
                 </PageContent>
-                <PageHeader>
-                    <Link href={routes.checkout.path()} asChild>
+                <PageFooter>
+                    <Link href={href} asChild>
                         <CheckoutButton />
                     </Link>
-                </PageHeader>
+                </PageFooter>
             </PageView>
         </Theme>
     )

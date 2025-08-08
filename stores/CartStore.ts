@@ -1,3 +1,5 @@
+import { ENDPOINTS } from '@/config/api';
+import { createCartRestoreToken } from '@/hooks/checkout/api';
 import {
     addItem as apiAddItem,
     fetchCart as apiFetchCart,
@@ -49,6 +51,7 @@ interface CartActions {
     addItem: (options: AddItemOptions) => Promise<void>;
     updateItem: (key: string, quantity: number) => Promise<void>;
     removeItem: (key: string) => Promise<void>;
+    checkout: () => Promise<URL>;
 }
 
 /**
@@ -123,6 +126,31 @@ export const useCartStore = create<CartState & CartActions>()(
     persist(
         (set, get) => ({
             ...initialState,
+
+            initializeCart: async () => {
+                if (get().isInitialized) return;
+                if (get().cartToken && get().cart) {
+                    set({ isInitialized: true });
+                }
+
+                log.info('CartStore: Initializing...');
+                set({ isLoading: true });
+
+                try {
+                    const { data } = await apiFetchCart();
+                    set({
+                        cart: data,
+                        cartToken: data.token,
+                        isInitialized: true,
+                    });
+                    log.info('CartStore: Initialization successful.');
+                } catch (error) {
+                    log.error('CartStore: Initialization failed.');
+                }
+                set({ isLoading: false });
+            },
+
+
             addItem: async (options: AddItemOptions) => {
                 const { cart } = get();
                 await handleCartAction(
@@ -164,27 +192,22 @@ export const useCartStore = create<CartState & CartActions>()(
                         items: cart!.items.filter((item) => item.key !== key),
                     }
                 );
-            }, initializeCart: async () => {
-                if (get().isInitialized) return;
-                if (get().cartToken && get().cart) {
-                    set({ isInitialized: true });
-                }
+            },
 
-                log.info('CartStore: Initializing...');
-                set({ isLoading: true });
 
+            checkout: async () => {
+                log.info('CartStore: checkout invoked.');
+                const { cartToken } = get();
                 try {
-                    const { data } = await apiFetchCart();
-                    set({
-                        cart: data,
-                        cartToken: data.token,
-                        isInitialized: true,
-                    });
-                    log.info('CartStore: Initialization successful.');
+                    const restoreToken = await createCartRestoreToken(cartToken);
+                    log.info('CartStore: restore token created', restoreToken.substring(0, 10) + '...');
+                    const checkoutUrl = new URL(ENDPOINTS.CHECKOUT.CHECKOUT(restoreToken));
+                    log.info('CartStore: checkout URL created');
+                    return checkoutUrl;
                 } catch (error) {
-                    log.error('CartStore: Initialization failed.');
+                    log.error('CartStore: checkout failed.', error);
+                    throw error;
                 }
-                set({ isLoading: false });
             },
         }),
 

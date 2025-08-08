@@ -37,7 +37,7 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
                 <Animated.View
                     entering={FadeIn}
                     exiting={FadeOut}
-                ><YStack gap="$2">
+                ><YStack gap="$2" theme="secondary_soft">
                         <ProductVariations />
                         <PurchaseButton />
                     </YStack>

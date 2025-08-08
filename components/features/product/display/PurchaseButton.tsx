@@ -3,8 +3,7 @@ import { useCartContext, useProductContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { ValidationStatus } from '@/models/Product/Purchasable';
 import { CircleX, ShoppingCart, TriangleAlert } from '@tamagui/lucide-icons';
-import React, { JSX, useRef } from 'react';
-
+import React, { JSX, useRef, } from 'react';
 import { Button, ButtonProps, SizableText, ThemeName, XStack } from 'tamagui';
 
 
@@ -46,10 +45,11 @@ export const PurchaseButton = (props: ButtonProps) => {
     return (
         <CallToActionButton
             ref={buttonRef}
-            theme={theme}
+            theme={"tertiary"}
             onPress={handleAddToCart}
             disabled={!isValid}
             icon={icon}
+
             {...props}
         >
             <PurchaseButtonContent />
