@@ -4,6 +4,10 @@ export interface ProductPrices {
     price: string;
     regular_price: string;
     sale_price: string;
-    price_range: { min_amount: string; max_amount: string } | null;
+    price_range: ProductPriceRange | null;
 }
 
+export interface ProductPriceRange {
+    min_amount: string;
+    max_amount: string;
+}

@@ -2,7 +2,7 @@ import { useProductContext } from '@/contexts';
 import React, { useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SizableText, StackProps, XStack, YStack } from 'tamagui';
-import { DisplayPrice } from '../display/DisplayPrice';
+import { PriceTag } from '../display/PriceTag';
 import { ProductStatus } from '../display/ProductStatus';
 import { PurchaseButton } from '../display/PurchaseButton';
 import { VariationButton } from '../display/VariationButton';
@@ -12,7 +12,7 @@ interface ProductCardFooterProps extends StackProps { }
 
 export const ProductCardFooter = (props: ProductCardFooterProps) => {
     const { purchasable } = useProductContext();
-    const { title, prices } = purchasable;
+    const { title } = purchasable;
     const [isExpanded, setIsExpanded] = useState(false);
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -26,7 +26,7 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
                 </XStack>
                 <XStack ai="center" jc="space-between" f={1} >
                     <SizableText>{title}</SizableText>
-                    <DisplayPrice productPrices={prices} />
+                    <PriceTag />
                 </XStack>
             </XStack>
 

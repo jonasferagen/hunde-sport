@@ -29,7 +29,6 @@ export const Tile = ({
             ov="hidden"
             aspectRatio={aspectRatio}
             boc="$borderColor"
-
             {...props}
         >
             <ThemedImage
@@ -39,9 +38,7 @@ export const Tile = ({
                 title={title}
 
             />
-
             {children}
-
             <YStack fullscreen t="auto" p="$2.5" jc="flex-end" f={1}>
                 <ThemedLinearGradient
                     fullscreen
