@@ -22,9 +22,11 @@ export const SearchScreen = () => {
     const searchQuery = query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.';
     const searchTotal = isSearching ? <ThemedSpinner /> : `(${total})`;
 
+
+
     return (
         <PageView theme="tertiary">
-            <PageHeader >
+            <PageHeader>
                 <SearchBar initialQuery={initialQuery} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>

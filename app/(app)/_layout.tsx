@@ -7,7 +7,6 @@ import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigatio
 import { useRoute } from '@react-navigation/native';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Theme } from 'tamagui';
 
 const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -16,10 +15,8 @@ const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
     return (
         <Theme name={themeName}>
-            <SafeAreaView style={{ flex: 1 }}>
-                {children}
-                <BottomBar />
-            </SafeAreaView>
+            {children}
+            <BottomBar />
         </Theme>
     );
 };
