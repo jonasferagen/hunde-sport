@@ -11,8 +11,6 @@ interface BreadcrumbsProps {
 export const Breadcrumbs = React.memo(({ isLastClickable = false }: BreadcrumbsProps) => {
     const { productCategory } = useProductCategoryContext();
     const getBreadcrumbTrail = useProductCategoryStore((state) => state.getBreadcrumbTrail);
-
-
     const trail = productCategory ? getBreadcrumbTrail(productCategory.id) : [];
 
     return (

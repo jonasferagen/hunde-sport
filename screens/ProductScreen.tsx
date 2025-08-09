@@ -31,13 +31,13 @@ const ProductScreenContent = () => {
 
   return (
     <PageView>
-      <PageHeader theme="secondary_soft">
+      <PageHeader theme="soft">
         <Breadcrumbs isLastClickable={true} />
         <ProductCategoryChips showAll={true} />
       </PageHeader>
       <PageSection scrollable>
         <ProductImage />
-        <PageContent theme="light_soft" gap="$3">
+        <PageContent theme="light" gap="$3">
           <XStack jc="space-between" gap="$3">
             <ProductTitle size="$6" />
             <PriceTag fos="$6" />

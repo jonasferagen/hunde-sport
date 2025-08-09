@@ -8,3 +8,5 @@ export const PRODUCT_CATEGORY_TILE_HEIGHT: DimensionValue = 120;
 
 export const PRODUCT_TILE_WIDTH: DimensionValue = 160;
 export const PRODUCT_TILE_HEIGHT: DimensionValue = 120;
+
+export const DEBUG_PRODUCTS = false;

@@ -19,7 +19,10 @@ export const Breadcrumb = React.memo(({ productCategory,
 }: BreadcrumbProps) => {
 
   const breadcrumbText = (
-    <SizableText fontSize="$5" fontWeight={isLast && !isLastClickable ? 'normal' : 'bold'} textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
+    <SizableText
+      fos="$5"
+      fow={isLast && !isLastClickable ? 'normal' : 'bold'}
+      textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
       {productCategory?.name}
     </SizableText>
   );

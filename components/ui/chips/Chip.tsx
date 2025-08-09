@@ -5,15 +5,14 @@ export const Chip = ({ children, ...props }: StackProps) => {
     const chipContent = (
         <XStack
             bg="$background"
-            py="$1"
             px="$2"
+            py="$1"
             br="$3"
             bw={1}
+            boc="$borderColor"
             ai="center"
             jc="center"
-            h="$5"
             gap="$1.5"
-            elevation={3}
             {...props}
         >
             <SizableText

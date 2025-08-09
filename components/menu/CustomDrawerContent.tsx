@@ -3,32 +3,25 @@ import { resolveTheme, routes } from '@/config/routes';
 import {
     DrawerContentComponentProps,
 } from '@react-navigation/drawer';
-import { LinearGradient } from '@tamagui/linear-gradient';
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { H4, ScrollView, XStack, YStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
+import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 import { ThemedText } from '../ui/ThemedText';
 
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const activeRouteName = state.routes[state.index].name;
     const themeName = resolveTheme(activeRouteName);
-    const { top, bottom } = useSafeAreaInsets();
 
     return (
         <YStack
             t={themeName}
             f={1}
         >
-            <YStack f={1} bc="$background" mt={top} mb={bottom}>
-                <LinearGradient
-                    colors={['$background', '$backgroundStrong']}
-                    start={[0, 0]}
-                    end={[1, 1]}
-                    fullscreen
-                />
+            <YStack f={1} bc="$background">
+                <ThemedLinearGradient />
                 <XStack
                     ai="center"
                     jc="space-between"

@@ -1,4 +1,5 @@
 import { DebugTrigger } from '@/components/debug/DebugTrigger';
+import { DEBUG_PRODUCTS } from '@/config/app';
 import { useProduct, useProductVariations } from '@/hooks/data/Product';
 import { ProductVariation, PurchasableProduct } from '@/models/Product/Product';
 import { createPurchasable, Purchasable } from '@/models/Product/Purchasable';
@@ -56,12 +57,13 @@ export const ProductLoader: React.FC<{ id: number; productCategoryId?: number; c
 };
 
 
-export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode; showDebug?: boolean }> = ({
+export const ProductProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
     product,
     children,
-    showDebug = true,
 }) => {
 
+
+    const showDebug = DEBUG_PRODUCTS;
     const { isLoading, items: variations } = useProductVariations(product);
     const [productVariations, setProductVariations] = useState<ProductVariation[]>([]);
     const [selectedProductVariation, setSelectedProductVariation] = useState<ProductVariation | undefined>(undefined);

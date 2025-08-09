@@ -75,7 +75,10 @@ export const PriceTag = ({ children, ...stackProps }: PriceTagProps): JSX.Elemen
     const { availability } = purchasable;
     const { isInStock, isPurchasable } = availability;
 
-    return <Chip theme="success_alt10" disabled={!isInStock || !isPurchasable} {...stackProps}>
+    return <Chip
+        theme="success_alt10"
+        disabled={!isInStock || !isPurchasable}
+        {...stackProps}>
         <Price />
     </Chip>;
 };

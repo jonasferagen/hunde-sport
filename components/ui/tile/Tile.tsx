@@ -67,13 +67,9 @@ export const TileBadge = ({ children, ...props }: TileBadgeProps): JSX.Element =
     return (
         <YStack
             pos="absolute"
-            t="$2"
-            r="$2"
-            px="$2"
-            py="$1"
-            br="$2"
-            bg="$backgroundStrong"
-            elevation="$2"
+            t="$1"
+            r="$1"
+
             {...props}
         >
             {children}
