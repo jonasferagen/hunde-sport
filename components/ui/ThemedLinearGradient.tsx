@@ -1,7 +1,7 @@
 import { LinearGradient } from '@tamagui/linear-gradient';
 import { darken, lighten } from 'polished';
 import type { ComponentProps } from 'react';
-import { JSX } from 'react';
+import { JSX, useMemo } from 'react';
 import { useTheme } from 'tamagui';
 
 interface ThemedLinearGradientProps
@@ -25,11 +25,14 @@ export const ThemedLinearGradient = ({
 
     const theme = useTheme();
     const baseColor = theme.background.get();
-    const baseColorPress = theme.isDark ? lighten(0.1, baseColor) : darken(0.1, baseColor);
+    const from = elevated ? lighten(.1, baseColor) : baseColor;
 
-    const colors = [baseColor, baseColorPress];
+    const value = strong ? .2 : .1;
+    const to = darken(value, from);
 
-    return (
+    const colors = [from, to];
+
+    return useMemo(() => (
         <LinearGradient
             fullscreen
             start={startPoint}
@@ -38,5 +41,5 @@ export const ThemedLinearGradient = ({
             colors={colors}
             {...props}
         />
-    );
+    ), [colors, startPoint, endPoint]);
 };

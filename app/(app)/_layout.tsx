@@ -7,18 +7,20 @@ import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigatio
 import { useRoute } from '@react-navigation/native';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
-import { YStack } from 'tamagui';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Theme } from 'tamagui';
 
 const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const route = useRoute();
     const themeName = routes[route.name]?.theme || 'primary';
 
     return (
-        <YStack f={1} t={themeName}>
-            {children}
-            <BottomBar />
-        </YStack>
+        <Theme name={themeName}>
+            <SafeAreaView style={{ flex: 1 }}>
+                {children}
+                <BottomBar />
+            </SafeAreaView>
+        </Theme>
     );
 };
 

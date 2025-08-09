@@ -18,7 +18,6 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { top, bottom } = useSafeAreaInsets();
 
     return (
-
         <YStack
             t={themeName}
             f={1}
