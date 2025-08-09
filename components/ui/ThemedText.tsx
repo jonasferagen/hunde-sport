@@ -10,10 +10,8 @@ export const ThemedText = styled(SizableText, {
             default: {},
             subtle: {
                 color: '$colorSubtle',
-                fontWeight: 'normal',
             },
             focused: {
-                color: '$colorSubtle',
                 fontWeight: 'bold',
             },
         },

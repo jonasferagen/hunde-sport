@@ -11,14 +11,14 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { JSX } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
 
 const RootLayout = (): JSX.Element => {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>
             <Theme name="light">
               <DebugProvider>
@@ -35,7 +35,7 @@ const RootLayout = (): JSX.Element => {
               </DebugProvider>
             </Theme>
           </TamaguiProvider>
-        </SafeAreaProvider>
+        </SafeAreaView>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );
