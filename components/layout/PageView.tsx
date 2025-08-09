@@ -1,6 +1,6 @@
-import { YStack } from 'tamagui';
-export const PageView = ({ children }: { children: React.ReactNode }) =>
+import { YStack, YStackProps } from 'tamagui';
+export const PageView = ({ children, ...stackProps }: YStackProps) =>
 
-  <YStack flex={1} >
+  <YStack f={1} {...stackProps}>
     {children}
   </YStack>

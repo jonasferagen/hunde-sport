@@ -24,9 +24,9 @@ export const ProductCardLeft = ({ href, props }: ProductCardImageProps) => {
             <YStack
                 w={imageSize}
                 h={imageSize}
-                br="$3"
-                boc="$borderColorStrong"
                 bw={1}
+                boc="$borderColor"
+                br="$3"
                 ov="hidden"
                 {...props}
             >

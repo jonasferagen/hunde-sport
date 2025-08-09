@@ -1,5 +1,4 @@
 import { CheckoutScreen } from '@/screens/CheckoutScreen';
+import { JSX } from 'react';
 
-export default function Checkout() {
-    return <CheckoutScreen />;
-}
+export default (): JSX.Element => <CheckoutScreen />;

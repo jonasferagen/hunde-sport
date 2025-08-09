@@ -23,12 +23,12 @@ export const SearchScreen = () => {
     const searchTotal = isSearching ? <ThemedSpinner /> : `(${total})`;
 
     return (
-        <PageView>
-            <PageHeader theme="tertiary">
+        <PageView theme="tertiary">
+            <PageHeader >
                 <SearchBar initialQuery={initialQuery} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>
-                <PageContent theme="tertiary_soft" ai="center" jc="space-between" fd="row">
+                <PageContent theme="soft" ai="center" jc="space-between" fd="row">
                     <SizableText f={1}>
                         {searchQuery}
                     </SizableText>
@@ -36,7 +36,7 @@ export const SearchScreen = () => {
                         {searchTotal}
                     </SizableText>
                 </PageContent>
-                <PageContent f={1} p="none" theme="tertiary_soft">
+                <PageContent f={1} p="none" theme="elevated">
                     <SearchResults key={query} />
                 </PageContent>
             </PageSection>

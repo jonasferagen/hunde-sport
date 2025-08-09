@@ -26,7 +26,7 @@ export const ProductList = memo(({
     const renderItem = useCallback(({ item: product, index }: { item: PurchasableProduct, index: number }) =>
         <Animated.View layout={LinearTransition}>
             <ProductProvider product={product}>
-                <Theme name={index % 2 === 0 ? 'secondary' : 'secondary_soft'}>
+                <Theme name={index % 2 === 0 ? 'normal' : 'soft'}>
                     <ProductCard />
                 </Theme>
             </ProductProvider>

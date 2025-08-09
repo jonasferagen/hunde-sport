@@ -25,50 +25,55 @@ const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
     }
 }
 
-
-
-const sageColor = '#DDE2C3'
-
-
-export const sageTheme = {
-    light_primary: enhanceTheme(themes.light, sageColor),
-    light_primary_soft: enhanceTheme(themes.light, lighten(0.1, sageColor)),
-    light_primary_elevated: enhanceTheme(themes.light, lighten(0.2, sageColor)),
-    light_primary_enhanced: enhanceTheme(themes.light, darken(0.1, sageColor)),
-    light_primary_strong: enhanceTheme(themes.light, darken(0.2, sageColor)),
-    dark_primary: enhanceTheme(themes.dark, sageColor),
-    dark_primary_soft: enhanceTheme(themes.dark, lighten(0.1, sageColor)),
-    dark_primary_elevated: enhanceTheme(themes.dark, lighten(0.2, sageColor)),
-    dark_primary_enhanced: enhanceTheme(themes.dark, darken(0.1, sageColor)),
-    dark_primary_strong: enhanceTheme(themes.dark, darken(0.2, sageColor)),
-}
-
-
 const lilacColor = '#D7C8E7'
 
 
 export const lilacTheme = {
-    light_secondary: enhanceTheme(themes.light, lilacColor),
-    light_secondary_soft: enhanceTheme(themes.light, lighten(0.1, lilacColor)),
-    light_secondary_elevated: enhanceTheme(themes.light, lighten(0.2, lilacColor)),
-    light_secondary_enhanced: enhanceTheme(themes.light, darken(0.1, lilacColor)),
-    light_secondary_strong: enhanceTheme(themes.light, darken(0.2, lilacColor)),
-    dark_secondary: enhanceTheme(themes.dark, lilacColor),
-    dark_secondary_soft: enhanceTheme(themes.dark, lighten(0.1, lilacColor)),
-    dark_secondary_elevated: enhanceTheme(themes.dark, lighten(0.2, lilacColor)),
-    dark_secondary_enhanced: enhanceTheme(themes.dark, darken(0.1, lilacColor)),
-    dark_secondary_strong: enhanceTheme(themes.dark, darken(0.2, lilacColor)),
+    light_primary: enhanceTheme(themes.light, lilacColor),
+    light_primary_normal: enhanceTheme(themes.light, lilacColor),
+    light_primary_soft: enhanceTheme(themes.light, lighten(0.1, lilacColor)),
+    light_primary_elevated: enhanceTheme(themes.light, lighten(0.2, lilacColor)),
+    light_primary_enhanced: enhanceTheme(themes.light, darken(0.1, lilacColor)),
+    light_primary_strong: enhanceTheme(themes.light, darken(0.2, lilacColor)),
+    dark_primary: enhanceTheme(themes.dark, lilacColor),
+    dark_primary_normal: enhanceTheme(themes.dark, lilacColor),
+    dark_primary_soft: enhanceTheme(themes.dark, lighten(0.1, lilacColor)),
+    dark_primary_elevated: enhanceTheme(themes.dark, lighten(0.2, lilacColor)),
+    dark_primary_enhanced: enhanceTheme(themes.dark, darken(0.1, lilacColor)),
+    dark_primary_strong: enhanceTheme(themes.dark, darken(0.2, lilacColor)),
 }
+
+const sageColor = '#DDE2C3'
+
+export const sageTheme = {
+    light_secondary: enhanceTheme(themes.light, sageColor),
+    light_secondary_normal: enhanceTheme(themes.light, sageColor),
+    light_secondary_soft: enhanceTheme(themes.light, lighten(0.1, sageColor)),
+    light_secondary_elevated: enhanceTheme(themes.light, lighten(0.2, sageColor)),
+    light_secondary_enhanced: enhanceTheme(themes.light, darken(0.1, sageColor)),
+    light_secondary_strong: enhanceTheme(themes.light, darken(0.2, sageColor)),
+    dark_secondary: enhanceTheme(themes.dark, sageColor),
+    dark_secondary_normal: enhanceTheme(themes.dark, sageColor),
+    dark_secondary_soft: enhanceTheme(themes.dark, lighten(0.1, sageColor)),
+    dark_secondary_elevated: enhanceTheme(themes.dark, lighten(0.2, sageColor)),
+    dark_secondary_enhanced: enhanceTheme(themes.dark, darken(0.1, sageColor)),
+    dark_secondary_strong: enhanceTheme(themes.dark, darken(0.2, sageColor)),
+}
+
+
+
 
 const mintColor = '#C8E6E5'
 
 export const mintTheme = {
     light_tertiary: enhanceTheme(themes.light, mintColor),
+    light_tertiary_normal: enhanceTheme(themes.light, mintColor),
     light_tertiary_soft: enhanceTheme(themes.light, lighten(0.1, mintColor)),
     light_tertiary_elevated: enhanceTheme(themes.light, lighten(0.2, mintColor)),
     light_tertiary_enhanced: enhanceTheme(themes.light, darken(0.1, mintColor)),
     light_tertiary_strong: enhanceTheme(themes.light, darken(0.2, mintColor)),
     dark_tertiary: enhanceTheme(themes.dark, mintColor),
+    dark_tertiary_normal: enhanceTheme(themes.dark, mintColor),
     dark_tertiary_soft: enhanceTheme(themes.dark, lighten(0.1, mintColor)),
     dark_tertiary_elevated: enhanceTheme(themes.dark, lighten(0.2, mintColor)),
     dark_tertiary_enhanced: enhanceTheme(themes.dark, darken(0.1, mintColor)),
@@ -80,6 +85,7 @@ const lightColor = themes.light.background;
 
 export const lightTheme = {
     light: enhanceTheme(themes.light, lightColor),
+    light_normal: enhanceTheme(themes.light, lightColor),
     light_soft: enhanceTheme(themes.light, lighten(0.1, lightColor)),
     light_elevated: enhanceTheme(themes.light, lighten(0.2, lightColor)),
     light_enhanced: enhanceTheme(themes.light, darken(0.1, lightColor)),
@@ -90,6 +96,7 @@ const darkColor = themes.dark.background;
 
 export const darkTheme = {
     dark: enhanceTheme(themes.dark, darkColor),
+    dark_normal: enhanceTheme(themes.dark, darkColor),
     dark_soft: enhanceTheme(themes.dark, lighten(0.1, darkColor)),
     dark_elevated: enhanceTheme(themes.dark, lighten(0.2, darkColor)),
     dark_enhanced: enhanceTheme(themes.dark, darken(0.1, darkColor)),
