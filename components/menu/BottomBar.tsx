@@ -14,21 +14,23 @@ const StyledTab = styled(Tabs.Tab, {
     gap: '$1',
     bg: 'transparent',
     h: 'auto',
-    bw: 1,
+    btw: 2,
+    brw: 1,
+    blw: 1,
     boc: '$borderColor',
 });
 
 const StyledTabs = styled(Tabs, {
     name: 'StyledTabs',
-    bottom: 0,
+    b: 0,
     w: '100%',
+
 });
 
 const StyledTabsList = styled(Tabs.List, {
     name: 'StyledTabsList',
     display: 'flex',
     w: '100%',
-
 });
 
 export const BottomBar = (props: YStackProps) => {
@@ -44,7 +46,6 @@ export const BottomBar = (props: YStackProps) => {
             <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
                 <StyledTabsList>
                     <ThemedLinearGradient />
-
                     <StyledTab value="index">
                         <Home />
                         <Text>Hjem</Text>

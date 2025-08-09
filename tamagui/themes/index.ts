@@ -7,7 +7,7 @@ const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
 
     const backgroundColor = baseColor;
     const color = readableColor(baseColor, '#fff', '#000');
-    const borderColor = darken(0.1, baseColor);
+    const borderColor = darken(0.15, baseColor);
     const backgroundHover = darken(0.03, baseColor);
     const backgroundPress = darken(0.1, baseColor);
     const backgroundFocus = darken(0.12, baseColor);
@@ -18,7 +18,6 @@ const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
         borderColor: borderColor,
         color: color,
         colorSubtle: rgba(color, 0.6),
-
         backgroundHover: backgroundHover,
         backgroundPress: backgroundPress,
         backgroundFocus: backgroundFocus,

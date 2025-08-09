@@ -5,7 +5,7 @@ import { Menu } from '@tamagui/lucide-icons';
 import { useNavigation } from 'expo-router';
 import { JSX } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { H4, Theme, XStack } from 'tamagui';
+import { H4, XStack } from 'tamagui';
 import { ThemedButton } from '../ui/ThemedButton';
 import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 
@@ -19,10 +19,9 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
     const insets = useSafeAreaInsets();
     const marginTop = insets.top;
 
-
-    return <Theme name={theme}>
+    return (
         <XStack
-
+            theme={theme}
             ai="center"
             jc="space-between"
             mt={marginTop}
@@ -41,5 +40,5 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
             </ThemedButton>
             <H4>{props.options.title}</H4>
         </XStack>
-    </Theme>
+    );
 };

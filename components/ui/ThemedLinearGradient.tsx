@@ -28,7 +28,8 @@ export const ThemedLinearGradient = ({
     const from = elevated ? lighten(.1, baseColor) : baseColor;
 
     const value = strong ? .2 : .1;
-    const to = darken(value, from);
+
+    const to = darken(value, baseColor);
 
     const colors = [from, to];
 
