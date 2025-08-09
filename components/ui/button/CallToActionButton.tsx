@@ -1,14 +1,12 @@
 import { ThemedButton } from '@/components/ui/ThemedButton';
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
-import React, { JSX } from 'react';
+import { ButtonProps } from '@tamagui/button';
+import React from 'react';
+import { Theme, XStack } from 'tamagui';
 
-import { Theme, XStack, YStackProps } from 'tamagui';
-import { ThemedText } from '../ThemedText';
-
-interface CallToActionButtonProps extends YStackProps {
+interface CallToActionButtonProps extends ButtonProps {
     children: React.ReactNode;
-    icon?: JSX.Element;
-    iconAfter?: JSX.Element;
+
 }
 
 export const CallToActionButton = React.forwardRef<
@@ -20,14 +18,12 @@ export const CallToActionButton = React.forwardRef<
     return (
         <Theme name={props.theme}>
             <ThemedButton
-                f={1}
                 ref={ref}
                 position="relative"
                 m="none"
-                p="none"
+                px="$3"
                 bw={0}
-                pr="$3"
-                br="$3"
+
                 boxSizing="border-box"
                 flexDirection='row'
                 ai="center"
@@ -38,10 +34,12 @@ export const CallToActionButton = React.forwardRef<
                     strong
                     br="$3"
                     fullscreen
+                    startPoint={[1, 1]}
+                    endPoint={[0, 0]}
                     zIndex={0}
-                    opacity={0}
+                    opacity={1}
                     pointerEvents="none"
-                    $group-press={{ opacity: 1 }}
+                    $group-press={{ opacity: 0 }}
                 />
 
                 {icon}
@@ -52,9 +50,9 @@ export const CallToActionButton = React.forwardRef<
                     px="none"
                     gap="$2"
                 >
-                    <ThemedText fow="bold" fos="$4" f={1} textAlign='left'>
-                        {children}
-                    </ThemedText>
+
+                    {children}
+
                 </XStack>
                 {iconAfter}
             </ThemedButton>

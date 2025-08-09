@@ -1,32 +1,18 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { THEME_PURCHASE_BUTTON } from '@/config/app';
 import { useCartContext, useProductContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
-import { ValidationStatus } from '@/models/Product/Purchasable';
-import { CircleX, PawPrint, TriangleAlert } from '@tamagui/lucide-icons';
+import { ShoppingCart } from '@tamagui/lucide-icons';
 import React, { JSX, useRef, } from 'react';
-import { Button, ButtonProps, ThemeName } from 'tamagui';
-
+import { Button, ButtonProps, ThemeName, XStack } from 'tamagui';
 
 interface ButtonStateConfig {
     icon: JSX.Element;
     theme: ThemeName;
 }
 
-// Map statuses to their corresponding configurations
-const buttonConfig: Record<ValidationStatus, ButtonStateConfig> = {
-    'OK': {
-        icon: <PawPrint />,
-        theme: 'success_alt7' as ThemeName
-    },
-    'ACTION_NEEDED': {
-        icon: <TriangleAlert />,
-        theme: 'success_alt7' as ThemeName,
-    },
-    'INVALID': {
-        icon: <CircleX />,
-        theme: 'success_alt1' as ThemeName,
-    },
-};
+
 
 export const PurchaseButton = (props: ButtonProps) => {
     const { purchasable } = useProductContext();
@@ -39,10 +25,15 @@ export const PurchaseButton = (props: ButtonProps) => {
         addItem(purchasable, { triggerRef: buttonRef });
     };
     // Get the configuration for the current status
-    const { icon, theme } = buttonConfig[status as ValidationStatus];
+    const theme = THEME_PURCHASE_BUTTON;
+    const icon = <ShoppingCart />;
+
+    const price = isValid ? formatPrice(prices.price) : "";
+    const label = isValid ? "Kjøp" : message;
 
     return (
         <CallToActionButton
+
             ref={buttonRef}
             theme={theme}
             onPress={handleAddToCart}
@@ -50,7 +41,11 @@ export const PurchaseButton = (props: ButtonProps) => {
             iconAfter={icon}
             {...props}
         >
-            {isValid ? formatPrice(prices.price) : message}
+            <XStack ai="center" gap="$2" jc="space-between" f={1}>
+                <ThemedText fow="bold" fos="$4" f={1} textAlign='left'>{label}</ThemedText>
+                <ThemedText fow="bold" fos="$4" f={0} textAlign='right'>{price}</ThemedText>
+            </XStack>
+
         </CallToActionButton>
     );
 };

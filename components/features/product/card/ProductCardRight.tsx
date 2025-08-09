@@ -17,39 +17,39 @@ export const ProductCardRight = ({ href }: ProductCardContentProps) => {
     const { product } = purchasable;
 
     return (
-        <YStack f={1}>
-            <Link href={href} asChild>
-                <Button unstyled pressStyle={{ opacity: 0.7 }}>
-                    <YStack f={1} jc="flex-start" gap="$2">
-                        <XStack
-                            gap="$2"
-                            ai="center"
-                            jc="space-between">
+        <ProductProvider product={product}>
+            <YStack f={1}>
+                <Link href={href} asChild>
+                    <Button unstyled pressStyle={{ opacity: 0.7 }}>
+                        <YStack f={1} jc="flex-start" gap="$2">
+                            <XStack
+                                gap="$2"
+                                ai="center"
+                                jc="space-between">
 
-                            <ProductTitle fos="$5" />
-                            <YStack
-                                gap="$1"
-                                jc="center"
-                                ai="center" >
-                                <ProductProvider product={product}>
+                                <ProductTitle fos="$5" />
+                                <YStack
+                                    gap="$1"
+                                    jc="center"
+                                    ai="center" >
                                     <PriceTag
                                         br="$5"
                                         miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
                                     />
-                                </ProductProvider>
-                            </YStack>
-                        </XStack>
-                        <ProductDescription
-                            fos="$2"
-                            lh='$1'
-                            textDecorationLine="none"
-                            numberOfLines={2}
-                            hoverStyle={{ color: '$colorHover' }}
-                            short={true} />
-                    </YStack>
-                </Button>
-            </Link>
-        </YStack >
+                                </YStack>
+                            </XStack>
+                            <ProductDescription
+                                fos="$2"
+                                lh='$1'
+                                textDecorationLine="none"
+                                numberOfLines={2}
+                                hoverStyle={{ color: '$colorHover' }}
+                                short={true} />
+                        </YStack>
+                    </Button>
+                </Link>
+            </YStack >
+        </ProductProvider>
     );
 
 };

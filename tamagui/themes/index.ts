@@ -5,12 +5,12 @@ import { darken, getLuminance, lighten, readableColor, rgba } from 'polished';
 const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
 
     const backgroundColor = baseColor;
-    const color = readableColor(baseColor, '#fff', '#000');
 
     const isLight = getLuminance(baseColor) > 0.5;
     const darkmod = isLight ? -1 : 1;
 
-    const borderColor = darken(0.15 * darkmod, baseColor);
+    const color = readableColor(baseColor, '#fff', '#000');
+    const borderColor = darken(0.15, baseColor);
     const backgroundHover = darken(0.03 * darkmod, baseColor);
     const backgroundPress = darken(0.1 * darkmod, baseColor);
     const backgroundFocus = darken(0.12 * darkmod, baseColor);

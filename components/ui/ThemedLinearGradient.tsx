@@ -26,7 +26,6 @@ export const ThemedLinearGradient = ({
     const theme = useTheme();
     const baseColor = theme.background.get();
     const from = elevated ? lighten(.1, baseColor) : baseColor;
-
     const value = strong ? .2 : .1;
 
     const to = darken(value, baseColor);
@@ -38,7 +37,9 @@ export const ThemedLinearGradient = ({
             fullscreen
             start={startPoint}
             end={endPoint}
+            opacity={1}
             $group-focus={{ opacity: 0 }}
+            pointerEvents='none'
             colors={colors}
             {...props}
         />

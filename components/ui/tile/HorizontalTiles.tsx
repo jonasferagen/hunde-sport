@@ -1,3 +1,4 @@
+import { Product } from '@/types';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import React, { JSX, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
@@ -47,7 +48,7 @@ interface HorizontalTilesProps<T> {
     hasNextPage?: boolean;
 }
 
-export const HorizontalTiles = <T extends { id: number | string }>({
+export const HorizontalTiles = <T extends Product>({
     items,
     renderItem,
     isLoading,
@@ -63,7 +64,10 @@ export const HorizontalTiles = <T extends { id: number | string }>({
     const isAtStart = scrollOffset <= 10;
     const isAtEnd = scrollOffset + containerWidth >= contentWidth - 10;
 
-    if (!items || items.length === 0) {
+
+    const products = items?.filter((item) => item.is_purchasable && item.is_in_stock);
+
+    if (!products || products.length === 0) {
         return <></>;
     }
 
@@ -93,7 +97,7 @@ export const HorizontalTiles = <T extends { id: number | string }>({
         <View position="relative">
             <FlashList
                 horizontal
-                data={items}
+                data={products}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 showsHorizontalScrollIndicator={false}

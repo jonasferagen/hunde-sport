@@ -24,7 +24,6 @@ export const DebugProducts = (): JSX.Element => {
 
 
 
-
 interface ProductTilesProps {
     queryResult: QueryResult<Product>;
 }
@@ -33,10 +32,12 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTiles
 
     return <HorizontalTiles
         {...queryResult}
-        renderItem={({ item }: { item: Product }) => (
-            <ProductTile
-                product={item}
-            />
-        )}
+        renderItem={({ item }: { item: Product }) => {
+            return (
+                <ProductTile
+                    product={item}
+                />
+            );
+        }}
     />
 };

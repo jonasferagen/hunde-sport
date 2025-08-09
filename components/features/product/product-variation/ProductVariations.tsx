@@ -4,7 +4,7 @@ import { useProductVariationSelector } from '@/models/Product/helpers/useProduct
 import { VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
-import { SizableText, StackProps, XStack, YStack } from 'tamagui';
+import { SizableText, StackProps, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 interface VariationSelectorProps {
@@ -35,7 +35,7 @@ const VariationSelector = ({ product,
     }
 
     return (
-        <XStack gap="$2" fw="wrap" {...stackProps}>
+        <YStack gap="$2" fw="wrap" {...stackProps}>
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
@@ -43,7 +43,7 @@ const VariationSelector = ({ product,
                 if (filteredOptions.length === 0) return null;
 
                 return (
-                    <YStack key={id} gap="$1" f={1}>
+                    <YStack key={id} gap="$1" f={1} >
                         <SizableText size="$3" fow="bold" tt="capitalize">{name}</SizableText>
                         <AttributeSelector
                             options={filteredOptions}
@@ -53,7 +53,7 @@ const VariationSelector = ({ product,
                     </YStack>
                 );
             })}
-        </XStack>
+        </YStack>
     );
 };
 

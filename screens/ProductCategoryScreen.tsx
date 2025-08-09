@@ -26,12 +26,12 @@ const ProductCategoryScreenContent = memo(() => {
     const showToggleButton = productCategories && productCategories.length > limit;
 
     return <PageView>
-        <PageHeader theme="secondary_soft">
+        <PageHeader theme="soft">
             <XStack jc="space-between" ai="center">
                 <Breadcrumbs isLastClickable={true} />
                 {showToggleButton && (
                     <Chip
-                        theme="secondary_alt2"
+                        theme="enhanced"
                         onPress={() => setShowAll(!showAll)}
                     >
                         {showAll ? <ChevronUp size="$4" /> : <ChevronDown size="$4" />}
@@ -42,6 +42,7 @@ const ProductCategoryScreenContent = memo(() => {
             <ProductCategoryChips
                 limit={limit}
                 showAll={showAll}
+                theme="enhanced"
             />
         </PageHeader>
         <PageContent f={1} p="none">
