@@ -4,7 +4,7 @@ export const Chip = ({ children, ...props }: StackProps) => {
 
     const chipContent = (
         <XStack
-            bg="black"
+            bg="$background"
             py="$1"
             px="$2"
             br="$3"

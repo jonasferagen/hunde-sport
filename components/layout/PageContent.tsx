@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
-import { H3, ScrollView, ThemeName, YStack, YStackProps } from 'tamagui';
+import { H3, ScrollView, YStack, YStackProps } from 'tamagui';
 import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
 
 interface PageContentProps extends YStackProps {
   children: ReactNode;
   title?: string;
   scrollable?: boolean; // Add this prop
-  theme?: ThemeName;
 }
 
 export const PageContent = (props: PageContentProps) => {
@@ -14,7 +13,6 @@ export const PageContent = (props: PageContentProps) => {
   const {
     children,
     title,
-    theme = 'light',
     scrollable,
     ...stackProps
 
@@ -26,7 +24,7 @@ export const PageContent = (props: PageContentProps) => {
     return null;
   }
 
-  return <YStack theme={theme} {...stackProps}>
+  return <YStack {...stackProps}>
     <ThemedLinearGradient />
     {title && <H3 p="$3" pb="none">{title}</H3>}
     <YStack

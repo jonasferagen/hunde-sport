@@ -6,7 +6,7 @@ import { SearchBar } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router } from 'expo-router';
-import { Input } from 'tamagui';
+import { Input, Theme } from 'tamagui';
 
 export const HomeScreen = () => {
 
@@ -16,26 +16,30 @@ export const HomeScreen = () => {
 
     const searchInputRef = useRunOnFocus<Input>((input) => input.focus());
 
-    return <PageView>
-        <PageHeader theme="primary">
-            <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
-        </PageHeader>
-        <PageSection scrollable>
-            <PageContent theme="primary_soft" title="Kategorier">
-                <ProductCategoryTiles key="categories" theme="primary" />
-            </PageContent>
-            <PageContent theme="primary_strong" title="Nyheter" px="none" scrollable >
-                <RecentProducts key='recent' theme="primary" />
-            </PageContent>
-            <PageContent theme="primary_soft" title="Tilbud" px="none" scrollable>
-                <DiscountedProducts key='discounted' theme="primary_strong" />
-            </PageContent>
-            <PageContent theme="primary_soft" title="Utvalgte produkter" px="none" scrollable>
-                <FeaturedProducts key='featured' theme="light" />
-            </PageContent>
-            <PageContent theme="primary" title="Debug" px="none" scrollable>
-                <DebugProducts key='debug' theme="secondary" />
-            </PageContent>
-        </PageSection>
-    </PageView >
+    return (
+        <Theme name="primary">
+            <PageView>
+                <PageHeader >
+                    <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
+                </PageHeader>
+                <PageSection scrollable>
+                    <PageContent theme="soft" title="Kategorier">
+                        <ProductCategoryTiles key="categories" theme="dark_success_alt1" />
+                    </PageContent>
+                    <PageContent theme="elevated" title="Nyheter" px="none" scrollable >
+                        <RecentProducts key='recent' />
+                    </PageContent>
+                    <PageContent theme="soft" title="Tilbud" px="none" scrollable>
+                        <DiscountedProducts key='discounted' />
+                    </PageContent>
+                    <PageContent theme="elevated" title="Utvalgte produkter" px="none" scrollable>
+                        <FeaturedProducts key='featured' />
+                    </PageContent>
+                    <PageContent theme="soft" title="Debug" px="none" scrollable>
+                        <DebugProducts key='debug' />
+                    </PageContent>
+                </PageSection>
+            </PageView>
+        </Theme>
+    );
 }

@@ -19,10 +19,10 @@ const RootLayout = (): JSX.Element => {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <TamaguiProvider config={appConfig}>
-          <SafeAreaProvider>
-            <DebugProvider>
-              <PortalProvider>
-                <Theme name="light">
+          <Theme name="light">
+            <SafeAreaProvider>
+              <DebugProvider>
+                <PortalProvider>
                   <AppToastProvider>
                     <SearchProvider>
                       <Stack screenOptions={{ headerShown: false }}>
@@ -31,10 +31,10 @@ const RootLayout = (): JSX.Element => {
                       <DebugView />
                     </SearchProvider>
                   </AppToastProvider>
-                </Theme>
-              </PortalProvider>
-            </DebugProvider>
-          </SafeAreaProvider>
+                </PortalProvider>
+              </DebugProvider>
+            </SafeAreaProvider>
+          </Theme>
         </TamaguiProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
