@@ -115,18 +115,18 @@ export const successThemeAlt10 = enhanceTheme(themes.dark, '#0F172A')
 
 
 export const extraThemes = {
-    dark_success: successTheme,
-    dark_success_alt1: successThemeAlt1,
-    dark_success_alt2: successThemeAlt2,
-    dark_success_alt3: successThemeAlt3,
-    dark_success_alt4: successThemeAlt4,
-    dark_success_alt5: successThemeAlt5,
-    dark_success_alt6: successThemeAlt6,
-    dark_success_alt7: successThemeAlt7,
-    dark_success_alt8: successThemeAlt8,
-    dark_success_alt9: successThemeAlt9,
-    dark_success_alt10: successThemeAlt10,
-    dark_danger: dangerTheme,
-    dark_danger_alt1: dangerThemeAlt1,
-    dark_danger_alt2: dangerThemeAlt2
+    success: successTheme,
+    success_alt1: successThemeAlt1,
+    success_alt2: successThemeAlt2,
+    success_alt3: successThemeAlt3,
+    success_alt4: successThemeAlt4,
+    success_alt5: successThemeAlt5,
+    success_alt6: successThemeAlt6,
+    success_alt7: successThemeAlt7,
+    success_alt8: successThemeAlt8,
+    success_alt9: successThemeAlt9,
+    success_alt10: successThemeAlt10,
+    danger: dangerTheme,
+    danger_alt1: dangerThemeAlt1,
+    danger_alt2: dangerThemeAlt2
 }
