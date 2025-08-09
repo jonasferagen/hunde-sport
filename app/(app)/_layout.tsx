@@ -9,6 +9,21 @@ import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { YStack } from 'tamagui';
 
+
+const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const route = useRoute();
+    const themeName = routes[route.name]?.theme || 'primary';
+
+    return (
+        <YStack f={1} t={themeName}>
+            {children}
+            <BottomBar />
+        </YStack>
+    );
+};
+
+
+
 const AppLayout = (): React.ReactElement => {
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => {
@@ -25,24 +40,22 @@ const AppLayout = (): React.ReactElement => {
         []
     );
 
-
     return (
         <ProductCategoryProvider>
             <CartProvider>
-                <ScreenWrapper>
-                    <Drawer drawerContent={drawerContent} screenOptions={screenOptions}>
-                        {Object.values(routes).map((route) => (
-                            <Drawer.Screen
-                                key={route.name}
-                                name={route.name}
-                                options={{
-                                    title: route.label,
-                                    drawerLabel: route.showInDrawer ? route.label : () => null,
-                                }}
-                            />
-                        ))}
-                    </Drawer>
-                </ScreenWrapper>
+                <Drawer drawerContent={drawerContent} screenOptions={screenOptions} screenLayout={(props) => <ScreenWrapper >{props.children}</ScreenWrapper>}>
+                    {Object.values(routes).map((route) => (
+                        <Drawer.Screen
+                            key={route.name}
+                            name={route.name}
+                            options={{
+                                title: route.label,
+                                drawerLabel: route.showInDrawer ? route.label : () => null,
+                            }}
+
+                        />
+                    ))}
+                </Drawer>
             </CartProvider>
         </ProductCategoryProvider>
     );
@@ -50,15 +63,3 @@ const AppLayout = (): React.ReactElement => {
 
 export default AppLayout;
 
-
-export const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const route = useRoute();
-    const themeName = routes[route.name]?.theme || 'primary';
-
-    return (
-        <YStack f={1} t={themeName}>
-            {children}
-            <BottomBar />
-        </YStack>
-    );
-};

@@ -46,6 +46,7 @@ export const routes: Record<string, Route> = {
         theme: 'secondary',
         path: () => ({ pathname: paths.cart }),
         showInDrawer: true,
+
     },
     search: {
         name: 'search',
@@ -54,6 +55,7 @@ export const routes: Record<string, Route> = {
         theme: 'tertiary',
         path: (query?: string) => ({ pathname: paths.search, params: { query } }),
         showInDrawer: true,
+
     },
     "product-category": {
         name: 'product-category',
@@ -61,6 +63,7 @@ export const routes: Record<string, Route> = {
         icon: () => null, // No icon for category in drawer
         theme: 'secondary',
         path: (productCategory: ProductCategory) => ({ pathname: paths.productCategory, params: { id: productCategory.id.toString(), name: productCategory.name } }),
+
     },
     product: {
         name: 'product',
@@ -84,6 +87,7 @@ export const routes: Record<string, Route> = {
         icon: () => null, // No icon for checkout in drawer
         theme: 'primary',
         path: () => ({ pathname: paths.checkout }),
+
     },
 };
 
