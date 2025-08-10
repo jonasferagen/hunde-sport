@@ -2,7 +2,7 @@ import { formatPrice } from '@/lib/helpers';
 import { AttributeTermDetails } from '@/types';
 import React from 'react';
 import { Pressable } from 'react-native';
-import { SizableText, XStack } from 'tamagui';
+import { Button, SizableText, XStack } from 'tamagui';
 
 interface AttributeOptionProps {
     option: string;
@@ -23,21 +23,23 @@ export const AttributeOption = ({ option, selectOption, isSelected, item }: Attr
     return <Pressable
         onPress={() => selectOption()}
         disabled={disabled}
+
     >
         <XStack
             f={1}
-            width="100%"
+            w="100%"
+            zIndex={10}
             theme={isSelected ? "secondary" : "secondary_elevated"}
-            ai="center"
             jc="space-between"
-            p="$3"
+            p="$5"
             bw={2}
             gap="$1"
             br="$3"
             boc="$borderColor"
             bg="$background"
-            opacity={disabled ? 0.5 : 1}
+
         >
+            <Button color="black">BBBBB</Button>
             {isAvailable && <SizableText fontSize="$1" fontWeight="bold" color={inStock ? "green" : "red"}>⬤</SizableText>}
             <SizableText f={1} fow={isSelected ? "bold" : "normal"} col="$color" tt="capitalize" textDecorationLine={disabled ? "line-through" : "none"}>
                 {option}

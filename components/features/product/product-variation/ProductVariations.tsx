@@ -22,7 +22,7 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
     });
 
     return (
-        <YStack gap="$2" fw="wrap" {...stackProps}>
+        <YStack gap="$2" fg={1} fw="wrap" {...stackProps}>
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
@@ -30,7 +30,7 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
                 if (filteredOptions.length === 0) return null;
 
                 return (
-                    <YStack key={id} gap="$1" f={1} >
+                    <YStack key={id} gap="$1">
                         <ThemedText>{name}</ThemedText>
                         <AttributeSelector
                             options={filteredOptions}

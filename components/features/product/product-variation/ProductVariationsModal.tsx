@@ -5,6 +5,7 @@ import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { ProductVariationProvider, useProductVariationContext } from '@/contexts/ProductVariationContext';
 import { VariableProduct } from '@/models/Product/Product';
 import React from 'react';
+import { YStack } from 'tamagui';
 import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
 import { VariationButton } from '../display/VariationButton';
@@ -19,6 +20,7 @@ export const ProductVariationsModal = () => {
     return (
         <>
             <VariationButton onPress={() => setOpen(true)} />
+
             <Modal open={open} onOpenChange={setOpen}>
                 {open && (
                     <ProductVariationProvider product={product}>
@@ -30,21 +32,6 @@ export const ProductVariationsModal = () => {
     );
 };
 
-/*
-return (
-    <>
-        <VariationButton onPress={() => setOpen(true)} />
-        <Modal open={open} onOpenChange={setOpen}>
-            {open && (
-                <ProductVariationProvider product={product}>
-                    <ProductVariationsContent product={product} />
-                </ProductVariationProvider>
-            )}
-        </Modal>
-    </>
-);*/
-
-
 
 const ProductVariationsContent = ({ product }: { product: VariableProduct }) => {
 
@@ -53,15 +40,16 @@ const ProductVariationsContent = ({ product }: { product: VariableProduct }) => 
     if (isLoading) return <ThemedSpinner />;
 
     return (
-
-        <ThemedYStack debugColor="green">
-            <ProductTitle />
-            <ProductVariations
-                product={product}
-                productVariations={productVariations || []}
-                onProductVariationSelected={setSelectedProductVariation}
-            />
-            <PurchaseButton />
+        <ThemedYStack jc="flex-start">
+            <ProductTitle f={0} />
+            <YStack f={1}>
+                <ProductVariations key={product.id}
+                    product={product}
+                    productVariations={productVariations || []}
+                    onProductVariationSelected={setSelectedProductVariation}
+                />
+            </YStack>
+            <PurchaseButton f={0} />
         </ThemedYStack>
 
     );

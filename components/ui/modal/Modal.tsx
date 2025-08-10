@@ -18,24 +18,20 @@ export const Modal = ({
             <Sheet.Overlay />
             <Sheet.Handle />
             <Sheet.Frame f={1} p="$4"
-                jc="center"
-                ai="center"
                 gap="$4"
                 boc="black"
                 bw={1}>
 
-                <ThemedYStack w="100%" h="100%" bg="blue" pos="relative" f={1} >
-                    <ThemedXStack fs={1} bg="red" ai="flex-start" jc="flex-end">
+                <ThemedYStack w="100%" h="100%" pos="relative" f={1} >
+                    <ThemedXStack fs={1} ai="flex-start" jc="flex-end">
                         <ThemedButton
-                            my="$3"
-                            mr="$3"
                             size="$6"
                             circular
                             icon={<X size="$4" />}
                             onPress={() => onOpenChange(false)}
                         />
                     </ThemedXStack>
-                    <ThemedXStack>
+                    <ThemedXStack f={1}>
                         {children}
                     </ThemedXStack>
                 </ThemedYStack>
