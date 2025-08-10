@@ -15,7 +15,7 @@ export const CartList = memo(
 
         return <FlashList
             data={cart.items}
-            renderItem={({ item }) => <CartListItem item={item} />}
+            renderItem={({ item, index }) => <CartListItem item={item} index={index} />}
             estimatedItemSize={100}
         />
     }

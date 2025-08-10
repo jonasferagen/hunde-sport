@@ -6,30 +6,24 @@ import { PageFooter } from '@/components/layout/PageFooter';
 import { routes } from '@/config/routes';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
-import { Theme, YStack } from 'tamagui';
 
 export const CartScreen = () => {
     const href: HrefObject = routes.checkout.path();
     return (
-        <Theme name="secondary_soft">
-            <PageView>
-                <PageHeader >
-                    <CartSummary />
-                </PageHeader>
-                <PageContent f={1}>
-                    <YStack f={1}>
-                        <CartList />
-                    </YStack>
-                </PageContent>
-                <PageFooter f={0}>
-                    <YStack>
-                        <Link href={href} asChild>
-                            <CheckoutButton />
-                        </Link>
-                    </YStack>
-                </PageFooter>
-            </PageView>
-        </Theme>
+        <PageView>
+            <PageHeader theme="elevated">
+                <CartSummary />
+            </PageHeader>
+            <PageContent f={1} p="none">
+                <CartList />
+            </PageContent>
+            <PageFooter theme="strong" f={0} >
+                <Link href={href} asChild>
+                    <CheckoutButton />
+                </Link>
+            </PageFooter>
+        </PageView>
+
     )
 };
 

@@ -1,40 +1,50 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
+import { ThemedLinearGradient, ThemedYStack } from '@/components/ui';
+import { THEME_CART_QUANTITY, THEME_CART_REMOVE } from '@/config/app';
 import { BaseProductProvider, useCartContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { CartItemData } from '@/models/Cart/Cart';
 import { PurchasableProduct } from '@/types';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
-import { H4, SizableText, XStack, YStack } from 'tamagui';
+import { H4, StackProps, Theme, XStack } from 'tamagui';
+import { PriceText } from '../product/display/PriceText';
 
+export const CartListItem = ({ item, index }: { item: CartItemData, index: number }): JSX.Element => {
 
-export const CartListItem = ({ item }: { item: CartItemData }): JSX.Element => {
-
+    const theme = index % 2 === 0 ? 'soft' : 'elevated';
     return (
         <BaseProductProvider product={item.product as PurchasableProduct}>
-            <CartListItemContent item={item} />
+            <Theme name={theme}>
+                <ThemedLinearGradient />
+                <CartListItemContent item={item} bbw={3} />
+            </Theme>
         </BaseProductProvider>
     );
 }
 
-const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
+interface CartListItemProps {
+    item: CartItemData;
+}
+
+const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps): JSX.Element => {
 
     const { updateItem, removeItem } = useCartContext();
     const { quantity, key } = item;
 
     return (
-
-        <YStack gap="$3" p="$3" bbw={2} borderBottomColor="$gray5">
+        <ThemedYStack p="$3"  {...props}>
             {/* Row 1: Product name + unit price */}
             <ProductTitle size="$4" />
+
 
             {/* Row 2: Quantity + Subtotal + Remove */}
             <XStack jc="space-between" ai="center" gap="$4">
                 {/* Quantity Controls */}
                 <XStack ai="center" gap="$2">
-                    <ThemedButton theme="success_alt7"
+                    <ThemedButton theme={THEME_CART_QUANTITY}
                         onPress={() => updateItem(key, quantity - 1)}
                         circular
                         disabled={quantity <= 1}
@@ -42,7 +52,7 @@ const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
                         <Minus />
                     </ThemedButton>
 
-                    <ThemedButton theme="success_alt7"
+                    <ThemedButton theme={THEME_CART_QUANTITY}
                         onPress={() => updateItem(key, quantity + 1)}
                         circular
                         disabled={false}
@@ -52,19 +62,19 @@ const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
                     <H4 w={30} ta="center">
                         {quantity}
                     </H4>
-                    <SizableText fos="$4" col="$gray10" >
+                    <PriceText variant="disabled">
                         {formatPrice(item.prices.price)}
-                    </SizableText>
+                    </PriceText>
                 </XStack>
 
                 <XStack f={1} ai="center" jc="flex-end">
-                    <SizableText fos="$4" fow="bold" flex={1} ta="right">
+                    <PriceText f={1} ta="right">
                         {formatPrice(item.prices.price)}
-                    </SizableText>
+                    </PriceText>
                 </XStack>
 
                 {/* Remove Button */}
-                <ThemedButton theme="danger"
+                <ThemedButton theme={THEME_CART_REMOVE}
                     onPress={() => removeItem(key)}
                     circular
                     disabled={false}
@@ -72,7 +82,7 @@ const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
                     <X />
                 </ThemedButton>
             </XStack>
-        </YStack>
+        </ThemedYStack>
 
     );
 };

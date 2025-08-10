@@ -1,7 +1,8 @@
 import { usePurchasable } from '@/hooks/usePurchasable';
 import { formatPrice, formatPriceRange } from '@/lib/helpers';
 import React from 'react';
-import { SizableText, SizableTextProps, XStack } from 'tamagui';
+import { SizableTextProps, XStack } from 'tamagui';
+import { PriceText } from './PriceText';
 
 export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
 
@@ -13,9 +14,9 @@ export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
     }
 
     return (
-        <SizableText fow="bold" fos="$4" {...props}>
+        <PriceText {...props}>
             {formatPriceRange(price_range)}
-        </SizableText>
+        </PriceText>
     );
 };
 
@@ -31,39 +32,32 @@ export const ProductPrice = ({ ...props }: SizableTextProps) => {
     }
 
     if (!isPurchasable || !isInStock) {
-        return <SizableText
-            color="$colorSubtle"
-            textDecorationLine='line-through'
-            fow="bold"
-            fos="$4"
+        return <PriceText
+            variant="disabled"
             {...props}>
             {formatPrice(price)}
-        </SizableText>
+        </PriceText>
     }
 
     if (isOnSale) {
         return (
             <XStack ai="center" gap="$2">
-                <SizableText
-                    textDecorationLine="line-through"
-                    opacity={0.7}
-                    fos="$4"
+                <PriceText
+                    variant="disabled"
                     {...props}>
                     {formatPrice(regular_price)}
-                </SizableText>
-                <SizableText fow="bold"
-                    fos="$4"
+                </PriceText>
+                <PriceText
                     {...props}>
                     {formatPrice(sale_price)}
-                </SizableText>
+                </PriceText>
             </XStack>
         );
     }
 
     return (
-        <SizableText fow="bold" fos="$4" {...props}>
+        <PriceText {...props}>
             {formatPrice(price)}
-        </SizableText>
+        </PriceText>
     );
 };
-
