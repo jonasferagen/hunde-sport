@@ -1,16 +1,12 @@
-import { useProductContext } from '@/contexts';
 import { Product } from '@/models/Product/Product';
-import { ProductVariation } from '@/models/Product/ProductVariation';
 
 import React from 'react';
 import { SizableText, SizableTextProps, XStack, getThemes } from 'tamagui';
 
 
-export const ProductStatus = ({ productOverride, showInStock = true, ...props }: { productOverride?: Product | ProductVariation, showInStock?: boolean } & SizableTextProps) => {
+export const ProductStatus = ({ product, showInStock = true, ...props }: { product: Product, showInStock?: boolean } & SizableTextProps) => {
 
-    const { purchasable } = useProductContext();
-    const { availability } = purchasable;
-    const { isInStock: inStock, isOnBackOrder } = availability;
+    const { isInStock: inStock, isOnBackOrder } = product.availability;
 
     const themes = getThemes();
 

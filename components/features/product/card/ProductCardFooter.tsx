@@ -1,34 +1,29 @@
 import product from '@/app/(app)/product';
-import { ProductProvider, useProductContext } from '@/contexts';
+import { ThemedStackProps, ThemedXStack, ThemedYStack } from '@/components/ui/ThemedStack';
+import { ProductProvider } from '@/contexts';
+import { Purchasable } from '@/types';
 import React, { useState } from 'react';
-import { Sheet, StackProps, XStack, YStack } from 'tamagui';
-import { ProductStatus } from '../display/ProductStatus';
-import { ProductTitle } from '../display/ProductTitle';
+import { Sheet, YStack } from 'tamagui';
 import { PurchaseButton } from '../display/PurchaseButton';
 import { ProductVariations } from '../product-variation/ProductVariations';
 
-interface ProductCardFooterProps extends StackProps { }
 
-export const ProductCardFooter = (props: ProductCardFooterProps) => {
-    const { product, purchasable } = useProductContext();
+
+export const ProductCardFooter = ({ purchasable, stackProps }: { purchasable: Purchasable; stackProps?: ThemedStackProps }) => {
     const [sheetOpen, setSheetOpen] = useState(false);
-    const { availability } = purchasable;
+
 
     return (
-        <YStack gap="$3" p="$3">
-            <XStack ai="center" gap="$2" f={1} >
-                <ProductTitle product={product} />
-                <ProductStatus />
-            </XStack>
-
-            <XStack gap="$2" theme="soft">
-                <ProductVariations />
-            </XStack>
-
-            <YStack>
-                {availability.isInStock && <PurchaseButton boc="black" bw={1} />}
-            </YStack>
-        </YStack>
+        <ThemedYStack p="none" {...stackProps}>
+            {purchasable.product.type === "variable" && (
+                <ThemedXStack gap="$2" theme="soft">
+                    <ProductVariations />
+                </ThemedXStack>
+            )}
+            <ThemedYStack>
+                {purchasable.activeProduct.availability.isInStock && <PurchaseButton boc="black" bw={1} />}
+            </ThemedYStack>
+        </ThemedYStack>
     );
 }
 

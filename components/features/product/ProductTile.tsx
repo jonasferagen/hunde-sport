@@ -34,7 +34,7 @@ export const ProductTile: React.FC<ProductTileProps> = ({
                 {...stackProps}
             >
 
-                <TileBadge bg="transparent">
+                <TileBadge >
                     <PriceTag product={product} />
                 </TileBadge>
 

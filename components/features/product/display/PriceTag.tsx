@@ -8,7 +8,7 @@ import { ProductPrice } from './ProductPrice';
 
 interface PriceTagProps extends StackProps { product: Product; textProps?: SizableTextProps; }
 
-export const PriceTag = ({ product, textProps, ...stackProps }: PriceTagProps): JSX.Element => {
+export const PriceTag = ({ product, textProps, br = "$3", ...stackProps }: PriceTagProps): JSX.Element => {
 
 
     const { isInStock, isPurchasable, isOnSale } = product.availability;
@@ -18,14 +18,15 @@ export const PriceTag = ({ product, textProps, ...stackProps }: PriceTagProps): 
     return <XStack
         ai="center"
         jc="center"
-        p="$2"
+        p="$1"
+        px="$2"
         gap="$1"
-        br="$3"
+        br={br}
         bw="$borderWidth"
         theme={theme}
         disabled={!isInStock || !isPurchasable}
         {...stackProps}>
-        <ThemedLinearGradient {...stackProps} />
+        <ThemedLinearGradient br={br} {...stackProps} />
         {isOnSale && <StarFull size="$3" />}
         <ProductPrice product={product} {...textProps} />
     </XStack>;

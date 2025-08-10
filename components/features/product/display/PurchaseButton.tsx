@@ -1,9 +1,9 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { ThemedText } from '@/components/ui/ThemedText';
-import { THEME_PURCHASE_BUTTON } from '@/config/app';
+import { THEME_PURCHASE_BUTTON, THEME_VARIATION_BUTTON } from '@/config/app';
 import { useCartContext, useProductContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
-import { ShoppingCart } from '@tamagui/lucide-icons';
+import { Plus, ShoppingCart } from '@tamagui/lucide-icons';
 import React, { JSX, useRef, } from 'react';
 import { Button, ButtonProps, ThemeName, XStack } from 'tamagui';
 
@@ -25,8 +25,8 @@ export const PurchaseButton = (props: ButtonProps) => {
         addItem(purchasable, { triggerRef: buttonRef });
     };
     // Get the configuration for the current status
-    const theme = THEME_PURCHASE_BUTTON;
-    const icon = <ShoppingCart />;
+    const theme = status === "OK" ? THEME_PURCHASE_BUTTON : THEME_VARIATION_BUTTON
+    const icon = status === "OK" ? <ShoppingCart /> : <Plus />;
 
     const price = isValid ? formatPrice(prices.price) : "";
     const label = isValid ? "Kjøp" : message;

@@ -7,8 +7,8 @@ export type ValidationStatus = 'OK' | 'ACTION_NEEDED' | 'INVALID';
 
 export interface ValidationResult {
     isValid: boolean;
-    reason?: 'VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT';
-    status?: ValidationStatus
+    reason: 'VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT' | 'OK';
+    status: ValidationStatus
     message: string;
 }
 
