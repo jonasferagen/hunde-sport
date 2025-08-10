@@ -1,10 +1,11 @@
+import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { formatPrice, formatPriceRange } from '@/lib/helpers';
-import { Product } from '@/types';
 import React from 'react';
 import { SizableText, SizableTextProps, XStack } from 'tamagui';
 
-export const ProductPriceRange = ({ product, ...props }: { product: Product; } & SizableTextProps) => {
+export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
 
+    const { product } = useBaseProductContext();
     const { price_range } = product.prices;
 
     if (!price_range) {
@@ -19,13 +20,14 @@ export const ProductPriceRange = ({ product, ...props }: { product: Product; } &
 };
 
 
-export const ProductPrice = ({ product, ...props }: { product: Product; } & SizableTextProps) => {
+export const ProductPrice = ({ ...props }: SizableTextProps) => {
 
+    const { product } = useBaseProductContext();
     const { isInStock, isPurchasable, isOnSale } = product.availability;
     const { sale_price, price, regular_price, price_range } = product.prices;
 
     if (price_range) {
-        return <ProductPriceRange product={product} {...props} />;
+        return <ProductPriceRange {...props} />;
     }
 
     if (!isPurchasable || !isInStock) {

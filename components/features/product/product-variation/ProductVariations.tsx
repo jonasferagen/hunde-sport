@@ -1,36 +1,29 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { useProductContext } from '@/contexts';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
-import { VariableProduct } from '@/models/Product/Product';
+import { Product, VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
 import { SizableText, StackProps, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
-interface VariationSelectorProps {
-    product: VariableProduct;
+interface ProductVariationsProps {
+    product: Product;
     productVariations: ProductVariation[];
     onProductVariationSelected: (variation: ProductVariation | undefined) => void;
     stackProps?: StackProps;
 }
 
-const VariationSelector = ({ product,
-    productVariations,
-    onProductVariationSelected:
-    onVariationSelected,
-    stackProps }: VariationSelectorProps): JSX.Element => {
-    const {
-        attributes,
-        selectionManager,
-        handleSelectOption,
-        unavailableOptions
-    } = useProductVariationSelector({
-        product,
+export const ProductVariations = ({ product, productVariations, onProductVariationSelected, stackProps }: ProductVariationsProps): JSX.Element => {
+
+
+    const { attributes, selectionManager, handleSelectOption, unavailableOptions } = useProductVariationSelector({
+        product: product as VariableProduct,
         productVariations,
-        onProductVariationSelected: onVariationSelected,
+        onProductVariationSelected,
     });
 
-    if (attributes.length === 0) {
+
+
+    if (product.type !== "variable" || product.attributes.length === 0) {
         return <></>;
     }
 
@@ -54,30 +47,5 @@ const VariationSelector = ({ product,
                 );
             })}
         </YStack>
-    );
-};
-
-export const ProductVariations = (stackProps: StackProps): JSX.Element => {
-    const { isLoading,
-        product: initialProduct,
-        setSelectedProductVariation,
-        productVariations
-    } = useProductContext();
-
-    if (!(initialProduct instanceof VariableProduct)) {
-        return <></>;
-    }
-    const product = initialProduct as VariableProduct;
-    if (isLoading) {
-        return <ThemedSpinner />;
-    }
-
-    return (
-        <VariationSelector
-            product={product}
-            productVariations={productVariations || []}
-            onProductVariationSelected={setSelectedProductVariation}
-            stackProps={stackProps}
-        />
     );
 };

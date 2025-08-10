@@ -1,6 +1,5 @@
 import { ThemedStackProps, ThemedYStack } from '@/components/ui/ThemedStack';
-import { Purchasable } from '@/types';
-import { HrefObject } from 'expo-router';
+import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import React from 'react';
 import { XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
@@ -10,12 +9,10 @@ import { ProductTitle } from '../display/ProductTitle';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 
 interface ProductCardContentProps {
-    href: HrefObject;
-    purchasable: Purchasable;
 }
 
-export const ProductCardRight = ({ href, purchasable, ...stackProps }: ProductCardContentProps & ThemedStackProps) => {
-    const product = purchasable.product;
+export const ProductCardRight = ({ ...stackProps }: ProductCardContentProps & ThemedStackProps) => {
+    const { product } = useBaseProductContext();
     return (
 
         <ThemedYStack f={1} jc="flex-start" gap="$2" {...stackProps}>
@@ -24,7 +21,7 @@ export const ProductCardRight = ({ href, purchasable, ...stackProps }: ProductCa
                 ai="center"
                 jc="space-between">
 
-                <ProductTitle fos="$5" product={product} />
+                <ProductTitle />
                 <YStack
                     gap="$1"
                     jc="center"
@@ -32,21 +29,18 @@ export const ProductCardRight = ({ href, purchasable, ...stackProps }: ProductCa
                     <PriceTag
                         br="$5"
                         miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
-                        product={product}
+
                     />
                 </YStack>
-            </XStack>
+            </XStack>ProductCardRight
             <ProductDescription
-                product={product}
                 fos="$2"
                 lh='$1'
                 textDecorationLine="none"
                 numberOfLines={2}
                 hoverStyle={{ color: '$colorHover' }}
                 short={true} />
-            <ProductStatus f={1} ta='right' product={product} />
+            <ProductStatus f={1} ta='right' />
         </ThemedYStack>
-
     );
-
 };

@@ -1,22 +1,22 @@
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { routes } from '@/config/routes';
-import { useProductCategoryContext, useProductContext } from '@/contexts';
+import { useProductCategoryContext } from '@/contexts';
 
 import { ThemedXStack, ThemedYStack } from '@/components/ui/ThemedStack';
+import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Button, StackProps } from 'tamagui';
-import { ProductCardFooter } from './ProductCardFooter';
 import { ProductCardLeft } from './ProductCardLeft';
 import { ProductCardRight } from './ProductCardRight';
 
 interface ProductCardProps extends StackProps { }
 
 export const ProductCard = ({ ...props }: ProductCardProps) => {
-    const { purchasable } = useProductContext();
+    const { product } = useBaseProductContext();
     const { productCategory: category } = useProductCategoryContext();
 
-    const href: HrefObject = routes.product.path(purchasable.product, category?.id);
+    const href: HrefObject = routes.product.path(product, category?.id);
 
 
     return (
@@ -25,12 +25,13 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
             <Link href={href} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
                     <ThemedXStack>
-                        <ProductCardLeft href={href} purchasable={purchasable} />
-                        <ProductCardRight href={href} purchasable={purchasable} />
+                        <ProductCardLeft />
+                        <ProductCardRight />
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ProductCardFooter purchasable={purchasable} />
+
         </ThemedYStack>
     );
 };
+/* <ProductCardFooter purchasable={purchasable} />  */

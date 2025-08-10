@@ -1,23 +1,21 @@
 import { ThemedImage } from '@/components/ui/ThemedImage';
+import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { getScaledImageUrl } from '@/lib/helpers';
-import { Purchasable } from '@/types';
-import { HrefObject } from 'expo-router';
 import React from 'react';
 import { YStack, YStackProps } from 'tamagui';
 
 export const PRODUCT_CARD_LEFT_COLUMN_WIDTH = 80;
 
 interface ProductCardImageProps {
-    href: HrefObject;
-    purchasable: Purchasable;
     props?: YStackProps;
 }
 
-export const ProductCardLeft = ({ href, purchasable, props }: ProductCardImageProps) => {
-    const { image, titles } = purchasable;
+export const ProductCardLeft = ({ props }: ProductCardImageProps) => {
+
+    const { product } = useBaseProductContext();
 
     const imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH;
-    const uri = getScaledImageUrl(image.src, imageSize, imageSize);
+    const uri = getScaledImageUrl(product.featuredImage.src, imageSize, imageSize);
 
     return (
 
@@ -32,8 +30,8 @@ export const ProductCardLeft = ({ href, purchasable, props }: ProductCardImagePr
         >
             <ThemedImage
                 source={{ uri }}
-                image={image}
-                title={titles.full}
+                image={product.featuredImage}
+                title={product.name}
                 w={imageSize}
                 h={imageSize}
             />

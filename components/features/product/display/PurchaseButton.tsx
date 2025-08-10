@@ -1,20 +1,20 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { THEME_PURCHASE_BUTTON, THEME_VARIATION_BUTTON } from '@/config/app';
-import { useCartContext, useProductContext } from '@/contexts';
+import { useCartContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
+import { Purchasable } from '@/types';
 import { Plus, ShoppingCart } from '@tamagui/lucide-icons';
-import React, { JSX, useRef, } from 'react';
-import { Button, ButtonProps, ThemeName } from 'tamagui';
+import React, { useRef } from 'react';
+import { Button, ButtonProps } from 'tamagui';
 
-interface ButtonStateConfig {
-    icon: JSX.Element;
-    theme: ThemeName;
+interface PurchaseButtonProps extends ButtonProps {
+    purchasable: Purchasable;
 }
 
 
 
-export const PurchaseButton = (props: ButtonProps) => {
-    const { purchasable } = useProductContext();
+export const PurchaseButton = ({ purchasable, ...props }: PurchaseButtonProps) => {
+
     const { isValid, prices, message, status } = purchasable;
 
     const { addItem } = useCartContext();

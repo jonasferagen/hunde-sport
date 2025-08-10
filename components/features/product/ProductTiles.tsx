@@ -1,6 +1,7 @@
+import { BaseProductProvider } from '@/contexts/BaseProductContext';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { QueryResult } from '@/hooks/data/util';
-import { Product } from '@/types';
+import { PurchasableProduct } from '@/types';
 import { JSX } from 'react';
 import { HorizontalTiles } from '../../ui/tile/HorizontalTiles';
 import { ProductTile } from './ProductTile';
@@ -25,18 +26,18 @@ export const DebugProducts = (): JSX.Element => {
 
 
 interface ProductTilesProps {
-    queryResult: QueryResult<Product>;
+    queryResult: QueryResult<PurchasableProduct>;
 }
 
 const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTilesProps) => {
 
     return <HorizontalTiles
         {...queryResult}
-        renderItem={({ item }: { item: Product }) => {
+        renderItem={({ item }: { item: PurchasableProduct }) => {
             return (
-                <ProductTile
-                    product={item}
-                />
+                <BaseProductProvider product={item}>
+                    <ProductTile />
+                </BaseProductProvider>
             );
         }}
     />
