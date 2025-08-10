@@ -1,4 +1,5 @@
 import { DebugView } from '@/components/debug/DebugView';
+import { CartToastHandler } from '@/components/features/cart/CartToastHandler';
 import {
   AppToastProvider,
   CartProvider,
@@ -28,6 +29,7 @@ const RootLayout = (): JSX.Element => {
                   <CartProvider>
                     <PortalProvider>
                       <AppToastProvider>
+                        <CartToastHandler />
                         <SearchProvider>
                           <Stack screenOptions={{ headerShown: false }}>
                             <Stack.Screen name="(app)" />

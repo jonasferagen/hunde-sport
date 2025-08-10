@@ -39,7 +39,6 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
             {/* Row 1: Product name + unit price */}
             <ProductTitle size="$4" />
 
-
             {/* Row 2: Quantity + Subtotal + Remove */}
             <XStack jc="space-between" ai="center" gap="$4">
                 {/* Quantity Controls */}
@@ -83,6 +82,5 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
                 </ThemedButton>
             </XStack>
         </ThemedYStack>
-
     );
 };

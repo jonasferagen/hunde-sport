@@ -18,3 +18,4 @@ export const THEME_VARIATION_BUTTON = 'success_alt7';
 export const THEME_CHECKOUT_BUTTON = 'success_alt1';
 export const THEME_CART_QUANTITY = 'success_alt5';
 export const THEME_CART_REMOVE = 'success_alt1';
+export const THEME_TOAST = 'dark_orange_alt2';

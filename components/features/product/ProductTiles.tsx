@@ -30,15 +30,16 @@ interface ProductTilesProps {
 }
 
 const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTilesProps) => {
-
-    return <HorizontalTiles
-        {...queryResult}
-        renderItem={({ item }: { item: PurchasableProduct }) => {
-            return (
-                <BaseProductProvider product={item}>
-                    <ProductTile />
-                </BaseProductProvider>
-            );
-        }}
-    />
+    return (
+        <HorizontalTiles
+            {...queryResult}
+            renderItem={({ item }: { item: PurchasableProduct }) => {
+                return (
+                    <BaseProductProvider product={item}>
+                        <ProductTile />
+                    </BaseProductProvider>
+                );
+            }}
+        />
+    );
 };

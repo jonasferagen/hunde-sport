@@ -28,7 +28,8 @@ export const BaseProductProvider: React.FC<{ product: PurchasableProduct; childr
 
     return (
         <BaseProductContext.Provider value={{ product, purchasable }}>
-            {children} {DEBUG_PRODUCTS && <DebugTrigger product={product} />}
+            {children}
+            {DEBUG_PRODUCTS ? <DebugTrigger product={product} /> : null}
         </BaseProductContext.Provider>
     );
 };

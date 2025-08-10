@@ -1,3 +1,4 @@
+import { ThemedSpinner } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { THEME_PURCHASE_BUTTON } from '@/config/app';
 import { useCartContext } from '@/contexts';
@@ -15,36 +16,35 @@ export const PurchaseButton = ({ onPurchase, ...props }: PurchaseButtonProps) =>
     const purchasable = usePurchasable();
     const { isValid, prices, message, status } = purchasable;
 
+    const [isLoading, setIsLoading] = React.useState(false);
+
     const { addItem } = useCartContext();
     const buttonRef = useRef<React.ComponentRef<typeof Button>>(null);
 
-    const handleAddToCart = () => {
-        addItem(purchasable, { triggerRef: buttonRef, silent: false });
+    const handleAddToCart = async () => {
+        setIsLoading(true);
+        await addItem(purchasable, { triggerRef: buttonRef, silent: false });
+        setIsLoading(false);
         onPurchase?.();
     };
 
     if (!isValid) {
         return null;
     }
-    // Get the configuration for the current status
-    const theme = THEME_PURCHASE_BUTTON;
+
     const price = formatPrice(prices.price);
-    const label = "Kjøp";
-    const icon = <ShoppingCart />;
 
     return (
         <CallToActionButton
-
             ref={buttonRef}
-            theme={theme}
+            theme={THEME_PURCHASE_BUTTON}
             onPress={handleAddToCart}
-            disabled={!isValid}
-            iconAfter={icon}
+            disabled={!isValid || isLoading}
+            iconAfter={isLoading ? <ThemedSpinner /> : <ShoppingCart />}
             textAfter={price}
             {...props}
         >
-            {label}
-
+            Kjøp
         </CallToActionButton>
     );
 };

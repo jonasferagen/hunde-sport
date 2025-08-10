@@ -51,13 +51,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         await storeAddItem(addItemOptions);
 
-        if (!options.silent) {
-            toastController.show('Lagt til i handlekurven', {
-                message: product.name,
-                theme: 'dark_yellow',
-                triggerRef: options.triggerRef,
-            });
-        }
     };
 
     const updateItem = async (key: string, quantity: number) => {

@@ -27,9 +27,7 @@ export const ThemedLinearGradient = ({
     const baseColor = theme.background.get();
     const from = elevated ? lighten(.1, baseColor) : baseColor;
     const value = strong ? .2 : .1;
-
     const to = darken(value, baseColor);
-
     const colors = [from, to];
 
     return useMemo(() => (
