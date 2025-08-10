@@ -12,8 +12,7 @@ export const ProductCardFooter = ({ stackProps }: { stackProps?: ThemedStackProp
 
     return (
         <ThemedYStack p="none" {...stackProps}>
-            {purchasable.product.type === "variable" && <ProductVariationsModal />}
-            <PurchaseButton />
+            {purchasable.product.type === "variable" ? <ProductVariationsModal /> : <PurchaseButton />}
         </ThemedYStack>
     );
 }

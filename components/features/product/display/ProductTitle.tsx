@@ -12,7 +12,7 @@ export const ProductTitle = ({ children, ...props }: ProductTitleProps) => {
         fow="bold"
         fos="$5"
         f={1}
-        fs={1}
+        fg={1}
         {...props}
     >
         {product.name}

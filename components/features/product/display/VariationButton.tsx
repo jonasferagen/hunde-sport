@@ -6,6 +6,7 @@ import { ThemeName } from 'tamagui';
 
 interface VariationButtonProps extends ButtonProps {
     onPress?: () => void;
+    iconAfter?: any;
 }
 
 export const VariationButton = ({ onPress, ...props }: VariationButtonProps): JSX.Element | null => {

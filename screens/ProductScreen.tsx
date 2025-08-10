@@ -12,7 +12,7 @@ import { BaseProductProvider, useBaseProductContext } from '@/contexts/BaseProdu
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { ProductVariationProvider } from '@/contexts/ProductVariationContext';
 import { useProduct } from '@/hooks/data/Product';
-import { PurchasableProduct } from '@/types';
+import { PurchasableProduct, VariableProduct } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { XStack } from 'tamagui';
@@ -44,7 +44,6 @@ export const ProductScreen = () => {
 };
 
 
-
 const ProductScreenContent = () => {
   const { product } = useBaseProductContext();
   return (
@@ -60,9 +59,8 @@ const ProductScreenContent = () => {
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />
           </XStack>
-          <ProductVariationProvider product={product}>
-            <PurchaseButton />
-            <ProductVariationsModal />
+          <ProductVariationProvider product={product as VariableProduct}>
+            {product.type === "variable" ? <ProductVariationsModal /> : <PurchaseButton />}
           </ProductVariationProvider>
         </PageContent>
         <PageContent title="Produktbilder" >
@@ -76,4 +74,3 @@ const ProductScreenContent = () => {
   );
 };
 
-/*   <ProductVariationsModal /> <PurchaseButton purchasable={purchasable} />  */
