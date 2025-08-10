@@ -15,9 +15,12 @@ export const ProductCardFooter = ({ stackProps }: { stackProps?: ThemedStackProp
         return <PurchaseButton />;
     }
 
+    if (status === "INVALID") {
+        return <ProductStatus f={1} ta="right" />
+    }
+
     if (status === "ACTION_NEEDED") {
         return <ProductVariationsButton />;
     }
 
-    return <ProductStatus f={1} ta="right" />
 }

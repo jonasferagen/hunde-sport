@@ -11,8 +11,8 @@ export const PRODUCT_TILE_HEIGHT: DimensionValue = 120;
 
 export const DEBUG_PRODUCTS = false;
 
-export const THEME_PRICE_TAG = 'success_alt10';
-export const THEME_PRICE_TAG_ON_SALE = 'success_alt10';
-export const THEME_PURCHASE_BUTTON = 'success_alt4';
-export const THEME_VARIATION_BUTTON = 'success_alt7';
-export const THEME_CHECKOUT_BUTTON = 'success_alt8';
+export const THEME_PRICE_TAG = 'success_alt4';
+export const THEME_PRICE_TAG_ON_SALE = 'dark_yellow_alt2';
+export const THEME_PURCHASE_BUTTON = 'success_alt1';
+export const THEME_VARIATION_BUTTON = 'success_alt1';
+export const THEME_CHECKOUT_BUTTON = 'success_alt1';

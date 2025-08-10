@@ -19,6 +19,7 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
 
     const href: HrefObject = routes.product.path(product, category?.id);
 
+
     return (
         <ThemedYStack p="$3" gap="$3" {...props} boc="$borderColor" bbw={1} f={1}>
             <ThemedLinearGradient />
@@ -30,7 +31,7 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ThemedYStack p="none">
+            <ThemedYStack p="none" w="100%" ai="flex-end" jc="flex-end">
                 <ProductCardFooter />
             </ThemedYStack>
         </ThemedYStack>

@@ -1,6 +1,6 @@
 import { ThemedStackProps, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import React from 'react';
-import { XStack, YStack } from 'tamagui';
+import { XStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductDescription } from '../display/ProductDescription';
 import { ProductTitle } from '../display/ProductTitle';
@@ -16,19 +16,15 @@ export const ProductCardRight = ({ ...stackProps }: ProductCardContentProps & Th
         <ThemedYStack f={1} jc="flex-start" gap="$2" {...stackProps}>
             <XStack
                 gap="$2"
-                ai="center"
-                jc="space-between">
-
+                ai="flex-start"
+                jc="space-between"
+            >
                 <ProductTitle fs={1} />
-                <YStack
-                    gap="$1"
-                    jc="center"
-                    ai="center" >
-                    <PriceTag
-                        br="$5"
-                        miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
-                    />
-                </YStack>
+                <PriceTag
+                    fs={0}
+                    br="$5"
+                    miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
+                />
             </XStack>
             <ProductDescription
                 fos="$2"
