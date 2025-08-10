@@ -1,4 +1,4 @@
-import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 import React from 'react';
 import { StackProps, YStack } from 'tamagui';
 

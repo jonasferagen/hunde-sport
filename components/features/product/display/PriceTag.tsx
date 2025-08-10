@@ -1,4 +1,4 @@
-import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
+import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { THEME_PRICE_TAG, THEME_PRICE_TAG_ON_SALE } from '@/config/app';
 import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { StarFull } from '@tamagui/lucide-icons';

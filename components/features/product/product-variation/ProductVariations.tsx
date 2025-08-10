@@ -1,8 +1,9 @@
+import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
 import { Product, VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
-import { SizableText, StackProps, YStack } from 'tamagui';
+import { StackProps, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 interface ProductVariationsProps {
@@ -14,18 +15,11 @@ interface ProductVariationsProps {
 
 export const ProductVariations = ({ product, productVariations, onProductVariationSelected, stackProps }: ProductVariationsProps): JSX.Element => {
 
-
     const { attributes, selectionManager, handleSelectOption, unavailableOptions } = useProductVariationSelector({
         product: product as VariableProduct,
         productVariations,
         onProductVariationSelected,
     });
-
-
-
-    if (product.type !== "variable" || product.attributes.length === 0) {
-        return <></>;
-    }
 
     return (
         <YStack gap="$2" fw="wrap" {...stackProps}>
@@ -37,7 +31,7 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
 
                 return (
                     <YStack key={id} gap="$1" f={1} >
-                        <SizableText size="$3" fow="bold" tt="capitalize">{name}</SizableText>
+                        <ThemedText>{name}</ThemedText>
                         <AttributeSelector
                             options={filteredOptions}
                             selectedValue={selectedValue}

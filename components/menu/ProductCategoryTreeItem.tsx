@@ -3,8 +3,8 @@ import { ProductCategory } from '@/models/ProductCategory';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { getTokenValue, XStack } from 'tamagui';
-import { ThemedButton } from '../ui/ThemedButton';
-import { ThemedText } from '../ui/ThemedText';
+import { ThemedButton } from '../ui/themed-components/ThemedButton';
+import { ThemedText } from '../ui/themed-components/ThemedText';
 import { AnimatedListExpansionIcon } from './AnimatedListExpansionIcon';
 
 export interface RenderItemProps {

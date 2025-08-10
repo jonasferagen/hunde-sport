@@ -1,4 +1,4 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
+import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { BaseProductProvider } from '@/contexts/BaseProductContext';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';

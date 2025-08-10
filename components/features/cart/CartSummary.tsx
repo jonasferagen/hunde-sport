@@ -1,5 +1,5 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
-import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
+import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 import { useCartContext } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/helpers';
 import React, { JSX, memo } from 'react';

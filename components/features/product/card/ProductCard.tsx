@@ -1,8 +1,8 @@
-import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
+import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { routes } from '@/config/routes';
-import { ProductVariationProvider, useProductCategoryContext } from '@/contexts';
+import { useProductCategoryContext } from '@/contexts';
 
-import { ThemedXStack, ThemedYStack } from '@/components/ui/ThemedStack';
+import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
@@ -31,9 +31,7 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ProductVariationProvider product={product}>
-                <ProductCardFooter />
-            </ProductVariationProvider>
+            <ProductCardFooter />
         </ThemedYStack>
     );
 };

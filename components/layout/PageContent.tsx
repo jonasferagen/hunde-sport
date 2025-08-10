@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { H3, ScrollView, YStackProps } from 'tamagui';
-import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
-import { ThemedYStack } from '../ui/ThemedStack';
+import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
+import { ThemedYStack } from '../ui/themed-components/ThemedStack';
 
 interface PageContentProps extends YStackProps {
   children: ReactNode;

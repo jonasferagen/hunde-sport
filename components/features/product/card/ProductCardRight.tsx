@@ -1,4 +1,4 @@
-import { ThemedStackProps, ThemedYStack } from '@/components/ui/ThemedStack';
+import { ThemedStackProps, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import React from 'react';
 import { XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';

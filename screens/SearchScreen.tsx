@@ -3,7 +3,7 @@ import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { SearchBar } from '@/components/ui';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
+import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useSearchContext } from '@/contexts/SearchContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useLocalSearchParams } from 'expo-router';

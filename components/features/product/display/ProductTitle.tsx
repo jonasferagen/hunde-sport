@@ -1,4 +1,4 @@
-import { useBaseProductContext } from '@/contexts/BaseProductContext';
+import { usePurchasable } from '@/hooks/usePurchasable';
 import React from 'react';
 import { SizableText, SizableTextProps } from 'tamagui';
 
@@ -7,7 +7,7 @@ interface ProductTitleProps extends SizableTextProps { }
 
 export const ProductTitle = ({ children, ...props }: ProductTitleProps) => {
 
-    const { product } = useBaseProductContext();
+    const { product } = usePurchasable();
     return <SizableText
         fow="bold"
         fos="$5"

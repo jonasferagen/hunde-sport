@@ -1,7 +1,7 @@
 import { X } from "@tamagui/lucide-icons";
-import { Sheet, SizableText } from "tamagui";
-import { ThemedButton } from "../ThemedButton";
-
+import { Sheet } from "tamagui";
+import { ThemedButton } from "../themed-components/ThemedButton";
+import { ThemedXStack, ThemedYStack } from "../themed-components/ThemedStack";
 export const Modal = ({
     children,
     open,
@@ -24,20 +24,23 @@ export const Modal = ({
                 boc="black"
                 bw={1}>
 
-                <ThemedButton
-                    pos="absolute"
-                    top="$3"
-                    right="$3"
-                    size="$5"
 
-                    circular
-                    icon={<X size="$3" />}
-                    onPress={() => onOpenChange(false)}
-                />
+                <ThemedYStack bg="blue" pos="relative" f={1} >
+                    <ThemedXStack fs={1} bg="red" ai="flex-start" jc="flex-end">
 
-                <SizableText size="$5" fow="bold" tt="capitalize">Velg variant</SizableText>
-                {children}
-
+                        <ThemedButton
+                            my="$3"
+                            mr="$3"
+                            size="$6"
+                            circular
+                            icon={<X size="$4" />}
+                            onPress={() => onOpenChange(false)}
+                        />
+                    </ThemedXStack>
+                    <ThemedXStack>
+                        {children}
+                    </ThemedXStack>
+                </ThemedYStack>
             </Sheet.Frame>
         </Sheet>
     );

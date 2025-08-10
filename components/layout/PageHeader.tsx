@@ -1,6 +1,6 @@
 import React from 'react';
 import { H4, YStack, YStackProps } from 'tamagui';
-import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
+import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 
 interface PageHeaderProps extends YStackProps {
     title?: string;

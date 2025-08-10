@@ -1,9 +1,9 @@
-import { ThemedButton } from '@/components/ui/ThemedButton';
-import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
+import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
+import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ButtonProps } from '@tamagui/button';
 import React from 'react';
 import { Theme, XStack } from 'tamagui';
-import { ThemedText } from '../ThemedText';
+import { ThemedText } from '../themed-components/ThemedText';
 
 interface CallToActionButtonProps extends ButtonProps {
     children: React.ReactNode;

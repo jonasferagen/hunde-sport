@@ -1,4 +1,4 @@
-import { ThemedSpinner } from '@/components/ui/ThemedSpinner';
+import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useProductCategories } from '@/hooks/data/ProductCategory';
 import { useCartStore } from '@/stores/CartStore';
 import { useProductCategoryStore } from '@/stores/ProductCategoryStore';

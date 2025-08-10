@@ -1,4 +1,4 @@
-import { ThemedImage } from '@/components/ui/ThemedImage';
+import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { GridTiles } from '@/components/ui/tile/GridTiles';
 import { useBaseProductContext } from '@/contexts';
 import { getScaledImageUrl } from '@/lib/helpers';

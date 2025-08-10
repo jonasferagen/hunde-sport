@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { SizableText, StackProps, XStack } from 'tamagui';
-import { ThemedLinearGradient } from '../ThemedLinearGradient';
+import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
 
 
 export const Chip = ({ children, ...props }: StackProps): JSX.Element => {

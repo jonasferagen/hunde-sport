@@ -1,4 +1,4 @@
-import { ThemedImage } from '@/components/ui/ThemedImage';
+import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { Galeria } from '@nandorojo/galeria';

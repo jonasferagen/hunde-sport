@@ -1,12 +1,12 @@
 
-import { useBaseProductContext } from '@/contexts/BaseProductContext';
+import { usePurchasable } from '@/hooks/usePurchasable';
 import React from 'react';
 import { SizableText, SizableTextProps, XStack, getThemes } from 'tamagui';
 
 
 export const ProductStatus = ({ showInStock = true, ...props }: { showInStock?: boolean } & SizableTextProps) => {
 
-    const { product } = useBaseProductContext();
+    const { product } = usePurchasable();
     const { isInStock: inStock, isOnBackOrder } = product.availability;
 
     const themes = getThemes();

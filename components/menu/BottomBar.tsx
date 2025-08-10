@@ -1,4 +1,4 @@
-import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
+import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { routes } from '@/config/routes';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname, useRouter } from 'expo-router';

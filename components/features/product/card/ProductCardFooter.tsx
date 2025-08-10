@@ -1,4 +1,4 @@
-import { ThemedStackProps, ThemedYStack } from '@/components/ui/ThemedStack';
+import { ThemedStackProps, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import { usePurchasable } from '@/hooks/usePurchasable';
 import React from 'react';
 import { PurchaseButton } from '../display/PurchaseButton';

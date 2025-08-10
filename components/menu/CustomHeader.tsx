@@ -5,8 +5,8 @@ import { Menu } from '@tamagui/lucide-icons';
 import { useNavigation } from 'expo-router';
 import { JSX } from 'react';
 import { H4, XStack } from 'tamagui';
-import { ThemedButton } from '../ui/ThemedButton';
-import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
+import { ThemedButton } from '../ui/themed-components/ThemedButton';
+import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 
 export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
 

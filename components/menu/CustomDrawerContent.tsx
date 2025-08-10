@@ -6,9 +6,9 @@ import {
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { H4, ScrollView, XStack, YStack } from 'tamagui';
-import { ThemedButton } from '../ui/ThemedButton';
-import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
-import { ThemedText } from '../ui/ThemedText';
+import { ThemedButton } from '../ui/themed-components/ThemedButton';
+import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
+import { ThemedText } from '../ui/themed-components/ThemedText';
 
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;

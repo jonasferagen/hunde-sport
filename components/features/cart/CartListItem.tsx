@@ -1,4 +1,4 @@
-import { ThemedButton } from '@/components/ui/ThemedButton';
+import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductProvider, useCartContext } from '@/contexts';

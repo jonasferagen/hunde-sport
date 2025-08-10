@@ -3,8 +3,8 @@ import { StoreImage } from '@/models/StoreImage';
 import { JSX } from 'react';
 import { DimensionValue } from 'react-native';
 import { SizableText, YStack, YStackProps } from 'tamagui';
-import { ThemedImage } from '../ThemedImage';
-import { ThemedLinearGradient } from '../ThemedLinearGradient';
+import { ThemedImage } from '../themed-components/ThemedImage';
+import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
 
 export interface TileProps extends YStackProps {
     title: string;

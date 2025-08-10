@@ -3,6 +3,6 @@ export { ProductCategoryTile as CategoryTile } from '../features/product-categor
 export { ProductTile } from '../features/product/ProductTile';
 export { Chip } from './chips/Chip';
 export { SearchBar } from './search-bar/Searchbar';
-export { ThemedStack } from './ThemedStack';
+export * from './themed-components/';
 export { Tile } from './tile/Tile';
 
