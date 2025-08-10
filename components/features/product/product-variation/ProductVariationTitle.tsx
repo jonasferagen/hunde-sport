@@ -5,16 +5,15 @@ import { SizableTextProps } from 'tamagui';
 
 interface ProductTitleProps extends SizableTextProps { }
 
+export const ProductVariationTitle = ({ children, ...props }: ProductTitleProps) => {
 
-export const ProductTitle = ({ children, ...props }: ProductTitleProps) => {
-
-    const { product } = usePurchasable();
+    const { productVariation } = usePurchasable();
     return <ThemedText
         fow="bold"
         fos="$5"
         {...props}
     >
-        {product.name}
-        {children}
+        {productVariation?.getLabel()}
+
     </ThemedText>;
 };

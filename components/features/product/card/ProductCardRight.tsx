@@ -20,7 +20,7 @@ export const ProductCardRight = ({ ...stackProps }: ProductCardContentProps & Th
                 ai="center"
                 jc="space-between">
 
-                <ProductTitle />
+                <ProductTitle fs={1} />
                 <YStack
                     gap="$1"
                     jc="center"
