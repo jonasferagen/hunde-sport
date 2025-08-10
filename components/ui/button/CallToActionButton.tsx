@@ -22,8 +22,10 @@ export const CallToActionButton = React.forwardRef<
                 ref={ref}
                 position="relative"
                 m="none"
-                px="$3"
+                pr="$3"
                 bw={0}
+                h="$"
+                br="$3"
 
                 boxSizing="border-box"
                 flexDirection='row'
