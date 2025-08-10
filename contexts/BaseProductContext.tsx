@@ -1,10 +1,11 @@
 // -----------------
 // Base product context
 
+import { DebugTrigger } from '@/components/debug/DebugTrigger';
+import { DEBUG_PRODUCTS } from '@/config/app';
 import { createPurchasable } from '@/models/Product/Purchasable';
 import { Purchasable, PurchasableProduct } from "@/types";
 import { createContext, useContext, useMemo } from "react";
-
 // -----------------
 export interface BaseProductContextType {
     product: PurchasableProduct;
@@ -27,7 +28,7 @@ export const BaseProductProvider: React.FC<{ product: PurchasableProduct; childr
 
     return (
         <BaseProductContext.Provider value={{ product, purchasable }}>
-            {children}
+            {children} {DEBUG_PRODUCTS && <DebugTrigger product={product} />}
         </BaseProductContext.Provider>
     );
 };

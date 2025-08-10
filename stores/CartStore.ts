@@ -73,51 +73,67 @@ const initialState: CartState = {
  * @param apiCall - The specific API function to execute for the cart operation.
  * @returns A promise that resolves when the action is complete.
  */
+
+
+// Tracks the order in which cart actions are initiated
+let cartActionVersion = 0;
+
 const handleCartAction = async (
-    actionName: 'addItem' | 'updateItem' | 'removeItem',
+    actionName: keyof Pick<CartActions, 'addItem' | 'updateItem' | 'removeItem'>,
     get: () => CartState,
     set: (partial: Partial<CartState>) => void,
     apiCall: (cartToken: string) => Promise<{ data: CartData }>,
-    optimisticCart: CartData,
-
+    optimisticCart: CartData | null
 ) => {
     log.info(`CartStore: ${actionName} invoked.`);
-    const cartToken = get().cartToken;
-    if (!cartToken) {
-        throw new Error(`CartStore: ${actionName} failed, no cart token found.`);
+
+    const { cartToken, cart: originalCart } = get();
+    if (!cartToken || !originalCart) {
+        throw new Error(`CartStore: ${actionName} failed — no cart loaded.`);
     }
-    const { cart: originalCart } = get();
-    set({ isUpdating: true });
+
+    // Assign a version for this specific action
+    const actionVersion = ++cartActionVersion;
+
+    // Apply optimistic state immediately
+    set({
+        cart: {
+            ...optimisticCart!,
+            lastUpdated: Date.now(),
+        },
+        isUpdating: true,
+    });
+
     try {
-        const newCart = optimisticCart;
-        const originalTimestamp = Date.now();
-        set({
-            cart: {
-                ...newCart,
-                lastUpdated: originalTimestamp,
-            },
-            isUpdating: true,
-        });
-
         const result = await apiCall(cartToken);
-        const cart = result.data;
 
-        // Only update if response is newer
-        const current = get().cart;
-        if (current && current?.lastUpdated > cart.lastUpdated) {
-            log.info('CartStore: response ignored due to newer cart state.');
+        // Ignore stale responses
+        if (actionVersion < cartActionVersion) {
+            log.info(`CartStore: ${actionName} response ignored (stale version).`);
             return;
         }
 
-        set({ cart, cartToken: cart.token });
+        const apiCart = {
+            ...result.data,
+            lastUpdated: result.data.lastUpdated ?? Date.now(),
+        };
+
+        set({
+            cart: apiCart,
+            cartToken: apiCart.token,
+        });
+
         log.info(`CartStore: ${actionName} success.`);
     } catch (error) {
-        log.error(`CartStore: ${actionName} failed.`, error);
+        log.error(`CartStore: ${actionName} failed.`, error instanceof Error ? error.message : error);
         set({ cart: originalCart });
     } finally {
         set({ isUpdating: false });
     }
 };
+
+
+
 
 /**
  * The centralized Zustand store for managing the shopping cart.
@@ -151,45 +167,43 @@ export const useCartStore = create<CartState & CartActions>()(
             },
 
 
-            addItem: async (options: AddItemOptions) => {
+            addItem: async (options) => {
                 const { cart } = get();
                 await handleCartAction(
                     'addItem',
                     get,
                     set,
-                    (cartToken) => apiAddItem(cartToken, { ...options, variation: options.variation || [] }),
-                    cart!
+                    (token) => apiAddItem(token, { ...options, variation: options.variation || [] }),
+                    cart
                 );
             },
 
-            updateItem: async (key: string, quantity: number) => {
-
+            updateItem: async (key, quantity) => {
                 const { cart } = get();
-
                 await handleCartAction(
                     'updateItem',
                     get,
                     set,
-                    (cartToken) => apiUpdateItem(cartToken, { key, quantity }),
-                    {
-                        ...cart!,
-                        items: cart!.items.map((item) =>
+                    (token) => apiUpdateItem(token, { key, quantity }),
+                    cart && {
+                        ...cart,
+                        items: cart.items.map((item) =>
                             item.key === key ? { ...item, quantity } : item
                         ),
                     }
                 );
             },
 
-            removeItem: async (key: string) => {
+            removeItem: async (key) => {
                 const { cart } = get();
                 await handleCartAction(
                     'removeItem',
                     get,
                     set,
-                    (cartToken) => apiRemoveItem(cartToken, { key }),
-                    {
-                        ...cart!,
-                        items: cart!.items.filter((item) => item.key !== key),
+                    (token) => apiRemoveItem(token, { key }),
+                    cart && {
+                        ...cart,
+                        items: cart.items.filter((item) => item.key !== key),
                     }
                 );
             },

@@ -3,7 +3,7 @@ import { ProductDescription } from '@/components/features/product/display/Produc
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
-import { ProductVariationsModal } from '@/components/features/product/product-variation/ProductVariationsButton';
+import { ProductVariationsButton } from '@/components/features/product/product-variation/ProductVariationsButton';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
@@ -37,7 +37,9 @@ export const ProductScreen = () => {
   return (
     <ProductCategoryProvider productCategoryId={productCategoryId} productCategories={product.categories} >
       <BaseProductProvider product={purchasableProduct}>
-        <ProductScreenContent />
+        <ProductVariationProvider product={product as VariableProduct}>
+          <ProductScreenContent />
+        </ProductVariationProvider>
       </BaseProductProvider>
     </ProductCategoryProvider>
   );
@@ -59,9 +61,7 @@ const ProductScreenContent = () => {
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />
           </XStack>
-          <ProductVariationProvider product={product as VariableProduct}>
-            {product.type === "variable" ? <ProductVariationsModal /> : <PurchaseButton />}
-          </ProductVariationProvider>
+          {product.type === "variable" ? <ProductVariationsButton /> : <PurchaseButton />}
         </PageContent>
         <PageContent title="Produktbilder" >
           {product.images.length > 1 && <ProductImageGallery />}

@@ -6,7 +6,11 @@ export const AppToast = () => {
 
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
+
+
     if (!toast || toast.isHandledNatively || toast.hide) return <></>
+
+
 
     return (
         <Toast
