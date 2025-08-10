@@ -9,6 +9,7 @@ export const ThemedText = styled(SizableText, {
         opacity: 0.5,
         textDecorationLine: "line-through"
     },
+
     variants: {
         variant: {
             default: {},

@@ -3,7 +3,6 @@ import React from 'react';
 import { XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
 import { ProductDescription } from '../display/ProductDescription';
-import { ProductStatus } from '../display/ProductStatus';
 import { ProductTitle } from '../display/ProductTitle';
 import { PRODUCT_CARD_LEFT_COLUMN_WIDTH } from './ProductCardLeft';
 
@@ -36,9 +35,9 @@ export const ProductCardRight = ({ ...stackProps }: ProductCardContentProps & Th
                 lh='$1'
                 textDecorationLine="none"
                 numberOfLines={2}
-                hoverStyle={{ color: '$colorHover' }}
+
                 short={true} />
-            <ProductStatus f={1} ta='right' />
+
         </ThemedYStack>
     );
 };

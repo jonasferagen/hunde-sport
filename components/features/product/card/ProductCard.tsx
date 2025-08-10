@@ -19,9 +19,8 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
 
     const href: HrefObject = routes.product.path(product, category?.id);
 
-
     return (
-        <ThemedYStack p="$3" gap="none" {...props} boc="$borderColor" bbw={1} f={1}>
+        <ThemedYStack p="$3" gap="$3" {...props} boc="$borderColor" bbw={1} f={1}>
             <ThemedLinearGradient />
             <Link href={href} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
@@ -31,8 +30,9 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ProductCardFooter />
+            <ThemedYStack p="none">
+                <ProductCardFooter />
+            </ThemedYStack>
         </ThemedYStack>
     );
-};
-/* <ProductCardFooter purchasable={purchasable} />  */
+}

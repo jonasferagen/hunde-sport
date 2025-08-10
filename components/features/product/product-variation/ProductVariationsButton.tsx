@@ -3,26 +3,34 @@ import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { ProductVariationProvider, useProductVariationContext } from '@/contexts/ProductVariationContext';
 import { VariableProduct } from '@/models/Product/Product';
-import React from 'react';
 import { ScrollView, YStack } from 'tamagui';
 import { PurchaseButton } from '../display/PurchaseButton';
-import { VariationButton } from '../display/VariationButton';
 import { ProductImage } from '../ProductImage';
 import { ProductVariations } from './ProductVariations';
 import { ProductVariationTitle } from './ProductVariationTitle';
 
-export const ProductVariationsModal = () => {
+import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
+import { THEME_VARIATION_BUTTON } from '@/config/app';
+import { PawPrint } from '@tamagui/lucide-icons';
+import React from 'react';
+
+
+export const ProductVariationsButton = () => {
     const { product: variableProduct } = useBaseProductContext();
     const [open, setOpen] = React.useState(false);
 
     const product = variableProduct as VariableProduct;
-
-
     return (
         <>
-            <VariationButton onPress={() => {
-                setOpen(true);
-            }} />
+            <CallToActionButton
+                theme={THEME_VARIATION_BUTTON}
+                iconAfter={<PawPrint />}
+                onPress={() => {
+                    setOpen(true);
+                }}
+            >
+                Velg variant
+            </CallToActionButton>
             {open && (
                 <Modal open={open} onOpenChange={setOpen} title={product.name}>
                     <ProductVariationProvider product={product}>

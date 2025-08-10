@@ -1,21 +1,23 @@
-import { ThemedStackProps, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
+import { ThemedStackProps } from '@/components/ui/themed-components/ThemedStack';
 import { usePurchasable } from '@/hooks/usePurchasable';
 import React from 'react';
+import { ProductStatus } from '../display/ProductStatus';
 import { PurchaseButton } from '../display/PurchaseButton';
-import { ProductVariationsModal } from '../product-variation/ProductVariationsModal';
+import { ProductVariationsButton } from '../product-variation/ProductVariationsButton';
 
 
 
 export const ProductCardFooter = ({ stackProps }: { stackProps?: ThemedStackProps }) => {
 
-    const purchasable = usePurchasable();
+    const { isValid, status } = usePurchasable();
 
-    return (
-        <ThemedYStack p="none" {...stackProps}>
-            {purchasable.product.type === "variable" ? <ProductVariationsModal /> : <PurchaseButton />}
-        </ThemedYStack>
-    );
+    if (isValid) {
+        return <PurchaseButton />;
+    }
+
+    if (status === "ACTION_NEEDED") {
+        return <ProductVariationsButton />;
+    }
+
+    return <ProductStatus f={1} ta="right" />
 }
-
-
-

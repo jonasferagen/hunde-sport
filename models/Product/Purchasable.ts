@@ -57,6 +57,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     return {
         isValid: true,
         status: 'OK',
+        reason: 'OK',
         message: 'Legg til i handlekurv'
     };
 };
