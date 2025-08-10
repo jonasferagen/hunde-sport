@@ -7,10 +7,11 @@ import { Plus, ShoppingCart } from '@tamagui/lucide-icons';
 import React, { useRef } from 'react';
 import { Button, ButtonProps } from 'tamagui';
 
+interface PurchaseButtonProps extends ButtonProps {
+    onPurchase?: () => void;
+}
 
-
-
-export const PurchaseButton = ({ ...props }: ButtonProps) => {
+export const PurchaseButton = ({ onPurchase, ...props }: PurchaseButtonProps) => {
     const purchasable = usePurchasable();
     const { isValid, prices, message, status } = purchasable;
 
@@ -19,6 +20,7 @@ export const PurchaseButton = ({ ...props }: ButtonProps) => {
 
     const handleAddToCart = () => {
         addItem(purchasable, { triggerRef: buttonRef });
+        onPurchase?.();
     };
     // Get the configuration for the current status
     const theme = status === "OK" ? THEME_PURCHASE_BUTTON : THEME_VARIATION_BUTTON

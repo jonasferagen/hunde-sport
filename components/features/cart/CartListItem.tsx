@@ -1,9 +1,10 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
-import { ProductProvider, useCartContext } from '@/contexts';
+import { BaseProductProvider, useCartContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { CartItemData } from '@/models/Cart/Cart';
+import { PurchasableProduct } from '@/types';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { H4, SizableText, XStack, YStack } from 'tamagui';
@@ -12,9 +13,9 @@ import { H4, SizableText, XStack, YStack } from 'tamagui';
 export const CartListItem = ({ item }: { item: CartItemData }): JSX.Element => {
 
     return (
-        <ProductProvider product={item.product}>
+        <BaseProductProvider product={item.product as PurchasableProduct}>
             <CartListItemContent item={item} />
-        </ProductProvider>
+        </BaseProductProvider>
     );
 }
 
@@ -33,21 +34,21 @@ const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
             <XStack jc="space-between" ai="center" gap="$4">
                 {/* Quantity Controls */}
                 <XStack ai="center" gap="$2">
-                    <ThemedButton theme="primary"
-                        icon={<Minus size="$3" />}
+                    <ThemedButton theme="success_alt7"
                         onPress={() => updateItem(key, quantity - 1)}
-                        size="$5"
                         circular
                         disabled={quantity <= 1}
-                    />
+                    >
+                        <Minus />
+                    </ThemedButton>
 
-                    <ThemedButton theme="primary"
-                        icon={<Plus size="$3" />}
+                    <ThemedButton theme="success_alt7"
                         onPress={() => updateItem(key, quantity + 1)}
-                        size="$5"
                         circular
                         disabled={false}
-                    />
+                    >
+                        <Plus />
+                    </ThemedButton>
                     <H4 w={30} ta="center">
                         {quantity}
                     </H4>
@@ -63,14 +64,13 @@ const CartListItemContent = ({ item }: { item: CartItemData }): JSX.Element => {
                 </XStack>
 
                 {/* Remove Button */}
-                <ThemedButton
-                    theme="secondary"
-                    icon={<X size="$3" />}
+                <ThemedButton theme="danger"
                     onPress={() => removeItem(key)}
-                    size="$5"
                     circular
                     disabled={false}
-                />
+                >
+                    <X />
+                </ThemedButton>
             </XStack>
         </YStack>
 

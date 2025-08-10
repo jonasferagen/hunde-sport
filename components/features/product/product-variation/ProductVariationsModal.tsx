@@ -26,7 +26,7 @@ export const ProductVariationsModal = () => {
             {open && (
                 <Modal open={open} onOpenChange={setOpen} title={product.name}>
                     <ProductVariationProvider product={product}>
-                        <ProductVariationsContent product={product} />
+                        <ProductVariationsContent product={product} setOpen={setOpen} />
                     </ProductVariationProvider>
                 </Modal>
             )}
@@ -36,9 +36,10 @@ export const ProductVariationsModal = () => {
 
 interface ProductVariationsContentProps {
     product: VariableProduct;
+    setOpen: (open: boolean) => void;
 }
 
-export const ProductVariationsContent = ({ product }: ProductVariationsContentProps) => {
+export const ProductVariationsContent = ({ product, setOpen }: ProductVariationsContentProps) => {
     const { isLoading, productVariations, setSelectedProductVariation } = useProductVariationContext();
 
 
@@ -57,7 +58,7 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
                     onProductVariationSelected={setSelectedProductVariation}
                 />}
             </ScrollView>
-            <PurchaseButton f={0} mb="$3" />
+            <PurchaseButton f={0} mb="$3" onPurchase={() => setOpen(false)} />
         </YStack>
 
     );
