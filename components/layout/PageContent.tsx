@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
-import { H3, ScrollView, YStack, YStackProps } from 'tamagui';
+import { H3, ScrollView, YStackProps } from 'tamagui';
 import { ThemedLinearGradient } from '../ui/ThemedLinearGradient';
+import { ThemedYStack } from '../ui/ThemedStack';
 
 interface PageContentProps extends YStackProps {
   children: ReactNode;
@@ -24,23 +25,24 @@ export const PageContent = (props: PageContentProps) => {
     return null;
   }
 
-  return <YStack {...stackProps}>
-    <ThemedLinearGradient />
-    {title && <H3 p="$3" pb="none">{title}</H3>}
-    <YStack
-      p="$3"
-      bbw={1}
-      boc="$borderColor"
+  return (
+    <ThemedYStack {...stackProps}>
+      <ThemedLinearGradient />
+      {title && <H3 p="$3" pb="none">{title}</H3>}
+      <ThemedYStack
+        p="$3"
+        bbw={1}
+        {...stackProps}
+      >
+        {scrollable ? (
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {validChildren}
+          </ScrollView>
+        ) : (
+          validChildren // Just render children directly
+        )}
 
-      {...stackProps}
-    >
-      {scrollable ? (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {validChildren}
-        </ScrollView>
-      ) : (
-        validChildren // Just render children directly
-      )}
-    </YStack >
-  </YStack>
+      </ThemedYStack >
+    </ThemedYStack >
+  );
 };

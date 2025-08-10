@@ -12,7 +12,7 @@ const createThemedStack = (
         const { debugColor, ...stackProps } = props;
         const debugProps = debugColor ? { bw: 1, boc: debugColor } : {};
 
-        return <StackComponent p="none" gap="$3" {...stackProps} {...debugProps} />;
+        return <StackComponent p="none" gap="$3" boc="$borderColor" {...stackProps} {...debugProps} />;
     };
 
     return ThemedStack;

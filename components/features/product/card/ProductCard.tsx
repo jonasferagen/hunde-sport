@@ -1,12 +1,13 @@
 import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { routes } from '@/config/routes';
-import { useProductCategoryContext } from '@/contexts';
+import { ProductVariationProvider, useProductCategoryContext } from '@/contexts';
 
 import { ThemedXStack, ThemedYStack } from '@/components/ui/ThemedStack';
 import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Button, StackProps } from 'tamagui';
+import { ProductCardFooter } from './ProductCardFooter';
 import { ProductCardLeft } from './ProductCardLeft';
 import { ProductCardRight } from './ProductCardRight';
 
@@ -30,7 +31,9 @@ export const ProductCard = ({ ...props }: ProductCardProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-
+            <ProductVariationProvider product={product}>
+                <ProductCardFooter />
+            </ProductVariationProvider>
         </ThemedYStack>
     );
 };

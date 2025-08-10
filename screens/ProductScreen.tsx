@@ -2,12 +2,15 @@ import { ProductCategoryChips } from '@/components/features/product-category/Pro
 import { ProductDescription } from '@/components/features/product/display/ProductDescription';
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
+import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
+import { ProductVariationsModal } from '@/components/features/product/product-variation/ProductVariationsModal';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
 import { BaseProductProvider, useBaseProductContext } from '@/contexts/BaseProductContext';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
+import { ProductVariationProvider } from '@/contexts/ProductVariationContext';
 import { useProduct } from '@/hooks/data/Product';
 import { PurchasableProduct } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
@@ -57,7 +60,10 @@ const ProductScreenContent = () => {
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />
           </XStack>
-          <ProductDescription />
+          <ProductVariationProvider product={product}>
+            <PurchaseButton />
+            <ProductVariationsModal />
+          </ProductVariationProvider>
         </PageContent>
         <PageContent title="Produktbilder" >
           {product.images.length > 1 && <ProductImageGallery />}

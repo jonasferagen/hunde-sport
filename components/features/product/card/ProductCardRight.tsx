@@ -1,5 +1,4 @@
 import { ThemedStackProps, ThemedYStack } from '@/components/ui/ThemedStack';
-import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import React from 'react';
 import { XStack, YStack } from 'tamagui';
 import { PriceTag } from '../display/PriceTag';
@@ -12,7 +11,7 @@ interface ProductCardContentProps {
 }
 
 export const ProductCardRight = ({ ...stackProps }: ProductCardContentProps & ThemedStackProps) => {
-    const { product } = useBaseProductContext();
+
     return (
 
         <ThemedYStack f={1} jc="flex-start" gap="$2" {...stackProps}>
@@ -29,10 +28,9 @@ export const ProductCardRight = ({ ...stackProps }: ProductCardContentProps & Th
                     <PriceTag
                         br="$5"
                         miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
-
                     />
                 </YStack>
-            </XStack>ProductCardRight
+            </XStack>
             <ProductDescription
                 fos="$2"
                 lh='$1'

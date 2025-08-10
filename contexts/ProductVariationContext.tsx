@@ -2,7 +2,7 @@
 // Variation context
 // -----------------
 import { useProductVariations } from '@/hooks/data/Product';
-import { ProductVariation, PurchasableProduct } from "@/models/Product/Product";
+import { ProductVariation, VariableProduct } from "@/models/Product/Product";
 import { createPurchasable } from '@/models/Product/Purchasable';
 import { Purchasable } from "@/types";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -23,7 +23,7 @@ export const useProductVariationContext = () => {
     return ctx;
 };
 
-export const ProductVariationProvider: React.FC<{ product: PurchasableProduct; children: React.ReactNode }> = ({
+export const ProductVariationProvider: React.FC<{ product: VariableProduct; children: React.ReactNode }> = ({
     product,
     children,
 }) => {

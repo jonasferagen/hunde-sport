@@ -1,17 +1,19 @@
 import { ThemedStackProps, ThemedYStack } from '@/components/ui/ThemedStack';
-import { Purchasable } from '@/types';
+import { usePurchasable } from '@/hooks/usePurchasable';
 import React from 'react';
 import { PurchaseButton } from '../display/PurchaseButton';
 import { ProductVariationsModal } from '../product-variation/ProductVariationsModal';
 
 
 
-export const ProductCardFooter = ({ purchasable, stackProps }: { purchasable: Purchasable; stackProps?: ThemedStackProps }) => {
+export const ProductCardFooter = ({ stackProps }: { stackProps?: ThemedStackProps }) => {
+
+    const purchasable = usePurchasable();
 
     return (
         <ThemedYStack p="none" {...stackProps}>
             {purchasable.product.type === "variable" && <ProductVariationsModal />}
-            <PurchaseButton purchasable={purchasable} />
+            <PurchaseButton />
         </ThemedYStack>
     );
 }
