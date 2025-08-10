@@ -24,10 +24,8 @@ export const Modal = ({
                 boc="black"
                 bw={1}>
 
-
-                <ThemedYStack bg="blue" pos="relative" f={1} >
+                <ThemedYStack w="100%" h="100%" bg="blue" pos="relative" f={1} >
                     <ThemedXStack fs={1} bg="red" ai="flex-start" jc="flex-end">
-
                         <ThemedButton
                             my="$3"
                             mr="$3"

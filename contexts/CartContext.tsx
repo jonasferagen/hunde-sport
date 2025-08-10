@@ -1,6 +1,5 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
 import { Purchasable } from '@/models/Product/Purchasable';
-import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { AddItemOptions, useCartStore } from '@/stores/CartStore';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
@@ -79,12 +78,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    if (cart === null) {
-        return <LoadingScreen />;
-    }
 
     const value = useMemo(() => ({
-        cart,
+        cart: cart!,
         isUpdating,
         addItem,
         updateItem,

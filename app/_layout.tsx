@@ -4,7 +4,7 @@ import {
   CartProvider,
   DebugProvider,
   ProductCategoryProvider,
-  SearchProvider,
+  SearchProvider
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
 import appConfig from '@/tamagui/tamagui.config';
@@ -24,8 +24,8 @@ const RootLayout = (): JSX.Element => {
           <TamaguiProvider config={appConfig}>
             <Theme name="light">
               <DebugProvider>
-                <CartProvider>
-                  <ProductCategoryProvider>
+                <ProductCategoryProvider>
+                  <CartProvider>
                     <PortalProvider>
                       <AppToastProvider>
                         <SearchProvider>
@@ -36,8 +36,8 @@ const RootLayout = (): JSX.Element => {
                         </SearchProvider>
                       </AppToastProvider>
                     </PortalProvider>
-                  </ProductCategoryProvider>
-                </CartProvider>
+                  </CartProvider>
+                </ProductCategoryProvider>
               </DebugProvider>
             </Theme>
           </TamaguiProvider>
