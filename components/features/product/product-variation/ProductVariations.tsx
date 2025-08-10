@@ -58,7 +58,11 @@ const VariationSelector = ({ product,
 };
 
 export const ProductVariations = (stackProps: StackProps): JSX.Element => {
-    const { isLoading, product: initialProduct, setSelectedProductVariation, productVariations } = useProductContext();
+    const { isLoading,
+        product: initialProduct,
+        setSelectedProductVariation,
+        productVariations
+    } = useProductContext();
 
     if (!(initialProduct instanceof VariableProduct)) {
         return <></>;

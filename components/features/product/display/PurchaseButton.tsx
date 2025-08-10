@@ -1,11 +1,10 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
-import { ThemedText } from '@/components/ui/ThemedText';
 import { THEME_PURCHASE_BUTTON, THEME_VARIATION_BUTTON } from '@/config/app';
 import { useCartContext, useProductContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { Plus, ShoppingCart } from '@tamagui/lucide-icons';
 import React, { JSX, useRef, } from 'react';
-import { Button, ButtonProps, ThemeName, XStack } from 'tamagui';
+import { Button, ButtonProps, ThemeName } from 'tamagui';
 
 interface ButtonStateConfig {
     icon: JSX.Element;
@@ -39,12 +38,10 @@ export const PurchaseButton = (props: ButtonProps) => {
             onPress={handleAddToCart}
             disabled={!isValid}
             iconAfter={icon}
+            textAfter={price}
             {...props}
         >
-            <XStack ai="center" gap="$2" jc="space-between" f={1}>
-                <ThemedText fow="bold" fos="$4" f={1} textAlign='left'>{label}</ThemedText>
-                <ThemedText fow="bold" fos="$4" f={0} textAlign='right'>{price}</ThemedText>
-            </XStack>
+            {label}
 
         </CallToActionButton>
     );

@@ -3,16 +3,17 @@ import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { ButtonProps } from '@tamagui/button';
 import React from 'react';
 import { Theme, XStack } from 'tamagui';
+import { ThemedText } from '../ThemedText';
 
 interface CallToActionButtonProps extends ButtonProps {
     children: React.ReactNode;
-
+    textAfter?: string;
 }
 
 export const CallToActionButton = React.forwardRef<
     React.ComponentRef<typeof ThemedButton>,
     CallToActionButtonProps
->(({ children, icon, iconAfter, ...props }, ref) => {
+>(({ children, textAfter, icon, iconAfter, ...props }, ref) => {
 
 
     return (
@@ -45,14 +46,26 @@ export const CallToActionButton = React.forwardRef<
                 {icon}
                 <XStack
                     ai="center"
+                    jc="space-between"
                     f={1}
                     fg={1}
                     px="none"
                     gap="$2"
                 >
-
-                    {children}
-
+                    <ThemedText fow="bold"
+                        fos="$4"
+                        f={1}
+                        textAlign='left'>
+                        {children}
+                    </ThemedText>
+                    {textAfter && <ThemedText
+                        fow="bold"
+                        fos="$4"
+                        f={0}
+                        textAlign='right'>
+                        {textAfter}
+                    </ThemedText>
+                    }
                 </XStack>
                 {iconAfter}
             </ThemedButton>
