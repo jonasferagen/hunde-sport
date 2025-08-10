@@ -12,6 +12,9 @@ export const ProductDescription = ({ short = true, ...sizableTextProps }: Produc
     const { product } = useBaseProductContext();
 
     return <ThemedText
+        fos="$2"
+        lh='$1'
+        textDecorationLine="none"
         {...sizableTextProps}
     >
         {short ? product.short_description : product.description}

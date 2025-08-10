@@ -9,10 +9,12 @@ import { ProductImage } from '../ProductImage';
 import { ProductVariations } from './ProductVariations';
 import { ProductVariationTitle } from './ProductVariationTitle';
 
+import { ThemedXStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { THEME_VARIATION_BUTTON } from '@/config/app';
 import { PawPrint } from '@tamagui/lucide-icons';
 import React from 'react';
+import { ProductPrice } from '../display/ProductPrice';
 
 
 export const ProductVariationsButton = () => {
@@ -54,10 +56,11 @@ export const ProductVariationsContent = ({ product, setOpen }: ProductVariations
     if (isLoading) return <ThemedSpinner />
 
     return (
-
         <YStack f={1} h="100%" gap="$3" theme="active">
             <ProductImage img_height={150} />
-            <ProductVariationTitle />
+            <ThemedXStack ai="center" jc="space-between">
+                <ProductVariationTitle /><ProductPrice fos="$6" />
+            </ThemedXStack>
             <ScrollView f={1} >
                 {<ProductVariations
                     key={product.id}

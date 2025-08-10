@@ -26,8 +26,8 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
                 <Sheet.Overlay />
                 <Sheet.Handle />
                 <Sheet.Frame f={1} minHeight={0} p="$4" gap="$4">
-                    <XStack ai="center" jc="space-between">
-                        <H4>{title}</H4>
+                    <XStack ai="center" jc="space-between" gap="$4">
+                        <H4 fs={1}>{title}</H4>
                         <ThemedButton
                             circular
                             onPress={() => onOpenChange(false)}

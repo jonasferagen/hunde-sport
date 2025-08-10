@@ -6,8 +6,8 @@ import { SizableText, SizableTextProps, XStack, getThemes } from 'tamagui';
 
 export const ProductStatus = ({ showInStock = true, ...props }: { showInStock?: boolean } & SizableTextProps) => {
 
-    const { product } = usePurchasable();
-    const { isInStock: inStock, isOnBackOrder } = product.availability;
+    const { activeProduct } = usePurchasable();
+    const { isInStock: inStock, isOnBackOrder } = activeProduct.availability;
 
     const themes = getThemes();
 

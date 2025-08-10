@@ -27,11 +27,8 @@ export const ProductCardRight = ({ ...stackProps }: ProductCardContentProps & Th
                 />
             </XStack>
             <ProductDescription
-                fos="$2"
-                lh='$1'
-                textDecorationLine="none"
-                numberOfLines={2}
 
+                numberOfLines={2}
                 short={true} />
 
         </ThemedYStack>
