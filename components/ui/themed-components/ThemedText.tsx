@@ -2,7 +2,7 @@ import { SizableText, styled } from 'tamagui';
 
 export const ThemedText = styled(SizableText, {
     name: 'ThemedText',
-    color: 'black',
+    color: '$color',
     fontWeight: 'normal',
     fontSize: '$3',
     disabledStyle: {

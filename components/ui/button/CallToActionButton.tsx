@@ -52,17 +52,18 @@ export const CallToActionButton = React.forwardRef<
                     px="none"
                     gap="$2"
                 >
-                    <ThemedText fow="bold"
+                    <ThemedText
+                        fow="bold"
                         fos="$4"
                         f={1}
-                        textAlign='left'>
+                    >
                         {children}
                     </ThemedText>
                     {textAfter && <ThemedText
                         fow="bold"
                         fos="$4"
                         f={0}
-                        textAlign='right'>
+                    >
                         {textAfter}
                     </ThemedText>
                     }

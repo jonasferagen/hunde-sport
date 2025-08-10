@@ -1,7 +1,9 @@
 import { DebugView } from '@/components/debug/DebugView';
 import {
   AppToastProvider,
+  CartProvider,
   DebugProvider,
+  ProductCategoryProvider,
   SearchProvider,
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
@@ -22,22 +24,26 @@ const RootLayout = (): JSX.Element => {
           <TamaguiProvider config={appConfig}>
             <Theme name="light">
               <DebugProvider>
-                <PortalProvider>
-                  <AppToastProvider>
-                    <SearchProvider>
-                      <Stack screenOptions={{ headerShown: false }}>
-                        <Stack.Screen name="(app)" />
-                      </Stack>
-                      <DebugView />
-                    </SearchProvider>
-                  </AppToastProvider>
-                </PortalProvider>
+                <CartProvider>
+                  <ProductCategoryProvider>
+                    <PortalProvider>
+                      <AppToastProvider>
+                        <SearchProvider>
+                          <Stack screenOptions={{ headerShown: false }}>
+                            <Stack.Screen name="(app)" />
+                          </Stack>
+                          <DebugView />
+                        </SearchProvider>
+                      </AppToastProvider>
+                    </PortalProvider>
+                  </ProductCategoryProvider>
+                </CartProvider>
               </DebugProvider>
             </Theme>
           </TamaguiProvider>
         </SafeAreaView>
       </GestureHandlerRootView>
-    </QueryClientProvider>
+    </QueryClientProvider >
   );
 };
 

@@ -5,7 +5,7 @@ import React, { JSX } from 'react';
 import { ThemeName } from 'tamagui';
 
 interface VariationButtonProps extends ButtonProps {
-    onPress: () => void;
+    onPress?: () => void;
 }
 
 export const VariationButton = ({ onPress, ...props }: VariationButtonProps): JSX.Element | null => {

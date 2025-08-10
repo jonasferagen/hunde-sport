@@ -2,7 +2,6 @@ import { BottomBar } from '@/components/menu/BottomBar';
 import { CustomDrawerContent } from '@/components/menu/CustomDrawerContent';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
-import { CartProvider, ProductCategoryProvider } from '@/contexts';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import { useRoute } from '@react-navigation/native';
 import Drawer from 'expo-router/drawer';
@@ -40,23 +39,19 @@ const AppLayout = (): React.ReactElement => {
     );
 
     return (
-        <ProductCategoryProvider>
-            <CartProvider>
-                <Drawer drawerContent={drawerContent} screenOptions={screenOptions} screenLayout={(props) => <ScreenWrapper >{props.children}</ScreenWrapper>}>
-                    {Object.values(routes).map((route) => (
-                        <Drawer.Screen
-                            key={route.name}
-                            name={route.name}
-                            options={{
-                                title: route.label,
-                                drawerLabel: route.showInDrawer ? route.label : () => null,
-                            }}
+        <Drawer drawerContent={drawerContent} screenOptions={screenOptions} screenLayout={(props) => <ScreenWrapper >{props.children}</ScreenWrapper>}>
+            {Object.values(routes).map((route) => (
+                <Drawer.Screen
+                    key={route.name}
+                    name={route.name}
+                    options={{
+                        title: route.label,
+                        drawerLabel: route.showInDrawer ? route.label : () => null,
+                    }}
 
-                        />
-                    ))}
-                </Drawer>
-            </CartProvider>
-        </ProductCategoryProvider>
+                />
+            ))}
+        </Drawer>
     );
 };
 

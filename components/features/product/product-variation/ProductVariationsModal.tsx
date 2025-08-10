@@ -6,6 +6,7 @@ import { ProductVariationProvider, useProductVariationContext } from '@/contexts
 import { VariableProduct } from '@/models/Product/Product';
 import React from 'react';
 import { ProductTitle } from '../display/ProductTitle';
+import { PurchaseButton } from '../display/PurchaseButton';
 import { VariationButton } from '../display/VariationButton';
 import { ProductVariations } from './ProductVariations';
 
@@ -29,6 +30,22 @@ export const ProductVariationsModal = () => {
     );
 };
 
+/*
+return (
+    <>
+        <VariationButton onPress={() => setOpen(true)} />
+        <Modal open={open} onOpenChange={setOpen}>
+            {open && (
+                <ProductVariationProvider product={product}>
+                    <ProductVariationsContent product={product} />
+                </ProductVariationProvider>
+            )}
+        </Modal>
+    </>
+);*/
+
+
+
 const ProductVariationsContent = ({ product }: { product: VariableProduct }) => {
 
     const { isLoading, productVariations, setSelectedProductVariation } = useProductVariationContext();
@@ -44,7 +61,7 @@ const ProductVariationsContent = ({ product }: { product: VariableProduct }) => 
                 productVariations={productVariations || []}
                 onProductVariationSelected={setSelectedProductVariation}
             />
-
+            <PurchaseButton />
         </ThemedYStack>
 
     );
