@@ -3,7 +3,7 @@ import { useProductVariationSelector } from '@/models/Product/helpers/useProduct
 import { Product, VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
-import { StackProps, YStack } from 'tamagui';
+import { StackProps, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 interface ProductVariationsProps {
@@ -22,7 +22,7 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
     });
 
     return (
-        <YStack gap="$2" fg={1} fw="wrap" {...stackProps}>
+        <XStack gap="$2" fg={1} fw="wrap" {...stackProps} >
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
@@ -30,7 +30,7 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
                 if (filteredOptions.length === 0) return null;
 
                 return (
-                    <YStack key={id} gap="$1">
+                    <YStack key={id} gap="$1" f={1}>
                         <ThemedText>{name}</ThemedText>
                         <AttributeSelector
                             options={filteredOptions}
@@ -40,6 +40,6 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
                     </YStack>
                 );
             })}
-        </YStack>
+        </XStack>
     );
 };

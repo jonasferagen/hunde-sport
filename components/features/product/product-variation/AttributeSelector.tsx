@@ -11,11 +11,15 @@ interface AttributeSelectorProps {
 }
 
 export const AttributeSelector = ({ options, onSelect, selectedValue }: AttributeSelectorProps) => {
-
     return (
-        <XStack f={1} gap="$2" flexWrap="wrap">
+        <XStack
+            f={1}
+            minWidth={0}
+            minHeight={0} // ✅ prevents collapse
+            flexWrap="wrap"
+            gap="$2"
+        >
             {options.map((item) => {
-
                 const isSelected = selectedValue === item.name;
 
                 const handlePress = () => {

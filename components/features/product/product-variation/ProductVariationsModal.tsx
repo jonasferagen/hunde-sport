@@ -1,11 +1,10 @@
 import { Modal } from '@/components/ui/modal/Modal';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
-import { ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { ProductVariationProvider, useProductVariationContext } from '@/contexts/ProductVariationContext';
 import { VariableProduct } from '@/models/Product/Product';
 import React from 'react';
-import { YStack } from 'tamagui';
+import { ScrollView, YStack } from 'tamagui';
 import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
 import { VariationButton } from '../display/VariationButton';
@@ -20,37 +19,39 @@ export const ProductVariationsModal = () => {
     return (
         <>
             <VariationButton onPress={() => setOpen(true)} />
-
             <Modal open={open} onOpenChange={setOpen}>
-                {open && (
+                <YStack>
+
                     <ProductVariationProvider product={product}>
                         <ProductVariationsContent product={product} />
                     </ProductVariationProvider>
-                )}
+                </YStack>
             </Modal>
+
         </>
     );
 };
 
+interface ProductVariationsContentProps {
+    product: VariableProduct;
+}
 
-const ProductVariationsContent = ({ product }: { product: VariableProduct }) => {
-
+export const ProductVariationsContent = ({ product }: ProductVariationsContentProps) => {
     const { isLoading, productVariations, setSelectedProductVariation } = useProductVariationContext();
-
     if (isLoading) return <ThemedSpinner />;
 
     return (
-        <ThemedYStack jc="flex-start">
+        <YStack f={1} minHeight="100%"   >
             <ProductTitle f={0} />
-            <YStack f={1}>
-                <ProductVariations key={product.id}
+            <ScrollView fg={1} >
+                <ProductVariations
+                    key={product.id}
                     product={product}
                     productVariations={productVariations || []}
                     onProductVariationSelected={setSelectedProductVariation}
                 />
-            </YStack>
+            </ScrollView>
             <PurchaseButton f={0} />
-        </ThemedYStack>
-
+        </YStack>
     );
 };
