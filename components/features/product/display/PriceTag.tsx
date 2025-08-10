@@ -1,27 +1,32 @@
-import { Chip } from '@/components/ui/chips/Chip';
+import { ThemedLinearGradient } from '@/components/ui/ThemedLinearGradient';
 import { THEME_PRICE_TAG, THEME_PRICE_TAG_ON_SALE } from '@/config/app';
-import { useProductContext } from '@/contexts';
+import { Product } from '@/types';
 import { StarFull } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
-import { StackProps } from 'tamagui';
+import { SizableTextProps, StackProps, XStack } from 'tamagui';
 import { ProductPrice } from './ProductPrice';
 
-interface PriceTagProps extends StackProps { }
+interface PriceTagProps extends StackProps { product: Product; textProps?: SizableTextProps; }
 
-export const PriceTag = ({ children, ...stackProps }: PriceTagProps): JSX.Element => {
+export const PriceTag = ({ product, textProps, ...stackProps }: PriceTagProps): JSX.Element => {
 
-    const { purchasable } = useProductContext();
-    const { availability } = purchasable;
-    const { isInStock, isPurchasable, isOnSale } = availability;
+
+    const { isInStock, isPurchasable, isOnSale } = product.availability;
 
     const theme = isOnSale ? THEME_PRICE_TAG_ON_SALE : THEME_PRICE_TAG;
 
-    return <Chip
-        bw={0}
+    return <XStack
+        ai="center"
+        jc="center"
+        p="$2"
+        gap="$1"
+        br="$3"
+        bw="$borderWidth"
         theme={theme}
         disabled={!isInStock || !isPurchasable}
-        icon={isOnSale && <StarFull size="$3" />}
         {...stackProps}>
-        <ProductPrice />
-    </Chip>;
+        <ThemedLinearGradient {...stackProps} />
+        {isOnSale && <StarFull size="$3" />}
+        <ProductPrice product={product} {...textProps} />
+    </XStack>;
 };

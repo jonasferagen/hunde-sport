@@ -1,6 +1,7 @@
 import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { PriceTag } from '@/components/features/product/display/PriceTag';
 import { ProductDescription } from '@/components/features/product/display/ProductDescription';
+import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
 import { ProductVariations } from '@/components/features/product/product-variation/ProductVariations';
@@ -39,14 +40,14 @@ const ProductScreenContent = () => {
         <ProductImage />
         <PageContent theme="light" gap="$3">
           <XStack jc="space-between" gap="$3">
-            <ProductTitle size="$6" />
-            <PriceTag fos="$6" />
+            <ProductTitle size="$6" product={product} />
+            <PriceTag theme="tertiary" textProps={{ fos: '$6' }} product={product} />
           </XStack>
-          <ProductDescription />
+          <ProductDescription product={product} />
           <ProductVariations />
           <XStack jc="space-between">
-            <ProductTitle size="$6" />
-            <PriceTag fos="$6" />
+            <ProductTitle size="$6" product={product} />
+            <ProductPrice size="$6" product={product} />
           </XStack>
           <PurchaseButton />
         </PageContent>
@@ -54,7 +55,7 @@ const ProductScreenContent = () => {
           {product.images.length > 1 && <ProductImageGallery />}
         </PageContent>
         <PageContent theme="secondary" title="Produktinformasjon">
-          <ProductDescription short={false} />
+          <ProductDescription short={false} product={product} />
         </PageContent>
       </PageSection>
     </PageView>

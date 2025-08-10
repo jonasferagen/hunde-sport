@@ -1,5 +1,5 @@
 import { StoreImage } from '@/models/StoreImage';
-import { Product, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
+import { Product, ProductAvailability, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 
 
@@ -61,12 +61,6 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     };
 };
 
-export interface Availability {
-    isInStock: boolean;
-    isPurchasable: boolean;
-    isOnBackOrder: boolean;
-    isOnSale: boolean;
-}
 
 
 export interface Purchasable extends ValidationResult {
@@ -76,7 +70,7 @@ export interface Purchasable extends ValidationResult {
     titles: { product: string; variation: string, full: string; };
     image: StoreImage;
     prices: ProductPrices;
-    availability: Availability;
+    availability: ProductAvailability;
 }
 
 export const createPurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): Purchasable => {
@@ -86,18 +80,13 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
 
     const image = activeProduct.featuredImage;
     const prices = activeProduct.prices;
+    const availability = activeProduct.availability;
     const titles = {
         product: product.name,
         variation: productVariation ? productVariation.getLabel() : '',
         full: product.name + (productVariation ? ` - ${productVariation.getLabel()}` : ''),
     }
 
-    const availability: Availability = {
-        isInStock: activeProduct.is_in_stock,
-        isPurchasable: activeProduct.is_purchasable,
-        isOnBackOrder: activeProduct.is_on_backorder,
-        isOnSale: activeProduct.prices.sale_price < activeProduct.prices.regular_price,
-    };
 
     return {
         product,

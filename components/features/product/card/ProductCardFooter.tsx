@@ -17,7 +17,7 @@ export const ProductCardFooter = (props: ProductCardFooterProps) => {
     return (
         <YStack gap="$3" p="$3">
             <XStack ai="center" gap="$2" f={1} >
-                <ProductTitle full />
+                <ProductTitle product={product} />
                 <ProductStatus />
             </XStack>
 

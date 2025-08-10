@@ -1,16 +1,13 @@
-import { useProductContext } from '@/contexts';
+import { Product } from '@/types';
 import React from 'react';
 import { SizableText, SizableTextProps } from 'tamagui';
 
 interface ProductTitleProps extends SizableTextProps {
-    full?: boolean;
-    product?: boolean;
-    variation?: boolean;
+    product: Product;
 }
 
-export const ProductTitle = ({ full = true, product = false, variation = false, children, ...props }: ProductTitleProps) => {
-    const { purchasable } = useProductContext();
-    const { titles } = purchasable;
+export const ProductTitle = ({ product, children, ...props }: ProductTitleProps) => {
+
 
     return <SizableText
         fow="bold"
@@ -18,7 +15,7 @@ export const ProductTitle = ({ full = true, product = false, variation = false, 
         fs={1}
         {...props}
     >
-        {variation ? titles.variation : product ? titles.product : titles.full}
+        {product.name}
         {children}
     </SizableText>;
 };

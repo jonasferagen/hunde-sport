@@ -4,6 +4,7 @@ import { StoreImage } from "../StoreImage";
 import { ProductAttribute } from "./ProductAttribute";
 import { ProductPrices } from "./ProductPrices";
 
+
 // The raw representation of an attribute as it comes from the initial product API response.
 export type ApiVariationAttribute = {
     name: string; // The attribute's "nice" name, e.g., "Farge"
@@ -14,6 +15,14 @@ export type VariationReference = {
     id: number;
     attributes: ApiVariationAttribute[];
 };
+
+export interface ProductAvailability {
+    isInStock: boolean;
+    isPurchasable: boolean;
+    isOnBackOrder: boolean;
+    isOnSale: boolean;
+}
+
 
 export interface BaseProductData {
     id: number;
@@ -90,5 +99,15 @@ export class BaseProduct<T extends BaseProductData> {
 
     get featuredImage(): StoreImage {
         return this.images[0];
+    }
+
+
+    get availability(): ProductAvailability {
+        return {
+            isInStock: this.is_in_stock,
+            isPurchasable: this.is_purchasable,
+            isOnSale: this.on_sale,
+            isOnBackOrder: this.is_on_backorder,
+        };
     }
 }

@@ -1,13 +1,13 @@
-import { useProductContext } from '@/contexts';
+import { Product } from '@/types';
 import React from 'react';
 import { SizableText, SizableTextProps } from 'tamagui';
 
 interface ProductDescriptionProps extends SizableTextProps {
     short?: boolean;
+    product: Product;
 }
 
-export const ProductDescription = ({ short = true, ...sizableTextProps }: ProductDescriptionProps) => {
-    const { product } = useProductContext();
+export const ProductDescription = ({ short = true, product, ...sizableTextProps }: ProductDescriptionProps) => {
 
     return <SizableText
         {...sizableTextProps}

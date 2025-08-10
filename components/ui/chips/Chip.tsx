@@ -1,10 +1,13 @@
+import { JSX } from 'react';
 import { SizableText, StackProps, XStack } from 'tamagui';
 import { ThemedLinearGradient } from '../ThemedLinearGradient';
 
-export const Chip = ({ icon, children, ...props }: StackProps & { icon?: JSX.Element }) => {
+
+export const Chip = ({ children, ...props }: StackProps): JSX.Element => {
 
     const chipContent = (
         <XStack
+            fs={1}
             pos="relative"
             px="$2"
             py="$1"
@@ -18,12 +21,15 @@ export const Chip = ({ icon, children, ...props }: StackProps & { icon?: JSX.Ele
 
             {...props}
         >
-            <ThemedLinearGradient elevated {...props} />
-            {icon}
-            <SizableText>
+            <ThemedLinearGradient />
+            <SizableText
+                color="$color"
+                fow="bold"
+                fs={1}
+            >
                 {children}
             </SizableText>
-        </XStack>
+        </XStack >
     );
 
     return chipContent;

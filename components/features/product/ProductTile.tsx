@@ -1,6 +1,5 @@
 import { Tile, TileBadge } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
-import { ProductProvider } from '@/contexts';
 import React from 'react';
 import { YStackProps } from "tamagui";
 import { PriceTag } from './display/PriceTag';
@@ -34,11 +33,11 @@ export const ProductTile: React.FC<ProductTileProps> = ({
                 image={product.featuredImage}
                 {...stackProps}
             >
-                <ProductProvider product={product}>
-                    <TileBadge bg="transparent">
-                        <PriceTag />
-                    </TileBadge>
-                </ProductProvider>
+
+                <TileBadge bg="transparent">
+                    <PriceTag product={product} />
+                </TileBadge>
+
             </Tile>
         </Link>
     );
