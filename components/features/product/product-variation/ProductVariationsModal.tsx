@@ -20,12 +20,11 @@ export const ProductVariationsModal = () => {
         <>
             <VariationButton onPress={() => setOpen(true)} />
             <Modal open={open} onOpenChange={setOpen}>
-                <YStack>
-
+                {open && <YStack>
                     <ProductVariationProvider product={product}>
                         <ProductVariationsContent product={product} />
                     </ProductVariationProvider>
-                </YStack>
+                </YStack>}
             </Modal>
 
         </>
@@ -38,18 +37,18 @@ interface ProductVariationsContentProps {
 
 export const ProductVariationsContent = ({ product }: ProductVariationsContentProps) => {
     const { isLoading, productVariations, setSelectedProductVariation } = useProductVariationContext();
-    if (isLoading) return <ThemedSpinner />;
 
     return (
         <YStack f={1} minHeight="100%"   >
             <ProductTitle f={0} />
             <ScrollView fg={1} >
-                <ProductVariations
+
+                {isLoading ? <ThemedSpinner /> : <ProductVariations
                     key={product.id}
                     product={product}
                     productVariations={productVariations || []}
                     onProductVariationSelected={setSelectedProductVariation}
-                />
+                />}
             </ScrollView>
             <PurchaseButton f={0} />
         </YStack>
