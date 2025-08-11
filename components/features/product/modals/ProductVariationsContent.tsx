@@ -8,16 +8,13 @@ import { PurchaseButton } from '../display/PurchaseButton';
 import { ProductVariationTitle } from '../product-variation/ProductVariationTitle';
 import { ProductVariations } from '../product-variation/ProductVariations';
 
-
-
-
 interface ProductVariationsContentProps {
     product: VariableProduct;
-    setOpen: (open: boolean) => void;
+    onPurchase: () => void;
 }
 
 
-export const ProductVariationsContent = ({ product, setOpen }: ProductVariationsContentProps) => {
+export const ProductVariationsContent = ({ product, onPurchase }: ProductVariationsContentProps) => {
 
     const { productVariations, setSelectedProductVariation } = useProductVariationContext();
 
@@ -44,7 +41,7 @@ export const ProductVariationsContent = ({ product, setOpen }: ProductVariations
                     onProductVariationSelected={setSelectedProductVariation}
                 />}
             </ScrollView>
-            <PurchaseButton f={0} mb="$3" onPurchase={() => setOpen(false)} />
+            <PurchaseButton f={0} mb="$3" onPurchase={onPurchase} />
         </YStack>
 
     );

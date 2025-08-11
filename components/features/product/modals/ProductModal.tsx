@@ -17,7 +17,7 @@ export const ProductModal = () => {
         <Modal open={open} onOpenChange={toggleModal} title={product.name}>
             {modalType === "variations" ? (
                 <ProductVariationProvider product={variableProduct}>
-                    <ProductVariationsContent product={variableProduct} setOpen={toggleModal} />
+                    <ProductVariationsContent product={variableProduct} onPurchase={toggleModal} />
                 </ProductVariationProvider>
             ) : modalType === "quantity" ? (
                 <QuantitySelectContent purchasable={purchasable} onPurchase={toggleModal} />
