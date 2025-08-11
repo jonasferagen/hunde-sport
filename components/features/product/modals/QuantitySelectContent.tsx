@@ -1,9 +1,10 @@
 import { ThemedButton, ThemedText, ThemedYStack } from "@/components/ui";
+import { THEME_MODAL_QUANTITY_SELECT } from "@/config/app";
 import { useModalContext } from "@/contexts";
 import { useCartContext } from "@/contexts/CartContext";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
-import { Stack, Theme, XStack, YStack } from "tamagui";
+import { Stack, Theme, ThemeName, XStack, YStack } from "tamagui";
 import { ContinueButton } from "./ContinueButton";
 
 
@@ -17,7 +18,6 @@ export const QuantitySelectContent = (): JSX.Element => {
     if (!purchasable) throw new Error("No purchasable");
 
 
-
     const onPress = () => {
         addItem(
             purchasable,
@@ -26,8 +26,10 @@ export const QuantitySelectContent = (): JSX.Element => {
         toggleModal();
     };
 
+    const theme: ThemeName = THEME_MODAL_QUANTITY_SELECT;
+
     return (
-        <><Theme name="primary">
+        <><Theme name={theme}>
             <Stack>
 
                 <YStack>

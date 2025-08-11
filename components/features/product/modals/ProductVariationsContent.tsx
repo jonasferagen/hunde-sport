@@ -1,7 +1,7 @@
-import { ThemedXStack } from '@/components/ui';
+import { ThemedXStack, ThemedYStack } from '@/components/ui';
 import { useModalContext, useProductVariationContext } from "@/contexts";
 import { VariableProduct } from "@/types";
-import { ScrollView, YStack } from 'tamagui';
+import { Theme, YStack } from 'tamagui';
 import { ProductImage } from '../ProductImage';
 import { ProductPrice } from '../display/ProductPrice';
 import { ProductVariationTitle } from '../product-variation/ProductVariationTitle';
@@ -19,38 +19,39 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
     const { setModalType, setPurchasable } = useModalContext();
     const handleContinue = () => {
         setPurchasable(purchasable);
-        setModalType("quantity"); // same product still in context
+        setModalType("quantity");
 
     };
 
 
     return (
-        <YStack
-            f={1}
-            h="100%"
-            gap="$3"
-            theme="active"
-        >
-            <ProductImage img_height={150} />
-            <ThemedXStack
-                ai="center"
-                jc="space-between"
+        <Theme name="soft">
+            <YStack
+                f={1}
+                h="100%"
+                gap="$3"
             >
-                <ProductVariationTitle /><ProductPrice fos="$6" />
-            </ThemedXStack>
-            <ScrollView f={1}
-                minHeight={0}
-            >
-                {<ProductVariations
-                    key={product.id}
-                    product={product}
-                    productVariations={productVariations || []}
-                    onProductVariationSelected={setSelectedProductVariation}
-                />}
-            </ScrollView>
-            <ContinueButton onPress={handleContinue} disabled={false} mb="$3" />
-        </YStack>
+                <ProductImage img_height={150} />
+                <ThemedYStack f={1} >
 
+                    {<ProductVariations
+                        key={product.id}
+                        product={product}
+                        productVariations={productVariations || []}
+                        onProductVariationSelected={setSelectedProductVariation}
+                    />}
+                </ThemedYStack>
+                <ThemedYStack my="$3">
+                    <ThemedXStack
+                        ai="center"
+                        jc="space-between"
+                    >
+                        <ProductVariationTitle fos="$6" /><ProductPrice fos="$6" />
+                    </ThemedXStack>
+                    <ContinueButton theme="normal" onPress={handleContinue} disabled={false} />
+                </ThemedYStack>
+            </YStack>
+        </Theme>
     );
 };
 

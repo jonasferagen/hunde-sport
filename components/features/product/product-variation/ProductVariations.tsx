@@ -3,7 +3,7 @@ import { useProductVariationSelector } from '@/models/Product/helpers/useProduct
 import { Product, VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
-import { StackProps, XStack, YStack } from 'tamagui';
+import { ScrollView, StackProps, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 interface ProductVariationsProps {
@@ -31,12 +31,15 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
 
                 return (
                     <YStack key={id} gap="$1" f={1}>
-                        <ThemedText tt="capitalize">{name}</ThemedText>
-                        <AttributeSelector
-                            options={filteredOptions}
-                            selectedValue={selectedValue}
-                            onSelect={(value) => handleSelectOption(name, value)}
-                        />
+                        <ThemedText tt="capitalize" fos="$5" fow="bold">{name}</ThemedText>
+                        <ScrollView>
+
+                            <AttributeSelector
+                                options={filteredOptions}
+                                selectedValue={selectedValue}
+                                onSelect={(value) => handleSelectOption(name, value)}
+                            />
+                        </ScrollView>
                     </YStack>
                 );
             })}

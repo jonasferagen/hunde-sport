@@ -7,10 +7,8 @@ interface ProductTitleProps extends SizableTextProps { }
 
 export const ProductVariationTitle = ({ children, ...props }: ProductTitleProps) => {
 
-    const { productVariation } = usePurchasable();
+    const { productVariation, product } = usePurchasable();
     return <ThemedText
-        fow="bold"
-        fos="$5"
         {...props}
     >
         {productVariation?.getLabel()}

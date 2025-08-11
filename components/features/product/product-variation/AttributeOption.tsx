@@ -29,10 +29,10 @@ export const AttributeOption = ({
                 f={1}
                 w="100%"
                 minWidth={0} // ✅ ensures child flex items can shrink instead of disappearing
-                flexWrap="nowrap"
-                alignItems="center"
-                justifyContent="space-between"
-                theme={isSelected ? 'normal' : 'strong'}
+                fw="nowrap"
+                ai="center"
+                jc="space-between"
+                theme={isSelected ? 'elevated' : 'normal'}
                 p="$3"
                 bw={2}
                 gap="$1"
@@ -43,9 +43,9 @@ export const AttributeOption = ({
             >
                 {isAvailable && (
                     <SizableText
-                        flexShrink={0} // ✅ don’t let the circle disappear
-                        fontSize="$2"
-                        fontWeight="bold"
+                        fs={0} // ✅ don’t let the circle disappear
+                        fos="$2"
+                        fow="bold"
                         color={inStock ? 'green' : 'red'}
                     >
                         ⬤

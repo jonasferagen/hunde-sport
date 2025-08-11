@@ -37,7 +37,6 @@ export const CallToActionButton = React.forwardRef<
             onPress={handlePress}
             disabled={disabled}
             aria-label={label}
-            p="$2"
             h="$6"
             bw={2}
             shadowColor="#000"

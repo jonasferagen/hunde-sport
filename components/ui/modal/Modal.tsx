@@ -1,7 +1,9 @@
 import { ThemedButton } from "@/components/ui/themed-components/ThemedButton";
+import { THEME_MODAL } from "@/config/app";
 import { X } from "@tamagui/lucide-icons";
 import React from "react";
-import { H4, Sheet, Theme, XStack, YStack, useThemeName } from "tamagui";
+import { H4, Sheet, Theme, ThemeName, XStack, YStack } from "tamagui";
+import { ThemedLinearGradient } from "../themed-components";
 
 interface ModalProps {
     open: boolean;
@@ -11,10 +13,10 @@ interface ModalProps {
 }
 
 export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
-    const themeName = useThemeName();
+    const theme: ThemeName = THEME_MODAL;
 
     return (
-        <Theme name={themeName}>
+        <Theme name={theme}>
             <Sheet
                 open={open}
                 onOpenChange={onOpenChange}
@@ -27,6 +29,11 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
                 <Sheet.Overlay />
                 <Sheet.Handle />
                 <Sheet.Frame f={1} minHeight={0} p="$4" gap="$4">
+                    <ThemedLinearGradient
+                        fullscreen
+                        strong
+
+                    />
                     <XStack ai="center" jc="space-between" gap="$4">
                         <H4 fs={1}>{title}</H4>
                         <ThemedButton
