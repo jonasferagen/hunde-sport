@@ -4,11 +4,10 @@ import { Product, ProductAvailability, PurchasableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 
 
-export type ValidationStatus = 'OK' | 'ACTION_NEEDED' | 'INVALID';
+export type ValidationStatus = 'OK' | 'VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT';
 
 export interface ValidationResult {
     isValid: boolean;
-    reason: 'PRODUCT_VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT' | 'OK';
     status: ValidationStatus
     message: string;
 }
@@ -22,8 +21,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     if (!product) {
         return {
             isValid: false,
-            status: 'INVALID',
-            reason: 'INVALID_PRODUCT',
+            status: 'INVALID_PRODUCT',
             message: 'Produkt utilgjengelig'
         };
     }
@@ -41,8 +39,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     if (!productToCheck.is_in_stock) {
         return {
             isValid: false,
-            status: 'INVALID',
-            reason: 'OUT_OF_STOCK',
+            status: 'OUT_OF_STOCK',
             message: 'Utsolgt'
         };
     }
@@ -52,8 +49,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     if (product instanceof VariableProduct && !productVariation) {
         return {
             isValid: false,
-            status: 'ACTION_NEEDED',
-            reason: 'PRODUCT_VARIATION_REQUIRED',
+            status: 'VARIATION_REQUIRED',
             message: 'Vennligst velg en variant'
         };
     }
@@ -62,7 +58,6 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     return {
         isValid: true,
         status: 'OK',
-        reason: 'OK',
         message: 'Legg til i handlekurv'
     };
 };

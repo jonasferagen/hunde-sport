@@ -13,9 +13,7 @@ import { ThemedText } from '../ui/themed-components/ThemedText';
 
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
-    const activeRouteName = state.routes[state.index].name;
     const themeName = THEME_DRAWER;
-
 
     return (
         <Theme name={themeName}>
@@ -53,7 +51,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                                 f={1}
                                                 variant={isActive ? 'focused' : 'default'}
                                                 letterSpacing={0.5}
-                                                fos="$4">
+                                            >
                                                 {route.label}
                                             </ThemedText>
                                         </ThemedButton>

@@ -4,26 +4,35 @@ import { darken, getLuminance, lighten, readableColor, rgba } from 'polished';
 
 const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
 
-    const background = baseColor;
-
     const isLight = getLuminance(baseColor) > 0.5;
-    const darkmod = isLight ? -1 : 1;
+    const darkmod = isLight ? 1 : -1;
 
     const color = readableColor(baseColor, '#fff', '#000');
-    const borderColor = darken(0.15, baseColor);
+
+    const background = baseColor;
     const backgroundHover = darken(0.03 * darkmod, baseColor);
     const backgroundPress = darken(0.1 * darkmod, baseColor);
     const backgroundFocus = darken(0.12 * darkmod, baseColor);
 
+    const borderColor = darken(0.15 * darkmod, baseColor);
+    const borderColorHover = darken(0.03 * darkmod, borderColor);
+    const borderColorPress = darken(0.1 * darkmod, borderColor);
+    const borderColorFocus = darken(0.12 * darkmod, borderColor);
+
+
+
     return {
         ...baseTheme,
         background,
-        borderColor,
-        color,
-        colorSubtle: rgba(color, 0.6),
         backgroundHover,
         backgroundPress,
         backgroundFocus,
+        color,
+        colorSubtle: rgba(color, 0.6),
+        borderColor,
+        borderColorHover,
+        borderColorPress,
+        borderColorFocus,
     }
 }
 

@@ -12,7 +12,6 @@ import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { usePurchasable } from '@/hooks/usePurchasable';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { YStack } from 'tamagui';
-import { PriceTag } from '../display/PriceTag';
 import { ProductDescription } from '../display/ProductDescription';
 import { ProductStatus } from '../display/ProductStatus';
 import { ProductTitle } from '../display/ProductTitle';
@@ -81,11 +80,7 @@ const ProductCardRight = ({ ...stackProps }: StackProps) => {
                 jc="space-between"
             >
                 <ProductTitle fs={1} />
-                <PriceTag
-                    fs={0}
-                    br="$5"
-                    miw={PRODUCT_CARD_LEFT_COLUMN_WIDTH}
-                />
+
             </XStack>
             <ProductDescription
                 numberOfLines={2}

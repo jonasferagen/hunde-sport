@@ -40,7 +40,7 @@ export const PurchaseButton = ({ onPurchase, ...props }: PurchaseButtonProps) =>
             theme={THEME_PURCHASE_BUTTON}
             onPress={handleAddToCart}
             disabled={!isValid || isLoading}
-            iconAfter={isLoading ? <ThemedSpinner /> : <ShoppingCart />}
+            icon={isLoading ? <ThemedSpinner /> : <ShoppingCart />}
             textAfter={price}
             {...props}
         >
