@@ -34,7 +34,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                     </ThemedButton>
                 </XStack>
 
-                <ScrollView>
+                <ScrollView >
                     <YStack gap="$2" p="$4">
                         {Object.values(routes)
                             .filter(route => route.showInDrawer)

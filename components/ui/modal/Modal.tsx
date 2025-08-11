@@ -22,6 +22,7 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
                 snapPointsMode="percent"
                 snapPoints={[90]}
                 dismissOnSnapToBottom
+                animation="fast"
             >
                 <Sheet.Overlay />
                 <Sheet.Handle />

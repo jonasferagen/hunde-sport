@@ -23,6 +23,7 @@ export const ButtonFrame = styled(View, {
     fd: 'row',
     br: '$3',
     gap: '$2',
+    bw: 1,
 
     backgroundColor: '$background',
     borderColor: '$borderColor',
@@ -50,7 +51,8 @@ export const ButtonFrame = styled(View, {
                 const { size } = useContext(ButtonContext.context)
                 const sz = getSize(size)
                 return {
-                    borderRadius: 9999,
+                    bw: 0,
+                    br: 9999,
                     width: sz.val * 2,   // matches height
                     height: sz.val * 2,
                     px: 0,

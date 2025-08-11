@@ -50,7 +50,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
         return {
             isValid: false,
             status: 'VARIATION_REQUIRED',
-            message: 'Vennligst velg en variant'
+            message: 'Velg variant'
         };
     }
 
@@ -58,7 +58,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     return {
         isValid: true,
         status: 'OK',
-        message: 'Legg til i handlekurv'
+        message: 'Kjøp'
     };
 };
 

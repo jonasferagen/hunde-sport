@@ -1,5 +1,5 @@
 import { themes } from '@tamagui/themes';
-import { darken, getLuminance, lighten, readableColor, rgba } from 'polished';
+import { darken, getLuminance, lighten, rgba } from 'polished';
 
 
 const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
@@ -7,17 +7,17 @@ const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
     const isLight = getLuminance(baseColor) > 0.5;
     const darkmod = isLight ? 1 : -1;
 
-    const color = readableColor(baseColor, '#fff', '#000');
+    const color = isLight ? '#000' : '#fff';
 
     const background = baseColor;
     const backgroundHover = darken(0.03 * darkmod, baseColor);
     const backgroundPress = darken(0.1 * darkmod, baseColor);
     const backgroundFocus = darken(0.12 * darkmod, baseColor);
 
-    const borderColor = darken(0.15 * darkmod, baseColor);
-    const borderColorHover = darken(0.03 * darkmod, borderColor);
-    const borderColorPress = darken(0.1 * darkmod, borderColor);
-    const borderColorFocus = darken(0.12 * darkmod, borderColor);
+    const borderColor = darken(0.15, baseColor);
+    const borderColorHover = darken(0.03, borderColor);
+    const borderColorPress = darken(0.1, borderColor);
+    const borderColorFocus = darken(0.12, borderColor);
 
 
 
@@ -46,12 +46,14 @@ export const lilacTheme = {
     light_primary_elevated: enhanceTheme(themes.light, lighten(0.2, lilacColor)),
     light_primary_enhanced: enhanceTheme(themes.light, darken(0.1, lilacColor)),
     light_primary_strong: enhanceTheme(themes.light, darken(0.2, lilacColor)),
+    light_primary_vstrong: enhanceTheme(themes.light, darken(0.3, lilacColor)),
     dark_primary: enhanceTheme(themes.dark, lilacColor),
     dark_primary_normal: enhanceTheme(themes.dark, lilacColor),
     dark_primary_soft: enhanceTheme(themes.dark, lighten(0.1, lilacColor)),
     dark_primary_elevated: enhanceTheme(themes.dark, lighten(0.2, lilacColor)),
     dark_primary_enhanced: enhanceTheme(themes.dark, darken(0.1, lilacColor)),
     dark_primary_strong: enhanceTheme(themes.dark, darken(0.2, lilacColor)),
+    dark_primary_vstrong: enhanceTheme(themes.dark, darken(0.3, lilacColor)),
 }
 
 const sageColor = '#DDE2C3'
@@ -63,12 +65,14 @@ export const sageTheme = {
     light_secondary_elevated: enhanceTheme(themes.light, lighten(0.2, sageColor)),
     light_secondary_enhanced: enhanceTheme(themes.light, darken(0.1, sageColor)),
     light_secondary_strong: enhanceTheme(themes.light, darken(0.2, sageColor)),
+    light_secondary_vstrong: enhanceTheme(themes.light, darken(0.3, sageColor)),
     dark_secondary: enhanceTheme(themes.dark, sageColor),
     dark_secondary_normal: enhanceTheme(themes.dark, sageColor),
     dark_secondary_soft: enhanceTheme(themes.dark, lighten(0.1, sageColor)),
     dark_secondary_elevated: enhanceTheme(themes.dark, lighten(0.2, sageColor)),
     dark_secondary_enhanced: enhanceTheme(themes.dark, darken(0.1, sageColor)),
     dark_secondary_strong: enhanceTheme(themes.dark, darken(0.2, sageColor)),
+    dark_secondary_vstrong: enhanceTheme(themes.dark, darken(0.3, sageColor)),
 }
 
 
@@ -83,12 +87,14 @@ export const mintTheme = {
     light_tertiary_elevated: enhanceTheme(themes.light, lighten(0.2, mintColor)),
     light_tertiary_enhanced: enhanceTheme(themes.light, darken(0.1, mintColor)),
     light_tertiary_strong: enhanceTheme(themes.light, darken(0.2, mintColor)),
+    light_tertiary_vstrong: enhanceTheme(themes.light, darken(0.3, mintColor)),
     dark_tertiary: enhanceTheme(themes.dark, mintColor),
     dark_tertiary_normal: enhanceTheme(themes.dark, mintColor),
     dark_tertiary_soft: enhanceTheme(themes.dark, lighten(0.1, mintColor)),
     dark_tertiary_elevated: enhanceTheme(themes.dark, lighten(0.2, mintColor)),
     dark_tertiary_enhanced: enhanceTheme(themes.dark, darken(0.1, mintColor)),
     dark_tertiary_strong: enhanceTheme(themes.dark, darken(0.2, mintColor)),
+    dark_tertiary_vstrong: enhanceTheme(themes.dark, darken(0.3, mintColor)),
 }
 
 
@@ -101,6 +107,7 @@ export const lightTheme = {
     light_elevated: enhanceTheme(themes.light, lighten(0.2, lightColor)),
     light_enhanced: enhanceTheme(themes.light, darken(0.1, lightColor)),
     light_strong: enhanceTheme(themes.light, darken(0.2, lightColor)),
+    light_vstrong: enhanceTheme(themes.light, darken(0.3, lightColor)),
 }
 
 const darkColor = themes.dark.background;
@@ -112,6 +119,7 @@ export const darkTheme = {
     dark_elevated: enhanceTheme(themes.dark, lighten(0.2, darkColor)),
     dark_enhanced: enhanceTheme(themes.dark, darken(0.1, darkColor)),
     dark_strong: enhanceTheme(themes.dark, darken(0.2, darkColor)),
+    dark_vstrong: enhanceTheme(themes.dark, darken(0.3, darkColor)),
 }
 
 

@@ -4,17 +4,13 @@ import { AddItemOptions, useCartStore } from '@/stores/CartStore';
 import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
 
-interface CartInteractionOptions {
-    silent?: boolean;
-    triggerRef?: React.RefObject<any>;
-}
 
 interface CartContextType {
     cart: CartData;
     isUpdating: boolean;
-    addItem: (validatedPurchasable: Purchasable, options?: CartInteractionOptions) => void;
+    addItem: (validatedPurchasable: Purchasable, quantity?: number) => void;
     updateItem: (key: string, quantity: number) => void;
-    removeItem: (key: string, options?: CartInteractionOptions) => void;
+    removeItem: (key: string) => void;
     getItem: (key: string) => CartItemData | undefined;
 }
 
@@ -33,7 +29,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const getItem = (key: string) => cart ? cart.items.find((i) => i.key === key) : undefined;
 
-    const addItem = async (purchasable: Purchasable, options: CartInteractionOptions = {}) => {
+    const addItem = async (purchasable: Purchasable, quantity: number = 1) => {
         if (!purchasable.isValid) {
             throw new Error(purchasable.message);
         }
@@ -45,7 +41,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const addItemOptions: AddItemOptions = {
             id: product.id,
-            quantity: 1,
+            quantity,
             variation,
         };
 
@@ -57,17 +53,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await storeUpdateItem(key, quantity);
     };
 
-    const removeItem = async (key: string, options: CartInteractionOptions = {}) => {
+    const removeItem = async (key: string) => {
         const item = getItem(key);
         if (item) {
             await storeRemoveItem(key);
-            if (!options.silent) {
-                toastController.show('Fjernet fra handlekurven', {
-                    message: item.product.name,
-                    theme: 'dark_yellow',
-                    triggerRef: options.triggerRef,
-                });
-            }
         }
     };
 

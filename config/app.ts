@@ -22,3 +22,4 @@ export const THEME_TOAST = 'dark_orange_alt2';
 export const THEME_DRAWER = 'tertiary';
 export const THEME_HEADER = THEME_DRAWER;
 export const THEME_BOTTOM_BAR = THEME_DRAWER
+export const THEME_MODAL = 'light';

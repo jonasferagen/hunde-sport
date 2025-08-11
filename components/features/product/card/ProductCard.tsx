@@ -37,7 +37,7 @@ export const ProductCard = ({ ...props }: StackProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ThemedYStack p="none" w="100%" ai="flex-end" jc="flex-end">
+            <ThemedYStack p="none">
                 <ProductCardCTA />
             </ThemedYStack>
         </ThemedYStack>
