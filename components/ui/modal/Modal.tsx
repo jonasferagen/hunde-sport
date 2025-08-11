@@ -39,7 +39,6 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
                     <YStack
                         f={1}
                         minHeight={0}
-
                     >
                         {children}
                     </YStack>

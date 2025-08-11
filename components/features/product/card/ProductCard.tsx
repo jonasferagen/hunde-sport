@@ -16,7 +16,6 @@ import { ProductDescription } from '../display/ProductDescription';
 import { ProductStatus } from '../display/ProductStatus';
 import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
-import { ProductVariationsButton } from '../product-variation/ProductVariationsButton';
 import { ProductCardCTA } from './ProductCardCTA';
 
 export const PRODUCT_CARD_LEFT_COLUMN_WIDTH = 80;
