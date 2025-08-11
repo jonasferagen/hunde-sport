@@ -50,7 +50,7 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
                     >
                         <ProductVariationTitle fos="$6" /><ProductPrice fos="$6" />
                     </ThemedXStack>
-                    <ContinueButton theme="normal" onPress={handleContinue} disabled={disabled} label={message} />
+                    <ContinueButton onPress={handleContinue} disabled={disabled} label={message} />
                 </ThemedYStack>
             </YStack>
         </Theme>

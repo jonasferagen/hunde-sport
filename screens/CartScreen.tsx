@@ -17,7 +17,7 @@ export const CartScreen = () => {
             <PageContent f={1} p="none">
                 <CartList />
             </PageContent>
-            <PageFooter theme="strong" f={0} >
+            <PageFooter theme="elevated" f={0} >
                 <Link href={href} asChild>
                     <CheckoutButton />
                 </Link>

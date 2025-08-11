@@ -25,7 +25,6 @@ export const ContinueButton = ({ onPress, disabled, label = 'Neste', ...props }:
             onPress={handlePress}
             disabled={disabled}
             icon={icon}
-            size="$4"
             f={0}
             label={label}
             after={iconAfter}

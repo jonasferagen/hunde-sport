@@ -18,9 +18,6 @@ export const THEME_PURCHASE_BUTTON_OK = "primary";
 export const THEME_VARIATION_BUTTON_OK = "secondary";
 export const THEME_PURCHASE_BUTTON_ERROR = "tertiary";
 
-export const THEME_PURCHASE_BUTTON = 'dark_green_alt2';
-export const THEME_VARIATION_BUTTON = THEME_PURCHASE_BUTTON;
-export const THEME_CHECKOUT_BUTTON = 'success_alt1';
 export const THEME_CART_QUANTITY = 'success_alt5';
 export const THEME_CART_REMOVE = 'success_alt1';
 export const THEME_TOAST = 'dark_orange_alt2';
@@ -28,3 +25,6 @@ export const THEME_DRAWER = 'tertiary';
 export const THEME_HEADER = THEME_DRAWER;
 export const THEME_BOTTOM_BAR = THEME_DRAWER
 export const THEME_MODAL = 'primary';
+
+
+export const THEME_CTA_BUTTON = 'success_alt7';

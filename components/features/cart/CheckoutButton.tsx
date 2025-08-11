@@ -1,23 +1,23 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
-import { THEME_CHECKOUT_BUTTON } from '@/config/app';
 import { ExternalLink } from '@tamagui/lucide-icons';
-import React, { JSX } from 'react';
+import React from 'react';
 import { ButtonProps } from 'tamagui';
 
-interface CheckoutButtonProps extends ButtonProps { }
+interface CheckoutButtonProps extends ButtonProps {
 
-export const CheckoutButton = (props: CheckoutButtonProps): JSX.Element => {
+}
 
+export const CheckoutButton = ({ disabled, ...props }: CheckoutButtonProps) => {
 
-    const theme = THEME_CHECKOUT_BUTTON;
-
+    const iconAfter = <ExternalLink />
     return (
         <CallToActionButton
-            theme={theme}
-            iconAfter={<ExternalLink />}
+            disabled={disabled}
+            f={0}
+            icon={null}
+            label={"Til kassen"}
+            after={iconAfter}
             {...props}
-        >
-            Til kassen
-        </CallToActionButton>
+        />
     );
 };

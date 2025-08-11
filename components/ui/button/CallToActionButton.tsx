@@ -1,14 +1,16 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
+import { THEME_CTA_BUTTON } from '@/config/app';
 import { ButtonProps } from '@tamagui/button';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
+import { GestureResponderEvent } from 'react-native';
 import { ThemeName } from 'tamagui';
 import { ThemedText } from '../themed-components';
 
 interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disabled' | 'icon' | 'theme'> {
-    onPress: () => void;
+    onPress?: ((event: GestureResponderEvent) => void) | null;
     disabled?: boolean;
-    icon: ButtonProps['icon'];
+    icon?: ButtonProps['icon'];
     theme?: ThemeName | null;
     label: string;
     after?: React.ReactNode;
@@ -19,16 +21,17 @@ export const CallToActionButton = React.forwardRef<
     CallToActionButtonProps
 >(({ onPress,
     disabled,
-    theme = null,
+    theme = THEME_CTA_BUTTON,
     icon,
     label,
     after,
     ...props }, ref) => {
 
-    const handlePress = () => {
+    const handlePress = (event: GestureResponderEvent) => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        onPress();
+        onPress?.(event);
     };
+
 
     return (
         <ThemedButton
