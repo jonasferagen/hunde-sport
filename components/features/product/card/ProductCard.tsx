@@ -1,4 +1,3 @@
-import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { routes } from '@/config/routes';
 import { useProductCategoryContext } from '@/contexts';
 
@@ -8,6 +7,7 @@ import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Button, StackProps, XStack } from 'tamagui';
 
+import { ThemedLinearGradient } from '@/components/ui';
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { YStack } from 'tamagui';
@@ -39,7 +39,6 @@ export const ProductCard = ({ ...props }: StackProps) => {
         </ThemedYStack>
     );
 }
-
 
 export const ProductCardImage = ({ ...props }: StackProps) => {
     const { purchasable } = usePurchasableContext();

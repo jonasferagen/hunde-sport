@@ -7,9 +7,9 @@ import { ProductVariation, VariableProduct } from "@/models/Product/Product";
 import React, { createContext, useContext } from 'react';
 
 export interface ProductVariationContextType {
-    selectedProductVariation: ProductVariation | undefined;
-    setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
-    productVariations: ProductVariation[] | undefined;
+    //selectedProductVariation: ProductVariation | undefined;
+    //setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
+    productVariations: ProductVariation[];
 
 }
 
@@ -25,8 +25,8 @@ export const ProductVariationProvider: React.FC<{ product: VariableProduct; chil
     product,
     children,
 }) => {
-    const { isLoading, items: variations } = useProductVariations(product);
-    const [selected, setSelected] = React.useState<ProductVariation>();
+    const { isLoading, items: productVariations } = useProductVariations(product);
+    //    const [selected, setSelected] = React.useState<ProductVariation>();
 
     if (isLoading) {
         return <ThemedSpinner />;
@@ -35,9 +35,9 @@ export const ProductVariationProvider: React.FC<{ product: VariableProduct; chil
     return (
         <ProductVariationContext.Provider
             value={{
-                productVariations: variations,
-                selectedProductVariation: selected,
-                setSelectedProductVariation: setSelected,
+                productVariations,
+                //             selectedProductVariation: selected,
+                //           setSelectedProductVariation: setSelected,
             }}
         >
             {children}

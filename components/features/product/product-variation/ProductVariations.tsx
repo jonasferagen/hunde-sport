@@ -1,6 +1,5 @@
-import { ThemedSpinner } from '@/components/ui';
 import { ThemedText } from '@/components/ui/themed-components/ThemedText';
-import { useProductVariations } from '@/hooks/data/Product';
+import { useProductVariationContext } from '@/contexts';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
 import { VariableProduct } from '@/models/Product/Product';
@@ -16,13 +15,9 @@ interface ProductVariationsProps {
 }
 
 export const ProductVariations = ({ variableProduct: variableProduct, onProductVariationSelected, stackProps }: ProductVariationsProps): JSX.Element => {
-    console.log(variableProduct.id);
 
     useRenderGuard("ProductVariations");
-
-    const { isLoading, items } = useProductVariations(variableProduct);
-
-    const productVariations = items || [];
+    const { productVariations } = useProductVariationContext();
 
 
     const { attributes,
@@ -35,9 +30,6 @@ export const ProductVariations = ({ variableProduct: variableProduct, onProductV
         onProductVariationSelected,
     });
 
-    if (isLoading) {
-        return <ThemedSpinner />;
-    }
     return (
         <XStack gap="$2" fg={1} fw="wrap" {...stackProps} >
             {attributes.map(({ id, name }) => {
