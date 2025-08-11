@@ -1,59 +1,41 @@
-import { ThemedXStack, ThemedYStack } from '@/components/ui';
-import { useModalContext, useProductVariationContext } from "@/contexts";
+import { ThemedYStack } from '@/components/ui';
+import { useModalContext, usePurchasableContext } from "@/contexts";
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { VariableProduct } from "@/types";
+import React from 'react';
 import { Theme, YStack } from 'tamagui';
 import { ProductImage } from '../ProductImage';
-import { ProductPrice } from '../display/ProductPrice';
-import { ProductVariationTitle } from '../product-variation/ProductVariationTitle';
 import { ProductVariations } from '../product-variation/ProductVariations';
 import { ContinueButton } from './ContinueButton';
 
-interface ProductVariationsContentProps {
-    product: VariableProduct;
-}
 
 
-export const ProductVariationsContent = ({ product }: ProductVariationsContentProps) => {
+export const ProductVariationsContent = () => {
 
-    const { productVariations, setSelectedProductVariation, purchasable } = useProductVariationContext();
-    const { setModalType, setPurchasable } = useModalContext();
+    useRenderGuard("ProductVariationsContent");
+
+    const { setModalType } = useModalContext();
+    const { purchasable, setProductVariation } = usePurchasableContext();
+    const variableProduct = purchasable.product as VariableProduct;
+
+    const disabled = !purchasable.isValid;
     const handleContinue = () => {
-        setPurchasable(purchasable);
         setModalType("quantity");
-
     };
-
-    const { isValid, message } = purchasable;
-    const disabled = !isValid;
 
     return (
         <Theme name="soft">
-            <YStack
-                f={1}
-                h="100%"
-                gap="$3"
-            >
+            <YStack f={1} h="100%" gap="$3">
                 <ProductImage img_height={150} />
                 <ThemedYStack f={1}>
-
-                    {<ProductVariations
-                        key={product.id}
-                        product={product}
-                        productVariations={productVariations || []}
-                        onProductVariationSelected={setSelectedProductVariation}
-                    />}
-                </ThemedYStack>
-                <ThemedYStack my="$4">
-                    <ThemedXStack
-                        ai="center"
-                        jc="space-between"
-                    >
-                        <ProductVariationTitle fos="$6" /><ProductPrice fos="$6" />
-                    </ThemedXStack>
-                    <ContinueButton onPress={handleContinue} disabled={disabled} label={message} />
+                    <ProductVariations
+                        key={variableProduct.id}
+                        variableProduct={variableProduct}
+                        onProductVariationSelected={setProductVariation} // Set the product variation here
+                    />
+                    <ContinueButton disabled={disabled} onPress={handleContinue} />
                 </ThemedYStack>
             </YStack>
         </Theme>
     );
 };
-

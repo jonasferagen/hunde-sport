@@ -3,7 +3,7 @@ import { routes } from '@/config/routes';
 import { useProductCategoryContext } from '@/contexts';
 
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
-import { useBaseProductContext } from '@/contexts/BaseProductContext';
+import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
 import { Button, StackProps, XStack } from 'tamagui';
@@ -18,7 +18,9 @@ import { PurchaseButton } from '../display/PurchaseButton';
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 
 export const ProductCard = ({ ...props }: StackProps) => {
-    const { product } = useBaseProductContext();
+
+    const { purchasable } = usePurchasableContext();
+    const { product } = purchasable;
     const { productCategory: category } = useProductCategoryContext();
     const href: HrefObject = routes.product.path(product, category?.id);
 
@@ -40,7 +42,8 @@ export const ProductCard = ({ ...props }: StackProps) => {
 
 
 export const ProductCardImage = ({ ...props }: StackProps) => {
-    const { product } = useBaseProductContext();
+    const { purchasable } = usePurchasableContext();
+    const { product } = purchasable;
     const imageSize = PRODUCT_CARD_NARROW_COLUMN_WIDTH;
     const uri = getScaledImageUrl(product.featuredImage.src, imageSize, imageSize);
 

@@ -28,6 +28,7 @@ export const CallToActionButton = React.forwardRef<
     ...props }, ref) => {
 
     const handlePress = (event: GestureResponderEvent) => {
+        if (disabled) return;
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         onPress?.(event);
     };

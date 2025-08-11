@@ -1,6 +1,6 @@
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { THEME_PRICE_TAG, THEME_PRICE_TAG_ON_SALE } from '@/config/app';
-import { useBaseProductContext } from '@/contexts/BaseProductContext';
+import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { StarFull } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { SizableTextProps, StackProps, XStack } from 'tamagui';
@@ -10,9 +10,8 @@ interface PriceTagProps extends StackProps { textProps?: SizableTextProps; }
 
 export const PriceTag = ({ textProps, br = "$3", ...stackProps }: PriceTagProps): JSX.Element => {
 
-    const { product } = useBaseProductContext();
-
-    const { isInStock, isPurchasable, isOnSale } = product.availability;
+    const { purchasable } = usePurchasableContext();
+    const { isInStock, isPurchasable, isOnSale } = purchasable.availability;
 
     const theme = isOnSale ? THEME_PRICE_TAG_ON_SALE : THEME_PRICE_TAG;
 

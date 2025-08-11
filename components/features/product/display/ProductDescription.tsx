@@ -1,5 +1,5 @@
 import { ThemedText } from '@/components/ui';
-import { useBaseProductContext } from '@/contexts/BaseProductContext';
+import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import React from 'react';
 import { SizableTextProps } from 'tamagui';
 
@@ -9,7 +9,8 @@ interface ProductDescriptionProps extends SizableTextProps {
 
 export const ProductDescription = ({ short = true, ...sizableTextProps }: ProductDescriptionProps) => {
 
-    const { product } = useBaseProductContext();
+    const { purchasable } = usePurchasableContext();
+    const { product } = purchasable;
 
     return <ThemedText
         fos="$2"

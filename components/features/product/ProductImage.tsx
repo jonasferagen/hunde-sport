@@ -1,5 +1,5 @@
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
-import { usePurchasable } from '@/hooks/usePurchasable';
+import { usePurchasableContext } from '@/contexts/';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { Galeria } from '@nandorojo/galeria';
 import React, { JSX } from 'react';
@@ -14,9 +14,9 @@ interface ProductImageProps {
 }
 
 export const ProductImage = ({ img_height = IMAGE_HEIGHT, ...stackProps }: ProductImageProps): JSX.Element => {
-    const { activeProduct } = usePurchasable();
+    const { purchasable } = usePurchasableContext();
+    const { activeProduct } = purchasable;
     const { width: screenWidth } = Dimensions.get('window');
-
     const image = activeProduct.featuredImage;
     const uri = getScaledImageUrl(image.src, screenWidth, screenWidth);
 

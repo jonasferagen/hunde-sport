@@ -4,15 +4,13 @@
 import { ThemedSpinner } from '@/components/ui';
 import { useProductVariations } from '@/hooks/data/Product';
 import { ProductVariation, VariableProduct } from "@/models/Product/Product";
-import { createPurchasable } from '@/models/Product/Purchasable';
-import { Purchasable } from "@/types";
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 
 export interface ProductVariationContextType {
     selectedProductVariation: ProductVariation | undefined;
     setSelectedProductVariation: (variation: ProductVariation | undefined) => void;
     productVariations: ProductVariation[] | undefined;
-    purchasable: Purchasable;
+
 }
 
 const ProductVariationContext = createContext<ProductVariationContextType | undefined>(undefined);
@@ -30,26 +28,16 @@ export const ProductVariationProvider: React.FC<{ product: VariableProduct; chil
     const { isLoading, items: variations } = useProductVariations(product);
     const [selected, setSelected] = React.useState<ProductVariation>();
 
-
-    const purchasable = useMemo(
-        () => createPurchasable({ product, productVariation: selected }),
-        [product, selected]
-    );
-
-
     if (isLoading) {
         return <ThemedSpinner />;
     }
 
-
     return (
         <ProductVariationContext.Provider
             value={{
-
                 productVariations: variations,
                 selectedProductVariation: selected,
                 setSelectedProductVariation: setSelected,
-                purchasable,
             }}
         >
             {children}

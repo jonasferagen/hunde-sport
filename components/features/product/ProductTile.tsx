@@ -5,7 +5,7 @@ import { YStackProps } from "tamagui";
 import { PriceTag } from './display/PriceTag';
 
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
-import { useBaseProductContext } from '@/contexts/BaseProductContext';
+import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { Link } from 'expo-router';
 import { DimensionValue } from "react-native";
 
@@ -20,8 +20,8 @@ export const ProductTile: React.FC<ProductTileProps> = ({
     height = PRODUCT_TILE_HEIGHT,
     ...stackProps
 }) => {
-    const { product } = useBaseProductContext();
-
+    const { purchasable } = usePurchasableContext();
+    const product = purchasable.product;
     return (
         <Link href={routes['product'].path(product)} asChild>
             <Tile

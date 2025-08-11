@@ -1,26 +1,43 @@
+import { ThemedSpinner } from '@/components/ui';
 import { ThemedText } from '@/components/ui/themed-components/ThemedText';
+import { useProductVariations } from '@/hooks/data/Product';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
-import { Product, VariableProduct } from '@/models/Product/Product';
+import { VariableProduct } from '@/models/Product/Product';
 import { ProductVariation } from '@/types';
 import { JSX } from 'react';
 import { ScrollView, StackProps, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 interface ProductVariationsProps {
-    product: Product;
-    productVariations: ProductVariation[];
+    variableProduct: VariableProduct;
     onProductVariationSelected: (variation: ProductVariation | undefined) => void;
     stackProps?: StackProps;
 }
 
-export const ProductVariations = ({ product, productVariations, onProductVariationSelected, stackProps }: ProductVariationsProps): JSX.Element => {
+export const ProductVariations = ({ variableProduct: variableProduct, onProductVariationSelected, stackProps }: ProductVariationsProps): JSX.Element => {
+    console.log(variableProduct.id);
 
-    const { attributes, selectionManager, handleSelectOption, unavailableOptions } = useProductVariationSelector({
-        product: product as VariableProduct,
+    useRenderGuard("ProductVariations");
+
+    const { isLoading, items } = useProductVariations(variableProduct);
+
+    const productVariations = items || [];
+
+
+    const { attributes,
+        selectionManager,
+        handleSelectOption,
+        unavailableOptions
+    } = useProductVariationSelector({
+        product: variableProduct,
         productVariations,
         onProductVariationSelected,
     });
 
+    if (isLoading) {
+        return <ThemedSpinner />;
+    }
     return (
         <XStack gap="$2" fg={1} fw="wrap" {...stackProps} >
             {attributes.map(({ id, name }) => {

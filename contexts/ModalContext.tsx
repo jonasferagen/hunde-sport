@@ -2,15 +2,15 @@ import { Purchasable } from "@/types";
 import React, { createContext, useContext, useState, useTransition } from "react";
 
 interface ModalContextType {
-    purchasable?: Purchasable;
     open: boolean;
+    purchasable?: Purchasable;
     setPurchasable: (purchasable: Purchasable) => void;
     toggleModal: () => void;
     modalType: "variations" | "quantity" | null;
     setModalType: (modalType: "variations" | "quantity" | null) => void;
 }
 
-export const ModalContext = createContext<ModalContextType | undefined>(undefined);
+export const ModalProductContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     const [purchasable, setPurchasable] = useState<Purchasable | undefined>(undefined);
@@ -26,7 +26,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <ModalContext.Provider value={{
+        <ModalProductContext.Provider value={{
             open,
             purchasable,
             setPurchasable,
@@ -35,12 +35,12 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
             setModalType
         }}>
             {children}
-        </ModalContext.Provider>
+        </ModalProductContext.Provider>
     );
 };
 
 export const useModalContext = () => {
-    const context = useContext(ModalContext);
+    const context = useContext(ModalProductContext);
     if (!context) {
         throw new Error("useModalContext must be used within a ModalProvider");
     }

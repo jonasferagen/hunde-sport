@@ -15,7 +15,6 @@ export const ContinueButton = ({ onPress, disabled, label = 'Neste', ...props }:
     const icon = <ShoppingCart />
     const iconAfter = <ArrowBigRightDash />
 
-
     const handlePress = () => {
         onPress();
     };

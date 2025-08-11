@@ -7,11 +7,10 @@ import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
-import { BaseProductProvider, useBaseProductContext } from '@/contexts/BaseProductContext';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
-import { ProductVariationProvider } from '@/contexts/ProductVariationContext';
+import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
-import { PurchasableProduct, VariableProduct } from '@/types';
+import { PurchasableProduct } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { XStack } from 'tamagui';
@@ -35,18 +34,17 @@ export const ProductScreen = () => {
 
   return (
     <ProductCategoryProvider productCategoryId={productCategoryId} productCategories={product.categories} >
-      <BaseProductProvider product={purchasableProduct}>
-        <ProductVariationProvider product={product as VariableProduct}>
-          <ProductScreenContent />
-        </ProductVariationProvider>
-      </BaseProductProvider>
+      <PurchasableProvider product={purchasableProduct}>
+        <ProductScreenContent />
+      </PurchasableProvider>
     </ProductCategoryProvider>
   );
 };
 
 
 const ProductScreenContent = () => {
-  const { product } = useBaseProductContext();
+  const { purchasable } = usePurchasableContext();
+  const { product } = purchasable;
   return (
     <PageView>
       <PageHeader theme="soft">

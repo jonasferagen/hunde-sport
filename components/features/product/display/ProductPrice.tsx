@@ -1,4 +1,5 @@
-import { usePurchasable } from '@/hooks/usePurchasable';
+
+import { usePurchasableContext } from '@/contexts';
 import { formatPrice, formatPriceRange } from '@/lib/helpers';
 import { PurchasableProduct } from '@/types';
 import React from 'react';
@@ -7,7 +8,8 @@ import { PriceText } from './PriceText';
 
 export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
 
-    const { activeProduct } = usePurchasable();
+    const { purchasable } = usePurchasableContext();
+    const { activeProduct } = purchasable;
     const { price_range } = activeProduct.prices;
 
     if (!price_range) {
@@ -24,13 +26,15 @@ export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
 
 
 export const ProductPrice = ({ ...props }: SizableTextProps) => {
-    const { activeProduct } = usePurchasable();
+    const { purchasable } = usePurchasableContext();
+    const { activeProduct } = purchasable;
     return <ProductPriceImpl product={activeProduct as PurchasableProduct} {...props} />;
 };
 
 export const BaseProductPrice = ({ ...props }: SizableTextProps) => {
-    const { product } = usePurchasable();
-    return <ProductPriceImpl product={product as PurchasableProduct} {...props} />;
+    const { purchasable } = usePurchasableContext();
+    const { product } = purchasable;
+    return <ProductPriceImpl product={product} {...props} />;
 }
 
 

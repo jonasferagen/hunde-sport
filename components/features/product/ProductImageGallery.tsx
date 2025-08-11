@@ -1,6 +1,6 @@
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { GridTiles } from '@/components/ui/tile/GridTiles';
-import { useBaseProductContext } from '@/contexts';
+import { usePurchasableContext } from '@/contexts';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { Galeria } from '@nandorojo/galeria';
 import React, { JSX, useState } from 'react';
@@ -12,7 +12,7 @@ interface ProductImageGalleryProps extends YStackProps {
 }
 
 export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductImageGalleryProps): JSX.Element => {
-    const { product } = useBaseProductContext();
+    const { product, purchasable } = usePurchasableContext();
     const images = product.images;
     const { width: screenWidth } = Dimensions.get('window');
 

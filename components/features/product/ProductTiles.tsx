@@ -1,4 +1,4 @@
-import { BaseProductProvider } from '@/contexts/BaseProductContext';
+import { PurchasableProvider } from '@/contexts/PurchasableContext';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { QueryResult } from '@/hooks/data/util';
 import { PurchasableProduct } from '@/types';
@@ -33,11 +33,11 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTiles
     return (
         <HorizontalTiles
             {...queryResult}
-            renderItem={({ item }: { item: PurchasableProduct }) => {
+            renderItem={({ item: product }: { item: PurchasableProduct }) => {
                 return (
-                    <BaseProductProvider product={item}>
+                    <PurchasableProvider product={product}>
                         <ProductTile />
-                    </BaseProductProvider>
+                    </PurchasableProvider>
                 );
             }}
         />

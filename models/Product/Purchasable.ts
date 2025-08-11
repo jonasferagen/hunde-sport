@@ -87,9 +87,6 @@ export const createPurchasable = ({
     const prices = activeProduct.prices;
     const availability = activeProduct.availability;
 
-
-    console.log("created purchasable for ", product.type);
-
     return {
         product,
         productVariation: productVariation,
