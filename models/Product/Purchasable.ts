@@ -1,5 +1,6 @@
+import { ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product/Product';
 import { StoreImage } from '@/models/StoreImage';
-import { Product, ProductAvailability, ProductVariation, PurchasableProduct, SimpleProduct, VariableProduct } from '@/types';
+import { Product, ProductAvailability, PurchasableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 
 
@@ -7,7 +8,7 @@ export type ValidationStatus = 'OK' | 'ACTION_NEEDED' | 'INVALID';
 
 export interface ValidationResult {
     isValid: boolean;
-    reason: 'VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT' | 'OK';
+    reason: 'PRODUCT_VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT' | 'OK';
     status: ValidationStatus
     message: string;
 }
@@ -27,29 +28,33 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
         };
     }
 
+
+
     if (product instanceof SimpleProduct && productVariation) {
         throw new Error('SimpleProduct cannot have a product variation');
     }
 
-    // Rule 1: Variable products must have a variation selected.
-    if (product instanceof VariableProduct && !productVariation) {
-        return {
-            isValid: false,
-            status: 'ACTION_NEEDED',
-            reason: 'VARIATION_REQUIRED',
-            message: 'Vennligst velg en variant'
-        };
-    }
-
+    // If the main product is out of stock - no variations are assumed to be in stock
     const productToCheck = productVariation || product;
 
-    // Rule 2: The product must be in stock.
+    // The product must be in stock.
     if (!productToCheck.is_in_stock) {
         return {
             isValid: false,
             status: 'INVALID',
             reason: 'OUT_OF_STOCK',
             message: 'Utsolgt'
+        };
+    }
+
+
+    // Rule 2: Variable products must have a variation selected.
+    if (product instanceof VariableProduct && !productVariation) {
+        return {
+            isValid: false,
+            status: 'ACTION_NEEDED',
+            reason: 'PRODUCT_VARIATION_REQUIRED',
+            message: 'Vennligst velg en variant'
         };
     }
 
@@ -68,13 +73,17 @@ export interface Purchasable extends ValidationResult {
     product: SimpleProduct | VariableProduct;
     productVariation?: ProductVariation;
     activeProduct: Product;
-    titles: { product: string; variation: string, full: string; };
     image: StoreImage;
     prices: ProductPrices;
     availability: ProductAvailability;
 }
 
-export const createPurchasable = ({ product, productVariation }: { product: PurchasableProduct, productVariation?: ProductVariation }): Purchasable => {
+export const createPurchasable = ({
+    product,
+    productVariation }: {
+        product: PurchasableProduct,
+        productVariation?: ProductVariation
+    }): Purchasable => {
 
     const validationResult = validate({ product, productVariation });
     const activeProduct = productVariation || product;
@@ -82,11 +91,6 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
     const image = activeProduct.featuredImage;
     const prices = activeProduct.prices;
     const availability = activeProduct.availability;
-    const titles = {
-        product: product.name,
-        variation: productVariation ? productVariation.getLabel() : '',
-        full: product.name + (productVariation ? ` - ${productVariation.getLabel()}` : ''),
-    }
 
 
     return {
@@ -95,7 +99,6 @@ export const createPurchasable = ({ product, productVariation }: { product: Purc
         activeProduct,
         image,
         prices,
-        titles,
         availability,
         ...validationResult,
     };

@@ -1,5 +1,4 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
-import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ButtonProps } from '@tamagui/button';
 import React from 'react';
 import { Theme, XStack } from 'tamagui';
@@ -22,29 +21,16 @@ export const CallToActionButton = React.forwardRef<
                 ref={ref}
                 position="relative"
                 m="none"
-                pr="$3"
+                px="$3"
                 bw={0}
-                h="$"
+                h="$6"
                 br="$3"
-
                 boxSizing="border-box"
-                flexDirection='row'
+                fd='row'
                 ai="center"
                 group
                 {...props}
             >
-                <ThemedLinearGradient
-                    strong
-                    br="$3"
-                    fullscreen
-                    startPoint={[1, 1]}
-                    endPoint={[0, 0]}
-                    zIndex={0}
-                    opacity={1}
-                    pointerEvents="none"
-                    $group-press={{ opacity: 0 }}
-                />
-
                 {icon}
                 <XStack
                     ai="center"

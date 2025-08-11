@@ -1,11 +1,12 @@
 import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
-import { resolveTheme, routes } from '@/config/routes';
+import { THEME_DRAWER } from '@/config/app';
+import { routes } from '@/config/routes';
 import {
     DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { H4, ScrollView, XStack, YStack } from 'tamagui';
+import { H4, ScrollView, Theme, XStack, YStack } from 'tamagui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 import { ThemedText } from '../ui/themed-components/ThemedText';
@@ -13,13 +14,12 @@ import { ThemedText } from '../ui/themed-components/ThemedText';
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const activeRouteName = state.routes[state.index].name;
-    const themeName = resolveTheme(activeRouteName);
+    const themeName = THEME_DRAWER;
+
 
     return (
-        <YStack
-            t={themeName}
-            f={1}
-        >
+        <Theme name={themeName}>
+
             <YStack f={1} bc="$background">
                 <ThemedLinearGradient />
                 <XStack
@@ -65,6 +65,6 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                     </YStack>
                 </ScrollView>
             </YStack>
-        </YStack>
+        </Theme>
     );
 }

@@ -4,7 +4,7 @@ import { darken, getLuminance, lighten, readableColor, rgba } from 'polished';
 
 const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
 
-    const backgroundColor = baseColor;
+    const background = baseColor;
 
     const isLight = getLuminance(baseColor) > 0.5;
     const darkmod = isLight ? -1 : 1;
@@ -17,13 +17,13 @@ const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
 
     return {
         ...baseTheme,
-        background: backgroundColor,
-        borderColor: borderColor,
-        color: color,
+        background,
+        borderColor,
+        color,
         colorSubtle: rgba(color, 0.6),
-        backgroundHover: backgroundHover,
-        backgroundPress: backgroundPress,
-        backgroundFocus: backgroundFocus,
+        backgroundHover,
+        backgroundPress,
+        backgroundFocus,
     }
 }
 

@@ -55,7 +55,7 @@ const ProductScreenContent = () => {
         <ProductCategoryChips showAll={true} />
       </PageHeader>
       <PageSection scrollable>
-        <ProductImage />
+        <ProductImage bbw={0} />
         <PageContent theme="light" gap="$3">
           <XStack jc="space-between">
             <ProductTitle size="$6" />
@@ -70,7 +70,7 @@ const ProductScreenContent = () => {
           <ProductDescription short={false} />
         </PageContent>
       </PageSection>
-    </PageView>
+    </PageView >
   );
 };
 

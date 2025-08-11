@@ -20,7 +20,7 @@ export const PriceTag = ({ textProps, br = "$3", ...stackProps }: PriceTagProps)
         ai="center"
         jc="center"
         p="$1"
-        px="$2"
+        px="$3"
         gap="$1"
         br={br}
         bw="$borderWidth"

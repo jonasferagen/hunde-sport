@@ -11,6 +11,7 @@ interface ThemedLinearGradientProps
     colors?: (string | any)[];
     strong?: boolean;
     elevated?: boolean;
+    flip?: boolean;
 }
 
 
@@ -20,6 +21,7 @@ export const ThemedLinearGradient = ({
     endPoint = [1, 1],
     strong = false,
     elevated = false,
+    flip = false,
     ...props
 }: ThemedLinearGradientProps): JSX.Element => {
 
@@ -28,7 +30,7 @@ export const ThemedLinearGradient = ({
     const from = elevated ? lighten(.1, baseColor) : baseColor;
     const value = strong ? .2 : .1;
     const to = darken(value, baseColor);
-    const colors = [from, to];
+    const colors = flip ? [to, from] : [from, to];
 
     return useMemo(() => (
         <LinearGradient

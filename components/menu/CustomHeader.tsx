@@ -1,4 +1,4 @@
-import { resolveTheme } from '@/config/routes';
+import { THEME_HEADER } from '@/config/app';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 import { Menu } from '@tamagui/lucide-icons';
@@ -14,8 +14,9 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
     const openDrawer = () => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
-    const theme = resolveTheme(props.route.name);
 
+    //    const theme = resolveTheme(props.route.name);
+    const theme = THEME_HEADER;
 
     return (
         <XStack

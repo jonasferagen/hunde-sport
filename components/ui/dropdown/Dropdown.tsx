@@ -1,4 +1,4 @@
-import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
+import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import React, { useMemo, useState } from 'react';
 import { Adapt, Select, Sheet, YStack } from 'tamagui';
 import { ThemedLinearGradient } from '../themed-components';
@@ -42,8 +42,17 @@ export const Dropdown = <T extends string>({
             onValueChange={handleValueChange}
             disablePreventBodyScroll
         >
-            <Select.Trigger w="100%" iconAfter={ChevronDown}>
-                <Select.Value placeholder={placeholder} />
+            <Select.Trigger
+                w="100%"
+                iconAfter={<ChevronDown size="$4" />}
+                br="$5"
+                bbw={1}
+                boc="$borderColor"
+                p="$3"
+            >
+                <Select.Value
+                    fos="$4"
+                    placeholder={placeholder} />
             </Select.Trigger>
 
             <Adapt platform="touch">
@@ -72,7 +81,12 @@ export const Dropdown = <T extends string>({
             </Adapt>
 
             <Select.Content zIndex={200000}>
-                <Select.ScrollUpButton ai="center" jc="center" w="100%" h="$3">
+                <Select.ScrollUpButton
+                    ai="center"
+                    jc="center"
+                    w="100%"
+                    h="$3"
+                >
                     <YStack zi={10}>
                         <ChevronUp size={20} />
                     </YStack>
@@ -82,11 +96,21 @@ export const Dropdown = <T extends string>({
                 <Select.Viewport minWidth={200}>
                     <Select.Group>
                         {options.map((item, i) => (
-                            <Select.Item index={i} key={item.value} value={i.toString()}>
-                                <Select.ItemText>{item.label}</Select.ItemText>
-                                <Select.ItemIndicator ml="auto">
-                                    <Check size={16} />
-                                </Select.ItemIndicator>
+                            <Select.Item index={i} key={item.value} value={i.toString()}
+                                theme="strong"
+                                br="$3"
+                                bg="$background"
+                                p="$4"
+                                bbw={1}
+                                boc="$borderColor"
+                            >
+                                <Select.ItemText
+                                    fos="$5"
+                                    fow="bold"
+                                >
+                                    {item.label}
+
+                                </Select.ItemText>
                             </Select.Item>
                         ))}
                     </Select.Group>

@@ -31,7 +31,7 @@ export const ProductVariations = ({ product, productVariations, onProductVariati
 
                 return (
                     <YStack key={id} gap="$1" f={1}>
-                        <ThemedText>{name}</ThemedText>
+                        <ThemedText tt="capitalize">{name}</ThemedText>
                         <AttributeSelector
                             options={filteredOptions}
                             selectedValue={selectedValue}
