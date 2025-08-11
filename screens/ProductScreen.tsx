@@ -3,7 +3,6 @@ import { ProductDescription } from '@/components/features/product/display/Produc
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
-import { ProductVariationsButton } from '@/components/features/product/product-variation/ProductVariationsButton';
 import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
@@ -55,13 +54,13 @@ const ProductScreenContent = () => {
         <ProductCategoryChips showAll={true} />
       </PageHeader>
       <PageSection scrollable>
-        <ProductImage bbw={0} />
+        <ProductImage />
         <PageContent theme="light" gap="$3">
           <XStack jc="space-between">
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />
           </XStack>
-          {product.type === "variable" ? <ProductVariationsButton /> : <PurchaseButton />}
+          <PurchaseButton />
         </PageContent>
         <PageContent title="Produktbilder" >
           {product.images.length > 1 && <ProductImageGallery />}
