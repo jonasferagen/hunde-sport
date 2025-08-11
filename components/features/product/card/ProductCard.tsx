@@ -9,16 +9,13 @@ import React from 'react';
 import { Button, StackProps, XStack } from 'tamagui';
 
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
-import { usePurchasable } from '@/hooks/usePurchasable';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { YStack } from 'tamagui';
 import { ProductDescription } from '../display/ProductDescription';
-import { ProductStatus } from '../display/ProductStatus';
 import { ProductTitle } from '../display/ProductTitle';
-import { PurchaseButton } from '../display/PurchaseButton';
-import { ProductCardCTA } from './ProductCardCTA';
+import { ProductCardFooter } from './ProductCardFooter';
 
-export const PRODUCT_CARD_LEFT_COLUMN_WIDTH = 80;
+export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 
 export const ProductCard = ({ ...props }: StackProps) => {
     const { product } = useBaseProductContext();
@@ -31,22 +28,20 @@ export const ProductCard = ({ ...props }: StackProps) => {
             <Link href={href} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
                     <ThemedXStack>
-                        <ProductCardLeft />
-                        <ProductCardRight />
+                        <ProductCardImage />
+                        <ProductCardDescription />
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ThemedYStack p="none">
-                <ProductCardCTA />
-            </ThemedYStack>
+            <ProductCardFooter />
         </ThemedYStack>
     );
 }
 
 
-export const ProductCardLeft = ({ ...props }: StackProps) => {
+export const ProductCardImage = ({ ...props }: StackProps) => {
     const { product } = useBaseProductContext();
-    const imageSize = PRODUCT_CARD_LEFT_COLUMN_WIDTH;
+    const imageSize = PRODUCT_CARD_NARROW_COLUMN_WIDTH;
     const uri = getScaledImageUrl(product.featuredImage.src, imageSize, imageSize);
 
     return (
@@ -70,7 +65,7 @@ export const ProductCardLeft = ({ ...props }: StackProps) => {
     );
 };
 
-const ProductCardRight = ({ ...stackProps }: StackProps) => {
+const ProductCardDescription = ({ ...stackProps }: StackProps) => {
     return (
         <ThemedYStack f={1} jc="flex-start" gap="$2" {...stackProps}>
             <XStack
@@ -83,24 +78,10 @@ const ProductCardRight = ({ ...stackProps }: StackProps) => {
             </XStack>
             <ProductDescription
                 numberOfLines={2}
-                short={true} />
+                short={true}
+                fow="normal"
+            />
         </ThemedYStack>
     );
 };
 
-const ProductCardFooter = ({ stackProps }: { stackProps?: StackProps }) => {
-
-    const { isValid, status, product, message } = usePurchasable();
-
-    if (isValid) {
-        return <PurchaseButton />;
-    }
-
-    if (status === "INVALID") {
-        return <ProductStatus f={1} ta="right" />
-    }
-
-    if (status === "ACTION_NEEDED") {
-        return <ProductVariationsButton />;
-    }
-}

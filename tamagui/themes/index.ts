@@ -19,6 +19,7 @@ const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
     const borderColorPress = darken(0.1, borderColor);
     const borderColorFocus = darken(0.12, borderColor);
 
+    const borderColorElevated = lighten(.1, borderColor);
 
 
     return {
@@ -33,6 +34,7 @@ const enhanceTheme = (baseTheme: Record<string, string>, baseColor: string) => {
         borderColorHover,
         borderColorPress,
         borderColorFocus,
+        borderColorElevated
     }
 }
 

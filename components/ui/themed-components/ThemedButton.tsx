@@ -24,10 +24,15 @@ export const ButtonFrame = styled(View, {
     br: '$3',
     gap: '$2',
     bw: 1,
+    animation: "fast",
 
     backgroundColor: '$background',
     borderColor: '$borderColor',
     borderWidth: '$borderWidth',
+
+    disabledStyle: {
+        opacity: 0.5,
+    },
 
     hoverStyle: {
         backgroundColor: '$backgroundHover',
