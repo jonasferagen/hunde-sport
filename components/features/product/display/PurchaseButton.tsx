@@ -53,8 +53,7 @@ export const PurchaseButton = () => {
                     bw={2}
                     boc="$borderColor"
                     br="$3"
-
-                    mr={-10}
+                    mr={-20}
                     minWidth={PRODUCT_CARD_NARROW_COLUMN_WIDTH}
                 >
                     <ThemedLinearGradient br="$3" flip elevated o={0.4} />

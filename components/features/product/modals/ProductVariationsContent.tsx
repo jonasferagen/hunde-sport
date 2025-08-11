@@ -23,6 +23,8 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
 
     };
 
+    const { isValid, message } = purchasable;
+    const disabled = !isValid;
 
     return (
         <Theme name="soft">
@@ -32,7 +34,7 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
                 gap="$3"
             >
                 <ProductImage img_height={150} />
-                <ThemedYStack f={1} >
+                <ThemedYStack f={1}>
 
                     {<ProductVariations
                         key={product.id}
@@ -41,14 +43,14 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
                         onProductVariationSelected={setSelectedProductVariation}
                     />}
                 </ThemedYStack>
-                <ThemedYStack my="$3">
+                <ThemedYStack my="$4">
                     <ThemedXStack
                         ai="center"
                         jc="space-between"
                     >
                         <ProductVariationTitle fos="$6" /><ProductPrice fos="$6" />
                     </ThemedXStack>
-                    <ContinueButton theme="normal" onPress={handleContinue} disabled={false} />
+                    <ContinueButton theme="normal" onPress={handleContinue} disabled={disabled} label={message} />
                 </ThemedYStack>
             </YStack>
         </Theme>

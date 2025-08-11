@@ -7,10 +7,10 @@ import { ButtonProps } from 'tamagui';
 interface ContinueButtonProps extends ButtonProps {
     onPress: () => void;
     disabled: boolean;
-
+    label?: string;
 }
 
-export const ContinueButton = ({ onPress, disabled, ...props }: ContinueButtonProps) => {
+export const ContinueButton = ({ onPress, disabled, label = 'Neste', ...props }: ContinueButtonProps) => {
 
     const icon = <ShoppingCart />
     const iconAfter = <ArrowBigRightDash />
@@ -19,8 +19,6 @@ export const ContinueButton = ({ onPress, disabled, ...props }: ContinueButtonPr
     const handlePress = () => {
         onPress();
     };
-
-    const label = "Fortsett"
 
     return (
         <CallToActionButton

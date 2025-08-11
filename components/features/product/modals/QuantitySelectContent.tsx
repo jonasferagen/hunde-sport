@@ -1,10 +1,11 @@
-import { ThemedButton, ThemedText, ThemedYStack } from "@/components/ui";
-import { THEME_MODAL_QUANTITY_SELECT } from "@/config/app";
+import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { useModalContext } from "@/contexts";
 import { useCartContext } from "@/contexts/CartContext";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
-import { Stack, Theme, ThemeName, XStack, YStack } from "tamagui";
+import { Theme, XStack, YStack } from "tamagui";
+import { ProductPrice } from "../display/ProductPrice";
+import { ProductVariationTitle } from "../product-variation/ProductVariationTitle";
 import { ContinueButton } from "./ContinueButton";
 
 
@@ -26,12 +27,15 @@ export const QuantitySelectContent = (): JSX.Element => {
         toggleModal();
     };
 
-    const theme: ThemeName = THEME_MODAL_QUANTITY_SELECT;
-
     return (
-        <><Theme name={theme}>
-            <Stack>
-
+        <Theme name="soft">
+            <ThemedYStack my="$4">
+                <ThemedXStack
+                    ai="center"
+                    jc="space-between"
+                >
+                    <ProductVariationTitle fos="$6" /><ProductPrice fos="$6" />
+                </ThemedXStack>
                 <YStack>
                     <XStack
                         ai="center"
@@ -45,7 +49,13 @@ export const QuantitySelectContent = (): JSX.Element => {
                         >
                             <Minus />
                         </ThemedButton>
-                        <ThemedText fos="$6" ta="center" minWidth={30}>{quantity}</ThemedText>
+                        <ThemedText
+                            fos="$6"
+                            ta="center"
+                            minWidth={30}
+                        >
+                            {quantity}
+                        </ThemedText>
                         <ThemedButton
                             circular
                             onPress={() => setQuantity(q => q + 1)}
@@ -54,15 +64,14 @@ export const QuantitySelectContent = (): JSX.Element => {
                         </ThemedButton>
                     </XStack>
                 </YStack>
-                <ThemedYStack >
+                <ThemedYStack my="$4">
                     <ContinueButton
                         onPress={onPress}
                         disabled={!purchasable.isValid}
                     />
                 </ThemedYStack>
-            </Stack>
+            </ThemedYStack>
         </Theme>
-        </>)
-
-};
+    );
+}
 

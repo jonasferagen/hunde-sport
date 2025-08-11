@@ -18,9 +18,6 @@ export const THEME_PURCHASE_BUTTON_OK = "primary";
 export const THEME_VARIATION_BUTTON_OK = "secondary";
 export const THEME_PURCHASE_BUTTON_ERROR = "tertiary";
 
-export const THEME_MODAL_PRODUCT_VARIATIONS = "success_alt7";
-export const THEME_MODAL_QUANTITY_SELECT = THEME_MODAL_PRODUCT_VARIATIONS;
-
 export const THEME_PURCHASE_BUTTON = 'dark_green_alt2';
 export const THEME_VARIATION_BUTTON = THEME_PURCHASE_BUTTON;
 export const THEME_CHECKOUT_BUTTON = 'success_alt1';
