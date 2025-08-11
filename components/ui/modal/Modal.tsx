@@ -26,7 +26,11 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
             >
                 <Sheet.Overlay />
                 <Sheet.Handle />
-                <Sheet.Frame f={1} minHeight={0} p="$4" gap="$3">
+                <Sheet.Frame f={1}
+                    minHeight={0}
+                    p="$4"
+                    gap="$3"
+                >
                     <ThemedLinearGradient
                         fullscreen
                         strong

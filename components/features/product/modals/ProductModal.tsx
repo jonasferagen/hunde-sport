@@ -1,5 +1,5 @@
 import { Modal } from '@/components/ui/modal/Modal';
-import { BaseProductProvider, ProductVariationProvider, useModalContext } from "@/contexts";
+import { ProductVariationProvider, useModalContext } from "@/contexts";
 import { VariableProduct } from "@/types";
 import React from 'react';
 import { ProductVariationsContent } from './ProductVariationsContent';
@@ -20,9 +20,7 @@ export const ProductModal = () => {
                     <ProductVariationsContent product={variableProduct} />
                 </ProductVariationProvider>
             ) : modalType === "quantity" ? (
-                <BaseProductProvider product={product}>
-                    <QuantitySelectContent />
-                </BaseProductProvider>
+                <QuantitySelectContent />
             ) : null}
         </Modal>
     );

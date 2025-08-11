@@ -27,7 +27,9 @@ export const PurchaseButton = () => {
 
     const disabled = !isValid && !isVariable;
     const icon = icons[status];
-    const theme = !isValid ? THEME_PURCHASE_BUTTON_ERROR : isVariable ? THEME_VARIATION_BUTTON_OK : THEME_PURCHASE_BUTTON_OK;
+    const theme = !isValid ?
+        THEME_PURCHASE_BUTTON_ERROR : isVariable ?
+            THEME_VARIATION_BUTTON_OK : THEME_PURCHASE_BUTTON_OK;
 
     const modalType = isVariable ? 'variations' : 'quantity';
 
