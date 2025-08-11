@@ -13,8 +13,7 @@ interface ModalProps {
 
 export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
     const theme: ThemeName = THEME_MODAL;
-
-    return (
+    return React.useMemo(() => (
         <Theme name={theme}>
             <Sheet
                 open={open}
@@ -23,7 +22,7 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
                 snapPointsMode="percent"
                 snapPoints={[90]}
                 dismissOnSnapToBottom
-                animation="fast"
+                animation="bouncy"
             >
                 <Sheet.Overlay />
                 <Sheet.Handle />
@@ -41,9 +40,18 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
                     >
                         <ChevronDown />
                     </ThemedButton>
-                    <XStack ai="center" jc="space-between" gap="$2">
-                        <H4 fs={1} fow="bold" m={0}>{title}</H4>
-
+                    <XStack
+                        ai="center"
+                        jc="space-between"
+                        gap="$2"
+                    >
+                        <H4
+                            fs={1}
+                            fow="bold"
+                            m={0}
+                        >
+                            {title}
+                        </H4>
                     </XStack>
                     <YStack
                         f={1}
@@ -54,5 +62,5 @@ export const Modal = ({ open, title, onOpenChange, children }: ModalProps) => {
                 </Sheet.Frame>
             </Sheet>
         </Theme>
-    );
+    ), [open, title, children]);
 };

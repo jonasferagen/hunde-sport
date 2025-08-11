@@ -1,5 +1,5 @@
 import { Purchasable } from "@/types";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useTransition } from "react";
 
 interface ModalContextType {
     purchasable?: Purchasable;
@@ -17,10 +17,23 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     const [modalType, setModalType] = useState<"variations" | "quantity" | null>(null);
     const [open, setOpen] = useState(false);
 
-    const toggleModal = () => setOpen(!open);
+    const [isPending, startTransition] = useTransition(); // Track the transition state
+
+    const toggleModal = () => {
+        startTransition(() => {
+            setOpen(!open); // This will now run as a transition, allowing smooth state update
+        });
+    };
 
     return (
-        <ModalContext.Provider value={{ purchasable, open, setPurchasable, toggleModal, modalType, setModalType }}>
+        <ModalContext.Provider value={{
+            open,
+            purchasable,
+            setPurchasable,
+            toggleModal,
+            modalType,
+            setModalType
+        }}>
             {children}
         </ModalContext.Provider>
     );

@@ -46,17 +46,16 @@ export const PurchaseButton = () => {
             label={message}
             after={
                 <YStack
-                    theme="soft"
+                    theme="normal"
                     h="$6"
                     ai="center"
                     jc="center"
-                    bw={2}
+                    px="$3"
                     boc="$borderColor"
-                    br="$3"
                     mr={-20}
                     minWidth={PRODUCT_CARD_NARROW_COLUMN_WIDTH}
                 >
-                    <ThemedLinearGradient br="$3" flip elevated o={0.4} />
+                    <ThemedLinearGradient br="$3" />
                     <BaseProductPrice />
                 </YStack>
             }

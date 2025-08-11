@@ -4,8 +4,6 @@ import { useCartContext } from "@/contexts/CartContext";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
 import { Theme, XStack, YStack } from "tamagui";
-import { ProductPrice } from "../display/ProductPrice";
-import { ProductVariationTitle } from "../product-variation/ProductVariationTitle";
 import { ContinueButton } from "./ContinueButton";
 
 
@@ -34,7 +32,7 @@ export const QuantitySelectContent = (): JSX.Element => {
                     ai="center"
                     jc="space-between"
                 >
-                    <ProductVariationTitle fos="$6" /><ProductPrice fos="$6" />
+
                 </ThemedXStack>
                 <YStack>
                     <XStack

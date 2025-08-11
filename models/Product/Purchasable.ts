@@ -58,7 +58,7 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
     return {
         isValid: true,
         status: 'OK',
-        message: 'Kjøp'
+        message: 'Legg til'
     };
 };
 
@@ -87,6 +87,8 @@ export const createPurchasable = ({
     const prices = activeProduct.prices;
     const availability = activeProduct.availability;
 
+
+    console.log("created purchasable for ", product.type);
 
     return {
         product,
