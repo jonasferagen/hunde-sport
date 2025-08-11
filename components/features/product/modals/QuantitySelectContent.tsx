@@ -1,48 +1,66 @@
-import { ThemedButton, ThemedText } from "@/components/ui";
-import { useCartContext } from "@/contexts";
-import { Purchasable } from "@/types";
+import { ThemedButton, ThemedText, ThemedYStack } from "@/components/ui";
+import { useModalContext } from "@/contexts";
+import { useCartContext } from "@/contexts/CartContext";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
-import { XStack, YStack } from "tamagui";
+import { Stack, Theme, XStack, YStack } from "tamagui";
+import { ContinueButton } from "./ContinueButton";
 
-interface QuantitySelectContentProps {
-    purchasable: Purchasable;
-    onPurchase: () => void;
-}
 
-export const QuantitySelectContent = ({ purchasable, onPurchase }: QuantitySelectContentProps): JSX.Element => {
+
+export const QuantitySelectContent = (): JSX.Element => {
     const { addItem } = useCartContext();
-    const [qty, setQty] = React.useState(1);
 
-    return <YStack>
-        <XStack
-            ai="center"
-            jc="center"
-            gap="$3"
-            p="$4"
-        >
-            <ThemedButton
-                circular
-                onPress={() => setQty(q => Math.max(1, q - 1))}
-            >
-                <Minus />
-            </ThemedButton>
-            <ThemedText fos="$6">{qty}</ThemedText>
-            <ThemedButton
-                circular
-                onPress={() => setQty(q => q + 1)}
-            >
-                <Plus />
-            </ThemedButton>
-        </XStack>
-        <ThemedButton
-            mt="$4"
-            onPress={() => {
-                addItem(purchasable, qty);
-                onPurchase();
-            }}
-        >
-            <ThemedText>Legg i handlekurv</ThemedText>
-        </ThemedButton>
-    </YStack>
+    const { toggleModal, purchasable } = useModalContext();
+    const [quantity, setQuantity] = React.useState(1);
+
+    if (!purchasable) throw new Error("No purchasable");
+
+
+
+    const onPress = () => {
+        addItem(
+            purchasable,
+            quantity
+        );
+        toggleModal();
+    };
+
+    return (
+        <><Theme name="primary">
+            <Stack>
+
+                <YStack>
+                    <XStack
+                        ai="center"
+                        jc="center"
+                        gap="$3"
+                        p="$4"
+                    >
+                        <ThemedButton
+                            circular
+                            onPress={() => setQuantity(q => Math.max(1, q - 1))}
+                        >
+                            <Minus />
+                        </ThemedButton>
+                        <ThemedText fos="$6" ta="center" minWidth={30}>{quantity}</ThemedText>
+                        <ThemedButton
+                            circular
+                            onPress={() => setQuantity(q => q + 1)}
+                        >
+                            <Plus />
+                        </ThemedButton>
+                    </XStack>
+                </YStack>
+                <ThemedYStack >
+                    <ContinueButton
+                        onPress={onPress}
+                        disabled={!purchasable.isValid}
+                    />
+                </ThemedYStack>
+            </Stack>
+        </Theme>
+        </>)
+
 };
+

@@ -13,7 +13,7 @@ import { getScaledImageUrl } from '@/lib/helpers';
 import { YStack } from 'tamagui';
 import { ProductDescription } from '../display/ProductDescription';
 import { ProductTitle } from '../display/ProductTitle';
-import { ProductCardFooter } from './ProductCardFooter';
+import { PurchaseButton } from '../display/PurchaseButton';
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 
@@ -33,7 +33,7 @@ export const ProductCard = ({ ...props }: StackProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ProductCardFooter />
+            <PurchaseButton />
         </ThemedYStack>
     );
 }

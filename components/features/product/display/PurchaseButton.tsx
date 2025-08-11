@@ -1,50 +1,64 @@
-import { ThemedSpinner } from '@/components/ui';
+// /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
-import { THEME_PURCHASE_BUTTON } from '@/config/app';
-import { useCartContext } from '@/contexts';
+import { THEME_PURCHASE_BUTTON_ERROR, THEME_PURCHASE_BUTTON_OK, THEME_VARIATION_BUTTON_OK } from '@/config/app';
+import { useModalContext } from '@/contexts';
 import { usePurchasable } from '@/hooks/usePurchasable';
-import { formatPrice } from '@/lib/helpers';
-import { ShoppingCart } from '@tamagui/lucide-icons';
-import React, { useRef } from 'react';
-import { Button, ButtonProps } from 'tamagui';
+import { VariableProduct } from '@/types';
+import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
 
-interface PurchaseButtonProps extends ButtonProps {
-    onPurchase?: () => void;
-}
+import { ThemedLinearGradient } from '@/components/ui';
+import React from 'react';
+import { YStack } from 'tamagui';
+import { PRODUCT_CARD_NARROW_COLUMN_WIDTH } from '../card';
+import { BaseProductPrice } from './ProductPrice';
 
-export const PurchaseButton = ({ onPurchase, ...props }: PurchaseButtonProps) => {
+const icons = {
+    VARIATION_REQUIRED: <Boxes />,
+    OUT_OF_STOCK: <X />,
+    INVALID_PRODUCT: <X />,
+    OK: <ShoppingCart />,
+};
+
+export const PurchaseButton = () => {
     const purchasable = usePurchasable();
-    const { isValid, prices, message, status } = purchasable;
+    const { product, status, message, isValid } = purchasable;
+    const { setPurchasable, toggleModal, setModalType } = useModalContext();
+    const isVariable = product instanceof VariableProduct;
 
-    const [isLoading, setIsLoading] = React.useState(false);
+    const disabled = !isValid && !isVariable;
+    const icon = icons[status];
+    const theme = !isValid ? THEME_PURCHASE_BUTTON_ERROR : isVariable ? THEME_VARIATION_BUTTON_OK : THEME_PURCHASE_BUTTON_OK;
 
-    const { addItem } = useCartContext();
-    const buttonRef = useRef<React.ComponentRef<typeof Button>>(null);
+    const modalType = isVariable ? 'variations' : 'quantity';
 
-    const handleAddToCart = async () => {
-        setIsLoading(true);
-        await addItem(purchasable, { triggerRef: buttonRef, silent: false });
-        setIsLoading(false);
-        onPurchase?.();
+    const onPress = () => {
+        setPurchasable(purchasable);
+        setModalType(modalType);
+        toggleModal();
     };
-
-    if (!isValid) {
-        return null;
-    }
-
-    const price = formatPrice(prices.price);
 
     return (
         <CallToActionButton
-            ref={buttonRef}
-            theme={THEME_PURCHASE_BUTTON}
-            onPress={handleAddToCart}
-            disabled={!isValid || isLoading}
-            icon={isLoading ? <ThemedSpinner /> : <ShoppingCart />}
-            textAfter={price}
-            {...props}
-        >
-            Kjøp
-        </CallToActionButton>
+            onPress={onPress}
+            disabled={disabled}
+            icon={icon}
+            theme={theme}
+            label={message}
+            after={
+                <YStack
+                    theme="soft"
+                    h="$6"
+                    ai="center"
+                    jc="center"
+                    mr={-10}
+                    minWidth={PRODUCT_CARD_NARROW_COLUMN_WIDTH}
+                >
+                    <ThemedLinearGradient strong o={0.4} />
+                    <BaseProductPrice />
+                </YStack>
+            }
+        />
+
+
     );
 };

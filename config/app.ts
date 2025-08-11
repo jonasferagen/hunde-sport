@@ -13,6 +13,11 @@ export const DEBUG_PRODUCTS = false;
 
 export const THEME_PRICE_TAG = 'success_alt10';
 export const THEME_PRICE_TAG_ON_SALE = 'dark_yellow_alt2';
+
+export const THEME_PURCHASE_BUTTON_OK = "primary";
+export const THEME_VARIATION_BUTTON_OK = "secondary";
+export const THEME_PURCHASE_BUTTON_ERROR = "tertiary";
+
 export const THEME_PURCHASE_BUTTON = 'dark_green_alt2';
 export const THEME_VARIATION_BUTTON = THEME_PURCHASE_BUTTON;
 export const THEME_CHECKOUT_BUTTON = 'success_alt1';

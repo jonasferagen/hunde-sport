@@ -1,6 +1,5 @@
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { BaseProductProvider } from '@/contexts/BaseProductContext';
-import { ModalProvider } from "@/contexts/ModalContext";
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React, { memo, useCallback } from 'react';
@@ -8,7 +7,6 @@ import { ViewStyle } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Theme, XStack } from 'tamagui';
 import { ProductCard } from './card';
-import { ProductModal } from './modals/ProductModal';
 
 interface ProductListProps {
     products: Product[];
@@ -38,23 +36,19 @@ export const ProductList = memo(({
     const keyExtractor = useCallback((item: PurchasableProduct) => item.id.toString(), []);
 
     return (
-        <ModalProvider>
-            <XStack f={1}>
-                <FlashList
-                    data={products}
-                    renderItem={renderItem}
-                    keyExtractor={keyExtractor}
-                    onEndReached={loadMore}
-                    onEndReachedThreshold={0.5}
-                    contentContainerStyle={contentContainerStyle}
-                    ListFooterComponent={() =>
-                        loadingMore ? <ThemedSpinner my="$3" /> : null
-                    }
-                    estimatedItemSize={200}
-                />
-            </XStack>
-            <ProductModal />
-
-        </ModalProvider>
+        <XStack f={1}>
+            <FlashList
+                data={products}
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
+                onEndReached={loadMore}
+                onEndReachedThreshold={0.5}
+                contentContainerStyle={contentContainerStyle}
+                ListFooterComponent={() =>
+                    loadingMore ? <ThemedSpinner my="$3" /> : null
+                }
+                estimatedItemSize={200}
+            />
+        </XStack>
     );
 }); 

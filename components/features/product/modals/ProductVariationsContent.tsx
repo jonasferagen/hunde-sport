@@ -1,22 +1,28 @@
 import { ThemedXStack } from '@/components/ui';
-import { useProductVariationContext } from "@/contexts";
+import { useModalContext, useProductVariationContext } from "@/contexts";
 import { VariableProduct } from "@/types";
 import { ScrollView, YStack } from 'tamagui';
 import { ProductImage } from '../ProductImage';
 import { ProductPrice } from '../display/ProductPrice';
-import { PurchaseButton } from '../display/PurchaseButton';
 import { ProductVariationTitle } from '../product-variation/ProductVariationTitle';
 import { ProductVariations } from '../product-variation/ProductVariations';
+import { ContinueButton } from './ContinueButton';
 
 interface ProductVariationsContentProps {
     product: VariableProduct;
-    onPurchase: () => void;
 }
 
 
-export const ProductVariationsContent = ({ product, onPurchase }: ProductVariationsContentProps) => {
+export const ProductVariationsContent = ({ product }: ProductVariationsContentProps) => {
 
-    const { productVariations, setSelectedProductVariation } = useProductVariationContext();
+    const { productVariations, setSelectedProductVariation, purchasable } = useProductVariationContext();
+    const { setModalType, setPurchasable } = useModalContext();
+    const handleContinue = () => {
+        setPurchasable(purchasable);
+        setModalType("quantity"); // same product still in context
+
+    };
+
 
     return (
         <YStack f={1}
@@ -41,7 +47,7 @@ export const ProductVariationsContent = ({ product, onPurchase }: ProductVariati
                     onProductVariationSelected={setSelectedProductVariation}
                 />}
             </ScrollView>
-            <PurchaseButton f={0} mb="$3" onPurchase={onPurchase} />
+            <ContinueButton onPress={handleContinue} disabled={false} />
         </YStack>
 
     );
