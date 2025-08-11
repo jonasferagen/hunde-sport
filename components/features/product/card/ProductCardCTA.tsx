@@ -61,9 +61,10 @@ export const ProductCardCTA = () => {
 const ProductVariationModal = ({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) => {
     const { product: baseProduct } = useBaseProductContext();
     const product = baseProduct as VariableProduct;
-    const [fullyOpen, setFullyOpen] = React.useState(false);
+
 
     return (
+        open &&
         <Modal
             open={open}
             onOpenChange={(o) => {
@@ -71,21 +72,19 @@ const ProductVariationModal = ({ open, setOpen }: { open: boolean, setOpen: (ope
             }}
             title={product.name}
         >
-            {open && (
-                <ProductVariationProvider product={product}>
-                    <ProductVariationsContent product={product} setOpen={setOpen} />
-                </ProductVariationProvider>
-            )}
+            <ProductVariationProvider product={product}>
+                <ProductVariationsContent product={product} setOpen={setOpen} />
+            </ProductVariationProvider>
         </Modal>
-    );
+    )
 };
 
 
 const QuantityModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
     const [qty, setQty] = React.useState(1);
     const purchasable = usePurchasable();
-    const { addItem } = useCartContext(); // if you have it
-
+    const { addItem } = useCartContext();
+    const [fullyOpen, setFullyOpen] = React.useState(false);
     return (
         <Modal open={open} onOpenChange={setOpen} title="Velg antall">
             <XStack ai="center" jc="center" gap="$3" p="$4">
@@ -99,8 +98,7 @@ const QuantityModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boole
                     addItem(purchasable, qty);
                     setOpen(false);
                 }}
-            >
-                <ThemedText>Legg i handlekurv</ThemedText>
+            >                <ThemedText>Legg i handlekurv</ThemedText>
             </ThemedButton>
         </Modal>
     );

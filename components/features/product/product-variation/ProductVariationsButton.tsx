@@ -1,5 +1,4 @@
 import { Modal } from '@/components/ui/modal/Modal';
-import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useBaseProductContext } from '@/contexts/BaseProductContext';
 import { ProductVariationProvider, useProductVariationContext } from '@/contexts/ProductVariationContext';
 import { VariableProduct } from '@/models/Product/Product';
@@ -12,6 +11,7 @@ import { ProductVariationTitle } from './ProductVariationTitle';
 import { ThemedXStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { THEME_VARIATION_BUTTON } from '@/config/app';
+import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { PawPrint } from '@tamagui/lucide-icons';
 import React from 'react';
 import { ProductPrice } from '../display/ProductPrice';
@@ -22,6 +22,12 @@ export const ProductVariationsButton = () => {
     const [open, setOpen] = React.useState(false);
 
     const product = variableProduct as VariableProduct;
+
+
+    React.useEffect(() => {
+        console.log('Modal Open State:', open);
+    }, [open]);
+
     return (
         <>
             <CallToActionButton
@@ -33,13 +39,13 @@ export const ProductVariationsButton = () => {
             >
                 Velg variant
             </CallToActionButton>
-            {open && (
-                <Modal open={open} onOpenChange={setOpen} title={product.name}>
-                    <ProductVariationProvider product={product}>
-                        <ProductVariationsContent product={product} setOpen={setOpen} />
-                    </ProductVariationProvider>
-                </Modal>
-            )}
+
+            <Modal open={open} onOpenChange={setOpen} title={product.name}>
+                <ProductVariationProvider product={product}>
+                    <ProductVariationsContent product={product} setOpen={setOpen} />
+                </ProductVariationProvider>
+            </Modal>
+
         </>
     );
 };
@@ -53,7 +59,7 @@ export const ProductVariationsContent = ({ product, setOpen }: ProductVariations
     const { isLoading, productVariations, setSelectedProductVariation } = useProductVariationContext();
 
 
-    if (isLoading) return <ThemedSpinner />
+    if (isLoading) return <LoadingScreen />
 
     return (
         <YStack f={1} h="100%" gap="$3" theme="active">

@@ -1,7 +1,6 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
 import { Purchasable } from '@/models/Product/Purchasable';
 import { AddItemOptions, useCartStore } from '@/stores/CartStore';
-import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
 
 
@@ -17,7 +16,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const toastController = useToastController();
+
     const {
         cart,
         isUpdating,
@@ -35,7 +34,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
 
         const { product, productVariation } = purchasable;
-
         const parsedVariation = productVariation?.getParsedVariation() || [];
         const variation = parsedVariation.map(attr => ({ attribute: attr.name, value: attr.value }));
 
@@ -44,7 +42,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             quantity,
             variation,
         };
-
         await storeAddItem(addItemOptions);
 
     };
@@ -59,7 +56,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await storeRemoveItem(key);
         }
     };
-
 
     const value = useMemo(() => ({
         cart: cart!,

@@ -45,7 +45,7 @@ const RootLayout = (): JSX.Element => {
           </TamaguiProvider>
         </SafeAreaView>
       </GestureHandlerRootView>
-    </QueryClientProvider >
+    </QueryClientProvider>
   );
 };
 
