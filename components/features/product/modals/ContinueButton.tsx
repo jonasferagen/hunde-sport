@@ -2,17 +2,19 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { ArrowBigRightDash, ShoppingCart } from '@tamagui/lucide-icons';
 import React from 'react';
+import { ButtonProps, ThemeName } from 'tamagui';
 
-interface ContinueButtonProps {
+interface ContinueButtonProps extends ButtonProps {
     onPress: () => void;
     disabled: boolean;
+
 }
 
-export const ContinueButton = ({ onPress, disabled }: ContinueButtonProps) => {
+export const ContinueButton = ({ onPress, disabled, ...props }: ContinueButtonProps) => {
 
     const icon = <ShoppingCart />
     const iconAfter = <ArrowBigRightDash />
-    const theme = "primary";
+    const theme: ThemeName = "primary";
 
     const handlePress = () => {
         onPress();
@@ -30,6 +32,7 @@ export const ContinueButton = ({ onPress, disabled }: ContinueButtonProps) => {
             f={0}
             label={label}
             after={iconAfter}
+            {...props}
         />
     );
 };

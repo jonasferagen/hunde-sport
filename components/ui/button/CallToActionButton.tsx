@@ -4,11 +4,12 @@ import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { ThemeName } from 'tamagui';
 import { ThemedText } from '../themed-components';
+
 interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disabled' | 'icon' | 'theme'> {
     onPress: () => void;
     disabled?: boolean;
-    icon: React.ReactNode;
-    theme?: ThemeName;
+    icon: ButtonProps['icon'];
+    theme?: ThemeName | null;
     label: string;
     after?: React.ReactNode;
 }
@@ -16,7 +17,13 @@ interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disable
 export const CallToActionButton = React.forwardRef<
     React.ComponentRef<typeof ThemedButton>,
     CallToActionButtonProps
->(({ onPress, disabled, icon, theme, label, after, ...props }, ref) => {
+>(({ onPress,
+    disabled,
+    theme = null,
+    icon,
+    label,
+    after,
+    ...props }, ref) => {
 
     const handlePress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);

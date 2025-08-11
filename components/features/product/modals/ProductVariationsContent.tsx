@@ -25,7 +25,8 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
 
 
     return (
-        <YStack f={1}
+        <YStack
+            f={1}
             h="100%"
             gap="$3"
             theme="active"
@@ -47,7 +48,7 @@ export const ProductVariationsContent = ({ product }: ProductVariationsContentPr
                     onProductVariationSelected={setSelectedProductVariation}
                 />}
             </ScrollView>
-            <ContinueButton onPress={handleContinue} disabled={false} />
+            <ContinueButton onPress={handleContinue} disabled={false} mb="$3" />
         </YStack>
 
     );
