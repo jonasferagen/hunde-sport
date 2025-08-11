@@ -158,3 +158,4 @@ export const extraThemes = {
     danger_alt1: dangerThemeAlt1,
     danger_alt2: dangerThemeAlt2
 }
+

@@ -22,7 +22,6 @@ export const PurchaseButton = () => {
     const { purchasable } = usePurchasableContext();
 
     const { product, status, message, isValid } = purchasable;
-    const { setPurchasable: setModalPurchasable, toggleModal, setModalType } = useModalContext();
     const isVariable = product instanceof VariableProduct;
 
     const disabled = !isValid && !isVariable;
@@ -31,12 +30,12 @@ export const PurchaseButton = () => {
         THEME_PURCHASE_BUTTON_ERROR : isVariable ?
             THEME_VARIATION_BUTTON_OK : THEME_PURCHASE_BUTTON_OK;
 
-    const modalType = isVariable ? 'variations' : 'quantity';
+
+    const { setPurchasable: setModalPurchasable } = useModalContext();
 
     const onPress = () => {
         setModalPurchasable(purchasable);
-        setModalType(modalType);
-        toggleModal();
+
     };
 
     return (
@@ -61,4 +60,4 @@ export const PurchaseButton = () => {
                     <BaseProductPrice />
                 </YStack>
             } />);
-};
+}; //  <ThemedLinearGradient br="$3" />
