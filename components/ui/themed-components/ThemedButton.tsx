@@ -22,7 +22,6 @@ export const ButtonFrame = styled(View, {
     ai: 'center',
     fd: 'row',
     br: '$3',
-    px: '$3',
     gap: '$2',
 
     backgroundColor: '$background',
@@ -45,7 +44,22 @@ export const ButtonFrame = styled(View, {
     },
 
     variants: {
-        circular: { true: { borderRadius: 9999, px: 0, width: 'auto' } },
+        circular: {
+            true: (val, { tokens }) => {
+
+                const { size } = useContext(ButtonContext.context)
+                const sz = getSize(size)
+                return {
+                    borderRadius: 9999,
+                    width: sz.val * 2,   // matches height
+                    height: sz.val * 2,
+                    px: 0,
+                    ai: 'center',
+                    jc: 'center',
+                }
+            },
+        },
+
         size: {
             '...size': (val) => {
                 const sz = getSize(val)

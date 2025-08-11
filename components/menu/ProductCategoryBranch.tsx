@@ -28,7 +28,7 @@ export const ProductCategoryBranch = memo(({
     return (
         <Animated.View key={productCategory.id} layout={LinearTransition}>
             <YStack>
-                <XStack flex={1}>
+                <XStack f={1}>
                     <ProductCategoryTreeItem
                         productCategory={productCategory}
                         level={level}
@@ -41,7 +41,9 @@ export const ProductCategoryBranch = memo(({
                     <Animated.View entering={FadeIn} exiting={FadeOut}>
                         <YStack pl="$4">
                             {subproductCategories.map((subproductCategory) => (
-                                <ProductCategoryProvider key={subproductCategory.id} productCategoryId={subproductCategory.id}>
+                                <ProductCategoryProvider
+                                    key={subproductCategory.id}
+                                    productCategoryId={subproductCategory.id}>
                                     <ProductCategoryBranch
                                         productCategory={subproductCategory}
                                         level={level + 1}

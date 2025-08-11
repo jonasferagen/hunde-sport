@@ -31,8 +31,9 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
             <ThemedLinearGradient />
             <ThemedButton
                 onPress={openDrawer}
-                size="$6"
                 circular
+                h="$6"
+                w="$6"
             >
                 <Menu />
             </ThemedButton>

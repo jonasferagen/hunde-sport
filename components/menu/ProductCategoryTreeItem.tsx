@@ -26,7 +26,7 @@ export const ProductCategoryTreeItem = ({
     const spacing = getTokenValue('$2', 'space');
 
     return (
-        <XStack ai="center" gap="$2" f={1}>
+        <XStack ai="center" gap="$2" f={1} mb="$2">
             <XStack flex={1} ml={level * spacing}>
                 <Link href={routes['product-category'].path(productCategory)} asChild>
                     <ThemedButton f={1} >
@@ -41,7 +41,6 @@ export const ProductCategoryTreeItem = ({
                 circular
                 onPress={() => handleExpand(productCategory.id)}
                 disabled={!hasChildren}
-                size="$6"
                 opacity={hasChildren ? 1 : 0}
                 pointerEvents={hasChildren ? 'auto' : 'none'}
             >
