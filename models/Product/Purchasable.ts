@@ -1,5 +1,4 @@
 import { ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product/Product';
-import { StoreImage } from '@/models/StoreImage';
 import { Product, ProductAvailability, PurchasableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 
@@ -68,7 +67,6 @@ export interface Purchasable extends ValidationResult {
     product: SimpleProduct | VariableProduct;
     productVariation?: ProductVariation;
     activeProduct: Product;
-    image: StoreImage;
     prices: ProductPrices;
     availability: ProductAvailability;
 }
@@ -83,7 +81,6 @@ export const createPurchasable = ({
     const validationResult = validate({ product, productVariation });
     const activeProduct = productVariation || product;
 
-    const image = activeProduct.featuredImage;
     const prices = activeProduct.prices;
     const availability = activeProduct.availability;
 
@@ -91,7 +88,6 @@ export const createPurchasable = ({
         product,
         productVariation: productVariation,
         activeProduct,
-        image,
         prices,
         availability,
         ...validationResult,

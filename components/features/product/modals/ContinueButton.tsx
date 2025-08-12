@@ -2,7 +2,7 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { ArrowBigRightDash, ShoppingCart } from '@tamagui/lucide-icons';
 import React from 'react';
-import { ButtonProps } from 'tamagui';
+import { ButtonProps, SizableText } from 'tamagui';
 
 interface ContinueButtonProps extends ButtonProps {
     onPress: () => void;
@@ -28,6 +28,8 @@ export const ContinueButton = ({ onPress, disabled, label = 'Neste', ...props }:
             label={label}
             after={iconAfter}
             {...props}
-        />
+        >
+            <SizableText>  aa </SizableText>
+        </CallToActionButton>
     );
 };

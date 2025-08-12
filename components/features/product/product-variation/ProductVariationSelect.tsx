@@ -11,29 +11,27 @@ import { AttributeSelector } from './AttributeSelector';
 
 
 
-interface ProductVariationsProps {
+interface ProductVariationSelectProps {
     stackProps?: StackProps;
 }
 
-export const ProductVariations = ({ stackProps }: ProductVariationsProps): JSX.Element => {
+export const ProductVariationSelect = ({ stackProps }: ProductVariationSelectProps): JSX.Element => {
     const { purchasable } = usePurchasableContext();
     const variableProduct = purchasable.product as VariableProduct;
 
     return <ProductVariationProvider product={variableProduct}>
-        <ProductVariationsContent stackProps={stackProps} />
+        <ProductVariationSelectContent stackProps={stackProps} />
     </ProductVariationProvider>
 
 }
 
-export const ProductVariationsContent = ({ stackProps }: ProductVariationsProps): JSX.Element => {
+export const ProductVariationSelectContent = ({ stackProps }: ProductVariationSelectProps): JSX.Element => {
 
-    useRenderGuard("ProductVariations");
+    useRenderGuard("ProductVariationSelect");
 
     const { purchasable, setProductVariation } = usePurchasableContext();
     const { productVariations } = useProductVariationContext();
     const variableProduct = purchasable.product as VariableProduct;
-
-
 
     const { attributes,
         selectionManager,
