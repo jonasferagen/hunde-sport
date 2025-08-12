@@ -11,7 +11,7 @@ import { ContinueButton } from './ContinueButton';
 
 
 
-export const VariationsStep = ({ onSelect, purchasable }: { onSelect: () => void, purchasable: Purchasable }) => {
+export const ProductVariationsModal = ({ onSelect, purchasable }: { onSelect: (purchasable: Purchasable) => void, purchasable: Purchasable }) => {
     return (
         <PurchasableProvider purchasable={purchasable}>
             <ProductVariationsModalContent onSelect={onSelect} />
@@ -19,7 +19,7 @@ export const VariationsStep = ({ onSelect, purchasable }: { onSelect: () => void
     );
 }
 
-export const ProductVariationsModalContent = ({ onSelect }: { onSelect: () => void }) => {
+export const ProductVariationsModalContent = ({ onSelect }: { onSelect: (purchasable: Purchasable) => void }) => {
 
     const { purchasable } = usePurchasableContext();
 
@@ -39,7 +39,7 @@ export const ProductVariationsModalContent = ({ onSelect }: { onSelect: () => vo
                     </ThemedXStack>
                     <ContinueButton
                         disabled={!purchasable.isValid}
-                        onPress={() => onSelect()}
+                        onPress={() => onSelect(purchasable)}
                     />
                 </ThemedYStack>
             </YStack>

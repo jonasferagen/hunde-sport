@@ -5,7 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import React, { memo, useCallback } from 'react';
 import { ViewStyle } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
-import { Theme, XStack } from 'tamagui';
+import { XStack } from 'tamagui';
 import { ProductCard } from './card';
 
 interface ProductListProps {
@@ -26,9 +26,7 @@ export const ProductList = memo(({
     const renderItem = useCallback(({ item: product, index }: { item: PurchasableProduct, index: number }) =>
         <Animated.View layout={LinearTransition}>
             <PurchasableProviderInit product={product}>
-                <Theme name={index % 2 === 0 ? 'normal' : 'soft'}>
-                    <ProductCard />
-                </Theme>
+                <ProductCard theme={index % 2 === 0 ? 'normal' : 'soft'} />
             </PurchasableProviderInit>
         </Animated.View>
         , []);
@@ -38,7 +36,7 @@ export const ProductList = memo(({
     return (
         <XStack f={1}>
             <FlashList
-                data={products}
+                data={products as PurchasableProduct[]}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 onEndReached={loadMore}

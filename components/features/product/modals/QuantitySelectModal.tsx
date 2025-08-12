@@ -11,7 +11,7 @@ import { ContinueButton } from "./ContinueButton";
 
 
 
-export const QuantityStep = ({ onSelect, purchasable }: { onSelect: () => void, purchasable: Purchasable }) => {
+export const QuantitySelectModal = ({ onSelect, purchasable }: { onSelect: () => void, purchasable: Purchasable }) => {
     return (
         <PurchasableProvider purchasable={purchasable}>
             <QuantitySelectModalContent onSelect={onSelect} />

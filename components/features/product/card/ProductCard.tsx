@@ -15,20 +15,20 @@ import { ProductDescription } from '../display/ProductDescription';
 import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
 
-import { useModalStore } from '@/stores/modalStore';
-import { Purchasable, VariableProduct } from '@/types';
-import { VariationsStep } from '../modals/ProductVariationsModal';
-import { QuantityStep } from '../modals/QuantitySelectModal';
+import { RenderArgs, RenderFn, useModalStore } from '@/stores/modalStore';
+import { Purchasable } from '@/types';
+import { ProductVariationsModal } from '../modals/ProductVariationsModal';
+import { QuantitySelectModal } from '../modals/QuantitySelectModal';
 
-const { openModal, replaceModal } = useModalStore();
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 
-export const ProductCard = ({ ...props }: StackProps) => {
+export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
     const { productCategory: category } = useProductCategoryContext();
+
     const href: HrefObject = routes.product.path(product, category?.id);
     return (
         <ThemedYStack p="$3" gap="$3" {...props} bbw={1} f={1}>
@@ -41,16 +41,10 @@ export const ProductCard = ({ ...props }: StackProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <PurchaseButton onPress={() => openModal(({ close, replace, payload }) => (
-                (payload as Purchasable).product instanceof VariableProduct
-                    ? <VariationsStep onSelect={() => close()} purchasable={payload as Purchasable} />
-                    : <QuantityStep onSelect={() => close()} purchasable={payload as Purchasable} />
-            ), purchasable)} />
+            <ProductCardFooter />
         </ThemedYStack>
     );
-}
-
-
+});
 
 export const ProductCardImage = ({ ...props }: StackProps) => {
     const { purchasable } = usePurchasableContext();
@@ -99,3 +93,49 @@ const ProductCardDescription = ({ ...stackProps }: StackProps) => {
     );
 };
 
+export const ProductCardFooter = () => {
+
+
+    const { purchasable } = usePurchasableContext();
+    const { product } = purchasable;
+    const isVariable = product.type === 'variable'; // safer than instanceof across realms
+    const openModal = useModalStore((s) => s.openModal) as <P>(render: RenderFn<P>, payload?: P) => void;
+
+    return (
+        <PurchaseButton
+            onPress={() =>
+                openModal(({ close, replace, payload }: RenderArgs<Purchasable>) =>
+                    isVariable
+                        ? <VariationsStep close={close} replace={replace} payload={payload} />
+                        : <QuantityStep close={close} replace={replace} payload={payload} />
+                    , purchasable)
+            }
+        />
+    );
+}
+
+
+
+type StepProps = RenderArgs<Purchasable>;
+
+const VariationsStep: React.FC<StepProps> = ({ payload, replace, close }) => {
+    // hooks go here if needed
+    return (
+        <ProductVariationsModal
+            purchasable={payload}
+            onSelect={(selectedVariation) => {
+                // build next payload
+                const nextPayload = { ...payload, selectedVariation };
+                // IMPORTANT: pass a FUNCTION, not an element
+                replace(({ close: close2 }) => (
+                    <QuantitySelectModal purchasable={nextPayload} onSelect={close2} />
+                ), nextPayload);
+            }}
+        />
+    );
+};
+
+const QuantityStep: React.FC<StepProps> = ({ payload, close }) => {
+    // hooks go here if needed
+    return <QuantitySelectModal purchasable={payload} onSelect={close} />;
+};

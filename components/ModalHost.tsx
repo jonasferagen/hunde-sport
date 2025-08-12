@@ -1,12 +1,15 @@
 // ModalHost.tsx
 import { ThemedButton } from '@/components/ui/themed-components';
-import { useModalStore } from '@/stores/modalStore';
+import { RenderFn, useModalStore } from '@/stores/modalStore';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
 import { H4, Sheet, SizableText, XStack, YStack } from 'tamagui';
 
 export const ModalHost = () => {
-    const { open, render, payload, closeModal, replaceModal } = useModalStore();
+    const { open, render, payload, closeModal, replaceModal, version } = useModalStore();
+
+    const replace = <N,>(r: RenderFn<N>, p?: N) => replaceModal(r, p);
+    const renderAny = render as RenderFn<unknown> | null;
 
     return (
         <Sheet
@@ -47,10 +50,7 @@ export const ModalHost = () => {
                         f={1}
                         minHeight={0}
                     >
-                        {render ?
-                            render({ close: closeModal, payload, replace: replaceModal },)
-                            : null
-                        }
+                        {renderAny ? renderAny({ close: closeModal, replace, payload }) : null}
                     </YStack>
                 </ModalErrorBoundary>
             </Sheet.Frame>
