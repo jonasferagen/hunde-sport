@@ -1,17 +1,23 @@
 import { ThemedXStack, ThemedYStack } from '@/components/ui';
-import { usePurchasableContext } from '@/contexts';
+import { PurchasableProvider, usePurchasableContext } from '@/contexts';
 import React from 'react';
 import { Theme, YStack } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from '../display';
 
+import { Purchasable } from '@/models/Product/Purchasable';
 import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
 import { ContinueButton } from './ContinueButton';
 
 
-export const ProductVariationsModal = ({ onSelect }: { onSelect: () => void }) => {
-    return ProductVariationsModalContent({ onSelect });
-};
 
+
+export const VariationsStep = ({ onSelect, purchasable }: { onSelect: () => void, purchasable: Purchasable }) => {
+    return (
+        <PurchasableProvider purchasable={purchasable}>
+            <ProductVariationsModalContent onSelect={onSelect} />
+        </PurchasableProvider>
+    );
+}
 
 export const ProductVariationsModalContent = ({ onSelect }: { onSelect: () => void }) => {
 
@@ -31,7 +37,10 @@ export const ProductVariationsModalContent = ({ onSelect }: { onSelect: () => vo
                         </ThemedXStack>
                         <ProductPrice />
                     </ThemedXStack>
-                    <ContinueButton disabled={!purchasable.isValid} onPress={onSelect} />
+                    <ContinueButton
+                        disabled={!purchasable.isValid}
+                        onPress={() => onSelect()}
+                    />
                 </ThemedYStack>
             </YStack>
         </Theme>

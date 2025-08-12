@@ -51,10 +51,9 @@ export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
                         <ThemedLinearGradient br="$3" />
                         <BaseProductPrice />
                     </YStack>
-                } />
-
-
+                }
+            />
 
         </>
     );
-}; //  <ThemedLinearGradient br="$3" />
+}; 

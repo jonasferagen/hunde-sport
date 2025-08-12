@@ -12,7 +12,8 @@ interface ProductImageGalleryProps extends YStackProps {
 }
 
 export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductImageGalleryProps): JSX.Element => {
-    const { product, purchasable } = usePurchasableContext();
+    const { purchasable } = usePurchasableContext();
+    const { product } = purchasable;
     const images = product.images;
     const { width: screenWidth } = Dimensions.get('window');
 

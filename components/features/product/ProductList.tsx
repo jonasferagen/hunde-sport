@@ -1,5 +1,5 @@
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
-import { PurchasableProvider } from '@/contexts/PurchasableContext';
+import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React, { memo, useCallback } from 'react';
@@ -25,11 +25,11 @@ export const ProductList = memo(({
 
     const renderItem = useCallback(({ item: product, index }: { item: PurchasableProduct, index: number }) =>
         <Animated.View layout={LinearTransition}>
-            <PurchasableProvider product={product}>
+            <PurchasableProviderInit product={product}>
                 <Theme name={index % 2 === 0 ? 'normal' : 'soft'}>
                     <ProductCard />
                 </Theme>
-            </PurchasableProvider>
+            </PurchasableProviderInit>
         </Animated.View>
         , []);
 

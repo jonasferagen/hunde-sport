@@ -16,13 +16,11 @@ import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
 
 import { useModalStore } from '@/stores/modalStore';
-import { VariableProduct } from '@/types';
-import { ProductVariationsModal } from '../modals/ProductVariationsModal';
-import { QuantitySelectContent } from '../modals/QuantitySelectContent';
+import { Purchasable, VariableProduct } from '@/types';
+import { VariationsStep } from '../modals/ProductVariationsModal';
+import { QuantityStep } from '../modals/QuantitySelectModal';
 
-const { openModal } = useModalStore();
-
-
+const { openModal, replaceModal } = useModalStore();
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 
@@ -33,7 +31,7 @@ export const ProductCard = ({ ...props }: StackProps) => {
     const { productCategory: category } = useProductCategoryContext();
     const href: HrefObject = routes.product.path(product, category?.id);
     return (
-        <ThemedYStack p="$3" gap="$3" {...props} boc="$borderColor" bbw={1} f={1}>
+        <ThemedYStack p="$3" gap="$3" {...props} bbw={1} f={1}>
             <ThemedLinearGradient />
             <Link href={href} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
@@ -43,10 +41,10 @@ export const ProductCard = ({ ...props }: StackProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <PurchaseButton onPress={() => openModal(({ close }) => (
-                purchasable.product instanceof VariableProduct
-                    ? <ProductVariationsModal onSelect={close} />
-                    : <QuantitySelectContent onSelect={close} />
+            <PurchaseButton onPress={() => openModal(({ close, replace, payload }) => (
+                (payload as Purchasable).product instanceof VariableProduct
+                    ? <VariationsStep onSelect={() => close()} purchasable={payload as Purchasable} />
+                    : <QuantityStep onSelect={() => close()} purchasable={payload as Purchasable} />
             ), purchasable)} />
         </ThemedYStack>
     );

@@ -15,27 +15,37 @@ export const usePurchasableContext = () => {
     return ctx;
 };
 
-// PurchasableProvider component
-export const PurchasableProvider: React.FC<{ product: PurchasableProduct; productVariation?: ProductVariation; children: ReactNode }> = ({
+
+export const PurchasableProviderInit: React.FC<{ product: PurchasableProduct; productVariation?: ProductVariation; children: ReactNode }> = ({
     product,
     productVariation,
     children,
 }) => {
-    // Initialize purchasable state with the product and an optional variation
-    const [purchasable, setPurchasable] = useState<Purchasable>(createPurchasable({ product, productVariation }));
+    const purchasable = createPurchasable({ product, productVariation });
+    return (
+        <PurchasableProvider purchasable={purchasable} children={children} />
+    );
+}
+
+// PurchasableProvider component
+export const PurchasableProvider: React.FC<{ purchasable: Purchasable; children: ReactNode }> = ({
+    purchasable: initialPurchasable,
+    children,
+}) => {
+
+    const [purchasable, setPurchasable] = useState<Purchasable>(initialPurchasable);
 
     // Memoized context value, which includes purchasable and a function to set the product variation
     const contextValue = useMemo(() => ({
         purchasable,
-        product,
         setProductVariation: (productVariation?: ProductVariation) => {
 
             if (productVariation !== purchasable.productVariation) {
-                const updatedPurchasable = createPurchasable({ product, productVariation });
+                const updatedPurchasable = createPurchasable({ product: purchasable.product, productVariation });
                 setPurchasable(updatedPurchasable); // Update the purchasable with the selected variation
             }
         },
-    }), [product, purchasable]);
+    }), [purchasable]);
 
     return (
         <PurchasableContext.Provider value={contextValue}>
