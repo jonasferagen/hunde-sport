@@ -7,7 +7,7 @@ export type RenderArgs<P> = {
   close: () => void;
   // generic replace so you can swap to a different payload type if needed
   replace: <N>(render: RenderFn<N>, payload?: N) => void;
-  payload: P;
+  payload?: P;
 };
 
 type ModalState = {

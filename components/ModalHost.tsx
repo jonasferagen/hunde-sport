@@ -1,6 +1,8 @@
 // ModalHost.tsx
 import { ThemedButton } from '@/components/ui/themed-components';
+import { PurchasableProvider } from '@/contexts';
 import { RenderFn, useModalStore } from '@/stores/modalStore';
+import { Purchasable } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
 import { H4, Sheet, SizableText, XStack, YStack } from 'tamagui';
@@ -50,7 +52,11 @@ export const ModalHost = () => {
                         f={1}
                         minHeight={0}
                     >
-                        {renderAny ? renderAny({ close: closeModal, replace, payload }) : null}
+                        {renderAny ? (
+                            <PurchasableProvider purchasable={payload as Purchasable}>
+                                {renderAny({ close: closeModal, replace, payload })}
+                            </PurchasableProvider>
+                        ) : null}
                     </YStack>
                 </ModalErrorBoundary>
             </Sheet.Frame>

@@ -95,7 +95,6 @@ const ProductCardDescription = ({ ...stackProps }: StackProps) => {
 
 export const ProductCardFooter = () => {
 
-
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
     const isVariable = product.type === 'variable'; // safer than instanceof across realms
@@ -104,38 +103,16 @@ export const ProductCardFooter = () => {
     return (
         <PurchaseButton
             onPress={() =>
-                openModal(({ close, replace, payload }: RenderArgs<Purchasable>) =>
+                openModal(({ close, replace }: RenderArgs<Purchasable>) =>
                     isVariable
-                        ? <VariationsStep close={close} replace={replace} payload={payload} />
-                        : <QuantityStep close={close} replace={replace} payload={payload} />
+                        ? <ProductVariationsModal
+                            onSelect={() => {
+                                replace(({ close: close2 }) => <QuantitySelectModal onSelect={close2} />);
+                            }}
+                        />
+                        : <QuantitySelectModal onSelect={close} />
                     , purchasable)
             }
         />
     );
 }
-
-
-
-type StepProps = RenderArgs<Purchasable>;
-
-const VariationsStep: React.FC<StepProps> = ({ payload, replace, close }) => {
-    // hooks go here if needed
-    return (
-        <ProductVariationsModal
-            purchasable={payload}
-            onSelect={(selectedVariation) => {
-                // build next payload
-                const nextPayload = { ...payload, selectedVariation };
-                // IMPORTANT: pass a FUNCTION, not an element
-                replace(({ close: close2 }) => (
-                    <QuantitySelectModal purchasable={nextPayload} onSelect={close2} />
-                ), nextPayload);
-            }}
-        />
-    );
-};
-
-const QuantityStep: React.FC<StepProps> = ({ payload, close }) => {
-    // hooks go here if needed
-    return <QuantitySelectModal purchasable={payload} onSelect={close} />;
-};

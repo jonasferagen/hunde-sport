@@ -1,5 +1,5 @@
 import { ThemedXStack, ThemedYStack } from '@/components/ui';
-import { PurchasableProvider, usePurchasableContext } from '@/contexts';
+import { usePurchasableContext } from '@/contexts';
 import React from 'react';
 import { Theme, YStack } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from '../display';
@@ -11,15 +11,8 @@ import { ContinueButton } from './ContinueButton';
 
 
 
-export const ProductVariationsModal = ({ onSelect, purchasable }: { onSelect: (purchasable: Purchasable) => void, purchasable: Purchasable }) => {
-    return (
-        <PurchasableProvider purchasable={purchasable}>
-            <ProductVariationsModalContent onSelect={onSelect} />
-        </PurchasableProvider>
-    );
-}
 
-export const ProductVariationsModalContent = ({ onSelect }: { onSelect: (purchasable: Purchasable) => void }) => {
+export const ProductVariationsModal = ({ onSelect }: { onSelect: (purchasable: Purchasable) => void }) => {
 
     const { purchasable } = usePurchasableContext();
 

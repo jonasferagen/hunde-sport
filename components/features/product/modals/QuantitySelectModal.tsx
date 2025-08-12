@@ -1,8 +1,6 @@
 import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { usePurchasableContext } from "@/contexts";
 import { useCartContext } from "@/contexts/CartContext";
-import { PurchasableProvider } from "@/contexts/PurchasableContext";
-import { Purchasable } from "@/models/Product/Purchasable";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
 import { Theme, XStack, YStack } from "tamagui";
@@ -11,17 +9,9 @@ import { ContinueButton } from "./ContinueButton";
 
 
 
-export const QuantitySelectModal = ({ onSelect, purchasable }: { onSelect: () => void, purchasable: Purchasable }) => {
-    return (
-        <PurchasableProvider purchasable={purchasable}>
-            <QuantitySelectModalContent onSelect={onSelect} />
-        </PurchasableProvider>
-    );
-}
 
 
-
-export const QuantitySelectModalContent = ({ onSelect }: { onSelect: () => void }): JSX.Element => {
+export const QuantitySelectModal = ({ onSelect }: { onSelect: () => void }): JSX.Element => {
 
     const { addItem } = useCartContext();
     const { purchasable } = usePurchasableContext();
