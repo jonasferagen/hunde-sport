@@ -2,42 +2,49 @@
 import React from 'react';
 import { create } from 'zustand';
 
-export type RenderFn<P> = (args: RenderArgs<P>) => React.ReactNode;
-export type RenderArgs<P> = {
+export type WizardRenderArgs<P> = {
   close: () => void;
-  // generic replace so you can swap to a different payload type if needed
-  replace: <N>(render: RenderFn<N>, payload?: N) => void;
-  payload?: P;
+  payload: P;
+  updatePayload: (next: P) => void;
+  setPosition: (index: number) => void;
 };
 
-type ModalState = {
+export type WizardRenderFn<P> = (args: WizardRenderArgs<P>) => React.ReactNode;
+
+type State = {
   open: boolean;
+  render: WizardRenderFn<unknown> | null;
   payload: unknown;
-  render: RenderFn<unknown> | null;
   version: number;
-  openModal: <P>(render: RenderFn<P>, payload?: P) => void;
-  replaceModal: <P>(render: RenderFn<P>, payload?: P) => void;
+  openModal: <P>(render: WizardRenderFn<P>, payload: P) => void;
+  updatePayload: <P>(next: P) => void;
   closeModal: () => void;
 };
 
-export const useModalStore = create<ModalState>((set) => ({
+export const useModalStore = create<State>((set) => ({
   open: false,
-  payload: undefined,
   render: null,
+  payload: undefined,
   version: 0,
+
   openModal: (render, payload) =>
     set((s) => ({
       open: true,
-      render: render as RenderFn<unknown>,
+      render: render as WizardRenderFn<unknown>,
       payload,
-      version: s.version + 1,
+      version: s.version + 1, // Clean remount on modal opening
     })),
-  replaceModal: (render, payload) =>
+
+  updatePayload: (next) =>
     set((s) => ({
-      open: true,
-      render: render as RenderFn<unknown>,
-      payload,
-      version: s.version + 1,
+      payload: next,
     })),
-  closeModal: () => set({ open: false, render: null, payload: undefined }),
+
+  closeModal: () =>
+    set({
+      open: false,
+      render: null,
+      payload: undefined,
+      version: 0,
+    }),
 }));

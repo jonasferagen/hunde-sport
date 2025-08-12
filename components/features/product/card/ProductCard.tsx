@@ -12,7 +12,7 @@ import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { YStack } from 'tamagui';
 import { ProductDescription } from '../display/ProductDescription';
-import { ProductPurchase } from '../display/ProductPurchase';
+import { ProductPurchaseFlow } from '../display/ProductPurchaseFlow';
 import { ProductTitle } from '../display/ProductTitle';
 
 
@@ -37,7 +37,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ProductPurchase />
+            <ProductPurchaseFlow />
         </ThemedYStack>
     );
 });

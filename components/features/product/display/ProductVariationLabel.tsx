@@ -18,20 +18,19 @@ export const ProductVariationLabel = ({ ...props }: ProductVariationLabelProps) 
                 return <ThemedXStack
                     key={attr.name}
                     gap="$1"
-                    ai="flex-start"
                 >
                     <ThemedText
                         fos="$3"
                         tt="capitalize"
-
+                        height="auto"
+                        variant="subtle"
                     >
                         {attr.name}:
                     </ThemedText>
                     <ThemedText
                         variant="emphasized"
-                        fos="$5"
+                        fos="$4"
                         tt="capitalize"
-
                     >
                         {attr.value}
                     </ThemedText>
@@ -41,5 +40,3 @@ export const ProductVariationLabel = ({ ...props }: ProductVariationLabelProps) 
 
     </ThemedXStack>;
 };
-
-

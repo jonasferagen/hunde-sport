@@ -6,16 +6,25 @@ import { ProductImage, ProductPrice, ProductStatus, ProductVariationLabel } from
 
 import { Purchasable } from '@/types';
 import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
+import { BackButton } from './BackButton';
 import { NextButton } from './NextButton';
 
 
-export const ProductVariationsModal = ({ onSelect }: { onSelect: (purchasable: Purchasable) => void }) => {
+export const ProductVariationsModal = ({
+    onNext,
+    onBack,
+}: {
+    onNext: (purchasable: Purchasable) => void,
+    onBack: (purchasable: Purchasable) => void
+}) => {
 
     const { purchasable } = usePurchasableContext();
+
     return (
 
         <ThemedYStack f={1} h="100%" >
             <ProductImage img_height={200} />
+
             <ScrollView h="100%" fs={1}>
                 <ThemedLinearGradient />
                 <ProductVariationSelect />
@@ -28,7 +37,11 @@ export const ProductVariationsModal = ({ onSelect }: { onSelect: (purchasable: P
                 </ThemedXStack>
                 <NextButton
                     disabled={!purchasable.isValid}
-                    onPress={() => onSelect(purchasable)}
+                    onPress={() => onNext(purchasable)}
+                />
+                <BackButton
+                    onPress={() => onBack(purchasable)}
+                    disabled={false}
                 />
             </ThemedYStack>
         </ThemedYStack>

@@ -26,4 +26,4 @@ const createThemedStack = (
 };
 
 export const ThemedYStack = createThemedStack(YStack);
-export const ThemedXStack = createThemedStack(XStack);
+export const ThemedXStack = createThemedStack(XStack); 

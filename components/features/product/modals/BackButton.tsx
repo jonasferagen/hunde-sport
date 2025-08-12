@@ -1,19 +1,20 @@
 // /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
-import { ArrowBigRightDash, ShoppingCart } from '@tamagui/lucide-icons';
+import { ArrowBigLeftDash } from '@tamagui/lucide-icons';
 import React from 'react';
 import { ButtonProps } from 'tamagui';
 
-interface NextButtonProps extends ButtonProps {
+interface BackButtonProps extends ButtonProps {
     onPress: () => void;
     disabled: boolean;
     label?: string;
 }
 
-export const NextButton = ({ onPress, disabled, label = 'Neste', ...props }: NextButtonProps) => {
+export const BackButton = ({ onPress, disabled, label = 'Tilbake', ...props }: BackButtonProps) => {
 
-    const icon = <ShoppingCart />
-    const iconAfter = <ArrowBigRightDash />
+    const icon = <ArrowBigLeftDash size="$6" />
+    const iconAfter = <ArrowBigLeftDash />
+
 
     return (
         <CallToActionButton
@@ -22,7 +23,7 @@ export const NextButton = ({ onPress, disabled, label = 'Neste', ...props }: Nex
             icon={icon}
             f={0}
             label={label}
-            after={iconAfter}
+
             {...props}
         >
 

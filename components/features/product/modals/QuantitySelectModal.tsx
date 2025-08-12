@@ -4,25 +4,24 @@ import { useCartContext } from "@/contexts/CartContext";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
 import { Theme, XStack, YStack } from "tamagui";
+import { BackButton } from "./BackButton";
 import { NextButton } from "./NextButton";
 
 
 
-
-
-
-export const QuantitySelectModal = ({ onSelect }: { onSelect: () => void }): JSX.Element => {
+export const QuantitySelectModal = ({ onNext, onBack }: { onNext: () => void, onBack?: () => void }): JSX.Element => {
 
     const { addItem } = useCartContext();
     const { purchasable } = usePurchasableContext();
     const [quantity, setQuantity] = React.useState(1);
+
 
     const onPress = () => {
         addItem(
             purchasable,
             quantity
         );
-        onSelect();
+        onNext();
     };
 
     return (
@@ -32,6 +31,7 @@ export const QuantitySelectModal = ({ onSelect }: { onSelect: () => void }): JSX
                     ai="center"
                     jc="space-between"
                 >
+                    {onBack && <BackButton onPress={onBack} disabled={false} />}
                 </ThemedXStack>
                 <YStack>
                     <XStack
