@@ -12,13 +12,9 @@ import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { YStack } from 'tamagui';
 import { ProductDescription } from '../display/ProductDescription';
+import { ProductPurchase } from '../display/ProductPurchase';
 import { ProductTitle } from '../display/ProductTitle';
-import { PurchaseButton } from '../display/PurchaseButton';
 
-import { RenderArgs, RenderFn, useModalStore } from '@/stores/modalStore';
-import { Purchasable } from '@/types';
-import { ProductVariationsModal } from '../modals/ProductVariationsModal';
-import { QuantitySelectModal } from '../modals/QuantitySelectModal';
 
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
@@ -41,7 +37,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <ProductCardFooter />
+            <ProductPurchase />
         </ThemedYStack>
     );
 });
@@ -92,27 +88,3 @@ const ProductCardDescription = ({ ...stackProps }: StackProps) => {
         </ThemedYStack>
     );
 };
-
-export const ProductCardFooter = () => {
-
-    const { purchasable } = usePurchasableContext();
-    const { product } = purchasable;
-    const isVariable = product.type === 'variable'; // safer than instanceof across realms
-    const openModal = useModalStore((s) => s.openModal) as <P>(render: RenderFn<P>, payload?: P) => void;
-
-    return (
-        <PurchaseButton
-            onPress={() =>
-                openModal(({ close, replace }: RenderArgs<Purchasable>) =>
-                    isVariable
-                        ? <ProductVariationsModal
-                            onSelect={() => {
-                                replace(({ close: close2 }) => <QuantitySelectModal onSelect={close2} />);
-                            }}
-                        />
-                        : <QuantitySelectModal onSelect={close} />
-                    , purchasable)
-            }
-        />
-    );
-}

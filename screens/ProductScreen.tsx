@@ -3,12 +3,12 @@ import { ProductDescription } from '@/components/features/product/display/Produc
 import { ProductImage } from '@/components/features/product/display/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/display/ProductImageGallery';
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
+import { ProductPurchase } from '@/components/features/product/display/ProductPurchase';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
-import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
-import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
+import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
 import { PurchasableProduct } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
@@ -34,9 +34,9 @@ export const ProductScreen = () => {
 
   return (
     <ProductCategoryProvider productCategoryId={productCategoryId} productCategories={product.categories} >
-      <PurchasableProvider product={purchasableProduct}>
+      <PurchasableProviderInit product={purchasableProduct}>
         <ProductScreenContent />
-      </PurchasableProvider>
+      </PurchasableProviderInit>
     </ProductCategoryProvider>
   );
 };
@@ -58,7 +58,7 @@ const ProductScreenContent = () => {
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />
           </XStack>
-          <PurchaseButton onPress={() => { }} />
+          <ProductPurchase />
         </PageContent>
         <PageContent title="Produktbilder" >
           {product.images.length > 1 && <ProductImageGallery />}

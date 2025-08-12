@@ -33,7 +33,12 @@ export const PurchasableProvider: React.FC<{ purchasable: Purchasable; children:
     children,
 }) => {
 
+
     const [purchasable, setPurchasable] = useState<Purchasable>(initialPurchasable);
+    if (!purchasable?.product) {
+        console.error("PurchasableProvider must be used with a valid Purchasable", purchasable);
+        throw new Error("PurchasableProvider must be used with a valid Purchasable");
+    }
 
     // Memoized context value, which includes purchasable and a function to set the product variation
     const contextValue = useMemo(() => ({

@@ -4,28 +4,27 @@ import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
 import { VariableProduct } from '@/models/Product/Product';
 import { JSX } from 'react';
-import { ScrollView, StackProps, XStack, YStack } from 'tamagui';
+import { ScrollView, XStack, YStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 
 
 
 
-interface ProductVariationSelectProps {
-    stackProps?: StackProps;
-}
+interface ProductVariationSelectProps extends YStackProps { }
 
-export const ProductVariationSelect = ({ stackProps }: ProductVariationSelectProps): JSX.Element => {
+
+export const ProductVariationSelect = (props: ProductVariationSelectProps): JSX.Element => {
     const { purchasable } = usePurchasableContext();
     const variableProduct = purchasable.product as VariableProduct;
 
     return <ProductVariationProvider product={variableProduct}>
-        <ProductVariationSelectContent stackProps={stackProps} />
+        <ProductVariationSelectContent {...props} />
     </ProductVariationProvider>
 
 }
 
-export const ProductVariationSelectContent = ({ stackProps }: ProductVariationSelectProps): JSX.Element => {
+export const ProductVariationSelectContent = (props: ProductVariationSelectProps): JSX.Element => {
 
     useRenderGuard("ProductVariationSelect");
 
@@ -44,7 +43,7 @@ export const ProductVariationSelectContent = ({ stackProps }: ProductVariationSe
     });
 
     return (
-        <XStack gap="$2" fg={1} fw="wrap" {...stackProps} >
+        <XStack gap="$2" fg={1} fw="wrap" {...props} bg={"$background"}>
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));

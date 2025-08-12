@@ -13,6 +13,9 @@ export const ModalHost = () => {
     const replace = <N,>(r: RenderFn<N>, p?: N) => replaceModal(r, p);
     const renderAny = render as RenderFn<unknown> | null;
 
+
+
+
     return (
         <Sheet
             modal={false}
@@ -44,13 +47,17 @@ export const ModalHost = () => {
                             fs={1}
                             fow="bold"
                             m={0}
-                        >
+                        > {version}
                             {"abc"}
                         </H4>
                     </XStack>
                     <YStack
                         f={1}
                         minHeight={0}
+                        key={version}
+                        animation="fast"
+                        enterStyle={{ opacity: 0, y: 10 }}
+                        exitStyle={{ opacity: 0, y: -10 }}
                     >
                         {renderAny ? (
                             <PurchasableProvider purchasable={payload as Purchasable}>

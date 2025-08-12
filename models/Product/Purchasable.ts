@@ -69,6 +69,7 @@ export interface Purchasable extends ValidationResult {
     activeProduct: Product;
     prices: ProductPrices;
     availability: ProductAvailability;
+    isVariable: boolean;
 }
 
 export const createPurchasable = ({
@@ -90,6 +91,7 @@ export const createPurchasable = ({
         activeProduct,
         prices,
         availability,
+        isVariable: product.type === 'variable',
         ...validationResult,
     };
-};
+};  

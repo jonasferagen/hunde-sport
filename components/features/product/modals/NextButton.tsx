@@ -4,13 +4,13 @@ import { ArrowBigRightDash, ShoppingCart } from '@tamagui/lucide-icons';
 import React from 'react';
 import { ButtonProps, SizableText } from 'tamagui';
 
-interface ContinueButtonProps extends ButtonProps {
+interface NextButtonProps extends ButtonProps {
     onPress: () => void;
     disabled: boolean;
     label?: string;
 }
 
-export const ContinueButton = ({ onPress, disabled, label = 'Neste', ...props }: ContinueButtonProps) => {
+export const NextButton = ({ onPress, disabled, label = 'Neste', ...props }: NextButtonProps) => {
 
     const icon = <ShoppingCart />
     const iconAfter = <ArrowBigRightDash />

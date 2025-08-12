@@ -4,7 +4,7 @@ import { useCartContext } from "@/contexts/CartContext";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
 import { Theme, XStack, YStack } from "tamagui";
-import { ContinueButton } from "./ContinueButton";
+import { NextButton } from "./NextButton";
 
 
 
@@ -62,7 +62,7 @@ export const QuantitySelectModal = ({ onSelect }: { onSelect: () => void }): JSX
                     </XStack>
                 </YStack>
                 <ThemedYStack my="$4">
-                    <ContinueButton
+                    <NextButton
                         onPress={onPress}
                         disabled={!purchasable.isValid}
                     />
