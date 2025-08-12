@@ -1,5 +1,5 @@
 import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
-import { useModalContext, usePurchasableContext } from "@/contexts";
+import { usePurchasableContext } from "@/contexts";
 import { useCartContext } from "@/contexts/CartContext";
 import { Minus, Plus } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
@@ -7,10 +7,9 @@ import { Theme, XStack, YStack } from "tamagui";
 import { ContinueButton } from "./ContinueButton";
 
 
-export const QuantitySelectContent = (): JSX.Element => {
+export const QuantitySelectContent = ({ onSelect }: { onSelect: () => void }): JSX.Element => {
     const { addItem } = useCartContext();
     const { purchasable } = usePurchasableContext();
-    const { toggleModal } = useModalContext();
     const [quantity, setQuantity] = React.useState(1);
 
     if (!purchasable) throw new Error("No purchasable found for QuantitySelectContent");
@@ -20,7 +19,7 @@ export const QuantitySelectContent = (): JSX.Element => {
             purchasable,
             quantity
         );
-        toggleModal();
+        onSelect();
     };
 
     return (

@@ -1,13 +1,9 @@
 // -----------------
 // Base product context
 
-import { DebugTrigger } from '@/components/debug/DebugTrigger';
-import { DEBUG_PRODUCTS } from '@/config/app';
 import { createPurchasable } from '@/models/Product/Purchasable';
 import { ProductVariation, Purchasable, PurchasableProduct } from "@/types";
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-
-
 
 // Context for Purchasable
 const PurchasableContext = createContext<{ purchasable: Purchasable; setProductVariation: (variation?: ProductVariation) => void } | undefined>(undefined);
@@ -43,7 +39,7 @@ export const PurchasableProvider: React.FC<{ product: PurchasableProduct; produc
 
     return (
         <PurchasableContext.Provider value={contextValue}>
-            {children}{DEBUG_PRODUCTS ? <DebugTrigger product={product} /> : null}
+            {children}
         </PurchasableContext.Provider>
     );
 };

@@ -1,11 +1,10 @@
 import { DebugView } from '@/components/debug/DebugView';
 import { CartToastHandler } from '@/components/features/cart/CartToastHandler';
-import { ProductModal } from '@/components/features/product/modals/ProductModal';
+import { ModalHost } from '@/components/menu/ModalHost';
 import {
   AppToastProvider,
   CartProvider,
   DebugProvider,
-  ModalProvider,
   ProductCategoryProvider,
   SearchProvider
 } from '@/contexts';
@@ -29,20 +28,18 @@ const RootLayout = (): JSX.Element => {
               <DebugProvider>
                 <ProductCategoryProvider>
                   <CartProvider>
-                    <ModalProvider>
-                      <PortalProvider>
-                        <ProductModal />
-                        <AppToastProvider>
-                          <CartToastHandler />
-                          <SearchProvider>
-                            <Stack screenOptions={{ headerShown: false }}>
-                              <Stack.Screen name="(app)" />
-                            </Stack>
-                            <DebugView />
-                          </SearchProvider>
-                        </AppToastProvider>
-                      </PortalProvider>
-                    </ModalProvider>
+                    <PortalProvider>
+                      <ModalHost />
+                      <AppToastProvider>
+                        <CartToastHandler />
+                        <SearchProvider>
+                          <Stack screenOptions={{ headerShown: false }}>
+                            <Stack.Screen name="(app)" />
+                          </Stack>
+                          <DebugView />
+                        </SearchProvider>
+                      </AppToastProvider>
+                    </PortalProvider>
                   </CartProvider>
                 </ProductCategoryProvider>
               </DebugProvider>

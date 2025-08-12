@@ -15,6 +15,15 @@ import { ProductDescription } from '../display/ProductDescription';
 import { ProductTitle } from '../display/ProductTitle';
 import { PurchaseButton } from '../display/PurchaseButton';
 
+import { useModalStore } from '@/stores/modalStore';
+import { VariableProduct } from '@/types';
+import { ProductVariationsModal } from '../modals/ProductVariationsModal';
+import { QuantitySelectContent } from '../modals/QuantitySelectContent';
+
+const { openModal } = useModalStore();
+
+
+
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 
 export const ProductCard = ({ ...props }: StackProps) => {
@@ -23,7 +32,6 @@ export const ProductCard = ({ ...props }: StackProps) => {
     const { product } = purchasable;
     const { productCategory: category } = useProductCategoryContext();
     const href: HrefObject = routes.product.path(product, category?.id);
-
     return (
         <ThemedYStack p="$3" gap="$3" {...props} boc="$borderColor" bbw={1} f={1}>
             <ThemedLinearGradient />
@@ -35,10 +43,16 @@ export const ProductCard = ({ ...props }: StackProps) => {
                     </ThemedXStack>
                 </Button>
             </Link>
-            <PurchaseButton />
+            <PurchaseButton onPress={() => openModal(({ close }) => (
+                purchasable.product instanceof VariableProduct
+                    ? <ProductVariationsModal onSelect={close} />
+                    : <QuantitySelectContent onSelect={close} />
+            ), purchasable)} />
         </ThemedYStack>
     );
 }
+
+
 
 export const ProductCardImage = ({ ...props }: StackProps) => {
     const { purchasable } = usePurchasableContext();

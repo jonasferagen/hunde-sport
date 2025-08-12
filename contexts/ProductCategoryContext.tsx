@@ -1,5 +1,5 @@
 import { ProductCategory } from '@/models/ProductCategory';
-import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
+import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import React, { createContext, useContext } from 'react';
 
 export interface ProductCategoryContextType {

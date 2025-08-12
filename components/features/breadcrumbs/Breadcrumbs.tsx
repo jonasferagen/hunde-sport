@@ -1,5 +1,5 @@
 import { useProductCategoryContext } from '@/contexts/ProductCategoryContext';
-import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
+import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import React from 'react';
 import { XStack } from 'tamagui';
 import { Breadcrumb } from './Breadcrumb';

@@ -1,6 +1,6 @@
 import { PageHeader, PageSection, PageView } from '@/components/layout';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
-import { useCartStore } from '@/stores/CartStore';
+import { useCartStore } from '@/stores/cartStore';
 import { JSX } from 'react';
 import { Linking } from 'react-native';
 import { SizableText } from 'tamagui';

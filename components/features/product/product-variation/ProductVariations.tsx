@@ -1,23 +1,38 @@
 import { ThemedText } from '@/components/ui/themed-components/ThemedText';
-import { useProductVariationContext } from '@/contexts';
+import { ProductVariationProvider, useProductVariationContext, usePurchasableContext } from '@/contexts';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
 import { VariableProduct } from '@/models/Product/Product';
-import { ProductVariation } from '@/types';
 import { JSX } from 'react';
 import { ScrollView, StackProps, XStack, YStack } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
+
+
+
+
 interface ProductVariationsProps {
-    variableProduct: VariableProduct;
-    onProductVariationSelected: (variation: ProductVariation | undefined) => void;
     stackProps?: StackProps;
 }
 
-export const ProductVariations = ({ variableProduct: variableProduct, onProductVariationSelected, stackProps }: ProductVariationsProps): JSX.Element => {
+export const ProductVariations = ({ stackProps }: ProductVariationsProps): JSX.Element => {
+    const { purchasable } = usePurchasableContext();
+    const variableProduct = purchasable.product as VariableProduct;
+
+    return <ProductVariationProvider product={variableProduct}>
+        <ProductVariationsContent stackProps={stackProps} />
+    </ProductVariationProvider>
+
+}
+
+export const ProductVariationsContent = ({ stackProps }: ProductVariationsProps): JSX.Element => {
 
     useRenderGuard("ProductVariations");
+
+    const { purchasable, setProductVariation } = usePurchasableContext();
     const { productVariations } = useProductVariationContext();
+    const variableProduct = purchasable.product as VariableProduct;
+
 
 
     const { attributes,
@@ -27,7 +42,7 @@ export const ProductVariations = ({ variableProduct: variableProduct, onProductV
     } = useProductVariationSelector({
         product: variableProduct,
         productVariations,
-        onProductVariationSelected,
+        onProductVariationSelected: setProductVariation,
     });
 
     return (

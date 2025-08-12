@@ -1,6 +1,6 @@
 import { CartData, CartItemData } from '@/models/Cart/Cart';
 import { Purchasable } from '@/models/Product/Purchasable';
-import { AddItemOptions, useCartStore } from '@/stores/CartStore';
+import { AddItemOptions, useCartStore } from '@/stores/cartStore';
 import React, { createContext, useContext, useMemo } from 'react';
 
 

@@ -1,5 +1,5 @@
 import { THEME_TOAST } from '@/config/app';
-import { useCartStore } from '@/stores/CartStore';
+import { useCartStore } from '@/stores/cartStore';
 import { useToastController } from '@tamagui/toast';
 import { useEffect, useRef } from 'react';
 

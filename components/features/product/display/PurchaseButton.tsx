@@ -1,7 +1,7 @@
 // /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { THEME_PURCHASE_BUTTON_ERROR, THEME_PURCHASE_BUTTON_OK, THEME_VARIATION_BUTTON_OK } from '@/config/app';
-import { useModalContext, usePurchasableContext } from '@/contexts';
+import { usePurchasableContext } from '@/contexts';
 import { VariableProduct } from '@/types';
 import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
 
@@ -18,9 +18,8 @@ const icons = {
     OK: <ShoppingCart />,
 };
 
-export const PurchaseButton = () => {
+export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
     const { purchasable } = usePurchasableContext();
-
     const { product, status, message, isValid } = purchasable;
     const isVariable = product instanceof VariableProduct;
 
@@ -30,34 +29,32 @@ export const PurchaseButton = () => {
         THEME_PURCHASE_BUTTON_ERROR : isVariable ?
             THEME_VARIATION_BUTTON_OK : THEME_PURCHASE_BUTTON_OK;
 
-
-    const { setPurchasable: setModalPurchasable } = useModalContext();
-
-    const onPress = () => {
-        setModalPurchasable(purchasable);
-
-    };
-
     return (
-        <CallToActionButton
-            onPress={onPress}
-            disabled={disabled}
-            icon={icon}
-            theme={theme}
-            label={message}
-            after={
-                <YStack
-                    theme="normal"
-                    h="$6"
-                    ai="center"
-                    jc="center"
-                    px="$3"
-                    boc="$borderColor"
-                    mr={-20}
-                    minWidth={PRODUCT_CARD_NARROW_COLUMN_WIDTH}
-                >
-                    <ThemedLinearGradient br="$3" />
-                    <BaseProductPrice />
-                </YStack>
-            } />);
+        <>
+            <CallToActionButton
+                onPress={onPress}
+                disabled={disabled}
+                icon={icon}
+                theme={theme}
+                label={message}
+                after={
+                    <YStack
+                        theme="normal"
+                        h="$6"
+                        ai="center"
+                        jc="center"
+                        px="$3"
+                        boc="$borderColor"
+                        mr={-20}
+                        minWidth={PRODUCT_CARD_NARROW_COLUMN_WIDTH}
+                    >
+                        <ThemedLinearGradient br="$3" />
+                        <BaseProductPrice />
+                    </YStack>
+                } />
+
+
+
+        </>
+    );
 }; //  <ThemedLinearGradient br="$3" />

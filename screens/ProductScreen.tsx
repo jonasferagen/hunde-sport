@@ -1,9 +1,9 @@
 import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { ProductDescription } from '@/components/features/product/display/ProductDescription';
+import { ProductImage } from '@/components/features/product/display/ProductImage';
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { PurchaseButton } from '@/components/features/product/display/PurchaseButton';
-import { ProductImage } from '@/components/features/product/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';

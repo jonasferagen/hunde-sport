@@ -1,7 +1,7 @@
 
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { THEME_VARIATION_BUTTON } from '@/config/app';
-import { useModalContext } from '@/contexts';
+import { useProductModalContext } from '@/contexts';
 import { usePurchasable } from '@/hooks/usePurchasable';
 import { PawPrint } from '@tamagui/lucide-icons';
 import React from 'react';
@@ -9,7 +9,7 @@ import React from 'react';
 
 export const ProductVariationsButton = () => {
     const purchasable = usePurchasable();
-    const { setPurchasable, toggleModal } = useModalContext();
+    const { setPurchasable, toggleModal } = useProductModalContext();
 
     return (
         <>

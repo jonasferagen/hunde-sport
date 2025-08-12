@@ -1,5 +1,5 @@
 import { PurchasableProduct } from '@/models/Product/Product';
-import { useCartStore } from '@/stores/CartStore';
+import { useCartStore } from '@/stores/cartStore';
 import React, { createContext, JSX, useContext, useEffect, useState } from 'react';
 
 interface DebugContextType {

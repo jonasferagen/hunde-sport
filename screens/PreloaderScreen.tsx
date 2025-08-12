@@ -1,7 +1,7 @@
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useProductCategories } from '@/hooks/data/ProductCategory';
-import { useCartStore } from '@/stores/CartStore';
-import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
+import { useCartStore } from '@/stores/cartStore';
+import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import { useRouter } from 'expo-router';
 import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { Theme, YStack } from 'tamagui';
