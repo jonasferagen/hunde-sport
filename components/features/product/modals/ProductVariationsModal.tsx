@@ -1,13 +1,10 @@
-import { ThemedLinearGradient, ThemedXStack, ThemedYStack } from '@/components/ui';
+import { ThemedLinearGradient } from '@/components/ui';
 import { usePurchasableContext } from '@/contexts';
 import React from 'react';
-import { ScrollView } from 'tamagui';
-import { ProductImage, ProductPrice, ProductStatus, ProductVariationLabel } from '../display';
 
 import { Purchasable } from '@/types';
 import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
-import { BackButton } from './BackButton';
-import { NextButton } from './NextButton';
+import { PurchaseWizardStep } from './PurchaseWizard';
 
 
 export const ProductVariationsModal = ({
@@ -21,30 +18,16 @@ export const ProductVariationsModal = ({
     const { purchasable } = usePurchasableContext();
 
     return (
-
-        <ThemedYStack f={1} h="100%" >
-            <ProductImage img_height={200} />
-
-            <ScrollView h="100%" fs={1}>
+        <PurchaseWizardStep
+            onNext={onNext}
+            onBack={onBack}
+            purchasable={purchasable}
+        >
+            <>
                 <ThemedLinearGradient />
                 <ProductVariationSelect />
-            </ScrollView>
-            <ThemedYStack>
-                <ProductVariationLabel />
-                <ThemedXStack ai="center" jc="space-between">
-                    <ProductStatus />
-                    <ProductPrice />
-                </ThemedXStack>
-                <NextButton
-                    disabled={!purchasable.isValid}
-                    onPress={() => onNext(purchasable)}
-                />
-                <BackButton
-                    onPress={() => onBack(purchasable)}
-                    disabled={false}
-                />
-            </ThemedYStack>
-        </ThemedYStack>
+            </>
+        </PurchaseWizardStep>
 
     );
 }

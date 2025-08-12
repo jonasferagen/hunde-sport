@@ -1,10 +1,8 @@
 // ModalHost.tsx
-import { ThemedButton } from '@/components/ui/themed-components';
 import { PurchasableProvider } from '@/contexts';
 import { useModalStore, WizardRenderFn } from '@/stores/modalStore';
-import { ArrowBigLeft, ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
-import { H4, Sheet, XStack, YStack } from 'tamagui';
+import { Sheet, YStack } from 'tamagui';
 
 export const ModalHost = () => {
 
@@ -18,7 +16,7 @@ export const ModalHost = () => {
         <Sheet
             modal={false} open={open} onOpenChange={(o: boolean) => { if (!o) closeModal(); }}
             snapPointsMode="percent"
-            snapPoints={[90, 90]}   // 0: compact, 1: tall
+            snapPoints={[50, 90]}   // 0: compact, 1: tall
             unmountChildrenWhenHidden
             dismissOnSnapToBottom={true}
             animation="fast"
@@ -27,22 +25,6 @@ export const ModalHost = () => {
             <Sheet.Overlay />
             <Sheet.Frame f={1} minHeight={0} p="$4" gap="$3">
 
-                <ThemedButton
-                    pos="absolute"
-                    r="$2"
-                    t="$2"
-                    circular
-                    onPress={() => closeModal()}
-                >
-                    <ChevronDown />
-                </ThemedButton>
-                <XStack
-                    ai="center"
-                    jc="space-between"
-                    gap="$2"
-                >
-                    <H4 fs={1} fow="bold" m={0}><ArrowBigLeft /></H4>
-                </XStack>
                 <YStack
                     key={version} f={1} minHeight={0}
                     animation="fast"
