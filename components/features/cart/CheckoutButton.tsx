@@ -1,4 +1,4 @@
-import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
+import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ExternalLink } from '@tamagui/lucide-icons';
 import React from 'react';
 import { ButtonProps } from 'tamagui';
@@ -16,7 +16,7 @@ export const CheckoutButton = ({ disabled, ...props }: CheckoutButtonProps) => {
             f={0}
             icon={null}
             label={"Til kassen"}
-            after={iconAfter}
+            iconAfter={iconAfter}
             {...props}
         />
     );

@@ -1,22 +1,21 @@
 import React from 'react';
-import { ThemeName, YStack, YStackProps } from 'tamagui';
+import { YStackProps } from 'tamagui';
+import { ThemedYStack } from '../ui';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 
-interface PageHeaderProps extends YStackProps {
+interface PageFooterProps extends YStackProps {
     children?: React.ReactNode;
-    theme?: ThemeName;
+
 }
 
-export const PageFooter: React.FC<PageHeaderProps> = ({ children, theme = 'soft', ...props }) => {
+export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) => {
 
-    return <YStack
-        p="$3"
-        gap="$3"
-        position="relative"
-        theme={theme}
+    return <ThemedYStack
+        theme="soft"
+        preset="container"
         {...props}
     >
         <ThemedLinearGradient />
         {children}
-    </YStack>
+    </ThemedYStack>
 }

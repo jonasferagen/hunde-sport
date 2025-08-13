@@ -1,14 +1,12 @@
 import { ProductCategory } from '@/models/ProductCategory';
 import { SimpleProduct, VariableProduct } from '@/types';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
-import { HrefObject, useSegments } from 'expo-router';
-import { ThemeName } from 'tamagui';
+import { HrefObject } from 'expo-router';
 
 export interface Route {
     name: string;
     label: string;
     icon: React.FC<any>;
-    theme: ThemeName;
     path: (...args: any[]) => HrefObject;
     showInDrawer?: boolean;
 }
@@ -35,7 +33,7 @@ export const routes: Record<string, Route> = {
         name: 'index',
         label: 'Hjem',
         icon: Home,
-        theme: 'primary',
+
         path: () => ({ pathname: paths.home }),
         showInDrawer: true,
     },
@@ -43,7 +41,7 @@ export const routes: Record<string, Route> = {
         name: 'cart',
         label: 'Handlekurv',
         icon: ShoppingCart,
-        theme: 'secondary',
+
         path: () => ({ pathname: paths.cart }),
         showInDrawer: true,
 
@@ -52,7 +50,7 @@ export const routes: Record<string, Route> = {
         name: 'search',
         label: 'Produktsøk',
         icon: Search,
-        theme: 'tertiary',
+
         path: (query?: string) => ({ pathname: paths.search, params: { query } }),
         showInDrawer: true,
 
@@ -61,7 +59,7 @@ export const routes: Record<string, Route> = {
         name: 'product-category',
         label: 'Kategori',
         icon: () => null, // No icon for category in drawer
-        theme: 'secondary',
+
         path: (productCategory: ProductCategory) => ({ pathname: paths.productCategory, params: { id: productCategory.id.toString(), name: productCategory.name } }),
 
     },
@@ -69,7 +67,7 @@ export const routes: Record<string, Route> = {
         name: 'product',
         label: 'Produkt',
         icon: () => null, // No icon for product in drawer
-        theme: 'primary',
+
         path: (product: SimpleProduct | VariableProduct, productCategoryId?: number) => {
             const params: { id: string; name: string; productCategoryId?: string } = {
                 id: product.id.toString(),
@@ -85,25 +83,8 @@ export const routes: Record<string, Route> = {
         name: 'checkout',
         label: 'Kassen',
         icon: () => null, // No icon for checkout in drawer
-        theme: 'primary',
+
         path: () => ({ pathname: paths.checkout }),
 
     },
-};
-
-export const resolveTheme = (routeName?: string): ThemeName => {
-    // If a routeName is passed directly, use it. It's more reliable.
-    if (routeName && routes[routeName]) {
-        return routes[routeName].theme;
-    }
-    // Fallback to using segments if no routeName is provided.
-    const segments = useSegments();
-    let lastSegment = segments[segments.length - 1] || 'index';
-
-    // Handle the edge case where the root of the group is active
-    if (lastSegment === '(app)') {
-        lastSegment = 'index';
-    }
-
-    return routes[lastSegment]?.theme || 'light';
 };

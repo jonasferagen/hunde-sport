@@ -1,5 +1,5 @@
 // /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
-import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
+import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { THEME_PURCHASE_BUTTON_ERROR, THEME_PURCHASE_BUTTON_OK, THEME_VARIATION_BUTTON_OK } from '@/config/app';
 import { usePurchasableContext } from '@/contexts';
 import { VariableProduct } from '@/types';

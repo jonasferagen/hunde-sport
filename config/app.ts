@@ -11,6 +11,14 @@ export const PRODUCT_TILE_HEIGHT: DimensionValue = 120;
 
 export const DEBUG_PRODUCTS = false;
 
+
+// success_alt6  #4C1D95 looks good with primary theme
+
+export const THEME_MAIN = 'primary';
+export const THEME_DRAWER = THEME_MAIN;
+export const THEME_HEADER = THEME_DRAWER;
+export const THEME_BOTTOM_BAR = THEME_DRAWER
+
 export const THEME_PRICE_TAG = 'success_alt10';
 export const THEME_PRICE_TAG_ON_SALE = 'dark_yellow_alt2';
 
@@ -21,10 +29,8 @@ export const THEME_PURCHASE_BUTTON_ERROR = "tertiary";
 export const THEME_CART_QUANTITY = 'success_alt5';
 export const THEME_CART_REMOVE = 'success_alt1';
 export const THEME_TOAST = 'dark_orange_alt2';
-export const THEME_DRAWER = 'tertiary';
-export const THEME_HEADER = THEME_DRAWER;
-export const THEME_BOTTOM_BAR = THEME_DRAWER
+
 export const THEME_MODAL = 'primary';
 
 
-export const THEME_CTA_BUTTON = 'success_alt7';
+export const THEME_CTA_BUTTON = 'success_alt2';

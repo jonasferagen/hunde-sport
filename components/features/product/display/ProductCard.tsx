@@ -4,17 +4,14 @@ import { useProductCategoryContext } from '@/contexts';
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { HrefObject, Link } from 'expo-router';
-import React from 'react';
+import React, { JSX } from 'react';
 import { Button, StackProps, XStack } from 'tamagui';
 
 import { ThemedLinearGradient } from '@/components/ui';
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { YStack } from 'tamagui';
-import { ProductDescription } from '../display/ProductDescription';
-import { ProductPurchaseFlow } from '../display/ProductPurchaseFlow';
-import { ProductTitle } from '../display/ProductTitle';
-
+import { ProductDescription, ProductPurchaseFlow, ProductTitle } from '.';
 
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
@@ -27,7 +24,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
     const href: HrefObject = routes.product.path(product, category?.id);
     return (
-        <ThemedYStack p="$3" gap="$3" {...props} bbw={1} f={1}>
+        <ThemedYStack preset="container" {...props} bbw={1} f={1}>
             <ThemedLinearGradient />
             <Link href={href} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
@@ -42,7 +39,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
     );
 });
 
-export const ProductCardImage = ({ ...props }: StackProps) => {
+const ProductCardImage = ({ ...props }: StackProps): JSX.Element => {
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
     const imageSize = PRODUCT_CARD_NARROW_COLUMN_WIDTH;
@@ -69,7 +66,7 @@ export const ProductCardImage = ({ ...props }: StackProps) => {
     );
 };
 
-const ProductCardDescription = ({ ...stackProps }: StackProps) => {
+const ProductCardDescription = ({ ...stackProps }: StackProps): JSX.Element => {
     return (
         <ThemedYStack f={1} jc="flex-start" gap="$2" {...stackProps}>
             <XStack

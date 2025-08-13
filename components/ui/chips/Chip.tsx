@@ -19,12 +19,14 @@ export const Chip = ({ children, ...props }: StackProps): JSX.Element => {
             jc="center"
             gap="$1.5"
 
+
             {...props}
         >
             <ThemedLinearGradient />
             <SizableText
                 color="$color"
                 fow="bold"
+                fos="$4"
                 fs={1}
             >
                 {children}

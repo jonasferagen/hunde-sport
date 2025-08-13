@@ -11,13 +11,13 @@ export const CartScreen = () => {
     const href: HrefObject = routes.checkout.path();
     return (
         <PageView>
-            <PageHeader theme="elevated">
+            <PageHeader theme="soft">
                 <CartSummary />
             </PageHeader>
             <PageContent f={1} p="none">
                 <CartList />
             </PageContent>
-            <PageFooter theme="elevated" f={0} >
+            <PageFooter theme="soft" f={0} >
                 <Link href={href} asChild>
                     <CheckoutButton />
                 </Link>

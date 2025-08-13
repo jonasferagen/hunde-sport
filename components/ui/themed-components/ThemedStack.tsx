@@ -1,29 +1,41 @@
-import { JSX } from 'react';
-import { StackProps, XStack, YStack } from 'tamagui';
+import { forwardRef, ReactNode } from 'react';
+import { styled, XStack, YStack } from 'tamagui';
 
-export interface ThemedStackProps extends StackProps {
-    debugColor?: string;
-}
+const config = {
+    name: 'ThemedYStack',
 
-const createThemedStack = (
-    StackComponent: typeof XStack | typeof YStack
-) => {
-    const ThemedStack = ({ ...props }: ThemedStackProps): JSX.Element => {
-        const { debugColor, ...stackProps } = props;
-        const debugProps = debugColor ? { bw: 1, boc: debugColor } : {};
+    // base
+    p: 0,                 // use 0 or '$0'
+    gap: '$3',
+    boc: '$borderColor',
+    bg: 'transparent',
 
-        return <StackComponent
-            p="none"
-            gap="$3"
-            boc="$borderColor"
-            bg="transparent"
-            {...stackProps}
-            {...debugProps}
-        />;
-    };
+    variants: {
+        preset: {
+            none: {},
+            container: { p: '$3', gap: '$3' },
+            tight: { p: '$2', gap: '$2' },
+            loose: { p: '$4', gap: '$4' },
+        },
+    },
 
-    return ThemedStack;
-};
+    defaultVariants: {
+        preset: 'none',
+    },
+} as const
 
-export const ThemedYStack = createThemedStack(YStack);
-export const ThemedXStack = createThemedStack(XStack); 
+
+// your styled base (as you already made it)
+const ThemedYStackBase = styled(YStack, config);
+const ThemedXStackBase = styled(XStack, config);
+
+// Re-add children typing via a tiny wrapper
+type WithChildren<P> = Omit<P, 'children'> & { children?: ReactNode };
+
+export const ThemedYStack = forwardRef<any, WithChildren<React.ComponentProps<typeof ThemedYStackBase>>>(
+    (props, ref) => <ThemedYStackBase ref={ref} {...props} />
+);
+
+export const ThemedXStack = forwardRef<any, WithChildren<React.ComponentProps<typeof ThemedXStackBase>>>(
+    (props, ref) => <ThemedXStackBase ref={ref} {...props} />
+);

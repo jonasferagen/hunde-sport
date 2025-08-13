@@ -25,12 +25,12 @@ export const SearchScreen = () => {
 
 
     return (
-        <PageView theme="tertiary">
+        <PageView >
             <PageHeader>
                 <SearchBar initialQuery={initialQuery} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>
-                <PageContent theme="soft" ai="center" jc="space-between" fd="row">
+                <PageContent ai="center" jc="space-between" fd="row">
                     <SizableText f={1}>
                         {searchQuery}
                     </SizableText>

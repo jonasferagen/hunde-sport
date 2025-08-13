@@ -26,23 +26,18 @@ export const PageContent = (props: PageContentProps) => {
   }
 
   return (
-    <ThemedYStack {...stackProps}>
+    <ThemedYStack preset="container" {...stackProps}>
       <ThemedLinearGradient />
-      {title && <H3 p="$3" pb="none">{title}</H3>}
-      <ThemedYStack
-        p="$3"
-        bbw={1}
-        {...stackProps}
-      >
-        {scrollable ? (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {validChildren}
-          </ScrollView>
-        ) : (
-          validChildren // Just render children directly
-        )}
+      {title && <H3 px="$3">{title}</H3>}
 
-      </ThemedYStack >
+      {scrollable ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {validChildren}
+        </ScrollView>
+      ) : (
+        validChildren // Just render children directly
+      )}
+
     </ThemedYStack >
   );
 };

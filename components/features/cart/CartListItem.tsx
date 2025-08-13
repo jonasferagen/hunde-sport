@@ -1,30 +1,23 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
-import { ProductTitle } from '@/components/features/product/display/ProductTitle';
-import { ThemedLinearGradient, ThemedYStack } from '@/components/ui';
+import { ThemedLinearGradient, ThemedText, ThemedYStack } from '@/components/ui';
 import { THEME_CART_QUANTITY, THEME_CART_REMOVE } from '@/config/app';
-import { PurchasableProviderInit, useCartContext } from '@/contexts';
+import { useCartContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { CartItemData } from '@/models/Cart/Cart';
-import { ProductVariation, PurchasableProduct } from '@/types';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { H4, StackProps, Theme, XStack } from 'tamagui';
 import { PriceText } from '../product/display/PriceText';
 
 export const CartListItem = ({ item, index }: { item: CartItemData, index: number }): JSX.Element => {
-
     const theme = index % 2 === 0 ? 'soft' : 'elevated';
     return (
-        <PurchasableProviderInit
-            product={item.product as PurchasableProduct}
-            productVariation={item.variations[0] as ProductVariation}
-        >
-            <Theme name={theme}>
-                <ThemedLinearGradient />
-                <CartListItemContent item={item} bbw={3} />
-            </Theme>
-        </PurchasableProviderInit>
+        <Theme name={theme}>
+            <ThemedLinearGradient />
+            <CartListItemContent item={item} bbw={3} />
+        </Theme>
+
     );
 }
 
@@ -40,7 +33,9 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
     return (
         <ThemedYStack p="$3"  {...props}>
             {/* Row 1: Product name + unit price */}
-            <ProductTitle size="$4" />
+            <ThemedText>
+                {item.product.name}
+            </ThemedText>
 
             {/* Row 2: Quantity + Subtotal + Remove */}
             <XStack jc="space-between" ai="center" gap="$4">

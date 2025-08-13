@@ -5,7 +5,7 @@ import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { GestureResponderEvent } from 'react-native';
 import { ThemeName } from 'tamagui';
-import { ThemedText } from '../themed-components';
+import { ThemedText } from './themed-components';
 
 interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disabled' | 'icon' | 'theme'> {
     onPress?: ((event: GestureResponderEvent) => void) | null;
