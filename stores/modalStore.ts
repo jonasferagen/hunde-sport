@@ -6,7 +6,7 @@ export type WizardRenderArgs<P> = {
   close: () => void;
   payload: P;
   updatePayload: (next: P) => void;
-  setPosition: (index: number) => void;
+
 };
 
 export type WizardRenderFn<P> = (args: WizardRenderArgs<P>) => React.ReactNode;

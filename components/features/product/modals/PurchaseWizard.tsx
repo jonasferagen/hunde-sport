@@ -15,17 +15,11 @@ type PWProps = {
     close: () => void;
     payload: Purchasable;
     updatePayload: (p: Purchasable) => void;
-    setPosition: (index: number) => void;
 };
 
-export const PurchaseWizard = ({ close, payload, updatePayload, setPosition }: PWProps) => {
+export const PurchaseWizard = ({ close, payload, updatePayload }: PWProps) => {
 
     const [step, setStep] = React.useState(payload.isVariable ? 0 : 1);
-
-    React.useEffect(() => {
-        // pick snap point per step
-        setPosition(step === 0 ? 1 : 0); // 1 => 90%, 0 => 50%
-    }, [step, setPosition]);
 
     // Step 0: Variations
     if (step === 0) {
