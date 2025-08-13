@@ -7,7 +7,7 @@ import { NextButton } from "./NextButton";
 import { ProductVariationsModal } from "./ProductVariationsModal";
 import { QuantitySelectModal } from "./QuantitySelectModal";
 
-import { ScrollView } from 'tamagui';
+import { Sheet } from 'tamagui';
 
 
 
@@ -54,13 +54,13 @@ export const PurchaseWizardStep = ({
         purchasable: Purchasable,
         children: JSX.Element
     }) =>
-    <ThemedYStack f={1} h="100%" >
+    <ThemedYStack f={1} mih={0} >
         <ThemedYStack>
             <ProductTitle />
         </ThemedYStack>
-        <ScrollView h="100%" fs={1}>
+        <Sheet.ScrollView f={1} mih={0}>
             {children}
-        </ScrollView>
+        </Sheet.ScrollView>
         <ThemedYStack>
             <ProductVariationLabel />
             <ThemedXStack ai="center" jc="space-between">

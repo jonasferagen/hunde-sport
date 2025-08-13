@@ -28,7 +28,7 @@ export const PurchasableProviderInit: React.FC<{ product: PurchasableProduct; pr
 }
 
 // PurchasableProvider component
-export const PurchasableProvider: React.FC<{ purchasable: Purchasable; children: ReactNode }> = ({
+export const import { createAnimations } from '@tamagui/animations-moti': React.FC<{ purchasable: Purchasable; children: ReactNode }> = ({
     purchasable: initialPurchasable,
     children,
 }) => {
