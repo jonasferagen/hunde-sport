@@ -6,7 +6,10 @@ export type AppConfig = typeof appConfig;
 // This extends the Tamagui module to include our custom configuration.
 declare module 'tamagui' {
     // Adds the custom configuration to Tamagui's internal types.
-    interface TamaguiCustomConfig extends AppConfig { }
+    interface TamaguiCustomConfig extends AppConfig {
+
+
+    }
 
 
 }

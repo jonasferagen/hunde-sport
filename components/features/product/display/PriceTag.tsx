@@ -16,18 +16,17 @@ export const PriceTag = ({ textProps, br = "$3", ...stackProps }: PriceTagProps)
     const theme = isOnSale ? THEME_PRICE_TAG_ON_SALE : THEME_PRICE_TAG;
 
     return <XStack
+        theme={theme}
         ai="center"
         jc="center"
         p="$1"
         px="$3"
         gap="$1"
         br={br}
-        bw="$borderWidth"
-        theme={theme}
         disabled={!isInStock || !isPurchasable}
         {...stackProps}>
         <ThemedLinearGradient br={br} {...stackProps} />
-        {isOnSale && <StarFull size="$3" />}
+        {isOnSale && <StarFull />}
         <ProductPrice {...textProps} />
     </XStack>;
 };

@@ -14,7 +14,9 @@ import { Stack } from 'expo-router';
 import { JSX } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TamaguiProvider, Theme } from 'tamagui';
+import { TamaguiProvider, Theme, ThemeName } from 'tamagui';
+
+const theme = "light_neutral" as ThemeName;
 
 const RootLayout = (): JSX.Element => {
   return (
@@ -42,7 +44,7 @@ const RootLayout = (): JSX.Element => {
           </TamaguiProvider>
         </SafeAreaView>
       </GestureHandlerRootView>
-    </QueryClientProvider>
+    </QueryClientProvider >
   );
 };
 

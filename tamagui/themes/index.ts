@@ -1,5 +1,5 @@
-import { themes } from '@tamagui/themes';
-import { complement, darken, getLuminance, invert, lighten, rgba } from 'polished';
+import { darken, getLuminance, lighten, rgba } from 'polished';
+import { ThemeName } from 'tamagui';
 
 
 const enhanceTheme = (baseColor: string, forceColor?: string) => {
@@ -40,189 +40,154 @@ const enhanceTheme = (baseColor: string, forceColor?: string) => {
         borderColorElevated
     }
 }
+// ---- 0) CONFIG: brand bases you want to swap between
+const BRANDS = {
+    lilac: { light: '#D7C8E7', dark: '#200C40' },
+    sage: { light: '#DDE2C3', dark: '#24301A' }, // pick a deep companion for dark
+    mint: { light: '#C8E6E5', dark: '#123434' },
+} as const;
 
-export const dangerTheme = enhanceTheme(themes.dark_red.background)
-export const dangerThemeAlt1 = enhanceTheme(themes.dark_red_alt2.background)
-export const dangerThemeAlt2 = enhanceTheme(themes.dark_red_active.background)
+// ---- 1) Shared neutrals (chrome) and accent seeds (don’t change when brand changes)
+const NEUTRALS = {
+    light: '#F1F5F9',  // slate-50
+    dark: '#0B1320',  // deep slate/blue-black
+};
+const ACCENTS = {
+    cta: { light: ['#0D9488', '#fff'], dark: ['#2DD4BF', '#000'] }, // teal 600 / 400
+    secondary: { light: ['#0891B2', '#fff'], dark: ['#22D3EE', '#000'] }, // cyan 600 / 400
+    success: { light: ['#16A34A', '#fff'], dark: ['#4ADE80', '#000'] }, // green 600 / 400
+    warn: { light: ['#F59E0B', '#000'], dark: ['#FCD34D', '#000'] }, // amber 500 / 300
+    danger: { light: ['#E11D48', '#fff'], dark: ['#FB7185', '#000'] }, // rose 600 / 400
+    // optional subtle brand accent (purple-ish), computed per-brand later if you want
+};
 
-export const successTheme = enhanceTheme(themes.dark_green.background)
-export const successThemeAlt1 = enhanceTheme('#0F766E')
-export const successThemeAlt2 = enhanceTheme('#065F46')
-export const successThemeAlt3 = enhanceTheme('#1D4ED8')
-export const successThemeAlt4 = enhanceTheme('#1E3A8A')
-export const successThemeAlt5 = enhanceTheme('#0B5394')
-export const successThemeAlt6 = enhanceTheme('#4C1D95')
-export const successThemeAlt7 = enhanceTheme('#9D174D')
-export const successThemeAlt8 = enhanceTheme('#7C2D12')
-export const successThemeAlt9 = enhanceTheme('#92400E')
-export const successThemeAlt10 = enhanceTheme('#0F172A')
+// ---- 2) Variant recipe (how far to push soft/elevated/strong etc)
+// Keep these small to avoid “too strong” vibes on surfaces
+const VARIANT_RECIPE = {
+    normal: 0,
+    soft: +0.08,  // lighten for light mode, darken for dark mode (we’ll flip automatically)
+    elevated: +0.15,
+    enhanced: -0.08,
+    strong: -0.18,
+    vstrong: -0.28,
+} as const;
 
+// ---- 3) Helpers using your existing enhanceTheme(baseColor, forceColor?)
+type Mode = 'light' | 'dark';
+type Variant =
+    | 'normal' | 'soft' | 'elevated' | 'enhanced' | 'strong' | 'vstrong';
 
+// choose lighten/darken direction by mode
+const tweak = (hex: string, amt: number, mode: Mode) =>
+    mode === 'light'
+        ? (amt >= 0 ? lighten(amt, hex) : darken(-amt, hex))
+        : (amt >= 0 ? darken(amt, hex) : lighten(-amt, hex));
 
-const lilacColor = '#D7C8E7'
-const lilacColorDark = '#200c40'
+// Build the 6-swatch surface set for a brand base in a mode
+const makeSurfaceSeeds = (base: string, mode: Mode) => {
+    const out: Record<Variant, string> = {} as any;
+    (Object.keys(VARIANT_RECIPE) as Variant[]).forEach(v => {
+        out[v] = tweak(base, VARIANT_RECIPE[v], mode);
+    });
+    return out;
+};
 
-export const lilacThemeOld = {
-    light_primary: enhanceTheme(lilacColor),
-    light_primary_normal: enhanceTheme(lilacColor),
-    light_primary_soft: enhanceTheme(lighten(0.1, lilacColor)),
-    light_primary_elevated: enhanceTheme(lighten(0.15, lilacColor)),
-    light_primary_enhanced: enhanceTheme(darken(0.1, lilacColor)),
-    light_primary_strong: enhanceTheme(darken(0.2, lilacColor)),
-    light_primary_vstrong: enhanceTheme(darken(0.3, lilacColor)),
+// Build a full “*_primary_*” surface object (using your enhanceTheme)
+const buildSurfaceThemes = (brandBase: string, mode: Mode, prefix: string) => {
+    const seeds = makeSurfaceSeeds(brandBase, mode);
+    const entries = Object.entries(seeds).flatMap(([variant, color]) => {
+        const key =
+            variant === 'normal'
+                ? `${mode}_${prefix}`
+                : `${mode}_${prefix}_${variant}`;
+        return [[key, enhanceTheme(color)]];
+    });
+    return Object.fromEntries(entries);
+};
 
+// Build neutrals
+const buildNeutralThemes = (mode: Mode) => {
+    const base = mode === 'light' ? NEUTRALS.light : NEUTRALS.dark;
+    const seeds = makeSurfaceSeeds(base, mode);
+    const entries = Object.entries(seeds).flatMap(([variant, color]) => {
+        const key =
+            variant === 'normal'
+                ? `${mode}_neutral`
+                : `${mode}_neutral_${variant}`;
+        return [[key, enhanceTheme(color)]];
+    });
+    return Object.fromEntries(entries);
+};
 
-    light_primary_accent1: enhanceTheme('#4C1D95'),
-    light_primary_accent2: enhanceTheme('#9D174D'),
+// Build accents (buttons/status). We also generate the 6-variant family by nudging around the seed.
+const buildAccentFamily = (seed: string, mode: Mode) => {
+    // center around the seed: soft/elevated a bit brighter, strong/vstrong darker
+    const recipe: Record<Variant, number> = {
+        normal: 0.00,
+        soft: mode === 'light' ? +0.10 : +0.15,
+        elevated: mode === 'light' ? -0.08 : -0.04,
+        enhanced: mode === 'light' ? -0.10 : -0.06,
+        strong: -0.18,
+        vstrong: -0.26,
+    };
+    const out: Record<Variant, string> = {} as any;
+    (Object.keys(recipe) as Variant[]).forEach(v => {
+        out[v] = tweak(seed, recipe[v], mode);
+    });
+    return out;
+};
 
+const buildAccents = (mode: Mode) => {
+    const map: Record<string, [string, string]> = Object.fromEntries(
+        Object.entries(ACCENTS).map(([k, v]) => [k, mode === 'light' ? v.light : v.dark])
+    ) as any;
 
-    dark_primary: enhanceTheme(lilacColorDark),
-    dark_primary_normal: enhanceTheme(lilacColorDark),
-    dark_primary_soft: enhanceTheme(lighten(0.1, lilacColorDark)),
-    dark_primary_elevated: enhanceTheme(lighten(0.15, lilacColorDark)),
-    dark_primary_enhanced: enhanceTheme(darken(0.1, lilacColorDark)),
-    dark_primary_strong: enhanceTheme(darken(0.2, lilacColorDark)),
-    dark_primary_vstrong: enhanceTheme(darken(0.3, lilacColor)),
-}
+    const out: Record<string, ReturnType<typeof enhanceTheme>> = {};
 
-export const lilacTheme = {
-    // -----------------
-    // Light surfaces (lilac brand)
-    light_primary: enhanceTheme('#D7C8E7'), // base lilac
-    light_primary_normal: enhanceTheme('#D7C8E7'),
-    light_primary_soft: enhanceTheme('#E6DAF2'),
-    light_primary_elevated: enhanceTheme('#C5B1DD'),
-    light_primary_enhanced: enhanceTheme('#B099D3'),
-    light_primary_strong: enhanceTheme('#7E6AB5'),
-    light_primary_vstrong: enhanceTheme('#5F4E98'),
+    Object.entries(map).forEach(([name, [seed, forceColor]]) => {
+        const fam = buildAccentFamily(seed, mode);
+        (Object.entries(fam) as [Variant, string][]).forEach(([variant, color]) => {
+            const key =
+                variant === 'normal'
+                    ? `${mode}_accent_${name}`
+                    : `${mode}_accent_${name}_${variant}`;
+            out[key] = enhanceTheme(color, forceColor);
+        });
+    });
 
-    // Light neutrals (general UI chrome, background)
-    light_neutral: enhanceTheme('#F1F5F9'),
-    light_neutral_soft: enhanceTheme('#E2E8F0'),
-    light_neutral_strong: enhanceTheme('#64748B'),
-
-    // Light accents (buttons & statuses)
-    light_accent_cta: enhanceTheme('#0D9488', '#fff'), // teal 600
-    light_accent_secondary: enhanceTheme('#0891B2', '#fff'), // cyan 600
-    light_accent_warn: enhanceTheme('#F59E0B', '#000'), // amber 500
-    light_accent_danger: enhanceTheme('#E11D48', '#fff'), // rose 600
-    light_accent_success: enhanceTheme('#16A34A', '#fff'), // green 600
-    light_accent_purple: enhanceTheme('#5F4E98', '#fff'), // deep lilac
-
-    // -----------------
-    // Dark surfaces (deep lilac brand)
-    dark_primary: enhanceTheme('#200C40'), // base dark lilac
-    dark_primary_normal: enhanceTheme('#200C40'),
-    dark_primary_soft: enhanceTheme('#3F3373'),
-    dark_primary_elevated: enhanceTheme('#5F4E98'),
-    dark_primary_enhanced: enhanceTheme('#7E6AB5'),
-    dark_primary_strong: enhanceTheme('#9A83C9'),
-    dark_primary_vstrong: enhanceTheme('#B099D3'),
-
-    // Dark neutrals (general UI chrome, background)
-    dark_neutral: enhanceTheme('#0B1320'),
-    dark_neutral_soft: enhanceTheme('#1E293B'),
-    dark_neutral_strong: enhanceTheme('#94A3B8'),
-
-    // Dark accents (buttons & statuses)
-    dark_accent_cta: enhanceTheme('#2DD4BF', '#000'), // teal 400
-    dark_accent_secondary: enhanceTheme('#22D3EE', '#000'), // cyan 400
-    dark_accent_warn: enhanceTheme('#FCD34D', '#000'), // amber 300
-    dark_accent_danger: enhanceTheme('#FB7185', '#000'), // rose 400
-    dark_accent_success: enhanceTheme('#4ADE80', '#000'), // green 400
-    dark_accent_purple: enhanceTheme('#B099D3', '#000'), // soft lilac
+    return out;
 };
 
 
-const sageColor = '#DDE2C3'
-
-export const sageTheme = {
-    light_secondary: enhanceTheme(sageColor),
-    light_secondary_normal: enhanceTheme(sageColor),
-    light_secondary_soft: enhanceTheme(lighten(0.1, sageColor)),
-    light_secondary_elevated: enhanceTheme(lighten(0.15, sageColor)),
-    light_secondary_enhanced: enhanceTheme(darken(0.1, sageColor)),
-    light_secondary_strong: enhanceTheme(darken(0.2, sageColor)),
-    light_secondary_vstrong: enhanceTheme(darken(0.3, sageColor)),
 
 
-    light_primary_alt1: enhanceTheme('#4C1D95'),
-    light_primary_alt2: enhanceTheme(complement('#DDE2C3')),
-    light_primary_alt3: enhanceTheme(invert('#DDE2C3')),
+// ---- 4) Factory: give it a brand, get a full theme object
+export const createBrandTheme = (brand: keyof typeof BRANDS) => {
+    const { light, dark } = BRANDS[brand];
 
-    dark_secondary: enhanceTheme(sageColor),
-    dark_secondary_normal: enhanceTheme(sageColor),
-    dark_secondary_soft: enhanceTheme(lighten(0.1, sageColor)),
-    dark_secondary_elevated: enhanceTheme(lighten(0.15, sageColor)),
-    dark_secondary_enhanced: enhanceTheme(darken(0.1, sageColor)),
-    dark_secondary_strong: enhanceTheme(darken(0.2, sageColor)),
-    dark_secondary_vstrong: enhanceTheme(darken(0.3, sageColor)),
-}
+    const lightTheme = {
+        ...buildSurfaceThemes(light, 'light', 'primary'),
+        ...buildNeutralThemes('light'),
+        ...buildAccents('light'),
+    };
+    const darkTheme = {
+        ...buildSurfaceThemes(dark, 'dark', 'primary'),
+        ...buildNeutralThemes('dark'),
+        ...buildAccents('dark'),
+    };
 
-
-
-
-const mintColor = '#C8E6E5'
-
-export const mintTheme = {
-    light_tertiary: enhanceTheme(mintColor),
-    light_tertiary_normal: enhanceTheme(mintColor),
-    light_tertiary_soft: enhanceTheme(lighten(0.1, mintColor)),
-    light_tertiary_elevated: enhanceTheme(lighten(0.15, mintColor)),
-    light_tertiary_enhanced: enhanceTheme(darken(0.1, mintColor)),
-    light_tertiary_strong: enhanceTheme(darken(0.2, mintColor)),
-    light_tertiary_vstrong: enhanceTheme(darken(0.3, mintColor)),
-    dark_tertiary: enhanceTheme(mintColor),
-    dark_tertiary_normal: enhanceTheme(mintColor),
-    dark_tertiary_soft: enhanceTheme(lighten(0.1, mintColor)),
-    dark_tertiary_elevated: enhanceTheme(lighten(0.15, mintColor)),
-    dark_tertiary_enhanced: enhanceTheme(darken(0.1, mintColor)),
-    dark_tertiary_strong: enhanceTheme(darken(0.2, mintColor)),
-    dark_tertiary_vstrong: enhanceTheme(darken(0.3, mintColor)),
-}
+    return { ...lightTheme, ...darkTheme } as Record<string, ThemeName>;
+};
 
 
-const lightColor = themes.light.background;
-
-export const lightTheme = {
-    light: enhanceTheme(lightColor),
-    light_normal: enhanceTheme(lightColor),
-    light_soft: enhanceTheme(lighten(0.1, lightColor)),
-    light_elevated: enhanceTheme(lighten(0.2, lightColor)),
-    light_enhanced: enhanceTheme(darken(0.1, lightColor)),
-    light_strong: enhanceTheme(darken(0.2, lightColor)),
-    light_vstrong: enhanceTheme(darken(0.3, lightColor)),
-}
-
-const darkColor = themes.dark.background;
-
-export const darkTheme = {
-    dark: enhanceTheme(darkColor),
-    dark_normal: enhanceTheme(darkColor),
-    dark_soft: enhanceTheme(lighten(0.1, darkColor)),
-    dark_elevated: enhanceTheme(lighten(0.2, darkColor)),
-    dark_enhanced: enhanceTheme(darken(0.1, darkColor)),
-    dark_strong: enhanceTheme(darken(0.2, darkColor)),
-    dark_vstrong: enhanceTheme(darken(0.3, darkColor)),
-}
+// tie themes to your actual token set
+// themes/brand.ts
 
 
 
 
-export const extraThemes = {
-    success: successTheme,
-    success_alt1: successThemeAlt1,
-    success_alt2: successThemeAlt2,
-    success_alt3: successThemeAlt3,
-    success_alt4: successThemeAlt4,
-    success_alt5: successThemeAlt5,
-    success_alt6: successThemeAlt6,
-    success_alt7: successThemeAlt7,
-    success_alt8: successThemeAlt8,
-    success_alt9: successThemeAlt9,
-    success_alt10: successThemeAlt10,
-    danger: dangerTheme,
-    danger_alt1: dangerThemeAlt1,
-    danger_alt2: dangerThemeAlt2
-}
+
+export const lilacTheme = createBrandTheme('lilac');
+export const sageTheme = createBrandTheme('sage');
+export const mintTheme = createBrandTheme('mint');
 
