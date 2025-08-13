@@ -14,7 +14,10 @@ export const ModalHost = () => {
 
     return (
         <Sheet
-            modal={true} open={open} onOpenChange={(o: boolean) => { if (!o) closeModal(); }}
+            modal
+            native
+            open={open}
+            onOpenChange={(o: boolean) => { if (!o) closeModal(); }}
             snapPointsMode="percent"
             snapPoints={[90]}   // 0: compact, 1: tall
             unmountChildrenWhenHidden
