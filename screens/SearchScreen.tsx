@@ -28,7 +28,7 @@ export const SearchScreen = () => {
                 <SearchBar initialQuery={initialQuery} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>
-                <PageContent theme="elevated">
+                <PageContent >
                     <ThemedXStack preset="split">
                         <SizableText f={1}>
                             {searchQuery}
@@ -38,7 +38,7 @@ export const SearchScreen = () => {
                         </SizableText>
                     </ThemedXStack>
                 </PageContent>
-                <PageContent f={1} p="none" theme="elevated">
+                <PageContent f={1} p="none">
                     <SearchResults key={query} />
                 </PageContent>
             </PageSection>

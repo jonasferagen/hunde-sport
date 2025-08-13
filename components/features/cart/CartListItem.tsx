@@ -1,14 +1,13 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
 import { ThemedLinearGradient, ThemedText, ThemedYStack } from '@/components/ui';
-import { THEME_CART_QUANTITY, THEME_CART_REMOVE } from '@/config/app';
+import { THEME_CART_REMOVE } from '@/config/app';
 import { useCartContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { CartItemData } from '@/models/Cart/Cart';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { H4, StackProps, Theme, XStack } from 'tamagui';
-import { PriceText } from '../product/display/PriceText';
 
 export const CartListItem = ({ item, index }: { item: CartItemData, index: number }): JSX.Element => {
     const theme = index % 2 === 0 ? 'soft' : 'elevated';
@@ -43,7 +42,7 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
             <XStack jc="space-between" ai="center" gap="$4">
                 {/* Quantity Controls */}
                 <XStack ai="center" gap="$2">
-                    <ThemedButton theme={THEME_CART_QUANTITY}
+                    <ThemedButton
                         onPress={() => updateItem(key, quantity - 1)}
                         circular
                         disabled={quantity <= 1}
@@ -51,7 +50,7 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
                         <Minus />
                     </ThemedButton>
 
-                    <ThemedButton theme={THEME_CART_QUANTITY}
+                    <ThemedButton
                         onPress={() => updateItem(key, quantity + 1)}
                         circular
                         disabled={false}
@@ -61,15 +60,15 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
                     <H4 w={30} ta="center">
                         {quantity}
                     </H4>
-                    <PriceText variant="disabled">
+                    <ThemedText>
                         {formatPrice(item.prices.price)}
-                    </PriceText>
+                    </ThemedText>
                 </XStack>
 
                 <XStack f={1} ai="center" jc="flex-end">
-                    <PriceText f={1} ta="right">
+                    <ThemedText f={1} ta="right">
                         {formatPrice(String(Number(item.totals.line_subtotal) + Number(item.totals.line_subtotal_tax)))}
-                    </PriceText>
+                    </ThemedText>
                 </XStack>
 
                 {/* Remove Button */}

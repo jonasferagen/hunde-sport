@@ -2,40 +2,20 @@ import { Input, styled } from 'tamagui'
 
 export const ThemedInput = styled(Input, {
     name: 'ThemedInput',
-
-    // Base style
+    size: '$4',
+    f: 1,
+    px: '$3',
+    py: '$2',
+    br: '$4',
+    bg: '$background',
     color: '$color',
-    backgroundColor: '$background',
-    borderColor: '$borderColor',
-    borderWidth: 1,
-    borderRadius: '$3',
-    paddingHorizontal: '$3',
-    paddingVertical: '$2',
+    boc: '$borderColor',
+    bw: 1,
 
-    // Interactions
-    hoverStyle: {
-        borderColor: '$borderColorHover',
-    },
+    placeholderTextColor: '$color',
 
-    focusStyle: {
-        borderColor: '$blue10',
-        outlineWidth: 2,
-        outlineColor: '$blue10',
-        outlineStyle: 'solid',
-    },
+    hoverStyle: { bg: '$backgroundHover' },
+    focusStyle: { boc: '$color', bw: 2, bg: '$backgroundFocus', outlineWidth: 0 },
 
-    // Variants
-    variants: {
-        error: {
-            true: {
-                borderColor: '$red10',
-            },
-        },
-    },
 
-    // Disabled
-    disabledStyle: {
-        opacity: 0.5,
-        backgroundColor: '$background',
-    },
 })

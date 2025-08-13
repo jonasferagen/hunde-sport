@@ -1,8 +1,7 @@
 import { useSearchContext } from '@/contexts/SearchContext';
-import { Search } from '@tamagui/lucide-icons';
-import React, { forwardRef, useEffect } from 'react';
-import { Input, XStack } from 'tamagui';
-import { ThemedButton } from '../themed-components';
+import React, { useEffect } from 'react';
+import { XStack } from 'tamagui';
+import { ThemedInput } from '../themed-components';
 
 export interface SearchBarProps {
     placeholder?: string;
@@ -10,46 +9,39 @@ export interface SearchBarProps {
     onSubmit?: (query: string) => void;
 }
 
-export const SearchBar = forwardRef<Input, SearchBarProps>((
-    { placeholder = 'Hva leter du etter?', initialQuery = '', onSubmit }, ref) => {
+export const SearchBar = ({
+    placeholder = 'Hva leter du etter?',
+    initialQuery = '',
+    onSubmit }: SearchBarProps) => {
+
     const { query, setQuery } = useSearchContext();
 
     useEffect(() => {
         setQuery(initialQuery);
     }, [initialQuery, setQuery]);
 
-    const handleSearch = () => {
-        const trimmedQuery = query.trim();
-        setQuery(trimmedQuery);
-        onSubmit?.(trimmedQuery);
-    };
-
-    const handleChangeText = (text: string) => {
-        setQuery(text);
-    };
 
     return (
         <XStack
             ai="center"
             br="$4"
             px="$3"
-            bw={1}
         >
-            <Input
-                f={1}
-                ref={ref}
+            <ThemedInput
+                theme="light"
                 placeholder={placeholder}
                 value={query}
-                onChangeText={handleChangeText}
-                onSubmitEditing={handleSearch}
-
+                onChangeText={(text: string) => {
+                    setQuery(text);
+                }}
+                onSubmitEditing={() => {
+                    const trimmedQuery = query.trim();
+                    setQuery(trimmedQuery);
+                    onSubmit?.(trimmedQuery);
+                }}
             />
-            <ThemedButton
-                onPress={handleSearch}
-                disabled={!query.trim()}
-            >
-                <Search />
-            </ThemedButton>
         </XStack>
     );
-});
+};
+
+

@@ -40,11 +40,10 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                             return (
                                 <XStack key={route.name}>
                                     <ThemedButton
-                                        f={1}
                                         onPress={onPress}
                                     >
                                         <ThemedText
-                                            f={1}
+
                                         >
                                             {route.label}
                                         </ThemedText>

@@ -3,7 +3,7 @@ import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 import { useCartContext } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/helpers';
 import React, { JSX, memo } from 'react';
-import { SizableText, XStack } from 'tamagui';
+import { XStack } from 'tamagui';
 
 export const CartSummary = memo(
     (): JSX.Element => {
@@ -21,10 +21,10 @@ export const CartSummary = memo(
                 >
                     {isUpdating && <ThemedSpinner pos="absolute" />}
 
-                    <SizableText size="$4" opacity={isUpdating ? 0 : 1}>
+                    <ThemedText size="$4" o={isUpdating ? 0 : 1}>
                         {cart.items_count} var(er)
-                    </SizableText>
-                    <ThemedText fos="$3" fow="bold" opacity={isUpdating ? 0 : 1}>
+                    </ThemedText>
+                    <ThemedText fos="$3" fow="bold" o={isUpdating ? 0 : 1}>
                         {formatPrice(cart.totals.total_price)}
                     </ThemedText>
                 </XStack>

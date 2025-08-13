@@ -4,7 +4,8 @@ import { formatPrice, formatPriceRange } from '@/lib/helpers';
 import { PurchasableProduct } from '@/types';
 import React from 'react';
 import { SizableTextProps, XStack } from 'tamagui';
-import { PriceText } from './PriceText';
+
+import { ThemedText } from '@/components/ui';
 
 export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
 
@@ -17,13 +18,11 @@ export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
     }
 
     return (
-        <PriceText {...props}>
+        <ThemedText {...props}>
             {formatPriceRange(price_range)}
-        </PriceText>
+        </ThemedText>
     );
 };
-
-
 
 export const ProductPrice = ({ ...props }: SizableTextProps) => {
     const { purchasable } = usePurchasableContext();
@@ -47,32 +46,31 @@ const ProductPriceImpl = ({ product, ...props }: { product: PurchasableProduct }
     }
 
     if (!isPurchasable || !isInStock) {
-        return <PriceText
-
+        return <ThemedText
+            disabled
             {...props}>
             {formatPrice(price)}
-        </PriceText>
+        </ThemedText>
     }
 
     if (isOnSale) {
         return (
             <XStack ai="center" gap="$2">
-                <PriceText
-
+                <ThemedText
                     {...props}>
                     {formatPrice(regular_price)}
-                </PriceText>
-                <PriceText
+                </ThemedText>
+                <ThemedText
                     {...props}>
                     {formatPrice(sale_price)}
-                </PriceText>
+                </ThemedText>
             </XStack>
         );
     }
 
     return (
-        <PriceText {...props}>
+        <ThemedText {...props}>
             {formatPrice(price)}
-        </PriceText>
+        </ThemedText>
     );
 };
