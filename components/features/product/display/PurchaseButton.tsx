@@ -1,7 +1,6 @@
 // /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { usePurchasableContext } from '@/contexts';
-import { THEME_PURCHASE_BUTTON_ERROR, THEME_PURCHASE_BUTTON_OK, THEME_VARIATION_BUTTON_OK } from '@/tamagui/app';
 import { VariableProduct } from '@/types';
 import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
 
@@ -25,10 +24,7 @@ export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
 
     const disabled = !isValid && !isVariable;
     const icon = icons[status];
-    const theme = !isValid ?
-        THEME_PURCHASE_BUTTON_ERROR : isVariable ?
-            THEME_VARIATION_BUTTON_OK : THEME_PURCHASE_BUTTON_OK;
-
+    const theme = "dark_primary";
     return (
         <>
             <CallToActionButton
@@ -37,9 +33,10 @@ export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
                 icon={icon}
                 theme={theme}
                 label={message}
+                size="$4"
                 iconAfter={
                     <YStack
-                        theme="normal"
+
                         h="$6"
                         ai="center"
                         jc="center"

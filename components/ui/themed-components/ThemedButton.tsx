@@ -6,13 +6,16 @@ import {
     useTheme,
     View,
     withStaticProperties
-} from '@tamagui/web'
-import { cloneElement, isValidElement, useContext } from 'react'
+} from '@tamagui/web';
+import { cloneElement, isValidElement, useContext } from 'react';
+
+
+const DEFAULT_SIZE = '$3';
 
 // 1) Context for sizing between parts
 // 1) Context — make $3 the default
 export const ButtonContext = createStyledContext({
-    size: '$4' as SizeTokens,
+    size: DEFAULT_SIZE as SizeTokens,
 })
 
 // 2) Shared size table (tweak to taste)
@@ -61,7 +64,7 @@ export const ButtonFrame = styled(View, {
     variants: {
         size: {
             '...size': (token) => {
-                const s = SIZES[(token as SizeKey)] ?? SIZES['$4']
+                const s = SIZES[(token as SizeKey)] ?? SIZES[DEFAULT_SIZE]
                 return {
                     height: s.h,
                     paddingHorizontal: s.px,
@@ -73,7 +76,7 @@ export const ButtonFrame = styled(View, {
         circular: {
             true: () => {
                 const { size } = useContext(ButtonContext.context)
-                const s = SIZES[(size as SizeKey)] ?? SIZES['$4']
+                const s = SIZES[(size as SizeKey)] ?? SIZES[DEFAULT_SIZE]
                 return {
                     bw: 0,
                     br: 9999,
@@ -103,7 +106,7 @@ export const ButtonText = styled(Text, {
     variants: {
         size: {
             '...size': (token) => {
-                const s = SIZES[(token as SizeKey)] ?? SIZES['$4']
+                const s = SIZES[(token as SizeKey)] ?? SIZES[DEFAULT_SIZE]
                 return {
                     fontSize: s.fs,
                     lineHeight: s.lh,
@@ -119,7 +122,7 @@ export const ButtonText = styled(Text, {
 const ButtonIcon = (props: { children: any }) => {
     const { size } = useContext(ButtonContext.context)
     const theme = useTheme()
-    const s = SIZES[(size as SizeKey)] ?? SIZES['$4']
+    const s = SIZES[(size as SizeKey)] ?? SIZES[DEFAULT_SIZE]
 
     return isValidElement(props.children)
         ? cloneElement(props.children, {

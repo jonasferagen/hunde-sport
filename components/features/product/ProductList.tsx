@@ -5,7 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import React, { memo, useCallback } from 'react';
 import { ViewStyle } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
-import { XStack } from 'tamagui';
+import { Theme, XStack } from 'tamagui';
 import { ProductCard } from './display/ProductCard';
 
 interface ProductListProps {
@@ -25,28 +25,33 @@ export const ProductList = memo(({
 
     const renderItem = useCallback(({ item: product, index }: { item: PurchasableProduct, index: number }) =>
         <Animated.View layout={LinearTransition}>
-            <PurchasableProviderInit product={product}>
-                <ProductCard theme={index % 2 === 0 ? 'normal' : 'soft'} />
-            </PurchasableProviderInit>
+            <Theme name="light_alt">
+                <PurchasableProviderInit product={product}>
+                    <ProductCard theme={index % 2 === 0 ? 'alt' : 'tint'} />
+                </PurchasableProviderInit>
+            </Theme>
         </Animated.View>
         , []);
 
     const keyExtractor = useCallback((item: PurchasableProduct) => item.id.toString(), []);
 
     return (
-        <XStack f={1} theme="primary">
-            <FlashList
-                data={products as PurchasableProduct[]}
-                renderItem={renderItem}
-                keyExtractor={keyExtractor}
-                onEndReached={loadMore}
-                onEndReachedThreshold={0.5}
-                contentContainerStyle={contentContainerStyle}
-                ListFooterComponent={() =>
-                    loadingMore ? <ThemedSpinner my="$3" /> : null
-                }
-                estimatedItemSize={200}
-            />
-        </XStack>
+        <Theme name="alt">
+            <XStack f={1} >
+                <FlashList
+                    data={products as PurchasableProduct[]}
+                    renderItem={renderItem}
+                    keyExtractor={keyExtractor}
+                    onEndReached={loadMore}
+                    onEndReachedThreshold={0.5}
+                    contentContainerStyle={contentContainerStyle}
+                    ListFooterComponent={() =>
+                        loadingMore ? <ThemedSpinner my="$3" /> : null
+                    }
+                    estimatedItemSize={200}
+                />
+            </XStack>
+        </Theme>
+
     );
 }); 

@@ -1,15 +1,20 @@
-// themeFactory.ts
+// themeFactory.ts (managed combos)
+// - Status are root-only (light_success / dark_success ...), no child themes
+// - Accents remain children (stackable), plus root aliases for explicit use
+// - Adds light_base / dark_base root aliases
+
 import { createThemeBuilder } from '@tamagui/theme-builder';
 import { darken, lighten } from 'polished';
 
 type ColorPair = { light: string; dark: string }
 
 export type ThemeFactoryConfig = {
-    base: ColorPair                      // app surface bases
-    neutral: ColorPair                   // neutral background slot
+    base: ColorPair
+    neutral: ColorPair
+    alt?: ColorPair
     text?: {
-        strong?: ColorPair                 // defaults: #000 / #fff
-        subtle?: ColorPair                 // defaults: slate-ish
+        strong?: ColorPair
+        subtle?: ColorPair
     }
     accents: {
         primary: ColorPair
@@ -20,37 +25,104 @@ export type ThemeFactoryConfig = {
         info?: ColorPair
         danger?: ColorPair
     }
-    // Optional: tweak ramp strength
     ramps?: {
-        baseLight?: { up1?: number; up2?: number; down1?: number; down2?: number }
-        baseDark?: { up1?: number; up2?: number; down1?: number; down2?: number }
-        accentLight?: { up2?: number; up1?: number; down1?: number; down2?: number }
-        accentDark?: { up2?: number; up1?: number; down1?: number; down2?: number }
+        baseLight?: Partial<Ramp6>
+        baseDark?: Partial<Ramp6>
+        accentLight?: Partial<Ramp5>
+        accentDark?: Partial<Ramp5>
     }
-    includeTintShade?: boolean           // default true
+    includeTintShade?: boolean // default true
+    // New: control how we wire child vs root themes to avoid theme explosion
+    childControls?: {
+        accentsAsChildren?: boolean   // default true (stackable)
+        statusAsChildren?: boolean    // default false (root-only)
+        addBaseAliases?: boolean      // default true (light_base/dark_base)
+        addAccentRootAliases?: boolean// default true (light_primary/dark_primary, ...)
+    }
 }
+
+// ----- internals
+
+type Ramp6 = { up2: number; up1: number; down1: number; down2: number }
+type Ramp5 = { up2: number; up1: number; down1: number; down2: number }
+type Template = Record<string, number>
 
 const DEFAULTS = {
     textStrong: { light: '#000000', dark: '#FFFFFF' },
     textSubtle: { light: '#334155', dark: '#E5E7EB' },
     ramps: {
-        baseLight: { up2: 0.12, up1: 0.06, down1: 0.06, down2: 0.12 },
-        baseDark: { up2: 0.18, up1: 0.12, down1: 0.06, down2: 0.12 },
-        accentLight: { up2: 0.18, up1: 0.09, down1: 0.08, down2: 0.16 },
-        accentDark: { up2: 0.24, up1: 0.16, down1: 0.08, down2: 0.16 },
+        baseLight: { up2: 0.12, up1: 0.06, down1: 0.06, down2: 0.12 } as Ramp6,
+        baseDark: { up2: 0.18, up1: 0.12, down1: 0.06, down2: 0.12 } as Ramp6,
+        accentLight: { up2: 0.18, up1: 0.09, down1: 0.08, down2: 0.16 } as Ramp5,
+        accentDark: { up2: 0.24, up1: 0.16, down1: 0.08, down2: 0.16 } as Ramp5,
     },
 } as const
 
-type Template = Record<string, number>
+const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n))
+const up = (hex: string, amt: number) => lighten(amt, hex)
+const down = (hex: string, amt: number) => darken(amt, hex)
+
+const buildBase6 = (base: string, neutral: string, r: Ramp6) => ([
+    neutral, up(base, r.up2), up(base, r.up1),
+    base, down(base, r.down1), down(base, r.down2),
+])
+
+const buildRamp5 = (hex: string, r: Ramp5) => ([
+    up(hex, r.up2), up(hex, r.up1), hex, down(hex, r.down1), down(hex, r.down2),
+])
+
+const shiftTemplate = (tmpl: Template, delta: number, maxIdx: number): Template => {
+    const out: Template = {}
+    for (const [k, v] of Object.entries(tmpl)) out[k] = v >= 0 ? clamp(v + delta, 0, maxIdx) : v
+    return out
+}
+
+const accentTemplateFrom = (start: number): Template => ({
+    background: start + 2,
+    backgroundHover: start + 3,
+    backgroundPress: start + 4,
+    backgroundFocus: start + 3,
+    color: -1, // strong
+    borderColor: start + 4,
+    borderColorHover: start + 3,
+    borderColorPress: start + 4,
+})
+
+const altTemplateFromBase = (start: number): Template => ({
+    background: start + 3,
+    backgroundHover: start + 4,
+    backgroundPress: start + 5,
+    backgroundFocus: start + 4,
+    color: -1, // strong
+    borderColor: start + 4,
+    borderColorHover: start + 4,
+    borderColorPress: start + 5,
+})
+
+const altSubtleFromBase = (start: number): Template => ({
+    background: start + 2,
+    backgroundHover: start + 3,
+    backgroundPress: start + 4,
+    backgroundFocus: start + 3,
+    color: -2, // subtle
+    borderColor: start + 3,
+})
 
 export function createAppThemes(cfg: ThemeFactoryConfig) {
+    const controls = {
+        accentsAsChildren: cfg.childControls?.accentsAsChildren ?? true,
+        statusAsChildren: cfg.childControls?.statusAsChildren ?? false, // <- default OFF
+        addBaseAliases: cfg.childControls?.addBaseAliases ?? true,
+        addAccentRootAliases: cfg.childControls?.addAccentRootAliases ?? true,
+    }
+
+    // ramps + text colors
     const ramps = {
         baseLight: { ...DEFAULTS.ramps.baseLight, ...(cfg.ramps?.baseLight ?? {}) },
         baseDark: { ...DEFAULTS.ramps.baseDark, ...(cfg.ramps?.baseDark ?? {}) },
         accentLight: { ...DEFAULTS.ramps.accentLight, ...(cfg.ramps?.accentLight ?? {}) },
         accentDark: { ...DEFAULTS.ramps.accentDark, ...(cfg.ramps?.accentDark ?? {}) },
     }
-
     const textStrong: ColorPair = {
         light: cfg.text?.strong?.light ?? DEFAULTS.textStrong.light,
         dark: cfg.text?.strong?.dark ?? DEFAULTS.textStrong.dark,
@@ -60,133 +132,54 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         dark: cfg.text?.subtle?.dark ?? DEFAULTS.textSubtle.dark,
     }
 
-    // ----- Base background ramps (first 6 indices must align across light/dark)
-    const baseLightBg = (base: string, neutral: string) => ([
-        neutral,                              // 0 neutral bg
-        lighten(ramps.baseLight.up2, base),   // 1
-        lighten(ramps.baseLight.up1, base),   // 2
-        base,                                 // 3
-        darken(ramps.baseLight.down1, base),  // 4
-        darken(ramps.baseLight.down2, base),  // 5
-    ])
-    const baseDarkBg = (base: string, neutral: string) => ([
-        neutral,                              // 0 neutral bg (dark)
-        lighten(ramps.baseDark.up2, base),    // 1
-        lighten(ramps.baseDark.up1, base),    // 2
-        base,                                 // 3
-        darken(ramps.baseDark.down1, base),   // 4
-        darken(ramps.baseDark.down2, base),   // 5
-    ])
+    // palettes
+    const light: string[] = buildBase6(cfg.base.light, cfg.neutral.light, ramps.baseLight)
+    const dark: string[] = buildBase6(cfg.base.dark, cfg.neutral.dark, ramps.baseDark)
 
-    // Accent/status ramp (5 slots): [tint2, tint1, base, shade1, shade2]
-    const rampLight = (hex: string) => ([
-        lighten(ramps.accentLight.up2, hex),
-        lighten(ramps.accentLight.up1, hex),
-        hex,
-        darken(ramps.accentLight.down1, hex),
-        darken(ramps.accentLight.down2, hex),
-    ])
-    const rampDark = (hex: string) => ([
-        lighten(ramps.accentDark.up2, hex),
-        lighten(ramps.accentDark.up1, hex),
-        hex,
-        darken(ramps.accentDark.down1, hex),
-        darken(ramps.accentDark.down2, hex),
-    ])
+    const baseStart: Record<string, number> = {} // 6-slot bases
+    const rampStart: Record<string, number> = {} // 5-slot ramps (accents/status)
 
-    // ----- Build palettes, keeping identical index layout between light/dark
-    const light: string[] = [...baseLightBg(cfg.base.light, cfg.neutral.light)]
-    const dark: string[] = [...baseDarkBg(cfg.base.dark, cfg.neutral.dark)]
+    const pushBasePair6 = (key: string, pair: ColorPair, neutral: ColorPair) => {
+        baseStart[key] = light.length
+        light.push(...buildBase6(pair.light, neutral.light, ramps.baseLight))
+        dark.push(...buildBase6(pair.dark, neutral.dark, ramps.baseDark))
+    }
+    if (cfg.alt) pushBasePair6('alt', cfg.alt, cfg.neutral)
 
-    // Record the starting index for each ramp
-    const rampStart: Record<string, number> = {}
-
-    // Helper to push paired ramps consistently
-    const pushRampPair = (key: string, pair: ColorPair) => {
-        const startIndex = light.length
-        rampStart[key] = startIndex
-        light.push(...rampLight(pair.light))
-        dark.push(...rampDark(pair.dark))
+    const pushRampPair5 = (key: string, pair: ColorPair) => {
+        rampStart[key] = light.length
+        light.push(...buildRamp5(pair.light, ramps.accentLight))
+        dark.push(...buildRamp5(pair.dark, ramps.accentDark))
     }
 
-    // Accents
-    pushRampPair('primary', cfg.accents.primary)
-    pushRampPair('secondary', cfg.accents.secondary)
-    // Status (optional)
-    if (cfg.status?.success) pushRampPair('success', cfg.status.success)
-    if (cfg.status?.info) pushRampPair('info', cfg.status.info)
-    if (cfg.status?.danger) pushRampPair('danger', cfg.status.danger)
+    // accents (5-slot ramps)
+    pushRampPair5('primary', cfg.accents.primary)
+    pushRampPair5('secondary', cfg.accents.secondary)
 
-    // Append text slots (must be last two)
-    const textStrongIndex = light.length
-    light.push(textStrong.light); dark.push(textStrong.dark)
-    const textSubtleIndex = light.length
-    light.push(textSubtle.light); dark.push(textSubtle.dark)
+    // status (optional)
+    if (cfg.status?.success) pushRampPair5('success', cfg.status.success)
+    if (cfg.status?.info) pushRampPair5('info', cfg.status.info)
+    if (cfg.status?.danger) pushRampPair5('danger', cfg.status.danger)
 
-    // Negative indices mapping
-    const TEXT_STRONG = -2 // last-1
-    const TEXT_SUBTLE = -1 // last
+    // append text
+    const textSubtleIndex = light.length; light.push(textSubtle.light); dark.push(textSubtle.dark)
+    const textStrongIndex = light.length; light.push(textStrong.light); dark.push(textStrong.dark)
+    const MAX_BG_INDEX = light.length - 3 // guard for shifts
 
-    // Guard: backgrounds must not use the final two indices
-    const MAX_BG_INDEX = light.length - 3
-
-    // Shift helper for tint/shade surfaces (doesn't touch negative text indices)
-    const shiftTemplate = (tmpl: Template, delta: number): Template => {
-        const out: Template = {}
-        for (const [k, v] of Object.entries(tmpl)) {
-            if (typeof v === 'number' && v >= 0) {
-                out[k] = Math.max(0, Math.min(MAX_BG_INDEX, v + delta))
-            } else {
-                out[k] = v as number
-            }
-        }
-        return out
+    // templates
+    const baseTemplate: Template = {
+        background: 3, backgroundHover: 4, backgroundPress: 5, backgroundFocus: 4,
+        color: -1, colorHover: -1, colorPress: -1, colorFocus: -1,
+        borderColor: 4, borderColorHover: 4, borderColorPress: 5,
     }
-
-    // ----- Core surface templates
-    const baseTemplate = {
-        background: 3,
-        backgroundHover: 4,
-        backgroundPress: 5,
-        backgroundFocus: 4,
-        color: TEXT_STRONG,
-        colorHover: TEXT_STRONG,
-        colorPress: TEXT_STRONG,
-        colorFocus: TEXT_STRONG,
-        borderColor: 4,
-        borderColorHover: 4,
-        borderColorPress: 5,
-    } as const
-
-    const subtleTemplate = {
-        background: 2,
-        backgroundHover: 3,
-        backgroundPress: 4,
-        backgroundFocus: 3,
-        color: TEXT_SUBTLE,
-        borderColor: 3,
-    } as const
-
-    const neutralTemplate = {
-        background: 0,
-        backgroundHover: 1,
-        backgroundPress: 2,
-        backgroundFocus: 1,
-        color: TEXT_STRONG,
-        borderColor: 2,
-    } as const
-
-    // Accent/status templates from a ramp start
-    const accentFrom = (start: number): Template => ({
-        background: start + 2,       // base
-        backgroundHover: start + 3,  // shade1
-        backgroundPress: start + 4,  // shade2
-        backgroundFocus: start + 3,
-        color: TEXT_STRONG,          // always strong text on CTA/status
-        borderColor: start + 4,
-        borderColorHover: start + 3,
-        borderColorPress: start + 4,
-    })
+    const subtleTemplate: Template = {
+        background: 2, backgroundHover: 3, backgroundPress: 4, backgroundFocus: 3,
+        color: -2, borderColor: 3,
+    }
+    const neutralTemplate: Template = {
+        background: 0, backgroundHover: 1, backgroundPress: 2, backgroundFocus: 1,
+        color: -1, borderColor: 2,
+    }
 
     const templates: Record<string, Template> = {
         base: baseTemplate,
@@ -194,21 +187,30 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         neutral: neutralTemplate,
     }
 
-    // Optional tint/shade variants for general surfaces
     const includeTintShade = cfg.includeTintShade ?? true
     if (includeTintShade) {
-        templates['tint'] = shiftTemplate(baseTemplate, -1)
-        templates['tint2'] = shiftTemplate(baseTemplate, -2)
-        templates['shade'] = shiftTemplate(baseTemplate, +1)
-        templates['shade2'] = shiftTemplate(baseTemplate, +2)
+        templates['tint'] = shiftTemplate(baseTemplate, -1, MAX_BG_INDEX)
+        templates['tint2'] = shiftTemplate(baseTemplate, -2, MAX_BG_INDEX)
+        templates['shade'] = shiftTemplate(baseTemplate, +1, MAX_BG_INDEX)
+        templates['shade2'] = shiftTemplate(baseTemplate, +2, MAX_BG_INDEX)
     }
 
-    // Add accent/status templates dynamically
+    // alt base
+    if (baseStart.alt !== undefined) {
+        templates['alt'] = altTemplateFromBase(baseStart.alt)
+        templates['alt_subtle'] = altSubtleFromBase(baseStart.alt)
+        if (includeTintShade) {
+            templates['alt_tint'] = shiftTemplate(templates['alt'], -1, MAX_BG_INDEX)
+            templates['alt_shade'] = shiftTemplate(templates['alt'], +1, MAX_BG_INDEX)
+        }
+    }
+
+    // accent/status surface templates
     for (const key of Object.keys(rampStart)) {
-        templates[key] = accentFrom(rampStart[key])
+        templates[key] = accentTemplateFrom(rampStart[key])
     }
 
-    // ----- Build with theme-builder
+    // ----- build
     const builder = createThemeBuilder()
         .addPalettes({ light, dark })
         .addTemplates(templates)
@@ -217,31 +219,79 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
             dark: { template: 'base', palette: 'dark' },
         })
 
-    // Core children
-    builder.addChildThemes({
-        subtle: { template: 'subtle' },
-        neutral: { template: 'neutral' },
-    })
-    // Tint/shade children
-    if (includeTintShade) {
-        builder.addChildThemes({
-            tint: { template: 'tint' },
-            tint2: { template: 'tint2' },
-            shade: { template: 'shade' },
-            shade2: { template: 'shade2' },
+    // base aliases (requested: light_base / dark_base)
+    if (controls.addBaseAliases) {
+        builder.addThemes({
+            light_base: { template: 'base', palette: 'light' },
+            dark_base: { template: 'base', palette: 'dark' },
         })
     }
-    // Accent/status children (direct)
-    builder.addChildThemes(
-        Object.fromEntries(Object.keys(rampStart).map(k => [k, { template: k }]))
-    )
+
+    // child sets (stackable)
+    const addChildSet = (names: string[]) => {
+        const entries = Object.fromEntries(names
+            .filter((n) => n in templates)
+            .map((n) => [n, { template: n }]))
+        if (Object.keys(entries).length) builder.addChildThemes(entries)
+    }
+
+    // keep these as children (stackable across the tree)
+    addChildSet(['subtle', 'neutral'])
+    if (includeTintShade) addChildSet(['tint', 'tint2', 'shade', 'shade2'])
+    if (baseStart.alt !== undefined) {
+        const names = ['alt', 'alt_subtle', ...(includeTintShade ? ['alt_tint', 'alt_shade'] : [])]
+        addChildSet(names)
+    }
+
+    // accents: default = children (stackable)
+    if (controls.accentsAsChildren) addChildSet(['primary', 'secondary'])
+
+    // status: default = NOT children -> add as root-only themes
+    const statusKeys = ['success', 'info', 'danger'].filter(k => k in rampStart)
+    if (controls.statusAsChildren) {
+        addChildSet(statusKeys)
+    } else {
+        const statusRoots = statusKeys.reduce<Record<string, { template: string; palette: 'light' | 'dark' }>>(
+            (acc, k) => {
+                acc[`light_${k}`] = { template: k, palette: 'light' }
+                acc[`dark_${k}`] = { template: k, palette: 'dark' }
+                return acc
+            }, {})
+        builder.addThemes(statusRoots)
+    }
+
+    // optional: root aliases for accents too (handy for explicit usage)
+    if (controls.addAccentRootAliases) {
+        const accentRoots = (['primary', 'secondary'] as const).reduce<
+            Record<string, { template: string; palette: 'light' | 'dark' }>
+        >((acc, k) => {
+            acc[`light_${k}`] = { template: k, palette: 'light' }
+            acc[`dark_${k}`] = { template: k, palette: 'dark' }
+            return acc
+        }, {})
+        builder.addThemes(accentRoots)
+    }
 
     const themes = builder.build()
 
-    // Handy names (runtime) for <Theme name="...">
-    const childKeys = ['subtle', 'neutral', ...(includeTintShade ? ['tint', 'tint2', 'shade', 'shade2'] : []), ...Object.keys(rampStart)]
+    // export names you’ll likely use
+    const childKeys = [
+        'subtle', 'neutral',
+        ...(includeTintShade ? ['tint', 'tint2', 'shade', 'shade2'] : []),
+        ...(baseStart.alt !== undefined ? ['alt', 'alt_subtle', ...(includeTintShade ? ['alt_tint', 'alt_shade'] : [])] : []),
+        ...(controls.accentsAsChildren ? ['primary', 'secondary'] : []),
+        ...(controls.statusAsChildren ? statusKeys : []),
+    ]
+
+    const rootAliases = [
+        ...(controls.addBaseAliases ? ['light_base', 'dark_base'] : []),
+        ...(controls.addAccentRootAliases ? ['light_primary', 'dark_primary', 'light_secondary', 'dark_secondary'] : []),
+        ...(!controls.statusAsChildren ? statusKeys.flatMap(k => [`light_${k}`, `dark_${k}`]) : []),
+    ]
+
     const themeNames = [
         'light', 'dark',
+        ...rootAliases,
         ...childKeys.flatMap(k => [`light_${k}`, `dark_${k}`]),
     ] as const
 
@@ -252,6 +302,7 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
             textStrong: textStrongIndex,
             textSubtle: textSubtleIndex,
             ramps: rampStart,
+            altStart: baseStart.alt
         },
     }
 }

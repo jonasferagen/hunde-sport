@@ -2,7 +2,8 @@ import { createAppThemes, ThemeFactoryConfig } from "./themeFactory"
 
 // your config (pairs for light/dark)
 const config = {
-    base: { light: '#DDE2C3', dark: '#24301A' },
+    base: { light: '#C8E6E5', dark: '#24301A' },
+    alt: { light: '#DDE2C3', dark: '#24301A' },
     neutral: { light: '#F1F5F9', dark: '#0B1320' },
     accents: {
         primary: { light: '#2563EB', dark: '#60A5FA' },   // blue, brighter on dark
@@ -17,4 +18,7 @@ const config = {
     // includeTintShade: false,
 } satisfies ThemeFactoryConfig
 
-export const sageTheme = createAppThemes(config)
+export const mintTheme = createAppThemes(config)
+
+//const lilacColor = '#D7C8E7'
+

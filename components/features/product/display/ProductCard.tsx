@@ -7,7 +7,7 @@ import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { HrefObject, Link } from 'expo-router';
 import React, { JSX } from 'react';
-import { Button, StackProps, XStack, YStack } from 'tamagui';
+import { Button, StackProps, useThemeName, XStack, YStack } from 'tamagui';
 import { ProductDescription, ProductTitle } from '.';
 import { ProductPurchaseFlow } from '../modals/ProductPurchaseFlow';
 
@@ -20,9 +20,12 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
     const { product } = purchasable;
     const { productCategory: category } = useProductCategoryContext();
 
+    const themeName = useThemeName();
+    console.log(themeName, props.theme);
+
     const href: HrefObject = routes.product.path(product, category?.id);
     return (
-        <ThemedYStack preset="container" {...props} bbw={1} f={1}>
+        <ThemedYStack preset="container" theme={props.theme} {...props} bbw={1} f={1} >
             <ThemedLinearGradient />
             <Link href={href} asChild>
                 <Button unstyled pressStyle={{ opacity: 0.7 }}>
