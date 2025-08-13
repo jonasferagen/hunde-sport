@@ -3,7 +3,7 @@ import { ProductDescription } from '@/components/features/product/display/Produc
 import { ProductImage } from '@/components/features/product/display/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/display/ProductImageGallery';
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
-import { ProductPurchase } from '@/components/features/product/display/ProductPurchaseFlow';
+import { ProductPurchaseFlow } from '@/components/features/product/display/ProductPurchaseFlow';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
@@ -58,7 +58,7 @@ const ProductScreenContent = () => {
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />
           </XStack>
-          <ProductPurchase />
+          <ProductPurchaseFlow />
         </PageContent>
         <PageContent title="Produktbilder" >
           {product.images.length > 1 && <ProductImageGallery />}
