@@ -11,9 +11,9 @@ interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disable
     onPress?: ((event: GestureResponderEvent) => void) | null;
     disabled?: boolean;
     icon?: ButtonProps['icon'];
+    iconAfter?: ButtonProps['icon'];
     theme?: ThemeName | null;
     label: string;
-    after?: React.ReactNode;
 }
 
 export const CallToActionButton = React.forwardRef<
@@ -24,7 +24,8 @@ export const CallToActionButton = React.forwardRef<
     theme = THEME_CTA_BUTTON,
     icon,
     label,
-    after,
+    iconAfter,
+    children,
     ...props }, ref) => {
 
     const handlePress = (event: GestureResponderEvent) => {
@@ -54,12 +55,12 @@ export const CallToActionButton = React.forwardRef<
             <ThemedButton.Icon>{icon}</ThemedButton.Icon>
             <ThemedButton.Text fg={1}>
                 <ThemedText fos="$4">{label}</ThemedText>
+                {children}
             </ThemedButton.Text>
-            {after &&
-                <ThemedButton.After>
-                    {after}
-                </ThemedButton.After>
-            }
+            <ThemedButton.Icon>
+                {iconAfter}
+            </ThemedButton.Icon>
+
         </ThemedButton>
     );
 });

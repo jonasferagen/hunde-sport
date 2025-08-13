@@ -68,16 +68,18 @@ export const PurchaseWizardStep = ({
                 <ProductPrice />
             </ThemedXStack>
         </ThemedYStack>
-        <ThemedYStack>
+        <ThemedXStack jc="space-between" ai="center">
             <BackButton
+                flex={1}
                 onPress={() => onBack(purchasable)}
                 disabled={false}
             />
             <NextButton
+                flex={1}
                 onPress={() => onNext(purchasable)}
                 disabled={!purchasable.isValid}
             />
-        </ThemedYStack>
-    </ThemedYStack>
+        </ThemedXStack>
+    </ThemedYStack >
 
 

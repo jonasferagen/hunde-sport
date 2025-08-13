@@ -37,7 +37,7 @@ export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
                 icon={icon}
                 theme={theme}
                 label={message}
-                after={
+                iconAfter={
                     <YStack
                         theme="normal"
                         h="$6"

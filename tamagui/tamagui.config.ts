@@ -107,8 +107,7 @@ const appConfig = createTamagui({
         heading: font,
         body: font,
     },
-    size: font.size,
-    lineHeight: font.lineHeight,
+
 });
 
 export default appConfig;

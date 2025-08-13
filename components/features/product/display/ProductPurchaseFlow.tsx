@@ -15,12 +15,11 @@ export const ProductPurchaseFlow = () => {
     return (
         <PurchaseButton
             onPress={() =>
-                openModal(({ close, payload, updatePayload, setPosition }: WizardRenderArgs<Purchasable>) => (
+                openModal(({ close, payload, updatePayload }: WizardRenderArgs<Purchasable>) => (
                     <PurchaseWizard
                         payload={payload}
                         updatePayload={updatePayload}
                         close={close}
-                        setPosition={setPosition}
                     />
                 ), purchasable)
             }

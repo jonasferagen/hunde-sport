@@ -1,8 +1,9 @@
 // /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
-import { ArrowBigRightDash, ShoppingCart } from '@tamagui/lucide-icons';
+import { ArrowBigRightDash } from '@tamagui/lucide-icons';
 import React from 'react';
-import { ButtonProps } from 'tamagui';
+import { ButtonProps, XStack } from 'tamagui';
+
 
 interface NextButtonProps extends ButtonProps {
     onPress: () => void;
@@ -11,21 +12,13 @@ interface NextButtonProps extends ButtonProps {
 }
 
 export const NextButton = ({ onPress, disabled, label = 'Neste', ...props }: NextButtonProps) => {
-
-    const icon = <ShoppingCart />
-    const iconAfter = <ArrowBigRightDash />
-
     return (
         <CallToActionButton
             onPress={onPress}
             disabled={disabled}
-            icon={icon}
-            f={0}
             label={label}
-            after={iconAfter}
+            iconAfter={<XStack><ArrowBigRightDash size="$5" /></XStack>}
             {...props}
-        >
-
-        </CallToActionButton>
-    );
-};
+        />
+    )
+}

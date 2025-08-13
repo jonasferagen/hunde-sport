@@ -2,7 +2,7 @@
 import { CallToActionButton } from '@/components/ui/button/CallToActionButton';
 import { ArrowBigLeftDash } from '@tamagui/lucide-icons';
 import React from 'react';
-import { ButtonProps } from 'tamagui';
+import { ButtonProps, XStack } from 'tamagui';
 
 interface BackButtonProps extends ButtonProps {
     onPress: () => void;
@@ -12,21 +12,16 @@ interface BackButtonProps extends ButtonProps {
 
 export const BackButton = ({ onPress, disabled, label = 'Tilbake', ...props }: BackButtonProps) => {
 
-    const icon = <ArrowBigLeftDash size="$6" />
-    const iconAfter = <ArrowBigLeftDash />
-
-
     return (
         <CallToActionButton
+            theme="dark_blue_active"
             onPress={onPress}
             disabled={disabled}
-            icon={icon}
+            icon={<XStack><ArrowBigLeftDash size="$5" /></XStack>}
             f={0}
+            size="$4"
             label={label}
-
             {...props}
-        >
-
-        </CallToActionButton>
+        />
     );
 };
