@@ -2,7 +2,6 @@ import { ProductCategoryTiles } from '@/components/features/product-category/Pro
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/ProductTiles';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { SearchBar } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router } from 'expo-router';
@@ -14,18 +13,17 @@ export const HomeScreen = () => {
         query && router.push(routes.search.path(query));
     };
 
-
     const searchInputRef = useRunOnFocus<Input>((input) => input.focus());
 
     return (
         <PageView>
             <PageHeader >
-                <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} />
+
             </PageHeader>
 
             <PageSection scrollable>
-                <PageContent theme="soft" title="Kategorier" >
-                    <ProductCategoryTiles key="categories" theme="success_alt6" />
+                <PageContent theme="accent" title="Kategorier" >
+                    <ProductCategoryTiles key="categories" theme="secondary" />
                 </PageContent>
                 <PageContent theme="elevated" title="Nyheter" scrollable px="none" >
                     <RecentProducts key='recent' />
@@ -44,3 +42,5 @@ export const HomeScreen = () => {
 
     );
 }
+
+/*                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} /> */

@@ -7,16 +7,14 @@ import {
   SearchProvider
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
-import appConfig from '@/tamagui/tamagui.config';
+import { appConfig } from '@/tamagui/tamagui.config';
 import { PortalProvider } from '@tamagui/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { JSX } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TamaguiProvider, Theme, ThemeName } from 'tamagui';
-
-const theme = "light_neutral" as ThemeName;
+import { TamaguiProvider, Theme } from 'tamagui';
 
 const RootLayout = (): JSX.Element => {
   return (

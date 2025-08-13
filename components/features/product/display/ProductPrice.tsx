@@ -48,7 +48,7 @@ const ProductPriceImpl = ({ product, ...props }: { product: PurchasableProduct }
 
     if (!isPurchasable || !isInStock) {
         return <PriceText
-            variant="disabled"
+
             {...props}>
             {formatPrice(price)}
         </PriceText>
@@ -58,7 +58,7 @@ const ProductPriceImpl = ({ product, ...props }: { product: PurchasableProduct }
         return (
             <XStack ai="center" gap="$2">
                 <PriceText
-                    variant="disabled"
+
                     {...props}>
                     {formatPrice(regular_price)}
                 </PriceText>

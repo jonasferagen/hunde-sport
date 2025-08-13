@@ -34,7 +34,7 @@ export const ProductList = memo(({
     const keyExtractor = useCallback((item: PurchasableProduct) => item.id.toString(), []);
 
     return (
-        <XStack f={1} theme="secondary">
+        <XStack f={1} theme="primary">
             <FlashList
                 data={products as PurchasableProduct[]}
                 renderItem={renderItem}

@@ -10,7 +10,7 @@ import { Theme } from 'tamagui';
 const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     return (
-        <Theme name='primary'>
+        <Theme name='light'>
             {children}
             <BottomBar />
         </Theme>

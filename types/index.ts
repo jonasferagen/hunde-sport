@@ -5,7 +5,6 @@ export * from '@/models/Product/Product';
 export * from '@/models/Product/ProductAttribute';
 export * from '@/models/Product/Purchasable';
 export * from '@/models/ProductCategory';
-export * from './tamagui';
 
 
 

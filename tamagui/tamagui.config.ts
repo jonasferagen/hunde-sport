@@ -1,9 +1,10 @@
 // tamagui.config.ts
 import { createAnimations } from '@tamagui/animations-moti'
-import { themes, tokens } from '@tamagui/config/v3'
+import { tokens } from '@tamagui/config/v4'
 import { createInterFont } from '@tamagui/font-inter'
 import { shorthands } from '@tamagui/shorthands'
 import { createTamagui } from 'tamagui'
+
 
 const font = createInterFont({
     size: { 1: 12, 2: 14, 3: 15, 4: 16, 5: 18, 6: 20 },
@@ -22,16 +23,18 @@ const animations = createAnimations({
 })
 
 
+import { themes } from './themes/sageTheme'
 
-const appConfig = createTamagui({
+console.log(JSON.stringify(Object.keys(themes), null, 2))
+
+export const appConfig = createTamagui({
     animations,
     tokens,
     shorthands,
     fonts: { heading: font, body: font },
-    themes: {
-        ...themes,
-        //...sageTheme,
-    },     // keep it literal
-})
+    themes: { ...themes } as const,
+});
 
-export default appConfig
+export type AppConfig = typeof appConfig;
+
+export default appConfig;

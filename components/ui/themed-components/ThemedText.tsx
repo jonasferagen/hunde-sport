@@ -3,22 +3,18 @@ import { SizableText, styled } from 'tamagui';
 export const ThemedText = styled(
     SizableText,
     {
+        name: 'ThemedText',
         color: '$color',
-        fontSize: '$4',            // SizableText prefers `size` token over raw fontSize
-        fontWeight: 400,       // use numeric weights; 'normal' isn't typed
-        disabledStyle: {
-            opacity: 0.5,
-            textDecorationLine: 'line-through',
-        },
+        // use font sizing via `size`, not layout `$size` via fontSize
+        size: '$4',
+        disabledStyle: { opacity: 0.5, textDecorationLine: 'line-through' },
 
         variants: {
             variant: {
-                subtle: { color: '$colorSubtle' },
-                emphasized: { fontWeight: 700 },
+                // v4 uses color, color2, color3... for “subtler” steps
+                subtle: { color: '$color2' },
+                emphasized: { fontWeight: 700 }, // or a font weight token, e.g. '$7'
             },
         } as const,
-    },
-    {
-        name: 'ThemedText',     // <-- put `name` in the static config (3rd arg)
     }
 );

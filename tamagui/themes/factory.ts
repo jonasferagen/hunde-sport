@@ -1,5 +1,4 @@
 import { darken, getLuminance, lighten, rgba } from 'polished';
-import { ThemeName } from 'tamagui';
 
 
 const enhanceTheme = (baseColor: string, forceColor?: string) => {
@@ -159,8 +158,6 @@ const buildAccents = (mode: Mode) => {
 };
 
 
-
-
 // ---- 4) Factory: give it a brand, get a full theme object
 export const createBrandTheme = (brand: keyof typeof BRANDS) => {
     const { light, dark } = BRANDS[brand];
@@ -176,18 +173,11 @@ export const createBrandTheme = (brand: keyof typeof BRANDS) => {
         ...buildAccents('dark'),
     };
 
-    return { ...lightTheme, ...darkTheme } as Record<string, ThemeName>;
+    return { ...lightTheme, ...darkTheme } as Record<string, ReturnType<typeof enhanceTheme>>;
 };
-
-
-// tie themes to your actual token set
-// themes/brand.ts
-
-
-
-
 
 export const lilacTheme = createBrandTheme('lilac');
 export const sageTheme = createBrandTheme('sage');
 export const mintTheme = createBrandTheme('mint');
 
+console.log(JSON.stringify(Object.keys(sageTheme), null, 2));
