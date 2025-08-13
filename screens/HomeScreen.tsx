@@ -25,7 +25,7 @@ export const HomeScreen = () => {
 
             <PageSection scrollable>
                 <PageContent theme="soft" title="Kategorier" >
-                    <ProductCategoryTiles key="categories" theme="alt1" />
+                    <ProductCategoryTiles key="categories" theme="success_alt6" />
                 </PageContent>
                 <PageContent theme="elevated" title="Nyheter" scrollable px="none" >
                     <RecentProducts key='recent' />

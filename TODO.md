@@ -10,8 +10,6 @@ product_name: Car candle 26458 (attributes)
 *'#' i category.description så viser vi den ikke
 
 
-
-
 Web view
 
 Købers storfe og ris
@@ -24,6 +22,16 @@ post@allprod.no
 Allprod AS
 Østre Rosten 4a
 7075 Tiller 
+
+
+- Navigasjon
+- Pricetag 
+- Både tilbud og ellers
+- Toggle all / 
+- Pinch / zoom
+- Handlekurv subtotal
+- Handlekurv pris skal ikke ha strikethrough
+- Turkis 
 
 
 

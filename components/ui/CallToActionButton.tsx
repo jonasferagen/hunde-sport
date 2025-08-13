@@ -6,6 +6,8 @@ import { GestureResponderEvent } from 'react-native';
 import { Theme, ThemeName } from 'tamagui';
 import { ThemedText } from './themed-components';
 
+import { THEME_CTA_BUTTON } from '@/tamagui/app';
+
 interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disabled' | 'icon' | 'theme'> {
     onPress?: ((event: GestureResponderEvent) => void) | null;
     disabled?: boolean;
@@ -20,7 +22,7 @@ export const CallToActionButton = React.forwardRef<
     CallToActionButtonProps
 >(({ onPress,
     disabled,
-    theme = 'accent',
+    theme = THEME_CTA_BUTTON,
     icon,
     label,
     iconAfter,
@@ -35,10 +37,9 @@ export const CallToActionButton = React.forwardRef<
 
 
     return (
-        <Theme name="secondary">
+        <Theme name={theme}>
 
             <ThemedButton
-                theme='cta'
                 ref={ref}
                 onPress={handlePress}
                 disabled={disabled}

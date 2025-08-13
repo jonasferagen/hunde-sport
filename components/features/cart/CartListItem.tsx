@@ -30,6 +30,8 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
     const { updateItem, removeItem } = useCartContext();
     const { quantity, key } = item;
 
+    console.log(item.totals);
+
     return (
         <ThemedYStack p="$3"  {...props}>
             {/* Row 1: Product name + unit price */}
@@ -66,7 +68,7 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
 
                 <XStack f={1} ai="center" jc="flex-end">
                     <PriceText f={1} ta="right">
-                        {formatPrice(item.prices.price)}
+                        {formatPrice(String(Number(item.totals.line_subtotal) + Number(item.totals.line_subtotal_tax)))}
                     </PriceText>
                 </XStack>
 

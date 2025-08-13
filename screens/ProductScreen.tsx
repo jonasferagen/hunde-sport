@@ -53,7 +53,7 @@ const ProductScreenContent = () => {
       </PageHeader>
       <PageSection scrollable>
         <ProductImage />
-        <PageContent theme="light" gap="$3">
+        <PageContent gap="$3">
           <XStack jc="space-between">
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />

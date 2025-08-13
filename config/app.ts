@@ -12,3 +12,4 @@ export const PRODUCT_TILE_HEIGHT: DimensionValue = 120;
 export const DEBUG_PRODUCTS = false;
 
 
+export const THEME_CTA = 'success_alt7';

@@ -4,6 +4,7 @@ import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname, useRouter } from 'expo-router';
 import { styled, Tabs, Text, Theme, YStack, YStackProps } from 'tamagui';
 
+import { THEME_BOTTOM_BAR } from '@/tamagui/app';
 
 const StyledTab = styled(Tabs.Tab, {
     name: 'StyledTab',
@@ -43,7 +44,7 @@ export const BottomBar = (props: YStackProps) => {
     };
 
     return (
-        <Theme name="primary">
+        <Theme name={THEME_BOTTOM_BAR}>
             <YStack {...props} w="100%">
                 <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
                     <StyledTabsList>

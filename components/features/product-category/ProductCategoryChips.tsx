@@ -49,9 +49,9 @@ export const ProductCategoryChips = ({ limit = 4, showAll, ...stackProps }: Stac
                     </Chip>
                 </Link>
             ))}
-            <Chip onPress={() => { setAll(!all); }} theme="strong">
+            {productCategories.length > limit && <Chip onPress={() => { setAll(!all); }} theme="strong">
                 {all ? 'Skjul' : 'Alle'}
-            </Chip>
+            </Chip>}
         </XStack>
     );
 };

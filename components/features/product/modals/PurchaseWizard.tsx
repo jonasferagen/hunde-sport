@@ -1,7 +1,7 @@
 import { ThemedButton, ThemedLinearGradient, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { Purchasable } from "@/types";
 import React, { JSX } from "react";
-import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
+import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 import { BackButton } from "./BackButton";
 import { NextButton } from "./NextButton";
 
@@ -58,6 +58,7 @@ export const PurchaseWizardStep = ({
     <ThemedYStack f={1} mih={0} >
         <ThemedYStack>
             <ProductTitle />
+            <ProductImage img_height={300} />
         </ThemedYStack>
         <Sheet.ScrollView f={1} mih={0}>
             {children}

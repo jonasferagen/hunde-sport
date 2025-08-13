@@ -22,7 +22,7 @@ const RootLayout = (): JSX.Element => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>
-            <Theme name="light_primary">
+            <Theme name="light">
               <DebugProvider>
                 <ProductCategoryProvider>
                   <CartProvider>
@@ -34,7 +34,6 @@ const RootLayout = (): JSX.Element => {
                         </Stack>
                         <DebugView />
                       </SearchProvider>
-
                     </PortalProvider>
                   </CartProvider>
                 </ProductCategoryProvider>
