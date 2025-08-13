@@ -1,24 +1,47 @@
-import React from 'react';
-import { ScrollView } from 'react-native';
-import { YStack, YStackProps } from 'tamagui';
+import React, { ReactNode } from 'react';
+import { H3, ScrollView, YStackProps } from 'tamagui';
+import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
+import { ThemedYStack } from '../ui/themed-components/ThemedStack';
 
 interface PageSectionProps extends YStackProps {
-  children: React.ReactNode;
-  scrollable?: boolean;
-
+  children: ReactNode;
+  title?: string;
+  scrollable?: boolean; // Add this prop
+  px?: string;
 }
 
-export const PageSection = React.forwardRef<ScrollView, PageSectionProps>(({ children, scrollable, ...props }, ref) => {
-  if (scrollable) {
-    return <ScrollView
-      ref={ref}
-      showsVerticalScrollIndicator={true}
-      nestedScrollEnabled={true}
-      scrollsToTop={true}
-    >
-      <YStack {...props}>{children}</YStack>
-    </ScrollView>
+export const PageSection = (props: PageSectionProps) => {
+
+  const {
+    children,
+    title,
+    scrollable,
+    ...stackProps
+
+  } = props;
+
+  const validChildren = React.Children.toArray(children).filter(Boolean);
+
+  if (validChildren.length === 0) {
+    return null;
   }
 
-  return <YStack f={1}{...props}>{children}</YStack>;
-});
+  const px = stackProps.px === 'none' ? '$3' : 'none';
+
+  return (
+
+    <ThemedYStack preset="container" {...stackProps}>
+      <ThemedLinearGradient />
+      {title && <H3 px={px}>{title}</H3>}
+
+      {scrollable ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {validChildren}
+        </ScrollView>
+      ) : (
+        validChildren // Just render children directly
+      )}
+
+    </ThemedYStack >
+  );
+};

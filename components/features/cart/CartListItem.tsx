@@ -1,7 +1,6 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
 import { ThemedLinearGradient, ThemedText, ThemedYStack } from '@/components/ui';
-import { THEME_CART_REMOVE } from '@/config/app';
 import { useCartContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { CartItemData } from '@/models/Cart/Cart';
@@ -28,8 +27,6 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
 
     const { updateItem, removeItem } = useCartContext();
     const { quantity, key } = item;
-
-    console.log(item.totals);
 
     return (
         <ThemedYStack p="$3"  {...props}>
@@ -72,7 +69,7 @@ const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps)
                 </XStack>
 
                 {/* Remove Button */}
-                <ThemedButton theme={THEME_CART_REMOVE}
+                <ThemedButton
                     onPress={() => removeItem(key)}
                     circular
                     disabled={false}

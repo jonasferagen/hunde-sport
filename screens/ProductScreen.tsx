@@ -5,7 +5,7 @@ import { ProductImageGallery } from '@/components/features/product/display/Produ
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductPurchaseFlow } from '@/components/features/product/modals/ProductPurchaseFlow';
-import { PageContent, PageHeader, PageSection, PageView } from '@/components/layout';
+import { PageBody, PageHeader, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
@@ -51,22 +51,22 @@ const ProductScreenContent = () => {
         <Breadcrumbs isLastClickable={true} />
         <ProductCategoryChips showAll={true} />
       </PageHeader>
-      <PageSection scrollable>
+      <PageBody scrollable>
         <ProductImage />
-        <PageContent gap="$3">
+        <PageBody gap="$3">
           <XStack jc="space-between">
             <ProductTitle size="$6" />
             <ProductPrice size="$6" />
           </XStack>
           <ProductPurchaseFlow />
-        </PageContent>
-        <PageContent title="Produktbilder" >
+        </PageBody>
+        <PageBody title="Produktbilder" >
           {product.images.length > 1 && <ProductImageGallery />}
-        </PageContent>
-        <PageContent theme="secondary" title="Produktinformasjon">
+        </PageBody>
+        <PageBody theme="secondary" title="Produktinformasjon">
           <ProductDescription short={false} />
-        </PageContent>
-      </PageSection>
+        </PageBody>
+      </PageBody>
     </PageView >
   );
 };

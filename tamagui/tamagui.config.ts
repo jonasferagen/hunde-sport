@@ -23,14 +23,14 @@ const animations = createAnimations({
 })
 
 
-import { themes } from './themes/sageTheme'
+import { sageTheme } from './themes/sageTheme'
 
 export const appConfig = createTamagui({
     animations,
     tokens,
     shorthands,
     fonts: { ...defaultConfig.fonts, heading: font, body: font },
-    themes: { ...defaultConfig.themes, ...themes } as const,
+    themes: { ...defaultConfig.themes, ...sageTheme.themes } as const,
 });
 
 export type AppConfig = typeof appConfig;

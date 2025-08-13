@@ -1,7 +1,8 @@
 import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/ProductTiles';
-import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { SearchBar } from '@/components/ui/search-bar/Searchbar';
 import { routes } from '@/config/routes';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router } from 'expo-router';
@@ -14,33 +15,31 @@ export const HomeScreen = () => {
     };
 
     const searchInputRef = useRunOnFocus<Input>((input) => input.focus());
-
+    //ref={searchInputRef}
     return (
         <PageView>
             <PageHeader >
-
+                <SearchBar onSubmit={handleSearch} />
             </PageHeader>
-
-            <PageSection scrollable>
-                <PageContent theme="accent" title="Kategorier" >
-                    <ProductCategoryTiles key="categories" theme="secondary" />
-                </PageContent>
-                <PageContent theme="elevated" title="Nyheter" scrollable px="none" >
+            <PageBody scrollable>
+                <PageSection title="Kategorier">
+                    <ProductCategoryTiles key="categories" />
+                </PageSection>
+                <PageSection title="Nyheter" scrollable px="none" >
                     <RecentProducts key='recent' />
-                </PageContent>
-                <PageContent theme="soft" title="Tilbud" scrollable px="none" >
+                </PageSection>
+                <PageSection title="Tilbud" scrollable px="none" >
                     <DiscountedProducts key='discounted' />
-                </PageContent>
-                <PageContent theme="elevated" title="Utvalgte produkter" scrollable px="none">
+                </PageSection>
+                <PageSection title="Utvalgte produkter" scrollable px="none">
                     <FeaturedProducts key='featured' />
-                </PageContent>
-                <PageContent theme="soft" title="Debug" scrollable px="none">
+                </PageSection>
+                <PageSection title="Debug" scrollable px="none">
                     <DebugProducts key='debug' />
-                </PageContent>
-            </PageSection>
+                </PageSection>
+            </PageBody>
         </PageView>
 
     );
 }
 
-/*                 <SearchBar initialQuery="" ref={searchInputRef} onSubmit={handleSearch} /> */

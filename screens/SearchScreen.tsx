@@ -1,5 +1,5 @@
 import { ProductList } from '@/components/features/product/ProductList';
-import { PageContent, PageSection, PageView } from '@/components/layout';
+import { PageBody, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { SearchBar, ThemedXStack } from '@/components/ui';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
@@ -27,8 +27,8 @@ export const SearchScreen = () => {
             <PageHeader>
                 <SearchBar initialQuery={initialQuery} placeholder="Produktsøk" />
             </PageHeader>
-            <PageSection>
-                <PageContent >
+            <PageBody>
+                <PageBody >
                     <ThemedXStack preset="split">
                         <SizableText f={1}>
                             {searchQuery}
@@ -37,11 +37,11 @@ export const SearchScreen = () => {
                             {searchTotal}
                         </SizableText>
                     </ThemedXStack>
-                </PageContent>
-                <PageContent f={1} p="none">
+                </PageBody>
+                <PageBody f={1} p="none">
                     <SearchResults key={query} />
-                </PageContent>
-            </PageSection>
+                </PageBody>
+            </PageBody>
         </PageView>
     );
 };

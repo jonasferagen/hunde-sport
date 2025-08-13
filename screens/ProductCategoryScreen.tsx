@@ -1,7 +1,7 @@
 import { Breadcrumbs } from '@/components/features/breadcrumbs/Breadcrumbs';
 import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { ProductCategoryProducts } from '@/components/features/product-category/ProductCategoryProducts';
-import { PageContent, PageView } from '@/components/layout';
+import { PageBody, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
@@ -29,8 +29,8 @@ const ProductCategoryScreenContent = memo(() => {
             <Breadcrumbs isLastClickable={true} />
             <ProductCategoryChips showAll={false} />
         </PageHeader>
-        <PageContent f={1} px="none">
+        <PageBody f={1} px="none">
             <ProductCategoryProducts />
-        </PageContent>
+        </PageBody>
     </PageView>
 });

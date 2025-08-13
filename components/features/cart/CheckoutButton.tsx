@@ -12,6 +12,7 @@ export const CheckoutButton = ({ disabled, ...props }: CheckoutButtonProps) => {
     const iconAfter = <ExternalLink />
     return (
         <CallToActionButton
+            theme="secondary"
             disabled={disabled}
             f={0}
             icon={null}
