@@ -2,7 +2,7 @@
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ArrowBigRightDash } from '@tamagui/lucide-icons';
 import React from 'react';
-import { ButtonProps, XStack } from 'tamagui';
+import { ButtonProps } from 'tamagui';
 
 
 interface NextButtonProps extends ButtonProps {
@@ -17,7 +17,7 @@ export const NextButton = ({ onPress, disabled, label = 'Neste', ...props }: Nex
             onPress={onPress}
             disabled={disabled}
             label={label}
-            iconAfter={<XStack><ArrowBigRightDash size="$5" /></XStack>}
+            iconAfter={<ArrowBigRightDash />}
             {...props}
         />
     )

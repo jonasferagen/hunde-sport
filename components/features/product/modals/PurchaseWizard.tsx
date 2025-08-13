@@ -1,13 +1,14 @@
-import { ThemedXStack, ThemedYStack } from "@/components/ui";
+import { ThemedButton, ThemedLinearGradient, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { Purchasable } from "@/types";
 import React, { JSX } from "react";
 import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 import { BackButton } from "./BackButton";
 import { NextButton } from "./NextButton";
-import { ProductVariationsModal } from "./ProductVariationsModal";
-import { QuantitySelectModal } from "./QuantitySelectModal";
 
-import { Sheet } from 'tamagui';
+import { useCartContext, usePurchasableContext } from "@/contexts";
+import { Minus, Plus } from "@tamagui/lucide-icons";
+import { Sheet, XStack } from 'tamagui';
+import { ProductVariationSelect } from "../product-variation/ProductVariationSelect";
 
 
 
@@ -71,7 +72,6 @@ export const PurchaseWizardStep = ({
         <ThemedYStack gap="$3" f={0}>
 
             <NextButton
-                size="$4"
                 onPress={() => onNext(purchasable)}
                 disabled={!purchasable.isValid}
             />
@@ -81,3 +81,71 @@ export const PurchaseWizardStep = ({
             />
         </ThemedYStack>
     </ThemedYStack >
+
+
+
+const ProductVariationsModal = ({
+    onNext,
+    onBack,
+}: {
+    onNext: (purchasable: Purchasable) => void,
+    onBack: (purchasable: Purchasable) => void
+}) => {
+
+    const { purchasable } = usePurchasableContext();
+
+    return (
+        <PurchaseWizardStep
+            onNext={onNext}
+            onBack={onBack}
+            purchasable={purchasable}
+        >
+            <>
+                <ThemedLinearGradient />
+                <ProductVariationSelect />
+            </>
+        </PurchaseWizardStep>
+
+    );
+}
+
+const QuantitySelectModal = ({
+    onNext,
+    onBack
+}: {
+    onNext: (purchasable: Purchasable) => void,
+    onBack: (purchasable: Purchasable) => void
+}): JSX.Element => {
+
+    const { addItem } = useCartContext();
+    const { purchasable } = usePurchasableContext();
+    const [quantity, setQuantity] = React.useState(1);
+
+    const onPress = () => {
+        addItem(
+            purchasable,
+            quantity
+        );
+        onNext(purchasable);
+    };
+
+    return (
+        <PurchaseWizardStep
+            onNext={onPress}
+            onBack={onBack}
+            purchasable={purchasable}
+        >
+            <XStack ai="center" jc="center" gap="$3" p="$4">
+                <ThemedButton circular onPress={() => setQuantity(q => Math.max(1, q - 1))}>
+                    <Minus />
+                </ThemedButton>
+                <ThemedText fos="$6" ta="center" minWidth={30}>
+                    {quantity}
+                </ThemedText>
+                <ThemedButton circular onPress={() => setQuantity(q => q + 1)}>
+                    <Plus />
+                </ThemedButton>
+            </XStack>
+        </PurchaseWizardStep>
+    )
+}

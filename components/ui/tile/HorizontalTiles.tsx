@@ -1,19 +1,24 @@
 import { Product } from '@/types';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
+import { rgba } from 'polished';
 import React, { JSX, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { Spinner, View } from 'tamagui';
-import { LinearGradient } from 'tamagui/linear-gradient';
+import { Spinner, View, useTheme } from 'tamagui';
+import { ThemedLinearGradient } from '../themed-components';
 
 interface ScrollIndicatorProps {
     side: 'left' | 'right';
     width: string;
 }
 
-const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
+const ScrollIndicator = React.memo(({ side, width }: ScrollIndicatorProps) => {
 
     const gradientStart = side === 'left' ? [1, 0] : [0, 0];
     const gradientEnd = side === 'left' ? [0, 0] : [1, 0];
+
+    const theme = useTheme();
+    const backgroundColor = theme.background.get();
+    const backgroundTransparent = rgba(backgroundColor, 0);
 
     return (
         <View
@@ -28,17 +33,15 @@ const ScrollIndicator = ({ side, width }: ScrollIndicatorProps) => {
             jc="flex-end"
             pe="none"
         >
+            <ThemedLinearGradient
+                colors={[backgroundTransparent, backgroundColor]}
+                startPoint={gradientStart as [number, number]}
+                endPoint={gradientEnd as [number, number]}
 
-            <LinearGradient
-                colors={['$backgroundTransparent', '$background']}
-                start={gradientStart as [number, number]}
-                end={gradientEnd as [number, number]}
-                fullscreen
             />
-
         </View>
     );
-};
+});
 
 interface HorizontalTilesProps<T> {
     items?: T[];

@@ -3,23 +3,19 @@ import { CustomDrawerContent } from '@/components/menu/CustomDrawerContent';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
-import { useRoute } from '@react-navigation/native';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { Theme } from 'tamagui';
 
 const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const route = useRoute();
-    const themeName = routes[route.name]?.theme || 'primary';
 
     return (
-        <Theme name={themeName}>
+        <Theme name='primary'>
             {children}
             <BottomBar />
         </Theme>
     );
 };
-
 
 
 const AppLayout = (): React.ReactElement => {

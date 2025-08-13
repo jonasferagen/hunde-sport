@@ -1,17 +1,15 @@
-import { routes } from '@/config/routes';
-import { useProductCategoryContext } from '@/contexts';
-
-import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
-import { usePurchasableContext } from '@/contexts/PurchasableContext';
-import { HrefObject, Link } from 'expo-router';
-import React, { JSX } from 'react';
-import { Button, StackProps, XStack } from 'tamagui';
-
 import { ThemedLinearGradient } from '@/components/ui';
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
+import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
+import { routes } from '@/config/routes';
+import { useProductCategoryContext } from '@/contexts';
+import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { getScaledImageUrl } from '@/lib/helpers';
-import { YStack } from 'tamagui';
-import { ProductDescription, ProductPurchaseFlow, ProductTitle } from '.';
+import { HrefObject, Link } from 'expo-router';
+import React, { JSX } from 'react';
+import { Button, StackProps, XStack, YStack } from 'tamagui';
+import { ProductDescription, ProductTitle } from '.';
+import { ProductPurchaseFlow } from '../modals/ProductPurchaseFlow';
 
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;

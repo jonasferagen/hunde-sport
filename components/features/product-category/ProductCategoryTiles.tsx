@@ -2,7 +2,7 @@ import { GridTiles } from '@/components/ui/tile/GridTiles';
 import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS } from '@/config/app';
 import { useProductCategoryContext } from '@/contexts';
 import { JSX, useMemo } from 'react';
-import { ScrollView, StackProps, useTheme, YStack } from 'tamagui';
+import { ScrollView, StackProps, YStack } from 'tamagui';
 import { ProductCategoryTile } from './ProductCategoryTile';
 
 export const MAX_CATEGORIES = NUM_CATEGORY_TILE_COLUMNS * NUM_CATEGORY_TILE_ROWS;
@@ -14,13 +14,6 @@ export const ProductCategoryTiles = (props: StackProps): JSX.Element => {
         () => rootProductCategories.slice(0, MAX_CATEGORIES),
         [rootProductCategories]
     );
-
-
-
-    const theme = useTheme();
-    const backgroundColor = theme.background.val; // Accessing the background color
-    console.log(backgroundColor);
-
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>

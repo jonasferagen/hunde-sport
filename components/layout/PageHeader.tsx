@@ -11,7 +11,7 @@ interface PageHeaderProps extends YStackProps {
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...props }) => {
 
     return <ThemedYStack
-        theme="soft"
+        theme="neutral"
         preset="container"
         bbw={1}
         boc="$borderColor"

@@ -1,7 +1,7 @@
 import { ProductList } from '@/components/features/product/ProductList';
 import { PageContent, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { SearchBar } from '@/components/ui';
+import { SearchBar, ThemedXStack } from '@/components/ui';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useSearchContext } from '@/contexts/SearchContext';
@@ -22,21 +22,21 @@ export const SearchScreen = () => {
     const searchQuery = query ? `Søkeresultater for "${query}"` : 'Søk etter produkter, merker og kategorier.';
     const searchTotal = isSearching ? <ThemedSpinner /> : `(${total})`;
 
-
-
     return (
         <PageView >
             <PageHeader>
                 <SearchBar initialQuery={initialQuery} placeholder="Produktsøk" />
             </PageHeader>
             <PageSection>
-                <PageContent ai="center" jc="space-between" fd="row">
-                    <SizableText f={1}>
-                        {searchQuery}
-                    </SizableText>
-                    <SizableText f={0}>
-                        {searchTotal}
-                    </SizableText>
+                <PageContent theme="elevated">
+                    <ThemedXStack preset="split">
+                        <SizableText f={1}>
+                            {searchQuery}
+                        </SizableText>
+                        <SizableText f={0}>
+                            {searchTotal}
+                        </SizableText>
+                    </ThemedXStack>
                 </PageContent>
                 <PageContent f={1} p="none" theme="elevated">
                     <SearchResults key={query} />

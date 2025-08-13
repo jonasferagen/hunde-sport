@@ -29,7 +29,7 @@ const ProductCategoryScreenContent = memo(() => {
             <Breadcrumbs isLastClickable={true} />
             <ProductCategoryChips showAll={false} />
         </PageHeader>
-        <PageContent f={1}>
+        <PageContent f={1} px="none">
             <ProductCategoryProducts />
         </PageContent>
     </PageView>

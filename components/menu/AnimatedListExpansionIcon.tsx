@@ -15,7 +15,7 @@ export const AnimatedListExpansionIcon = ({ expanded, size }: { expanded: boolea
 
     return (
         <Animated.View style={animatedStyle}>
-            <ChevronDown size={size} />
+            <ChevronDown />
         </Animated.View>
     );
 };

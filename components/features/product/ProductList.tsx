@@ -6,7 +6,7 @@ import React, { memo, useCallback } from 'react';
 import { ViewStyle } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { XStack } from 'tamagui';
-import { ProductCard } from './card';
+import { ProductCard } from './display/ProductCard';
 
 interface ProductListProps {
     products: Product[];

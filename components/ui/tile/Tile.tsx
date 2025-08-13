@@ -23,6 +23,7 @@ export const Tile = ({
     const uri = getScaledImageUrl(image.src, props.w as DimensionValue, props.h as DimensionValue, 'cover');
 
     return (
+
         <YStack
             br="$3"
             ov="hidden"
@@ -41,7 +42,7 @@ export const Tile = ({
             <YStack fullscreen t="auto" p="$2.5" jc="flex-end" f={1}>
                 <ThemedLinearGradient
                     fullscreen
-                    colors={['$backgroundPress', '$background']}
+                    flip
                     startPoint={[0, 0.2]}
                     endPoint={[0, 0.9]}
                     opacity={0.8}
@@ -58,6 +59,7 @@ export const Tile = ({
                 </SizableText>
             </YStack>
         </YStack>
+
     );
 };
 

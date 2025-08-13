@@ -1,5 +1,4 @@
 import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
-import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
 import {
     DrawerContentComponentProps,
@@ -13,12 +12,10 @@ import { ThemedText } from '../ui/themed-components/ThemedText';
 
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
-    const themeName = THEME_DRAWER;
 
     return (
-        <Theme name={themeName}>
-
-            <YStack f={1} bc="$background">
+        <Theme name="secondary">
+            <YStack f={1}>
                 <ThemedLinearGradient />
                 <XStack
                     ai="center"
@@ -49,7 +46,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                         >
                                             <ThemedText
                                                 f={1}
-                                                variant={isActive ? 'focused' : 'default'}
+                                                variant={isActive ? 'emphasized' : 'subtle'}
                                                 letterSpacing={0.5}
                                             >
                                                 {route.label}

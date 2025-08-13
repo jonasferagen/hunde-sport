@@ -1,6 +1,6 @@
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
-import { THEME_PRICE_TAG, THEME_PRICE_TAG_ON_SALE } from '@/config/app';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
+import { THEME_PRICE_TAG, THEME_PRICE_TAG_ON_SALE } from '@/tamagui/app';
 import { StarFull } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { SizableTextProps, StackProps, XStack } from 'tamagui';

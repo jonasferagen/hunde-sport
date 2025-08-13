@@ -31,6 +31,7 @@ interface ProductTilesProps {
 
 const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTilesProps) => {
     return (
+
         <HorizontalTiles
             {...queryResult}
             renderItem={({ item: product }: { item: PurchasableProduct }) => {
@@ -41,5 +42,6 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTiles
                 );
             }}
         />
+
     );
 };

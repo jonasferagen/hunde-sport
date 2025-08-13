@@ -1,4 +1,3 @@
-import { THEME_HEADER } from '@/config/app';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 import { Menu } from '@tamagui/lucide-icons';
@@ -15,12 +14,8 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
         navigation.dispatch(DrawerActions.openDrawer());
     };
 
-    //    const theme = resolveTheme(props.route.name);
-    const theme = THEME_HEADER;
-
     return (
         <XStack
-            theme={theme}
             ai="center"
             jc="space-between"
             p="$3"
@@ -32,8 +27,6 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
             <ThemedButton
                 onPress={openDrawer}
                 circular
-                h="$6"
-                w="$6"
             >
                 <Menu />
             </ThemedButton>

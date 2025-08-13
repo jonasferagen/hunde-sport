@@ -1,10 +1,10 @@
 import {
-    SizeTokens,
-    Text,
-    View,
     createStyledContext,
+    SizeTokens,
     styled,
+    Text,
     useTheme,
+    View,
     withStaticProperties
 } from '@tamagui/web'
 import { cloneElement, isValidElement, useContext } from 'react'
@@ -12,7 +12,7 @@ import { cloneElement, isValidElement, useContext } from 'react'
 // 1) Context for sizing between parts
 // 1) Context — make $3 the default
 export const ButtonContext = createStyledContext({
-    size: '$3' as SizeTokens,
+    size: '$4' as SizeTokens,
 })
 
 // 2) Shared size table (tweak to taste)
@@ -61,7 +61,7 @@ export const ButtonFrame = styled(View, {
     variants: {
         size: {
             '...size': (token) => {
-                const s = SIZES[(token as SizeKey)] ?? SIZES['$3']
+                const s = SIZES[(token as SizeKey)] ?? SIZES['$4']
                 return {
                     height: s.h,
                     paddingHorizontal: s.px,
@@ -73,7 +73,7 @@ export const ButtonFrame = styled(View, {
         circular: {
             true: () => {
                 const { size } = useContext(ButtonContext.context)
-                const s = SIZES[(size as SizeKey)] ?? SIZES['$3']
+                const s = SIZES[(size as SizeKey)] ?? SIZES['$4']
                 return {
                     bw: 0,
                     br: 9999,
@@ -89,7 +89,7 @@ export const ButtonFrame = styled(View, {
     } as const,
 
     defaultVariants: {
-        size: '$3', // ← default/standard
+        size: '$4', // ← default/standard
     },
 })
 
@@ -103,7 +103,7 @@ export const ButtonText = styled(Text, {
     variants: {
         size: {
             '...size': (token) => {
-                const s = SIZES[(token as SizeKey)] ?? SIZES['$3']
+                const s = SIZES[(token as SizeKey)] ?? SIZES['$4']
                 return {
                     fontSize: s.fs,
                     lineHeight: s.lh,
@@ -112,14 +112,14 @@ export const ButtonText = styled(Text, {
         },
     } as const,
 
-    defaultVariants: { size: '$3' },
+    defaultVariants: { size: '$4' },
 })
 
 // 5) Icon slot reads from the table too
 const ButtonIcon = (props: { children: any }) => {
     const { size } = useContext(ButtonContext.context)
     const theme = useTheme()
-    const s = SIZES[(size as SizeKey)] ?? SIZES['$3']
+    const s = SIZES[(size as SizeKey)] ?? SIZES['$4']
 
     return isValidElement(props.children)
         ? cloneElement(props.children, {
@@ -140,4 +140,5 @@ export const ThemedButton = withStaticProperties(ButtonFrame, {
     Icon: ButtonIcon,
     After: ButtonAfter,
 })
+
 

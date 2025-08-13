@@ -6,7 +6,7 @@ import { SearchBar } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router } from 'expo-router';
-import { Input, useTheme } from 'tamagui';
+import { Input } from 'tamagui';
 
 export const HomeScreen = () => {
 
@@ -14,9 +14,6 @@ export const HomeScreen = () => {
         query && router.push(routes.search.path(query));
     };
 
-    const theme = useTheme();
-    const backgroundColor = theme.background.val; // Accessing the background color
-    console.log(backgroundColor);
 
     const searchInputRef = useRunOnFocus<Input>((input) => input.focus());
 
@@ -27,19 +24,19 @@ export const HomeScreen = () => {
             </PageHeader>
 
             <PageSection scrollable>
-                <PageContent theme="soft" title="Kategorier">
-                    <ProductCategoryTiles key="categories" theme="success_alt6" />
+                <PageContent theme="soft" title="Kategorier" >
+                    <ProductCategoryTiles key="categories" theme="alt1" />
                 </PageContent>
-                <PageContent theme="elevated" title="Nyheter" px="none" scrollable >
+                <PageContent theme="elevated" title="Nyheter" scrollable px="none" >
                     <RecentProducts key='recent' />
                 </PageContent>
-                <PageContent theme="soft" title="Tilbud" px="none" scrollable>
+                <PageContent theme="soft" title="Tilbud" scrollable px="none" >
                     <DiscountedProducts key='discounted' />
                 </PageContent>
-                <PageContent theme="elevated" title="Utvalgte produkter" px="none" scrollable>
+                <PageContent theme="elevated" title="Utvalgte produkter" scrollable px="none">
                     <FeaturedProducts key='featured' />
                 </PageContent>
-                <PageContent theme="soft" title="Debug" px="none" scrollable>
+                <PageContent theme="soft" title="Debug" scrollable px="none">
                     <DebugProducts key='debug' />
                 </PageContent>
             </PageSection>

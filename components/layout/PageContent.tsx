@@ -7,6 +7,7 @@ interface PageContentProps extends YStackProps {
   children: ReactNode;
   title?: string;
   scrollable?: boolean; // Add this prop
+  px?: string;
 }
 
 export const PageContent = (props: PageContentProps) => {
@@ -25,10 +26,13 @@ export const PageContent = (props: PageContentProps) => {
     return null;
   }
 
+  const px = stackProps.px === 'none' ? '$3' : 'none';
+
   return (
+
     <ThemedYStack preset="container" {...stackProps}>
       <ThemedLinearGradient />
-      {title && <H3 px="$3">{title}</H3>}
+      {title && <H3 px={px}>{title}</H3>}
 
       {scrollable ? (
         <ScrollView showsVerticalScrollIndicator={false}>

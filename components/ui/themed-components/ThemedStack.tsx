@@ -16,6 +16,7 @@ const config = {
             container: { p: '$3', gap: '$3' },
             tight: { p: '$2', gap: '$2' },
             loose: { p: '$4', gap: '$4' },
+            split: { gap: '$3', ai: 'center', jc: 'space-between' },
         },
     },
 
