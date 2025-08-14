@@ -25,6 +25,9 @@ const config = {
         box: {
             true: { bw: 1, boc: '$borderColor', bg: '$background' },
         },
+        rounded: {
+            true: { br: '$3' },
+        },
         chip: {
             true: {
                 fs: 1,

@@ -26,9 +26,10 @@ export const SearchBar = ({
             ai="center"
             br="$4"
             px="$3"
+
         >
             <ThemedInput
-                theme="light"
+
                 placeholder={placeholder}
                 value={query}
                 onChangeText={(text: string) => {

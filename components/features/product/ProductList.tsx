@@ -3,7 +3,7 @@ import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React, { memo } from 'react';
-import { Theme } from 'tamagui';
+import { useWindowDimensions } from 'react-native';
 import { ProductCard } from './display/ProductCard';
 
 interface ProductListProps {
@@ -13,12 +13,17 @@ interface ProductListProps {
 
 }
 
+
 export const ProductList = memo(({
     products,
     loadMore,
     loadingMore,
 
 }: ProductListProps) => {
+
+
+    const { width, height } = useWindowDimensions();
+
 
     const keyExtractor = React.useCallback(
         (item: PurchasableProduct) => String(item.id),
@@ -44,18 +49,22 @@ export const ProductList = memo(({
         [loadingMore]
     );
 
-    return (
-        <Theme name="light">
-            <FlashList
-                data={products as PurchasableProduct[]}
-                renderItem={renderItem}
-                keyExtractor={keyExtractor}
-                onEndReached={handleEndReached}
-                onEndReachedThreshold={0.8}
-                ListFooterComponent={Footer}
-                estimatedItemSize={150}
-            />
-        </Theme>
+    const ITEM_HEIGHT = 170;
 
+    return (
+
+        <FlashList
+            data={products as PurchasableProduct[]}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.8}
+            ListFooterComponent={Footer}
+            estimatedItemSize={ITEM_HEIGHT}
+            overrideItemLayout={(layout) => { layout.size = ITEM_HEIGHT; }}
+
+            drawDistance={1400} // optional: helps during fast flings
+            estimatedListSize={{ height, width }}
+        />
     );
 }); 

@@ -1,11 +1,9 @@
 import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/ProductTiles';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
-import { SearchBar } from '@/components/ui/search-bar/Searchbar';
+import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { routes } from '@/config/routes';
-import { useRunOnFocus } from '@/hooks/useRunOnFocus';
 import { router } from 'expo-router';
-import { Input } from 'tamagui';
 
 export const HomeScreen = () => {
 
@@ -13,8 +11,6 @@ export const HomeScreen = () => {
         query && router.push(routes.search.path(query));
     };
 
-    const searchInputRef = useRunOnFocus<Input>((input) => input.focus());
-    //ref={searchInputRef}
     return (
         <PageView>
             <PageHeader >
@@ -22,7 +18,7 @@ export const HomeScreen = () => {
             </PageHeader>
             <PageBody>
                 <PageSection title="Kategorier">
-                    <ProductCategoryTiles key="categories" />
+                    <ProductCategoryTiles key="categories" theme="secondary" />
                 </PageSection>
                 <PageSection title="Nyheter" scrollable px="none" >
                     <RecentProducts key='recent' />

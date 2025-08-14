@@ -10,12 +10,10 @@ export const ThemedInput = styled(Input, {
     bg: '$background',
     color: '$color',
     boc: '$borderColor',
-    bw: 1,
-
+    bw: 2,
     placeholderTextColor: '$color',
 
-    hoverStyle: { bg: '$backgroundHover' },
-    focusStyle: { boc: '$color', bw: 2, bg: '$backgroundFocus', outlineWidth: 0 },
-
+    hoverStyle: { boc: '$colorHover', bg: '$backgroundHover' },
+    focusStyle: { boc: '$colorFocus', bg: '$backgroundFocus', outlineWidth: 2 },
 
 })

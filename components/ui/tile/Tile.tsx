@@ -1,8 +1,9 @@
-import { getAspectRatio, getScaledImageUrl } from '@/lib/helpers';
+import { getAspectRatio } from '@/lib/helpers';
 import { StoreImage } from '@/models/StoreImage';
 import { JSX } from 'react';
 import { DimensionValue } from 'react-native';
 import { SizableText, YStack, YStackProps } from 'tamagui';
+import { ThemedYStack } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
 
@@ -20,22 +21,20 @@ export const Tile = ({
 
 
     const aspectRatio = getAspectRatio(props.w as DimensionValue, props.h as DimensionValue);
-    const uri = getScaledImageUrl(image.src, props.w as DimensionValue, props.h as DimensionValue, 'cover');
 
     return (
 
-        <YStack
-            br="$3"
+        <ThemedYStack
+            box
+            rounded
             ov="hidden"
             aspectRatio={aspectRatio}
-            boc="$borderColor"
             {...props}
         >
             <ThemedImage
                 fullscreen
                 image={image}
                 title={title}
-                objectFit="cover"
             />
             {children}
             <YStack fullscreen t="auto" p="$2.5" jc="flex-end" f={1}>
@@ -57,7 +56,7 @@ export const Tile = ({
                     {title}
                 </SizableText>
             </YStack>
-        </YStack>
+        </ThemedYStack>
 
     );
 };

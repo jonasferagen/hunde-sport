@@ -1,8 +1,9 @@
 import { ProductList } from '@/components/features/product/ProductList';
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { SearchBar, ThemedXStack } from '@/components/ui';
+import { ThemedXStack } from '@/components/ui';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
+import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useSearchContext } from '@/contexts/SearchContext';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
