@@ -1,13 +1,13 @@
 import { ThemedButton, ThemedLinearGradient, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { Purchasable } from "@/types";
 import React, { JSX } from "react";
-import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
+import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 import { BackButton } from "./BackButton";
 import { NextButton } from "./NextButton";
 
 import { useCartContext, usePurchasableContext } from "@/contexts";
 import { Minus, Plus } from "@tamagui/lucide-icons";
-import { Sheet, XStack } from 'tamagui';
+import { Sheet, Spacer, XStack } from 'tamagui';
 import { ProductVariationSelect } from "../product-variation/ProductVariationSelect";
 
 
@@ -58,7 +58,7 @@ export const PurchaseWizardStep = ({
     <ThemedYStack f={1} mih={0} >
         <ThemedYStack>
             <ProductTitle />
-            <ProductImage img_height={300} />
+
         </ThemedYStack>
         <Sheet.ScrollView f={1} mih={0}>
             {children}
@@ -70,7 +70,7 @@ export const PurchaseWizardStep = ({
                 <ProductPrice />
             </ThemedXStack>
         </ThemedYStack>
-        <ThemedYStack gap="$3" f={0}>
+        <ThemedYStack gap="$3" f={0} mb="$5">
 
             <NextButton
                 onPress={() => onNext(purchasable)}
@@ -81,9 +81,11 @@ export const PurchaseWizardStep = ({
                 disabled={false}
             />
         </ThemedYStack>
+        <Spacer mb="$6">
+        </Spacer>
     </ThemedYStack >
 
-
+//  <ProductImage img_height={300} />
 
 const ProductVariationsModal = ({
     onNext,

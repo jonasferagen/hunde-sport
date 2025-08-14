@@ -21,7 +21,7 @@ export const ProductImage = ({ img_height = IMAGE_HEIGHT, ...stackProps }: Produ
     const uri = getScaledImageUrl(image.src, screenWidth, screenWidth);
 
     return (
-        <YStack w="100%" h={img_height} ov="hidden" boc="$borderColor" bbw={1} {...stackProps}>
+        <YStack w="100%" h={img_height} ov="hidden" boc="$borderColor" br="$3" {...stackProps}>
             <Galeria urls={[uri!]}>
                 <Galeria.Image>
                     <ThemedImage

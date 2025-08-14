@@ -14,10 +14,8 @@ export const ModalHost = () => {
     const update = <P,>(next: P) => updatePayload(next);
 
     return (
-        <Theme name="neutral">
-
+        <Theme name="secondary">
             <Sheet
-
                 modal
                 native
                 open={open}
@@ -28,14 +26,14 @@ export const ModalHost = () => {
                 dismissOnSnapToBottom={true}
                 animation="fast"
             >
-                <Sheet.Overlay />
-                <Sheet.Frame f={1} minHeight={0} p="$4" gap="$3">
-                    <ThemedLinearGradient strong />
+                <Sheet.Overlay bg="white" opacity={0.2} />
+                <Sheet.Frame f={1} mih={0} p="$4" gap="$3">
+                    <ThemedLinearGradient />
                     <YStack
 
                         key={version}
                         f={1}
-                        minHeight={0}
+                        mih={0}
                     >
                         {renderAny ? (
                             <PurchasableProvider purchasable={payload as any}>
