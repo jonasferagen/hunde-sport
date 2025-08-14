@@ -30,7 +30,7 @@ export const PageSection = (props: PageSectionProps) => {
 
   return (
 
-    <ThemedYStack container {...stackProps} >
+    <ThemedYStack box container {...stackProps} >
 
       {title && <ThemedText px={px} size="$6">{title}</ThemedText>}
 

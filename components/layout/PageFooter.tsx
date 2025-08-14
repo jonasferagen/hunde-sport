@@ -11,7 +11,7 @@ interface PageFooterProps extends YStackProps {
 export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) => {
 
     return (
-        <Theme name="alt">
+        <Theme name="secondary">
             <ThemedYStack
                 container
                 box

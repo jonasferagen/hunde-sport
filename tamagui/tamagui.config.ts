@@ -25,6 +25,7 @@ const animations = createAnimations({
 
 import { mintTheme } from './themes/mintTheme'
 
+console.log(mintTheme);
 
 // 1) Names as a typed union
 type BuiltThemeName = (typeof mintTheme.themeNames)[number]

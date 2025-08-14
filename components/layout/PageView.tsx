@@ -4,7 +4,7 @@ export const PageView = ({ children, ...stackProps }: YStackProps) => {
 
   return (
     <ThemedYStack
-      theme="neutral"
+      theme="tertiary"
       f={1}
       gap="none"
 

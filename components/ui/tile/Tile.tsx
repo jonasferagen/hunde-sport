@@ -25,6 +25,7 @@ export const Tile = ({
     return (
 
         <ThemedYStack
+
             box
             rounded
             ov="hidden"
@@ -37,7 +38,13 @@ export const Tile = ({
                 title={title}
             />
             {children}
-            <YStack fullscreen t="auto" p="$2.5" jc="flex-end" f={1}>
+            <YStack fullscreen
+                f={1}
+                t="auto"
+                p="$2.5"
+                jc="flex-end"
+
+            >
                 <ThemedLinearGradient
                     fullscreen
                     flip

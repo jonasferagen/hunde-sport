@@ -23,7 +23,7 @@ export const ProductTile: React.FC<ProductTileProps> = ({
     const { purchasable } = usePurchasableContext();
     const product = purchasable.product;
     return (
-        <Theme name="primary">
+        <Theme name="neutral">
             <Link href={routes['product'].path(product)} asChild>
                 <Tile
                     w={width}

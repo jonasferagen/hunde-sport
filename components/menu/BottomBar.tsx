@@ -5,6 +5,8 @@ import { usePathname, useRouter } from 'expo-router';
 import { styled, Tabs, Text, YStack, YStackProps } from 'tamagui';
 
 
+
+
 const StyledTab = styled(Tabs.Tab, {
     name: 'StyledTab',
     f: 1,
@@ -43,7 +45,7 @@ export const BottomBar = (props: YStackProps) => {
     };
 
     return (
-        <YStack {...props} w="100%" >
+        <YStack theme="primary" {...props} w="100%" >
             <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
                 <StyledTabsList>
                     <ThemedLinearGradient />

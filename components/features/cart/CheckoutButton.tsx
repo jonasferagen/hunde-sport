@@ -18,7 +18,7 @@ export const CheckoutButton = ({ disabled, ...props }: CheckoutButtonProps) => {
             label={"Til kassen"}
             iconAfter={iconAfter}
             {...props}
-            theme="alt_shade"
+            theme="accent3"
         />
     );
 };

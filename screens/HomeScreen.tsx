@@ -16,20 +16,20 @@ export const HomeScreen = () => {
             <PageHeader >
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
-            <PageBody>
-                <PageSection title="Kategorier">
-                    <ProductCategoryTiles key="categories" theme="secondary" />
+            <PageBody >
+                <PageSection title="Kategorier" theme="secondary">
+                    <ProductCategoryTiles key="categories" theme="primary" />
                 </PageSection>
                 <PageSection title="Nyheter" scrollable px="none" >
                     <RecentProducts key='recent' />
                 </PageSection>
-                <PageSection title="Tilbud" scrollable px="none" >
+                <PageSection title="Tilbud" scrollable px="none" theme="secondary">
                     <DiscountedProducts key='discounted' />
                 </PageSection>
-                <PageSection title="Utvalgte produkter" scrollable px="none">
+                <PageSection title="Utvalgte produkter" scrollable px="none" >
                     <FeaturedProducts key='featured' />
                 </PageSection>
-                <PageSection title="Debug" scrollable px="none">
+                <PageSection title="Debug" scrollable px="none" theme="primary">
                     <DebugProducts key='debug' />
                 </PageSection>
             </PageBody>

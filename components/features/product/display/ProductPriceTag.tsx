@@ -1,6 +1,5 @@
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
-import { THEME_PRICE_TAG, THEME_PRICE_TAG_ON_SALE } from '@/tamagui/app';
 import { StarFull } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { SizableTextProps, StackProps, XStack } from 'tamagui';
@@ -13,10 +12,9 @@ export const ProductPriceTag = ({ textProps, br = "$3", ...stackProps }: Product
     const { purchasable } = usePurchasableContext();
     const { isInStock, isPurchasable, isOnSale } = purchasable.availability;
 
-    const theme = isOnSale ? THEME_PRICE_TAG_ON_SALE : THEME_PRICE_TAG;
 
     return <XStack
-        theme={theme}
+
         ai="center"
         jc="center"
         p="$1"

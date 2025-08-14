@@ -12,7 +12,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...prop
 
     return (
         <ThemedYStack
-            theme="alt"
+            theme="secondary"
             container
             box
             btw={0}

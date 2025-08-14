@@ -11,9 +11,13 @@ interface PageBodyProps extends YStackProps {
 export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, mode = 'scroll', ...props }, ref) => {
 
 
-  const content = <ThemedYStack {...props} f={1} gap="none" >
-    {children}
-  </ThemedYStack>;
+  const content = (
+    <ThemedYStack {...props}
+      f={1}
+      gap="none">
+      {children}
+    </ThemedYStack>
+  );
 
 
   return mode === 'scroll' ? (

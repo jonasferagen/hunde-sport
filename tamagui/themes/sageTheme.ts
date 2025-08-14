@@ -1,3 +1,4 @@
+/*
 import { createAppThemes, ThemeFactoryConfig } from "./themeFactory"
 
 // your config (pairs for light/dark)
@@ -18,3 +19,4 @@ const config = {
 } satisfies ThemeFactoryConfig
 
 export const sageTheme = createAppThemes(config)
+*/
