@@ -6,7 +6,6 @@ import { ProductPriceTag } from './display/ProductPriceTag';
 
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
-import { THEME_MAIN } from "@/tamagui/app";
 import { Link } from 'expo-router';
 import { DimensionValue } from "react-native";
 
@@ -24,7 +23,7 @@ export const ProductTile: React.FC<ProductTileProps> = ({
     const { purchasable } = usePurchasableContext();
     const product = purchasable.product;
     return (
-        <Theme inverse name={THEME_MAIN}>
+        <Theme name="primary">
             <Link href={routes['product'].path(product)} asChild>
                 <Tile
                     w={width}

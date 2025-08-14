@@ -33,10 +33,9 @@ export const Tile = ({
         >
             <ThemedImage
                 fullscreen
-                source={{ uri }}
                 image={image}
                 title={title}
-
+                objectFit="cover"
             />
             {children}
             <YStack fullscreen t="auto" p="$2.5" jc="flex-end" f={1}>
