@@ -1,5 +1,5 @@
 import { DebugView } from '@/components/debug/DebugView';
-import { ModalHost } from '@/components/features/product/modals/ModalHost';
+import { ModalHost } from '@/components/features/product/purchase/ModalHost';
 import {
   CartProvider,
   DebugProvider,

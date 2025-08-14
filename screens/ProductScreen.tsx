@@ -4,7 +4,7 @@ import { ProductImage } from '@/components/features/product/display/ProductImage
 import { ProductImageGallery } from '@/components/features/product/display/ProductImageGallery';
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
-import { ProductPurchaseFlow } from '@/components/features/product/modals/ProductPurchaseFlow';
+import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
 import { PageBody, PageHeader, PageView } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';

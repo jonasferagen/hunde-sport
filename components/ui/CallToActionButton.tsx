@@ -22,7 +22,7 @@ export const CallToActionButton = React.forwardRef<
     CallToActionButtonProps
 >(({ onPress,
     disabled,
-    theme = 'primary',
+    theme = "primary",
     icon,
     label,
     iconAfter,
@@ -34,6 +34,7 @@ export const CallToActionButton = React.forwardRef<
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         onPress?.(event);
     };
+
 
 
     return (

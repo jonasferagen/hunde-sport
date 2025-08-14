@@ -12,13 +12,13 @@ export const CheckoutButton = ({ disabled, ...props }: CheckoutButtonProps) => {
     const iconAfter = <ExternalLink />
     return (
         <CallToActionButton
-            theme="secondary"
             disabled={disabled}
             f={0}
             icon={null}
             label={"Til kassen"}
             iconAfter={iconAfter}
             {...props}
+            theme="alt_shade"
         />
     );
 };

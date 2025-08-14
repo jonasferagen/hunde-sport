@@ -9,7 +9,7 @@ import { HrefObject, Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { Button, StackProps, useThemeName, XStack, YStack } from 'tamagui';
 import { ProductDescription, ProductTitle } from '.';
-import { ProductPurchaseFlow } from '../modals/ProductPurchaseFlow';
+import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
 
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;

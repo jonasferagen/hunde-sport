@@ -1,28 +1,24 @@
 import { forwardRef, ReactNode } from 'react';
-import { styled, XStack, YStack } from 'tamagui';
+import { SizeTokens, styled, XStack, YStack } from 'tamagui';
+
+const DEFAULT_SIZE = '$3';
 
 const config = {
     name: 'ThemedYStack',
-
-    // base
-    p: 0,                 // use 0 or '$0'
-    gap: '$3',
+    p: 0,
+    gap: DEFAULT_SIZE,
     boc: '$borderColor',
     bg: 'transparent',
 
     variants: {
-        preset: {
-            none: {},
-            container: { p: '$3', gap: '$3' },
-            tight: { p: '$2', gap: '$2' },
-            loose: { p: '$4', gap: '$4' },
-            split: { gap: '$3', ai: 'center', jc: 'space-between' },
+        container: {
+            true: { p: DEFAULT_SIZE, gap: DEFAULT_SIZE },
+            '...size': (size: SizeTokens) => ({ p: size, gap: size }),
         },
-    },
-
-    defaultVariants: {
-        preset: 'none',
-    },
+        split: {
+            true: { ai: 'center', jc: 'space-between' },
+        },
+    }
 } as const
 
 

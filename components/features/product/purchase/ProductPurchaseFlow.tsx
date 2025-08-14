@@ -3,7 +3,7 @@ import { usePurchasableContext } from "@/contexts";
 import { useModalStore, WizardRenderArgs, WizardRenderFn } from "@/stores/modalStore";
 import { Purchasable } from "@/types";
 import React from "react";
-import { PurchaseButton } from "../display/PurchaseButton";
+import { PurchaseButton } from "./PurchaseButton";
 import { PurchaseWizard } from "./PurchaseWizard";
 
 export const ProductPurchaseFlow = () => {

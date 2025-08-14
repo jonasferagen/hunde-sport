@@ -8,7 +8,7 @@ import { ThemedLinearGradient } from '@/components/ui';
 import React from 'react';
 import { YStack } from 'tamagui';
 
-import { BaseProductPrice } from './ProductPrice';
+import { BaseProductPrice } from '../display/ProductPrice';
 
 const icons = {
     VARIATION_REQUIRED: <Boxes />,

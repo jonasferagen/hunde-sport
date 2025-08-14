@@ -5,7 +5,8 @@ import {
 } from '@react-navigation/drawer';
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { H4, ScrollView, XStack, YStack } from 'tamagui';
+import { ScrollView, YStack } from 'tamagui';
+import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 import { ThemedText } from '../ui/themed-components/ThemedText';
@@ -17,43 +18,34 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
         <YStack f={1}>
             <ThemedLinearGradient />
-            <XStack
-                ai="center"
-                jc="space-between"
-                p="$3"
-            >
-                <H4>hunde-sport.no</H4>
+            <ThemedXStack container split>
+                <ThemedText size="$6">hunde-sport.no</ThemedText>
                 <ThemedButton
                     circular
                     onPress={() => navigation.closeDrawer()}
                 >
                     <X />
                 </ThemedButton>
-            </XStack>
+            </ThemedXStack>
             <ScrollView >
-                <YStack gap="$2" p="$4">
+                <ThemedYStack container="$4">
                     {Object.values(routes)
                         .filter(route => route.showInDrawer)
                         .map((route) => {
                             const isActive = state.routes[state.index].name === route.name;
                             const onPress = () => navigation.navigate(route.name);
                             return (
-                                <XStack key={route.name}>
-                                    <ThemedButton
-                                        onPress={onPress}
-                                    >
-                                        <ThemedText
-
-                                        >
-                                            {route.label}
-                                        </ThemedText>
-                                    </ThemedButton>
-                                </XStack>
+                                <ThemedButton key={route.name}
+                                    onPress={onPress}
+                                    theme={isActive ? "alt_tint" : "alt_shade"}
+                                >
+                                    <ThemedText>{route.label}</ThemedText>
+                                </ThemedButton>
                             );
                         })}
-                    <H4 my="$2">Kategorier</H4>
+                    <ThemedText size="$6">Kategorier</ThemedText>
                     <ProductCategoryTree />
-                </YStack>
+                </ThemedYStack>
             </ScrollView>
         </YStack>
 
