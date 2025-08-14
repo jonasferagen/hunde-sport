@@ -5,7 +5,7 @@ import { PurchasableProduct } from '@/types';
 import React from 'react';
 import { SizableTextProps, XStack } from 'tamagui';
 
-import { ThemedText } from '@/components/ui';
+import { ThemedText } from '@/components/ui/themed-components/';
 
 export const ProductPriceRange = ({ ...props }: SizableTextProps) => {
 

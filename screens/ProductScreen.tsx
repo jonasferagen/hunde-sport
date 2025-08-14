@@ -1,13 +1,9 @@
-import { BreadCrumbsContainer } from '@/components/features/breadcrumbs/BreadCrumbsContainer';
-import { ProductDescription } from '@/components/features/product/display/ProductDescription';
-import { ProductImage } from '@/components/features/product/display/ProductImage';
-import { ProductImageGallery } from '@/components/features/product/display/ProductImageGallery';
-import { ProductPrice } from '@/components/features/product/display/ProductPrice';
-import { ProductTitle } from '@/components/features/product/display/ProductTitle';
+import { BreadCrumbsContainer } from '@/components/features/product-category/breadcrumbs/BreadCrumbsContainer';
+import { ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductTitle } from '@/components/features/product/display/';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
 import { PageBody, PageFooter, PageHeader, PageSection, PageView } from '@/components/layout';
 import { ThemedXStack } from '@/components/ui';
-import { ProductCategoryProvider, useProductCategoryContext } from '@/contexts/ProductCategoryContext';
+import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
 import { PurchasableProduct } from '@/types';
@@ -44,21 +40,20 @@ export const ProductScreen = () => {
 const ProductScreenContent = () => {
   const { purchasable } = usePurchasableContext();
   const { product } = purchasable;
-  const { productCategory } = useProductCategoryContext();
 
 
   return (
     <PageView>
       <PageHeader>
-        <BreadCrumbsContainer defaultOpen />
+        <BreadCrumbsContainer />
       </PageHeader>
       <PageBody>
-        <PageSection >
-          <ProductTitle size="$6" />
+        <PageSection>
+          <ProductTitle fos="$7" />
           <ProductImage />
         </PageSection>
         <PageSection title="Produktinformasjon">
-          <ProductDescription short={false} />
+          <ProductDescription long />
         </PageSection>
 
         <PageSection title="Produktbilder" >
@@ -66,9 +61,9 @@ const ProductScreenContent = () => {
         </PageSection>
       </PageBody>
       <PageFooter>
-        <ThemedXStack container split>
-          <ProductTitle size="$6" />
-          <ProductPrice size="$6" />
+        <ThemedXStack split>
+          <ProductTitle />
+          <ProductPrice size="$5" />
         </ThemedXStack>
         <ProductPurchaseFlow />
       </PageFooter>

@@ -1,4 +1,4 @@
-import { BreadCrumbsContainer } from '@/components/features/breadcrumbs/BreadCrumbsContainer';
+import { BreadCrumbsContainer } from '@/components/features/product-category/breadcrumbs/BreadCrumbsContainer';
 import { ProductCategoryProducts } from '@/components/features/product-category/ProductCategoryProducts';
 import { PageBody, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';

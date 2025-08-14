@@ -7,8 +7,9 @@ import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { HrefObject, Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
-import { ProductDescription, ProductTitle } from '.';
 import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
+import { ProductDescription } from './ProductDescription';
+import { ProductTitle } from './ProductTitle';
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 

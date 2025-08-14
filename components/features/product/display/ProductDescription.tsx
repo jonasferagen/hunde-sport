@@ -4,10 +4,10 @@ import React from 'react';
 import { SizableTextProps } from 'tamagui';
 
 interface ProductDescriptionProps extends SizableTextProps {
-    short?: boolean;
+    long?: boolean;
 }
 
-export const ProductDescription = ({ short = true, ...sizableTextProps }: ProductDescriptionProps) => {
+export const ProductDescription = ({ long = false, ...sizableTextProps }: ProductDescriptionProps) => {
 
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
@@ -18,6 +18,6 @@ export const ProductDescription = ({ short = true, ...sizableTextProps }: Produc
         textDecorationLine="none"
         {...sizableTextProps}
     >
-        {short ? product.short_description : product.description}
+        {long ? product.description : product.short_description}
     </ThemedText>;
 };

@@ -1,4 +1,5 @@
-import { Chip, ThemedXStack } from "@/components/ui/";
+import { Chip } from "@/components/ui/chips/Chip";
+import { ThemedXStack } from "@/components/ui/themed-components";
 import { routes } from "@/config/routes";
 import { ProductCategory } from "@/types";
 import { Link } from "expo-router";

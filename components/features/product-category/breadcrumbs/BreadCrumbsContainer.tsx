@@ -1,24 +1,20 @@
-import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui/";
+import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui/themed-components";
 import { useProductCategoryContext } from "@/contexts";
 import { ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
 import React from "react";
-import Animated, { LinearTransition, SlideInLeft, SlideOutRight } from "react-native-reanimated";
+import Animated, { LinearTransition, SlideInLeft, SlideOutDown } from "react-native-reanimated";
 import { StackProps } from "tamagui";
-import { ProductCategoryChips } from "../product-category/ProductCategoryChips";
+import { ProductCategoryChips } from "../ProductCategoryChips";
 import { Breadcrumbs } from "./Breadcrumbs";
 
-export const BreadCrumbsContainer = ({ defaultOpen = false, ...stackProps }: StackProps & { defaultOpen?: boolean }) => {
+export const BreadCrumbsContainer = ({ ...stackProps }: StackProps & { defaultOpen?: boolean }) => {
 
     const { productCategories } = useProductCategoryContext();
-    const [showCategories, setShowCategories] = React.useState(defaultOpen);
-
-    React.useEffect(() => {
-        setShowCategories(defaultOpen);
-    }, [defaultOpen]);
+    const [showCategories, setShowCategories] = React.useState(false);
 
 
     return (
-        <ThemedYStack {...stackProps}>
+        <ThemedYStack  {...stackProps}>
             <ThemedXStack split>
                 <Breadcrumbs isLastClickable={true} />
                 <ThemedButton
@@ -29,18 +25,19 @@ export const BreadCrumbsContainer = ({ defaultOpen = false, ...stackProps }: Sta
                 </ThemedButton>
 
             </ThemedXStack>
+
             {(showCategories) &&
                 <Animated.View
-                    key="product-category-chips"
                     layout={LinearTransition.springify()}
-                    entering={SlideInLeft.springify().mass(0.7)}
-                    exiting={SlideOutRight.duration(160)}
+                    entering={SlideInLeft.springify().mass(0.5)}
+                    exiting={SlideOutDown.duration(160)}
                     collapsable={false}
                     style={{ alignSelf: 'stretch' }}
                 >
                     <ProductCategoryChips productCategories={productCategories} />
                 </Animated.View>
             }
+
         </ThemedYStack>
 
     );

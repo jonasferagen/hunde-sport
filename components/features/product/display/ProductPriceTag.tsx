@@ -6,9 +6,9 @@ import React, { JSX } from 'react';
 import { SizableTextProps, StackProps, XStack } from 'tamagui';
 import { ProductPrice } from './ProductPrice';
 
-interface PriceTagProps extends StackProps { textProps?: SizableTextProps; }
+interface ProductPriceTagProps extends StackProps { textProps?: SizableTextProps; }
 
-export const PriceTag = ({ textProps, br = "$3", ...stackProps }: PriceTagProps): JSX.Element => {
+export const ProductPriceTag = ({ textProps, br = "$3", ...stackProps }: ProductPriceTagProps): JSX.Element => {
 
     const { purchasable } = usePurchasableContext();
     const { isInStock, isPurchasable, isOnSale } = purchasable.availability;
