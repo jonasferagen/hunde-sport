@@ -1,39 +1,31 @@
-/*
-import { darken } from "polished"
-import { createAppThemes, ThemeFactoryConfig } from "./themeFactoryPrev"
+import { darken } from 'polished';
+import { buildThemes } from './themeFactory';
 
-// your config (pairs for light/dark)
-const config = {
-    base: { light: '#C8E6E5', dark: '#24301A' },
-    alt: { light: '#DDE2C3', dark: '#24301A' },
-    neutral: { light: '#F1F5F9', dark: '#0B1320' },
-    accents: {
-        primary: { light: darken(0.1, '#608f39'), dark: '#608f39' },
-        secondary: { light: '#334524', dark: '#334524' },
-    },
-    status: {
-        success: { light: '#16A34A', dark: '#34D399' },
-        info: { light: '#0891B2', dark: '#22D3EE' },
-        danger: { light: '#DC2626', dark: '#F87171' },
-    },
-
-} satisfies ThemeFactoryConfig
-
-export const mintTheme = createAppThemes(config)
-*/
-//const lilacColor = '#D7C8E7'
-
-/// themes/appThemes.ts
-import { buildThemes } from './themeFactory'
-
+// theme-config.ts
 export const config = {
-    primary: { light: '#C8E6E5', dark: '#24301A' },
-    secondary: { light: '#DDE2C3', dark: '#24301A' },
-    tertiary: { light: '#F1F5F9', dark: '#0B1320' },
-    accent1: { light: '#608f39', dark: '#608f39' },
+
+    primary: { light: '#C8E6E5', dark: darken(0.6, '#C8E6E5') },
+    secondary: { light: '#DDE2C3', dark: darken(0.5, '#DDE2C3') },
+    tertiary: { light: '#bcd1a1', dark: darken(0.6, '#bcd1a1') },
+    neutral: { light: '#F1F5F9', dark: darken(0.6, '#F1F5F9') },
+
+    // existing accents
+    accent1: { light: '#4338CA', dark: '#608f39' },
     accent2: { light: '#334524', dark: '#334524' },
     accent3: { light: '#608f39', dark: '#608f39' },
-} as const
+
+    // NEW accents (4–13)
+    accent4: { light: '#2563EB', dark: '#60A5FA' }, // vivid blue
+    accent5: { light: '#4338CA', dark: '#8B8CF8' }, // indigo
+    accent6: { light: '#06B6D4', dark: '#67E8F9' }, // sky cyan
+    accent7: { light: '#0F766E', dark: '#2DD4BF' }, // deep teal
+    accent8: { light: '#059669', dark: '#34D399' }, // emerald
+    accent9: { light: '#D946EF', dark: '#F0ABFC' }, // fuchsia
+    accent10: { light: '#A855F7', dark: '#D8B4FE' }, // violet
+    accent11: { light: '#F97316', dark: '#FDBA74' }, // orange
+    accent12: { light: '#EA580C', dark: '#FB923C' }, // burnt orange
+    accent13: { light: '#E11D48', dark: '#FB7185' }, // crimson
+} as const;
 
 export const mintTheme = buildThemes(config)
 

@@ -1,12 +1,11 @@
 import { CartSummary } from '@/components/features/cart';
 import { CartList } from '@/components/features/cart/CartList';
 import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
-import { PageBody, PageHeader, PageView } from '@/components/layout';
+import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { PageFooter } from '@/components/layout/PageFooter';
 import { routes } from '@/config/routes';
 import { HrefObject, Link } from 'expo-router';
 import React from 'react';
-import { Theme } from 'tamagui';
 
 export const CartScreen = () => {
     const href: HrefObject = routes.checkout.path();
@@ -16,9 +15,9 @@ export const CartScreen = () => {
                 <CartSummary />
             </PageHeader>
             <PageBody>
-                <Theme name="alt">
+                <PageSection p="none" f={1} h="100%">
                     <CartList />
-                </Theme>
+                </PageSection>
             </PageBody>
             <PageFooter f={0} >
                 <Link href={href} asChild>

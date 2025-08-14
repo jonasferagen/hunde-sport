@@ -27,8 +27,7 @@ export const ProductImage = ({ img_height = IMAGE_HEIGHT, ...stackProps }: Produ
                     <ThemedImage
                         w="100%"
                         h="100%"
-                        source={{ uri }}
-                        image={image}
+                        uri={uri}
                         title={activeProduct.name}
                     />
                 </Galeria.Image>

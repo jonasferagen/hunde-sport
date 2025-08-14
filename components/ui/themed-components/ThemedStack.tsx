@@ -46,6 +46,7 @@ const config = {
 } as const
 
 
+
 // your styled base (as you already made it)
 const ThemedYStackBase = styled(YStack, config);
 const ThemedXStackBase = styled(XStack, config);

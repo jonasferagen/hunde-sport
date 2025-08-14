@@ -15,14 +15,17 @@ export const BreadCrumbsContainer = ({ ...stackProps }: StackProps & { defaultOp
 
     return (
         <ThemedYStack  {...stackProps}>
-            <ThemedXStack split>
-                <Breadcrumbs isLastClickable={true} />
+            <ThemedXStack ai="center" f={1}>
                 <ThemedButton
+                    fs={0}
                     circular
                     disabled={productCategories.length === 0}
                     onPress={() => setShowCategories(!showCategories)}>
                     {showCategories ? <ChevronUp /> : <ChevronDown />}
                 </ThemedButton>
+                <ThemedXStack fs={1}>
+                    <Breadcrumbs isLastClickable={true} />
+                </ThemedXStack>
 
             </ThemedXStack>
 

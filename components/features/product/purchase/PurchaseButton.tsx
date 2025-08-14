@@ -24,7 +24,7 @@ export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
 
     const disabled = !isValid && !isVariable;
     const icon = icons[status];
-    const theme = isVariable ? "primary" : "secondary";
+    const theme = isVariable ? "dark_primary" : "dark_tertiary";
     return (
         <>
             <CallToActionButton

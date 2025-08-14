@@ -13,7 +13,7 @@ interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disable
     disabled?: boolean;
     icon?: ButtonProps['icon'];
     iconAfter?: ButtonProps['icon'];
-    theme?: 'accent1' | 'accent2' | 'accent3';
+    theme?: string;
     label: string;
 }
 
@@ -22,7 +22,7 @@ export const CallToActionButton = React.forwardRef<
     CallToActionButtonProps
 >(({ onPress,
     disabled,
-    theme = "accent1",
+    theme,
     icon,
     label,
     iconAfter,

@@ -33,7 +33,7 @@ export const ProductList = memo(({
     const renderItem = React.useCallback(
         ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
             <PurchasableProviderInit product={product}>
-                <ProductCard theme={index % 2 === 0 ? 'alt_tint' : 'alt_shade'} />
+                <ProductCard theme={index % 2 === 0 ? 'secondary' : null} />
             </PurchasableProviderInit>
         ),
         []
@@ -66,5 +66,6 @@ export const ProductList = memo(({
             drawDistance={1400} // optional: helps during fast flings
             estimatedListSize={{ height, width }}
         />
+
     );
 }); 

@@ -1,68 +1,32 @@
-import { LinearGradient } from '@tamagui/linear-gradient';
-import { darken, lighten } from 'polished';
-import React, { JSX } from 'react';
-import { useTheme, useThemeName } from 'tamagui';
+// ThemedLinearGradient.tsx
+import { darken, getLuminance, lighten, rgba } from 'polished'
+import React, { useMemo } from 'react'
+import { getVariableValue, useTheme } from 'tamagui'
+import { LinearGradient } from 'tamagui/linear-gradient'
 
+export function ThemedLinearGradient(props: React.ComponentProps<typeof LinearGradient>) {
 
+    const theme = useTheme()
 
-const propsAreEqual = (prevProps: ThemedLinearGradientProps, nextProps: ThemedLinearGradientProps) => {
-    return prevProps.strong === nextProps.strong &&
-        prevProps.elevated === nextProps.elevated &&
-        prevProps.flip === nextProps.flip &&
-        prevProps.colors === nextProps.colors;
-};
+    const base = (getVariableValue(theme.background) as string)
+    const isLight = getLuminance(base) > 0.5
 
-interface ThemedLinearGradientProps {
-    strong?: boolean;
-    elevated?: boolean;
-    flip?: boolean;
-    [key: string]: any;
-}
+    // derive a subtle 2–3 stop gradient from the active surface
+    const colors = useMemo(() => {
+        const top = rgba(isLight ? darken(0.03, base) : lighten(0.03, base), 0.9)
+        const mid = rgba(base, 0.85)
+        const bottom = rgba(isLight ? darken(0.07, base) : lighten(0.07, base), 0.9)
+        return [top, mid, bottom]
+    }, [base, isLight])
 
-export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
-
-    strong = false,
-    elevated = false,
-    flip = false,
-    ...props
-}: ThemedLinearGradientProps): JSX.Element {
-
-
-    const startPoint = [0, 0];
-    const endPoint = [1, 1];
-    const theme = useTheme();
-    const themeName = useThemeName(); // helps when theme objects are proxies
-
-
-    // Base color string (stable primitive)
-    const baseColor = React.useMemo(() => {
-        // `.get()` returns a string; if theme changes, themeName changes too
-        return theme.background?.get?.() ?? '#fff';
-    }, [themeName]); // depend on themeName for clarity
-
-    // Derived colors (cheap but now referentially stable)
-    const colors = React.useMemo(() => {
-        const from = elevated ? lighten(0.1, baseColor) : baseColor;
-        const amount = strong ? 0.2 : 0.1;
-        const to = darken(amount, baseColor);
-        return (flip ? [to, from] : [from, to]) as [string, string];
-    }, [baseColor, elevated, strong, flip]);
-
-    // Normalize point array identities (avoid new arrays causing rerenders downstream)
-    const start = React.useMemo<[number, number]>(() => [startPoint[0], startPoint[1]], [startPoint[0], startPoint[1]]);
-    const end = React.useMemo<[number, number]>(() => [endPoint[0], endPoint[1]], [endPoint[0], endPoint[1]]);
-
-    // No need to memoize the JSX; React.memo on the component handles skipping rerenders
     return (
         <LinearGradient
             fullscreen
-            start={start}
-            end={end}
             pointerEvents="none"
+            start={[0, 0]}
+            end={[1, 1]}
             colors={colors}
             {...props}
         />
-    );
-}, propsAreEqual);
-
-
+    )
+}

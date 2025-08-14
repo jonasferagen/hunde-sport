@@ -1,4 +1,4 @@
-import { getAspectRatio } from '@/lib/helpers';
+import { getAspectRatio, getScaledImageUrl } from '@/lib/helpers';
 import { StoreImage } from '@/models/StoreImage';
 import { JSX } from 'react';
 import { DimensionValue } from 'react-native';
@@ -21,7 +21,7 @@ export const Tile = ({
 
 
     const aspectRatio = getAspectRatio(props.w as DimensionValue, props.h as DimensionValue);
-
+    const uri = getScaledImageUrl(image.src, props.w as DimensionValue, props.h as DimensionValue);
     return (
 
         <ThemedYStack
@@ -34,7 +34,7 @@ export const Tile = ({
         >
             <ThemedImage
                 fullscreen
-                image={image}
+                uri={uri}
                 title={title}
             />
             {children}
@@ -47,9 +47,8 @@ export const Tile = ({
             >
                 <ThemedLinearGradient
                     fullscreen
-                    flip
-                    startPoint={[0, 0.2]}
-                    endPoint={[0, 0.9]}
+                    start={[0, 0.2]}
+                    end={[0, 0.9]}
                     opacity={0.8}
                 />
                 <SizableText

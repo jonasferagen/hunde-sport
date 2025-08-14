@@ -4,6 +4,7 @@ import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/Th
 import { routes } from '@/config/routes';
 import { useProductCategoryContext } from '@/contexts';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
+import { getScaledImageUrl } from '@/lib/helpers';
 import { HrefObject, Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
@@ -11,7 +12,10 @@ import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
 import { ProductDescription } from './ProductDescription';
 import { ProductTitle } from './ProductTitle';
 
-export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
+const IMAGE_SIZE = 80;
+
+
+
 
 export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
@@ -23,10 +27,12 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
 
     return (
+
         <ThemedYStack
             container
             box
-            {...props} >
+            {...props}
+        >
             <ThemedLinearGradient />
             <Link href={href} asChild>
                 <ThemedXStack pressable>
@@ -35,8 +41,9 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
                 </ThemedXStack>
             </Link>
             <ProductPurchaseFlow />
-
         </ThemedYStack>
+
+
     );
 
 
@@ -45,23 +52,22 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
 const ProductCardImage = ({ ...props }: StackProps): JSX.Element => {
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
-    const imageSize = PRODUCT_CARD_NARROW_COLUMN_WIDTH;
 
+    const uri = getScaledImageUrl(product.featuredImage.src, IMAGE_SIZE, IMAGE_SIZE);
     return (
         <YStack
-            w={imageSize}
-            h={imageSize}
+            w={IMAGE_SIZE}
+            h={IMAGE_SIZE}
             bw={1}
             boc="$borderColor"
             br="$3"
             ov="hidden"
             {...props}
         ><ThemedImage
-
-                image={product.featuredImage}
+                uri={uri}
                 title={product.name}
-                w={imageSize}
-                h={imageSize}
+                w={IMAGE_SIZE}
+                h={IMAGE_SIZE}
             />
         </YStack>
     );
@@ -85,7 +91,6 @@ const ProductCardDescription = ({ ...stackProps }: StackProps): JSX.Element => {
             </XStack>
             <ProductDescription
                 numberOfLines={2}
-                short={true}
                 fow="normal"
             />
         </ThemedYStack>

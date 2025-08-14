@@ -9,7 +9,7 @@ import React, { JSX } from 'react';
 import { H4, StackProps, Theme, XStack } from 'tamagui';
 
 export const CartListItem = ({ item, index }: { item: CartItemData, index: number }): JSX.Element => {
-    const theme = index % 2 === 0 ? 'soft' : 'elevated';
+    const theme = index % 2 === 0 ? 'secondary' : null;
     return (
         <Theme name={theme}>
             <ThemedLinearGradient />
@@ -23,7 +23,7 @@ interface CartListItemProps {
     item: CartItemData;
 }
 
-const CartListItemContent = ({ item, ...props }: CartListItemProps & StackProps): JSX.Element => {
+const CartListItemContent = ({ item, theme, ...props }: CartListItemProps & StackProps): JSX.Element => {
 
     const { updateItem, removeItem } = useCartContext();
     const { quantity, key } = item;

@@ -52,11 +52,11 @@ const ProductScreenContent = () => {
           <ProductTitle fos="$7" />
           <ProductImage />
         </PageSection>
-        <PageSection title="Produktinformasjon">
+        <PageSection title="Produktinformasjon" theme="secondary">
           <ProductDescription long />
         </PageSection>
 
-        <PageSection title="Produktbilder" >
+        <PageSection title="Produktbilder">
           {product.images.length > 1 && <ProductImageGallery />}
         </PageSection>
       </PageBody>
