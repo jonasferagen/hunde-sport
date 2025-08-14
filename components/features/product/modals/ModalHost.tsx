@@ -14,7 +14,7 @@ export const ModalHost = () => {
     const update = <P,>(next: P) => updatePayload(next);
 
     return (
-        <Theme name="soft">
+        <Theme name="neutral">
 
             <Sheet
 

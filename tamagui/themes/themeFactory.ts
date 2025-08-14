@@ -3,8 +3,12 @@
 // - Accents remain children (stackable), plus root aliases for explicit use
 // - Adds light_base / dark_base root aliases
 
+// + add this import
+import { darken, lighten, readableColor } from 'polished';
+
+
+
 import { createThemeBuilder } from '@tamagui/theme-builder';
-import { darken, lighten } from 'polished';
 
 type ColorPair = { light: string; dark: string }
 
@@ -25,6 +29,8 @@ export type ThemeFactoryConfig = {
         info?: ColorPair
         danger?: ColorPair
     }
+    // ...
+    textOnStrongSurfaces?: 'fixedByTone' | 'autoContrast' // default 'fixedByTone'
     ramps?: {
         baseLight?: Partial<Ramp6>
         baseDark?: Partial<Ramp6>
@@ -77,16 +83,21 @@ const shiftTemplate = (tmpl: Template, delta: number, maxIdx: number): Template 
     return out
 }
 
+// change this so it includes color* states we can override later
 const accentTemplateFrom = (start: number): Template => ({
     background: start + 2,
     backgroundHover: start + 3,
     backgroundPress: start + 4,
     backgroundFocus: start + 3,
-    color: -1, // strong
+    color: -1,           // placeholder, will be overridden
+    colorHover: -1,
+    colorPress: -1,
+    colorFocus: -1,
     borderColor: start + 4,
     borderColorHover: start + 3,
     borderColorPress: start + 4,
 })
+
 
 const altTemplateFromBase = (start: number): Template => ({
     background: start + 3,
@@ -116,6 +127,11 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         addAccentRootAliases: cfg.childControls?.addAccentRootAliases ?? true,
     }
 
+
+    // + which strategy?
+    const textOnStrongSurfaces =
+        cfg.textOnStrongSurfaces ?? 'fixedByTone' // default as requested
+
     // ramps + text colors
     const ramps = {
         baseLight: { ...DEFAULTS.ramps.baseLight, ...(cfg.ramps?.baseLight ?? {}) },
@@ -132,13 +148,17 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         dark: cfg.text?.subtle?.dark ?? DEFAULTS.textSubtle.dark,
     }
 
+
+
     // palettes
     const light: string[] = buildBase6(cfg.base.light, cfg.neutral.light, ramps.baseLight)
     const dark: string[] = buildBase6(cfg.base.dark, cfg.neutral.dark, ramps.baseDark)
 
-    const baseStart: Record<string, number> = {} // 6-slot bases
-    const rampStart: Record<string, number> = {} // 5-slot ramps (accents/status)
+    const baseStart: Record<string, number> = {}
+    const rampStart: Record<string, number> = {}
 
+    // + keep the raw center hex for each ramp so we can compute readable text
+    const rampBaseHex: Record<string, ColorPair> = {}
     const pushBasePair6 = (key: string, pair: ColorPair, neutral: ColorPair) => {
         baseStart[key] = light.length
         light.push(...buildBase6(pair.light, neutral.light, ramps.baseLight))
@@ -150,21 +170,44 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         rampStart[key] = light.length
         light.push(...buildRamp5(pair.light, ramps.accentLight))
         dark.push(...buildRamp5(pair.dark, ramps.accentDark))
+        // + remember the ramp’s center color (index start+2) for contrast calc
+        rampBaseHex[key] = pair
     }
 
-    // accents (5-slot ramps)
+    // accents (unchanged)
     pushRampPair5('primary', cfg.accents.primary)
     pushRampPair5('secondary', cfg.accents.secondary)
 
-    // status (optional)
+    // status (unchanged)
     if (cfg.status?.success) pushRampPair5('success', cfg.status.success)
     if (cfg.status?.info) pushRampPair5('info', cfg.status.info)
     if (cfg.status?.danger) pushRampPair5('danger', cfg.status.danger)
 
     // append text
+    // + create one shared slot OR per-ramp slots, depending on strategy
+    let textOnStrongIdx: number | null = null
+    const textOnStrongIdxByKey: Record<string, number> = {}
+
+    if (textOnStrongSurfaces === 'fixedByTone') {
+        // white on light palette, black on dark palette
+        textOnStrongIdx = light.length
+        light.push('#FFFFFF')
+        dark.push('#000000')
+    } else {
+        // autoContrast per ramp via polished.readableColor
+        for (const key of Object.keys(rampStart)) {
+            const pair = rampBaseHex[key] // { light, dark }
+            const lightText = readableColor(pair.light, '#000000', '#FFFFFF')
+            const darkText = readableColor(pair.dark, '#000000', '#FFFFFF')
+            textOnStrongIdxByKey[key] = light.length
+            light.push(lightText)
+            dark.push(darkText)
+        }
+    }
+    // append text (keep these as *last two* like before)
     const textSubtleIndex = light.length; light.push(textSubtle.light); dark.push(textSubtle.dark)
     const textStrongIndex = light.length; light.push(textStrong.light); dark.push(textStrong.dark)
-    const MAX_BG_INDEX = light.length - 3 // guard for shifts
+    const MAX_BG_INDEX = light.length - 3
 
     // templates
     const baseTemplate: Template = {
@@ -205,9 +248,22 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         }
     }
 
+    // ... build base templates as before ...
+
     // accent/status surface templates
     for (const key of Object.keys(rampStart)) {
         templates[key] = accentTemplateFrom(rampStart[key])
+
+        // pick the index that holds our high-contrast text for this ramp
+        const idx = (textOnStrongSurfaces === 'fixedByTone')
+            ? (textOnStrongIdx as number)
+            : textOnStrongIdxByKey[key]
+
+        // override all color* states for strong readability
+        templates[key].color = idx
+        templates[key].colorHover = idx
+        templates[key].colorPress = idx
+        templates[key].colorFocus = idx
     }
 
     // ----- build
@@ -295,6 +351,7 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         ...childKeys.flatMap(k => [`light_${k}`, `dark_${k}`]),
     ] as const
 
+
     return {
         themes,
         themeNames,
@@ -302,7 +359,12 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
             textStrong: textStrongIndex,
             textSubtle: textSubtleIndex,
             ramps: rampStart,
-            altStart: baseStart.alt
+            altStart: baseStart.alt,
+            // + helpful when tweaking
+            textOnStrongSurfaces:
+                textOnStrongSurfaces === 'fixedByTone'
+                    ? { shared: textOnStrongIdx! }
+                    : { perRamp: textOnStrongIdxByKey },
         },
     }
 }

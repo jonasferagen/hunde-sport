@@ -24,7 +24,7 @@ export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
 
     const disabled = !isValid && !isVariable;
     const icon = icons[status];
-    const theme = "dark_primary";
+    const theme = isVariable ? "primary" : "secondary";
     return (
         <>
             <CallToActionButton
@@ -33,7 +33,6 @@ export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
                 icon={icon}
                 theme={theme}
                 label={message}
-                size="$4"
                 iconAfter={
                     <YStack
 

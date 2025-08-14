@@ -10,7 +10,7 @@ import {
 import { cloneElement, isValidElement, useContext } from 'react';
 
 
-const DEFAULT_SIZE = '$3';
+const DEFAULT_SIZE = '$4';
 
 // 1) Context for sizing between parts
 // 1) Context — make $3 the default
@@ -92,7 +92,7 @@ export const ButtonFrame = styled(View, {
     } as const,
 
     defaultVariants: {
-        size: '$4', // ← default/standard
+        size: DEFAULT_SIZE, // ← default/standard
     },
 })
 
@@ -115,7 +115,7 @@ export const ButtonText = styled(Text, {
         },
     } as const,
 
-    defaultVariants: { size: '$4' },
+    defaultVariants: { size: DEFAULT_SIZE },
 })
 
 // 5) Icon slot reads from the table too
@@ -128,7 +128,7 @@ const ButtonIcon = (props: { children: any }) => {
         ? cloneElement(props.children, {
             size: s.icon,
             color: theme.color?.val,
-        })
+        } as any)
         : null
 }
 
@@ -143,5 +143,3 @@ export const ThemedButton = withStaticProperties(ButtonFrame, {
     Icon: ButtonIcon,
     After: ButtonAfter,
 })
-
-
