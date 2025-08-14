@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import { H3, ScrollView, YStackProps } from 'tamagui';
-import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
+import { ScrollView, YStackProps } from 'tamagui';
+import { ThemedText } from '../ui';
 import { ThemedYStack } from '../ui/themed-components/ThemedStack';
 
 interface PageSectionProps extends YStackProps {
@@ -30,9 +30,9 @@ export const PageSection = (props: PageSectionProps) => {
 
   return (
 
-    <ThemedYStack preset="container" {...stackProps}>
-      <ThemedLinearGradient />
-      {title && <H3 px={px}>{title}</H3>}
+    <ThemedYStack container {...stackProps} >
+
+      {title && <ThemedText px={px} size="$6">{title}</ThemedText>}
 
       {scrollable ? (
         <ScrollView showsVerticalScrollIndicator={false}>

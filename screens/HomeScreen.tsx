@@ -1,7 +1,6 @@
 import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/ProductTiles';
-import { PageBody, PageSection, PageView } from '@/components/layout';
-import { PageHeader } from '@/components/layout/PageHeader';
+import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { SearchBar } from '@/components/ui/search-bar/Searchbar';
 import { routes } from '@/config/routes';
 import { useRunOnFocus } from '@/hooks/useRunOnFocus';
@@ -21,7 +20,7 @@ export const HomeScreen = () => {
             <PageHeader >
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
-            <PageBody scrollable>
+            <PageBody>
                 <PageSection title="Kategorier">
                     <ProductCategoryTiles key="categories" />
                 </PageSection>

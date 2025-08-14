@@ -1,5 +1,5 @@
 import React from 'react';
-import { Theme, YStackProps } from 'tamagui';
+import { YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 
@@ -11,15 +11,15 @@ interface PageFooterProps extends YStackProps {
 export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) => {
 
     return (
-        <Theme name="tint">
-            <ThemedYStack
-                theme="tint"
-                preset="container"
-                {...props}
-            >
-                <ThemedLinearGradient />
-                {children}
-            </ThemedYStack>
-        </Theme>
+
+        <ThemedYStack
+            theme="tint"
+            container
+            {...props}
+        >
+            <ThemedLinearGradient />
+            {children}
+        </ThemedYStack>
+
     );
 }

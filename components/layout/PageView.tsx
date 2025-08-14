@@ -1,8 +1,16 @@
-import { YStack, YStackProps } from 'tamagui';
-export const PageView = ({ children, ...stackProps }: YStackProps) =>
+import { YStackProps } from 'tamagui';
+import { ThemedLinearGradient, ThemedYStack } from '../ui';
+export const PageView = ({ children, ...stackProps }: YStackProps) => {
 
+  return (
+    <ThemedYStack
+      theme="alt"
+      f={1}
+      gap="none"
 
-  <YStack f={1} {...stackProps}>
-    {children}
-  </YStack>
-
+      {...stackProps}>
+      <ThemedLinearGradient />
+      {children}
+    </ThemedYStack>
+  );
+}

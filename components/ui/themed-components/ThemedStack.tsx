@@ -4,7 +4,7 @@ import { SizeTokens, styled, XStack, YStack } from 'tamagui';
 const DEFAULT_SIZE = '$3';
 
 const config = {
-    name: 'ThemedYStack',
+    name: 'ThemedStack',
     p: 0,
     gap: DEFAULT_SIZE,
     boc: '$borderColor',
@@ -18,6 +18,10 @@ const config = {
         split: {
             true: { ai: 'center', jc: 'space-between' },
         },
+        pressable: {
+            true: { pressStyle: { opacity: 0.7 } },
+        },
+
     }
 } as const
 

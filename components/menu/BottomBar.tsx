@@ -2,9 +2,8 @@ import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLi
 import { routes } from '@/config/routes';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname, useRouter } from 'expo-router';
-import { styled, Tabs, Text, Theme, YStack, YStackProps } from 'tamagui';
+import { styled, Tabs, Text, YStack, YStackProps } from 'tamagui';
 
-import { THEME_BOTTOM_BAR } from '@/tamagui/app';
 
 const StyledTab = styled(Tabs.Tab, {
     name: 'StyledTab',
@@ -16,7 +15,7 @@ const StyledTab = styled(Tabs.Tab, {
     gap: '$1',
     bg: 'transparent',
     h: 'auto',
-    btw: 2,
+    btw: 1,
     brw: 1,
     blw: 1,
     boc: '$borderColor',
@@ -44,26 +43,24 @@ export const BottomBar = (props: YStackProps) => {
     };
 
     return (
-        <Theme name={THEME_BOTTOM_BAR}>
-            <YStack {...props} w="100%">
-                <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
-                    <StyledTabsList>
-                        <ThemedLinearGradient />
-                        <StyledTab value="index">
-                            <Home />
-                            <Text>Hjem</Text>
-                        </StyledTab>
-                        <StyledTab value="search">
-                            <Search />
-                            <Text>Søk</Text>
-                        </StyledTab>
-                        <StyledTab value="cart">
-                            <ShoppingCart />
-                            <Text>Handlekurv</Text>
-                        </StyledTab>
-                    </StyledTabsList>
-                </StyledTabs>
-            </YStack>
-        </Theme>
+        <YStack {...props} w="100%" >
+            <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
+                <StyledTabsList>
+                    <ThemedLinearGradient />
+                    <StyledTab value="index">
+                        <Home />
+                        <Text>Hjem</Text>
+                    </StyledTab>
+                    <StyledTab value="search">
+                        <Search />
+                        <Text>Søk</Text>
+                    </StyledTab>
+                    <StyledTab value="cart">
+                        <ShoppingCart />
+                        <Text>Handlekurv</Text>
+                    </StyledTab>
+                </StyledTabsList>
+            </StyledTabs>
+        </YStack>
     );
 };

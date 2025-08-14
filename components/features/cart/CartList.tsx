@@ -13,10 +13,13 @@ export const CartList = memo(
             return <DefaultTextContent>Handlekurven er tom</DefaultTextContent>
         }
 
-        return <FlashList
-            data={cart.items}
-            renderItem={({ item, index }) => <CartListItem item={item} index={index} />}
-            estimatedItemSize={100}
-        />
+        return (
+            <FlashList
+                data={cart.items}
+                renderItem={({ item, index }) => <CartListItem item={item} index={index} />}
+                estimatedItemSize={100}
+            />
+        );
+
     }
 );

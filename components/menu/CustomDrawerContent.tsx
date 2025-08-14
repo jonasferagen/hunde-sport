@@ -16,8 +16,8 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
     return (
 
-        <YStack f={1}>
-            <ThemedLinearGradient />
+        <YStack>
+            <ThemedLinearGradient strong flip />
             <ThemedXStack container split>
                 <ThemedText size="$6">hunde-sport.no</ThemedText>
                 <ThemedButton

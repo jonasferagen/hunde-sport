@@ -5,15 +5,14 @@ import { routes } from '@/config/routes';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
-import { Theme } from 'tamagui';
 
 const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     return (
-        <Theme name='light'>
+        <>
             {children}
             <BottomBar />
-        </Theme>
+        </>
     );
 };
 
@@ -35,7 +34,9 @@ const AppLayout = (): React.ReactElement => {
     );
 
     return (
-        <Drawer drawerContent={drawerContent} screenOptions={screenOptions} screenLayout={(props) => <ScreenWrapper >{props.children}</ScreenWrapper>}>
+        <Drawer drawerContent={drawerContent}
+            screenOptions={screenOptions}
+            screenLayout={(props) => <ScreenWrapper >{props.children}</ScreenWrapper>}>
             {Object.values(routes).map((route) => (
                 <Drawer.Screen
                     key={route.name}

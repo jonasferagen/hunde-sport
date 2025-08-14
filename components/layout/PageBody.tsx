@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
-import { Theme, YStack, YStackProps } from 'tamagui';
+
+import { ScrollView, YStackProps } from 'tamagui';
+import { ThemedYStack } from '../ui';
 
 interface PageBodyProps extends YStackProps {
   children: React.ReactNode;
@@ -8,26 +9,30 @@ interface PageBodyProps extends YStackProps {
 
 }
 
-export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, scrollable, ...props }, ref) => {
+export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, scrollable = true, ...props }, ref) => {
+
+
+  const content = (
+    <ThemedYStack {...props} gap="none" mih="100%">
+      {children}
+    </ThemedYStack>
+  );
 
 
   if (scrollable) {
-    return <ScrollView
-      ref={ref}
-      showsVerticalScrollIndicator={true}
-      nestedScrollEnabled={true}
-      scrollsToTop={true}
-    >
-      <PageBodyContent {...props}>{children}</PageBodyContent>
-    </ScrollView>
+    return (
+      <ScrollView
+        ref={ref}
+        showsVerticalScrollIndicator={true}
+        nestedScrollEnabled={true}
+        scrollsToTop={true}
+      >
+        {content}
+      </ScrollView>
+    )
   }
 
-  return <PageBodyContent {...props}>{children}</PageBodyContent>;
+  return content;
+
 });
 
-const PageBodyContent = ({ children }: { children: React.ReactNode }) => {
-
-  return <Theme name="neutral">
-    <YStack f={1}>{children}</YStack>
-  </Theme>;
-};

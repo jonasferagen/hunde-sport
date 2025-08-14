@@ -1,29 +1,34 @@
+import { getScaledImageUrl } from '@/lib/helpers';
 import { StoreImage as ImageModel } from '@/models/StoreImage';
 import { MotiView } from 'moti';
 import { JSX, useState } from 'react';
+import { DimensionValue } from 'react-native';
 import { Image, ImageProps, YStack, YStackProps } from 'tamagui';
 
 export interface ThemedImageProps extends YStackProps {
-    source: ImageProps['source'];
     image: ImageModel;
     title?: string;
     objectFit?: ImageProps['objectFit'];
     aspectRatio?: number;
+    w: DimensionValue;
+    h: DimensionValue;
 }
 
 export const ThemedImage = ({
-    source,
     image,
     title,
     objectFit,
     aspectRatio,
-    ...stackProps
+    w,
+    h,
+    ...props
 }: ThemedImageProps): JSX.Element => {
     const [isLoaded, setIsLoaded] = useState(false);
     const ariaLabel = image?.alt || title;
+    const uri = getScaledImageUrl(image.src, w, h);
 
     return (
-        <YStack {...stackProps}>
+        <YStack {...props}>
             <MotiView
                 style={{ width: '100%', height: '100%' }}
                 pointerEvents={isLoaded ? 'auto' : 'none'}
@@ -37,7 +42,7 @@ export const ThemedImage = ({
             >
                 <Image
                     w="100%"
-                    source={source}
+                    source={{ uri }}
                     objectFit={objectFit}
                     aria-label={ariaLabel}
                     aspectRatio={aspectRatio}

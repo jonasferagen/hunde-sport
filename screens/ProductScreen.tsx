@@ -5,15 +5,14 @@ import { ProductImageGallery } from '@/components/features/product/display/Produ
 import { ProductPrice } from '@/components/features/product/display/ProductPrice';
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
-import { PageBody, PageHeader, PageView } from '@/components/layout';
-import { Breadcrumbs } from '@/components/ui';
+import { PageBody, PageFooter, PageHeader, PageSection, PageView } from '@/components/layout';
+import { Breadcrumbs, ThemedXStack } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
 import { PurchasableProduct } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { XStack } from 'tamagui';
 import { LoadingScreen } from './misc/LoadingScreen';
 import { NotFoundScreen } from './misc/NotFoundScreen';
 
@@ -47,26 +46,30 @@ const ProductScreenContent = () => {
   const { product } = purchasable;
   return (
     <PageView>
-      <PageHeader theme="soft">
+      <PageHeader>
         <Breadcrumbs isLastClickable={true} />
         <ProductCategoryChips showAll={true} />
       </PageHeader>
       <PageBody scrollable>
-        <ProductImage />
-        <PageBody gap="$3">
-          <XStack jc="space-between">
-            <ProductTitle size="$6" />
-            <ProductPrice size="$6" />
-          </XStack>
-          <ProductPurchaseFlow />
-        </PageBody>
-        <PageBody title="Produktbilder" >
-          {product.images.length > 1 && <ProductImageGallery />}
-        </PageBody>
-        <PageBody theme="secondary" title="Produktinformasjon">
+        <PageSection >
+          <ProductTitle size="$6" />
+          <ProductImage />
+        </PageSection>
+        <PageSection title="Produktinformasjon">
           <ProductDescription short={false} />
-        </PageBody>
+        </PageSection>
+
+        <PageSection title="Produktbilder" >
+          {product.images.length > 1 && <ProductImageGallery />}
+        </PageSection>
       </PageBody>
+      <PageFooter>
+        <ThemedXStack container split>
+          <ProductTitle size="$6" />
+          <ProductPrice size="$6" />
+        </ThemedXStack>
+        <ProductPurchaseFlow />
+      </PageFooter>
     </PageView >
   );
 };
