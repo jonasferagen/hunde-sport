@@ -34,7 +34,7 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
                         gap="$2"
                         // Let content dictate height; avoid forcing 100% inside ScrollView
                         renderItem={({ item: image, index }) => {
-                            const thumbnailUrl = getScaledImageUrl(image.src, undefined, 200);
+
                             return (
                                 <YStack
                                     onPress={() => openGallery(index)}
@@ -45,13 +45,12 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
                                 >
                                     <Galeria.Image index={index}>
                                         <ThemedImage
-
-                                            source={{ uri: thumbnailUrl }}
                                             image={image}
                                             title={product.name}
 
                                             aspectRatio={1}
                                             objectFit="cover"
+                                            h={200}
                                         />
                                     </Galeria.Image>
                                 </YStack>

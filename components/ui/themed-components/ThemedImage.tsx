@@ -10,7 +10,7 @@ export interface ThemedImageProps extends YStackProps {
     title?: string;
     objectFit?: ImageProps['objectFit'];
     aspectRatio?: number;
-    w: DimensionValue;
+    w?: DimensionValue;
     h: DimensionValue;
 }
 
@@ -19,8 +19,8 @@ export const ThemedImage = ({
     title,
     objectFit,
     aspectRatio,
-    w,
-    h,
+    w = '100%',
+    h = '100%',
     ...props
 }: ThemedImageProps): JSX.Element => {
     const [isLoaded, setIsLoaded] = useState(false);

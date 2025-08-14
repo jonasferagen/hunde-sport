@@ -20,12 +20,29 @@ export const ProductList = memo(({
 
 }: ProductListProps) => {
 
-    const renderItem = ({ item: product, index }: { item: PurchasableProduct, index: number }) =>
-        <PurchasableProviderInit product={product}>
-            <ProductCard theme={index % 2 === 0 ? 'tint' : 'shade'} />
-        </PurchasableProviderInit>
+    const keyExtractor = React.useCallback(
+        (item: PurchasableProduct) => String(item.id),
+        []
+    );
 
-    const keyExtractor = (item: PurchasableProduct) => item.id.toString();
+    const renderItem = React.useCallback(
+        ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
+            <PurchasableProviderInit product={product}>
+                <ProductCard theme={index % 2 === 0 ? 'tint' : 'shade'} />
+            </PurchasableProviderInit>
+        ),
+        []
+    );
+
+    // Prevent duplicate fetches
+    const handleEndReached = React.useCallback(() => {
+        if (!loadingMore) loadMore();
+    }, [loadingMore, loadMore]);
+
+    const Footer = React.useMemo(
+        () => (loadingMore ? <ThemedSpinner my="$3" /> : null),
+        [loadingMore]
+    );
 
     return (
         <Theme name="light_alt">
@@ -33,12 +50,10 @@ export const ProductList = memo(({
                 data={products as PurchasableProduct[]}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
-                onEndReached={loadMore}
+                onEndReached={handleEndReached}
                 onEndReachedThreshold={0.8}
-                ListFooterComponent={() =>
-                    loadingMore ? <ThemedSpinner my="$3" /> : null
-                }
-                estimatedItemSize={200}
+                ListFooterComponent={Footer}
+                estimatedItemSize={150}
             />
         </Theme>
 
