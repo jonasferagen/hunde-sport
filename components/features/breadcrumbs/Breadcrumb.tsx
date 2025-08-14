@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { SizableText, Stack, XStack } from 'tamagui';
 
+import { ThemedText, ThemedXStack } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { ProductCategory } from '@/models/ProductCategory';
 import { ChevronRight } from '@tamagui/lucide-icons';
@@ -19,12 +19,12 @@ export const Breadcrumb = React.memo(({ productCategory,
 }: BreadcrumbProps) => {
 
   const breadcrumbText = (
-    <SizableText
-      fos="$5"
+    <ThemedText
+      size="$6"
       fow={isLast && !isLastClickable ? 'normal' : 'bold'}
-      textDecorationLine={isLast && !isLastClickable ? 'none' : 'underline'}>
+      textDecorationLine={isLast ? 'none' : 'underline'}>
       {productCategory?.name}
-    </SizableText>
+    </ThemedText>
   );
 
   if (!productCategory) {
@@ -32,7 +32,7 @@ export const Breadcrumb = React.memo(({ productCategory,
   }
 
   return (
-    <XStack ai="center">
+    <ThemedXStack gap="none">
       {isLast && !isLastClickable ? (
         breadcrumbText
       ) : (
@@ -41,10 +41,8 @@ export const Breadcrumb = React.memo(({ productCategory,
         </Link>
       )}
       {!isLast && (
-        <Stack  >
-          <ChevronRight size="$4" />
-        </Stack>
+        <ChevronRight size="$2" />
       )}
-    </XStack>
+    </ThemedXStack>
   );
 });

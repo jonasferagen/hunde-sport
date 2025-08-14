@@ -25,7 +25,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
         <ThemedYStack
             container
             bbw={1}
-
+            boc="$borderColor"
             {...props} >
             <Link href={href} asChild>
                 <ThemedXStack pressable>

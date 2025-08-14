@@ -21,6 +21,9 @@ const config = {
         pressable: {
             true: { pressStyle: { opacity: 0.7 } },
         },
+        box: {
+            true: { bw: 1, boc: '$borderColor' },
+        }
 
     }
 } as const
