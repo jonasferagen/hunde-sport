@@ -43,19 +43,12 @@ export const CallToActionButton = React.forwardRef<
                 onPress={handlePress}
                 disabled={disabled}
                 aria-label={label}
-
                 bw={2}
-                shadowColor="#000"
-                shadowOffset={{ width: 0, height: 2 }}
-                shadowOpacity={disabled ? 0 : 0.25}
-                shadowRadius={3.84}
-                animation="fast"
-                ov="hidden"
                 {...props}
             >
                 <ThemedButton.Icon>{icon}</ThemedButton.Icon>
                 <ThemedButton.Text fg={1}>
-                    <ThemedText fos="$4">{label}</ThemedText>
+                    <ThemedText>{label}</ThemedText>
                     {children}
                 </ThemedButton.Text>
                 <ThemedButton.Icon>

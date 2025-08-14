@@ -45,7 +45,11 @@ export const ButtonFrame = styled(View, {
     br: '$3',
     bw: 1,
     animation: 'fast',
-
+    shadowColor: '$shadowColor',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    ov: 'hidden',
     gap: '$2',
     backgroundColor: '$background',
     borderColor: '$borderColor',

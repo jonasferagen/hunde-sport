@@ -207,7 +207,32 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
     // append text (keep these as *last two* like before)
     const textSubtleIndex = light.length; light.push(textSubtle.light); dark.push(textSubtle.dark)
     const textStrongIndex = light.length; light.push(textStrong.light); dark.push(textStrong.dark)
-    const MAX_BG_INDEX = light.length - 3
+
+    // AFTER computing ramp/text indices, but BEFORE MAX_BG_INDEX
+    // (right after you appended textSubtle + textStrong)
+    const transparentIndex = light.length;
+    light.push('transparent');
+    dark.push('transparent');
+
+    const shadowIndex = light.length;
+    light.push('rgba(0,0,0,0.35)');
+    dark.push('rgba(0,0,0,0.65)');
+
+    const shadowHoverIndex = light.length;
+    light.push('rgba(0,0,0,0.45)');
+    dark.push('rgba(0,0,0,0.75)');
+
+    const shadowPressIndex = light.length;
+    light.push('rgba(0,0,0,0.5)');
+    dark.push('rgba(0,0,0,0.85)');
+
+    const shadowFocusIndex = light.length;
+    light.push('rgba(0,0,0,0.4)');
+    dark.push('rgba(0,0,0,0.7)');
+
+    const MAX_BG_INDEX = light.length - 3; // move this line below the pushes
+
+
 
     // templates
     const baseTemplate: Template = {
@@ -229,6 +254,9 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         subtle: subtleTemplate,
         neutral: neutralTemplate,
     }
+
+
+
 
     const includeTintShade = cfg.includeTintShade ?? true
     if (includeTintShade) {
@@ -266,20 +294,41 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         templates[key].colorFocus = idx
     }
 
+
+    const rootDefaults: Template = {
+        borderColorFocus: 4,          // same lane as border hover (sensible default)
+        colorTransparent: transparentIndex,
+        placeholderColor: -2,         // textSubtle
+        shadowColor: shadowIndex,
+        shadowColorHover: shadowHoverIndex,
+        shadowColorPress: shadowPressIndex,
+        shadowColorFocus: shadowFocusIndex,
+    }
+    const withRootDefaults = (tmpl: Template): Template => ({ ...rootDefaults, ...tmpl })
+
+    templates['base_root'] = withRootDefaults(templates['base'])
+    templates['primary_root'] = withRootDefaults(templates['primary'])
+    templates['secondary_root'] = withRootDefaults(templates['secondary'])
+    if (templates['success']) templates['success_root'] = withRootDefaults(templates['success'])
+    if (templates['info']) templates['info_root'] = withRootDefaults(templates['info'])
+    if (templates['danger']) templates['danger_root'] = withRootDefaults(templates['danger'])
+    if (templates['alt']) templates['alt_root'] = withRootDefaults(templates['alt'])
+
+
     // ----- build
     const builder = createThemeBuilder()
         .addPalettes({ light, dark })
         .addTemplates(templates)
         .addThemes({
-            light: { template: 'base', palette: 'light' },
-            dark: { template: 'base', palette: 'dark' },
+            light: { template: 'base_root', palette: 'light' },
+            dark: { template: 'base_root', palette: 'dark' },
         })
 
     // base aliases (requested: light_base / dark_base)
     if (controls.addBaseAliases) {
         builder.addThemes({
-            light_base: { template: 'base', palette: 'light' },
-            dark_base: { template: 'base', palette: 'dark' },
+            light_base: { template: 'base_root', palette: 'light' },
+            dark_base: { template: 'base_root', palette: 'dark' },
         })
     }
 
@@ -304,15 +353,12 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
 
     // status: default = NOT children -> add as root-only themes
     const statusKeys = ['success', 'info', 'danger'].filter(k => k in rampStart)
-    if (controls.statusAsChildren) {
-        addChildSet(statusKeys)
-    } else {
-        const statusRoots = statusKeys.reduce<Record<string, { template: string; palette: 'light' | 'dark' }>>(
-            (acc, k) => {
-                acc[`light_${k}`] = { template: k, palette: 'light' }
-                acc[`dark_${k}`] = { template: k, palette: 'dark' }
-                return acc
-            }, {})
+    if (!controls.statusAsChildren) {
+        const statusRoots = statusKeys.reduce<Record<string, { template: string; palette: 'light' | 'dark' }>>((acc, k) => {
+            acc[`light_${k}`] = { template: `${k}_root`, palette: 'light' }
+            acc[`dark_${k}`] = { template: `${k}_root`, palette: 'dark' }
+            return acc
+        }, {})
         builder.addThemes(statusRoots)
     }
 
@@ -321,13 +367,12 @@ export function createAppThemes(cfg: ThemeFactoryConfig) {
         const accentRoots = (['primary', 'secondary'] as const).reduce<
             Record<string, { template: string; palette: 'light' | 'dark' }>
         >((acc, k) => {
-            acc[`light_${k}`] = { template: k, palette: 'light' }
-            acc[`dark_${k}`] = { template: k, palette: 'dark' }
+            acc[`light_${k}`] = { template: `${k}_root`, palette: 'light' }
+            acc[`dark_${k}`] = { template: `${k}_root`, palette: 'dark' }
             return acc
         }, {})
         builder.addThemes(accentRoots)
     }
-
     const themes = builder.build()
 
     // export names you’ll likely use
