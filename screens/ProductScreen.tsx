@@ -1,4 +1,4 @@
-import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
+import { BreadCrumbsContainer } from '@/components/features/breadcrumbs/BreadCrumbsContainer';
 import { ProductDescription } from '@/components/features/product/display/ProductDescription';
 import { ProductImage } from '@/components/features/product/display/ProductImage';
 import { ProductImageGallery } from '@/components/features/product/display/ProductImageGallery';
@@ -6,8 +6,8 @@ import { ProductPrice } from '@/components/features/product/display/ProductPrice
 import { ProductTitle } from '@/components/features/product/display/ProductTitle';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
 import { PageBody, PageFooter, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Breadcrumbs, ThemedXStack } from '@/components/ui';
-import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
+import { ThemedXStack } from '@/components/ui';
+import { ProductCategoryProvider, useProductCategoryContext } from '@/contexts/ProductCategoryContext';
 import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
 import { PurchasableProduct } from '@/types';
@@ -44,11 +44,13 @@ export const ProductScreen = () => {
 const ProductScreenContent = () => {
   const { purchasable } = usePurchasableContext();
   const { product } = purchasable;
+  const { productCategory } = useProductCategoryContext();
+
+
   return (
     <PageView>
       <PageHeader>
-        <Breadcrumbs isLastClickable={true} />
-        <ProductCategoryChips showAll={true} />
+        <BreadCrumbsContainer defaultOpen />
       </PageHeader>
       <PageBody>
         <PageSection >

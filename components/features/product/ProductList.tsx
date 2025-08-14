@@ -28,7 +28,7 @@ export const ProductList = memo(({
     const renderItem = React.useCallback(
         ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
             <PurchasableProviderInit product={product}>
-                <ProductCard theme={index % 2 === 0 ? 'tint' : 'shade'} />
+                <ProductCard theme={index % 2 === 0 ? 'alt_tint' : 'alt_shade'} />
             </PurchasableProviderInit>
         ),
         []
@@ -45,7 +45,7 @@ export const ProductList = memo(({
     );
 
     return (
-        <Theme name="light_alt">
+        <Theme name="light">
             <FlashList
                 data={products as PurchasableProduct[]}
                 renderItem={renderItem}

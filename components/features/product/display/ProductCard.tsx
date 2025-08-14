@@ -1,4 +1,5 @@
 import { ThemedImage } from '@/components/ui';
+import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import { routes } from '@/config/routes';
 import { useProductCategoryContext } from '@/contexts';
@@ -8,7 +9,6 @@ import React, { JSX } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 import { ProductDescription, ProductTitle } from '.';
 import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
-
 
 export const PRODUCT_CARD_NARROW_COLUMN_WIDTH = 80;
 
@@ -24,9 +24,9 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
     return (
         <ThemedYStack
             container
-            bbw={1}
-            boc="$borderColor"
+            box
             {...props} >
+            <ThemedLinearGradient />
             <Link href={href} asChild>
                 <ThemedXStack pressable>
                     <ProductCardImage />

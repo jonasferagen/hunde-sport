@@ -9,6 +9,7 @@ const config = {
     gap: DEFAULT_SIZE,
     boc: '$borderColor',
     bg: 'transparent',
+    pos: 'relative',
 
     variants: {
         container: {
@@ -22,7 +23,20 @@ const config = {
             true: { pressStyle: { opacity: 0.7 } },
         },
         box: {
-            true: { bw: 1, boc: '$borderColor' },
+            true: { bw: 1, boc: '$borderColor', bg: '$background' },
+        },
+        chip: {
+            true: {
+                fs: 1,
+                bw: 1,
+                px: '$2',
+                py: '$1',
+                br: '$3',
+                ov: 'hidden',
+                ai: 'center',
+                jc: 'center',
+                gap: '$1.5'
+            },
         }
 
     }

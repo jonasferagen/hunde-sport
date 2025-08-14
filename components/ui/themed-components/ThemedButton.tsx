@@ -13,7 +13,7 @@ import { cloneElement, isValidElement, useContext } from 'react';
 const DEFAULT_SIZE = '$4';
 
 // 1) Context for sizing between parts
-// 1) Context — make $3 the default
+
 export const ButtonContext = createStyledContext({
     size: DEFAULT_SIZE as SizeTokens,
 })
@@ -68,6 +68,7 @@ export const ButtonFrame = styled(View, {
     variants: {
         size: {
             '...size': (token) => {
+
                 const s = SIZES[(token as SizeKey)] ?? SIZES[DEFAULT_SIZE]
                 return {
                     height: s.h,
