@@ -50,7 +50,7 @@ const ProductScreenContent = () => {
         <Breadcrumbs isLastClickable={true} />
         <ProductCategoryChips showAll={true} />
       </PageHeader>
-      <PageBody scrollable>
+      <PageBody>
         <PageSection >
           <ProductTitle size="$6" />
           <ProductImage />

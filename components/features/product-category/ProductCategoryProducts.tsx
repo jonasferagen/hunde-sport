@@ -6,7 +6,7 @@ import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import React, { JSX } from 'react';
 import { ProductList } from '../product/ProductList';
 
-export const ProductCategoryProducts = (): JSX.Element | null => {
+export const ProductCategoryProducts = (): JSX.Element => {
     useRenderGuard('ProductCategoryProducts');
     const { productCategory } = useProductCategoryContext();
     const { items: products, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByCategory(productCategory!);
@@ -20,6 +20,5 @@ export const ProductCategoryProducts = (): JSX.Element | null => {
         loadingMore={isFetchingNextPage}
         loadMore={fetchNextPage}
     />;
-
 };
 

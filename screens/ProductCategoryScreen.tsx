@@ -23,14 +23,15 @@ const ProductCategoryScreenContent = memo(() => {
 
     useRenderGuard('ProductCategoryScreenContent');
 
-
-    return <PageView>
-        <PageHeader>
-            <Breadcrumbs isLastClickable={true} />
-            <ProductCategoryChips showAll={false} />
-        </PageHeader>
-        <PageBody f={1} px="none">
-            <ProductCategoryProducts />
-        </PageBody>
-    </PageView>
+    return (
+        <PageView>
+            <PageHeader>
+                <Breadcrumbs isLastClickable={true} />
+                <ProductCategoryChips showAll={false} />
+            </PageHeader>
+            <PageBody px="none" mode="static">
+                <ProductCategoryProducts />
+            </PageBody>
+        </PageView>
+    );
 });

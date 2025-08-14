@@ -5,34 +5,28 @@ import { ThemedYStack } from '../ui';
 
 interface PageBodyProps extends YStackProps {
   children: React.ReactNode;
-  scrollable?: boolean;
-
+  mode?: 'scroll' | 'static';
 }
 
-export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, scrollable = true, ...props }, ref) => {
+export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, mode = 'scroll', ...props }, ref) => {
 
 
-  const content = (
-    <ThemedYStack {...props} gap="none" mih="100%">
-      {children}
-    </ThemedYStack>
-  );
+  const content = <ThemedYStack {...props} f={1} gap="none" >
+    {children}
+  </ThemedYStack>;
 
 
-  if (scrollable) {
-    return (
-      <ScrollView
-        ref={ref}
-        showsVerticalScrollIndicator={true}
-        nestedScrollEnabled={true}
-        scrollsToTop={true}
-      >
-        {content}
-      </ScrollView>
-    )
-  }
-
-  return content;
+  return mode === 'scroll' ? (
+    <ScrollView
+      f={1}
+      ref={ref}
+      showsVerticalScrollIndicator={true}
+      nestedScrollEnabled={true}
+      scrollsToTop={true}
+    >
+      {content}
+    </ScrollView>
+  ) : content
 
 });
 
