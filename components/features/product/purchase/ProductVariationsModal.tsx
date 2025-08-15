@@ -4,7 +4,7 @@ import React from "react";
 import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 
 
-import { Sheet, Spacer } from 'tamagui';
+import { Spacer } from 'tamagui';
 import { ProductVariationSelect } from "../product-variation/ProductVariationSelect";
 
 import { PurchasableProvider, useCartContext, usePurchasableContext } from "@/contexts";
@@ -42,9 +42,7 @@ const Inner = ({ close }: { close: () => void }) => {
                 <ProductTitle />
             </ThemedYStack>
 
-            <Sheet.ScrollView f={1} mih={0} >
-                <ProductVariationSelect />
-            </Sheet.ScrollView>
+            <ProductVariationSelect />
 
             <ThemedYStack>
                 <ProductVariationLabel />
@@ -63,3 +61,6 @@ const Inner = ({ close }: { close: () => void }) => {
     )
 }
 
+/*          <Sheet.ScrollView f={1} mih={0} >
+                <ProductVariationSelect />
+            </Sheet.ScrollView> */
