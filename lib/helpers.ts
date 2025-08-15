@@ -150,3 +150,23 @@ export const getAspectRatio = (width: DimensionValue | undefined, height: Dimens
     // Mixed units (px vs %) — ambiguous; fallback
     return 1;
 };
+
+
+
+import { tokens } from '@tamagui/config/v4';
+import { getVariableValue } from 'tamagui';
+
+export function spacePx(token: string | number) {
+    const key =
+        typeof token === 'string' && token.startsWith('$')
+            ? token.slice(1)
+            : String(token)
+
+    const candidate =
+        // try "$2", then "2", then 2
+        (tokens.space as any)[`$${key}`] ??
+        (tokens.space as any)[key] ??
+        (tokens.space as any)[Number(key)]
+
+    return Math.round(Number(getVariableValue(candidate ?? 0)))
+}

@@ -1,6 +1,6 @@
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { usePurchasableContext } from '@/contexts';
-import { getScaledImageUrl } from '@/lib/helpers';
+import { getScaledImageUrl, spacePx } from '@/lib/helpers';
 import { Galeria } from '@nandorojo/galeria';
 import React, { JSX, useMemo, useState } from 'react';
 import { Dimensions } from 'react-native';
@@ -9,33 +9,39 @@ import { ScrollView, XStack, YStack, YStackProps } from 'tamagui';
 interface ProductImageGalleryProps extends YStackProps {
     numColumns?: number;
 }
-
-export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductImageGalleryProps): JSX.Element => {
+export const ProductImageGallery = ({
+    numColumns = 4,
+    ...stackProps
+}: ProductImageGalleryProps): JSX.Element => {
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
-    const images = product.images;
     const { width: screenWidth } = Dimensions.get('window');
-
-    const galleryUrls = images.map((image) => getScaledImageUrl(image.src, screenWidth, screenWidth));
+    const images = product.images;
 
     const [gallery, setGallery] = useState({ visible: false, initialIndex: 0 });
-    const openGallery = (index: number) => {
+    const openGallery = (index: number) =>
         setGallery({ visible: true, initialIndex: index });
-    };
-
 
     const [containerW, setContainerW] = useState(0);
-    const gapPx = 8;
 
-    // compute square tile size
-    const itemSize = useMemo(() => {
-        if (!containerW || !numColumns) return 0;
-        const totalGutters = gapPx * (numColumns - 1);
-        return Math.floor((containerW - totalGutters) / numColumns);
-    }, [containerW, numColumns, gapPx]);
+    // gutters
+    const GAP = '$2';
+    const gapPx = spacePx(GAP);
+    const half = Math.round(gapPx / 2);
 
-    const THUMBNAIL_WIDTH = Math.floor(screenWidth / numColumns);
+    // % width per column
+    const colPct = `${100 / numColumns}%`;
 
+    // pixel size to request for thumbnails (container width / cols minus padding)
+    const thumbPx = useMemo(() => {
+        const w = containerW || screenWidth;          // fallback avoids 0 on first render
+        return Math.max(1, Math.floor(w / numColumns) - half * 2);
+    }, [containerW, screenWidth, numColumns, half]);
+
+    const galleryUrls = useMemo(
+        () => images.map((img) => getScaledImageUrl(img.src, thumbPx, thumbPx)),
+        [images, thumbPx]
+    );
 
     return (
         <YStack f={1} {...stackProps}>
@@ -43,28 +49,16 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
                 <ScrollView>
                     <XStack
                         fw="wrap"
-                        // RN supports gap on wrap in recent versions, but margins are the most reliable.
+                        m={-half}                                 // equal outer trim on all sides
                         onLayout={(e) => setContainerW(e.nativeEvent.layout.width)}
-                        // use gap for simple cases; margins handle older platforms
-                        gap="$2"
                     >
-                        {images.map((image, index) => {
-                            // fallback if layout not measured yet
-                            const size = itemSize || THUMBNAIL_WIDTH;
-                            const uri = getScaledImageUrl(image.src, size, size);
-
-                            return (
-                                <YStack
-                                    key={index}
-                                    w={size}
-                                    h={size}
-                                    br="$2"
-                                    ov="hidden"
-                                    onPress={() => openGallery(index)}
-                                >
+                        {images.map((image, index) => (
+                            <YStack key={index} w={colPct} p={half}>
+                                {/* Inner square: borders/radius here so padding doesn't affect math */}
+                                <YStack w="100%" aspectRatio={1} br="$2" ov="hidden" onPress={() => openGallery(index)}>
                                     <Galeria.Image index={index}>
                                         <ThemedImage
-                                            uri={uri}
+                                            uri={galleryUrls[index]}
                                             title={product.name}
                                             aspectRatio={1}
                                             objectFit="cover"
@@ -73,13 +67,12 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
                                         />
                                     </Galeria.Image>
                                 </YStack>
-                            );
-                        })}
+                            </YStack>
+                        ))}
                     </XStack>
                 </ScrollView>
             </Galeria>
         </YStack>
-
     );
 };
 
