@@ -32,7 +32,6 @@ export const config = {
 export const mintTheme = buildThemes(config)
 
 
-console.log(mintTheme.themes.light_accent2_shade);
 // Optional: handy type for <Theme name="...">
 export type AppThemeName =
     | `light_${keyof typeof config & string}`

@@ -8,12 +8,11 @@ import { getHeaderTitle } from '@react-navigation/elements';
 export const CustomHeader = (props: DrawerHeaderProps) => {
     const { navigation, route, options } = props;
 
-    const { name } = route.params as { name: string };
+    const { name } = route?.params as { name: string };
 
-    const title = name || getHeaderTitle(options, route.name);
-
-
-
+    const title = name === 'index' || name === undefined
+        ? 'hunde-sport.no'
+        : (name || getHeaderTitle(options, route?.name)) as string;
 
     return (
         <Theme name="primary">

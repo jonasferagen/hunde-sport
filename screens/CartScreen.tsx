@@ -3,7 +3,7 @@ import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageFooter } from '@/components/layout/PageFooter';
 import { routes } from '@/config/routes';
-import { HrefObject, Link } from 'expo-router';
+import { HrefObject } from 'expo-router';
 import React from 'react';
 
 export const CartScreen = () => {
@@ -16,9 +16,7 @@ export const CartScreen = () => {
                 </PageSection>
             </PageBody>
             <PageFooter f={0} >
-                <Link href={href} asChild>
-                    <CheckoutButton />
-                </Link>
+                <CheckoutButton />
             </PageFooter>
         </PageView>
 

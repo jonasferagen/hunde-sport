@@ -1,4 +1,4 @@
-import { PageBody, PageHeader, PageView } from '@/components/layout';
+import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { useCartStore } from '@/stores/cartStore';
 import { JSX } from 'react';
@@ -21,10 +21,12 @@ export const CheckoutScreen = (): JSX.Element => {
             <PageHeader>
                 <SizableText>Kassen</SizableText>
             </PageHeader>
-            <PageBody>
-                <DefaultTextContent>
-                    Forbereder kassen...
-                </DefaultTextContent>
+            <PageBody >
+                <PageSection>
+                    <DefaultTextContent>
+                        Forbereder kassen...
+                    </DefaultTextContent>
+                </PageSection>
             </PageBody>
         </PageView>
     );

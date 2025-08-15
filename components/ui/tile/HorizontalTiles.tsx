@@ -4,7 +4,7 @@ import { rgba } from 'polished';
 import React, { JSX, useCallback, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { Spinner, View, XStack, getVariableValue, useTheme } from 'tamagui';
-import { ThemedLinearGradient } from '../themed-components';
+import { ThemedLinearGradient, ThemedYStack } from '../themed-components';
 
 interface ScrollIndicatorProps {
     side: 'left' | 'right';
@@ -98,7 +98,7 @@ export const HorizontalTiles = <T extends Product>({
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={() => <View w={SPACING} />}
+                ItemSeparatorComponent={() => <ThemedYStack mx="$1.5" />}
                 estimatedItemSize={100}
                 onScroll={handleScroll}
                 scrollEventThrottle={16} // Trigger onScroll every 16ms
