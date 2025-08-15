@@ -1,6 +1,7 @@
 import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
 import { THEME_DRAWER } from '@/config/app';
-import { routes } from '@/config/routes';
+import { RouteKey, routes } from '@/config/routes';
+import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import {
     DrawerContentComponentProps,
 } from '@react-navigation/drawer';
@@ -14,6 +15,7 @@ import { ThemedText } from '../ui/themed-components/ThemedText';
 
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
+    const { to } = useCanonicalNav();
 
     return (
         <Theme name={THEME_DRAWER}>
@@ -33,10 +35,10 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 <ScrollView >
                     <ThemedYStack container="$4">
                         {Object.values(routes)
-                            .filter(route => route.showInDrawer)
+                            .filter((route) => route.showInDrawer)
                             .map((route) => {
                                 const isActive = state.routes[state.index].name === route.name;
-                                const onPress = () => navigation.navigate(route.name);
+                                const onPress = () => to(route.name as RouteKey);
                                 return (
                                     <ThemedButton key={route.name}
                                         onPress={onPress}

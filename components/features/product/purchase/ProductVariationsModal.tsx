@@ -1,13 +1,14 @@
-import { ThemedXStack, ThemedYStack } from "@/components/ui";
+import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { Purchasable } from "@/types";
 import React from "react";
-import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
+import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 
 
 import { Sheet, YStack } from 'tamagui';
 import { ProductVariationSelect } from "../product-variation/ProductVariationSelect";
 
 import { PurchasableProvider, useCartContext, usePurchasableContext } from "@/contexts";
+import { ChevronDown } from "@tamagui/lucide-icons";
 import { PurchaseButton } from "./PurchaseButton";
 export const ProductVariationsModal = ({
     close,
@@ -38,9 +39,13 @@ const Inner = ({ close }: { close: () => void }) => {
 
     return (
         <ThemedYStack f={1} mih={0} >
-            <ThemedYStack>
-                <ProductTitle />
-            </ThemedYStack>
+            <ThemedXStack split>
+                <ProductTitle fs={1} />
+                <ThemedButton circular onPress={close}>
+                    <ChevronDown />
+                </ThemedButton>
+            </ThemedXStack>
+            <ProductImage img_height={200} />
 
             <Sheet.ScrollView f={1} mih={0}>
                 <YStack pb="$4">

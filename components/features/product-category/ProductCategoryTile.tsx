@@ -1,6 +1,6 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { PRODUCT_CATEGORY_TILE_HEIGHT, PRODUCT_CATEGORY_TILE_WIDTH } from '@/config/app';
-import { routes } from '@/config/routes';
+import { useCanonicalNav } from "@/hooks/useCanonicalNav";
 import { ProductCategory } from '@/models/ProductCategory';
 import { Link } from 'expo-router';
 import React, { memo } from 'react';
@@ -14,8 +14,10 @@ const ProductCategoryTileBase: React.FC<ProductCategoryTileProps> = ({
     productCategory,
     ...stackProps
 }) => {
+
+    const { linkProps } = useCanonicalNav();
     return (
-        <Link href={routes['product-category'].path(productCategory)} asChild>
+        <Link {...linkProps('product-category', productCategory)} asChild>
             <Tile
                 w={PRODUCT_CATEGORY_TILE_WIDTH}
                 h={PRODUCT_CATEGORY_TILE_HEIGHT}

@@ -1,11 +1,11 @@
 import { ThemedImage } from '@/components/ui';
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
-import { routes } from '@/config/routes';
 import { useProductCategoryContext } from '@/contexts';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
+import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { getScaledImageUrl } from '@/lib/helpers';
-import { HrefObject, Link } from 'expo-router';
+import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
@@ -18,8 +18,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
     const { productCategory: category } = useProductCategoryContext();
-
-    const href: HrefObject = routes.product.path(product, category?.id);
+    const { linkProps } = useCanonicalNav();
 
 
     return (
@@ -30,7 +29,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
             {...props}
         >
             <ThemedLinearGradient />
-            <Link href={href} asChild>
+            <Link {...linkProps('product', product, category?.id)} asChild>
                 <ThemedXStack pressable>
                     <ProductCardImage />
                     <ProductCardDescription />

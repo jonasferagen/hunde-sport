@@ -2,14 +2,15 @@ import { ProductCategoryTiles } from '@/components/features/product-category/Pro
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductTiles';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
-import { routes } from '@/config/routes';
-import { router } from 'expo-router';
+import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+
+
+
 
 export const HomeScreen = () => {
 
-    const handleSearch = (query: string) => {
-        query && router.push(routes.search.path(query));
-    };
+    const { to } = useCanonicalNav();
+    const handleSearch = (q: string) => to('search', q);
 
     return (
         <PageView>

@@ -22,7 +22,7 @@ export const CustomHeader = (props: DrawerHeaderProps) => {
                 <ThemedButton theme="tint" circular onPress={() => navigation.openDrawer()}>
                     <Menu />
                 </ThemedButton>
-                <H4>{title}</H4>
+                <H4 fs={1}>{title}</H4>
             </ThemedXStack>
         </Theme>
     );

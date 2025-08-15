@@ -1,8 +1,9 @@
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { THEME_BOTTOM_BAR } from '@/config/app';
-import { routes } from '@/config/routes';
+import { RouteKey } from '@/config/routes';
+import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
-import { usePathname, useRouter } from 'expo-router';
+import { usePathname } from 'expo-router';
 import { styled, Tabs, Text, YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
 
@@ -39,11 +40,13 @@ const StyledTabsList = styled(Tabs.List, {
 });
 
 export const BottomBar = (props: YStackProps) => {
-    const router = useRouter();
+
+    const { to, linkProps } = useCanonicalNav();
+
     const pathname = usePathname();
     const currentTab = pathname.split('/')[1] || 'index';
     const handleTabChange = (value: string) => {
-        router.push(routes[value].path());
+        to(value as RouteKey);
     };
 
     return (

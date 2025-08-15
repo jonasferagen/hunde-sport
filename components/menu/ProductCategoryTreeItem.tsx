@@ -1,4 +1,4 @@
-import { routes } from '@/config/routes';
+import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { ProductCategory } from '@/models/ProductCategory';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
@@ -24,11 +24,12 @@ export const ProductCategoryTreeItem = ({
 }: RenderItemProps): JSX.Element => {
 
     const spacing = getTokenValue('$2', 'space');
+    const { linkProps } = useCanonicalNav();
 
     return (
         <XStack ai="center" gap="$2" f={1} mb="$2">
             <XStack flex={1} ml={level * spacing}>
-                <Link href={routes['product-category'].path(productCategory)} asChild>
+                <Link {...linkProps('product-category', productCategory)} asChild>
                     <ThemedButton theme="shade" f={1} >
                         <ThemedText f={1} letterSpacing={0.5}>
                             {productCategory.name}

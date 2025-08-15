@@ -25,7 +25,7 @@ export const PurchaseButton = ({ onPress, enable = true, isLoading = false }: { 
 
     const disabled = !availability.isInStock || isLoading || !enable;
     const icon = icons[status];
-    const theme = isVariable ? THEME_CTA_VARIATION : THEME_CTA_BUY;
+    const theme = isVariable && !isValid ? THEME_CTA_VARIATION : THEME_CTA_BUY;
 
     const label = isLoading ? undefined : message;
 

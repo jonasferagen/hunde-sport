@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import React from 'react';
 
 import { ThemedText, ThemedXStack } from '@/components/ui';
-import { routes } from '@/config/routes';
+import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { ProductCategory } from '@/models/ProductCategory';
 import { ChevronRight } from '@tamagui/lucide-icons';
 
@@ -31,12 +31,15 @@ export const Breadcrumb = React.memo(({ productCategory,
     return null;
   }
 
+
+  const { linkProps } = useCanonicalNav();
+
   return (
     <ThemedXStack gap="none">
       {isLast && !isLastClickable ? (
         breadcrumbText
       ) : (
-        <Link replace href={routes['product-category'].path(productCategory)} asChild>
+        <Link {...linkProps('product-category', productCategory)} asChild>
           {breadcrumbText}
         </Link>
       )}
