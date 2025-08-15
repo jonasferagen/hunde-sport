@@ -1,28 +1,34 @@
 
 import { usePurchasableContext } from "@/contexts";
-import { useModalStore, WizardRenderArgs, WizardRenderFn } from "@/stores/modalStore";
 import { Purchasable } from "@/types";
 import React from "react";
+import { openModal } from "./ModalStore";
+import { ProductVariationsModal } from "./ProductVariationsModal";
 import { PurchaseButton } from "./PurchaseButton";
-import { PurchaseWizard } from "./PurchaseWizard";
 
 export const ProductPurchaseFlow = () => {
-
     const { purchasable } = usePurchasableContext();
 
-    const openModal = useModalStore((s) => s.openModal) as <P>(r: WizardRenderFn<P>, p: P) => void;
+    console.log(openModal);
 
     return (
         <PurchaseButton
             onPress={() =>
-                openModal(({ close, payload, updatePayload }: WizardRenderArgs<Purchasable>) => (
-                    <PurchaseWizard
-                        payload={payload}
-                        updatePayload={updatePayload}
-                        close={close}
-                    />
-                ), purchasable)
+                openModal<Purchasable>(
+                    (payload, api) => (
+                        <ProductVariationsModal
+                            purchasable={payload}
+                            onNext={() => api.close()}
+                            onBack={() => api.close()}
+                        />
+                    ),
+                    purchasable,
+                    {
+                        snapPoints: [90],       // customize per flow if needed
+                        initialPosition: 0,
+                    }
+                )
             }
         />
     );
-}
+};
