@@ -17,7 +17,7 @@ export const THEME_MAIN = 'primary';
 export const THEME_DRAWER = 'secondary';
 export const THEME_HEADER = 'primary';
 export const THEME_BOTTOM_BAR = 'primary'
-
+export const THEME_MODAL = "neutral";
 
 export const THEME_CTA_BUY = "accent13";
 export const THEME_CTA_VARIATION = "accent12";

@@ -4,10 +4,9 @@ import { usePurchasableContext } from '@/contexts';
 import { VariableProduct } from '@/types';
 import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
 
-import { ThemedLinearGradient } from '@/components/ui';
 import React from 'react';
-import { YStack } from 'tamagui';
 
+import { ThemedYStack } from '@/components/ui';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { BaseProductPrice } from '../display/ProductPrice';
@@ -38,19 +37,21 @@ export const PurchaseButton = ({ onPress, isLoading = false }: { onPress: () => 
             theme={theme}
             label={label}
             iconAfter={
-                <YStack
-
+                <ThemedYStack
+                    box
+                    theme="secondary"
                     h="$6"
                     ai="center"
                     jc="center"
                     px="$3"
+
                     boc="$borderColor"
                     mr={-20}
                     minWidth={80}
                 >
-                    <ThemedLinearGradient br="$3" />
+
                     <BaseProductPrice />
-                </YStack>
+                </ThemedYStack>
             }
 
         > {isLoading && <ThemedSpinner />}

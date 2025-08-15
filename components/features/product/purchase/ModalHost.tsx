@@ -3,14 +3,14 @@ import { ThemedLinearGradient } from '@/components/ui';
 import React from 'react';
 import { Sheet, Theme, YStack } from 'tamagui';
 
+import { THEME_MODAL } from '@/config/app';
 import { closeModal, setModalPosition, useModalStore } from './ModalStore';
-
 
 export const ModalHost = () => {
     const { open, renderer, payload, snapPoints, position } = useModalStore()
 
     return (
-        <Theme name="secondary">
+        <Theme name={THEME_MODAL}>
             <Sheet
                 modal
                 native

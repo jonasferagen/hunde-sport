@@ -23,7 +23,7 @@ const config = {
             true: { pressStyle: { opacity: 0.7 } },
         },
         box: {
-            true: { bw: 1, boc: '$borderColor', bg: '$background' },
+            true: { bw: 0, boc: '$borderColor', bg: '$background' },
         },
         rounded: {
             true: { br: '$3' },
