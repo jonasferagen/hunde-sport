@@ -6,7 +6,7 @@ import { ThemedYStack } from '../ui/themed-components/ThemedStack';
 interface PageSectionProps extends YStackProps {
   children: ReactNode;
   title?: string;
-  scrollable?: boolean; // Add this prop
+  scrollable?: boolean;
   px?: string;
 }
 
@@ -26,13 +26,15 @@ export const PageSection = (props: PageSectionProps) => {
     return null;
   }
 
-  const px = stackProps.px === 'none' ? '$3' : 'none';
-
   return (
 
-    <ThemedYStack box container {...stackProps} >
+    <ThemedYStack
+      box
+      container
+      {...stackProps}
+    >
 
-      {title && <ThemedText px={px} size="$6">{title}</ThemedText>}
+      {title && <ThemedText size="$6">{title}</ThemedText>}
 
       {scrollable ? (
         <ScrollView showsVerticalScrollIndicator={false}>

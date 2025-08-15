@@ -17,19 +17,19 @@ export const HomeScreen = () => {
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
             <PageBody>
-                <PageSection title="Nyheter" scrollable px="none"  >
-                    <RecentProducts key='recent' />
+                <PageSection title="Nyheter" scrollable   >
+                    <RecentProducts />
                 </PageSection>
                 <PageSection title="Kategorier" theme="dark_primary">
                     <ProductCategoryTiles key="categories" theme="tertiary" />
                 </PageSection>
-                <PageSection title="Tilbud" scrollable px="none" >
+                <PageSection title="Tilbud" scrollable  >
                     <DiscountedProducts key='discounted' />
                 </PageSection>
-                <PageSection title="Utvalgte produkter" scrollable px="none" theme="dark_primary">
+                <PageSection title="Utvalgte produkter" scrollable theme="dark_primary">
                     <FeaturedProducts key='featured' />
                 </PageSection>
-                <PageSection title="Debug" scrollable px="none">
+                <PageSection title="Debug" scrollable >
                     <DebugProducts key='debug' />
                 </PageSection>
             </PageBody>

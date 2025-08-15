@@ -1,9 +1,9 @@
 import { Product } from '@/types';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { rgba } from 'polished';
-import React, { JSX, useState } from 'react';
+import React, { JSX, useCallback, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { Spinner, View, useTheme } from 'tamagui';
+import { Spinner, View, XStack, getVariableValue, useTheme } from 'tamagui';
 import { ThemedLinearGradient } from '../themed-components';
 
 interface ScrollIndicatorProps {
@@ -16,17 +16,15 @@ const ScrollIndicator = React.memo(({ side, width }: ScrollIndicatorProps) => {
     const gradientStart = side === 'left' ? [1, 0] : [0, 0];
     const gradientEnd = side === 'left' ? [0, 0] : [1, 0];
 
-    const theme = useTheme();
-    const backgroundColor = theme.background.get();
+    const theme = useTheme()
+    const backgroundColor = (getVariableValue(theme.background) as string)
     const backgroundTransparent = rgba(backgroundColor, 0);
 
     return (
-        <View
+        <XStack
             pos="absolute"
             l={side === 'left' ? 0 : undefined}
             r={side === 'right' ? 0 : undefined}
-            t={0}
-            b={0}
             w={width}
             f={1}
             ai="center"
@@ -35,11 +33,10 @@ const ScrollIndicator = React.memo(({ side, width }: ScrollIndicatorProps) => {
         >
             <ThemedLinearGradient
                 colors={[backgroundTransparent, backgroundColor]}
-                startPoint={gradientStart as [number, number]}
-                endPoint={gradientEnd as [number, number]}
-
+                start={gradientStart as [number, number]}
+                end={gradientEnd as [number, number]}
             />
-        </View>
+        </XStack>
     );
 });
 
@@ -67,26 +64,19 @@ export const HorizontalTiles = <T extends Product>({
     const isAtStart = scrollOffset <= 10;
     const isAtEnd = scrollOffset + containerWidth >= contentWidth - 10;
 
-
-    const products = items?.filter((item) => item.is_purchasable && item.is_in_stock);
-
-    if (!products || products.length === 0) {
-        return <></>;
-    }
-
-    const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
         setScrollOffset(event.nativeEvent.contentOffset.x);
-    };
+    }, []);
 
-    const handleEndReached = () => {
+    const handleEndReached = useCallback(() => {
         if (!isLoading && hasNextPage && fetchNextPage) {
             fetchNextPage();
         }
-    };
+    }, [isLoading, hasNextPage, fetchNextPage]);
 
     const SPACING = "$3";
 
-    const renderFooter = () => {
+    const renderFooter = useCallback(() => {
         if (!hasNextPage || !isLoading) return <View w={SPACING} h="100%" />;
 
         return (
@@ -94,13 +84,17 @@ export const HorizontalTiles = <T extends Product>({
                 <Spinner />
             </View>
         );
-    };
+    }, [hasNextPage, isLoading]);
+
+    if (!items || items.length === 0) {
+        return <></>;
+    }
 
     return (
         <View position="relative">
             <FlashList
                 horizontal
-                data={products}
+                data={items}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 showsHorizontalScrollIndicator={false}
@@ -112,7 +106,6 @@ export const HorizontalTiles = <T extends Product>({
                 onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
                 onEndReached={handleEndReached}
                 onEndReachedThreshold={0.5}
-                ListHeaderComponent={<View w={SPACING} h="100%" />}
                 ListFooterComponent={renderFooter}
             />
             {isScrollable && !isAtEnd && <ScrollIndicator side="right" width="$6" />}
