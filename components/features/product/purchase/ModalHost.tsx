@@ -30,7 +30,7 @@ export const ModalHost = () => {
                 <Sheet.Frame f={1} mih={0} p="$4" gap="$3">
                     <ThemedLinearGradient />
                     <YStack f={1} mih={0}>
-                        {renderer ? renderer({ close: closeModal, setPosition: setModalPosition }) : null}
+                        {renderer ? renderer(payload, { close: closeModal, setPosition: setModalPosition }) : null}
                     </YStack>
                 </Sheet.Frame>
             </Sheet>
