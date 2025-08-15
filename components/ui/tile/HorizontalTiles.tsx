@@ -98,7 +98,7 @@ export const HorizontalTiles = <T extends Product>({
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={() => <ThemedYStack mx="$1.5" />}
+                ItemSeparatorComponent={() => <ThemedYStack ml="$3" />}
                 estimatedItemSize={100}
                 onScroll={handleScroll}
                 scrollEventThrottle={16} // Trigger onScroll every 16ms

@@ -15,7 +15,7 @@ export const ProductCategoryTiles = (props: StackProps): JSX.Element => {
         () => rootProductCategories.slice(0, MAX_CATEGORIES),
         [rootProductCategories]
     );
-    const GAP = '$2' // your token
+    const GAP = '$3' // your token
     const gapPx = spacePx(GAP);
     const half = Math.round(gapPx / 2)
     const cols = NUM_CATEGORY_TILE_COLUMNS
