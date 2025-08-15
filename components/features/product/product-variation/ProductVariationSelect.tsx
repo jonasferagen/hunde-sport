@@ -43,7 +43,7 @@ export const ProductVariationSelectContent = (props: ProductVariationSelectProps
     });
 
     return (
-        <XStack gap="$2" fg={1} fw="wrap" {...props} bg={"$background"}>
+        <XStack gap="$2" fg={1} fw="wrap" {...props} >
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
@@ -52,9 +52,8 @@ export const ProductVariationSelectContent = (props: ProductVariationSelectProps
 
                 return (
                     <YStack key={id} gap="$1" f={1}>
-                        <ThemedText tt="capitalize" fos="$5" fow="bold">{name}</ThemedText>
+                        <ThemedText tt="capitalize" fos="$5" bold>{name}</ThemedText>
                         <ScrollView>
-
                             <AttributeSelector
                                 options={filteredOptions}
                                 selectedValue={selectedValue}

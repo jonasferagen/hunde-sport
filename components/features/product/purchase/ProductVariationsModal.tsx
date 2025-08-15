@@ -1,4 +1,4 @@
-import { ThemedLinearGradient, ThemedXStack, ThemedYStack } from "@/components/ui";
+import { ThemedXStack, ThemedYStack } from "@/components/ui";
 import { Purchasable } from "@/types";
 import React from "react";
 import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
@@ -42,8 +42,7 @@ const Inner = ({ close }: { close: () => void }) => {
                 <ProductTitle />
             </ThemedYStack>
 
-            <Sheet.ScrollView f={1} mih={0}>
-                <ThemedLinearGradient />
+            <Sheet.ScrollView f={1} mih={0} >
                 <ProductVariationSelect />
             </Sheet.ScrollView>
 
@@ -56,7 +55,7 @@ const Inner = ({ close }: { close: () => void }) => {
             </ThemedYStack>
 
             <ThemedYStack gap="$3" f={0} mb="$5">
-                <PurchaseButton onPress={onPress} isLoading={isLoading} />
+                <PurchaseButton onPress={onPress} enable={purchasable.isValid} isLoading={isLoading} />
             </ThemedYStack>
 
             <Spacer mb="$6" />

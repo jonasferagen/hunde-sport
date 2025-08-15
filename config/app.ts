@@ -19,13 +19,13 @@ export const THEME_HEADER = 'primary';
 export const THEME_BOTTOM_BAR = 'tertiary'
 export const THEME_MODAL = "tertiary";
 
-export const THEME_CTA_BUY = "accent13";
-export const THEME_CTA_VARIATION = "accent12";
-export const THEME_CTA_CHECKOUT = "accent13";
+export const THEME_CTA_BUY = "accent2";
+export const THEME_CTA_VARIATION = "accent5";
+export const THEME_CTA_CHECKOUT = "accent3";
 
 
-export const THEME_PRICE_TAG = 'accent13';
-export const THEME_PRICE_TAG_SALE = 'accent12';
+export const THEME_PRICE_TAG = 'accent1';
+export const THEME_PRICE_TAG_SALE = 'accent2';
 
 export const THEME_PRODUCT_ITEM_1 = 'secondary_tint';
 export const THEME_PRODUCT_ITEM_2 = 'secondary_shade';

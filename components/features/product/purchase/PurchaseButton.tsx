@@ -9,7 +9,7 @@ import React from 'react';
 import { ThemedYStack } from '@/components/ui';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
-import { BaseProductPrice } from '../display/ProductPrice';
+import { ProductPrice } from '../display/ProductPrice';
 
 const icons = {
     VARIATION_REQUIRED: <Boxes />,
@@ -18,12 +18,12 @@ const icons = {
     OK: <ShoppingCart />,
 };
 
-export const PurchaseButton = ({ onPress, isLoading = false }: { onPress: () => void, isLoading: boolean }) => {
+export const PurchaseButton = ({ onPress, enable = true, isLoading = false }: { onPress: () => void, enable?: boolean, isLoading: boolean }) => {
     const { purchasable } = usePurchasableContext();
     const { product, status, message, isValid, availability } = purchasable;
     const isVariable = product instanceof VariableProduct;
 
-    const disabled = (!isValid && !isVariable) || !availability.isInStock || isLoading;
+    const disabled = !availability.isInStock || isLoading || !enable;
     const icon = icons[status];
     const theme = isVariable ? THEME_CTA_VARIATION : THEME_CTA_BUY;
 
@@ -40,7 +40,7 @@ export const PurchaseButton = ({ onPress, isLoading = false }: { onPress: () => 
             mr={-20}
             minWidth={80}
         >
-            <BaseProductPrice />
+            <ProductPrice />
         </ThemedYStack>);
 
 

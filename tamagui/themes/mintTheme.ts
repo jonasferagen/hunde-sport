@@ -10,10 +10,10 @@ export const config = {
     secondary: { light: '#DDE2C3', dark: '#474e25' },
     tertiary: { light: '#F1F5F9', dark: '#375c81' },
 
-    // existing accents
-    accent1: { light: '#4338CA', dark: '#608f39' },
-    accent2: { light: '#334524', dark: '#334524' },
-    accent3: { light: '#608f39', dark: '#608f39' },
+
+    accent1: { light: '#EA580C', dark: '#FB923C' }, // burnt orange
+    accent2: { light: '#E11D48', dark: '#FB7185' }, // crimson
+    accent3: { light: '#9d1432', dark: '#608f39' },
 
     // NEW accents (4–13)
     accent4: { light: '#2563EB', dark: '#60A5FA' }, // vivid blue
@@ -24,13 +24,15 @@ export const config = {
     accent9: { light: '#D946EF', dark: '#F0ABFC' }, // fuchsia
     accent10: { light: '#A855F7', dark: '#D8B4FE' }, // violet
     accent11: { light: '#F97316', dark: '#FDBA74' }, // orange
-    accent12: { light: '#EA580C', dark: '#FB923C' }, // burnt orange
-    accent13: { light: '#E11D48', dark: '#FB7185' }, // crimson
+
 } as const;
+
+
 
 export const mintTheme = buildThemes(config)
 
 
+console.log(mintTheme.themes.light_accent2_shade);
 // Optional: handy type for <Theme name="...">
 export type AppThemeName =
     | `light_${keyof typeof config & string}`
