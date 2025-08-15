@@ -4,7 +4,7 @@ import React, { useMemo } from 'react'
 import { getVariableValue, useTheme } from 'tamagui'
 import { LinearGradient } from 'tamagui/linear-gradient'
 
-export function ThemedLinearGradient(props: React.ComponentProps<typeof LinearGradient>) {
+export function ThemedLinearGradient({ ...props }: React.ComponentProps<typeof LinearGradient>) {
 
     const theme = useTheme()
 
@@ -13,9 +13,9 @@ export function ThemedLinearGradient(props: React.ComponentProps<typeof LinearGr
 
     // derive a subtle 2–3 stop gradient from the active surface
     const colors = useMemo(() => {
-        const top = rgba(isLight ? darken(0.03, base) : lighten(0.03, base), 0.9)
+        const top = rgba(isLight ? darken(0.05, base) : lighten(0.05, base), 0.9)
         const mid = rgba(base, 0.85)
-        const bottom = rgba(isLight ? darken(0.07, base) : lighten(0.07, base), 0.9)
+        const bottom = rgba(isLight ? darken(0.1, base) : lighten(0.1, base), 0.9)
         return [top, mid, bottom]
     }, [base, isLight])
 

@@ -3,7 +3,7 @@ import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecent
 import { QueryResult } from '@/hooks/data/util';
 import { PurchasableProduct } from '@/types';
 import { JSX } from 'react';
-import { HorizontalTiles } from '../../ui/tile/HorizontalTiles';
+import { HorizontalTiles } from '../../../ui/tile/HorizontalTiles';
 import { ProductTile } from './ProductTile';
 
 

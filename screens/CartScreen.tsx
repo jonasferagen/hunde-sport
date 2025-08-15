@@ -1,7 +1,6 @@
-import { CartSummary } from '@/components/features/cart';
 import { CartList } from '@/components/features/cart/CartList';
 import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
-import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
+import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageFooter } from '@/components/layout/PageFooter';
 import { routes } from '@/config/routes';
 import { HrefObject, Link } from 'expo-router';
@@ -11,11 +10,8 @@ export const CartScreen = () => {
     const href: HrefObject = routes.checkout.path();
     return (
         <PageView>
-            <PageHeader >
-                <CartSummary />
-            </PageHeader>
             <PageBody>
-                <PageSection p="none" f={1} h="100%">
+                <PageSection p="none" >
                     <CartList />
                 </PageSection>
             </PageBody>

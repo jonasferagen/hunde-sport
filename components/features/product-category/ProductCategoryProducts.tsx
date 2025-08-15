@@ -4,7 +4,7 @@ import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 
 import React, { JSX } from 'react';
-import { ProductList } from '../product/ProductList';
+import { ProductList } from '../product/list/ProductList';
 
 export const ProductCategoryProducts = (): JSX.Element => {
     useRenderGuard('ProductCategoryProducts');

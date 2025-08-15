@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from 'react';
-import { LayoutChangeEvent } from 'react-native';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface LayoutContextType {
@@ -15,14 +14,6 @@ export const LayoutProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const insets = useSafeAreaInsets();
     const [layout, setLayout] = useState({ width: 0, height: 0 });
     const [headerHeight, setHeaderHeight] = useState(0);
-
-    const handleLayout = (event: LayoutChangeEvent) => {
-        const { width, height } = event.nativeEvent.layout;
-        if (layout.width !== width || layout.height !== height) {
-            setLayout({ width, height });
-        }
-    };
-
 
     return (
         <LayoutContext.Provider value={{ insets, layout, headerHeight, setHeaderHeight }}>

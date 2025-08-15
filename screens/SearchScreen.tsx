@@ -1,4 +1,4 @@
-import { ProductList } from '@/components/features/product/ProductList';
+import { ProductList } from '@/components/features/product/list/ProductList';
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ThemedXStack } from '@/components/ui';

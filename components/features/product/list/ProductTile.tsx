@@ -2,7 +2,7 @@ import { Tile, TileBadge } from "@/components/ui/tile/Tile";
 import { routes } from '@/config/routes';
 import React from 'react';
 import { Theme, YStackProps } from "tamagui";
-import { ProductPriceTag } from './display/ProductPriceTag';
+import { ProductPriceTag } from '../display/ProductPriceTag';
 
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';

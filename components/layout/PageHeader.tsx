@@ -14,7 +14,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...prop
         <Theme name="primary">
             <ThemedYStack
                 container
-                box
+
                 btw={0}
                 {...props}
             >

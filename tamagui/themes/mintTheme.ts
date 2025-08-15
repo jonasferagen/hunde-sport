@@ -1,13 +1,21 @@
-import { darken } from 'polished';
+import { darken, lighten } from 'polished';
 import { buildThemes } from './themeFactory';
 
 // theme-config.ts
+
+const sl = '#DDE2C3';
+const sd = darken(0.5, sl);
+
 export const config = {
 
+
     primary: { light: '#C8E6E5', dark: darken(0.6, '#C8E6E5') },
-    secondary: { light: '#DDE2C3', dark: darken(0.5, '#DDE2C3') },
+    secondary: { light: sl, dark: sd },
     tertiary: { light: '#bcd1a1', dark: darken(0.6, '#bcd1a1') },
     neutral: { light: '#F1F5F9', dark: darken(0.6, '#F1F5F9') },
+
+    secondary_tint: { light: lighten(0.1, sl), dark: darken(0.1, sd) },
+    secondary_shade: { light: darken(0.1, sl), dark: lighten(0.1, sd) },
 
     // existing accents
     accent1: { light: '#4338CA', dark: '#608f39' },

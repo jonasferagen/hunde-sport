@@ -1,10 +1,11 @@
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
+import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React, { memo } from 'react';
 import { useWindowDimensions } from 'react-native';
-import { ProductCard } from './display/ProductCard';
+import { ProductCard } from '../display/ProductCard';
 
 interface ProductListProps {
     products: Product[];
@@ -33,7 +34,7 @@ export const ProductList = memo(({
     const renderItem = React.useCallback(
         ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
             <PurchasableProviderInit product={product}>
-                <ProductCard theme={index % 2 === 0 ? 'secondary' : null} />
+                <ProductCard theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2} />
             </PurchasableProviderInit>
         ),
         []

@@ -14,7 +14,7 @@ interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disable
     icon?: ButtonProps['icon'];
     iconAfter?: ButtonProps['icon'];
     theme?: string;
-    label: string;
+    label?: string;
 }
 
 export const CallToActionButton = React.forwardRef<
@@ -48,11 +48,11 @@ export const CallToActionButton = React.forwardRef<
                 {...props}
             >
                 <ThemedButton.Icon>{icon}</ThemedButton.Icon>
-                <ThemedButton.Text fg={1}>
+                <ThemedButton.Text w="100%" fs={1}>
                     <ThemedText>{label}</ThemedText>
                     {children}
                 </ThemedButton.Text>
-                <ThemedButton.Icon>
+                <ThemedButton.Icon >
                     {iconAfter}
                 </ThemedButton.Icon>
 

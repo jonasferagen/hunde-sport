@@ -7,12 +7,14 @@ export const ThemedText = styled(
         color: '$color',
         // use font sizing via `size`, not layout `$size` via fontSize
         size: '$3',
+
+
         disabledStyle: { opacity: 0.5, textDecorationLine: 'line-through' },
 
         variants: {
             subtle: { true: { color: '$colorTransparent' } },
             bold: {
-                true: { fontWeight: "$7" },
+                true: { fontWeight: 'bold' },
             },
         } as const,
     }

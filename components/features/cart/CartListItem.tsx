@@ -1,21 +1,19 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
-import { ThemedLinearGradient, ThemedText, ThemedYStack } from '@/components/ui';
+import { ThemedText, ThemedYStack } from '@/components/ui';
 import { useCartContext } from '@/contexts';
 import { formatPrice } from '@/lib/helpers';
 import { CartItemData } from '@/models/Cart/Cart';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
-import { H4, StackProps, Theme, XStack } from 'tamagui';
+import { H4, StackProps, XStack } from 'tamagui';
+
+import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from '@/config/app';
 
 export const CartListItem = ({ item, index }: { item: CartItemData, index: number }): JSX.Element => {
-    const theme = index % 2 === 0 ? 'secondary' : null;
-    return (
-        <Theme name={theme}>
-            <ThemedLinearGradient />
-            <CartListItemContent item={item} bbw={3} />
-        </Theme>
 
+    return (
+        <CartListItemContent item={item} />
     );
 }
 
@@ -28,13 +26,14 @@ const CartListItemContent = ({ item, theme, ...props }: CartListItemProps & Stac
     const { updateItem, removeItem } = useCartContext();
     const { quantity, key } = item;
 
-    return (
-        <ThemedYStack p="$3"  {...props}>
+    return (<>
+        <ThemedYStack theme={THEME_CART_ITEM_1} box container bw={0} bbw={1} {...props}>
             {/* Row 1: Product name + unit price */}
-            <ThemedText>
+            <ThemedText size="$5">
                 {item.product.name}
             </ThemedText>
-
+        </ThemedYStack>
+        <ThemedYStack theme={THEME_CART_ITEM_2} box container bw={0} bbw={1} {...props}>
             {/* Row 2: Quantity + Subtotal + Remove */}
             <XStack jc="space-between" ai="center" gap="$4">
                 {/* Quantity Controls */}
@@ -78,5 +77,5 @@ const CartListItemContent = ({ item, theme, ...props }: CartListItemProps & Stac
                 </ThemedButton>
             </XStack>
         </ThemedYStack>
-    );
+    </>);
 };

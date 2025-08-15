@@ -46,7 +46,7 @@ export const BottomBar = (props: YStackProps) => {
     };
 
     return (
-        <ThemedYStack box theme="secondary" {...props} w="100%" >
+        <ThemedYStack box theme="neutral" {...props} w="100%" >
             <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
                 <StyledTabsList>
                     <ThemedLinearGradient />

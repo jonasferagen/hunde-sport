@@ -15,9 +15,9 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
 
     return (
-        <Theme name="secondary">
+        <Theme name="neutral">
             <YStack>
-                <ThemedLinearGradient strong flip />
+                <ThemedLinearGradient />
                 <ThemedXStack container split>
                     <ThemedText size="$6">hunde-sport.no</ThemedText>
                     <ThemedButton

@@ -11,15 +11,17 @@ interface PageFooterProps extends YStackProps {
 export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) => {
 
     return (
-        <Theme name="secondary">
+        <Theme name="primary">
             <ThemedYStack
                 container
                 box
-                bbw={0}
+                bw={0}
+                btw={1}
                 {...props}
             >
                 <ThemedLinearGradient />
                 {children}
+
             </ThemedYStack>
         </Theme>
 
