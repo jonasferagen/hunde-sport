@@ -4,7 +4,7 @@ import React from "react";
 import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 
 
-import { Spacer } from 'tamagui';
+import { Sheet, YStack } from 'tamagui';
 import { ProductVariationSelect } from "../product-variation/ProductVariationSelect";
 
 import { PurchasableProvider, useCartContext, usePurchasableContext } from "@/contexts";
@@ -37,12 +37,17 @@ const Inner = ({ close }: { close: () => void }) => {
     }
 
     return (
-        <ThemedYStack f={1} mih={0}>
+        <ThemedYStack f={1} mih={0} >
             <ThemedYStack>
                 <ProductTitle />
             </ThemedYStack>
 
-            <ProductVariationSelect />
+            <Sheet.ScrollView f={1} mih={0}>
+                <YStack pb="$4">
+                    <ProductVariationSelect />
+                </YStack>
+            </Sheet.ScrollView>
+
 
             <ThemedYStack>
                 <ProductVariationLabel />
@@ -51,16 +56,11 @@ const Inner = ({ close }: { close: () => void }) => {
                     <ProductPrice />
                 </ThemedXStack>
             </ThemedYStack>
-
             <ThemedYStack gap="$3" f={0} mb="$5">
                 <PurchaseButton onPress={onPress} enable={purchasable.isValid} isLoading={isLoading} />
             </ThemedYStack>
 
-            <Spacer mb="$6" />
         </ThemedYStack>
     )
 }
 
-/*          <Sheet.ScrollView f={1} mih={0} >
-                <ProductVariationSelect />
-            </Sheet.ScrollView> */

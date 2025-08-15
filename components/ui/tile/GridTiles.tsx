@@ -38,7 +38,7 @@ export const GridTiles = <T,>({
     return (
         <YStack f={1} width="100%" gap="$3" {...stackProps}>
             {rows.map((row, rowIndex) => (
-                <XStack key={rowIndex} f={1} jc="space-between" >
+                <XStack key={rowIndex} f={1} jc="flex-start" boc="red" bw={1}>
                     {row.map((item, itemIndex) => (
                         <React.Fragment key={itemIndex}>{item}</React.Fragment>
                     ))}

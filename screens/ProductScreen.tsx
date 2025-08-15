@@ -55,7 +55,6 @@ const ProductScreenContent = () => {
         <PageSection title="Produktinformasjon" theme="secondary">
           <ProductDescription long />
         </PageSection>
-
         <PageSection title="Produktbilder">
           {product.images.length > 1 && <ProductImageGallery />}
         </PageSection>

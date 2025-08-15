@@ -26,8 +26,6 @@ export const ThemedImage = ({
 }: ThemedImageProps): JSX.Element => {
     const [loading, setLoading] = useState(true);
 
-
-
     return (
         <ZStack w={w} h={h} ai="center" jc="center" {...props}>
             {/* Image layer (fades in) */}
@@ -56,8 +54,6 @@ export const ThemedImage = ({
             </MotiView>
 
             {loading && <LoadingScreen />}
-
-
         </ZStack>
     );
 };

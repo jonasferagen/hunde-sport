@@ -5,7 +5,7 @@ import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
 import { VariableProduct } from '@/models/Product/Product';
 import { JSX } from 'react';
-import { Sheet, XStack, YStackProps } from 'tamagui';
+import { XStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 
@@ -45,7 +45,7 @@ export const ProductVariationSelectContent = (props: ProductVariationSelectProps
 
 
     return (
-        <XStack gap="$2" fg={1} fw="wrap" {...props} >
+        <XStack jc="space-between" gap="$2" fg={1} fw="wrap" {...props} >
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
@@ -55,22 +55,17 @@ export const ProductVariationSelectContent = (props: ProductVariationSelectProps
                 return (
                     <ThemedYStack key={id} container px="none">
                         <ThemedText
-
                             top={0}
                             zIndex={1}
-
                             tt="capitalize"
-
                             bold>
                             {name}
                         </ThemedText>
-                        <Sheet.ScrollView fs={1} >
-                            <AttributeSelector
-                                options={filteredOptions}
-                                selectedValue={selectedValue}
-                                onSelect={(value) => handleSelectOption(name, value)}
-                            />
-                        </Sheet.ScrollView>
+                        <AttributeSelector
+                            options={filteredOptions}
+                            selectedValue={selectedValue}
+                            onSelect={(value) => handleSelectOption(name, value)}
+                        />
                     </ThemedYStack>
                 );
             })}

@@ -24,6 +24,9 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
         setGallery({ visible: true, initialIndex: index });
     };
 
+    const THUMBNAIL_WIDTH = Math.floor(screenWidth / numColumns);
+
+
     return (
         <YStack f={1} {...stackProps}>
             <Galeria urls={galleryUrls}>
@@ -34,8 +37,8 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
                         gap="$2"
                         // Let content dictate height; avoid forcing 100% inside ScrollView
                         renderItem={({ item: image, index }) => {
-                            const IMAGE_SIZE = 200;
-                            const uri = getScaledImageUrl(image.src, IMAGE_SIZE, IMAGE_SIZE);
+
+                            const uri = getScaledImageUrl(image.src, THUMBNAIL_WIDTH, THUMBNAIL_WIDTH);
 
                             return (
                                 <YStack
@@ -51,7 +54,7 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
                                             title={product.name}
                                             aspectRatio={1}
                                             objectFit="cover"
-                                            h={IMAGE_SIZE}
+                                            h={THUMBNAIL_WIDTH}
                                         />
                                     </Galeria.Image>
                                 </YStack>

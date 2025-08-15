@@ -12,10 +12,12 @@ export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children,
 
 
   const content = (
-    <ThemedYStack {...props}
+    <ThemedYStack
       f={1}
-      mih="100%"
-      gap="none">
+      mih={0}
+      gap="none"
+      {...props}
+    >
       {children}
     </ThemedYStack>
   );
