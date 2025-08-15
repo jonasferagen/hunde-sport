@@ -4,10 +4,11 @@ import React from "react";
 import { ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 
 
-import { Button, Sheet, Spacer } from 'tamagui';
+import { Sheet, Spacer } from 'tamagui';
 import { ProductVariationSelect } from "../product-variation/ProductVariationSelect";
 
 import { PurchasableProvider, useCartContext, usePurchasableContext } from "@/contexts";
+import { PurchaseButton } from "./PurchaseButton";
 export const ProductVariationsModal = ({
     close,
     purchasable, // used only to seed the provider
@@ -25,8 +26,7 @@ export const ProductVariationsModal = ({
 const Inner = ({ close }: { close: () => void }) => {
     const { purchasable } = usePurchasableContext()
     const { addItem } = useCartContext();
-
-
+    const onPress = () => { addItem(purchasable); close() }
 
     return (
         <ThemedYStack f={1} mih={0}>
@@ -48,10 +48,7 @@ const Inner = ({ close }: { close: () => void }) => {
             </ThemedYStack>
 
             <ThemedYStack gap="$3" f={0} mb="$5">
-
-                <Button disabled={!purchasable.isValid} onPress={() => { addItem(purchasable); close() }}>
-                    Neste
-                </Button>
+                <PurchaseButton onPress={onPress} />
             </ThemedYStack>
 
             <Spacer mb="$6" />
