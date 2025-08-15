@@ -6,14 +6,13 @@ export const ThemedText = styled(
         name: 'ThemedText',
         color: '$color',
         // use font sizing via `size`, not layout `$size` via fontSize
-        size: '$4',
+        size: '$3',
         disabledStyle: { opacity: 0.5, textDecorationLine: 'line-through' },
 
         variants: {
-            variant: {
-                // v4 uses color, color2, color3... for “subtler” steps
-                subtle: { color: '$color2' },
-                emphasized: { fontWeight: 700 }, // or a font weight token, e.g. '$7'
+            subtle: { true: { color: '$colorTransparent' } },
+            bold: {
+                true: { fontWeight: "$7" },
             },
         } as const,
     }

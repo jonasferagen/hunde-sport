@@ -8,6 +8,7 @@ import { ThemedLinearGradient } from '@/components/ui';
 import React from 'react';
 import { YStack } from 'tamagui';
 
+import { THEME_CTA_BUY, THEME_CTA_SELECT } from '@/config/app';
 import { BaseProductPrice } from '../display/ProductPrice';
 
 const icons = {
@@ -19,12 +20,12 @@ const icons = {
 
 export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
     const { purchasable } = usePurchasableContext();
-    const { product, status, message, isValid } = purchasable;
+    const { product, status, message, isValid, availability } = purchasable;
     const isVariable = product instanceof VariableProduct;
 
-    const disabled = !isValid && !isVariable;
+    const disabled = (!isValid && !isVariable) || !availability.isInStock;
     const icon = icons[status];
-    const theme = isVariable ? "dark_primary" : "dark_tertiary";
+    const theme = isVariable ? THEME_CTA_SELECT : THEME_CTA_BUY;
     return (
         <>
             <CallToActionButton

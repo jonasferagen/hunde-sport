@@ -1,6 +1,8 @@
+import { THEME_TOAST_SUCCESS } from '@/config/app';
 import { CartData, CartItemData } from '@/models/Cart/Cart';
 import { Purchasable } from '@/models/Product/Purchasable';
 import { AddItemOptions, useCartStore } from '@/stores/cartStore';
+import { useToastController } from '@tamagui/toast';
 import React, { createContext, useContext, useMemo } from 'react';
 
 
@@ -16,6 +18,9 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+
+    const toast = useToastController();
 
     const {
         cart,
@@ -42,8 +47,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             quantity,
             variation,
         };
-        await storeAddItem(addItemOptions);
 
+        await storeAddItem(addItemOptions);
+        toast.show('Lagt til i handlekurv',
+            {
+                message: purchasable.product.name,
+                theme: THEME_TOAST_SUCCESS,
+            }
+        );
     };
 
     const updateItem = async (key: string, quantity: number) => {

@@ -17,7 +17,6 @@ export const ProductCategoryTiles = (props: StackProps): JSX.Element => {
     );
 
     return (
-
         <ThemedYStack
             {...props}
         >

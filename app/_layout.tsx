@@ -1,6 +1,7 @@
 import { DebugView } from '@/components/debug/DebugView';
 import { ModalHost } from '@/components/features/product/purchase/ModalHost';
 import {
+  AppToastProvider,
   CartProvider,
   DebugProvider,
   ProductCategoryProvider,
@@ -25,17 +26,19 @@ const RootLayout = (): JSX.Element => {
             <Theme name="light">
               <DebugProvider>
                 <ProductCategoryProvider>
-                  <CartProvider>
-                    <PortalProvider>
-                      <ModalHost />
-                      <SearchProvider>
-                        <Stack screenOptions={{ headerShown: false }}>
-                          <Stack.Screen name="(app)" />
-                        </Stack>
-                        <DebugView />
-                      </SearchProvider>
-                    </PortalProvider>
-                  </CartProvider>
+                  <AppToastProvider>
+                    <CartProvider>
+                      <PortalProvider>
+                        <ModalHost />
+                        <SearchProvider>
+                          <Stack screenOptions={{ headerShown: false }}>
+                            <Stack.Screen name="(app)" />
+                          </Stack>
+                          <DebugView />
+                        </SearchProvider>
+                      </PortalProvider>
+                    </CartProvider>
+                  </AppToastProvider>
                 </ProductCategoryProvider>
               </DebugProvider>
             </Theme>

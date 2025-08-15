@@ -38,6 +38,7 @@ export const ThemedImage = ({
                 pointerEvents={loading ? 'none' : 'auto'}
             >
                 <Image
+                    bg="white"
                     w="100%"
                     source={{ uri }}
                     objectFit={objectFit}

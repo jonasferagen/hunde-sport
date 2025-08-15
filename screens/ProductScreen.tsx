@@ -62,7 +62,7 @@ const ProductScreenContent = () => {
       </PageBody>
       <PageFooter>
         <ThemedXStack split>
-          <ProductTitle />
+          <ProductTitle fs={1} />
           <ProductPrice size="$5" />
         </ThemedXStack>
         <ProductPurchaseFlow />

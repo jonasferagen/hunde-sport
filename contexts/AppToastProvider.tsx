@@ -1,24 +1,15 @@
 import { AppToast } from '@/components/ui/AppToast';
-import { ToastProvider as TamaguiToastProvider, ToastViewport } from '@tamagui/toast';
-import React, { JSX } from 'react';
+// AppToastProvider.tsx
+import { ToastProvider, ToastViewport } from '@tamagui/toast';
+import React from 'react';
 
-interface AppToastProviderProps {
-    children: React.ReactNode;
-}
 
-export const AppToastProvider = ({ children }: AppToastProviderProps): JSX.Element => {
-    return (
-        <TamaguiToastProvider>
-            <AppToast />
-            <ToastViewport
-                multipleToasts={false}
-                b={0}
-                l={0}
-                pos="absolute"
-                h="50"
-                w="100%"
-            />
-            {children}
-        </TamaguiToastProvider>
-    );
-};
+export const AppToastProvider = ({ children }: { children: React.ReactNode }) => (
+    <ToastProvider native={true} duration={3000} swipeDirection="horizontal">
+        <AppToast />
+        <ToastViewport multipleToasts={false} top="$4" left={0} />
+        {children}
+    </ToastProvider>
+);
+
+

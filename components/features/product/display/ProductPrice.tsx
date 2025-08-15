@@ -57,10 +57,12 @@ const ProductPriceImpl = ({ product, ...props }: { product: PurchasableProduct }
         return (
             <XStack ai="center" gap="$2">
                 <ThemedText
+                    disabled
                     {...props}>
                     {formatPrice(regular_price)}
                 </ThemedText>
                 <ThemedText
+                    bold
                     {...props}>
                     {formatPrice(sale_price)}
                 </ThemedText>

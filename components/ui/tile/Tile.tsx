@@ -2,8 +2,8 @@ import { getAspectRatio, getScaledImageUrl } from '@/lib/helpers';
 import { StoreImage } from '@/models/StoreImage';
 import { JSX } from 'react';
 import { DimensionValue } from 'react-native';
-import { SizableText, YStack, YStackProps } from 'tamagui';
-import { ThemedYStack } from '../themed-components';
+import { YStack, YStackProps } from 'tamagui';
+import { ThemedText, ThemedYStack } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
 
@@ -51,16 +51,15 @@ export const Tile = ({
                     end={[0, 0.9]}
                     opacity={0.8}
                 />
-                <SizableText
-                    fos="$3"
-                    fow="bold"
+                <ThemedText
+                    bold
                     col="$color"
                     numberOfLines={2}
                     ellipse
                     ta="center"
                 >
                     {title}
-                </SizableText>
+                </ThemedText>
             </YStack>
         </ThemedYStack>
 
@@ -73,8 +72,8 @@ export const TileBadge = ({ children, ...props }: TileBadgeProps): JSX.Element =
     return (
         <YStack
             pos="absolute"
-            t="$1"
-            r="$1"
+            t="$2"
+            r="$2"
 
             {...props}
         >
