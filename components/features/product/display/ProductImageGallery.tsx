@@ -1,11 +1,10 @@
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
-import { GridTiles } from '@/components/ui/tile/GridTiles';
 import { usePurchasableContext } from '@/contexts';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { Galeria } from '@nandorojo/galeria';
-import React, { JSX, useState } from 'react';
+import React, { JSX, useMemo, useState } from 'react';
 import { Dimensions } from 'react-native';
-import { ScrollView, YStack, YStackProps } from 'tamagui';
+import { ScrollView, XStack, YStack, YStackProps } from 'tamagui';
 
 interface ProductImageGalleryProps extends YStackProps {
     numColumns?: number;
@@ -24,6 +23,17 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
         setGallery({ visible: true, initialIndex: index });
     };
 
+
+    const [containerW, setContainerW] = useState(0);
+    const gapPx = 8;
+
+    // compute square tile size
+    const itemSize = useMemo(() => {
+        if (!containerW || !numColumns) return 0;
+        const totalGutters = gapPx * (numColumns - 1);
+        return Math.floor((containerW - totalGutters) / numColumns);
+    }, [containerW, numColumns, gapPx]);
+
     const THUMBNAIL_WIDTH = Math.floor(screenWidth / numColumns);
 
 
@@ -31,22 +41,26 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
         <YStack f={1} {...stackProps}>
             <Galeria urls={galleryUrls}>
                 <ScrollView>
-                    <GridTiles
-                        data={images}
-                        numColumns={numColumns}
+                    <XStack
+                        fw="wrap"
+                        // RN supports gap on wrap in recent versions, but margins are the most reliable.
+                        onLayout={(e) => setContainerW(e.nativeEvent.layout.width)}
+                        // use gap for simple cases; margins handle older platforms
                         gap="$2"
-                        // Let content dictate height; avoid forcing 100% inside ScrollView
-                        renderItem={({ item: image, index }) => {
-
-                            const uri = getScaledImageUrl(image.src, THUMBNAIL_WIDTH, THUMBNAIL_WIDTH);
+                    >
+                        {images.map((image, index) => {
+                            // fallback if layout not measured yet
+                            const size = itemSize || THUMBNAIL_WIDTH;
+                            const uri = getScaledImageUrl(image.src, size, size);
 
                             return (
                                 <YStack
-                                    onPress={() => openGallery(index)}
+                                    key={index}
+                                    w={size}
+                                    h={size}
                                     br="$2"
                                     ov="hidden"
-                                    f={1}
-                                // Do not force flex on grid items; let image size control height
+                                    onPress={() => openGallery(index)}
                                 >
                                     <Galeria.Image index={index}>
                                         <ThemedImage
@@ -54,16 +68,18 @@ export const ProductImageGallery = ({ numColumns = 4, ...stackProps }: ProductIm
                                             title={product.name}
                                             aspectRatio={1}
                                             objectFit="cover"
-                                            h={THUMBNAIL_WIDTH}
+                                            w="100%"
+                                            h="100%"
                                         />
                                     </Galeria.Image>
                                 </YStack>
                             );
-                        }}
-                    />
+                        })}
+                    </XStack>
                 </ScrollView>
             </Galeria>
         </YStack>
 
     );
 };
+

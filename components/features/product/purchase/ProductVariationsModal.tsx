@@ -48,7 +48,6 @@ const Inner = ({ close }: { close: () => void }) => {
                 </YStack>
             </Sheet.ScrollView>
 
-
             <ThemedYStack>
                 <ProductVariationLabel />
                 <ThemedXStack split>
