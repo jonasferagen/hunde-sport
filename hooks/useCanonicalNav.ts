@@ -3,8 +3,7 @@ import { cleanHref, RouteKey, routes } from '@/config/routes';
 import { HrefObject, LinkProps, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
 
-type ArgsOf<K extends RouteKey> =
-    Parameters<(typeof routes)[K]['path']>;
+
 
 const shallowEqualStrings = (a?: Record<string, any>, b?: Record<string, any>) => {
     const A = a ?? {}, B = b ?? {};
@@ -13,6 +12,15 @@ const shallowEqualStrings = (a?: Record<string, any>, b?: Record<string, any>) =
     for (const k of ak) if (String(A[k]) !== String(B[k])) return false;
     return true;
 };
+
+
+type RouteMap = typeof routes;
+type ArgsOf<K extends RouteKey> =
+    RouteMap[K] extends { path: (...a: infer A) => any } ? A : never;
+
+const getRoute = <K extends RouteKey>(k: K) => routes[k] as RouteMap[K];
+const getPath = <K extends RouteKey>(k: K) =>
+    getRoute(k).path as (...a: ArgsOf<K>) => HrefObject;
 
 export function useCanonicalNav() {
     const pathname = usePathname();
@@ -23,7 +31,7 @@ export function useCanonicalNav() {
         ...args: ArgsOf<K>
     ) => {
         const route = routes[key];
-        const href = cleanHref(route.path(...args));
+        const href = cleanHref(getPath(key)(...args));
         const sameScreen = href.pathname === pathname;
 
         if (sameScreen) {
@@ -53,15 +61,17 @@ export function useCanonicalNav() {
         key: K,
         ...args: ArgsOf<K>
     ): Pick<LinkProps, 'href' | 'replace'> => {
-        const r = routes[key];
-        const href = cleanHref(r.path(...args));
-        return { href: href as HrefObject, replace: r.nav !== 'push' };
+        const href = cleanHref(getPath(key)(...args));
+        const { nav } = getRoute(key);
+        return { href, replace: nav !== 'push' };
     }, []);
+
 
     const href = React.useCallback(<K extends RouteKey>(
         key: K,
         ...args: ArgsOf<K>
-    ): HrefObject => cleanHref(routes[key].path(...args)), []);
+    ): HrefObject => cleanHref(getPath(key)(...args)), []);
+
 
     return { to, linkProps, href };
 }
