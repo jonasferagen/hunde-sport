@@ -1,4 +1,5 @@
-import { BreadCrumbsContainer } from '@/components/features/product-category/breadcrumbs/BreadCrumbsContainer';
+import { Breadcrumbs } from '@/components/features/product-category/breadcrumbs/Breadcrumbs';
+import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductTitle } from '@/components/features/product/display/';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
 import { PageBody, PageFooter, PageHeader, PageSection, PageView } from '@/components/layout';
@@ -45,25 +46,28 @@ const ProductScreenContent = () => {
   return (
     <PageView>
       <PageHeader>
-        <BreadCrumbsContainer />
+        <Breadcrumbs isLastClickable={false} />
       </PageHeader>
       <PageBody>
         <PageSection>
-          <ProductTitle fos="$7" />
           <ProductImage />
+          <ThemedXStack split>
+            <ProductTitle size="$5" fs={1} />
+            <ProductPrice size="$5" />
+          </ThemedXStack>
         </PageSection>
-        <PageSection title="Produktinformasjon" theme="secondary">
+        <PageSection title="Produktinformasjon" theme="primary">
           <ProductDescription long />
         </PageSection>
         <PageSection title="Produktbilder">
           {product.images.length > 1 && <ProductImageGallery />}
         </PageSection>
+        <PageSection title="Kategorier">
+          <ProductCategoryChips productCategories={product.categories} />
+        </PageSection>
       </PageBody>
       <PageFooter>
-        <ThemedXStack split>
-          <ProductTitle fs={1} />
-          <ProductPrice size="$5" />
-        </ThemedXStack>
+
         <ProductPurchaseFlow />
       </PageFooter>
     </PageView >

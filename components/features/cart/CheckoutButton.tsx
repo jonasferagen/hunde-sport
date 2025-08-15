@@ -21,7 +21,6 @@ export const CheckoutButton = ({ disabled, ...props }: CheckoutButtonProps) => {
 
     return (
         <CallToActionButton
-            size="$5"
             disabled={disabled || isUpdating}
             f={0}
             icon={icon}
@@ -33,8 +32,8 @@ export const CheckoutButton = ({ disabled, ...props }: CheckoutButtonProps) => {
                 <ThemedXStack split p="none" w="100%" ai="center">
                     {isUpdating ? <ThemedSpinner /> : (
                         <>
-                            <ThemedText size="$6" >{cart.items_count} var(er)</ThemedText>
-                            <ThemedText size="$6" bold>   {formatPrice(String(Number(cart.totals.total_price) + Number(cart.totals.total_tax)))}</ThemedText>
+                            <ThemedText size="$5" >{cart.items_count} var(er)</ThemedText>
+                            <ThemedText size="$5" bold>   {formatPrice(String(Number(cart.totals.total_price) + Number(cart.totals.total_tax)))}</ThemedText>
                         </>
                     )}
                 </ThemedXStack>

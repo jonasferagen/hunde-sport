@@ -13,10 +13,6 @@ import { ProductDescription } from './ProductDescription';
 import { ProductTitle } from './ProductTitle';
 
 const IMAGE_SIZE = 80;
-
-
-
-
 export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
     const { purchasable } = usePurchasableContext();
@@ -86,7 +82,7 @@ const ProductCardDescription = ({ ...stackProps }: StackProps): JSX.Element => {
                 ai="flex-start"
                 jc="space-between"
             >
-                <ProductTitle fs={1} />
+                <ProductTitle size="$5" fs={1} />
 
             </XStack>
             <ProductDescription

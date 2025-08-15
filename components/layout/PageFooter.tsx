@@ -1,7 +1,6 @@
 import React from 'react';
 import { Theme, YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
-import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 
 interface PageFooterProps extends YStackProps {
     children?: React.ReactNode;
@@ -11,7 +10,7 @@ interface PageFooterProps extends YStackProps {
 export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) => {
 
     return (
-        <Theme name="primary">
+        <Theme name="dark_primary">
             <ThemedYStack
                 container
                 box
@@ -19,7 +18,7 @@ export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) =>
                 btw={1}
                 {...props}
             >
-                <ThemedLinearGradient />
+
                 {children}
 
             </ThemedYStack>

@@ -1,38 +1,29 @@
 import { DrawerHeaderProps } from '@react-navigation/drawer';
-import { DrawerActions } from '@react-navigation/native';
 import { Menu } from '@tamagui/lucide-icons';
-import { useNavigation } from 'expo-router';
-import { JSX } from 'react';
 import { H4, Theme } from 'tamagui';
-import { ThemedXStack } from '../ui';
-import { ThemedButton } from '../ui/themed-components/ThemedButton';
-import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
+import { ThemedButton, ThemedLinearGradient, ThemedXStack } from '../ui/themed-components';
 
-export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
+import { getHeaderTitle } from '@react-navigation/elements';
 
-    const navigation = useNavigation();
-    const openDrawer = () => {
-        navigation.dispatch(DrawerActions.openDrawer());
-    };
+export const CustomHeader = (props: DrawerHeaderProps) => {
+    const { navigation, route, options } = props;
+
+    const { name } = route.params as { name: string };
+
+    const title = name || getHeaderTitle(options, route.name);
+
+
+
 
     return (
         <Theme name="primary">
-            <ThemedXStack
-                container
-                split
-                box
-            >
+            <ThemedXStack container split box>
                 <ThemedLinearGradient />
-                <ThemedButton
-                    theme="tint"
-                    circular
-                    onPress={openDrawer}
-                >
+                <ThemedButton theme="tint" circular onPress={() => navigation.openDrawer()}>
                     <Menu />
                 </ThemedButton>
-                <H4>{props.options.title}</H4>
+                <H4>{title}</H4>
             </ThemedXStack>
         </Theme>
-
     );
 };

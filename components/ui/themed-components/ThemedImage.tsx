@@ -1,8 +1,8 @@
-import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import { MotiView } from 'moti';
 import { JSX, useState } from 'react';
 import { DimensionValue } from 'react-native';
-import { Image, ImageProps, YStackProps, ZStack } from 'tamagui';
+import { Image, ImageProps, YStack, YStackProps, ZStack } from 'tamagui';
+import { ThemedSpinner } from './ThemedSpinner';
 
 export interface ThemedImageProps extends YStackProps {
 
@@ -53,7 +53,9 @@ export const ThemedImage = ({
                 />
             </MotiView>
 
-            {loading && <LoadingScreen />}
+            {loading && (<YStack f={1} jc="center" ai="center">
+                <ThemedSpinner />
+            </YStack>)}
         </ZStack>
     );
 };

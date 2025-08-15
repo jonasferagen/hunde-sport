@@ -1,7 +1,6 @@
-import { ThemedText } from '@/components/ui';
 import { usePurchasableContext } from '@/contexts';
 import React from 'react';
-import { SizableTextProps } from 'tamagui';
+import { Heading, SizableTextProps } from 'tamagui';
 
 interface ProductTitleProps extends SizableTextProps { }
 
@@ -9,14 +8,13 @@ export const ProductTitle = ({ children, ...props }: ProductTitleProps) => {
 
     const { purchasable } = usePurchasableContext();
     const { activeProduct } = purchasable;
-    return <ThemedText
-        fow="bold"
-        fos="$5"
+    return <Heading
+        fontWeight="bold"
         {...props}
     >
         {activeProduct.name}
         {children}
-    </ThemedText>;
+    </Heading>;
 };
 
 
