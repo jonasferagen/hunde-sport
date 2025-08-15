@@ -26,7 +26,15 @@ export const ProductVariationsModal = ({
 const Inner = ({ close }: { close: () => void }) => {
     const { purchasable } = usePurchasableContext()
     const { addItem } = useCartContext();
-    const onPress = () => { addItem(purchasable); close() }
+
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    const onPress = async () => {
+        setIsLoading(true);
+        await addItem(purchasable);
+        setIsLoading(false);
+        close();
+    }
 
     return (
         <ThemedYStack f={1} mih={0}>
@@ -48,7 +56,7 @@ const Inner = ({ close }: { close: () => void }) => {
             </ThemedYStack>
 
             <ThemedYStack gap="$3" f={0} mb="$5">
-                <PurchaseButton onPress={onPress} />
+                <PurchaseButton onPress={onPress} isLoading={isLoading} />
             </ThemedYStack>
 
             <Spacer mb="$6" />

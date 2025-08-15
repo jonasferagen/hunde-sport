@@ -12,9 +12,12 @@ export const ProductPurchaseFlow = () => {
     const { purchasable } = usePurchasableContext();
     const { addItem } = useCartContext();
 
+    const [isLoading, setIsLoading] = React.useState(false);
 
-    const onPressSimpleProduct = () => {
-        addItem(purchasable);
+    const onPressSimpleProduct = async () => {
+        setIsLoading(true);
+        await addItem(purchasable);
+        setIsLoading(false);
     }
 
     const onPressVariableProduct = () => {
@@ -31,6 +34,6 @@ export const ProductPurchaseFlow = () => {
     const onPress = purchasable.isVariable ? onPressVariableProduct : onPressSimpleProduct;
 
     return (
-        <PurchaseButton onPress={onPress} />
+        <PurchaseButton onPress={onPress} isLoading={isLoading} />
     );
 };

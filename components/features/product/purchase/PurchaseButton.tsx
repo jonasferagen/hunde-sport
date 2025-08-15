@@ -8,6 +8,7 @@ import { ThemedLinearGradient } from '@/components/ui';
 import React from 'react';
 import { YStack } from 'tamagui';
 
+import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { BaseProductPrice } from '../display/ProductPrice';
 
@@ -18,39 +19,41 @@ const icons = {
     OK: <ShoppingCart />,
 };
 
-export const PurchaseButton = ({ onPress }: { onPress: () => void }) => {
+export const PurchaseButton = ({ onPress, isLoading = false }: { onPress: () => void, isLoading: boolean }) => {
     const { purchasable } = usePurchasableContext();
     const { product, status, message, isValid, availability } = purchasable;
     const isVariable = product instanceof VariableProduct;
 
-    const disabled = (!isValid && !isVariable) || !availability.isInStock;
+    const disabled = (!isValid && !isVariable) || !availability.isInStock || isLoading;
     const icon = icons[status];
     const theme = isVariable ? THEME_CTA_VARIATION : THEME_CTA_BUY;
+
+    const label = isLoading ? undefined : message;
+
     return (
-        <>
-            <CallToActionButton
-                onPress={onPress}
-                disabled={disabled}
-                icon={icon}
-                theme={theme}
-                label={message}
-                iconAfter={
-                    <YStack
+        <CallToActionButton
+            onPress={onPress}
+            disabled={disabled}
+            icon={icon}
+            theme={theme}
+            label={label}
+            iconAfter={
+                <YStack
 
-                        h="$6"
-                        ai="center"
-                        jc="center"
-                        px="$3"
-                        boc="$borderColor"
-                        mr={-20}
-                        minWidth={80}
-                    >
-                        <ThemedLinearGradient br="$3" />
-                        <BaseProductPrice />
-                    </YStack>
-                }
-            />
+                    h="$6"
+                    ai="center"
+                    jc="center"
+                    px="$3"
+                    boc="$borderColor"
+                    mr={-20}
+                    minWidth={80}
+                >
+                    <ThemedLinearGradient br="$3" />
+                    <BaseProductPrice />
+                </YStack>
+            }
 
-        </>
+        > {isLoading && <ThemedSpinner />}
+        </CallToActionButton>
     );
 }; 

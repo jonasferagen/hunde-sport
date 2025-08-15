@@ -11,9 +11,7 @@ interface ProductListProps {
     products: Product[];
     loadMore: () => void;
     loadingMore: boolean;
-
 }
-
 
 export const ProductList = memo(({
     products,
