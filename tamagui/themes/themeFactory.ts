@@ -73,9 +73,11 @@ export function makeTemplate(base: string): ThemeTemplate {
 
     const step = (amt: number) => (isLightBg ? darken(amt, base) : lighten(amt, base))
 
+    const darkenBorders = true || isLightBg;
+
     // Borders: derive from base, darker on light, lighter on dark
-    const borderBase = isLightBg ? darken(AMOUNTS.borderBase, base) : lighten(AMOUNTS.borderBase, base)
-    const borderStep = (amt: number) => (isLightBg ? darken(amt, borderBase) : lighten(amt, borderBase))
+    const borderBase = darkenBorders ? darken(AMOUNTS.borderBase, base) : lighten(AMOUNTS.borderBase, base)
+    const borderStep = (amt: number) => (darkenBorders ? darken(amt, borderBase) : lighten(amt, borderBase))
 
     const shadowAlpha = AMOUNTS.shadowBase(isLightBg)
 

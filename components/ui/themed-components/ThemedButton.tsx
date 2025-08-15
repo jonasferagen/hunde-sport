@@ -1,6 +1,5 @@
 import {
     createStyledContext,
-    getVariableValue,
     SizeTokens,
     styled,
     Text,
@@ -8,7 +7,6 @@ import {
     View,
     withStaticProperties
 } from '@tamagui/web';
-import { lighten } from 'polished';
 import { cloneElement, isValidElement, useContext } from 'react';
 
 
@@ -85,10 +83,6 @@ export const ButtonFrame = styled(View, {
                 const { size } = useContext(ButtonContext.context)
                 const s = SIZES[(size as SizeKey)] ?? SIZES[DEFAULT_SIZE]
 
-                const theme = useTheme()
-                const background = (getVariableValue(theme.background) as string)
-                const bg = lighten(.1, background);
-
 
                 return {
                     bw: 0,
@@ -99,7 +93,7 @@ export const ButtonFrame = styled(View, {
                     ai: 'center',
                     jc: 'center',
                     gap: 0,
-                    bg,
+
                 }
             },
         },

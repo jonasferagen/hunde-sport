@@ -3,7 +3,7 @@ import { ButtonProps } from '@tamagui/button';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { GestureResponderEvent } from 'react-native';
-import { Theme } from 'tamagui';
+import { Theme, ThemeName } from 'tamagui';
 import { ThemedText } from './themed-components';
 
 
@@ -13,7 +13,7 @@ interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disable
     disabled?: boolean;
     icon?: ButtonProps['icon'];
     iconAfter?: ButtonProps['icon'];
-    theme?: string;
+    theme?: ThemeName;
     label?: string;
 }
 
@@ -38,8 +38,8 @@ export const CallToActionButton = React.forwardRef<
 
 
     return (
-        <Theme>
-            <ThemedButton theme={theme}
+        <Theme name={theme}>
+            <ThemedButton
                 ref={ref}
                 onPress={handlePress}
                 disabled={disabled}

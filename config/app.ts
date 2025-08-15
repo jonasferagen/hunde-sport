@@ -14,14 +14,14 @@ export const DEBUG_PRODUCTS = false;
 
 
 export const THEME_MAIN = 'primary';
-export const THEME_DRAWER = 'secondary';
+export const THEME_DRAWER = 'tertiary';
 export const THEME_HEADER = 'primary';
-export const THEME_BOTTOM_BAR = 'primary'
-export const THEME_MODAL = "neutral";
+export const THEME_BOTTOM_BAR = 'tertiary'
+export const THEME_MODAL = "tertiary";
 
 export const THEME_CTA_BUY = "accent13";
 export const THEME_CTA_VARIATION = "accent12";
-export const THEME_CTA_CHECKOUT = "dark_primary";
+export const THEME_CTA_CHECKOUT = "accent13";
 
 
 export const THEME_PRICE_TAG = 'accent13';

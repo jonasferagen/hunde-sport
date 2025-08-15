@@ -1,9 +1,6 @@
-import { darken } from 'polished';
 import { buildThemes } from './themeFactory';
 
 // theme-config.ts
-
-console.log(darken(0.6, '#DDE2C3'));
 
 
 export const config = {
@@ -11,8 +8,7 @@ export const config = {
 
     primary: { light: '#C8E6E5', dark: '#275554' },
     secondary: { light: '#DDE2C3', dark: '#474e25' },
-    tertiary: { light: '#bcd1a1', dark: darken(0.6, '#bcd1a1') },
-    neutral: { light: '#F1F5F9', dark: darken(0.6, '#F1F5F9') },
+    tertiary: { light: '#F1F5F9', dark: '#375c81' },
 
     // existing accents
     accent1: { light: '#4338CA', dark: '#608f39' },

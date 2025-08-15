@@ -24,6 +24,7 @@ export const CustomHeader = (props: DrawerHeaderProps): JSX.Element => {
             >
                 <ThemedLinearGradient />
                 <ThemedButton
+                    theme="tint"
                     circular
                     onPress={openDrawer}
                 >

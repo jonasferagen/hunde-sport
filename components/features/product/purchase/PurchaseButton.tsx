@@ -29,6 +29,21 @@ export const PurchaseButton = ({ onPress, isLoading = false }: { onPress: () => 
 
     const label = isLoading ? undefined : message;
 
+    const priceTag = (
+        <ThemedYStack
+            box
+            theme="shade"
+            h="$6"
+            ai="center"
+            jc="center"
+            px="$3"
+            mr={-20}
+            minWidth={80}
+        >
+            <BaseProductPrice />
+        </ThemedYStack>);
+
+
     return (
         <CallToActionButton
             onPress={onPress}
@@ -36,25 +51,11 @@ export const PurchaseButton = ({ onPress, isLoading = false }: { onPress: () => 
             icon={icon}
             theme={theme}
             label={label}
-            iconAfter={
-                <ThemedYStack
-                    box
-                    theme="secondary"
-                    h="$6"
-                    ai="center"
-                    jc="center"
-                    px="$3"
 
-                    boc="$borderColor"
-                    mr={-20}
-                    minWidth={80}
-                >
-
-                    <BaseProductPrice />
-                </ThemedYStack>
-            }
+            iconAfter={priceTag}
 
         > {isLoading && <ThemedSpinner />}
+
         </CallToActionButton>
     );
 }; 

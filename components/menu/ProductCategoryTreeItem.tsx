@@ -29,7 +29,7 @@ export const ProductCategoryTreeItem = ({
         <XStack ai="center" gap="$2" f={1} mb="$2">
             <XStack flex={1} ml={level * spacing}>
                 <Link href={routes['product-category'].path(productCategory)} asChild>
-                    <ThemedButton f={1} >
+                    <ThemedButton theme="shade" f={1} >
                         <ThemedText f={1} letterSpacing={0.5}>
                             {productCategory.name}
                         </ThemedText>
@@ -38,6 +38,7 @@ export const ProductCategoryTreeItem = ({
             </XStack>
 
             <ThemedButton
+                theme="shade"
                 circular
                 onPress={() => handleExpand(productCategory.id)}
                 disabled={!hasChildren}

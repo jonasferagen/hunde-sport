@@ -1,4 +1,5 @@
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
+import { THEME_BOTTOM_BAR } from '@/config/app';
 import { routes } from '@/config/routes';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname, useRouter } from 'expo-router';
@@ -46,7 +47,7 @@ export const BottomBar = (props: YStackProps) => {
     };
 
     return (
-        <ThemedYStack box theme="neutral" {...props} w="100%" >
+        <ThemedYStack box theme={THEME_BOTTOM_BAR} {...props} w="100%" >
             <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
                 <StyledTabsList>
                     <ThemedLinearGradient />

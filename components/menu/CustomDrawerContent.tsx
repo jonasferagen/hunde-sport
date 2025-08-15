@@ -1,4 +1,5 @@
 import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
+import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
 import {
     DrawerContentComponentProps,
@@ -15,17 +16,19 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
 
     return (
-        <Theme name="neutral">
+        <Theme name={THEME_DRAWER}>
             <YStack>
                 <ThemedLinearGradient />
                 <ThemedXStack container split>
                     <ThemedText size="$6">hunde-sport.no</ThemedText>
                     <ThemedButton
+                        theme="tint"
                         circular
                         onPress={() => navigation.closeDrawer()}
                     >
                         <X />
                     </ThemedButton>
+
                 </ThemedXStack>
                 <ScrollView >
                     <ThemedYStack container="$4">
@@ -37,7 +40,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                                 return (
                                     <ThemedButton key={route.name}
                                         onPress={onPress}
-                                        theme={isActive ? "alt_tint" : "alt_shade"}
+                                        theme={isActive ? "tint" : "shade"}
                                     >
                                         <ThemedText>{route.label}</ThemedText>
                                     </ThemedButton>
