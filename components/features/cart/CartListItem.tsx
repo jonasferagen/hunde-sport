@@ -1,6 +1,6 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
-import { ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui';
+import { ThemedSpinner, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui';
 
 import { CartItemData } from '@/domain/Cart/Cart';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
@@ -24,7 +24,7 @@ interface CartListItemProps {
 
 const CartListItemContent = ({ item, theme, ...props }: CartListItemProps & StackProps): JSX.Element => {
 
-    const { updateItem, removeItem } = useCartStore();
+    const { updateItem, removeItem, isUpdating } = useCartStore();
     const { quantity, key } = item;
 
     return (<>
@@ -64,9 +64,9 @@ const CartListItemContent = ({ item, theme, ...props }: CartListItemProps & Stac
                 </XStack>
 
                 <XStack f={1} ai="center" jc="flex-end">
-                    <ThemedText f={1} ta="right">
+                    {isUpdating ? <ThemedSpinner /> : <ThemedText f={1} ta="right">
                         {formatItemLineTotal(item.totals)}
-                    </ThemedText>
+                    </ThemedText>}
                 </XStack>
 
                 {/* Remove Button */}

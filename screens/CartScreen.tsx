@@ -9,7 +9,7 @@ export const CartScreen = () => {
     return (
         <PageView>
             <PageBody>
-                <PageSection f={1} p="none" boc="blue" bw={1}>
+                <PageSection f={1} p="none">
                     <CartList />
                 </PageSection>
             </PageBody>
