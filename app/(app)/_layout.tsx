@@ -1,27 +1,16 @@
+// app/(app)/_layout.tsx
 import { BottomBar } from '@/components/menu/BottomBar';
 import { CustomDrawerContent } from '@/components/menu/CustomDrawerContent';
 import { CustomHeader } from '@/components/menu/CustomHeader';
-import { routes } from '@/config/routes';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
+import { View } from 'react-native';
+import { drawerScreens } from './_drawerScreens';
 
-const ScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
-    return (
-        <>
-            {children}
-            <BottomBar />
-        </>
-    );
-};
-
-
-const AppLayout = (): React.ReactElement => {
+const AppLayout = React.memo((): React.ReactElement => {
     const drawerContent = React.useCallback(
-        (props: DrawerContentComponentProps) => {
-            return <CustomDrawerContent {...props} />;
-        },
+        (props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />,
         []
     );
 
@@ -29,28 +18,33 @@ const AppLayout = (): React.ReactElement => {
         () => ({
             header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
             swipeEnabled: true,
+            freezeOnBlur: true,          // ← requires react-native-screens + enableFreeze(true)
         }),
         []
     );
 
     return (
-        <Drawer drawerContent={drawerContent}
-            screenOptions={screenOptions}
-            screenLayout={(props) => <ScreenWrapper >{props.children}</ScreenWrapper>}>
-            {Object.values(routes).map((route) => (
-                <Drawer.Screen
-                    key={route.name}
-                    name={route.name}
-                    options={{
-                        title: route.label,
-                        drawerLabel: route.showInDrawer ? route.label : () => null,
-                    }}
+        <View style={{ flex: 1 }}>
+            <Drawer
+                drawerContent={drawerContent}
+                screenOptions={screenOptions}
+                detachInactiveScreens
+                lazy
+            >
+                {drawerScreens /* see #2 */}
+            </Drawer>
 
-                />
-            ))}
-        </Drawer>
+            {/* Overlay the bottom bar so it doesn't participate in per-screen re-renders */}
+            <View
+                pointerEvents="box-none"
+                style={{
+                    position: 'absolute', left: 0, right: 0, bottom: 0,
+                }}
+            >
+                <BottomBar />
+            </View>
+        </View>
     );
-};
+});
 
 export default AppLayout;
-

@@ -4,6 +4,8 @@ import { HrefObject, LinkProps, router, useLocalSearchParams, usePathname } from
 import * as React from 'react';
 
 
+const navTimer = { label: '', t0: 0, target: '' as string };
+
 
 const shallowEqualStrings = (a?: Record<string, any>, b?: Record<string, any>) => {
     const A = a ?? {}, B = b ?? {};
@@ -25,14 +27,34 @@ const getPath = <K extends RouteKey>(k: K) =>
 export function useCanonicalNav() {
     const pathname = usePathname();
     const currentParams = useLocalSearchParams(); // strings only
+    React.useEffect(() => {
+        if (!navTimer.t0) return;
+        if (pathname === navTimer.target) {
+            const dt = Math.round(performance.now() - navTimer.t0);
+            console.log(`[NAV] ${navTimer.label} -> ${navTimer.target} in ${dt}ms`);
+            navTimer.t0 = 0;
+            navTimer.label = '';
+            navTimer.target = '';
+        }
+    }, [pathname]);
 
     const to = React.useCallback(<K extends RouteKey>(
         key: K,
         ...args: ArgsOf<K>
     ) => {
+
+
+
+
         const route = routes[key];
         const href = cleanHref(getPath(key)(...args));
         const sameScreen = href.pathname === pathname;
+
+        // start timer
+        navTimer.t0 = performance.now();
+        navTimer.label = key as string;
+        navTimer.target = href.pathname;
+
 
         if (sameScreen) {
             // same screen:
