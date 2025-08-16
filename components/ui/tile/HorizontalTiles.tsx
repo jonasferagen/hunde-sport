@@ -3,7 +3,7 @@ import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { rgba } from 'polished';
 import React, { JSX, useCallback, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { Spinner, View, XStack, getVariableValue, useTheme } from 'tamagui';
+import { Spinner, StackProps, Theme, View, XStack, getVariableValue, useTheme } from 'tamagui';
 import { ThemedLinearGradient, ThemedYStack } from '../themed-components';
 
 interface ScrollIndicatorProps {
@@ -40,7 +40,7 @@ const ScrollIndicator = React.memo(({ side, width }: ScrollIndicatorProps) => {
     );
 });
 
-interface HorizontalTilesProps<T> {
+interface HorizontalTilesProps<T> extends StackProps {
     items?: T[];
     renderItem: ListRenderItem<T>;
     isLoading?: boolean;
@@ -54,6 +54,7 @@ export const HorizontalTiles = <T extends Product>({
     isLoading,
     fetchNextPage,
     hasNextPage,
+    ...props
 }: HorizontalTilesProps<T>): JSX.Element => {
 
     const [scrollOffset, setScrollOffset] = useState(0);
@@ -91,25 +92,27 @@ export const HorizontalTiles = <T extends Product>({
     }
 
     return (
-        <View position="relative">
-            <FlashList
-                horizontal
-                data={items}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-                showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={() => <ThemedYStack ml="$3" />}
-                estimatedItemSize={100}
-                onScroll={handleScroll}
-                scrollEventThrottle={16} // Trigger onScroll every 16ms
-                onContentSizeChange={setContentWidth}
-                onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
-                onEndReached={handleEndReached}
-                onEndReachedThreshold={0.5}
-                ListFooterComponent={renderFooter}
-            />
-            {isScrollable && !isAtEnd && <ScrollIndicator side="right" width="$6" />}
-            {isScrollable && !isAtStart && <ScrollIndicator side="left" width="$6" />}
-        </View>
+        <Theme name={props.theme}>
+            <View position="relative">
+                <FlashList
+                    horizontal
+                    data={items}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id.toString()}
+                    showsHorizontalScrollIndicator={false}
+                    ItemSeparatorComponent={() => <ThemedYStack ml="$3" />}
+                    estimatedItemSize={100}
+                    onScroll={handleScroll}
+                    scrollEventThrottle={16} // Trigger onScroll every 16ms
+                    onContentSizeChange={setContentWidth}
+                    onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
+                    onEndReached={handleEndReached}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={renderFooter}
+                />
+                {isScrollable && !isAtEnd && <ScrollIndicator side="right" width="$6" />}
+                {isScrollable && !isAtStart && <ScrollIndicator side="left" width="$6" />}
+            </View>
+        </Theme>
     );
 };

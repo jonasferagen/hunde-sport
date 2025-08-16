@@ -24,16 +24,14 @@ export const Tile = ({
     const aspectRatio = getAspectRatio(props.w as DimensionValue, props.h as DimensionValue);
     const uri = getScaledImageUrl(image.src, props.w as DimensionValue, props.h as DimensionValue);
 
-
     return (
         <ThemedSurface
             bw={2}
             pressStyle={{ boc: '$borderColorInverse', bg: '$backgroundInverse' }}
             {...props}
             ov="hidden"
-
         >
-            <ThemedYStack fullscreen aspectRatio={aspectRatio} ov="hidden">
+            <ThemedYStack fullscreen aspectRatio={aspectRatio} >
                 <ThemedImage uri={uri} title={title} aspectRatio={aspectRatio} />
                 {children}
                 <ThemedYStack fullscreen f={1} t="auto" p="$2.5" jc="flex-end">

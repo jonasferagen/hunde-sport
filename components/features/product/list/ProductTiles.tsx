@@ -3,37 +3,39 @@ import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecent
 import { QueryResult } from '@/hooks/data/util';
 import { PurchasableProduct } from '@/types';
 import { JSX } from 'react';
+import { StackProps } from 'tamagui';
 import { HorizontalTiles } from '../../../ui/tile/HorizontalTiles';
 import { ProductTile } from './ProductTile';
 
 
-export const RecentProducts = (): JSX.Element => {
-    return <ProductTiles queryResult={useRecentProducts()} />
+export const RecentProducts = (props: StackProps): JSX.Element => {
+    return <ProductTiles queryResult={useRecentProducts()} {...props} />
 };
 
-export const DiscountedProducts = (): JSX.Element => {
-    return <ProductTiles queryResult={useDiscountedProducts()} />
+export const DiscountedProducts = (props: StackProps): JSX.Element => {
+    return <ProductTiles queryResult={useDiscountedProducts()} {...props} />
 };
 
-export const FeaturedProducts = (): JSX.Element => {
-    return <ProductTiles queryResult={useFeaturedProducts()} />
+export const FeaturedProducts = (props: StackProps): JSX.Element => {
+    return <ProductTiles queryResult={useFeaturedProducts()} {...props} />
 };
 
-export const DebugProducts = (): JSX.Element => {
-    return <ProductTiles queryResult={useProductsByIds([246557, 35961, 27445])} />
+export const DebugProducts = (props: StackProps): JSX.Element => {
+    return <ProductTiles queryResult={useProductsByIds([246557, 35961, 27445])} {...props} />
 };
 
 
 
-interface ProductTilesProps {
+interface ProductTilesProps extends StackProps {
     queryResult: QueryResult<PurchasableProduct>;
 }
 
-const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTilesProps) => {
+const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, ...stackProps }: ProductTilesProps) => {
     return (
 
         <HorizontalTiles
             {...queryResult}
+            {...stackProps}
             renderItem={({ item: product }: { item: PurchasableProduct }) => {
                 return (
                     <PurchasableProviderInit product={product}>

@@ -38,3 +38,10 @@ export const THEME_CART_ITEM_2 = 'tertiary_shade';
 
 export const THEME_OPTION = 'light';
 export const THEME_OPTION_SELECTED = 'tertiary';
+
+
+export const THEME_PRODUCTS_DISCOUNTED = "tertiary";
+
+export const THEME_PRODUCTS_RECENT = "tertiary";
+
+export const THEME_PRODUCTS_FEATURED = "accent3";
