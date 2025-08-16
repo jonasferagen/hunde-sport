@@ -1,23 +1,14 @@
 // /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
-import { CallToActionButton } from '@/components/ui/CallToActionButton';
-import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
-
-import React, { JSX } from 'react';
-
 import { ThemedYStack } from '@/components/ui';
+import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
+import { usePurchasableContext } from '@/contexts';
+import { Purchasable } from '@/domain/Product/Purchasable';
+import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
+import React, { JSX } from 'react';
+import { ThemeName } from 'tamagui';
 import { ProductPrice } from '../display/ProductPrice';
-
-
-
-type PurchaseButtonProps = {
-    cta: PurchaseCTAState;
-    onPress: () => void;
-    isLoading?: boolean;
-    // optional overrides
-    themeOverride?: ThemeName;
-};
 
 const ICONS: Record<PurchaseCTAState['mode'], JSX.Element> = {
     buy: <ShoppingCart />,
@@ -31,14 +22,22 @@ const THEMES: Record<PurchaseCTAState['mode'], ThemeName> = {
     unavailable: THEME_CTA_VARIATION, // or a danger theme
 };
 
+
+type PurchaseButtonProps = {
+    onPress: () => void;
+    isLoading?: boolean;
+};
+
+
 export const PurchaseButton = ({
-    cta,
     onPress,
     isLoading = false,
-    themeOverride,
-
 }: PurchaseButtonProps) => {
-    const theme = themeOverride ?? THEMES[cta.mode];
+
+    const { purchasable } = usePurchasableContext();
+    const cta = derivePurchaseCTA(purchasable);
+
+    const theme = THEMES[cta.mode];
     const disabled = cta.disabled || isLoading;
 
     const priceTag = (
@@ -67,12 +66,9 @@ export type PurchaseCTAState = {
     mode: PurchaseCTAMode;       // drives theme/icon
     label: string;               // button label
     disabled: boolean;           // final disabled state
-
 };
 
-// purchaseCta.ts
-import { Purchasable } from '@/models/Product/Purchasable';
-import { ThemeName } from 'tamagui';
+
 
 export function derivePurchaseCTA(p: Purchasable): PurchaseCTAState {
     if (!p.availability.isInStock) {

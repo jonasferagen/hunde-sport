@@ -1,7 +1,7 @@
 // -----------------
 // Base product context
 
-import { createPurchasable } from '@/models/Product/Purchasable';
+import { createPurchasable } from '@/domain/Product/Purchasable';
 import { ProductVariation, Purchasable, PurchasableProduct } from "@/types";
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 

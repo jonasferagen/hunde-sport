@@ -1,5 +1,5 @@
 // routes.ts
-import { ProductCategory } from '@/models/ProductCategory';
+import { ProductCategory } from '@/domain/ProductCategory';
 import { SimpleProduct, VariableProduct } from '@/types';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { HrefObject } from 'expo-router';
@@ -81,14 +81,7 @@ export const routes = {
         nav: 'push',             // drill-down
     } satisfies Route<[SimpleProduct | VariableProduct, number?]>,
 
-    checkout: {
-        name: 'checkout',
-        label: 'Kassen',
-        icon: () => null,
-        path: () => ({ pathname: paths.checkout }),
-        showInDrawer: false,
-        nav: 'replace',
-    } satisfies Route,
+
 } as const;
 
 export type RouteKey = keyof typeof routes;

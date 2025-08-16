@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '@/config/api';
+import { CartData } from '@/domain/Cart/Cart';
+import { mapCartData } from '@/domain/Cart/CartMapper';
 import { apiClient } from '@/lib/apiClient';
-import { CartData } from '@/models/Cart/Cart';
-import { mapCartData } from '@/models/Cart/CartMapper';
 import { ApiResponse } from 'apisauce';
 
 const handleResponse = (

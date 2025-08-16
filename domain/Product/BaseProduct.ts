@@ -1,8 +1,8 @@
+import { ProductPrices } from "@/domain/pricing";
 import { cleanHtml } from "@/lib/helpers";
 import { ProductCategory } from "../ProductCategory";
 import { StoreImage } from "../StoreImage";
 import { ProductAttribute } from "./ProductAttribute";
-import { ProductPrices } from "./ProductPrices";
 
 
 // The raw representation of an attribute as it comes from the initial product API response.

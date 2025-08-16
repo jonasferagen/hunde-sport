@@ -1,4 +1,4 @@
-import { ProductVariation, SimpleProduct, VariableProduct } from '@/models/Product/Product';
+import { ProductVariation, SimpleProduct, VariableProduct } from '@/domain/Product/Product';
 import { Product, ProductAvailability, PurchasableProduct } from '@/types';
 import { ProductPrices } from './ProductPrices';
 

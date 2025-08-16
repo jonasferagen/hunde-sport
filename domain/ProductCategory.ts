@@ -1,4 +1,4 @@
-import { StoreImage } from '@/models/StoreImage';
+import { StoreImage } from '@/domain/StoreImage';
 
 export interface ProductCategoryData {
   id: number;

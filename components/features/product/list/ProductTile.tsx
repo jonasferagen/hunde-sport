@@ -21,7 +21,7 @@ export const ProductTile: React.FC<ProductTileProps> = ({
     ...stackProps
 }) => {
     const { purchasable } = usePurchasableContext();
-    const product = purchasable.product;
+    const { product } = purchasable;
     const { linkProps } = useCanonicalNav();
     return (
         <Theme>
@@ -33,11 +33,9 @@ export const ProductTile: React.FC<ProductTileProps> = ({
                     image={product.featuredImage}
                     {...stackProps}
                 >
-
                     <TileBadge >
                         <ProductPriceTag />
                     </TileBadge>
-
                 </Tile>
             </Link>
         </Theme>

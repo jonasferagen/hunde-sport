@@ -1,4 +1,4 @@
-import { PurchasableProduct } from '@/models/Product/Product';
+import { PurchasableProduct } from '@/domain/Product/Product';
 import { useCartStore } from '@/stores/cartStore';
 import React, { createContext, JSX, useContext, useEffect, useState } from 'react';
 

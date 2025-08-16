@@ -36,7 +36,7 @@ export const SearchScreen = () => {
                     </SizableText>
                 </ThemedXStack>
             </PageHeader>
-            <PageBody mode="static">
+            <PageBody>
                 <PageSection f={1} p="none">
                     <SearchResults key={query} />
                 </PageSection>

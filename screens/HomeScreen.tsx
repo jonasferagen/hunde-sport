@@ -17,7 +17,7 @@ export const HomeScreen = () => {
             <PageHeader >
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
-            <PageBody>
+            <PageBody mode="scroll">
                 <PageSection title="Nyheter" scrollable>
                     <RecentProducts />
                 </PageSection>

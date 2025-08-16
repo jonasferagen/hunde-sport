@@ -1,5 +1,5 @@
 import { ProductCategoryProvider, useProductCategoryContext } from '@/contexts';
-import { ProductCategory } from '@/models/ProductCategory';
+import { ProductCategory } from '@/domain/ProductCategory';
 import React, { memo } from 'react';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { XStack, YStack } from 'tamagui';

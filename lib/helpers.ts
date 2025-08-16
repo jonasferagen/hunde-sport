@@ -13,21 +13,6 @@ export const cleanNumber = (value: string) => {
 
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const formatPrice = (price: string): string => {
-    const num = parseFloat(price) / 100;
-    return num.toFixed(0).replace('.', ',') + ',-';
-};
-
-export const formatPriceRange = (priceRange: any, compact: boolean = true): string => {
-    if (priceRange.min_amount === priceRange.max_amount) {
-        return formatPrice(priceRange.min_amount);
-    }
-    if (compact) {
-        return `Fra ${formatPrice(priceRange.min_amount)}`;
-    }
-    return `${formatPrice(priceRange.min_amount)} - ${formatPrice(priceRange.max_amount)}`;
-};
-
 import { parseDocument } from 'htmlparser2';
 
 const isAllWhitespace = (str: string) => /^\s*$/.test(str);

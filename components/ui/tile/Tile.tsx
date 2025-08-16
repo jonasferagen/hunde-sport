@@ -1,5 +1,5 @@
+import { StoreImage } from '@/domain/StoreImage';
 import { getAspectRatio, getScaledImageUrl } from '@/lib/helpers';
-import { StoreImage } from '@/models/StoreImage';
 import { JSX } from 'react';
 import { DimensionValue } from 'react-native';
 import { YStack, YStackProps } from 'tamagui';

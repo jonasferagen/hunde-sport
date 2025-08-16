@@ -1,4 +1,4 @@
-import { Product, PurchasableProduct } from '@/models/Product/Product';
+import { Product, PurchasableProduct } from '@/domain/Product/Product';
 import { ProductCategory, ProductVariation } from '@/types';
 import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { handleQueryResult, queryOptions, QueryResult } from '../util';

@@ -1,4 +1,4 @@
-import { ProductCategory } from '@/models/ProductCategory';
+import { ProductCategory } from '@/domain/ProductCategory';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import React, { createContext, useContext } from 'react';
 

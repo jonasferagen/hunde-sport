@@ -1,5 +1,5 @@
 import { useDebug } from '@/contexts/DebugContext';
-import { PurchasableProduct } from '@/models/Product/Product';
+import { PurchasableProduct } from '@/domain/Product/Product';
 import { Info } from '@tamagui/lucide-icons';
 import { JSX } from 'react';
 import { YStack } from 'tamagui';

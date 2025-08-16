@@ -1,5 +1,5 @@
 import { THEME_OPTION, THEME_OPTION_SELECTED } from '@/config/app';
-import { formatPrice } from '@/lib/helpers';
+import { formatMinorWithHeader } from '@/domain/pricing';
 import { AttributeTermDetails } from '@/types';
 import React from 'react';
 import { Pressable } from 'react-native';
@@ -23,6 +23,7 @@ export const AttributeOption = ({
     const disabled = !isAvailable || !isPurchasable;
     const minPrice = minPrices?.price ?? null;
     const maxPrice = maxPrices?.price ?? null;
+
 
     return (
         <Theme name={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}>
@@ -76,8 +77,8 @@ export const AttributeOption = ({
                     >
                         {minPrice
                             ? minPrice === maxPrice
-                                ? formatPrice(minPrice)
-                                : `Fra ${formatPrice(minPrice)}`
+                                ? formatMinorWithHeader(minPrice, minPrices,)
+                                : `Fra ${formatMinorWithHeader(minPrice, minPrices)}`
                             : null}
                     </SizableText>
                 </XStack>

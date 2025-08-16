@@ -1,4 +1,4 @@
-import { ProductCategory } from '@/models/ProductCategory';
+import { ProductCategory } from '@/domain/ProductCategory';
 import { create } from 'zustand';
 
 interface ProductCategoryState {

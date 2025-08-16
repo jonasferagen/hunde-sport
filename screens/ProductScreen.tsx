@@ -48,7 +48,7 @@ const ProductScreenContent = () => {
       <PageHeader>
         <Breadcrumbs isLastClickable={false} />
       </PageHeader>
-      <PageBody>
+      <PageBody mode="scroll">
         <PageSection>
           <ProductImage />
           <ThemedXStack split>

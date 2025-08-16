@@ -1,5 +1,5 @@
 // useAddToCart.ts
-import { Purchasable } from '@/models/Product/Purchasable'
+import { Purchasable } from '@/domain/Product/Purchasable'
 import { AddItemOptions, useCartStore } from '@/stores/cartStore'
 import { useToastController } from '@tamagui/toast'
 

@@ -1,8 +1,8 @@
 // -----------------
 // Variation context
 // -----------------
+import { ProductVariation, VariableProduct } from "@/domain/Product/Product";
 import { useProductVariations } from '@/hooks/data/Product';
-import { ProductVariation, VariableProduct } from "@/models/Product/Product";
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import React, { createContext, useContext } from 'react';
 

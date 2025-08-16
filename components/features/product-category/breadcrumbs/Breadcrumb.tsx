@@ -2,8 +2,8 @@ import { Link } from 'expo-router';
 import React from 'react';
 
 import { ThemedText, ThemedXStack } from '@/components/ui';
+import { ProductCategory } from '@/domain/ProductCategory';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import { ProductCategory } from '@/models/ProductCategory';
 import { ChevronRight } from '@tamagui/lucide-icons';
 
 interface BreadcrumbProps {

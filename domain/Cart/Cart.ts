@@ -1,4 +1,4 @@
-
+import { WcItemPrices, WcItemTotals, WcTotals } from '@/domain/Cart/pricing';
 
 export interface CartItemData {
     key: string;
@@ -6,8 +6,8 @@ export interface CartItemData {
     type: string;
     name: string;
     variations: any[];
-    prices: any;
-    totals: any;
+    prices: WcItemPrices;
+    totals: WcItemTotals;
     quantity: number;
 }
 
@@ -16,8 +16,9 @@ export interface CartData {
     token: string;
     items_count: number;
     items_weight: number;
-    totals: any;
+    totals: WcTotals;
     has_calculated_shipping: boolean;
     shipping_rates: any;
     lastUpdated: number;
 }
+

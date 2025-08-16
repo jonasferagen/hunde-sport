@@ -3,7 +3,7 @@ import { usePurchasableContext } from "@/contexts/";
 import React from "react";
 import { openModal } from "./ModalStore";
 import { ProductVariationsModal } from "./ProductVariationsModal";
-import { derivePurchaseCTA, PurchaseButton } from "./PurchaseButton";
+import { PurchaseButton } from "./PurchaseButton";
 
 import { useAddToCart } from "@/hooks/useAddToCart";
 
@@ -12,8 +12,6 @@ export const ProductPurchaseFlow = () => {
     const addToCart = useAddToCart();
     const { purchasable } = usePurchasableContext();
     const [loading, setLoading] = React.useState(false)
-
-    const cta = derivePurchaseCTA(purchasable);
 
     const onPressSimple = async () => {
         setLoading(true);
@@ -30,5 +28,5 @@ export const ProductPurchaseFlow = () => {
 
     const onPress = purchasable.isVariable && !purchasable.isValid ? onPressVariable : onPressSimple;
 
-    return <PurchaseButton cta={cta} onPress={onPress} isLoading={loading} />;
+    return <PurchaseButton onPress={onPress} isLoading={loading} />;
 };

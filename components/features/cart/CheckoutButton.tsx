@@ -1,7 +1,7 @@
 import { ThemedSpinner, ThemedText, ThemedXStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { THEME_CTA_CHECKOUT } from '@/config/app';
-import { formatPrice } from '@/lib/helpers';
+import { formatCartGrandTotal } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
 import { ExternalLink } from '@tamagui/lucide-icons';
 import React from 'react';
@@ -11,12 +11,12 @@ import { ButtonProps } from 'tamagui';
 
 
 
-export const CheckoutButton = ({ disabled, ...props }: ButtonProps) => {
+export const CheckoutButton = ({ ...props }: ButtonProps) => {
 
     const { cart, checkout, isUpdating } = useCartStore();
 
-    const itemsCount = cart?.items_count ?? 0;
-    const totals = cart?.totals;
+    const itemsCount = cart!.items_count ?? 0;
+    const totals = cart!.totals;
 
     const icon = null;
     const iconAfter = <ExternalLink />
@@ -28,8 +28,9 @@ export const CheckoutButton = ({ disabled, ...props }: ButtonProps) => {
         setIsRedirecting(false);
     };
 
+    const disabled = itemsCount === 0;
     const isWaiting = isUpdating || isRedirecting;
-
+    const label = itemsCount + ' ' + (itemsCount === 1 ? 'vare' : 'varer');
 
     return (
         <CallToActionButton
@@ -45,8 +46,8 @@ export const CheckoutButton = ({ disabled, ...props }: ButtonProps) => {
                 <ThemedXStack split p="none" w="100%" ai="center">
                     {isWaiting ? <ThemedSpinner /> : (
                         <>
-                            <ThemedText size="$5" >{itemsCount} var(er)</ThemedText>
-                            <ThemedText size="$5" bold>   {formatPrice(String(Number(totals.total_price) + Number(totals.total_tax)))}</ThemedText>
+                            <ThemedText size="$5" >{label}</ThemedText>
+                            <ThemedText size="$5" bold>{formatCartGrandTotal(totals)}</ThemedText>
                         </>
                     )}
                 </ThemedXStack>

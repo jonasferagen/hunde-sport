@@ -1,4 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
+import { CartData } from '@/domain/Cart/Cart';
 import { createCartRestoreToken } from '@/hooks/checkout/api';
 import {
     addItem as apiAddItem,
@@ -7,7 +8,6 @@ import {
     updateItem as apiUpdateItem,
 } from '@/hooks/data/Cart/api';
 import { log } from '@/lib/logger';
-import { CartData } from '@/models/Cart/Cart';
 import { Storage } from 'expo-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';

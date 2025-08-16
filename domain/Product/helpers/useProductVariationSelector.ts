@@ -1,5 +1,5 @@
-import { VariableProduct } from '@/models/Product/Product';
-import { VariationSelection } from '@/models/Product/helpers/VariationSelection';
+import { VariableProduct } from '@/domain/Product/Product';
+import { VariationSelection } from '@/domain/Product/helpers/VariationSelection';
 import { ProductVariation } from '@/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 

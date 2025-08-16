@@ -1,6 +1,6 @@
 import { ENDPOINTS, PaginationOptions } from '@/config/api';
+import { mapToProductCategory } from '@/domain/ProductCategory';
 import { apiClient } from '@/lib/apiClient';
-import { mapToProductCategory } from '@/models/ProductCategory';
 import { responseTransformer } from '../util';
 
 export async function fetchProductCategories(pagination?: PaginationOptions) {

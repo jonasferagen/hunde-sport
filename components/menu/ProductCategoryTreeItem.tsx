@@ -1,5 +1,5 @@
+import { ProductCategory } from '@/domain/ProductCategory';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import { ProductCategory } from '@/models/ProductCategory';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
 import { getTokenValue, XStack } from 'tamagui';

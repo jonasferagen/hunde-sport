@@ -1,7 +1,7 @@
 import { Tile } from "@/components/ui/tile/Tile";
 import { PRODUCT_CATEGORY_TILE_HEIGHT, PRODUCT_CATEGORY_TILE_WIDTH } from '@/config/app';
+import { ProductCategory } from '@/domain/ProductCategory';
 import { useCanonicalNav } from "@/hooks/useCanonicalNav";
-import { ProductCategory } from '@/models/ProductCategory';
 import { Link } from 'expo-router';
 import React, { memo } from 'react';
 import { YStackProps } from "tamagui";

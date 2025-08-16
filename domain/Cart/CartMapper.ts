@@ -1,4 +1,4 @@
-import { CartData, CartItemData } from '@/models/Cart/Cart';
+import { CartData, CartItemData } from '@/domain/Cart/Cart';
 
 /**
  * Maps raw cart data from the API to the application's CartData model.

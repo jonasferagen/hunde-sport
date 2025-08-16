@@ -1,9 +1,9 @@
 import { ThemedYStack } from '@/components/ui';
 import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 import { ProductVariationProvider, useProductVariationContext, usePurchasableContext } from '@/contexts';
+import { useProductVariationSelector } from '@/domain/Product/helpers/useProductVariationSelector';
+import { VariableProduct } from '@/domain/Product/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { useProductVariationSelector } from '@/models/Product/helpers/useProductVariationSelector';
-import { VariableProduct } from '@/models/Product/Product';
 import { JSX } from 'react';
 import { XStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';

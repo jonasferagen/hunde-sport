@@ -8,7 +8,7 @@ interface PageBodyProps extends YStackProps {
   mode?: 'scroll' | 'static';
 }
 
-export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, mode = 'scroll', ...props }, ref) => {
+export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, mode = 'static', ...props }, ref) => {
 
 
   const content = (
@@ -25,6 +25,8 @@ export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children,
 
   return mode === 'scroll' ? (
     <ScrollView
+      boc="blue"
+      bw={1}
       f={1}
       ref={ref}
       showsVerticalScrollIndicator={true}

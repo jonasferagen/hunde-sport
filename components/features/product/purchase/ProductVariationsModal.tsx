@@ -10,7 +10,7 @@ import { ProductVariationSelect } from "../product-variation/ProductVariationSel
 import { PurchasableProvider, usePurchasableContext } from "@/contexts/PurchasableContext";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { ChevronDown } from "@tamagui/lucide-icons";
-import { derivePurchaseCTA, PurchaseButton } from "./PurchaseButton";
+import { PurchaseButton } from "./PurchaseButton";
 export const ProductVariationsModal = ({
     close,
     purchasable, // used only to seed the provider
@@ -30,7 +30,6 @@ const Inner = ({ close }: { close: () => void }) => {
     const { purchasable } = usePurchasableContext()
     const [loading, setLoading] = useState(false)
 
-    const cta = derivePurchaseCTA(purchasable);
 
     const onPress = async () => {
         setLoading(true);
@@ -66,7 +65,7 @@ const Inner = ({ close }: { close: () => void }) => {
                 </ThemedXStack>
             </ThemedYStack>
             <ThemedYStack gap="$3" f={0} mb="$5">
-                <PurchaseButton cta={cta} onPress={onPress} isLoading={loading} />
+                <PurchaseButton onPress={onPress} isLoading={loading} />
             </ThemedYStack>
         </ThemedYStack>
     )
