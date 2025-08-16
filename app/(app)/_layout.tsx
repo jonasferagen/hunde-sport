@@ -25,8 +25,9 @@ const AppLayout = React.memo((): React.ReactElement => {
         []
     );
 
+
     return (
-        <Prof id="DrawerNavigator">
+        <Prof id={`AppLayout`}>
             <View style={{ flex: 1 }}>
                 <Drawer
                     drawerContent={drawerContent}
@@ -43,7 +44,9 @@ const AppLayout = React.memo((): React.ReactElement => {
                         position: 'absolute', left: 0, right: 0, bottom: 0,
                     }}
                 >
-                    <BottomBar />
+                    <Prof id="BottomBar">
+                        <BottomBar />
+                    </Prof>
                 </View>
             </View>
         </Prof>

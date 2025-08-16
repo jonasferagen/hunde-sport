@@ -1,8 +1,8 @@
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useProductCategories } from '@/hooks/data/ProductCategory';
+import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { useCartStore } from '@/stores/cartStore';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
-import { useRouter } from 'expo-router';
 import React, { JSX, useCallback, useEffect, useState } from 'react';
 import { Theme, YStack } from 'tamagui';
 
@@ -55,16 +55,15 @@ const CategoryLoader = ({ onReady }: LoaderProps) => {
 export const PreloaderScreen = (): JSX.Element => {
     const [isCartReady, setCartReady] = useState(false);
     const [areCategoriesReady, setCategoriesReady] = useState(false);
-    const router = useRouter();
-
+    const { to } = useCanonicalNav();
     const handleCartReady = useCallback(() => setCartReady(true), []);
     const handleCategoriesReady = useCallback(() => setCategoriesReady(true), []);
 
     useEffect(() => {
         if (isCartReady && areCategoriesReady) {
-            router.replace('/(app)');
+            to('index');
         }
-    }, [isCartReady, areCategoriesReady, router]);
+    }, [isCartReady, areCategoriesReady, to]);
 
     return (
         <Theme name="primary">

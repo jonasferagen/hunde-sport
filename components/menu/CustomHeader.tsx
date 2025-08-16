@@ -1,3 +1,4 @@
+import { THEME_HEADER } from '@/config/app';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { getHeaderTitle } from '@react-navigation/elements';
 import { Menu } from '@tamagui/lucide-icons';
@@ -18,7 +19,7 @@ const HeaderChrome = React.memo(function HeaderChrome({
     children,
 }: { onOpen: () => void; children: React.ReactNode }) {
     return (
-        <Theme name="primary">
+        <Theme name={THEME_HEADER}>
             <ThemedXStack container split box>
                 <ThemedLinearGradient />
                 <ThemedButton theme="tint" circular onPress={onOpen}>

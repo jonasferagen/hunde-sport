@@ -15,7 +15,6 @@ export const drawerScreens = Object.values(routes).map((route) => (
         name={route.name}
         options={staticOptions(route.label, route.showInDrawer)}
     />
-
 ));
 
 export default drawerScreens;

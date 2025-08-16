@@ -77,7 +77,6 @@ export const CustomDrawerContent = React.memo((props: DrawerContentComponentProp
                 <ScrollView>
                     <ThemedYStack container="$4">
                         <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
-
                         <ThemedText size="$6">Kategorier</ThemedText>
                         {/* Mount the heavy tree only when the drawer is opening/open */}
                         {status === 'open' ? <ProductCategoryTree /> : null}
