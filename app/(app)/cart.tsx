@@ -1,5 +1,4 @@
-import { MinimalScreen } from '@/screens/MinimalScreen';
+import { CartScreen } from '@/screens/CartScreen';
 import { JSX } from 'react';
 
-//export default (): JSX.Element => <CartScreen />;
-export default (): JSX.Element => <MinimalScreen />;
+export default (): JSX.Element => <CartScreen />;

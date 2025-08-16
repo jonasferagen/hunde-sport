@@ -3,18 +3,7 @@ import { cleanHref, RouteKey, routes } from '@/config/routes';
 import { HrefObject, LinkProps, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
 
-
 const navTimer = { label: '', t0: 0, target: '' as string };
-
-
-const shallowEqualStrings = (a?: Record<string, any>, b?: Record<string, any>) => {
-    const A = a ?? {}, B = b ?? {};
-    const ak = Object.keys(A), bk = Object.keys(B);
-    if (ak.length !== bk.length) return false;
-    for (const k of ak) if (String(A[k]) !== String(B[k])) return false;
-    return true;
-};
-
 
 type RouteMap = typeof routes;
 type ArgsOf<K extends RouteKey> =
@@ -24,9 +13,37 @@ const getRoute = <K extends RouteKey>(k: K) => routes[k] as RouteMap[K];
 const getPath = <K extends RouteKey>(k: K) =>
     getRoute(k).path as (...a: ArgsOf<K>) => HrefObject;
 
+const toJSON = (obj?: Record<string, any>) =>
+    JSON.stringify(Object.fromEntries(Object.entries(obj ?? {}).filter(([, v]) => v != null)));
+
+let lastParamsSig = '';
+let sameSetCount = 0;
+let lastSetAt = 0;
+function warnIfLoop(sig: string) {
+    const now = Date.now();
+    if (sig === lastParamsSig && now - lastSetAt < 1000) {
+        sameSetCount++;
+        if (sameSetCount >= 3) {
+            console.warn('[NAV] Possible setParams loop; same params 3x in <1s:', sig);
+        }
+    } else {
+        sameSetCount = 0;
+        lastParamsSig = sig;
+    }
+    lastSetAt = now;
+}
+
 export function useCanonicalNav() {
-    const pathname = usePathname();
-    const currentParams = useLocalSearchParams(); // strings only
+    const rawPathname = usePathname();
+    const pathname = React.useMemo(
+        () => (rawPathname?.replace(/\/+$/, '') || '/'),
+        [rawPathname]
+    );
+
+    // Expo Router returns strings (and sometimes string[]) – we only care about a stable signature
+    const currentParams = useLocalSearchParams();
+    const currentKey = React.useMemo(() => toJSON(currentParams as any), [currentParams]);
+
     React.useEffect(() => {
         if (!navTimer.t0) return;
         if (pathname === navTimer.target) {
@@ -38,46 +55,37 @@ export function useCanonicalNav() {
         }
     }, [pathname]);
 
-    const to = React.useCallback(<K extends RouteKey>(
-        key: K,
-        ...args: ArgsOf<K>
-    ) => {
-
-
-
-
+    const to = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
         const route = routes[key];
         const href = cleanHref(getPath(key)(...args));
-        const sameScreen = href.pathname === pathname;
+        const targetPath = (href.pathname?.replace(/\/+$/, '') || '/');
+        const sameScreen = targetPath === pathname;
 
-        // start timer
+        // start timer (per nav intent)
         navTimer.t0 = performance.now();
         navTimer.label = key as string;
-        navTimer.target = href.pathname;
-
+        navTimer.target = targetPath;
 
         if (sameScreen) {
-            // same screen:
             if (route.nav === 'push') {
-                // detail page navigating to another detail (e.g. product -> product)
+                // same route, new detail – push a new entry (e.g., product -> product)
                 router.push(href);
             } else {
-                // top-level: only update params if they changed
-                const changed = !shallowEqualStrings(currentParams, href.params as any);
-                if (changed) router.setParams((href.params ?? {}) as any);
+                // top-level: only update URL params if they actually changed and aren’t empty
+                const nextKey = toJSON(href.params as any);
+                if (nextKey && nextKey !== currentKey) {
+                    warnIfLoop(nextKey);
+                    router.setParams(href.params as any);
+                }
             }
             return;
         }
 
-        // different screen:
-        if (route.nav === 'push') {
-            router.push(href);
-        } else if (route.nav === 'replace') {
-            router.replace(href);
-        } else {
-            router.navigate(href);
-        }
-    }, [pathname, currentParams]);
+        // different screen
+        if (route.nav === 'push') router.push(href);
+        else if (route.nav === 'replace') router.replace(href);
+        else router.navigate(href);
+    }, [pathname, currentKey]);
 
     const linkProps = React.useCallback(<K extends RouteKey>(
         key: K,
@@ -88,12 +96,10 @@ export function useCanonicalNav() {
         return { href, replace: nav !== 'push' };
     }, []);
 
-
     const href = React.useCallback(<K extends RouteKey>(
         key: K,
         ...args: ArgsOf<K>
     ): HrefObject => cleanHref(getPath(key)(...args)), []);
-
 
     return { to, linkProps, href };
 }

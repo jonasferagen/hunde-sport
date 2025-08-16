@@ -8,6 +8,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { drawerScreens } from './_drawerScreens';
 
+import { Prof } from '@/lib/debug/prof';
+
 const AppLayout = React.memo((): React.ReactElement => {
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />,
@@ -24,26 +26,27 @@ const AppLayout = React.memo((): React.ReactElement => {
     );
 
     return (
-        <View style={{ flex: 1 }}>
-            <Drawer
-                drawerContent={drawerContent}
-                screenOptions={screenOptions}
-                detachInactiveScreens
-                lazy
-            >
-                {drawerScreens /* see #2 */}
-            </Drawer>
+        <Prof id="DrawerNavigator">
+            <View style={{ flex: 1 }}>
+                <Drawer
+                    drawerContent={drawerContent}
+                    screenOptions={screenOptions}
+                    detachInactiveScreens
+                >
+                    {drawerScreens /* see #2 */}
+                </Drawer>
 
-            {/* Overlay the bottom bar so it doesn't participate in per-screen re-renders */}
-            <View
-                pointerEvents="box-none"
-                style={{
-                    position: 'absolute', left: 0, right: 0, bottom: 0,
-                }}
-            >
-                <BottomBar />
+                {/* Overlay the bottom bar so it doesn't participate in per-screen re-renders */}
+                <View
+                    pointerEvents="box-none"
+                    style={{
+                        position: 'absolute', left: 0, right: 0, bottom: 0,
+                    }}
+                >
+                    <BottomBar />
+                </View>
             </View>
-        </View>
+        </Prof>
     );
 });
 
