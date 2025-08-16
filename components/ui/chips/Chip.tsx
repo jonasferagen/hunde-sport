@@ -7,11 +7,17 @@ export const Chip = ({ children, ...props }: StackProps): JSX.Element => {
 
     const chipContent = (
         <ThemedXStack
-            chip
+            fs={1}
+            bw={1}
+            p="$3"
+            br="$3"
+            ov="hidden"
+            ai="center"
+            jc="center"
+            gap="$1.5"
             {...props}
-            br="$5"
         >
-            <ThemedText fs={1} >{children}</ThemedText>
+            <ThemedText fs={1} size="$5" bold >{children}</ThemedText>
         </ThemedXStack >
     );
 

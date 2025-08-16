@@ -8,7 +8,6 @@ export const PageView = ({ children, ...stackProps }: YStackProps) => {
       theme={THEME_PAGE}
       f={1}
       gap="none"
-
       {...stackProps}>
       <ThemedLinearGradient />
       {children}

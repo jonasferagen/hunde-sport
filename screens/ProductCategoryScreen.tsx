@@ -16,7 +16,9 @@ export const ProductCategoryScreen = memo(() => {
         <ProductCategoryProvider productCategoryId={Number(id)}>
             <PageView>
                 <PageHeader>
+
                     <BreadCrumbsContainer />
+
                 </PageHeader>
                 <PageBody mode="static" >
                     <PageSection f={1} mih={0} p="none">

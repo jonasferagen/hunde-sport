@@ -64,8 +64,8 @@ const Inner = ({ close }: { close: () => void }) => {
                     <ProductPrice />
                 </ThemedXStack>
             </ThemedYStack>
-            <ThemedYStack gap="$3" f={0} mb="$5">
-                <PurchaseButton onPress={onPress} isLoading={loading} />
+            <ThemedYStack gap="$3" f={0} mb="$3">
+                <PurchaseButton enabled={purchasable.isValid} onPress={onPress} isLoading={loading} />
             </ThemedYStack>
         </ThemedYStack>
     )

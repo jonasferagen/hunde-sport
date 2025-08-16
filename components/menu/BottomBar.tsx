@@ -1,14 +1,11 @@
-import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { THEME_BOTTOM_BAR } from '@/config/app';
-import { RouteKey } from '@/config/routes';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
+import * as Haptics from 'expo-haptics';
 import { usePathname } from 'expo-router';
-import { styled, Tabs, Text, YStackProps } from 'tamagui';
-import { ThemedYStack } from '../ui';
-
-
-
+import { useEffect, useMemo, useState } from 'react';
+import { StackProps, styled, Tabs, Text } from 'tamagui';
+import { ThemedLinearGradient, ThemedSpinner, ThemedYStack } from '../ui';
 
 const StyledTab = styled(Tabs.Tab, {
     name: 'StyledTab',
@@ -39,31 +36,46 @@ const StyledTabsList = styled(Tabs.List, {
     w: '100%',
 });
 
-export const BottomBar = (props: YStackProps) => {
-
-    const { to, linkProps } = useCanonicalNav();
-
+export const BottomBar = (props: StackProps) => {
+    const { to } = useCanonicalNav();
     const pathname = usePathname();
-    const currentTab = pathname.split('/')[1] || 'index';
-    const handleTabChange = (value: string) => {
-        to(value as RouteKey);
+
+    // derive current route segment ('', 'search', 'cart'...)
+    const currentTab = useMemo(() => pathname.split('/')[1] || 'index', [pathname]);
+
+    // optimistic tab value
+    const [tab, setTab] = useState(currentTab);
+    useEffect(() => {
+        // when navigation completes, sync + stop pending UI
+        setTab(currentTab);
+    }, [currentTab]);
+
+    const onChange = (next: string) => {
+        if (next === tab) return;
+        setTab(next);                      // instant visual switch
+        Haptics.selectionAsync().catch(() => { });
+
+        // canonical navigation policy (replace for top-level tabs)
+        to(next as any);
     };
 
     return (
-        <ThemedYStack box theme={THEME_BOTTOM_BAR} {...props} w="100%" >
-            <StyledTabs {...props} value={currentTab} onValueChange={handleTabChange}>
+        <ThemedYStack box theme={THEME_BOTTOM_BAR} {...props} w="100%">
+            <StyledTabs value={tab} onValueChange={onChange}>
                 <StyledTabsList>
                     <ThemedLinearGradient />
-                    <StyledTab value="index">
-                        <Home />
+                    <StyledTab value="index" disabled={tab === 'index' && tab !== currentTab}>
+                        {tab === 'index' && tab !== currentTab ? <ThemedSpinner size="small" /> : <Home />}
                         <Text>Hjem</Text>
                     </StyledTab>
-                    <StyledTab value="search">
-                        <Search />
+
+                    <StyledTab value="search" disabled={tab === 'search' && tab !== currentTab}>
+                        {tab === 'search' && tab !== currentTab ? <ThemedSpinner size="small" /> : <Search />}
                         <Text>Søk</Text>
                     </StyledTab>
-                    <StyledTab value="cart">
-                        <ShoppingCart />
+
+                    <StyledTab value="cart" disabled={tab === 'cart' && tab !== currentTab}>
+                        {tab === 'cart' && tab !== currentTab ? <ThemedSpinner size="small" /> : <ShoppingCart />}
                         <Text>Handlekurv</Text>
                     </StyledTab>
                 </StyledTabsList>

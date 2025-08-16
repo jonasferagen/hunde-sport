@@ -28,19 +28,7 @@ const config = {
         rounded: {
             true: { br: '$3' },
         },
-        chip: {
-            true: {
-                fs: 1,
-                bw: 1,
-                px: '$2',
-                py: '$1',
-                br: '$3',
-                ov: 'hidden',
-                ai: 'center',
-                jc: 'center',
-                gap: '$1.5'
-            },
-        }
+
 
     }
 } as const

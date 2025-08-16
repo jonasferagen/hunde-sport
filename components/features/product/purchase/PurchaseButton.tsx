@@ -26,19 +26,21 @@ const THEMES: Record<PurchaseCTAState['mode'], ThemeName> = {
 type PurchaseButtonProps = {
     onPress: () => void;
     isLoading?: boolean;
+    enabled?: boolean;
 };
 
 
 export const PurchaseButton = ({
     onPress,
     isLoading = false,
+    enabled = true,
 }: PurchaseButtonProps) => {
 
     const { purchasable } = usePurchasableContext();
     const cta = derivePurchaseCTA(purchasable);
 
     const theme = THEMES[cta.mode];
-    const disabled = cta.disabled || isLoading;
+    const disabled = cta.disabled || isLoading || !enabled;
 
     const priceTag = (
         <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="$3" mr={-20} minWidth={80}>

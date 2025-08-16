@@ -1,6 +1,6 @@
 import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
 import { THEME_DRAWER } from '@/config/app';
-import { RouteKey, routes } from '@/config/routes';
+import { routes } from '@/config/routes';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import {
     DrawerContentComponentProps,
@@ -38,7 +38,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                             .filter((route) => route.showInDrawer)
                             .map((route) => {
                                 const isActive = state.routes[state.index].name === route.name;
-                                const onPress = () => to(route.name as RouteKey);
+                                const onPress = () => to(route.name);
                                 return (
                                     <ThemedButton key={route.name}
                                         onPress={onPress}
