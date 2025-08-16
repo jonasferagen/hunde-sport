@@ -1,7 +1,7 @@
 // /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
-import { ThemedYStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
+import { ThemedSurface } from '@/components/ui/themed-components/ThemedSurface';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { usePurchasableContext } from '@/contexts';
 import { Purchasable } from '@/domain/Product/Purchasable';
@@ -41,9 +41,9 @@ export const PurchaseButton = ({
     const disabled = cta.disabled || isLoading;
 
     const priceTag = (
-        <ThemedYStack box theme="shade" h="$6" ai="center" jc="center" px="$3" mr={-20} minWidth={80}>
+        <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="$3" mr={-20} minWidth={80}>
             <ProductPrice />
-        </ThemedYStack>
+        </ThemedSurface>
     );
 
     return (

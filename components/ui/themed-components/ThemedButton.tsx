@@ -8,7 +8,7 @@ import {
     withStaticProperties
 } from '@tamagui/web';
 import { cloneElement, isValidElement, useContext } from 'react';
-import { Surface } from './Surface';
+import { ThemedSurface } from './ThemedSurface';
 
 const DEFAULT_SIZE = '$4';
 
@@ -37,7 +37,7 @@ const SIZES: Record<SizeKey, {
 }
 
 // 3) Frame uses the table
-export const ButtonFrame = styled(Surface, {
+export const ButtonFrame = styled(ThemedSurface, {
     name: 'ThemedButton',
     context: ButtonContext,
     ai: 'center',

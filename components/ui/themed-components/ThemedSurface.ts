@@ -1,9 +1,9 @@
 // surface.ts
-import { styled, View } from 'tamagui'
+import { View, styled } from 'tamagui';
 
 // everything here is theme-token driven and interaction-ready
-const surfaceBase = {
-    name: 'Surface',
+const surface = {
+    name: 'ThemedSurface',
     ov: 'hidden',
     br: '$3',
     bw: '$borderWidth',
@@ -15,15 +15,15 @@ const surfaceBase = {
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
-    hoverStyle: { bg: '$backgroundHover', boc: '$borderColor' },
-    pressStyle: { bg: '$backgroundPress', boc: '$borderColor' },
+    animation: 'fast',
+    hoverStyle: { bg: '$backgroundHover', boc: '$borderColorHover', opacity: 0.7 },
+    pressStyle: { bg: '$backgroundPress', boc: '$borderColorPress', opacity: 0.7 },
     focusStyle: {
         bg: '$backgroundFocus',
-        boc: '$borderColor',
+        boc: '$borderColorFocus',
         outlineWidth: 2,
         outlineStyle: 'solid',
     },
 } as const
 
-export const Surface = styled(View, surfaceBase)
+export const ThemedSurface = styled(View, surface)

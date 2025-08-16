@@ -12,12 +12,14 @@ export const ProductDescription = ({ long = false, ...sizableTextProps }: Produc
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
 
+    const description = long ? product.description || product.short_description : product.short_description
+
     return <ThemedText
         fos="$2"
         lh='$1'
         textDecorationLine="none"
         {...sizableTextProps}
     >
-        {long ? product.description : product.short_description}
+        {description || "Ingen beskrivelse tilgjengelig"}
     </ThemedText>;
 };

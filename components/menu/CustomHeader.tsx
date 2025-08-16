@@ -6,6 +6,12 @@ import { ThemedButton, ThemedLinearGradient, ThemedXStack } from '../ui/themed-c
 import { getHeaderTitle } from '@react-navigation/elements';
 
 export const CustomHeader = (props: DrawerHeaderProps) => {
+
+    if (!props) {
+        console.error("Header props undefined");
+        return null;
+    }
+
     const { navigation, route, options } = props;
 
     const { name } = route?.params as { name: string };

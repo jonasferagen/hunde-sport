@@ -6,6 +6,7 @@ import { YStack, YStackProps } from 'tamagui';
 import { ThemedText, ThemedYStack } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
+import { ThemedSurface } from '../themed-components/ThemedSurface';
 
 export interface TileProps extends YStackProps {
     title: string;
@@ -22,47 +23,27 @@ export const Tile = ({
 
     const aspectRatio = getAspectRatio(props.w as DimensionValue, props.h as DimensionValue);
     const uri = getScaledImageUrl(image.src, props.w as DimensionValue, props.h as DimensionValue);
+
+
     return (
-
-        <ThemedYStack
-
-            box
-            rounded
-            ov="hidden"
-            aspectRatio={aspectRatio}
+        <ThemedSurface
+            bw={2}
+            pressStyle={{ boc: '$borderColorInverse', bg: '$backgroundInverse' }}
             {...props}
+            ov="hidden"
+
         >
-            <ThemedImage
-                fullscreen
-                uri={uri}
-                title={title}
-            />
-            {children}
-            <YStack fullscreen
-                f={1}
-                t="auto"
-                p="$2.5"
-                jc="flex-end"
-
-            >
-                <ThemedLinearGradient
-                    fullscreen
-                    start={[0, 0.2]}
-                    end={[0, 0.9]}
-                    opacity={0.8}
-                />
-                <ThemedText
-                    bold
-                    col="$color"
-                    numberOfLines={2}
-                    ellipse
-                    ta="center"
-                >
-                    {title}
-                </ThemedText>
-            </YStack>
-        </ThemedYStack>
-
+            <ThemedYStack fullscreen aspectRatio={aspectRatio} ov="hidden">
+                <ThemedImage uri={uri} title={title} aspectRatio={aspectRatio} />
+                {children}
+                <ThemedYStack fullscreen f={1} t="auto" p="$2.5" jc="flex-end">
+                    <ThemedLinearGradient fullscreen start={[0, 0.2]} end={[0, 0.9]} opacity={0.8} />
+                    <ThemedText bold col="$color" numberOfLines={2} ellipse ta="center">
+                        {title}
+                    </ThemedText>
+                </ThemedYStack>
+            </ThemedYStack>
+        </ThemedSurface >
     );
 };
 
@@ -81,3 +62,5 @@ export const TileBadge = ({ children, ...props }: TileBadgeProps): JSX.Element =
         </YStack>
     );
 };
+
+

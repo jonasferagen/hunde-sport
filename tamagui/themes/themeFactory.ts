@@ -25,6 +25,12 @@ export type ThemeTemplate = {
     shadowColorFocus: string
     shadowColorHover: string
     shadowColorPress: string
+
+    /* Extra tokens, not tamagui defaults */
+    backgroundInverse: string
+    borderColorInverse: string
+    colorInverse: string
+    shadowColorInverse: string
 }
 
 /** Your input config */
@@ -47,9 +53,9 @@ const AMOUNTS = {
     hover: 0.04,
     press: 0.09,
     focus: 0.12,
-    borderBase: 0.18,
+    borderBase: 0.15,
     borderHover: 0.04,
-    borderPress: 0.08,
+    borderPress: -0.08,
     textTransparent: 0.55,
     placeholder: 0.5,
     shadowBase: (isLightBg: boolean) => (isLightBg ? 0.28 : 0.6),
@@ -109,6 +115,12 @@ export function makeTemplate(base: string): ThemeTemplate {
         shadowColorHover: rgba('#000', Math.min(1, shadowAlpha + AMOUNTS.shadowHoverDelta)),
         shadowColorPress: rgba('#000', Math.min(1, shadowAlpha + AMOUNTS.shadowPressDelta)),
         shadowColorFocus: rgba('#000', Math.min(1, shadowAlpha + AMOUNTS.shadowFocusDelta)),
+
+        backgroundInverse: base,
+        borderColorInverse: borderBase,
+        colorInverse: isLightBg ? '#FFFFFF' : '#000000',
+        shadowColorInverse: rgba('#000', 1 - shadowAlpha),
+
     }
 }
 
@@ -128,38 +140,37 @@ function makeVariantSet(base: string) {
     } as const
 }
 
+function patchInverse(target: ThemeTemplate, inverse: ThemeTemplate) {
+    target.backgroundInverse = inverse.background
+    target.borderColorInverse = inverse.borderColor
+    target.colorInverse = inverse.color
+    target.shadowColorInverse = inverse.shadowColor
+}
+
 /**
  * Build a flat set of themes like (per key):
  *  - light_key, light_key_tint, light_key_shade
  *  - dark_key,  dark_key_tint,  dark_key_shade
  * (No extra nesting; you attach them directly under Tamagui's light/dark.)
  */
-export function buildThemes<C extends PaletteConfig>(config: C): {
-    themes: Record<ThemeNames<C>, ThemeTemplate>
-    themeNames: ThemeNames<C>[]
-} {
+export function buildThemes<C extends PaletteConfig>(config: C) {
     const themes = {} as Record<ThemeNames<C>, ThemeTemplate>
 
-    for (const key of Object.keys(config) as Array<BaseKey<C>>) {
+    for (const key of Object.keys(config) as Array<Extract<keyof C, string>>) {
         const { light, dark } = config[key]
+        const lightSet = makeVariantSet(light);
+        const darkSet = makeVariantSet(dark);
 
-        const lightSet = makeVariantSet(light)
-        const darkSet = makeVariantSet(dark)
+        (['', '_tint', '_shade'] as const).forEach((v) => {
+            const L = lightSet[v]
+            const D = darkSet[v]
+            patchInverse(L, D)
+            patchInverse(D, L)
 
-        // base/tint/shade for light
-        themes[`light_${key}` as ThemeNames<C>] = lightSet['']
-        themes[`light_${key}_tint` as ThemeNames<C>] = lightSet['_tint']
-        themes[`light_${key}_shade` as ThemeNames<C>] = lightSet['_shade']
-
-        // base/tint/shade for dark
-        themes[`dark_${key}` as ThemeNames<C>] = darkSet['']
-        themes[`dark_${key}_tint` as ThemeNames<C>] = darkSet['_tint']
-        themes[`dark_${key}_shade` as ThemeNames<C>] = darkSet['_shade']
+            themes[`light_${key}${v}` as ThemeNames<C>] = L
+            themes[`dark_${key}${v}` as ThemeNames<C>] = D
+        })
     }
-
-    // Optional roots:
-    // themes.light = makeTemplate('#FFFFFF' as any)
-    // themes.dark  = makeTemplate('#111111' as any)
 
     const themeNames = Object.keys(themes) as ThemeNames<C>[]
     return { themes, themeNames }

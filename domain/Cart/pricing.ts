@@ -26,29 +26,20 @@ export type WcItemTotals = CurrencyHeader & {
     line_total_tax?: string;       // minor units (discounted)
 };
 
-const parseMinor = (s?: string) => (s ? parseInt(s, 10) : 0);
-
-export const formatWithHeader = (minor: number, h: CurrencyHeader) => {
-    const { currency_minor_unit: mu, currency_decimal_separator: ds, currency_thousand_separator: ts } = h;
-    const sign = minor < 0 ? '-' : '';
-    const abs = Math.abs(minor);
-    const intPart = Math.floor(abs / 10 ** mu).toString();
-    const fracPart = (abs % 10 ** mu).toString().padStart(mu, '0');
-    const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ts);
-    return `${sign}${h.currency_prefix}${intWithSep}${mu ? ds + fracPart : ''}${h.currency_suffix}`;
-};
+import { formatMinorWithHeader } from "../pricing";
 
 // Cart grand total (already tax-inclusive in Store API)
 export const formatCartGrandTotal = (totals: WcTotals) =>
-    formatWithHeader(parseMinor(totals.total_price), totals);
+    formatMinorWithHeader(totals.total_price, totals, { style: 'full', omitPrefix: false });
 
 // Unit price for a cart line item
 export const formatItemUnitPrice = (prices: WcItemPrices) =>
-    formatWithHeader(parseMinor(prices.price), prices);
+    formatMinorWithHeader(prices.price, prices, { style: 'short' });
 
 // Line total (prefer discounted totals when present)
 export const formatItemLineTotal = (totals: WcItemTotals, discounted = true) => {
     const base = discounted ? (totals.line_total ?? totals.line_subtotal) : totals.line_subtotal;
     const tax = discounted ? (totals.line_total_tax ?? totals.line_subtotal_tax) : totals.line_subtotal_tax;
-    return formatWithHeader(parseMinor(base) + parseMinor(tax), totals);
+    const total = parseInt(base, 10) + parseInt(tax, 10);
+    return formatMinorWithHeader(total.toString(), totals, { style: 'full', omitPrefix: false });
 };

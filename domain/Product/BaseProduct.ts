@@ -72,8 +72,8 @@ export class BaseProduct<T extends BaseProductData> {
         this.name = cleanHtml(data.name);
         this.slug = data.slug;
         this.permalink = data.permalink;
-        this.description = cleanHtml(data.description || 'Ingen beskrivelse tilgjengelig');
-        this.short_description = cleanHtml(data.short_description || 'Ingen beskrivelse tilgjengelig');
+        this.description = cleanHtml(data.description);
+        this.short_description = cleanHtml(data.short_description);
         this.images = (data.images && data.images.length > 0) ? data.images : [{
             id: 0,
             src: '',

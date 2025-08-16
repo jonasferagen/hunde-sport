@@ -7,17 +7,11 @@ import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useCanonicalNav } from "@/hooks/useCanonicalNav";
 import { Link } from 'expo-router';
-import { DimensionValue } from "react-native";
 
 interface ProductTileProps extends YStackProps {
-    width?: DimensionValue;
-    height?: DimensionValue;
 }
 
 export const ProductTile: React.FC<ProductTileProps> = ({
-
-    width = PRODUCT_TILE_WIDTH,
-    height = PRODUCT_TILE_HEIGHT,
     ...stackProps
 }) => {
     const { purchasable } = usePurchasableContext();
@@ -27,8 +21,8 @@ export const ProductTile: React.FC<ProductTileProps> = ({
         <Theme>
             <Link {...linkProps('product', product)} asChild>
                 <Tile
-                    w={width}
-                    h={height}
+                    w={PRODUCT_TILE_WIDTH}
+                    h={PRODUCT_TILE_HEIGHT}
                     title={product.name}
                     image={product.featuredImage}
                     {...stackProps}
@@ -39,6 +33,5 @@ export const ProductTile: React.FC<ProductTileProps> = ({
                 </Tile>
             </Link>
         </Theme>
-
     );
 };

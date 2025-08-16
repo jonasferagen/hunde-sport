@@ -27,7 +27,6 @@ export const PageSection = (props: PageSectionProps) => {
   }
 
   return (
-
     <ThemedYStack
       box
       container

@@ -37,7 +37,7 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult }: ProductTiles
             renderItem={({ item: product }: { item: PurchasableProduct }) => {
                 return (
                     <PurchasableProviderInit product={product}>
-                        <ProductTile boc="red" bw={1} />
+                        <ProductTile />
                     </PurchasableProviderInit>
                 );
             }}
