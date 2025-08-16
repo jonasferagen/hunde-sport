@@ -3,7 +3,6 @@ import React from 'react';
 import { Theme, YStackProps } from "tamagui";
 import { ProductPriceTag } from '../display/ProductPriceTag';
 
-import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useCanonicalNav } from "@/hooks/useCanonicalNav";
 import { Link } from 'expo-router';
@@ -21,8 +20,7 @@ export const ProductTile: React.FC<ProductTileProps> = ({
         <Theme>
             <Link {...linkProps('product', product)} asChild>
                 <Tile
-                    w={PRODUCT_TILE_WIDTH}
-                    h={PRODUCT_TILE_HEIGHT}
+
                     title={product.name}
                     image={product.featuredImage}
                     {...stackProps}
