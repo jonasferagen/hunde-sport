@@ -16,8 +16,7 @@ export const ProductCategoryTile: React.FC<ProductCategoryTileProps> = ({
     const { linkProps } = useCanonicalNav();
     return (
         <Link {...linkProps('product-category', productCategory)} asChild>
-            <Tile w="100%"
-                h={undefined}
+            <Tile
                 aspectRatio={1}
                 title={productCategory.name}
                 image={productCategory.image}

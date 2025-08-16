@@ -1,3 +1,4 @@
+import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { QueryResult } from '@/hooks/data/util';
@@ -39,7 +40,7 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, ...stackProps 
             renderItem={({ item: product }: { item: PurchasableProduct }) => {
                 return (
                     <PurchasableProviderInit product={product}>
-                        <ProductTile />
+                        <ProductTile w={PRODUCT_TILE_WIDTH} h={PRODUCT_TILE_HEIGHT} />
                     </PurchasableProviderInit>
                 );
             }}

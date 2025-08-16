@@ -20,7 +20,6 @@ export const ProductTile: React.FC<ProductTileProps> = ({
         <Theme>
             <Link {...linkProps('product', product)} asChild>
                 <Tile
-
                     title={product.name}
                     image={product.featuredImage}
                     {...stackProps}
