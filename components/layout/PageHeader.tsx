@@ -1,3 +1,4 @@
+import { THEME_PAGE_HEADER } from '@/config/app';
 import React from 'react';
 import { Theme, YStackProps } from 'tamagui';
 import { ThemedText, ThemedYStack } from '../ui';
@@ -11,7 +12,7 @@ interface PageHeaderProps extends YStackProps {
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...props }) => {
 
     return (
-        <Theme name="primary">
+        <Theme name={THEME_PAGE_HEADER}>
             <ThemedYStack
                 container
 

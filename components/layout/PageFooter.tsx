@@ -1,3 +1,4 @@
+import { THEME_PAGE_FOOTER } from '@/config/app';
 import React from 'react';
 import { Theme, YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
@@ -10,7 +11,7 @@ interface PageFooterProps extends YStackProps {
 export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) => {
 
     return (
-        <Theme name="dark_primary">
+        <Theme name={THEME_PAGE_FOOTER}>
             <ThemedYStack
                 container
                 box

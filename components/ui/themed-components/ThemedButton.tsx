@@ -8,7 +8,7 @@ import {
     withStaticProperties
 } from '@tamagui/web';
 import { cloneElement, isValidElement, useContext } from 'react';
-
+import { Surface } from './Surface';
 
 const DEFAULT_SIZE = '$4';
 
@@ -37,25 +37,15 @@ const SIZES: Record<SizeKey, {
 }
 
 // 3) Frame uses the table
-export const ButtonFrame = styled(View, {
+export const ButtonFrame = styled(Surface, {
     name: 'ThemedButton',
     context: ButtonContext,
     ai: 'center',
     fd: 'row',
-    br: '$3',
-    bw: 1,
-    animation: 'fast',
-    shadowColor: '$shadowColor',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    ov: 'hidden',
     gap: '$2',
-    backgroundColor: '$background',
-    borderColor: '$borderColor',
-    borderWidth: '$borderWidth',
-
+    animation: 'fast',
     disabledStyle: { opacity: 0.5 },
+
     hoverStyle: { backgroundColor: '$backgroundHover', borderColor: '$borderColor' },
     pressStyle: { backgroundColor: '$backgroundPress', borderColor: '$borderColor' },
     focusStyle: {

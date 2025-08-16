@@ -25,8 +25,7 @@ export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children,
 
   return mode === 'scroll' ? (
     <ScrollView
-      boc="blue"
-      bw={1}
+
       f={1}
       ref={ref}
       showsVerticalScrollIndicator={true}

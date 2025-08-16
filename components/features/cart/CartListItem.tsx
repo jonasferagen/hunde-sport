@@ -11,18 +11,14 @@ import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from '@/config/app';
 import { formatItemLineTotal, formatItemUnitPrice } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
 
-export const CartListItem = ({ item, index }: { item: CartItemData, index: number }): JSX.Element => {
-
-    return (
-        <CartListItemContent item={item} />
-    );
-}
 
 interface CartListItemProps {
     item: CartItemData;
+    index: number;
 }
 
-const CartListItemContent = ({ item, theme, ...props }: CartListItemProps & StackProps): JSX.Element => {
+
+export const CartListItem = ({ item, index, ...props }: CartListItemProps & StackProps): JSX.Element => {
 
     const { updateItem, removeItem, isUpdating } = useCartStore();
     const { quantity, key } = item;
