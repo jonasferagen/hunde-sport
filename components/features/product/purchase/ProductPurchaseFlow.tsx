@@ -1,39 +1,34 @@
 
-import { usePurchasableContext } from "@/contexts";
-import { Purchasable } from "@/types";
+import { usePurchasableContext } from "@/contexts/";
 import React from "react";
 import { openModal } from "./ModalStore";
 import { ProductVariationsModal } from "./ProductVariationsModal";
-import { PurchaseButton } from "./PurchaseButton";
+import { derivePurchaseCTA, PurchaseButton } from "./PurchaseButton";
 
-import { useCartContext } from "@/contexts/CartContext";
+import { useAddToCart } from "@/hooks/useAddToCart";
+
 
 export const ProductPurchaseFlow = () => {
+    const addToCart = useAddToCart();
     const { purchasable } = usePurchasableContext();
-    const { addItem } = useCartContext();
+    const [loading, setLoading] = React.useState(false)
 
-    const [isLoading, setIsLoading] = React.useState(false);
+    const cta = derivePurchaseCTA(purchasable);
 
-    const onPressSimpleProduct = async () => {
-        setIsLoading(true);
-        await addItem(purchasable);
-        setIsLoading(false);
-    }
+    const onPressSimple = async () => {
+        setLoading(true);
+        try { await addToCart(purchasable, 1); }
+        finally { setLoading(false); }
+    };
 
-    const onPressVariableProduct = () => {
-        openModal<Purchasable>(
-            (payload, api) => (
-                <ProductVariationsModal
-                    purchasable={payload}
-                    close={() => api.close()}
-                />
-            ),
+    const onPressVariable = () => {
+        openModal(
+            (payload, api) => <ProductVariationsModal purchasable={payload} close={() => api.close()} />,
             purchasable
-        )
-    }
-    const onPress = purchasable.isVariable ? onPressVariableProduct : onPressSimpleProduct;
+        );
+    };
 
-    return (
-        <PurchaseButton onPress={onPress} isLoading={isLoading} />
-    );
+    const onPress = purchasable.isVariable && !purchasable.isValid ? onPressVariable : onPressSimple;
+
+    return <PurchaseButton cta={cta} onPress={onPress} isLoading={loading} />;
 };

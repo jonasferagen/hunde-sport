@@ -1,9 +1,7 @@
-import { Product } from '@/types';
 
 
 export interface CartItemData {
     key: string;
-    product: Product;
     id: number;
     type: string;
     name: string;

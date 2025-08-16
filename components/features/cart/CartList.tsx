@@ -1,25 +1,25 @@
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
-import { useCartContext } from '@/contexts/CartContext';
+import { useCartStore } from '@/stores/cartStore';
 import { FlashList } from '@shopify/flash-list';
-import React, { JSX, memo } from 'react';
+import React, { JSX } from 'react';
 import { CartListItem } from './CartListItem';
 
-export const CartList = memo(
-    (): JSX.Element => {
 
-        const { cart } = useCartContext();
+export const CartList = React.memo((): JSX.Element => {
+    const items = useCartStore(s => s.cart?.items ?? []); // subscribe only to items
 
-        if (cart.items.length === 0) {
-            return <DefaultTextContent>Handlekurven er tom</DefaultTextContent>
-        }
 
-        return (
-            <FlashList
-                data={cart.items}
-                renderItem={({ item, index }) => <CartListItem item={item} index={index} />}
-                estimatedItemSize={100}
-            />
-        );
-
+    if (items.length === 0) {
+        return <DefaultTextContent>Handlekurven er tom</DefaultTextContent>
     }
+
+    return (
+        <FlashList
+            data={items}
+            renderItem={({ item, index }) => <CartListItem item={item} index={index} />}
+            estimatedItemSize={100}
+        />
+    );
+
+}
 );

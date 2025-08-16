@@ -1,15 +1,16 @@
 import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { Purchasable } from "@/types";
-import React from "react";
+import React, { useState } from "react";
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from "../display";
 
 
 import { Sheet, YStack } from 'tamagui';
 import { ProductVariationSelect } from "../product-variation/ProductVariationSelect";
 
-import { PurchasableProvider, useCartContext, usePurchasableContext } from "@/contexts";
+import { PurchasableProvider, usePurchasableContext } from "@/contexts/PurchasableContext";
+import { useAddToCart } from "@/hooks/useAddToCart";
 import { ChevronDown } from "@tamagui/lucide-icons";
-import { PurchaseButton } from "./PurchaseButton";
+import { derivePurchaseCTA, PurchaseButton } from "./PurchaseButton";
 export const ProductVariationsModal = ({
     close,
     purchasable, // used only to seed the provider
@@ -25,17 +26,21 @@ export const ProductVariationsModal = ({
 }
 
 const Inner = ({ close }: { close: () => void }) => {
+    const addToCart = useAddToCart();
     const { purchasable } = usePurchasableContext()
-    const { addItem } = useCartContext();
+    const [loading, setLoading] = useState(false)
 
-    const [isLoading, setIsLoading] = React.useState(false);
+    const cta = derivePurchaseCTA(purchasable);
 
     const onPress = async () => {
-        setIsLoading(true);
-        await addItem(purchasable);
-        setIsLoading(false);
-        close();
-    }
+        setLoading(true);
+        try {
+            await addToCart(purchasable);
+            close();
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <ThemedYStack f={1} mih={0} >
@@ -61,9 +66,8 @@ const Inner = ({ close }: { close: () => void }) => {
                 </ThemedXStack>
             </ThemedYStack>
             <ThemedYStack gap="$3" f={0} mb="$5">
-                <PurchaseButton onPress={onPress} enable={purchasable.isValid} isLoading={isLoading} />
+                <PurchaseButton cta={cta} onPress={onPress} isLoading={loading} />
             </ThemedYStack>
-
         </ThemedYStack>
     )
 }

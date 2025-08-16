@@ -2,13 +2,13 @@ import { DebugView } from '@/components/debug/DebugView';
 import { ModalHost } from '@/components/features/product/purchase/ModalHost';
 import {
   AppToastProvider,
-  CartProvider,
   DebugProvider,
   ProductCategoryProvider,
   SearchProvider
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
 import { appConfig } from '@/tamagui/tamagui.config';
+
 import { PortalProvider } from '@tamagui/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
@@ -27,17 +27,15 @@ const RootLayout = (): JSX.Element => {
               <DebugProvider>
                 <ProductCategoryProvider>
                   <AppToastProvider>
-                    <CartProvider>
-                      <PortalProvider>
-                        <ModalHost />
-                        <SearchProvider>
-                          <Stack screenOptions={{ headerShown: false }}>
-                            <Stack.Screen name="(app)" />
-                          </Stack>
-                          <DebugView />
-                        </SearchProvider>
-                      </PortalProvider>
-                    </CartProvider>
+                    <PortalProvider>
+                      <ModalHost />
+                      <SearchProvider>
+                        <Stack screenOptions={{ headerShown: false }}>
+                          <Stack.Screen name="(app)" />
+                        </Stack>
+                        <DebugView />
+                      </SearchProvider>
+                    </PortalProvider>
                   </AppToastProvider>
                 </ProductCategoryProvider>
               </DebugProvider>

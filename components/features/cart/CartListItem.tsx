@@ -1,7 +1,7 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
 import { ThemedText, ThemedYStack } from '@/components/ui';
-import { useCartContext } from '@/contexts';
+
 import { formatPrice } from '@/lib/helpers';
 import { CartItemData } from '@/models/Cart/Cart';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
@@ -9,6 +9,7 @@ import React, { JSX } from 'react';
 import { H4, StackProps, XStack } from 'tamagui';
 
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from '@/config/app';
+import { useCartStore } from '@/stores/cartStore';
 
 export const CartListItem = ({ item, index }: { item: CartItemData, index: number }): JSX.Element => {
 
@@ -23,14 +24,14 @@ interface CartListItemProps {
 
 const CartListItemContent = ({ item, theme, ...props }: CartListItemProps & StackProps): JSX.Element => {
 
-    const { updateItem, removeItem } = useCartContext();
+    const { updateItem, removeItem } = useCartStore();
     const { quantity, key } = item;
 
     return (<>
         <ThemedYStack theme={THEME_CART_ITEM_1} box container bw={0} bbw={1} {...props}>
             {/* Row 1: Product name + unit price */}
             <ThemedText size="$5">
-                {item.product.name}
+                {item.name}
             </ThemedText>
         </ThemedYStack>
         <ThemedYStack theme={THEME_CART_ITEM_2} box container bw={0} bbw={1} {...props}>
