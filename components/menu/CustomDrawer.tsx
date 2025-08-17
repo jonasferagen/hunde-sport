@@ -62,7 +62,12 @@ const DrawerLinks = React.memo(function DrawerLinks({
 
 
 
-export const CustomDrawer = React.memo(({ navigation }: { navigation: DrawerContentComponentProps['navigation'] }) => {
+export const CustomDrawer = React.memo((
+    {
+        navigation
+    }: {
+        navigation: DrawerContentComponentProps['navigation']
+    }) => {
 
     const isOpen = useDrawerStatus() === 'open';
     const activeRouteName = useNavigationState((s) =>

@@ -3,7 +3,7 @@ import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { Prof } from '@/lib/debug/prof';
-import type { DrawerContentComponentProps } from '@react-navigation/drawer';
+import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View } from 'tamagui';
@@ -14,8 +14,8 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     const screenOptions = React.useMemo(
         () => ({
-            header: () => <CustomHeader />,
-            swipeEnabled: false,
+            header: (props: DrawerHeaderProps) => <CustomHeader navigation={props.navigation} />,
+            swipeEnabled: true,
             freezeOnBlur: true,          // default
             unmountOnBlur: false,        // default
         }),

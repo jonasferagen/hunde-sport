@@ -1,6 +1,6 @@
 import { THEME_HEADER } from '@/config/app';
 import { Prof } from '@/lib/debug/prof';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { Menu } from '@tamagui/lucide-icons';
 import React from 'react';
 import { H4, Theme } from 'tamagui';
@@ -42,12 +42,15 @@ function headerPropsEqual(prev: DrawerHeaderProps, next: DrawerHeaderProps) {
     return prev.route.key === next.route.key && deriveTitle(prev) === deriveTitle(next);
 }*/
 
-export const CustomHeader = React.memo(() => {
+export const CustomHeader = React.memo(({
+    navigation
+}: {
+    navigation: DrawerHeaderProps['navigation']
+}) => {
     const title = "static";
-    const nav = useNavigation();
     const open = React.useCallback(() => {
-        nav.dispatch(DrawerActions.openDrawer());
-    }, [nav]);
+        navigation.openDrawer();
+    }, [navigation]);
 
     return (
         <HeaderChrome onOpen={open}>
