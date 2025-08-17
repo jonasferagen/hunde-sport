@@ -1,10 +1,11 @@
+
 import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
-import { ProductCategoryProvider } from '@/contexts';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer';
 import { X } from '@tamagui/lucide-icons';
 import React, { useCallback, useMemo } from 'react';
+import { Freeze } from 'react-freeze';
 import { ScrollView, Theme } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
@@ -47,7 +48,7 @@ const DrawerLinks = React.memo(function DrawerLinks({
                         key={r.name}
                         name={r.name as keyof typeof routes}
                         label={r.label}
-                        active={false}
+                        active={activeRouteName === r.name}
                         to={to}
                     />
                 )),
@@ -57,15 +58,15 @@ const DrawerLinks = React.memo(function DrawerLinks({
     return <>{items}</>;
 });
 
-export const CustomDrawerContent = React.memo((props: DrawerContentComponentProps) => {
+export const CustomDrawer = React.memo((props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const { to } = useCanonicalNav();
 
     const activeRouteName = state.routes[state.index]?.name ?? 'index';
     const close = useCallback(() => navigation.closeDrawer(), [navigation]);
-
+    const isOpen = useDrawerStatus() === 'open';
     return (
-        <Theme name={THEME_DRAWER} key={activeRouteName}>
+        <Theme name={THEME_DRAWER} >
             <ThemedYStack>
                 <ThemedXStack container split>
                     <ThemedText size="$6">hunde-sport.no</ThemedText>
@@ -78,10 +79,12 @@ export const CustomDrawerContent = React.memo((props: DrawerContentComponentProp
                         <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
                         <ThemedText size="$6">Kategorier</ThemedText>
                     </ThemedYStack>
+
+                    <Freeze freeze={!isOpen}>
+                        <ThemedText >bbb</ThemedText>
+                        <ProductCategoryTree />
+                    </Freeze>
                 </ScrollView>
-                <ProductCategoryProvider productCategoryId={0}>
-                    <ProductCategoryTree />
-                </ProductCategoryProvider>
             </ThemedYStack>
         </Theme>
     );

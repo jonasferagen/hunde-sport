@@ -1,19 +1,18 @@
 // app/(app)/_layout.tsx
-import { CustomDrawerContent } from '@/components/menu/CustomDrawerContent';
-import React from 'react';
-
-import { BottomBar } from '@/components/menu/BottomBar';
+import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
+import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { Prof } from '@/lib/debug/prof';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
+import React from 'react';
 import { View } from 'tamagui';
 import { drawerScreens } from './_drawerScreens';
 
 
 const AppLayout = React.memo((): React.ReactElement => {
     const drawerContent = React.useCallback(
-        (props: DrawerContentComponentProps) => <CustomDrawerContent {...props} />,
+        (props: DrawerContentComponentProps) => <CustomDrawer {...props} />,
         []
     );
 
@@ -29,7 +28,7 @@ const AppLayout = React.memo((): React.ReactElement => {
     const screenLayout = React.useCallback(
         (props: { route: { name: string }; children: React.ReactNode }) => {
             return (
-                <Prof id={`SCENE:${props.route.name}`}>
+                <Prof id={`SCENE:${props.route.name}`} disable>
                     {props.children}
                 </Prof>
             );
@@ -39,15 +38,16 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     return (
         <View f={1} >
-            <Drawer
-                drawerContent={drawerContent}
-                screenOptions={screenOptions}
-                screenLayout={screenLayout}
-                detachInactiveScreens
-            >
-                {drawerScreens}
-            </Drawer>
-
+            <Prof id="drawer">
+                <Drawer
+                    drawerContent={drawerContent}
+                    screenOptions={screenOptions}
+                    screenLayout={screenLayout}
+                    detachInactiveScreens
+                >
+                    {drawerScreens}
+                </Drawer>
+            </Prof>
 
             {/* Overlay the bottom bar so it doesn't participate in per-screen re-renders */}
             <View
@@ -56,7 +56,9 @@ const AppLayout = React.memo((): React.ReactElement => {
                     position: 'absolute', left: 0, right: 0, bottom: 0,
                 }}
             >
-                <BottomBar />
+                <Prof id="bottombar">
+                    <CustomBottomBar />
+                </Prof>
             </View>
         </View >
     );

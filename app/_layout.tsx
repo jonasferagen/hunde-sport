@@ -22,7 +22,7 @@ const RootLayout = (): JSX.Element => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>
-            <Prof id="stack">
+            <Prof id="stack" >
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(app)" />
               </Stack>

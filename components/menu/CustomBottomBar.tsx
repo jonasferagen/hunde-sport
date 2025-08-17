@@ -37,7 +37,7 @@ const StyledTabsList = styled(Tabs.List, {
     display: 'flex',
     w: '100%',
 });
-export const BottomBar = React.memo((props) => {
+export const CustomBottomBar = React.memo((props) => {
     const { to } = useCanonicalNav();
     const pathname = usePathname();
     const currentTab = useMemo(
