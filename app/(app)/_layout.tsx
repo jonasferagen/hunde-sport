@@ -39,6 +39,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
                     screenLayout={screenLayout}
+                    detachInactiveScreens
                 >
                     {drawerScreens}
                 </Drawer>
