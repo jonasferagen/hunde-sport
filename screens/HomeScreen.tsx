@@ -44,7 +44,6 @@ export const HomeScreen = React.memo(() => {
                         <DebugProducts key='debug' />
                     </Defer>
                 </PageSection>
-
             </PageBody>
         </PageView >
     )

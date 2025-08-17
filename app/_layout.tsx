@@ -10,8 +10,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { enableFreeze } from 'react-native-screens';
 import { TamaguiProvider } from 'tamagui';
 
+import { enableScreens, } from 'react-native-screens';
+enableScreens(true);
 enableFreeze(true);
-
 
 
 const RootLayout = (): JSX.Element => {

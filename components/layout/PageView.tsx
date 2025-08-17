@@ -4,7 +4,6 @@ import React from 'react';
 import { YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
-
 // Memoized backdrop so PageView re-renders don't recompute gradient math
 const PageBackdrop = React.memo(function PageBackdrop({
   token = 'background',
@@ -17,12 +16,24 @@ type PageViewProps = YStackProps & {
   gradientToken?: string;
 };
 
+import { useIsFocused } from '@react-navigation/native';
+import { Freeze } from 'react-freeze';
 export const PageView = ({ children, withGradient = true, gradientToken = 'background', ...stackProps }: PageViewProps) => {
-
+  const isFocused = useIsFocused();
   return (
-    <ThemedYStack theme={THEME_PAGE} f={1} gap="none" {...stackProps}>
-      {withGradient ? <PageBackdrop token={gradientToken} /> : null}
-      {children}
-    </ThemedYStack>
+    <Freeze freeze={!isFocused}>
+      <ThemedYStack
+        theme={THEME_PAGE}
+        f={1}
+        gap="none"
+        // if you still want it invisible and inert to touches while blurred:
+        pointerEvents={isFocused ? 'auto' : 'none'}
+        style={isFocused ? undefined : { display: 'none' }} // or { opacity: 0.0001 } to keep layout
+        {...stackProps}
+      >
+        {withGradient ? <PageBackdrop token={gradientToken} /> : null}
+        {children}
+      </ThemedYStack>
+    </Freeze>
   );
 };

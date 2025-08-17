@@ -1,13 +1,11 @@
 import { THEME_BOTTOM_BAR } from '@/config/app';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
-import * as Haptics from 'expo-haptics';
 import { usePathname } from 'expo-router';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { styled, Tabs, Text } from 'tamagui';
 import { ThemedLinearGradient, ThemedYStack } from '../ui';
 
-import { useNavPending } from '@/stores/navPending';
 
 const StyledTab = styled(Tabs.Tab, {
     pos: 'relative',
@@ -42,26 +40,27 @@ const StyledTabsList = styled(Tabs.List, {
 export const BottomBar = React.memo((props) => {
     const { to } = useCanonicalNav();
     const pathname = usePathname();
-    const currentTab = useMemo(() => pathname.split('/')[1] || 'index', [pathname]);
-    const setPendingTo = useNavPending((s) => s.setPendingTo);
+    const currentTab = useMemo(
+        () => pathname.split('/')[1] || 'index',
+        [pathname]
+    );
 
     const onChange = useCallback((next: string) => {
-        if (next === currentTab) return;
-        setPendingTo(next);                // announce target immediately
-        Haptics.selectionAsync().catch(() => { console.log("aa") });
-        to(next as any);
-    }, [currentTab, setPendingTo, to]);
-
-    useEffect(() => {                    // clear when nav lands
-        setPendingTo(null);
-    }, [currentTab, setPendingTo]);
-
+        if (next !== currentTab) {
+            // For tab UX, replace instead of pushing to avoid stacking history
+            to(next as any, undefined, { replace: true });
+        }
+    }, [currentTab, to]);
 
     return (
-        <ThemedYStack box theme={THEME_BOTTOM_BAR} {...props} w="100%" key={currentTab}>
-            <StyledTabs onValueChange={onChange}>
+        <ThemedYStack box theme={THEME_BOTTOM_BAR} {...props} w="100%">
+            <StyledTabs
+                value={currentTab}           // <-- controlled
+                onValueChange={onChange}
+                activationMode="manual"      // avoid activating on focus moves
+            >
                 <StyledTabsList>
-                    <ThemedLinearGradient />
+                    <ThemedLinearGradient pointerEvents="none" />
                     <StyledTab value="index">
                         <Home />
                         <Text>Hjem</Text>

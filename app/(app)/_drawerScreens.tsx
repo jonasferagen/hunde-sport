@@ -14,9 +14,13 @@ export const drawerScreens = Object.values(routes).map((route) => {
             options={{
                 title: route.label,
                 ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
-                ...(route.name === 'index' ? { unmountOnBlur: false, freezeOnBlur: true } : { freezeOnBlur: false }),
+                ...(route.name === 'search' || route.name === 'cart'
+                    ? { freezeOnBlur: false, unmountOnBlur: true } // light screens can unmount
+                    : {}
+                ),
             }}
         />
+
     );
 });
 

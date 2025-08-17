@@ -2,7 +2,6 @@
 import React from 'react';
 export const Prof: React.FC<{ id: string; children: React.ReactNode; disable?: boolean }> = ({ id, children, disable }) => {
 
-
     return (
         <React.Profiler
             key={id}

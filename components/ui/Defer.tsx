@@ -1,19 +1,38 @@
+import { useIsFocused } from '@react-navigation/native';
+import React from 'react';
 
-// components/Defer.tsx
-import { useDeferMount } from '@/hooks/useDeferMount';
-import { JSX } from 'react';
-
-export const Defer = ({
+export function Defer({
+    minDelay = 0,
+    once = false,
     children,
-    fallback = null,
-    minDelay,
-    once,
+    enabled: enabledProp,
 }: {
-    children: any;
-    fallback?: any;
     minDelay?: number;
     once?: boolean;
-}): JSX.Element => {
-    const ready = useDeferMount({ minDelay, once });
-    return ready ? children : fallback;
+    children: React.ReactNode;
+    enabled?: boolean; // optional external control
+}) {
+    const isFocused = useIsFocused();
+    const enabled = enabledProp ?? isFocused;
+
+    const [show, setShow] = React.useState(minDelay === 0);
+    const shownOnceRef = React.useRef(false);
+
+    React.useEffect(() => {
+        if (!enabled) {
+            // Pause/cancel while blurred
+            if (!once) setShow(false);
+            return;
+        }
+        if (once && shownOnceRef.current) return;
+
+        const id = setTimeout(() => {
+            setShow(true);
+            if (once) shownOnceRef.current = true;
+        }, minDelay);
+
+        return () => clearTimeout(id);
+    }, [enabled, once, minDelay]);
+
+    return show ? <>{children}</> : null;
 }

@@ -2,14 +2,13 @@
 import { CustomDrawerContent } from '@/components/menu/CustomDrawerContent';
 import React from 'react';
 
-import { drawerScreens } from './_drawerScreens';
-
 import { BottomBar } from '@/components/menu/BottomBar';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { Prof } from '@/lib/debug/prof';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import { View } from 'tamagui';
+import { drawerScreens } from './_drawerScreens';
 
 
 const AppLayout = React.memo((): React.ReactElement => {
@@ -22,16 +21,15 @@ const AppLayout = React.memo((): React.ReactElement => {
         () => ({
             header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
             swipeEnabled: false,
+            freezeOnBlur: true,          // default
+            unmountOnBlur: false,        // default
         }),
         []
     );
     const screenLayout = React.useCallback(
         (props: { route: { name: string }; children: React.ReactNode }) => {
-
-
             return (
                 <Prof id={`SCENE:${props.route.name}`}>
-
                     {props.children}
                 </Prof>
             );
@@ -41,13 +39,12 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     return (
         <View f={1} >
-
             <Drawer
                 drawerContent={drawerContent}
                 screenOptions={screenOptions}
                 screenLayout={screenLayout}
+                detachInactiveScreens
             >
-
                 {drawerScreens}
             </Drawer>
 
