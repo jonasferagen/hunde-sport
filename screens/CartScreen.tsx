@@ -12,7 +12,7 @@ export const CartScreen = () => {
                     <CartList />
                 </PageSection>
             </PageBody>
-            <PageFooter f={0} >
+            <PageFooter h={200} f={0} boc="red" bw={1}>
                 <CheckoutButton />
             </PageFooter>
         </PageView>

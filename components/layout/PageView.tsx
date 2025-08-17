@@ -1,5 +1,6 @@
 // PageView.tsx
 import { THEME_PAGE } from '@/config/app';
+import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
@@ -16,9 +17,15 @@ type PageViewProps = YStackProps & {
   gradientToken?: string;
 };
 
+import { useNavProgress } from '@/stores/navProgressStore';
 import { useIsFocused } from '@react-navigation/native';
 import { Freeze } from 'react-freeze';
 export const PageView = ({ children, withGradient = true, gradientToken = 'background', ...stackProps }: PageViewProps) => {
+
+  useFocusEffect(React.useCallback(() => {
+    useNavProgress.getState().stop();
+  }, []));
+
   const isFocused = useIsFocused();
   return (
     <Freeze freeze={!isFocused}>

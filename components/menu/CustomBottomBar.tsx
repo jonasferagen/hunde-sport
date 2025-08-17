@@ -20,9 +20,7 @@ const StyledTab = styled(Tabs.Tab, {
     gap: '$1',
     bg: 'transparent',
     h: 'auto',
-    btw: 1,
-    brw: 1,
-    blw: 1,
+    bw: 1,
     boc: '$borderColor',
 });
 
@@ -46,7 +44,8 @@ type Props = React.ComponentProps<typeof ThemedYStack> & {
     respectSafeArea?: boolean;
 };
 
-
+import { useNavProgress } from '@/stores/navProgressStore';
+import { startTransition } from 'react';
 export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: Props) => {
 
     const insets = useSafeAreaInsets();
@@ -61,20 +60,25 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
 
     const onChange = useCallback((next: string) => {
         if (next !== currentTab) {
-            // For tab UX, replace instead of pushing to avoid stacking history
-            to(next as any, undefined, { replace: true });
+            const { start } = useNavProgress.getState();
+            start();
+            startTransition(() => {
+                to(next as any);
+            });
         }
     }, [currentTab, to]);
 
     return (
-        <ThemedYStack theme={THEME_BOTTOM_BAR} {...rest} w="100%" pb={pb} >
+        <ThemedYStack box theme={THEME_BOTTOM_BAR} {...rest} w="100%"  >
+            <ThemedLinearGradient pointerEvents="none" />
             <StyledTabs
+                key={currentTab}
                 value={currentTab}           // <-- controlled
                 onValueChange={onChange}
                 activationMode="manual"      // avoid activating on focus moves
+                pb={pb}
             >
                 <StyledTabsList>
-                    <ThemedLinearGradient pointerEvents="none" />
                     <StyledTab value="index">
                         <Home />
                         <Text>Hjem</Text>

@@ -3,6 +3,7 @@ import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { Prof } from '@/lib/debug/prof';
+import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
 import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
@@ -40,10 +41,13 @@ const AppLayout = React.memo((): React.ReactElement => {
                 </Drawer>
             </Prof>
 
+            {/* Global overlay */}
+            <LoadingOverlay />
+
+            {/* Bottom bar */}
             <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
                 <CustomBottomBar />
             </View>
-
         </View >
     );
 });

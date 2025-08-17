@@ -5,26 +5,18 @@ import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { useDrawerStatus, type DrawerContentComponentProps } from '@react-navigation/drawer';
 import { useNavigationState } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
-import React from 'react';
+import React, { Suspense } from 'react';
+import { InteractionManager } from 'react-native';
 import { ScrollView, Theme } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
-import { ProductCategoryTree } from './ProductCategoryTree';
-// DrawerLinks.tsx
-const DrawerLink = React.memo(({ name, label, active, to }: {
-    name: keyof typeof routes;
-    label: string;
-    active: boolean;
-    to: (name: keyof typeof routes) => void;
-}) => {
-    const onPress = React.useCallback(() => to(name), [to, name]);
-    return (
-        <ThemedButton onPress={onPress} theme={active ? 'tint' : 'shade'}>
-            <ThemedText>{label}</ThemedText>
-        </ThemedButton>
-    );
-});
+
+// CustomDrawer.tsx
+const LazyCategoryTree = React.lazy(() =>
+    import('@/components/menu/ProductCategoryTree').then((m) =>
+        ({ default: m.ProductCategoryTree })) as Promise<{ default: any }>);
+
 
 
 export const CustomDrawer = React.memo(({ navigation }
@@ -37,6 +29,16 @@ export const CustomDrawer = React.memo(({ navigation }
     const activeRouteName = useNavigationState((s) =>
         isOpen ? s.routes[s.index]?.name ?? 'index' : 'index'
     );
+
+    const [showTree, setShowTree] = React.useState(false);
+    React.useEffect(() => {
+        if (isOpen && !showTree) {
+            const t = InteractionManager.runAfterInteractions(() => setShowTree(true));
+            return () => t.cancel();
+        }
+    }, [isOpen, showTree]);
+
+
 
     return (
         <Theme name={THEME_DRAWER}>
@@ -59,9 +61,31 @@ export const CustomDrawer = React.memo(({ navigation }
                         ))}
                         <ThemedText size="$6">Kategorier</ThemedText>
                     </ThemedYStack>
-                    <ProductCategoryTree />
+                    {/* heavy subtree */}
+                    <Suspense fallback={null}>
+                        {showTree ? (
+                            <ThemedYStack display={isOpen ? 'flex' : 'none'}>
+                                <LazyCategoryTree />
+                            </ThemedYStack>
+                        ) : null}
+                    </Suspense>
                 </ScrollView>
             </ThemedYStack>
         </Theme>
+    );
+});
+
+
+const DrawerLink = React.memo(({ name, label, active, to }: {
+    name: keyof typeof routes;
+    label: string;
+    active: boolean;
+    to: (name: keyof typeof routes) => void;
+}) => {
+    const onPress = React.useCallback(() => to(name), [to, name]);
+    return (
+        <ThemedButton onPress={onPress} theme={active ? 'tint' : 'shade'}>
+            <ThemedText>{label}</ThemedText>
+        </ThemedButton>
     );
 });

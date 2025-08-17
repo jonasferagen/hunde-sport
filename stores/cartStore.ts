@@ -12,18 +12,27 @@ import { Storage } from 'expo-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-// Expo Storage adapter for Zustand persistence
-const expoStorage = {
-    getItem: async (name: string): Promise<string | null> => {
-        return await Storage.getItem({ key: name });
+
+let lastPersistedValue: string | null = null;
+
+const smartExpoStorage = {
+    getItem: async (name: string) => {
+        const v = await Storage.getItem({ key: name });
+        lastPersistedValue = v;
+        return v;
     },
-    setItem: async (name: string, value: string): Promise<void> => {
+    setItem: async (name: string, value: string) => {
+        if (value === lastPersistedValue) return; // skip no-op write
+        lastPersistedValue = value;
         await Storage.setItem({ key: name, value });
     },
-    removeItem: async (name: string): Promise<void> => {
+    removeItem: async (name: string) => {
+        lastPersistedValue = null;
         await Storage.removeItem({ key: name });
     },
 };
+
+
 
 /**
  * Defines the shape of the cart's state.
@@ -145,9 +154,6 @@ export const useCartStore = create<CartState & CartActions>()(
 
             initializeCart: async () => {
                 if (get().isInitialized) return;
-                if (get().cartToken && get().cart) {
-                    set({ isInitialized: true });
-                }
 
                 log.info('CartStore: Initializing...');
                 set({ isLoading: true });
@@ -158,13 +164,14 @@ export const useCartStore = create<CartState & CartActions>()(
                         cart: data,
                         cartToken: data.token,
                         isInitialized: true,
+                        isLoading: false,
                     });
-                    log.info('CartStore: Initialization successful.');
-                } catch (error) {
+                } catch (e) {
                     log.error('CartStore: Initialization failed.');
+                    set({ isLoading: false });
                 }
-                set({ isLoading: false });
             },
+
 
 
             addItem: async (options) => {
@@ -227,7 +234,7 @@ export const useCartStore = create<CartState & CartActions>()(
 
         {
             name: 'cart-storage',
-            storage: createJSONStorage(() => expoStorage),
+            storage: createJSONStorage(() => smartExpoStorage),
             partialize: (state) => ({ cartToken: state.cartToken }), // Only persist the cart token
         }
     )

@@ -4,7 +4,7 @@ import { useCategoryById, useVisibleChildren } from '@/stores/productCategorySto
 import { ChevronDown } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import { JSX, memo, useEffect } from 'react';
-import Animated, { FadeIn, FadeOut, LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { getTokenValue } from 'tamagui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
@@ -12,6 +12,10 @@ import { ThemedText } from '../ui/themed-components/ThemedText';
 import React from 'react';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { useIsExpanded, useToggleExpanded } from './ProductCategoryTreeStore';
+
+
+
+const INDENT = getTokenValue('$2', 'space');
 
 export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
     const root = useVisibleChildren(0);
@@ -53,13 +57,13 @@ export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; leve
 
             {isExpanded && hasChildren && (
                 <Animated.View entering={FadeIn} exiting={FadeOut}>
-                    <Animated.View layout={LinearTransition}>
-                        <ThemedYStack pl="$4">
-                            {children.map((child) => (
-                                <ProductCategoryBranch key={child.id} id={child.id} level={level + 1} />
-                            ))}
-                        </ThemedYStack>
-                    </Animated.View>
+
+                    <ThemedYStack pl="$4">
+                        {children.map((child) => (
+                            <ProductCategoryBranch key={child.id} id={child.id} level={level + 1} />
+                        ))}
+                    </ThemedYStack>
+
                 </Animated.View>
             )}
         </ThemedYStack>
@@ -82,14 +86,11 @@ const ProductCategoryTreeItem = React.memo(({
     hasChildren,
     handleExpand,
 }: RenderItemProps): JSX.Element => {
-
-    const spacing = React.useMemo(() => getTokenValue('$2', 'space'), []);
-
     const { linkProps } = useCanonicalNav();
 
     return (
         <ThemedXStack f={1} ai="center" gap="$2" mb="$2">
-            <ThemedXStack ml={level * spacing} f={1}>
+            <ThemedXStack ml={level * INDENT} f={1}>
                 <Link {...linkProps('product-category', productCategory)} asChild>
                     <ThemedButton theme="shade" f={1} >
                         <ThemedText f={1} letterSpacing={0.5}>
@@ -116,11 +117,8 @@ const ProductCategoryTreeItem = React.memo(({
 
 
 const AnimatedListExpansionIcon = ({ expanded, size }: { expanded: boolean, size: string }) => {
-    const rotation = useSharedValue(expanded ? 180 : 0);
-
-    useEffect(() => {
-        rotation.value = withTiming(expanded ? 180 : 0, { duration: 150 });
-    }, [expanded]);
+    const rotation = useSharedValue(0);
+    useEffect(() => { rotation.value = withTiming(expanded ? 180 : 0, { duration: 150 }); }, [expanded]);
 
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ rotateZ: `${rotation.value}deg` }],
