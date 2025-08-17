@@ -8,14 +8,11 @@ import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View } from 'tamagui';
 import { DrawerScreens } from './_drawerScreens';
-
 const AppLayout = React.memo((): React.ReactElement => {
 
     const screenOptions = React.useMemo(
         () => ({
-            header: (props: DrawerHeaderProps) => <CustomHeader
-                navigation={props.navigation}
-            />,
+            header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
             swipeEnabled: true,
             freezeOnBlur: true,          // default
             unmountOnBlur: false,        // default
@@ -43,15 +40,10 @@ const AppLayout = React.memo((): React.ReactElement => {
                 </Drawer>
             </Prof>
 
-            {/* Overlay the bottom bar so it doesn't participate in per-screen re-renders */}
-            <View
-                pointerEvents="box-none"
-                style={{
-                    position: 'absolute', left: 0, right: 0, bottom: 0,
-                }}
-            >
+            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
                 <CustomBottomBar />
             </View>
+
         </View >
     );
 });

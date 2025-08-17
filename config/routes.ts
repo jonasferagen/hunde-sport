@@ -89,7 +89,7 @@ export const resolveTitle = (route: RouteProp<any, any>): string => {
     return route?.params?.name || route?.name || 'hunde-sport.no';
 }
 
-export type RouteKey = keyof typeof routes;
+
 
 export const cleanHref = (href: HrefObject): HrefObject => {
     const p = href.params ?? {};

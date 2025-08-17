@@ -8,6 +8,7 @@ import { ThemedLinearGradient, ThemedYStack } from '../ui';
 
 
 const StyledTab = styled(Tabs.Tab, {
+
     pos: 'relative',
     zIndex: 1,
     name: 'StyledTab',
@@ -37,8 +38,19 @@ const StyledTabsList = styled(Tabs.List, {
     display: 'flex',
     w: '100%',
 });
-export const CustomBottomBar = React.memo((props) => {
 
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+type Props = React.ComponentProps<typeof ThemedYStack> & {
+    respectSafeArea?: boolean;
+};
+
+
+export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: Props) => {
+
+    const insets = useSafeAreaInsets();
+    const pb = respectSafeArea ? insets.bottom : 0;
 
     const { to } = useCanonicalNav();
     const pathname = usePathname();
@@ -55,7 +67,7 @@ export const CustomBottomBar = React.memo((props) => {
     }, [currentTab, to]);
 
     return (
-        <ThemedYStack box theme={THEME_BOTTOM_BAR} {...props} w="100%">
+        <ThemedYStack theme={THEME_BOTTOM_BAR} {...rest} w="100%" pb={pb} >
             <StyledTabs
                 value={currentTab}           // <-- controlled
                 onValueChange={onChange}

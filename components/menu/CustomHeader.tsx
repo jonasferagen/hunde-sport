@@ -28,22 +28,9 @@ const HeaderChrome = React.memo(function HeaderChrome({
 });
 
 
-export const CustomHeader = React.memo(({
-    navigation,
-}: {
-    navigation: DrawerHeaderProps['navigation'],
-}) => {
-
-    const route = navigation.getState().routes[navigation.getState().index];
-    const title = resolveTitle(route);
-
-    const open = React.useCallback(() => {
-        navigation.openDrawer();
-    }, [navigation]);
-
-
-    return (
-        <HeaderChrome onOpen={open} title={title} />
-    );
+export const CustomHeader = React.memo(({ navigation, route }: DrawerHeaderProps) => {
+    const title = React.useMemo(() => resolveTitle(route), [route.key]);
+    const open = React.useCallback(() => navigation.openDrawer(), [navigation]);
+    return <HeaderChrome onOpen={open} title={title} />;
 });
 

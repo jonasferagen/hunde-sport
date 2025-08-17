@@ -26,40 +26,12 @@ const DrawerLink = React.memo(({ name, label, active, to }: {
     );
 });
 
-const DrawerLinks = React.memo(function DrawerLinks({
-    activeRouteName,
-    to,
-}: {
-    activeRouteName: string;
-    to: (name: keyof typeof routes) => void;
-}) {
-    const items = React.useMemo(
-        () => Object.values(routes)
-            .filter((r) => r.showInDrawer)
-            .map((r) => ({ name: r.name as keyof typeof routes, label: r.label })),
-        []
-    );
-
-    return (
-        <>
-            {items.map(({ name, label }) => (
-                <DrawerLink
-                    key={name}
-                    name={name}
-                    label={label}
-                    active={activeRouteName === name}
-                    to={to}
-                />
-            ))}
-        </>
-    );
-});
-
-
 
 export const CustomDrawer = React.memo(({ navigation }
     : { navigation: DrawerContentComponentProps['navigation'] }) => {
-
+    const DRAWER_ITEMS = Object.values(routes)
+        .filter(r => r.showInDrawer)
+        .map(r => ({ name: r.name as keyof typeof routes, label: r.label }));
     const { to } = useCanonicalNav();
     const isOpen = useDrawerStatus() === 'open';
     const activeRouteName = useNavigationState((s) =>
@@ -68,7 +40,7 @@ export const CustomDrawer = React.memo(({ navigation }
 
     return (
         <Theme name={THEME_DRAWER}>
-            <ThemedYStack box f={1} zIndex={10}>
+            <ThemedYStack box f={1} >
                 <ThemedXStack container split>
                     <ThemedText size="$6">hunde-sport.no</ThemedText>
                     <ThemedButton theme="tint" circular onPress={() => { navigation.closeDrawer() }}>
@@ -77,11 +49,14 @@ export const CustomDrawer = React.memo(({ navigation }
                 </ThemedXStack>
                 <ScrollView>
                     <ThemedYStack container="$4">
-                        {/* Only compute “active” while open (otherwise always false) */}
-                        <DrawerLinks
-                            activeRouteName={activeRouteName}
-                            to={to as any}
-                        />
+                        {DRAWER_ITEMS.map(({ name, label }) => (
+                            <DrawerLink key={name}
+                                name={name}
+                                label={label}
+                                active={activeRouteName === name}
+                                to={to}
+                            />
+                        ))}
                         <ThemedText size="$6">Kategorier</ThemedText>
                     </ThemedYStack>
                     <ProductCategoryTree />
