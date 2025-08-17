@@ -1,13 +1,11 @@
 
-import { THEME_DRAWER } from '@/config/app';
+import { THEME_HEADER } from '@/config/app';
 import { routes } from '@/config/routes';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import type { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { useDrawerStatus } from '@react-navigation/drawer';
+import { useDrawerStatus, type DrawerContentComponentProps } from '@react-navigation/drawer';
 import { useNavigationState } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Freeze } from 'react-freeze';
 import { ScrollView, Theme } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
@@ -30,11 +28,11 @@ const DrawerLink = React.memo(({ name, label, active, to }: {
 });
 
 const DrawerLinks = React.memo(function DrawerLinks({
-    isOpen,
+
     activeRouteName,
     to,
 }: {
-    isOpen: boolean;
+
     activeRouteName: string;
     to: (name: keyof typeof routes) => void;
 }) {
@@ -52,7 +50,7 @@ const DrawerLinks = React.memo(function DrawerLinks({
                     key={name}
                     name={name}
                     label={label}
-                    active={isOpen && activeRouteName === name}
+                    active={activeRouteName === name}
                     to={to}
                 />
             ))}
@@ -69,46 +67,43 @@ export const CustomDrawer = React.memo((
         navigation: DrawerContentComponentProps['navigation']
     }) => {
 
+
+
     const isOpen = useDrawerStatus() === 'open';
     const activeRouteName = useNavigationState((s) =>
         isOpen ? s.routes[s.index]?.name ?? 'index' : 'index'
     );
 
-    const close = React.useCallback(() => {
-        navigation.closeDrawer();
-    }, [navigation]);
-
     const { to } = useCanonicalNav();
 
+
     return (
-        <Freeze freeze={!isOpen}>
-            <Theme name={THEME_DRAWER}>
 
-                <ThemedYStack f={1}>
-                    <ThemedXStack container split>
-                        <ThemedText size="$6">hunde-sport.no</ThemedText>
-                        <ThemedButton theme="tint" circular onPress={close}>
-                            <X />
-                        </ThemedButton>
-                    </ThemedXStack>
+        <Theme name={THEME_HEADER}>
 
-                    {/* Freeze entire heavy part when closed – no extra display/pointer flips */}
+            <ThemedYStack f={1}>
+                <ThemedXStack container split>
+                    <ThemedText size="$6">hunde-sport.no</ThemedText>
+                    <ThemedButton theme="tint" circular onPress={() => { navigation.closeDrawer() }}>
+                        <X />
+                    </ThemedButton>
+                </ThemedXStack>
 
-                    <ScrollView>
-                        <ThemedYStack container="$4">
-                            {/* Only compute “active” while open (otherwise always false) */}
-                            <DrawerLinks
-                                isOpen={isOpen}
-                                activeRouteName={activeRouteName}
-                                to={to as any}
-                            />
-                            <ThemedText size="$6">Kategorier</ThemedText>
-                        </ThemedYStack>
-                        <ProductCategoryTree />
-                    </ScrollView>
+                {/* Freeze entire heavy part when closed – no extra display/pointer flips */}
 
-                </ThemedYStack>
-            </Theme>
-        </Freeze>
+                <ScrollView>
+                    <ThemedYStack container="$4">
+                        {/* Only compute “active” while open (otherwise always false) */}
+                        <DrawerLinks
+                            activeRouteName={activeRouteName}
+                            to={to as any}
+                        />
+                        <ThemedText size="$6">Kategorier</ThemedText>
+                    </ThemedYStack>
+                    <ProductCategoryTree />
+                </ScrollView>
+            </ThemedYStack>
+        </Theme>
+
     );
 });

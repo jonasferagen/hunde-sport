@@ -1,4 +1,3 @@
-import { Prof } from '@/lib/debug/prof';
 import { queryClient } from '@/lib/queryClient';
 import { appConfig } from '@/tamagui/tamagui.config';
 
@@ -11,8 +10,8 @@ import { enableFreeze } from 'react-native-screens';
 import { TamaguiProvider } from 'tamagui';
 
 import { enableScreens, } from 'react-native-screens';
-enableScreens(true);
-enableFreeze(true);
+enableScreens(false);
+enableFreeze(false);
 
 
 const RootLayout = (): JSX.Element => {
@@ -22,11 +21,9 @@ const RootLayout = (): JSX.Element => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>
-            <Prof id="stack" >
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(app)" />
-              </Stack>
-            </Prof>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(app)" />
+            </Stack>
           </TamaguiProvider>
         </SafeAreaView>
       </GestureHandlerRootView>

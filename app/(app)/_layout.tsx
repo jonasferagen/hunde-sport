@@ -7,28 +7,21 @@ import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navi
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View } from 'tamagui';
-import { drawerScreens } from './_drawerScreens';
+import { DrawerScreens } from './_drawerScreens';
 
 const AppLayout = React.memo((): React.ReactElement => {
 
-
     const screenOptions = React.useMemo(
         () => ({
-            header: (props: DrawerHeaderProps) => <CustomHeader navigation={props.navigation} />,
+            header: (props: DrawerHeaderProps) => <CustomHeader
+                navigation={props.navigation}
+                route={props.route}
+            />,
             swipeEnabled: true,
             freezeOnBlur: true,          // default
             unmountOnBlur: false,        // default
+            lazy: true
         }),
-        []
-    );
-    const screenLayout = React.useCallback(
-        (props: { route: { name: string }; children: React.ReactNode }) => {
-            return (
-                <Prof id={`SCENE:${props.route.name}`} disable>
-                    {props.children}
-                </Prof>
-            );
-        },
         []
     );
 
@@ -45,10 +38,11 @@ const AppLayout = React.memo((): React.ReactElement => {
                 <Drawer
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
-                    screenLayout={screenLayout}
-                    detachInactiveScreens
+                    detachInactiveScreens={false}
+                    // freezeOnBlur is true by default; turn it off for this test:
+                    freezeOnBlur={false}
                 >
-                    {drawerScreens}
+                    <DrawerScreens />
                 </Drawer>
             </Prof>
 
@@ -59,12 +53,12 @@ const AppLayout = React.memo((): React.ReactElement => {
                     position: 'absolute', left: 0, right: 0, bottom: 0,
                 }}
             >
-                <Prof id="bottombar">
-                    <CustomBottomBar />
-                </Prof>
+                <CustomBottomBar />
             </View>
         </View >
     );
 });
 
 export default AppLayout;
+// TracedDrawer.tsx
+

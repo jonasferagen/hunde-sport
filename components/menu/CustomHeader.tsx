@@ -1,5 +1,4 @@
 import { THEME_HEADER } from '@/config/app';
-import { Prof } from '@/lib/debug/prof';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { Menu } from '@tamagui/lucide-icons';
 import React from 'react';
@@ -9,26 +8,26 @@ import { ThemedButton, ThemedLinearGradient, ThemedXStack } from '../ui/themed-c
 
 const HeaderChrome = React.memo(function HeaderChrome({
     onOpen,
-    children,
-}: { onOpen: () => void; children: React.ReactNode }) {
+    title,
+}: {
+    onOpen: () => void;
+    title: string;
+}) {
     return (
-        <Prof id="HeaderChrome" disable>
-            <Theme name={THEME_HEADER}>
-                <ThemedXStack container split box>
-                    <ThemedLinearGradient />
-                    <ThemedButton theme="tint" circular onPress={onOpen}>
-                        <Menu />
-                    </ThemedButton>
-                    {children}
-                </ThemedXStack>
-            </Theme>
-        </Prof>
+        <Theme name={THEME_HEADER}>
+            <ThemedXStack container split box>
+                <ThemedLinearGradient />
+                <ThemedButton theme="tint" circular onPress={onOpen}>
+                    <Menu />
+                </ThemedButton>
+                <H4 fs={1}>{title}</H4>
+            </ThemedXStack>
+        </Theme>
+
     );
 });
 
-const HeaderTitle = React.memo(function HeaderTitle({ title }: { title: string }) {
-    return <H4 fs={1}>{title}</H4>
-});
+
 /*
 function deriveTitle(props: DrawerHeaderProps) {
     const { route, options } = props;
@@ -43,19 +42,21 @@ function headerPropsEqual(prev: DrawerHeaderProps, next: DrawerHeaderProps) {
 }*/
 
 export const CustomHeader = React.memo(({
-    navigation
+    navigation,
+    route,
 }: {
-    navigation: DrawerHeaderProps['navigation']
+    navigation: DrawerHeaderProps['navigation'],
+    route: DrawerHeaderProps['route'],
 }) => {
-    const title = "static";
+    ;
     const open = React.useCallback(() => {
         navigation.openDrawer();
     }, [navigation]);
 
+    const title = route.name;
+
     return (
-        <HeaderChrome onOpen={open}>
-            <HeaderTitle title={title} />
-        </HeaderChrome>
+        <HeaderChrome onOpen={open} title={title} />
     );
 });
 
