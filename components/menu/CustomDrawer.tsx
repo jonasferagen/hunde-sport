@@ -79,9 +79,7 @@ export const CustomDrawer = React.memo((props: DrawerContentComponentProps) => {
                         <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
                         <ThemedText size="$6">Kategorier</ThemedText>
                     </ThemedYStack>
-
                     <Freeze freeze={!isOpen}>
-                        <ThemedText >bbb</ThemedText>
                         <ProductCategoryTree />
                     </Freeze>
                 </ScrollView>

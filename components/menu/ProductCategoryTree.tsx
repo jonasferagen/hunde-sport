@@ -20,7 +20,7 @@ export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
     }, []);
 
     return (
-        <ThemedYStack f={1} boc="red" bw={1} w="100%">
+        <ThemedYStack f={1} container >
             {root.map((c) => (
                 <ProductCategoryBranch
                     id={c.id}
@@ -46,10 +46,9 @@ export const ProductCategoryBranch = memo(({
     const hasChildren = children.length > 0;
     const isExpanded = expanded[id];
 
-
     return (
         <Animated.View layout={LinearTransition}>
-            <ThemedXStack f={1} boc="blue" bw={1}>
+            <ThemedYStack f={1}>
                 <ThemedXStack f={1}>
                     <ProductCategoryTreeItem
                         productCategory={node}
@@ -75,7 +74,7 @@ export const ProductCategoryBranch = memo(({
                         </ThemedYStack>
                     </Animated.View>
                 )}
-            </ThemedXStack>
+            </ThemedYStack>
         </Animated.View>
     );
 });
@@ -103,8 +102,8 @@ const ProductCategoryTreeItem = React.memo(({
     const { linkProps } = useCanonicalNav();
 
     return (
-        <ThemedYStack h={80} f={1} ai="center" gap="$2" mb="$2" boc="green" bw={1}>
-            <ThemedXStack ml={level * spacing} h={80} f={1}>
+        <ThemedXStack f={1} ai="center" gap="$2" mb="$2">
+            <ThemedXStack ml={level * spacing} f={1}>
                 <Link {...linkProps('product-category', productCategory)} asChild>
                     <ThemedButton theme="shade" f={1} >
                         <ThemedText f={1} letterSpacing={0.5}>
@@ -115,6 +114,7 @@ const ProductCategoryTreeItem = React.memo(({
             </ThemedXStack>
 
             <ThemedButton
+                fs={1}
                 theme="shade"
                 circular
                 onPress={() => handleExpand(productCategory.id)}
@@ -124,7 +124,7 @@ const ProductCategoryTreeItem = React.memo(({
             >
                 {hasChildren && <AnimatedListExpansionIcon expanded={isExpanded} size="$4" />}
             </ThemedButton>
-        </ThemedYStack>
+        </ThemedXStack>
     );
 });
 
