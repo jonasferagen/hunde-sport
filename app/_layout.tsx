@@ -20,7 +20,6 @@ const RootLayout = (): JSX.Element => {
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>
             <Theme name="light">
-
               <AppToastProvider>
                 <PortalProvider>
                   <ModalHost />
@@ -29,7 +28,6 @@ const RootLayout = (): JSX.Element => {
                   </Stack>
                 </PortalProvider>
               </AppToastProvider>
-
             </Theme>
           </TamaguiProvider>
         </SafeAreaView>
