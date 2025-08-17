@@ -28,11 +28,9 @@ const DrawerLink = React.memo(({ name, label, active, to }: {
 });
 
 const DrawerLinks = React.memo(function DrawerLinks({
-
     activeRouteName,
     to,
 }: {
-
     activeRouteName: string;
     to: (name: keyof typeof routes) => void;
 }) {
@@ -67,20 +65,14 @@ export const CustomDrawer = React.memo((
         navigation: DrawerContentComponentProps['navigation']
     }) => {
 
-
-
+    const { to } = useCanonicalNav();
     const isOpen = useDrawerStatus() === 'open';
     const activeRouteName = useNavigationState((s) =>
         isOpen ? s.routes[s.index]?.name ?? 'index' : 'index'
     );
 
-    const { to } = useCanonicalNav();
-
-
     return (
-
         <Theme name={THEME_HEADER}>
-
             <ThemedYStack f={1}>
                 <ThemedXStack container split>
                     <ThemedText size="$6">hunde-sport.no</ThemedText>
@@ -88,9 +80,6 @@ export const CustomDrawer = React.memo((
                         <X />
                     </ThemedButton>
                 </ThemedXStack>
-
-                {/* Freeze entire heavy part when closed – no extra display/pointer flips */}
-
                 <ScrollView>
                     <ThemedYStack container="$4">
                         {/* Only compute “active” while open (otherwise always false) */}

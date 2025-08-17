@@ -1,6 +1,7 @@
 // routes.ts
 import { ProductCategory } from '@/domain/ProductCategory';
 import { SimpleProduct, VariableProduct } from '@/types';
+import { RouteProp } from '@react-navigation/native';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { HrefObject } from 'expo-router';
 
@@ -82,6 +83,11 @@ export const routes = {
 
 
 } as const;
+
+
+export const resolveTitle = (route: RouteProp<any, any>): string => {
+    return route?.params?.name || route?.name || 'hunde-sport.no';
+}
 
 export type RouteKey = keyof typeof routes;
 
