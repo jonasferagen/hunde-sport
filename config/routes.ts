@@ -94,5 +94,7 @@ export const cleanHref = (href: HrefObject): HrefObject => {
             return true;
         })
     );
+
+
     return Object.keys(params).length ? { ...href, params } : { pathname: href.pathname };
 };

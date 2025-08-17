@@ -1,4 +1,3 @@
-import { ModalHost } from '@/components/features/product/purchase/ModalHost';
 import {
   AppToastProvider
 } from '@/contexts';
@@ -13,6 +12,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TamaguiProvider, Theme } from 'tamagui';
 
+
 const RootLayout = (): JSX.Element => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -22,7 +22,6 @@ const RootLayout = (): JSX.Element => {
             <Theme name="light">
               <AppToastProvider>
                 <PortalProvider>
-                  <ModalHost />
                   <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="(app)" />
                   </Stack>

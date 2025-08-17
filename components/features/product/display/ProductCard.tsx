@@ -1,7 +1,6 @@
 import { ThemedImage } from '@/components/ui';
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
-import { useProductCategoryContext } from '@/contexts';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { getScaledImageUrl } from '@/lib/helpers';
@@ -17,19 +16,16 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
-    const { productCategory: category } = useProductCategoryContext();
     const { linkProps } = useCanonicalNav();
 
-
     return (
-
         <ThemedYStack
             container
             box
             {...props}
         >
             <ThemedLinearGradient />
-            <Link {...linkProps('product', product, category?.id)} asChild>
+            <Link {...linkProps('product', product)} asChild>
                 <ThemedXStack pressable>
                     <ProductCardImage />
                     <ProductCardDescription />

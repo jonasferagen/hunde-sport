@@ -7,34 +7,18 @@ import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useProductsBySearch } from '@/hooks/data/Product';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { PurchasableProduct } from '@/types';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { SizableText } from 'tamagui';
 
-const toSig = (obj: Record<string, any>) =>
-    JSON.stringify(Object.fromEntries(
-        Object.entries(obj).flatMap(([k, v]) => {
-            if (v == null) return [];
-            const s = String(Array.isArray(v) ? v[0] : v).trim();
-            return s ? [[k, s]] : [];
-        })
-    ));
+
 
 export const SearchScreen = () => {
+    useRenderGuard('SearchScreen');
     const params = useLocalSearchParams<{ query?: string }>();
     const [query, setQuery] = React.useState(String(params.query ?? ''));
-
-    // debounce + guard URL writes (so Drawer doesn’t churn)
-    React.useEffect(() => {
-        const tid = setTimeout(() => {
-            const next = query.trim();
-            const current = String(params.query ?? '');
-            if (next !== current) router.setParams(next ? { query: next } : {});
-        }, 200);
-        return () => clearTimeout(tid);
-    }, [query, params.query]);
-
 
     const result = useProductsBySearch(query);
 
@@ -78,6 +62,9 @@ type SearchResultsProps = {
 };
 
 const SearchResults = React.memo(({ query, result }: SearchResultsProps) => {
+
+    useRenderGuard('SearchResults');
+
     const { items, isLoading, fetchNextPage, isFetchingNextPage } = result;
 
     if (!query) return null;

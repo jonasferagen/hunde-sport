@@ -1,4 +1,5 @@
 // components/ui/search-bar/SearchBar.tsx
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import React from 'react';
 import { XStack } from 'tamagui';
 import { ThemedInput } from '../themed-components';
@@ -22,6 +23,8 @@ export const SearchBar = React.memo(({
     onSubmit,
     autoFocus,
 }: SearchBarProps) => {
+
+    useRenderGuard("SearchBar");
     // Internal state only when NOT controlled
     const [inner, setInner] = React.useState(defaultValue);
 

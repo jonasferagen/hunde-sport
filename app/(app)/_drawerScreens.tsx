@@ -4,13 +4,9 @@ import Drawer from 'expo-router/drawer';
 import React from 'react';
 
 
-const staticOptions = (label: string, showInDrawer?: boolean) =>
-    showInDrawer
-        ? { title: label }
-        : { title: label, drawerItemStyle: { display: 'none' as const } };
-
 // _drawerScreens.tsx
 export const drawerScreens = Object.values(routes).map((route) => (
+
     <Drawer.Screen
         key={route.name}
         name={route.name}

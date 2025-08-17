@@ -1,16 +1,14 @@
 // Prof.tsx
 import React from 'react';
-export const Prof: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+export const Prof: React.FC<{ id: string; children: React.ReactNode; disable?: boolean }> = ({ id, children, disable }) => {
 
 
     return (
         <React.Profiler
+            key={id}
             id={id}
             onRender={(id, phase, actualDuration) => {
-                if (actualDuration > 8) {
-                    // only log "slow" commits
-                    console.log(`[RENDER] ${id} ${phase} ${actualDuration.toFixed(1)}ms`);
-                }
+                if (!disable) console.log(`[RENDER] ${id} ${phase} ${actualDuration.toFixed(1)}ms`);
             }}
         >
             {children}

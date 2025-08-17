@@ -1,4 +1,5 @@
 import { THEME_HEADER } from '@/config/app';
+import { Prof } from '@/lib/debug/prof';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { getHeaderTitle } from '@react-navigation/elements';
 import { Menu } from '@tamagui/lucide-icons';
@@ -19,20 +20,25 @@ const HeaderChrome = React.memo(function HeaderChrome({
     children,
 }: { onOpen: () => void; children: React.ReactNode }) {
     return (
-        <Theme name={THEME_HEADER}>
-            <ThemedXStack container split box>
-                <ThemedLinearGradient />
-                <ThemedButton theme="tint" circular onPress={onOpen}>
-                    <Menu />
-                </ThemedButton>
-                {children}
-            </ThemedXStack>
-        </Theme>
+        <Prof id="HeaderChrome" disable>
+            <Theme name={THEME_HEADER}>
+                <ThemedXStack container split box>
+                    <ThemedLinearGradient />
+                    <ThemedButton theme="tint" circular onPress={onOpen}>
+                        <Menu />
+                    </ThemedButton>
+                    {children}
+                </ThemedXStack>
+            </Theme>
+        </Prof>
+
     );
 });
 
 const HeaderTitle = React.memo(function HeaderTitle({ title }: { title: string }) {
-    return <H4 fs={1}>{title}</H4>;
+    return <Prof id="HeaderTitle" disable>
+        <H4 fs={1}>{title}</H4>
+    </Prof>;
 });
 
 function deriveTitle(props: DrawerHeaderProps) {
