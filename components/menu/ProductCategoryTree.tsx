@@ -13,11 +13,7 @@ import React from 'react';
 import { ThemedXStack, ThemedYStack } from '../ui';
 
 export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
-    const root = useVisibleChildren(level);
-    const [expanded, setExpanded] = React.useState<Record<number, boolean>>({});
-    const toggle = React.useCallback((id: number) => {
-        setExpanded((e) => ({ ...e, [id]: !e[id] }));
-    }, []);
+    const root = useVisibleChildren(0);
 
     return (
         <ThemedYStack f={1} container >
@@ -26,60 +22,49 @@ export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
                     id={c.id}
                     key={c.id}
                     level={level}
-                    expanded={expanded}
-                    toggle={toggle}
                 />
             ))}
         </ThemedYStack>
     );
 });
 
-
-export const ProductCategoryBranch = memo(({
-    id,
-    level = 0,
-    expanded,
-    toggle
-}: { id: number; level?: number, expanded: Record<number, boolean>, toggle: (id: number) => void }) => {
+export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; level?: number }) => {
     const node = useCategoryById(id)!;
     const children = useVisibleChildren(id);
     const hasChildren = children.length > 0;
-    const isExpanded = expanded[id];
+
+    const isExpanded = useIsExpanded(id);     // <- localized subscription
+    const toggle = useToggleExpanded();
 
     return (
-        <Animated.View layout={LinearTransition}>
-            <ThemedYStack f={1}>
-                <ThemedXStack f={1}>
-                    <ProductCategoryTreeItem
-                        productCategory={node}
-                        level={level}
-                        isExpanded={isExpanded}
-                        hasChildren={hasChildren}
-                        handleExpand={toggle}
-                    />
-                </ThemedXStack>
+        // Try to avoid layout transition on every node (see #3 below)
 
-                {isExpanded && hasChildren && (
-                    <Animated.View entering={FadeIn} exiting={FadeOut}>
+        <ThemedYStack f={1}>
+            <ThemedXStack f={1}>
+                <ProductCategoryTreeItem
+                    productCategory={node}
+                    level={level}
+                    isExpanded={isExpanded}
+                    hasChildren={hasChildren}
+                    handleExpand={toggle}
+                />
+            </ThemedXStack>
+
+            {isExpanded && hasChildren && (
+                <Animated.View entering={FadeIn} exiting={FadeOut}>
+                    <Animated.View layout={LinearTransition}>
                         <ThemedYStack pl="$4">
                             {children.map((child) => (
-                                <ProductCategoryBranch
-                                    key={child.id}
-                                    id={child.id}
-                                    level={level + 1}
-                                    expanded={expanded}
-                                    toggle={toggle}
-                                />
+                                <ProductCategoryBranch key={child.id} id={child.id} level={level + 1} />
                             ))}
                         </ThemedYStack>
                     </Animated.View>
-                )}
-            </ThemedYStack>
-        </Animated.View>
+                </Animated.View>
+            )}
+        </ThemedYStack>
+
     );
 });
-
-
 
 interface RenderItemProps {
     productCategory: ProductCategory;
@@ -146,3 +131,18 @@ const AnimatedListExpansionIcon = ({ expanded, size }: { expanded: boolean, size
         </Animated.View>
     );
 };
+
+// categoryUiStore.ts
+import { create } from 'zustand';
+
+type UI = { expanded: Record<number, boolean>; toggle: (id: number) => void };
+export const useCategoryUi = create<UI>((set) => ({
+    expanded: {},
+    toggle: (id) => set((s) => ({ expanded: { ...s.expanded, [id]: !s.expanded[id] } })),
+}));
+
+export const useIsExpanded = (id: number) =>
+    useCategoryUi((s) => !!s.expanded[id]);       // subscribes only to expanded[id]
+
+export const useToggleExpanded = () =>
+    useCategoryUi((s) => s.toggle);
