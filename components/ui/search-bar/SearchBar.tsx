@@ -1,48 +1,55 @@
-import { useSearchContext } from '@/contexts/SearchContext';
-import React, { useEffect } from 'react';
+// components/ui/search-bar/SearchBar.tsx
+import React from 'react';
 import { XStack } from 'tamagui';
 import { ThemedInput } from '../themed-components';
 
 export interface SearchBarProps {
     placeholder?: string;
-    initialQuery?: string;
-    onSubmit?: (query: string) => void;
+    /** Controlled value: if provided, component mirrors this */
+    value?: string;
+    /** Uncontrolled initial value: used only on first mount when value is undefined */
+    defaultValue?: string;
+    onChangeText?: (text: string) => void;
+    onSubmit?: (text: string) => void;
+    autoFocus?: boolean;
 }
 
-export const SearchBar = ({
+export const SearchBar = React.memo(({
     placeholder = 'Hva leter du etter?',
-    initialQuery = '',
-    onSubmit }: SearchBarProps) => {
+    value,
+    defaultValue = '',
+    onChangeText,
+    onSubmit,
+    autoFocus,
+}: SearchBarProps) => {
+    // Internal state only when NOT controlled
+    const [inner, setInner] = React.useState(defaultValue);
 
-    const { query, setQuery } = useSearchContext();
+    // Keep internal state in sync when switching to controlled mode or when value changes
+    React.useEffect(() => {
+        if (value !== undefined) setInner(value);
+    }, [value]);
 
-    useEffect(() => {
-        setQuery(initialQuery);
-    }, [initialQuery, setQuery]);
+    const handleChange = React.useCallback((text: string) => {
+        if (value === undefined) setInner(text);   // uncontrolled: update local state
+        onChangeText?.(text);                      // always notify parent
+    }, [value, onChangeText]);
 
+    const handleSubmit = React.useCallback(() => {
+        const text = (value ?? inner).trim();
+        if (value === undefined) setInner(text);   // normalize uncontrolled text
+        onSubmit?.(text);
+    }, [value, inner, onSubmit]);
 
     return (
-        <XStack
-            ai="center"
-            br="$4"
-            px="$3"
-
-        >
+        <XStack ai="center" br="$4" px="$3">
             <ThemedInput
-
                 placeholder={placeholder}
-                value={query}
-                onChangeText={(text: string) => {
-                    setQuery(text);
-                }}
-                onSubmitEditing={() => {
-                    const trimmedQuery = query.trim();
-                    setQuery(trimmedQuery);
-                    onSubmit?.(trimmedQuery);
-                }}
+                value={value ?? inner}
+                onChangeText={handleChange}
+                onSubmitEditing={handleSubmit}
+                autoFocus={autoFocus}
             />
         </XStack>
     );
-};
-
-
+});

@@ -3,7 +3,6 @@ import { cleanHref, RouteKey, routes } from '@/config/routes';
 import { HrefObject, LinkProps, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
 
-const navTimer = { label: '', t0: 0, target: '' as string };
 
 type RouteMap = typeof routes;
 type ArgsOf<K extends RouteKey> =
@@ -13,25 +12,19 @@ const getRoute = <K extends RouteKey>(k: K) => routes[k] as RouteMap[K];
 const getPath = <K extends RouteKey>(k: K) =>
     getRoute(k).path as (...a: ArgsOf<K>) => HrefObject;
 
-const toJSON = (obj?: Record<string, any>) =>
-    JSON.stringify(Object.fromEntries(Object.entries(obj ?? {}).filter(([, v]) => v != null)));
 
-let lastParamsSig = '';
-let sameSetCount = 0;
-let lastSetAt = 0;
-function warnIfLoop(sig: string) {
-    const now = Date.now();
-    if (sig === lastParamsSig && now - lastSetAt < 1000) {
-        sameSetCount++;
-        if (sameSetCount >= 3) {
-            console.warn('[NAV] Possible setParams loop; same params 3x in <1s:', sig);
-        }
-    } else {
-        sameSetCount = 0;
-        lastParamsSig = sig;
-    }
-    lastSetAt = now;
-}
+const normalizeParams = (obj?: Record<string, any>) =>
+    Object.fromEntries(
+        Object.entries(obj ?? {}).flatMap(([k, v]) => {
+            if (v == null) return [];                              // drop null/undefined
+            if (Array.isArray(v)) v = v[0];                        // expo-router can give string[]
+            const s = String(v);
+            if (s.trim() === '') return [];                        // drop empty strings to avoid {} vs {q:""}
+            return [[k, s]];
+        })
+    );
+
+const toJSON = (obj?: Record<string, any>) => JSON.stringify(normalizeParams(obj));
 
 export function useCanonicalNav() {
     const rawPathname = usePathname();
@@ -40,20 +33,8 @@ export function useCanonicalNav() {
         [rawPathname]
     );
 
-    // Expo Router returns strings (and sometimes string[]) – we only care about a stable signature
-    const currentParams = useLocalSearchParams();
-    const currentKey = React.useMemo(() => toJSON(currentParams as any), [currentParams]);
-
-    React.useEffect(() => {
-        if (!navTimer.t0) return;
-        if (pathname === navTimer.target) {
-            const dt = Math.round(performance.now() - navTimer.t0);
-            console.log(`[NAV] ${navTimer.label} -> ${navTimer.target} in ${dt}ms`);
-            navTimer.t0 = 0;
-            navTimer.label = '';
-            navTimer.target = '';
-        }
-    }, [pathname]);
+    const paramsObj = useLocalSearchParams();
+    const currentKey = React.useMemo(() => toJSON(paramsObj as any), [paramsObj]);
 
     const to = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
         const route = routes[key];
@@ -61,31 +42,23 @@ export function useCanonicalNav() {
         const targetPath = (href.pathname?.replace(/\/+$/, '') || '/');
         const sameScreen = targetPath === pathname;
 
-        // start timer (per nav intent)
-        navTimer.t0 = performance.now();
-        navTimer.label = key as string;
-        navTimer.target = targetPath;
-
         if (sameScreen) {
             if (route.nav === 'push') {
-                // same route, new detail – push a new entry (e.g., product -> product)
-                router.push(href);
+                router.push(href);               // product -> product, etc.
             } else {
-                // top-level: only update URL params if they actually changed and aren’t empty
                 const nextKey = toJSON(href.params as any);
                 if (nextKey && nextKey !== currentKey) {
-                    warnIfLoop(nextKey);
                     router.setParams(href.params as any);
                 }
             }
             return;
         }
 
-        // different screen
         if (route.nav === 'push') router.push(href);
         else if (route.nav === 'replace') router.replace(href);
         else router.navigate(href);
     }, [pathname, currentKey]);
+
 
     const linkProps = React.useCallback(<K extends RouteKey>(
         key: K,

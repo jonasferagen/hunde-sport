@@ -9,11 +9,16 @@ const staticOptions = (label: string, showInDrawer?: boolean) =>
         ? { title: label }
         : { title: label, drawerItemStyle: { display: 'none' as const } };
 
+// _drawerScreens.tsx
 export const drawerScreens = Object.values(routes).map((route) => (
     <Drawer.Screen
         key={route.name}
         name={route.name}
-        options={staticOptions(route.label, route.showInDrawer)}
+        options={
+            route.showInDrawer
+                ? { title: route.label }
+                : { title: route.label, drawerItemStyle: { display: 'none' as const } }
+        }
     />
 ));
 

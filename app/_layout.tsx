@@ -3,8 +3,7 @@ import { ModalHost } from '@/components/features/product/purchase/ModalHost';
 import {
   AppToastProvider,
   DebugProvider,
-  ProductCategoryProvider,
-  SearchProvider
+  ProductCategoryProvider
 } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
 import { appConfig } from '@/tamagui/tamagui.config';
@@ -29,12 +28,10 @@ const RootLayout = (): JSX.Element => {
                   <AppToastProvider>
                     <PortalProvider>
                       <ModalHost />
-                      <SearchProvider>
-                        <Stack screenOptions={{ headerShown: false }}>
-                          <Stack.Screen name="(app)" />
-                        </Stack>
-                        <DebugView />
-                      </SearchProvider>
+                      <Stack screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name="(app)" />
+                      </Stack>
+                      <DebugView />
                     </PortalProvider>
                   </AppToastProvider>
                 </ProductCategoryProvider>

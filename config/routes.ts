@@ -24,7 +24,6 @@ const paths = {
     productCategory: '/product-category',
     product: '/product',
     cart: '/cart',
-    checkout: '/checkout',
 } as const;
 
 export const routes = {
@@ -88,6 +87,12 @@ export type RouteKey = keyof typeof routes;
 
 export const cleanHref = (href: HrefObject): HrefObject => {
     const p = href.params ?? {};
-    const params = Object.fromEntries(Object.entries(p).filter(([, v]) => v != null));
+    const params = Object.fromEntries(
+        Object.entries(p).filter(([, v]) => {
+            if (v == null) return false;                // drop null/undefined
+            if (typeof v === 'string' && v.trim() === '') return false; // drop empty
+            return true;
+        })
+    );
     return Object.keys(params).length ? { ...href, params } : { pathname: href.pathname };
 };

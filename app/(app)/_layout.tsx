@@ -1,13 +1,13 @@
 // app/(app)/_layout.tsx
-import { BottomBar } from '@/components/menu/BottomBar';
 import { CustomDrawerContent } from '@/components/menu/CustomDrawerContent';
-import { CustomHeader } from '@/components/menu/CustomHeader';
 import { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View } from 'react-native';
 import { drawerScreens } from './_drawerScreens';
 
+import { BottomBar } from '@/components/menu/BottomBar';
+import { CustomHeader } from '@/components/menu/CustomHeader';
 import { Prof } from '@/lib/debug/prof';
 
 const AppLayout = React.memo((): React.ReactElement => {
@@ -25,31 +25,29 @@ const AppLayout = React.memo((): React.ReactElement => {
         []
     );
 
-
     return (
-        <Prof id={`AppLayout`}>
-            <View style={{ flex: 1 }}>
+
+        <View style={{ flex: 1 }}>
+            <Prof id={`Drawer`}>
                 <Drawer
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
-                    detachInactiveScreens
                 >
-                    {drawerScreens /* see #2 */}
+                    {drawerScreens}
                 </Drawer>
-
-                {/* Overlay the bottom bar so it doesn't participate in per-screen re-renders */}
+            </Prof>
+            {/* Overlay the bottom bar so it doesn't participate in per-screen re-renders */}
+            <Prof id="BottomBar">
                 <View
                     pointerEvents="box-none"
                     style={{
                         position: 'absolute', left: 0, right: 0, bottom: 0,
                     }}
                 >
-                    <Prof id="BottomBar">
-                        <BottomBar />
-                    </Prof>
+                    <BottomBar />
                 </View>
-            </View>
-        </Prof>
+            </Prof>
+        </View >
     );
 });
 

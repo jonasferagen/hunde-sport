@@ -1,29 +1,24 @@
-import { PageView } from '@/components/layout';
+import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
+import { ThemedText } from '@/components/ui';
 import React from 'react';
+
+
+
 
 export const CartScreen = () => {
     return (
         <PageView>
-
-        </PageView>
-    )
-};
-
-/* export const CartScreen = () => {
-    return (
-        <PageView>
             <PageBody>
                 <PageSection f={1} p="none">
-                    <CartList />
+                    <ThemedText >Handlekurv</ThemedText>
+
                 </PageSection>
             </PageBody>
             <PageFooter f={0} >
-
-                <CheckoutButton />
+                <ThemedText >Handlekurv</ThemedText>
 
             </PageFooter>
         </PageView>
     )
 };
-
- */
+//    <CartList />   <CheckoutButton />

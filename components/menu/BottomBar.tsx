@@ -3,7 +3,7 @@ import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import * as Haptics from 'expo-haptics';
 import { usePathname } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { StackProps, styled, Tabs, Text } from 'tamagui';
 import { ThemedLinearGradient, ThemedSpinner, ThemedYStack } from '../ui';
 
@@ -35,51 +35,50 @@ const StyledTabsList = styled(Tabs.List, {
     display: 'flex',
     w: '100%',
 });
-
-export const BottomBar = (props: StackProps) => {
+export const BottomBar = React.memo((props: StackProps) => {
     const { to } = useCanonicalNav();
     const pathname = usePathname();
-
-    // derive current route segment ('', 'search', 'cart'...)
     const currentTab = useMemo(() => pathname.split('/')[1] || 'index', [pathname]);
 
-    // optimistic tab value
-    const [tab, setTab] = useState(currentTab);
+    // purely for UI feedback, NOT the Tabs value
+    const [pending, setPending] = useState<string | null>(null);
+
+    // when navigation lands, clear pending
     useEffect(() => {
-        // when navigation completes, sync + stop pending UI
-        setTab(currentTab);
-    }, [currentTab]);
+        if (pending && pending === currentTab) setPending(null);
+    }, [currentTab, pending]);
 
-    const onChange = (next: string) => {
-        if (next === tab) return;
-        setTab(next);                      // instant visual switch
+    const onChange = useCallback((next: string) => {
+        if (next === currentTab) return;        // already there
+        setPending(next);                       // show spinner/disable
         Haptics.selectionAsync().catch(() => { });
+        to(next as any);                        // replace for top-level, push for details (per your routes)
+    }, [currentTab, to]);
 
-        // canonical navigation policy (replace for top-level tabs)
-        to(next as any);
-    };
+    const isPending = (k: string) => pending === k && pending !== currentTab;
 
     return (
         <ThemedYStack box theme={THEME_BOTTOM_BAR} {...props} w="100%">
-            <StyledTabs value={tab} onValueChange={onChange}>
+            <StyledTabs value={currentTab} onValueChange={onChange}>
                 <StyledTabsList>
                     <ThemedLinearGradient />
-                    <StyledTab value="index" disabled={tab === 'index' && tab !== currentTab}>
-                        {tab === 'index' && tab !== currentTab ? <ThemedSpinner size="small" /> : <Home />}
+
+                    <StyledTab value="index" disabled={isPending('index')}>
+                        {isPending('index') ? <ThemedSpinner size="small" /> : <Home />}
                         <Text>Hjem</Text>
                     </StyledTab>
 
-                    <StyledTab value="search" disabled={tab === 'search' && tab !== currentTab}>
-                        {tab === 'search' && tab !== currentTab ? <ThemedSpinner size="small" /> : <Search />}
+                    <StyledTab value="search" disabled={isPending('search')}>
+                        {isPending('search') ? <ThemedSpinner size="small" /> : <Search />}
                         <Text>Søk</Text>
                     </StyledTab>
 
-                    <StyledTab value="cart" disabled={tab === 'cart' && tab !== currentTab}>
-                        {tab === 'cart' && tab !== currentTab ? <ThemedSpinner size="small" /> : <ShoppingCart />}
+                    <StyledTab value="cart" disabled={isPending('cart')}>
+                        {isPending('cart') ? <ThemedSpinner size="small" /> : <ShoppingCart />}
                         <Text>Handlekurv</Text>
                     </StyledTab>
                 </StyledTabsList>
             </StyledTabs>
         </ThemedYStack>
     );
-};
+});
