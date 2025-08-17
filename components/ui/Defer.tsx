@@ -1,7 +1,6 @@
 
 // components/Defer.tsx
 import { useDeferMount } from '@/hooks/useDeferMount';
-import * as React from 'react';
 import { JSX } from 'react';
 
 export const Defer = ({
@@ -10,11 +9,11 @@ export const Defer = ({
     minDelay,
     once,
 }: {
-    children: React.ReactNode;
-    fallback?: React.ReactNode;
+    children: any;
+    fallback?: any;
     minDelay?: number;
     once?: boolean;
 }): JSX.Element => {
     const ready = useDeferMount({ minDelay, once });
-    return ready ? <>{children} </> : <>{fallback}</>
+    return ready ? children : fallback;
 }

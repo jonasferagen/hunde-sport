@@ -43,6 +43,7 @@ export function useCanonicalNav() {
         const sameScreen = targetPath === pathname;
 
         if (sameScreen) {
+            console.log("same");
             if (route.nav === 'push') {
                 router.push(href);               // product -> product, etc.
             } else {
@@ -54,9 +55,11 @@ export function useCanonicalNav() {
             return;
         }
 
-        if (route.nav === 'push') router.push(href);
-        else if (route.nav === 'replace') router.replace(href);
-        else router.navigate(href);
+        router.replace(href);
+        /*
+                if (route.nav === 'push') router.push(href);
+                else if (route.nav === 'replace') router.replace(href);
+                else router.navigate(href); */
     }, [pathname, currentKey]);
 
 

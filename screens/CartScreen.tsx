@@ -3,8 +3,8 @@ import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
 import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
 import React from 'react';
 
-
 export const CartScreen = () => {
+
     return (
         <PageView>
             <PageBody>
@@ -16,5 +16,5 @@ export const CartScreen = () => {
                 <CheckoutButton />
             </PageFooter>
         </PageView>
-    )
+    );
 };

@@ -5,19 +5,19 @@ import React from 'react';
 
 
 // _drawerScreens.tsx
-export const drawerScreens = Object.values(routes).map((route) => (
-    <Drawer.Screen
-        key={route.name}
-        name={route.name}
-        options={{
-            title: route.label,
-            ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
-            // Unmount top-level screens when blurred to stop background re-renders:
-            ...(route.name === 'index' || route.name === 'search' || route.name === 'cart'
-                ? { unmountOnBlur: true }
-                : {}),
-        }}
-    />
-));
+export const drawerScreens = Object.values(routes).map((route) => {
+
+    return (
+        <Drawer.Screen
+            key={route.name}
+            name={route.name}
+            options={{
+                title: route.label,
+                ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
+                ...(route.name === 'index' ? { unmountOnBlur: false, freezeOnBlur: true } : { freezeOnBlur: false }),
+            }}
+        />
+    );
+});
 
 export default drawerScreens;

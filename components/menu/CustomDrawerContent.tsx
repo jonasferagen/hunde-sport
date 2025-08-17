@@ -1,17 +1,15 @@
-import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
 import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
 import { ProductCategoryProvider } from '@/contexts';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import { Prof } from '@/lib/debug/prof';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { X } from '@tamagui/lucide-icons';
 import React, { useCallback, useMemo } from 'react';
-import { ScrollView, Theme, YStack } from 'tamagui';
+import { ScrollView, Theme } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
-import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 import { ThemedText } from '../ui/themed-components/ThemedText';
+import { ProductCategoryTree } from './ProductCategoryTree';
 
 type DrawerLinkProps = {
     name: keyof typeof routes;
@@ -38,6 +36,8 @@ const DrawerLinks = React.memo(function DrawerLinks({
     activeRouteName: string;
     to: (name: keyof typeof routes) => void;
 }) {
+    //  activeRouteName === r.name
+
     const items = useMemo(
         () =>
             Object.values(routes)
@@ -47,7 +47,7 @@ const DrawerLinks = React.memo(function DrawerLinks({
                         key={r.name}
                         name={r.name as keyof typeof routes}
                         label={r.label}
-                        active={activeRouteName === r.name}
+                        active={false}
                         to={to}
                     />
                 )),
@@ -65,29 +65,24 @@ export const CustomDrawerContent = React.memo((props: DrawerContentComponentProp
     const close = useCallback(() => navigation.closeDrawer(), [navigation]);
 
     return (
-        <Theme name={THEME_DRAWER}>
-            <YStack>
-                <Prof id={`Drawer1`} disable>
-                    <ThemedLinearGradient />
-                    <ThemedXStack container split>
-                        <ThemedText size="$6">hunde-sport.no</ThemedText>
-                        <ThemedButton theme="tint" circular onPress={close}>
-                            <X />
-                        </ThemedButton>
-                    </ThemedXStack>
-                </Prof>
-                <Prof id={`Drawer2`} disable>
-                    <ScrollView>
-                        <ThemedYStack container="$4">
-                            <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
-                            <ThemedText size="$6">Kategorier</ThemedText>
-                            <ProductCategoryProvider productCategoryId={0}>
-                                <ProductCategoryTree />
-                            </ProductCategoryProvider>
-                        </ThemedYStack>
-                    </ScrollView>
-                </Prof>
-            </YStack>
+        <Theme name={THEME_DRAWER} key={activeRouteName}>
+            <ThemedYStack>
+                <ThemedXStack container split>
+                    <ThemedText size="$6">hunde-sport.no</ThemedText>
+                    <ThemedButton theme="tint" circular onPress={close}>
+                        <X />
+                    </ThemedButton>
+                </ThemedXStack>
+                <ScrollView>
+                    <ThemedYStack container="$4">
+                        <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
+                        <ThemedText size="$6">Kategorier</ThemedText>
+                    </ThemedYStack>
+                </ScrollView>
+                <ProductCategoryProvider productCategoryId={0}>
+                    <ProductCategoryTree />
+                </ProductCategoryProvider>
+            </ThemedYStack>
         </Theme>
     );
 });

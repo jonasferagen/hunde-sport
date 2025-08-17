@@ -18,6 +18,7 @@ type PageViewProps = YStackProps & {
 };
 
 export const PageView = ({ children, withGradient = true, gradientToken = 'background', ...stackProps }: PageViewProps) => {
+
   return (
     <ThemedYStack theme={THEME_PAGE} f={1} gap="none" {...stackProps}>
       {withGradient ? <PageBackdrop token={gradientToken} /> : null}
