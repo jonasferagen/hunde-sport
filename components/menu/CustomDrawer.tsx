@@ -4,7 +4,7 @@ import { routes } from '@/config/routes';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer';
 import { X } from '@tamagui/lucide-icons';
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import { Freeze } from 'react-freeze';
 import { ScrollView, Theme } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
@@ -19,10 +19,14 @@ type DrawerLinkProps = {
     to: (name: keyof typeof routes) => void;
 };
 
-// memoize a single drawer link row
-const DrawerLink = React.memo(({ name, label, active, to }: DrawerLinkProps) => {
-
-    const onPress = useCallback(() => to(name), [to, name]);
+// DrawerLinks.tsx
+const DrawerLink = React.memo(({ name, label, active, to }: {
+    name: keyof typeof routes;
+    label: string;
+    active: boolean;
+    to: (name: keyof typeof routes) => void;
+}) => {
+    const onPress = React.useCallback(() => to(name), [to, name]);
     return (
         <ThemedButton onPress={onPress} theme={active ? 'tint' : 'shade'}>
             <ThemedText>{label}</ThemedText>
@@ -30,41 +34,53 @@ const DrawerLink = React.memo(({ name, label, active, to }: DrawerLinkProps) => 
     );
 });
 
-const DrawerLinks = React.memo(function DrawerLinks({
-    activeRouteName,
+export const DrawerLinks = React.memo(function DrawerLinks({
+    activeRouteName,   // string or null
     to,
 }: {
-    activeRouteName: string;
+    activeRouteName: string | null;
     to: (name: keyof typeof routes) => void;
 }) {
-    //  activeRouteName === r.name
-
-    const items = useMemo(
-        () =>
-            Object.values(routes)
-                .filter((r) => r.showInDrawer)
-                .map((r) => (
-                    <DrawerLink
-                        key={r.name}
-                        name={r.name as keyof typeof routes}
-                        label={r.label}
-                        active={activeRouteName === r.name}
-                        to={to}
-                    />
-                )),
-        [activeRouteName, to]
+    // Build the static list once
+    const items = React.useMemo(
+        () => Object.values(routes)
+            .filter((r) => r.showInDrawer)
+            .map((r) => ({ name: r.name as keyof typeof routes, label: r.label })),
+        []
     );
 
-    return <>{items}</>;
+    return (
+        <>
+            {items.map(({ name, label }) => (
+                <DrawerLink
+                    key={name}
+                    name={name}
+                    label={label}
+                    active={!!activeRouteName && activeRouteName === name}
+                    to={to}
+                />
+            ))}
+        </>
+    );
 });
+
 
 export const CustomDrawer = React.memo((props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const { to } = useCanonicalNav();
 
-    const activeRouteName = state.routes[state.index]?.name ?? 'index';
-    const close = useCallback(() => navigation.closeDrawer(), [navigation]);
     const isOpen = useDrawerStatus() === 'open';
+    const close = React.useCallback(() => navigation.closeDrawer(), [navigation]);
+    const [mounted, setMounted] = React.useState(false);
+    React.useEffect(() => { if (isOpen && !mounted) setMounted(true); }, [isOpen, mounted]);
+
+    // Only derive active route when the drawer is OPEN
+    const activeRouteName = React.useMemo(
+        () => (isOpen ? state.routes[state.index]?.name ?? 'index' : null),
+        [isOpen, state]
+    );
+
+
     return (
         <Theme name={THEME_DRAWER} >
             <ThemedYStack>
@@ -74,15 +90,18 @@ export const CustomDrawer = React.memo((props: DrawerContentComponentProps) => {
                         <X />
                     </ThemedButton>
                 </ThemedXStack>
-                <ScrollView>
-                    <ThemedYStack container="$4">
-                        <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
-                        <ThemedText size="$6">Kategorier</ThemedText>
-                    </ThemedYStack>
+                {mounted ? (
                     <Freeze freeze={!isOpen}>
-                        <ProductCategoryTree />
+                        <ScrollView>
+                            <ThemedYStack container="$4">
+                                <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
+                                <ThemedText size="$6">Kategorier</ThemedText>
+                            </ThemedYStack>
+
+                            <ProductCategoryTree />
+                        </ScrollView>
                     </Freeze>
-                </ScrollView>
+                ) : null}
             </ThemedYStack>
         </Theme>
     );
