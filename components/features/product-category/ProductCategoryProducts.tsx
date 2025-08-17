@@ -9,6 +9,7 @@ import { ProductList } from '../product/list/ProductList';
 export const ProductCategoryProducts = (): JSX.Element => {
     useRenderGuard('ProductCategoryProducts');
     const { productCategory } = useProductCategoryContext();
+
     const { items: products, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByCategory(productCategory!);
 
     if (isLoading) {

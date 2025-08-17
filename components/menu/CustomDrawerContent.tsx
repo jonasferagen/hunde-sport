@@ -3,7 +3,7 @@ import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
 import { ProductCategoryProvider } from '@/contexts';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer';
+import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { X } from '@tamagui/lucide-icons';
 import React, { useCallback, useMemo } from 'react';
 import { ScrollView, Theme, YStack } from 'tamagui';
@@ -58,10 +58,8 @@ const DrawerLinks = React.memo(function DrawerLinks({
 export const CustomDrawerContent = React.memo((props: DrawerContentComponentProps) => {
     const { state, navigation } = props;
     const { to } = useCanonicalNav();
-    const status = useDrawerStatus();
 
     const activeRouteName = state.routes[state.index]?.name ?? 'index';
-
     const close = useCallback(() => navigation.closeDrawer(), [navigation]);
 
     return (
