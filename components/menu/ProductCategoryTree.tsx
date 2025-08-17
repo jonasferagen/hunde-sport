@@ -11,6 +11,7 @@ import { ThemedText } from '../ui/themed-components/ThemedText';
 
 import React from 'react';
 import { ThemedXStack, ThemedYStack } from '../ui';
+import { useIsExpanded, useToggleExpanded } from './ProductCategoryTreeStore';
 
 export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
     const root = useVisibleChildren(0);
@@ -131,18 +132,3 @@ const AnimatedListExpansionIcon = ({ expanded, size }: { expanded: boolean, size
         </Animated.View>
     );
 };
-
-// categoryUiStore.ts
-import { create } from 'zustand';
-
-type UI = { expanded: Record<number, boolean>; toggle: (id: number) => void };
-export const useCategoryUi = create<UI>((set) => ({
-    expanded: {},
-    toggle: (id) => set((s) => ({ expanded: { ...s.expanded, [id]: !s.expanded[id] } })),
-}));
-
-export const useIsExpanded = (id: number) =>
-    useCategoryUi((s) => !!s.expanded[id]);       // subscribes only to expanded[id]
-
-export const useToggleExpanded = () =>
-    useCategoryUi((s) => s.toggle);

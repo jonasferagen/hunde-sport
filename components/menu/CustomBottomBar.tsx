@@ -1,6 +1,5 @@
 import { THEME_BOTTOM_BAR } from '@/config/app';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import { useWhyDidYouUpdate } from '@/hooks/useWhyDidYouUpdate';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname } from 'expo-router';
 import React, { useCallback, useMemo } from 'react';
@@ -40,7 +39,6 @@ const StyledTabsList = styled(Tabs.List, {
 });
 export const CustomBottomBar = React.memo((props) => {
 
-    useWhyDidYouUpdate('CustomBottomBar', props);
 
     const { to } = useCanonicalNav();
     const pathname = usePathname();

@@ -6,13 +6,11 @@ import { Stack } from 'expo-router';
 import { JSX } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { enableFreeze } from 'react-native-screens';
+import { enableFreeze, enableScreens } from 'react-native-screens';
 import { TamaguiProvider } from 'tamagui';
 
-import { enableScreens, } from 'react-native-screens';
-enableScreens(false);
-enableFreeze(false);
-
+enableScreens(true);
+enableFreeze(true);
 
 const RootLayout = (): JSX.Element => {
 

@@ -1,5 +1,5 @@
 
-import { THEME_HEADER } from '@/config/app';
+import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { useDrawerStatus, type DrawerContentComponentProps } from '@react-navigation/drawer';
@@ -11,7 +11,6 @@ import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
 import { ProductCategoryTree } from './ProductCategoryTree';
-
 // DrawerLinks.tsx
 const DrawerLink = React.memo(({ name, label, active, to }: {
     name: keyof typeof routes;
@@ -58,12 +57,8 @@ const DrawerLinks = React.memo(function DrawerLinks({
 
 
 
-export const CustomDrawer = React.memo((
-    {
-        navigation
-    }: {
-        navigation: DrawerContentComponentProps['navigation']
-    }) => {
+export const CustomDrawer = React.memo(({ navigation }
+    : { navigation: DrawerContentComponentProps['navigation'] }) => {
 
     const { to } = useCanonicalNav();
     const isOpen = useDrawerStatus() === 'open';
@@ -72,8 +67,8 @@ export const CustomDrawer = React.memo((
     );
 
     return (
-        <Theme name={THEME_HEADER}>
-            <ThemedYStack f={1}>
+        <Theme name={THEME_DRAWER}>
+            <ThemedYStack box f={1} zIndex={10}>
                 <ThemedXStack container split>
                     <ThemedText size="$6">hunde-sport.no</ThemedText>
                     <ThemedButton theme="tint" circular onPress={() => { navigation.closeDrawer() }}>
@@ -93,6 +88,5 @@ export const CustomDrawer = React.memo((
                 </ScrollView>
             </ThemedYStack>
         </Theme>
-
     );
 });

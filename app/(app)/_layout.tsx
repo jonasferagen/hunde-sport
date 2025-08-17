@@ -2,7 +2,6 @@
 import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
-import { resolveTitle } from '@/config/routes';
 import { Prof } from '@/lib/debug/prof';
 import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
@@ -16,7 +15,6 @@ const AppLayout = React.memo((): React.ReactElement => {
         () => ({
             header: (props: DrawerHeaderProps) => <CustomHeader
                 navigation={props.navigation}
-                title={resolveTitle(props.route)}
             />,
             swipeEnabled: true,
             freezeOnBlur: true,          // default
@@ -59,5 +57,5 @@ const AppLayout = React.memo((): React.ReactElement => {
 });
 
 export default AppLayout;
-// TracedDrawer.tsx
+
 
