@@ -29,7 +29,7 @@ export const ProductScreen = () => {
   const purchasableProduct = product as PurchasableProduct;
 
   return (
-    <ProductCategoryProvider productCategoryId={productCategoryId} productCategories={product.categories} >
+    <ProductCategoryProvider productCategoryId={productCategoryId} >
       <PurchasableProviderInit product={purchasableProduct}>
         <ProductScreenContent />
       </PurchasableProviderInit>
@@ -67,7 +67,6 @@ const ProductScreenContent = () => {
         </PageSection>
       </PageBody>
       <PageFooter>
-
         <ProductPurchaseFlow />
       </PageFooter>
     </PageView >

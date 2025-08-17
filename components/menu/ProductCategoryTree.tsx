@@ -8,7 +8,7 @@ export interface ProductCategoryTreeProps {
 }
 
 export const ProductCategoryTree = ({ level = 0 }: ProductCategoryTreeProps) => {
-    const { productCategories: productCategories } = useProductCategoryContext();
+    const { productCategory, productCategories } = useProductCategoryContext();
     const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
 
     const handleExpand = useCallback((id: number) => {

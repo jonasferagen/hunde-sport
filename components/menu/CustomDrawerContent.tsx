@@ -1,6 +1,7 @@
 import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
 import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
+import { ProductCategoryProvider } from '@/contexts';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer';
 import { X } from '@tamagui/lucide-icons';
@@ -73,13 +74,13 @@ export const CustomDrawerContent = React.memo((props: DrawerContentComponentProp
                         <X />
                     </ThemedButton>
                 </ThemedXStack>
-
                 <ScrollView>
                     <ThemedYStack container="$4">
                         <DrawerLinks activeRouteName={activeRouteName} to={to as any} />
                         <ThemedText size="$6">Kategorier</ThemedText>
-                        {/* Mount the heavy tree only when the drawer is opening/open */}
-                        {status === 'open' ? <ProductCategoryTree /> : null}
+                        <ProductCategoryProvider productCategoryId={0}>
+                            <ProductCategoryTree />
+                        </ProductCategoryProvider>
                     </ThemedYStack>
                 </ScrollView>
             </YStack>

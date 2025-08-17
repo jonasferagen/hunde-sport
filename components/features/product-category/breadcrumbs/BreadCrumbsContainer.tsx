@@ -12,20 +12,16 @@ export const BreadCrumbsContainer = ({ ...stackProps }: StackProps & { defaultOp
     const { productCategories } = useProductCategoryContext();
     const [showCategories, setShowCategories] = React.useState(false);
 
-
     return (
         <ThemedYStack  {...stackProps}>
             <ThemedXStack ai="center" >
                 <ThemedButton
                     circular
                     display={productCategories.length === 0 ? 'none' : 'flex'}
-
                     onPress={() => setShowCategories(!showCategories)}>
                     {showCategories ? <ChevronUp /> : <ChevronDown />}
                 </ThemedButton>
-
                 <Breadcrumbs isLastClickable={true} />
-
             </ThemedXStack>
 
             {(showCategories) &&

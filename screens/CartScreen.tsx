@@ -1,8 +1,7 @@
+import { CartList } from '@/components/features/cart/CartList';
+import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
 import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
-import { ThemedText } from '@/components/ui';
 import React from 'react';
-
-
 
 
 export const CartScreen = () => {
@@ -10,15 +9,12 @@ export const CartScreen = () => {
         <PageView>
             <PageBody>
                 <PageSection f={1} p="none">
-                    <ThemedText >Handlekurv</ThemedText>
-
+                    <CartList />
                 </PageSection>
             </PageBody>
             <PageFooter f={0} >
-                <ThemedText >Handlekurv</ThemedText>
-
+                <CheckoutButton />
             </PageFooter>
         </PageView>
     )
 };
-//    <CartList />   <CheckoutButton />

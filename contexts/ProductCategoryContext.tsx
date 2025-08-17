@@ -1,46 +1,39 @@
+// ProductCategoryProvider.tsx
 import { ProductCategory } from '@/domain/ProductCategory';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 
-export interface ProductCategoryContextType {
+interface ProductCategoryContextType {
     productCategory?: ProductCategory;
     productCategories: ProductCategory[];
 }
 
-const ProductCategoryContext = createContext<ProductCategoryContextType | undefined>(undefined);
+const Ctx = createContext<ProductCategoryContextType | undefined>(undefined);
 
 export const useProductCategoryContext = () => {
-    const context = useContext(ProductCategoryContext);
-    if (!context) {
-        throw new Error('useProductCategoryContext must be used within a ProductCategoryProvider');
+    const ctx = useContext(Ctx);
+    if (!ctx) throw new Error('useProductCategoryContext must be used within a ProductCategoryProvider');
+    return ctx;
+};
+
+export const ProductCategoryProvider = React.memo(
+    ({ productCategoryId = 0, children }: { productCategoryId?: number; children: React.ReactNode }) => {
+        const categories = useProductCategoryStore((s) => s.productCategories);
+
+        const productCategory = useMemo(
+            () => categories.find((c) => c.id === productCategoryId),
+            [categories, productCategoryId]
+        );
+        const sub = useMemo(
+            () => categories.filter((c) => c.parent === (productCategory?.id ?? 0) && c.shouldDisplay()),
+            [categories, productCategory?.id]
+        );
+
+        const value = useMemo(
+            () => ({ productCategory, productCategories: sub }),
+            [productCategory, sub]
+        );
+
+        return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
     }
-    return context;
-};
-
-interface ProductCategoryProviderProps {
-    productCategoryId?: number;
-    productCategories?: ProductCategory[];
-    children: React.ReactNode;
-}
-
-export const ProductCategoryProvider: React.FC<ProductCategoryProviderProps> = ({
-    productCategoryId = 0,
-    productCategories,
-    children,
-}) => {
-    const {
-        getProductCategoryById,
-        getSubProductCategories,
-    } = useProductCategoryStore();
-
-    // If categoryId is provided, it takes precedence and fetches from the store.
-    const productCategory = getProductCategoryById(productCategoryId ?? 0);
-
-    // Use passed-in categories if available, otherwise derive from parent category.
-    const value: ProductCategoryContextType = {
-        productCategory,
-        productCategories: productCategories ?? getSubProductCategories(productCategory?.id ?? 0),
-    };
-
-    return <ProductCategoryContext.Provider value={value}>{children}</ProductCategoryContext.Provider>;
-};
+);

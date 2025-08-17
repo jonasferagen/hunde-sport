@@ -1,20 +1,21 @@
 import { ThemedYStack } from '@/components/ui';
 import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS } from '@/config/app';
-import { useProductCategoryContext } from '@/contexts';
 import { spacePx } from '@/lib/helpers';
+import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import { JSX, useMemo } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 import { ProductCategoryTile } from './ProductCategoryTile';
-
 export const MAX_CATEGORIES = NUM_CATEGORY_TILE_COLUMNS * NUM_CATEGORY_TILE_ROWS;
 
 
 export const ProductCategoryTiles = (props: StackProps): JSX.Element => {
-    const { productCategories: rootProductCategories } = useProductCategoryContext();
+
+    const allProductCategories = useProductCategoryStore((s) => s.productCategories);
     const productCategories = useMemo(
-        () => rootProductCategories.slice(0, MAX_CATEGORIES),
-        [rootProductCategories]
+        () => allProductCategories.filter((c) => c.parent === 0) || [],
+        [allProductCategories]
     );
+
     const GAP = '$3' // your token
     const gapPx = spacePx(GAP);
     const half = Math.round(gapPx / 2)

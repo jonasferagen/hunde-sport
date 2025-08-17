@@ -24,6 +24,7 @@ export const ProductCategoryScreen = memo(() => {
                     </PageSection>
                 </PageBody>
             </PageView>
-        </ProductCategoryProvider>);
+        </ProductCategoryProvider>
+    );
 });
 
