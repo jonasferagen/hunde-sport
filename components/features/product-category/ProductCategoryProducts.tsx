@@ -10,7 +10,7 @@ export const ProductCategoryProducts = (): JSX.Element => {
     useRenderGuard('ProductCategoryProducts');
     const { productCategory } = useProductCategoryContext();
 
-    const { items: products, isLoading, fetchNextPage, isFetchingNextPage } = useProductsByCategory(productCategory!);
+    const { items: products, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useProductsByCategory(productCategory!);
 
     if (isLoading) {
         return <LoadingScreen />;
@@ -18,8 +18,9 @@ export const ProductCategoryProducts = (): JSX.Element => {
 
     return <ProductList
         products={products}
-        loadingMore={isFetchingNextPage}
         loadMore={fetchNextPage}
+        isLoadingMore={isFetchingNextPage}
+        hasMore={hasNextPage}
     />;
 };
 

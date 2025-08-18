@@ -8,20 +8,43 @@ import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useProductsBySearch } from '@/hooks/data/Product';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'; // simple 200–300ms debounce hook
 import { useScreenReady } from '@/hooks/useScreenReady';
-import { useLocalSearchParams } from 'expo-router';
+
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { SizableText } from 'tamagui';
+import { LoadingScreen } from './misc/LoadingScreen';
 
 export const SearchScreen = () => {
-    const ready = useScreenReady(0); // start work after interactions
-    const params = useLocalSearchParams<{ query?: string }>();
-    const [query, setQuery] = React.useState(String(params.query ?? ''));
+    const ready = useScreenReady();
+
+    const params = useLocalSearchParams<{ query?: string | string[] }>();
+
+    // coerce param to a plain string (Expo can give string[])
+    const paramToString = (q: string | string[] | undefined) =>
+        Array.isArray(q) ? q[0] ?? '' : (q ?? '');
+
+    const [query, setQuery] = React.useState(() => paramToString(params.query));
+
+    // ✅ keep local state in sync with URL when navigating here again
+    React.useEffect(() => {
+        setQuery(paramToString(params.query));
+    }, [params.query]);
+
     const debounced = useDebouncedValue(query, 250);
 
-    // Gate query work behind `ready` and non-empty search
     const result = useProductsBySearch(debounced, {
-        enabled: ready && debounced.length > 0,
+        enabled: ready && debounced.trim().length > 0,
     });
+
+    const router = useRouter();
+    const submitInThisScreen = (text: string) => {
+        const q = text.trim();
+        setQuery(q);
+        // keep URL shareable (optional but nice)
+        router.setParams({ query: q || undefined });
+    };
+
+
 
     const isSearching = result.isLoading && !!debounced;
     const title = query
@@ -35,6 +58,7 @@ export const SearchScreen = () => {
                 <SearchBar
                     value={query}
                     onChangeText={setQuery}
+                    onSubmit={submitInThisScreen}   // <- keep URL & state in sync
                     placeholder="Produktsøk"
                 />
                 <ThemedXStack container split>
@@ -42,21 +66,21 @@ export const SearchScreen = () => {
                     <SizableText f={0}>{total}</SizableText>
                 </ThemedXStack>
             </PageHeader>
-
             <PageBody>
-                <PageSection f={1} p="none">
+                <PageSection fill padding="none">
                     {/* Show nothing (or a subtle placeholder) until ready */}
                     {!ready ? (
-                        <DefaultTextContent><ThemedSpinner /></DefaultTextContent>
+                        <LoadingScreen />
                     ) : !debounced ? null : result.isLoading ? (
-                        <DefaultTextContent><ThemedSpinner /></DefaultTextContent>
+                        <LoadingScreen />
                     ) : !result.items?.length ? (
                         <DefaultTextContent>Ingen resultater funnet for "{debounced}"</DefaultTextContent>
                     ) : (
                         <ProductList
                             products={result.items}
                             loadMore={result.fetchNextPage}
-                            loadingMore={result.isFetchingNextPage}
+                            isLoadingMore={result.isLoading || result.isFetchingNextPage}
+                            hasMore={result.hasNextPage}
                         />
                     )}
                 </PageSection>

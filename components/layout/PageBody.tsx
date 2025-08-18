@@ -10,7 +10,6 @@ interface PageBodyProps extends YStackProps {
 
 export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children, mode = 'static', ...props }, ref) => {
 
-
   const content = (
     <ThemedYStack
       box
@@ -23,10 +22,8 @@ export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children,
     </ThemedYStack>
   );
 
-
   return mode === 'scroll' ? (
     <ScrollView
-
       f={1}
       ref={ref}
       showsVerticalScrollIndicator={true}
@@ -36,6 +33,5 @@ export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children,
       {content}
     </ScrollView>
   ) : content
-
 });
 

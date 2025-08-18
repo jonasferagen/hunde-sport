@@ -3,32 +3,23 @@ import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
-import React, { memo } from 'react';
+import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import { ProductCard } from '../display/ProductCard';
 
 interface ProductListProps {
     products: Product[];
     loadMore: () => void;
-    loadingMore: boolean;
+    isLoadingMore: boolean;
+    hasMore: boolean;
 }
-
-export const ProductList = memo(({
-    products,
-    loadMore,
-    loadingMore,
-
-}: ProductListProps) => {
-
-
+export const ProductList = React.memo(function ProductList({
+    products, loadMore, isLoadingMore, hasMore,
+}: ProductListProps) {
     const { width, height } = useWindowDimensions();
+    const ITEM_HEIGHT = 170;
 
-
-    const keyExtractor = React.useCallback(
-        (item: PurchasableProduct) => String(item.id),
-        []
-    );
-
+    const keyExtractor = React.useCallback((p: PurchasableProduct) => String(p.id), []);
     const renderItem = React.useCallback(
         ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
             <PurchasableProviderInit product={product}>
@@ -38,32 +29,34 @@ export const ProductList = memo(({
         []
     );
 
-    // Prevent duplicate fetches
-    const handleEndReached = React.useCallback(() => {
-        if (!loadingMore) loadMore();
-    }, [loadingMore, loadMore]);
+    const onEndReached = React.useCallback(() => {
+        if (hasMore && !isLoadingMore) loadMore();
+    }, [hasMore, isLoadingMore, loadMore]);
 
-    const Footer = React.useMemo(
-        () => (loadingMore ? <ThemedSpinner my="$3" /> : null),
-        [loadingMore]
-    );
-
-    const ITEM_HEIGHT = 170;
 
     return (
+
 
         <FlashList
             data={products as PurchasableProduct[]}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
-            onEndReached={handleEndReached}
+            onEndReached={onEndReached}
             onEndReachedThreshold={0.8}
-            ListFooterComponent={Footer}
+            ListFooterComponent={isLoadingMore ? <ThemedSpinner my="$3" /> : null}
+
+            // sizing & virtualization
+            style={{ flex: 1 }}                          // <- this fills because parents give height
             estimatedItemSize={ITEM_HEIGHT}
-            overrideItemLayout={(layout) => { layout.size = ITEM_HEIGHT; }}
-            drawDistance={1400} // optional: helps during fast flings
-            estimatedListSize={{ height, width }}
+            overrideItemLayout={(l) => { l.size = ITEM_HEIGHT; }}
+            estimatedListSize={{ width, height }}        // hint (not a constraint)
+            drawDistance={800}
+            getItemType={() => 'product'}
+            removeClippedSubviews
+
+            // optional padding without any ScrollView
+            contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 8 }}
         />
 
     );
-}); 
+});

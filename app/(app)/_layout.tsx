@@ -36,7 +36,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                 <Drawer
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
-                    detachInactiveScreens
+                    detachInactiveScreens={false}
                     initialRouteName='cart'
 
                 >
