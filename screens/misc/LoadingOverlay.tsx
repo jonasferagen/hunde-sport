@@ -1,7 +1,8 @@
 // LoadingOverlay.tsx
+import { ThemedSpinner, ThemedYStack } from '@/components/ui';
 import { useNavProgress } from '@/stores/navProgressStore';
 import React from 'react';
-import { ActivityIndicator, Animated, Easing, StyleSheet, View } from 'react-native';
+import { Animated, Easing, StyleSheet } from 'react-native';
 
 const MIN_SHOW_MS = 250;      // avoid flicker
 const SHOW_DELAY_MS = 120;    // don’t show for ultra-fast hops
@@ -49,9 +50,9 @@ export const LoadingOverlay = React.memo(() => {
             pointerEvents={active ? 'auto' : 'none'}
             style={[StyleSheet.absoluteFillObject, { justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.04)', opacity }]}
         >
-            <View style={{ padding: 14, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.9)' }}>
-                <ActivityIndicator />
-            </View>
+            <ThemedYStack ai="center" jc="center" w="100%" h="100%" bg="black" o={.3} >
+                <ThemedSpinner size="large" />
+            </ThemedYStack>
         </Animated.View>
     );
 });

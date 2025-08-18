@@ -40,12 +40,13 @@ const StyledTabsList = styled(Tabs.List, {
 });
 
 
+import { useNavProgress } from '@/stores/navProgressStore';
+import { startTransition } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = React.ComponentProps<typeof ThemedYStack> & {
     respectSafeArea?: boolean;
 };
-
 
 export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: Props) => {
 
@@ -61,10 +62,15 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
 
     const onChange = useCallback((next: string) => {
         if (next !== currentTab) {
-            // For tab UX, replace instead of pushing to avoid stacking history
-            to(next as any, undefined, { replace: true });
+            const { start } = useNavProgress.getState();
+            start();
+            startTransition(() => {
+                setTimeout(() => to(next as any), 200);
+            });
         }
     }, [currentTab, to]);
+
+
 
     return (
         <ThemedYStack theme={THEME_BOTTOM_BAR} {...rest} w="100%"  >
