@@ -18,7 +18,6 @@ type PageViewProps = YStackProps & {
 };
 
 import { useNavProgress } from '@/stores/navProgressStore';
-import { useIsFocused } from '@react-navigation/native';
 import { Freeze } from 'react-freeze';
 export const PageView = ({ children, withGradient = true, gradientToken = 'background', ...stackProps }: PageViewProps) => {
 
@@ -26,9 +25,9 @@ export const PageView = ({ children, withGradient = true, gradientToken = 'backg
     useNavProgress.getState().stop();
   }, []));
 
-  const isFocused = useIsFocused();
+  const isFocused = false // useIsFocused();
   return (
-    <Freeze freeze={!isFocused}>
+    <Freeze freeze={isFocused}>
       <ThemedYStack
         theme={THEME_PAGE}
         f={1}

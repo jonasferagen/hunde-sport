@@ -13,9 +13,10 @@ export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) =>
     return (
         <Theme name={THEME_PAGE_FOOTER}>
             <ThemedYStack
+                boc="blue"
                 container
                 box
-                bw={0}
+                bw={3}
                 btw={1}
                 {...props}
             >

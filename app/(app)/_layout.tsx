@@ -1,14 +1,12 @@
 // app/(app)/_layout.tsx
-import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
-import { Prof } from '@/lib/debug/prof';
-import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
+import { routes } from '@/config/routes';
 import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View } from 'tamagui';
-import { DrawerScreens } from './_drawerScreens';
+
 const AppLayout = React.memo((): React.ReactElement => {
 
     const screenOptions = React.useMemo(
@@ -31,27 +29,34 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     return (
         <View f={1} >
-            <Prof id="drawer">
-                <Drawer
-                    drawerContent={drawerContent}
-                    screenOptions={screenOptions}
-                    detachInactiveScreens={false}
-                >
-                    <DrawerScreens />
-                </Drawer>
-            </Prof>
+            <Drawer
+                drawerContent={drawerContent}
+                screenOptions={screenOptions}
+                detachInactiveScreens={false}
+            >
+                {Object.values(routes).map((route) => {
+                    return <Drawer.Screen
+                        key={route.name}
+                        name={route.name}
+                        options={{
+                            title: route.label,
+                            ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
+                        }}
+                    />
+                })}
+            </Drawer>
 
-            {/* Global overlay */}
-            <LoadingOverlay />
 
-            {/* Bottom bar */}
-            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+            {/* <LoadingOverlay /> */}
+
+
+            {/* 
+            <View style={{ flex: 1, position: 'absolute', left: 0, right: 0, bottom: 0 }}>
                 <CustomBottomBar />
-            </View>
+            </View>Bottom bar */}
         </View >
     );
 });
 
 export default AppLayout;
-
 
