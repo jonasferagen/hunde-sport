@@ -3,7 +3,6 @@ import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useAddToCart } from '@/hooks/useAddToCart';
 import { useDeferredOpen } from '@/hooks/useDeferredOpen';
-import { spacePx } from '@/lib/helpers';
 import { Purchasable } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
@@ -23,7 +22,7 @@ export const ProductVariationsModal = ({
 };
 
 
-
+/*
 function useMeasure() {
     const [h, setH] = React.useState(0);
     const onLayout = React.useCallback((e: any) => {
@@ -31,7 +30,7 @@ function useMeasure() {
         if (next !== h) setH(next);
     }, [h]);
     return [h, onLayout] as const;
-}
+} */
 
 export const Inner = React.memo(function Inner({ close }: { close: () => void }) {
     const { purchasable } = usePurchasableContext();
@@ -39,17 +38,19 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const [loading, setLoading] = React.useState(false);
     const ready = useDeferredOpen([purchasable.product.id], 50);
 
-    // measure containers
-    const [bodyH, onBodyLayout] = useMeasure();
-    const [headerH, onHeaderLayout] = useMeasure();
-    const [footerH, onFooterLayout] = useMeasure();
+    const CTA_HEIGHT = 56; // your button height (+ margins)
+    const [bodyH, setBodyH] = React.useState(0);
+    const [headerH, setHeaderH] = React.useState(0);
+    const [footerH, setFooterH] = React.useState(0);
     const [contentH, setContentH] = React.useState(0);
 
-    // known pieces
+    const onBodyLayout = (e: any) => setBodyH(Math.round(e.nativeEvent.layout.height));
+    const onHeaderLayout = (e: any) => setHeaderH(Math.round(e.nativeEvent.layout.height));
+    const onFooterLayout = (e: any) => setFooterH(Math.round(e.nativeEvent.layout.height));
+
     const IMAGE_H = 200;
-    const paddings = spacePx('$4') + spacePx('$3'); // adjust if your gaps change
-    // how much space can the options area occupy
-    const availableForOptions = Math.max(0, bodyH - headerH - IMAGE_H - footerH - paddings);
+    const paddings = 0; // if your frame has vertical padding, add it here
+    const availableForOptions = Math.max(0, bodyH - headerH - IMAGE_H - footerH - CTA_HEIGHT - paddings);
     const needsScroll = contentH > availableForOptions + 1;
 
     const onPress = async () => {
@@ -65,32 +66,28 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
 
     return (
         <ThemedYStack f={1} mih={0} onLayout={onBodyLayout}>
-            {/* Header */}
+            {/* header */}
             <ThemedXStack split onLayout={onHeaderLayout}>
                 <ProductTitle fs={1} />
                 <ThemedButton circular onPress={close}><ChevronDown /></ThemedButton>
             </ThemedXStack>
 
-            {/* Image (fixed height) */}
+            {/* image */}
             <ProductImage img_height={IMAGE_H} />
 
-            {/* Options: auto-fit; only scroll if needed */}
+            {/* attributes (auto-fit; scroll only if needed) */}
             {ready ? (
                 needsScroll ? (
                     <Sheet.ScrollView
-                        // IMPORTANT: no flex here; cap to fit
                         maxHeight={availableForOptions}
                         keyboardShouldPersistTaps="handled"
                         onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
+                        contentContainerStyle={{ paddingBottom: 12 }} // some breathing room
                     >
-                        <YStack pb="$4">
-                            <ProductVariationSelect />
-                        </YStack>
+                        <ProductVariationSelect />
                     </Sheet.ScrollView>
                 ) : (
-                    <YStack
-                        pb="$4"
-                        // measure when not scrolling
+                    <YStack f={1}
                         onLayout={(e) => setContentH(Math.round(e.nativeEvent.layout.height))}
                     >
                         <ProductVariationSelect />
@@ -98,7 +95,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
                 )
             ) : null}
 
-            {/* Footer (status + price + CTA) */}
+            {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout}>
                 <ProductVariationLabel />
                 <ThemedXStack split>
@@ -107,12 +104,13 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
                 </ThemedXStack>
             </ThemedYStack>
 
-            <ThemedYStack gap="$3" f={0} mb="$3">
+            {/* CTA pinned bottom */}
+            <ThemedYStack mt="$2" mb="$3">
                 <PurchaseButton
-                    mode="auto"
-                    enabled={purchasable.isValid}
+                    // mode="auto" so it morphs to BUY when valid
                     onPress={onPress}
                     isLoading={loading}
+                    enabled={purchasable.isValid}
                 />
             </ThemedYStack>
         </ThemedYStack>
