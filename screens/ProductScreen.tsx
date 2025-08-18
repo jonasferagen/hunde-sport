@@ -52,9 +52,7 @@ const ProductScreenContent = () => {
   return (
     <Prof id="ProductScreen">
       <PageView>
-        <PageHeader>
-          <Breadcrumbs isLastClickable={false} />
-        </PageHeader>
+        <PageHeader><Breadcrumbs isLastClickable={false} /></PageHeader>
         <PageBody mode="scroll">
           <PageSection pt="$5">
             <ProductImage />

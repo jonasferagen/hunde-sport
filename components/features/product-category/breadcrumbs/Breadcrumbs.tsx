@@ -12,8 +12,7 @@ interface BreadcrumbsProps {
 export const Breadcrumbs = React.memo(({ isLastClickable = false }: BreadcrumbsProps) => {
     const { productCategory } = useProductCategoryContext();
     const trail = getBreadcrumbTrail(productCategory?.id ?? 0);
-
-    return (
+    return (trail.length > 0 ?
         <ThemedXStack gap="none" ai="center" fw="wrap">
             {trail.map((breadcrumbCategory, index) => (
                 <Breadcrumb
@@ -24,7 +23,7 @@ export const Breadcrumbs = React.memo(({ isLastClickable = false }: BreadcrumbsP
                 />
             ))}
         </ThemedXStack>
-    );
+        : null);
 });
 
 const getBreadcrumbTrail = (productCategoryId: number) => {

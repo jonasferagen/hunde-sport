@@ -18,6 +18,7 @@ export const AttributeSelector = React.memo(function AttributeSelector({
                 return (
                     <AttributeOption
                         key={item.name}
+                        option={item.name}
                         selectOption={handlePress}
                         isSelected={isSelected}
                         item={item}

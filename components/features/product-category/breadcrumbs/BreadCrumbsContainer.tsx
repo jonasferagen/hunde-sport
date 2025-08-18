@@ -1,6 +1,5 @@
-import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui/themed-components";
+import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui/themed-components";
 import { useProductCategoryContext } from "@/contexts";
-import { ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
 import React from "react";
 import Animated, { LinearTransition, SlideInLeft, SlideOutDown } from "react-native-reanimated";
 import { StackProps } from "tamagui";
@@ -15,14 +14,17 @@ export const BreadCrumbsContainer = ({ ...stackProps }: StackProps & { defaultOp
 
     return (
         <ThemedYStack  {...stackProps}>
-            <ThemedXStack ai="center" >
+            <ThemedXStack ai="center" f={1}>
+                <ThemedYStack f={1}>
+                    <Breadcrumbs isLastClickable={true} />
+                </ThemedYStack>
                 <ThemedButton
                     circular
-                    display={productCategories.length === 0 ? 'none' : 'flex'}
+                    theme="dark_primary"
+                    disabled={productCategories.length === 0}
                     onPress={() => setShowCategories(!showCategories)}>
-                    {showCategories ? <ChevronUp /> : <ChevronDown />}
+                    <ThemedText fos="$5" bold>{productCategories.length}</ThemedText>
                 </ThemedButton>
-                <Breadcrumbs isLastClickable={true} />
             </ThemedXStack>
 
             {(showCategories) &&

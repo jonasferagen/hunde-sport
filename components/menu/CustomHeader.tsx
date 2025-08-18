@@ -17,7 +17,7 @@ const HeaderChrome = React.memo(function HeaderChrome({
         <Theme name={THEME_HEADER}>
             <ThemedXStack container split box>
                 <ThemedLinearGradient />
-                <ThemedButton theme="tint" circular onPress={onOpen}>
+                <ThemedButton theme="primary_tint" circular onPress={onOpen}>
                     <Menu />
                 </ThemedButton>
                 <H4 fs={1}>{title}</H4>

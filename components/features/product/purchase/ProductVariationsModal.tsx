@@ -6,7 +6,7 @@ import { useDeferredOpen } from '@/hooks/useDeferredOpen';
 import { Purchasable } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Sheet, YStack } from 'tamagui';
+import { Sheet } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from '../display';
 import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
 import { PurchaseButton } from './PurchaseButton';
@@ -51,7 +51,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const IMAGE_H = 200;
     const paddings = 0; // if your frame has vertical padding, add it here
     const availableForOptions = Math.max(0, bodyH - headerH - IMAGE_H - footerH - CTA_HEIGHT - paddings);
-    const needsScroll = contentH > availableForOptions + 1;
+
 
     const onPress = async () => {
         if (loading) return;
@@ -60,6 +60,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
             const res = await addToCart(purchasable, 1);
             if (res.ok) close();
         } finally {
+            console.log("finally");
             setLoading(false);
         }
     };
@@ -77,22 +78,16 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
 
             {/* attributes (auto-fit; scroll only if needed) */}
             {ready ? (
-                needsScroll ? (
-                    <Sheet.ScrollView
-                        maxHeight={availableForOptions}
-                        keyboardShouldPersistTaps="handled"
-                        onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
-                        contentContainerStyle={{ paddingBottom: 12 }} // some breathing room
-                    >
-                        <ProductVariationSelect />
-                    </Sheet.ScrollView>
-                ) : (
-                    <YStack f={1}
-                        onLayout={(e) => setContentH(Math.round(e.nativeEvent.layout.height))}
-                    >
-                        <ProductVariationSelect />
-                    </YStack>
-                )
+                <Sheet.ScrollView
+                    // IMPORTANT: do not set f={1} or flex here
+                    style={availableForOptions ? { maxHeight: availableForOptions } : undefined}
+                    keyboardShouldPersistTaps="handled"
+                    onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
+                    scrollEnabled={contentH > availableForOptions}
+                    contentContainerStyle={{ paddingBottom: 12 }}
+                >
+                    {ready ? <ProductVariationSelect /> : null}
+                </Sheet.ScrollView>
             ) : null}
 
             {/* status & price */}
