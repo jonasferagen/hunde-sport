@@ -15,7 +15,7 @@ export const ProductPriceLite = React.memo(function ProductPriceLite({
     // Variable products: show range
     if (prices.price_range) {
         return (
-            <ThemedText {...props}>
+            <ThemedText bold {...props}>
                 {formatRangeWithHeader(prices.price_range, prices, { style: 'short' })}
             </ThemedText>
         );
@@ -38,7 +38,7 @@ export const ProductPriceLite = React.memo(function ProductPriceLite({
         );
     }
 
-    return <ThemedText {...props}>{unitFormatted}</ThemedText>;
+    return <ThemedText bold {...props}>{unitFormatted}</ThemedText>;
 }, (a, b) => {
     // prevent re-renders unless display-relevant fields change
     const ap = a.product, bp = b.product;

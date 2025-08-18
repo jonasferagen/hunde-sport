@@ -37,10 +37,13 @@ type ProductTilesProps = {
     limit?: number; // NEW: cap items for home rows
 } & StackProps;
 
-const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, limit = 8, ...stackProps }) => {
+const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, limit = 4, ...stackProps }) => {
 
     const all = queryResult.items ?? [];
-    const staged = useProgressiveSlice(all, limit, all.length - 8, 120); // 8 now, +8 after ~120ms
+
+    //const items = (queryResult.items ?? []).slice(0, limit); // e.g., 8
+
+    const staged = useProgressiveSlice(all, limit, all.length - limit, 120);
     const { to } = useCanonicalNav();
 
     return (
@@ -51,6 +54,7 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, limit = 8, ...
             gapToken="$3"
             padToken="$3"
             leadingInsetToken="$6"
+            h={PRODUCT_TILE_HEIGHT}
             renderItem={({ item: product, index }) => (
 
                 <TileFixed

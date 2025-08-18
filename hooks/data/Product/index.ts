@@ -50,6 +50,7 @@ export const useProductsBySearch = (query: string, options = { enabled: !!query 
         queryFn: ({ pageParam }) => fetchProductsBySearch(query, { page: pageParam }),
         ...options,
         ...queryOptions,
+
     });
     return handleQueryResult<PurchasableProduct>(result);
 }

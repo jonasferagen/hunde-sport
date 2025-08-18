@@ -26,7 +26,8 @@ export const ProductPriceTag = React.memo(function ProductPriceTag({ product, br
             p="$1"
             px="$2"
             gap="$1"
-            br={br}
+            br="$5"
+
             bg="$background"
             disabled={!isInStock || !isPurchasable}
             {...props}

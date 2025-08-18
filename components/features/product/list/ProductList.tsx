@@ -61,7 +61,6 @@ export const ProductList = memo(({
             ListFooterComponent={Footer}
             estimatedItemSize={ITEM_HEIGHT}
             overrideItemLayout={(layout) => { layout.size = ITEM_HEIGHT; }}
-
             drawDistance={1400} // optional: helps during fast flings
             estimatedListSize={{ height, width }}
         />

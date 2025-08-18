@@ -26,12 +26,14 @@ export const responseTransformer = <T>(response: ApiResponse<any>, mapper: (item
 }
 
 export const queryOptions = {
+    placeholderData: (prev: any) => prev,
     initialPageParam: 1,
     getNextPageParam: (lastPage: any, allPages: any[]) => {
         if (!lastPage?.totalPages) return undefined;
         const nextPage = allPages.length + 1;
         return nextPage <= lastPage.totalPages ? nextPage : undefined;
     }
+
 };
 
 

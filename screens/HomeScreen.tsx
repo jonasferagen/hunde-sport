@@ -3,12 +3,13 @@ import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } f
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { Defer } from '@/components/ui/Defer';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
-import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECENT } from '@/config/app';
+import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS, PRODUCT_TILE_HEIGHT, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECENT } from '@/config/app';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { useScreenReady } from '@/hooks/useScreenReady';
 import { spacePx } from '@/lib/helpers';
 import React from 'react';
 import { Dimensions } from 'react-native';
+import { LoadingScreen } from './misc/LoadingScreen';
 
 const COLS = NUM_CATEGORY_TILE_COLUMNS; // e.g. 3
 const ROWS = NUM_CATEGORY_TILE_ROWS;    // e.g. 3
@@ -22,43 +23,43 @@ const CATEGORY_GRID_H = Math.round(ROWS * tileW + GAP_PX * (ROWS - 1));
 export const HomeScreen = React.memo(() => {
 
 
-    const uready = useScreenReady();
-    const ready = false;
+    const ready = useScreenReady();
 
     const { to } = useCanonicalNav();
     const handleSearch = (q: string) => to('search', q);
 
-
+    if (!ready) {
+        return <LoadingScreen />
+    }
 
     return (
         <PageView>
             <PageHeader >
-                {true && <SearchBar onSubmit={handleSearch} />}
+                {<SearchBar onSubmit={handleSearch} />}
             </PageHeader>
             <PageBody mode="scroll" >
                 <PageSection title="Nyheter" bleedX >
-                    {ready &&
-                        <RecentProducts theme={THEME_PRODUCTS_RECENT} />
-                    }
+                    <Defer minDelay={50} once >
+                        <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
+                    </Defer>
                 </PageSection>
                 <PageSection title="Kategorier" theme="dark_primary" bleedX contentHeight={CATEGORY_GRID_H} >
-                    {true && <ProductCategoryTiles key="categories" mx="$3" />}
+                    <ProductCategoryTiles key="categories" mx="$3" />
                 </PageSection>
-
                 <PageSection title="Tilbud" bleedX >
-                    {<Defer minDelay={50} once>
-                        <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} />
-                    </Defer>}
+                    <Defer minDelay={100} once>
+                        <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
+                    </Defer>
                 </PageSection>
                 <PageSection title="Utvalgte produkter" bleedX theme="dark_primary">
-                    {ready &&
-                        <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} />
-                    }
+                    <Defer minDelay={200} once>
+                        <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
+                    </Defer>
                 </PageSection>
                 <PageSection title="Debug" bleedX >
-                    {ready &&
-                        <DebugProducts key='debug' />
-                    }
+                    <Defer minDelay={300} once>
+                        <DebugProducts key='debug' h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
+                    </Defer>
                 </PageSection>
             </PageBody>
         </PageView >

@@ -79,6 +79,7 @@ export function HorizontalTiles<T extends { id: number | string }>({
     ...props
 }: HorizontalTilesProps<T>): JSX.Element {
     const leadPx = spacePx(leadingInsetToken ?? padToken); // how far the first item starts from the left
+
     const padPx = spacePx(padToken);
     const gapPx = spacePx(gapToken);
 
@@ -86,7 +87,7 @@ export function HorizontalTiles<T extends { id: number | string }>({
     const [atEnd, setAtEnd] = useState(false);
     const contentWRef = useRef(0);
     const containerWRef = useRef(0);
-    const lastStartRef = useRef(true);
+    //    const lastStartRef = useRef(true);
     const lastEndRef = useRef(false);
 
     const onContentSizeChange = useCallback((w: number) => {
@@ -139,7 +140,13 @@ export function HorizontalTiles<T extends { id: number | string }>({
 
     return (
 
-        <View style={[styles.container, { height: estimatedItemCrossSize }]} onLayout={onLayout} {...props}>
+        <View
+            style={[styles.container, { height: estimatedItemCrossSize }]}
+            onLayout={onLayout}
+            mih={estimatedItemCrossSize}
+            h={estimatedItemCrossSize}
+            {...props}
+        >
             <FlashList
                 horizontal
                 data={items}
@@ -151,10 +158,10 @@ export function HorizontalTiles<T extends { id: number | string }>({
                 estimatedItemSize={estimatedItemSize}
                 estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
                 overrideItemLayout={(layout) => { layout.size = estimatedItemSize; layout.span = 1; }}
-
+                drawDistance={leadPx + estimatedItemSize * 2}
+                getItemType={() => 'product'}
                 // ~80% screen overscan
                 scrollEventThrottle={32}
-                drawDistance={Math.ceil(estimatedItemSize * 2)}  // e.g. 240px for 160px tiles
                 onContentSizeChange={onContentSizeChange}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.5}
@@ -168,6 +175,7 @@ export function HorizontalTiles<T extends { id: number | string }>({
                         <View style={{ width: padPx }} /> // match trailing padding
                     )
                 }
+
             />
 
             {/* Edge fades sized by token */}
