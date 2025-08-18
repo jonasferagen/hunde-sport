@@ -38,7 +38,6 @@ const AppLayout = React.memo((): React.ReactElement => {
                     screenOptions={screenOptions}
                     detachInactiveScreens={false}
                     initialRouteName='cart'
-
                 >
                     {Object.values(routes).map((route) => (
                         <Drawer.Screen
