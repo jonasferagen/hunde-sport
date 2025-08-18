@@ -1,5 +1,4 @@
 import { ModalHost } from '@/components/features/product/purchase/ModalHost';
-import { NavInspector } from '@/lib/debug/NavInspector';
 import { queryClient } from '@/lib/queryClient';
 import { appConfig } from '@/tamagui/tamagui.config';
 
@@ -18,7 +17,6 @@ const RootLayout = (): JSX.Element => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NavInspector />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>

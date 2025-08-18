@@ -1,6 +1,5 @@
 import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
-import { useNavProgress } from '@/stores/navProgressStore';
 import { useDrawerStatus, type DrawerContentComponentProps } from '@react-navigation/drawer';
 import { DrawerActions, useNavigationState } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
@@ -29,6 +28,7 @@ export const CustomDrawer = React.memo(({ navigation }
     const activeRouteName = useNavigationState((s) =>
         isOpen ? s.routes[s.index]?.name ?? 'index' : 'index'
     );
+    const [pending, setPending] = React.useState<keyof typeof routes | null>(null);
 
     const [showTree, setShowTree] = React.useState(false);
     React.useEffect(() => {
@@ -38,18 +38,20 @@ export const CustomDrawer = React.memo(({ navigation }
         }
     }, [isOpen, showTree]);
 
-    const onNavigate = React.useCallback((name: keyof typeof routes, params?: Record<string, unknown>) => {
-        const state = navigation.getState();
-
-        if (state.routeNames.includes(name as string)) {
-            useNavProgress.getState().start();
-            navigation.dispatch(DrawerActions.closeDrawer());
-            navigation.dispatch(DrawerActions.jumpTo(name as string, params));
-
+    React.useEffect(() => {
+        if (drawerStatus === 'closed' && pending) {
+            navigation.dispatch(DrawerActions.jumpTo(pending as string));
+            setPending(null);
         }
+    }, [drawerStatus, pending, navigation]);
+
+    const onNavigate = React.useCallback((name: keyof typeof routes) => {
+        // start close IMMEDIATELY; defer the heavy mount
+        setPending(name);
+        navigation.dispatch(DrawerActions.closeDrawer());
     }, [navigation]);
 
-    const close = () => { navigation.closeDrawer(); }
+    const close = () => { navigation.dispatch(DrawerActions.closeDrawer()); }
 
 
     return (

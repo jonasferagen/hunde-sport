@@ -46,6 +46,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                             name={route.name}
                             options={{
                                 title: route.label,
+                                lazy: !route.showInDrawer,
                                 ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
                             }}
                         />
