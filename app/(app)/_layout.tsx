@@ -1,4 +1,5 @@
 // app/(app)/_layout.tsx
+import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';

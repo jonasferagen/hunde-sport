@@ -40,7 +40,6 @@ const scheduleNav = (fn: () => void, withoutOverlay: boolean) => {
         requestAnimationFrame(() => {
             // give overlay a paint
             setTimeout(() => {
-                console.log("a");
                 startTransition(fn); /** Note: hack still needed for the overlay to work */
             }, 1);
         });

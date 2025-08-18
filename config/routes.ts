@@ -89,8 +89,6 @@ export const resolveTitle = (route: RouteProp<any, any>): string => {
     return route?.params?.name || route?.name || 'hunde-sport.no';
 }
 
-
-
 export const cleanHref = (href: HrefObject): HrefObject => {
     const p = href.params ?? {};
     const params = Object.fromEntries(
@@ -100,7 +98,6 @@ export const cleanHref = (href: HrefObject): HrefObject => {
             return true;
         })
     );
-
 
     return Object.keys(params).length ? { ...href, params } : { pathname: href.pathname };
 };

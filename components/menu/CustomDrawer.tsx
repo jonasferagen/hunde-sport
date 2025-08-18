@@ -1,9 +1,8 @@
-
 import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useNavProgress } from '@/stores/navProgressStore';
 import { useDrawerStatus, type DrawerContentComponentProps } from '@react-navigation/drawer';
-import { useNavigationState } from '@react-navigation/native';
+import { DrawerActions, useNavigationState } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
 import React, { Suspense } from 'react';
 import { InteractionManager } from 'react-native';
@@ -18,14 +17,15 @@ const LazyCategoryTree = React.lazy(() =>
         ({ default: m.ProductCategoryTree })) as Promise<{ default: any }>);
 
 
-
 export const CustomDrawer = React.memo(({ navigation }
     : { navigation: DrawerContentComponentProps['navigation'] }) => {
+
     const DRAWER_ITEMS = Object.values(routes)
         .filter(r => r.showInDrawer)
         .map(r => ({ name: r.name as keyof typeof routes, label: r.label }));
-    const { to } = useCanonicalNav();
-    const isOpen = useDrawerStatus() === 'open';
+
+    const drawerStatus = useDrawerStatus();
+    const isOpen = drawerStatus === 'open';
     const activeRouteName = useNavigationState((s) =>
         isOpen ? s.routes[s.index]?.name ?? 'index' : 'index'
     );
@@ -38,6 +38,21 @@ export const CustomDrawer = React.memo(({ navigation }
         }
     }, [isOpen, showTree]);
 
+    const onNavigate = React.useCallback((name: keyof typeof routes) => {
+        const state = navigation.getState();
+        if (state.routeNames.includes(name as string)) {
+            navigation.dispatch(DrawerActions.closeDrawer());
+
+            setTimeout(() => {
+                useNavProgress.getState().start();
+            }, 50);
+            setTimeout(() => {
+                navigation.dispatch(DrawerActions.jumpTo(name as string));
+            }, 100);
+        }
+    }, [navigation]);
+
+    const close = () => { navigation.closeDrawer() }
 
 
     return (
@@ -45,18 +60,19 @@ export const CustomDrawer = React.memo(({ navigation }
             <ThemedYStack box f={1} >
                 <ThemedXStack container split>
                     <ThemedText size="$6">hunde-sport.no</ThemedText>
-                    <ThemedButton theme="tint" circular onPress={() => { navigation.closeDrawer() }}>
+                    <ThemedButton theme="tint" circular onPress={close}>
                         <X />
                     </ThemedButton>
                 </ThemedXStack>
                 <ScrollView>
                     <ThemedYStack container="$4">
                         {DRAWER_ITEMS.map(({ name, label }) => (
-                            <DrawerLink key={name}
+                            <DrawerLink
+                                key={name}
                                 name={name}
                                 label={label}
                                 active={activeRouteName === name}
-                                to={to}
+                                onNavigate={onNavigate}
                             />
                         ))}
                         <ThemedText size="$6">Kategorier</ThemedText>
@@ -76,16 +92,15 @@ export const CustomDrawer = React.memo(({ navigation }
 });
 
 
-const DrawerLink = React.memo(({ name, label, active, to }: {
-    name: keyof typeof routes;
-    label: string;
-    active: boolean;
-    to: (name: keyof typeof routes) => void;
+// DrawerLink.tsx
+const DrawerLink = React.memo(({ name, label, active, onNavigate }: {
+    name: keyof typeof routes; label: string; active: boolean;
+    onNavigate: (name: keyof typeof routes) => void;
 }) => {
-    const onPress = React.useCallback(() => to(name), [to, name]);
     return (
-        <ThemedButton onPress={onPress} theme={active ? 'tint' : 'shade'}>
+        <ThemedButton onPress={() => onNavigate(name)} theme={active ? 'tint' : 'shade'}>
             <ThemedText>{label}</ThemedText>
         </ThemedButton>
     );
 });
+

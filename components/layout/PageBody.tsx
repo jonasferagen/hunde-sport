@@ -15,8 +15,6 @@ export const PageBody = React.forwardRef<ScrollView, PageBodyProps>(({ children,
     <ThemedYStack
       box
       f={1}
-      boc="green"
-      bw={2}
       mih={0}
       gap="none"
       {...props}
