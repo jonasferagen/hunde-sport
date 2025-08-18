@@ -66,8 +66,8 @@ export const SearchScreen = () => {
                     <SizableText f={0}>{total}</SizableText>
                 </ThemedXStack>
             </PageHeader>
-            <PageBody>
-                <PageSection fill padding="none">
+            <PageBody pad="none">
+                <PageSection useContainer={false} pad="none" fill f={1}>
                     {/* Show nothing (or a subtle placeholder) until ready */}
                     {!ready ? (
                         <LoadingScreen />

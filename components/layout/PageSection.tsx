@@ -5,14 +5,14 @@ import { YStackProps } from 'tamagui';
 import { ThemedText } from '../ui';
 import { ThemedYStack } from '../ui/themed-components/ThemedStack';
 
+type SpaceToken = '$1' | '$2' | '$3' | '$4' | '$5' | 'none';
+
 type PageSectionProps = YStackProps & {
   title?: string;
-  /** Horizontal padding token for the section container */
-  pad?: '$1' | '$2' | '$3' | '$4' | '$5';
-  /** Let only the content bleed to screen edges; title remains aligned */
-  bleedX?: boolean;
-  /** Let children (e.g., FlashList) own the height */
-  fill?: boolean;
+  pad?: SpaceToken;               // section’s horizontal gutter
+  bleedX?: boolean;               // let content bleed past the gutter (keeps title aligned)
+  fill?: boolean;                 // let children (e.g. FlashList) own height
+  useContainer?: boolean;         // NEW: toggle Tamagui "container" behavior
 };
 
 export const PageSection: React.FC<PageSectionProps> = ({
@@ -21,33 +21,29 @@ export const PageSection: React.FC<PageSectionProps> = ({
   pad = '$3',
   bleedX = false,
   fill = false,
+  useContainer = true,
   ...stackProps
 }) => {
-  const padPx = useMemo(() => spacePx(pad), [pad]);
+  const padPx = useMemo(() => (pad === 'none' ? 0 : spacePx(pad)), [pad]);
   const hasChildren = React.Children.toArray(children).some(Boolean);
   if (!hasChildren) return null;
 
   return (
-    <ThemedYStack box container {...stackProps} >
-      {title ? (
-        <ThemedText size="$6"  >
-          {title}
-        </ThemedText>
-      ) : null}
+    <ThemedYStack
+      box
+      {...(useContainer ? { container: true } : {})}  // <- turn off when you want edge-to-edge
+      {...stackProps}
+    >
+      {title ? <ThemedText size="$6" px={useContainer ? padPx : 0}>{title}</ThemedText> : null}
 
-      {/* Content wrapper: either padded or full-bleed via negative margins */}
       <ThemedYStack
-        // normal padded content
-        px={bleedX ? undefined : padPx}
-        // bleed to edges by canceling the container padding
-        mx={bleedX ? -padPx : undefined}
-
+        px={bleedX || !useContainer ? 0 : padPx}
+        mx={bleedX && useContainer ? -padPx : 0}
         f={fill ? 1 : undefined}
-
         mih={fill ? 0 : undefined}
       >
         {children}
       </ThemedYStack>
-    </ThemedYStack >
+    </ThemedYStack>
   );
 };

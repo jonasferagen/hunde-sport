@@ -35,8 +35,6 @@ export const ProductList = React.memo(function ProductList({
 
 
     return (
-
-
         <FlashList
             data={products as PurchasableProduct[]}
             renderItem={renderItem}
@@ -53,9 +51,6 @@ export const ProductList = React.memo(function ProductList({
             drawDistance={800}
             getItemType={() => 'product'}
             removeClippedSubviews
-
-            // optional padding without any ScrollView
-            contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 8 }}
         />
 
     );

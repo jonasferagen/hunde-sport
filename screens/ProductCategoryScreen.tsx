@@ -1,7 +1,7 @@
 import { BreadCrumbsContainer } from '@/components/features/product-category/breadcrumbs/BreadCrumbsContainer';
+import { ProductCategoryProducts } from '@/components/features/product-category/ProductCategoryProducts';
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { ThemedText } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/useScreenReady';
@@ -27,13 +27,13 @@ export const ProductCategoryScreen = memo(() => {
                 <PageHeader>
                     <BreadCrumbsContainer />
                 </PageHeader>
-                <PageBody p="none" boc="green" bw={3}>
-                    <PageSection fill padding="none" px={0} fg={1} boc="red" bw={3} >
-                        <ThemedText>Hei</ThemedText>
+                <PageBody pad="none">
+                    <PageSection useContainer={false} pad="none" fill f={1} >
+                        <ProductCategoryProducts />
                     </PageSection>
                 </PageBody>
             </PageView>
         </ProductCategoryProvider>
     )
 });
-/*<ProductCategoryProducts /> */
+
