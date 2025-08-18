@@ -1,10 +1,10 @@
 // TileFixed.tsx
-import { StoreImage } from '@/domain/StoreImage';
+import type { StoreImage } from '@/domain/StoreImage';
 import { getScaledImageUrl } from '@/lib/helpers';
-import React, { useMemo } from 'react';
-import { DimensionValue } from 'react-native';
-import { YStackProps } from 'tamagui';
-import { ThemedText, ThemedYStack } from '../themed-components';
+import React from 'react';
+import { Pressable, StyleSheet } from 'react-native';
+import type { YStackProps } from 'tamagui';
+import { ThemedText } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
 import { ThemedSurface } from '../themed-components/ThemedSurface';
@@ -12,8 +12,9 @@ import { ThemedSurface } from '../themed-components/ThemedSurface';
 type TileFixedProps = YStackProps & {
     title: string;
     image: StoreImage;
-    w: number;                   // explicit px
-    h: number;                   // explicit px
+    w: number;              // px
+    h: number;              // px
+    onPress?: () => void;
     showGradient?: boolean;
     titleLines?: number;
 };
@@ -23,38 +24,73 @@ export const TileFixed = React.memo(function TileFixed({
     image,
     w,
     h,
-    children,
+    onPress,
     showGradient = true,
     titleLines = 2,
+    children,
     ...props
 }: TileFixedProps) {
-    const uri = useMemo(
-        () => getScaledImageUrl(image.src, w as DimensionValue, h as DimensionValue),
-        [image.src, w, h]
-    );
+    // Ask CDN for exact size; no measuring needed
+    const uri = React.useMemo(() => getScaledImageUrl(image.src, w, h), [image.src, w, h]);
 
-    return (
+    const content = (
         <ThemedSurface
             w={w}
             h={h}
-            ov="hidden"
+            ov="hidden"                 // keep if you rely on clipping; else remove for Android perf
             bw={2}
             pressStyle={{ boc: '$borderColorInverse', bg: '$backgroundInverse' }}
             {...props}
         >
-            {/* No aspectRatio here; fixed box avoids measurement */}
-            <ThemedYStack fullscreen>
-                <ThemedImage uri={uri} title={title} contentFit="cover" />
-                {children}
-                {showGradient && (
-                    <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end">
-                        <ThemedLinearGradient fullscreen start={[0, 0.2]} end={[0, 0.9]} opacity={0.8} />
-                        <ThemedText bold col="$color" numberOfLines={titleLines} ellipse ta="center">
-                            {title}
-                        </ThemedText>
-                    </ThemedYStack>
-                )}
-            </ThemedYStack>
+            {/* Image fills; zero transition for lists */}
+            <ThemedImage
+                uri={uri}
+                title={title}
+                contentFit="cover"
+                transitionMs={0}
+                cachePolicy="memory-disk"
+                recyclingKey={uri}
+                w="100%"
+                h="100%"
+                borderRadiusPx={8}       // faster than overflow clipping on Android
+            />
+
+            {/* Badge or custom children */}
+            {children}
+
+            {/* Title overlay */}
+            {showGradient && (
+                <>
+                    <ThemedLinearGradient
+                        style={StyleSheet.absoluteFillObject}
+                        start={[0, 0.2]}
+                        end={[0, 0.9]}
+                        opacity={0.8}
+                    />
+                    <ThemedText
+                        pos="absolute"
+                        b="$2.5"
+                        l="$2.5"
+                        r="$2.5"
+                        ta="center"
+                        bold
+                        col="$color"
+                        numberOfLines={titleLines}
+                        ellipse
+                    >
+                        {title}
+                    </ThemedText>
+                </>
+            )}
         </ThemedSurface>
+    );
+
+    if (!onPress) return content;
+
+    // Light press feedback with minimal overhead
+    return (
+        <Pressable onPress={onPress} android_ripple={{ color: 'rgba(0,0,0,0.06)' }}>
+            {content}
+        </Pressable>
     );
 });

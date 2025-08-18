@@ -2,12 +2,12 @@
 import { StoreImage } from '@/domain/StoreImage';
 import { getScaledImageUrl } from '@/lib/helpers';
 import React, { useMemo } from 'react';
+import { PixelRatio } from 'react-native';
 import { YStackProps } from 'tamagui';
 import { ThemedText, ThemedYStack } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
 import { ThemedSurface } from '../themed-components/ThemedSurface';
-
 type TileSquareProps = YStackProps & {
     title: string;
     image: StoreImage;
@@ -20,16 +20,21 @@ type TileSquareProps = YStackProps & {
 export const TileSquare = React.memo(function TileSquare({
     title,
     image,
-    approxW = 160, // safe default; CDN can upscale/downscale
+    approxW = 200, // safe default; CDN can upscale/downscale
     children,
     showGradient = true,
     titleLines = 2,
     ...props
 }: TileSquareProps) {
     // Ask your scaler for a square; skip measuring
+
+
+    const dpr = Math.min(PixelRatio.get(), 2);
+    const approxPx = Math.round(approxW * dpr);
+
     const uri = useMemo(
-        () => getScaledImageUrl(image.src, approxW, approxW),
-        [image.src, approxW]
+        () => getScaledImageUrl(image.src, approxPx, approxPx),
+        [image.src, approxPx]
     );
 
     return (

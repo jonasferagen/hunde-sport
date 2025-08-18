@@ -1,15 +1,15 @@
 // ThemedLinearGradient.tsx
 import { darken, getLuminance, lighten, rgba } from 'polished';
 import React, { useMemo } from 'react';
-import { getVariableValue, useTheme, YStack } from 'tamagui';
+import { getVariableValue, useTheme } from 'tamagui';
 import { LinearGradient } from 'tamagui/linear-gradient';
 
 type Props = (React.ComponentProps<typeof LinearGradient> & { token?: string });
+// mutable tuples
+const START: [number, number] = [0, 0];
+const END: [number, number] = [1, 1];
 
-const START = Object.freeze([0, 0] as const);
-const END = Object.freeze([1, 1] as const);
-
-export const ThemedLinearGradient2 = React.memo(function ThemedLinearGradient({
+export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
     token = 'background',
     ...rest
 }: Props) {
@@ -25,12 +25,14 @@ export const ThemedLinearGradient2 = React.memo(function ThemedLinearGradient({
     );
     const isLight = useMemo(() => getLuminance(base) > 0.5, [base]);
     // Derive subtle 3-stop gradient
-    const colors = useMemo(() => {
+    // colors as a mutable array (or a mutable tuple)
+    const colors = useMemo<[string, string, string]>(() => {
         const top = rgba(isLight ? darken(0.05, base) : lighten(0.05, base), 0.9);
         const mid = rgba(base, 0.85);
         const bottom = rgba(isLight ? darken(0.1, base) : lighten(0.1, base), 0.9);
-        return [top, mid, bottom] as const;
+        return [top, mid, bottom];
     }, [base, isLight]);
+
 
     return (
         <LinearGradient
@@ -41,6 +43,7 @@ export const ThemedLinearGradient2 = React.memo(function ThemedLinearGradient({
             colors={colors}
             {...rest}
         />
+
     );
 }, (prev, next) => {
     // super-cheap compare; if you pass dynamic props into the gradient, consider
@@ -49,15 +52,3 @@ export const ThemedLinearGradient2 = React.memo(function ThemedLinearGradient({
 });
 
 
-
-export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
-    token = 'background',
-    ...rest
-}: Props) {
-    return <YStack
-        fullscreen
-        pointerEvents="none"
-        bg={'$background'}
-
-    />
-});
