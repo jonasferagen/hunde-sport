@@ -3,10 +3,10 @@
 
 import { createPurchasable } from '@/domain/Product/Purchasable';
 import { ProductVariation, Purchasable, PurchasableProduct } from "@/types";
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 
 // Context for Purchasable
-const PurchasableContext = createContext<{ purchasable: Purchasable; setProductVariation: (variation?: ProductVariation) => void } | undefined>(undefined);
+export const PurchasableContext = createContext<{ purchasable: Purchasable; setProductVariation: (variation?: ProductVariation) => void } | undefined>(undefined);
 
 // Hook to access PurchasableContext
 export const usePurchasableContext = () => {
@@ -15,42 +15,45 @@ export const usePurchasableContext = () => {
     return ctx;
 };
 
-
-export const PurchasableProviderInit: React.FC<{ product: PurchasableProduct; productVariation?: ProductVariation; children: ReactNode }> = ({
-    product,
-    productVariation,
-    children,
-}) => {
-    const purchasable = createPurchasable({ product, productVariation });
-    return (
-        <PurchasableProvider purchasable={purchasable} children={children} />
+// PurchasableProviderInit.tsx
+export const PurchasableProviderInit: React.FC<{
+    product: PurchasableProduct;
+    productVariation?: ProductVariation;
+    children: React.ReactNode;
+}> = ({ product, productVariation, children }) => {
+    const purchasable = React.useMemo(
+        () => createPurchasable({ product, productVariation }),
+        [product.id, productVariation?.id, product.priceKey, product.availabilityKey]
     );
-}
+    return <PurchasableProvider purchasable={purchasable}>{children}</PurchasableProvider>;
+};
 
 // PurchasableProvider component
-export const PurchasableProvider: React.FC<{ purchasable: Purchasable; children: ReactNode }> = ({
-    purchasable: initialPurchasable,
-    children,
-}) => {
+// PurchasableProvider.tsx
+export const PurchasableProvider: React.FC<{
+    purchasable: Purchasable;
+    children: React.ReactNode;
+}> = ({ purchasable: initialPurchasable, children }) => {
+    const [purchasable, setPurchasable] = React.useState(initialPurchasable);
 
+    // keep state in sync if the prop changes (e.g., new product id)
+    React.useEffect(() => {
+        if (purchasable.product.id !== initialPurchasable.product.id ||
+            purchasable.productVariation?.id !== initialPurchasable.productVariation?.id) {
+            setPurchasable(initialPurchasable);
+        }
+    }, [initialPurchasable, purchasable.product.id, purchasable.productVariation?.id]);
 
-    const [purchasable, setPurchasable] = useState<Purchasable>(initialPurchasable);
-    if (!purchasable?.product) {
-        console.error("PurchasableProvider must be used with a valid Purchasable", purchasable);
-        throw new Error("PurchasableProvider must be used with a valid Purchasable");
-    }
+    const setProductVariation = React.useCallback((productVariation?: ProductVariation) => {
+        if (productVariation !== purchasable.productVariation) {
+            setPurchasable(createPurchasable({ product: purchasable.product, productVariation }));
+        }
+    }, [purchasable.product, purchasable.productVariation]);
 
-    // Memoized context value, which includes purchasable and a function to set the product variation
-    const contextValue = useMemo(() => ({
-        purchasable,
-        setProductVariation: (productVariation?: ProductVariation) => {
-
-            if (productVariation !== purchasable.productVariation) {
-                const updatedPurchasable = createPurchasable({ product: purchasable.product, productVariation });
-                setPurchasable(updatedPurchasable); // Update the purchasable with the selected variation
-            }
-        },
-    }), [purchasable]);
+    const contextValue = React.useMemo(
+        () => ({ purchasable, setProductVariation }),
+        [purchasable, setProductVariation]
+    );
 
     return (
         <PurchasableContext.Provider value={contextValue}>

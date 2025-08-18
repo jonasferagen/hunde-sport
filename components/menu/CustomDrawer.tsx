@@ -1,7 +1,8 @@
 import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
+import { useActiveDrawerRouteWhenOpen } from '@/hooks/useActiveDrawerRouteWhenOpen';
 import { useDrawerStatus, type DrawerContentComponentProps } from '@react-navigation/drawer';
-import { DrawerActions, useNavigationState } from '@react-navigation/native';
+import { DrawerActions } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
 import React, { Suspense } from 'react';
 import { InteractionManager } from 'react-native';
@@ -25,9 +26,7 @@ export const CustomDrawer = React.memo(({ navigation }
 
     const drawerStatus = useDrawerStatus();
     const isOpen = drawerStatus === 'open';
-    const activeRouteName = useNavigationState((s) =>
-        isOpen ? s.routes[s.index]?.name ?? 'index' : 'index'
-    );
+    const activeRouteName = useActiveDrawerRouteWhenOpen();
     const [pending, setPending] = React.useState<keyof typeof routes | null>(null);
 
     const [showTree, setShowTree] = React.useState(false);

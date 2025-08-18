@@ -3,8 +3,8 @@ import { spacePx } from '@/lib/helpers';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { rgba } from 'polished';
 import React, { JSX, useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, StyleSheet } from 'react-native';
-import { Spinner, StackProps, Theme, View, XStack, getVariableValue, useTheme } from 'tamagui';
+import { Dimensions, StyleSheet } from 'react-native';
+import { Spinner, StackProps, View, XStack, getVariableValue, useTheme } from 'tamagui';
 import { ThemedLinearGradient } from '../themed-components';
 
 const SCREEN_W = Dimensions.get('window').width;
@@ -102,6 +102,8 @@ export function HorizontalTiles<T extends { id: number | string }>({
         containerWRef.current = e.nativeEvent.layout.width;
     }, []);
 
+    /*
+
     const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
         const x = e.nativeEvent.contentOffset.x;
         const start = x <= 10;
@@ -114,7 +116,7 @@ export function HorizontalTiles<T extends { id: number | string }>({
             lastEndRef.current = end;
             setAtEnd(end);
         }
-    }, []);
+    }, []); */
 
     const onEndReached = useCallback(() => {
         if (!isLoading && hasNextPage && fetchNextPage) fetchNextPage();
@@ -136,43 +138,43 @@ export function HorizontalTiles<T extends { id: number | string }>({
     if (!items?.length) return <></>;
 
     return (
-        <Theme name={theme}>
-            <View style={[styles.container, { height: estimatedItemCrossSize }]} onLayout={onLayout} {...props}>
-                <FlashList
-                    horizontal
-                    data={items}
-                    renderItem={renderItem}
-                    keyExtractor={(p) => String(p.id)}
-                    showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={ItemSeparatorComponent}
-                    // sizing hints
-                    estimatedItemSize={estimatedItemSize}
-                    estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
-                    overrideItemLayout={(layout) => { layout.size = estimatedItemSize; layout.span = 1; }}
-                    initialNumToRender={Math.ceil(SCREEN_W / estimatedItemSize) + 1} // only what's visible + 1
-                    drawDistance={Math.ceil(SCREEN_W * 0.8)}                          // ~80% screen overscan
-                    scrollEventThrottle={32}
 
-                    onContentSizeChange={onContentSizeChange}
-                    onEndReached={onEndReached}
-                    onEndReachedThreshold={0.5}
-                    contentContainerStyle={contentStyle}
-                    ListFooterComponent={
-                        hasNextPage && isLoading ? (
-                            <View style={[styles.footer, { marginLeft: gapPx }]}>
-                                <Spinner />
-                            </View>
-                        ) : (
-                            <View style={{ width: padPx }} /> // match trailing padding
-                        )
-                    }
-                />
+        <View style={[styles.container, { height: estimatedItemCrossSize }]} onLayout={onLayout} {...props}>
+            <FlashList
+                horizontal
+                data={items}
+                renderItem={renderItem}
+                keyExtractor={(p) => String(p.id)}
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={ItemSeparatorComponent}
+                // sizing hints
+                estimatedItemSize={estimatedItemSize}
+                estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
+                overrideItemLayout={(layout) => { layout.size = estimatedItemSize; layout.span = 1; }}
 
-                {/* Edge fades sized by token */}
-                {!atEnd && <ScrollIndicator side="right" widthToken={indicatorWidthToken} />}
-                {!atStart && <ScrollIndicator side="left" widthToken={indicatorWidthToken} />}
-            </View>
-        </Theme>
+                // ~80% screen overscan
+                scrollEventThrottle={32}
+                drawDistance={Math.ceil(estimatedItemSize * 2)}  // e.g. 240px for 160px tiles
+                onContentSizeChange={onContentSizeChange}
+                onEndReached={onEndReached}
+                onEndReachedThreshold={0.5}
+                contentContainerStyle={contentStyle}
+                ListFooterComponent={
+                    hasNextPage && isLoading ? (
+                        <View style={[styles.footer, { marginLeft: gapPx }]}>
+                            <Spinner />
+                        </View>
+                    ) : (
+                        <View style={{ width: padPx }} /> // match trailing padding
+                    )
+                }
+            />
+
+            {/* Edge fades sized by token */}
+            {!atEnd && <ScrollIndicator side="right" widthToken={indicatorWidthToken} />}
+            {!atStart && <ScrollIndicator side="left" widthToken={indicatorWidthToken} />}
+        </View>
+
     );
 }
 

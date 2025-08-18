@@ -1,33 +1,39 @@
 import { ThemedXStack } from '@/components/ui';
 import { THEME_PRICE_TAG, THEME_PRICE_TAG_SALE } from '@/config/app';
-import { usePurchasableContext } from '@/contexts/PurchasableContext';
+import { PurchasableProduct } from '@/types';
 import { StarFull } from '@tamagui/lucide-icons';
-import React, { JSX } from 'react';
+import React from 'react';
 import { SizableTextProps, StackProps } from 'tamagui';
-import { ProductPrice } from './ProductPrice';
+import { ProductPriceLite } from './ProductPriceLite';
 
-interface ProductPriceTagProps extends StackProps { textProps?: SizableTextProps; }
+interface ProductPriceTagProps extends StackProps {
+    product: PurchasableProduct,
+    textProps?: SizableTextProps
+}
 
-export const ProductPriceTag = ({ textProps, br = "$3", ...stackProps }: ProductPriceTagProps): JSX.Element => {
+export const ProductPriceTag = React.memo(function ProductPriceTag({ product, br, ...props }: ProductPriceTagProps) {
 
-    const { purchasable } = usePurchasableContext();
-    const { isInStock, isPurchasable, isOnSale } = purchasable.availability;
 
+    const { availability } = product;
+    const { isInStock, isPurchasable, isOnSale } = availability;
     const theme = isOnSale ? THEME_PRICE_TAG_SALE : THEME_PRICE_TAG;
 
-    return <ThemedXStack
-        theme={theme}
-        ai="center"
-        jc="center"
-        p="$1"
-        px="$2"
-        gap="$1"
-        br={br}
-        bg="$background"
-        disabled={!isInStock || !isPurchasable}
-        {...stackProps}>
+    return (
+        <ThemedXStack
+            theme={theme}
+            ai="center"
+            jc="center"
+            p="$1"
+            px="$2"
+            gap="$1"
+            br={br}
+            bg="$background"
+            disabled={!isInStock || !isPurchasable}
+            {...props}
+        >
+            {isOnSale && <StarFull scale={0.5} color="gold" />}
+            <ProductPriceLite product={product} />
 
-        {isOnSale && <StarFull scale={.5} color="gold" />}
-        <ProductPrice {...textProps} />
-    </ThemedXStack>;
-};
+        </ThemedXStack>
+    );
+});

@@ -46,8 +46,8 @@ export const HomeScreen = React.memo(() => {
                 </PageSection>
 
                 <PageSection title="Tilbud" bleedX >
-                    {true && <Defer minDelay={50} once>
-                        <DiscountedProducts limit={8} theme={THEME_PRODUCTS_DISCOUNTED} />
+                    {<Defer minDelay={50} once>
+                        <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} />
                     </Defer>}
                 </PageSection>
                 <PageSection title="Utvalgte produkter" bleedX theme="dark_primary">

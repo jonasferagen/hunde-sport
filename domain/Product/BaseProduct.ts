@@ -110,4 +110,13 @@ export class BaseProduct<T extends BaseProductData> {
             isOnBackOrder: this.is_on_backorder,
         };
     }
+
+    get priceKey() {
+        const p = this.prices;
+        return `${p.currency_code}|${p.price}|${p.sale_price}|${p.regular_price}|${!!p.price_range}`;
+    }
+    get availabilityKey() {
+        return `${+this.is_in_stock}${+this.is_purchasable}${+this.is_on_backorder}${+this.on_sale}`;
+    }
+
 }

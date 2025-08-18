@@ -25,6 +25,8 @@ export interface ThemedImageProps extends YStackProps {
     recyclingKey?: string;
     /** Border radius applied directly to bitmap (faster than overflow: hidden) */
     borderRadiusPx?: number;
+    /** Background color for image, should probably be white or transparent */
+    bg?: string;
 }
 
 /** Ultra-light image for lists/tiles. */
@@ -39,6 +41,7 @@ export const ThemedImage = memo(function ThemedImage({
     priority = 'normal',
     recyclingKey,
     borderRadiusPx,
+    bg = "white",
     w = '100%',
     h = '100%',
     ...props
@@ -56,7 +59,7 @@ export const ThemedImage = memo(function ThemedImage({
     }, [aspectRatio, borderRadiusPx, h]);
 
     return (
-        <View style={[{ width: w as any, height: h as any, backgroundColor: "white" }, style]}>
+        <View style={[{ width: w as any, height: h as any, backgroundColor: bg }, style]}>
             <ExpoImage
                 source={uri ? { uri } : undefined}
                 accessibilityLabel={title}
