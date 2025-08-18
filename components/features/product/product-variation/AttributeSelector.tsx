@@ -15,13 +15,12 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
         <XStack
             f={1}
             miw={0}
-            mih={0} // ✅ prevents collapse
+            mih={0}
             fw="wrap"
             gap="$1"
         >
             {options.map((item) => {
                 const isSelected = selectedValue === item.name;
-
                 const handlePress = () => {
                     onSelect(isSelected ? null : item.name);
                 };

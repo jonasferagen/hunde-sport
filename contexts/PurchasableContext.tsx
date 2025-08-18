@@ -44,11 +44,21 @@ export const PurchasableProvider: React.FC<{
         }
     }, [initialPurchasable, purchasable.product.id, purchasable.productVariation?.id]);
 
-    const setProductVariation = React.useCallback((productVariation?: ProductVariation) => {
-        if (productVariation !== purchasable.productVariation) {
-            setPurchasable(createPurchasable({ product: purchasable.product, productVariation }));
-        }
-    }, [purchasable.product, purchasable.productVariation]);
+    // PurchasableProvider.tsx
+    const setProductVariation = React.useCallback(
+        (next?: ProductVariation) => {
+            const curId = purchasable.productVariation?.id ?? null;
+            const nextId = next?.id ?? null;
+
+            if (curId === nextId) return; // ✅ no-op if same selection
+            const newPurchasable = createPurchasable({ product: purchasable.product, productVariation: next })
+            setPurchasable(newPurchasable);
+            console.log(newPurchasable.product.id + ' ' + newPurchasable.productVariation?.id);
+
+        },
+        [purchasable.product, purchasable.productVariation?.id]
+    );
+
 
     const contextValue = React.useMemo(
         () => ({ purchasable, setProductVariation }),

@@ -15,7 +15,6 @@ import { useIsExpanded, useToggleExpanded } from './ProductCategoryTreeStore';
 
 
 
-const INDENT = getTokenValue('$2', 'space');
 
 export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
     const root = useVisibleChildren(0);
@@ -87,6 +86,8 @@ const ProductCategoryTreeItem = React.memo(({
     handleExpand,
 }: RenderItemProps): JSX.Element => {
     const { linkProps } = useCanonicalNav();
+
+    const INDENT = React.useMemo(() => getTokenValue('$2', 'space'), []);
 
     return (
         <ThemedXStack f={1} ai="center" gap="$2" mb="$2">

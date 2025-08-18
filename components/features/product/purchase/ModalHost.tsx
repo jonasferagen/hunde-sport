@@ -5,14 +5,12 @@ import { Sheet, Theme, YStack } from 'tamagui';
 
 import { THEME_MODAL } from '@/config/app';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { closeModal, setModalPosition, useModalStore } from './ModalStore';
+import { closeModal, setModalPosition, useModalStore } from '../../../../stores/modalStore';
 
 export const ModalHost = () => {
     const { open, renderer, payload, snapPoints, position } = useModalStore()
 
     const insets = useSafeAreaInsets();
-
-
 
     return (
         <Theme name={THEME_MODAL}>
@@ -20,18 +18,16 @@ export const ModalHost = () => {
                 modal
                 native
                 open={open}
-                onOpenChange={(o: boolean) => {
-                    if (!o) closeModal()
-                }}
+                onOpenChange={(o: boolean) => { if (!o) closeModal(); }}
                 snapPointsMode="percent"
-                snapPoints={snapPoints}
+                snapPoints={snapPoints}         // e.g. [85]
                 position={position}
-                onPositionChange={(p) => setModalPosition(p)}
+                onPositionChange={setModalPosition}
                 unmountChildrenWhenHidden
                 dismissOnSnapToBottom
                 animation="fast"
             >
-                <Sheet.Overlay bg="white" opacity={0.2} />
+                <Sheet.Overlay bg="black" opacity={0.15} />
                 <Sheet.Frame f={1} mih={0} p="$4" gap="$3" mb={insets.bottom}>
                     <ThemedLinearGradient />
                     <YStack f={1} mih={0}>

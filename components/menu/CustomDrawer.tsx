@@ -1,3 +1,4 @@
+import { ProductCategoryTree } from '@/components/menu/ProductCategoryTree';
 import { THEME_DRAWER } from '@/config/app';
 import { routes } from '@/config/routes';
 import { useActiveDrawerRouteWhenOpen } from '@/hooks/useActiveDrawerRouteWhenOpen';
@@ -10,11 +11,6 @@ import { ScrollView, Theme } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
-
-// CustomDrawer.tsx
-const LazyCategoryTree = React.lazy(() =>
-    import('@/components/menu/ProductCategoryTree').then((m) =>
-        ({ default: m.ProductCategoryTree })) as Promise<{ default: any }>);
 
 
 export const CustomDrawer = React.memo(({ navigation }
@@ -77,9 +73,9 @@ export const CustomDrawer = React.memo(({ navigation }
                     </ThemedYStack>
                     {/* heavy subtree */}
                     <Suspense fallback={null}>
-                        {showTree && false ? (
+                        {showTree ? (
                             <ThemedYStack display={isOpen ? 'flex' : 'none'}>
-                                <LazyCategoryTree />
+                                <ProductCategoryTree />
                             </ThemedYStack>
                         ) : null}
                     </Suspense>

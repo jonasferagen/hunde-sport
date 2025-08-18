@@ -4,16 +4,12 @@ import { ProductVariationProvider, useProductVariationContext, usePurchasableCon
 import { useProductVariationSelector } from '@/domain/Product/helpers/useProductVariationSelector';
 import { VariableProduct } from '@/domain/Product/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { JSX } from 'react';
+import { haptic } from '@/lib/haptics';
+import React, { JSX } from 'react';
 import { XStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
-
-
-
-
 interface ProductVariationSelectProps extends YStackProps { }
-
 
 export const ProductVariationSelect = (props: ProductVariationSelectProps): JSX.Element => {
     const { purchasable } = usePurchasableContext();
@@ -22,53 +18,70 @@ export const ProductVariationSelect = (props: ProductVariationSelectProps): JSX.
     return <ProductVariationProvider product={variableProduct}>
         <ProductVariationSelectContent {...props} />
     </ProductVariationProvider>
-
 }
 
-export const ProductVariationSelectContent = (props: ProductVariationSelectProps): JSX.Element => {
-
-    useRenderGuard("ProductVariationSelect");
-
+export const ProductVariationSelectContent = React.memo(function ProductVariationSelectContent(
+    props: ProductVariationSelectProps
+) {
+    useRenderGuard('ProductVariationSelect');
     const { purchasable, setProductVariation } = usePurchasableContext();
-    const { productVariations } = useProductVariationContext();
+    const { productVariations, isLoading } = useProductVariationContext();
     const variableProduct = purchasable.product as VariableProduct;
 
-    const { attributes,
+    const {
+        attributes,
         selectionManager,
         handleSelectOption,
-        unavailableOptions
+        unavailableOptions,
     } = useProductVariationSelector({
         product: variableProduct,
         productVariations,
         onProductVariationSelected: setProductVariation,
     });
 
+    // Convert arrays to Sets once for O(1) lookups in render
+    const unavailableSets = React.useMemo(() => {
+        const m: Record<string, Set<string>> = {};
+        for (const [name, arr] of Object.entries(unavailableOptions)) {
+            m[name] = new Set(arr);
+        }
+        return m;
+    }, [unavailableOptions]);
+
+    ;
+
+    const onSelect = React.useCallback(
+        (name: string, value: string) => {
+            haptic.selection();
+            handleSelectOption(name, value);
+        },
+        [handleSelectOption]
+    );
+    if (isLoading) {
+        return <ThemedText>Henter varianter…</ThemedText>;
+    }
 
     return (
-        <XStack jc="space-between" gap="$2" fg={1} fw="wrap" {...props} >
+        <XStack jc="space-between" gap="$2" fg={1} fw="wrap" {...props}>
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
-                const filteredOptions = options.filter((option) => !unavailableOptions[name]?.includes(option.name));
+                // cheap filter with Set
+                const unavailable = unavailableSets[name];
+                const filtered = unavailable ? options.filter(o => !unavailable.has(o.name)) : options;
                 const selectedValue = selectionManager.getSelectedOption(name);
-                if (filteredOptions.length === 0) return null;
+                if (filtered.length === 0) return null;
 
                 return (
                     <ThemedYStack key={id} container px="none">
-                        <ThemedText
-                            top={0}
-                            zIndex={1}
-                            tt="capitalize"
-                            bold>
-                            {name}
-                        </ThemedText>
+                        <ThemedText top={0} zIndex={1} tt="capitalize" bold>{name}</ThemedText>
                         <AttributeSelector
-                            options={filteredOptions}
+                            options={filtered}
                             selectedValue={selectedValue}
-                            onSelect={(value) => handleSelectOption(name, value)}
+                            onSelect={(value: string | null) => onSelect(name, value || '')}
                         />
                     </ThemedYStack>
                 );
             })}
         </XStack>
     );
-};
+});

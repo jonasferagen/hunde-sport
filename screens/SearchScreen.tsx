@@ -67,7 +67,8 @@ export const SearchScreen = () => {
                 </ThemedXStack>
             </PageHeader>
             <PageBody pad="none">
-                <PageSection useContainer={false} pad="none" fill f={1}>
+                <PageSection useContainer={false} pad="none" fill f={1} mih={0}>
+
                     {/* Show nothing (or a subtle placeholder) until ready */}
                     {!ready ? (
                         <LoadingScreen />
@@ -83,6 +84,7 @@ export const SearchScreen = () => {
                             hasMore={result.hasNextPage}
                         />
                     )}
+
                 </PageSection>
             </PageBody>
         </PageView>

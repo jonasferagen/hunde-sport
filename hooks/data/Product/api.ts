@@ -84,7 +84,6 @@ export const fetchProductVariations = async (id: number, pagination?: Pagination
  * @returns The fetched products.
  */
 export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
-    console.log(ENDPOINTS.PRODUCTS.RECENT(pagination));
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.RECENT(pagination));
     return responseTransformer(response, mapToProduct);
 }

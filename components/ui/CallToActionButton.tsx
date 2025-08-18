@@ -35,8 +35,6 @@ export const CallToActionButton = React.forwardRef<
         onPress?.(event);
     };
 
-
-
     return (
         <Theme name={theme}>
             <ThemedButton

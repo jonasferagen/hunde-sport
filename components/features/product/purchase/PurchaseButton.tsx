@@ -1,49 +1,56 @@
-// /home/jonas/Prosjekter/hunde-sport/components/features/product/display/PurchaseButton.tsx
+// PurchaseButton.tsx
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { ThemedSurface } from '@/components/ui/themed-components/ThemedSurface';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { usePurchasableContext } from '@/contexts';
-import { Purchasable } from '@/domain/Product/Purchasable';
 import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
-import { ThemeName } from 'tamagui';
+import type { ThemeName } from 'tamagui';
 import { ProductPrice } from '../display/ProductPrice';
+import { computeCTA, type PurchaseCTAMode, type PurchaseCTAModeInput } from './purchase-cta';
 
-const ICONS: Record<PurchaseCTAState['mode'], JSX.Element> = {
+const ICONS: Record<PurchaseCTAMode, JSX.Element> = {
     buy: <ShoppingCart />,
     'select-variation': <Boxes />,
     unavailable: <X />,
 };
 
-const THEMES: Record<PurchaseCTAState['mode'], ThemeName> = {
+const THEMES: Record<PurchaseCTAMode, ThemeName> = {
     buy: THEME_CTA_BUY,
     'select-variation': THEME_CTA_VARIATION,
-    unavailable: THEME_CTA_VARIATION, // or a danger theme
+    unavailable: THEME_CTA_VARIATION, // or a danger theme if you prefer
 };
-
 
 type PurchaseButtonProps = {
     onPress: () => void;
     isLoading?: boolean;
     enabled?: boolean;
+    /** Force the visual/logic mode. Default 'auto' derives from purchasable. */
+    mode?: PurchaseCTAModeInput;
 };
 
-
-export const PurchaseButton = ({
+export const PurchaseButton = React.memo(function PurchaseButton({
     onPress,
     isLoading = false,
     enabled = true,
-}: PurchaseButtonProps) => {
-
+    mode = 'auto',
+}: PurchaseButtonProps) {
     const { purchasable } = usePurchasableContext();
-    const cta = derivePurchaseCTA(purchasable);
+
+    // only recompute when something that affects the CTA changes
+    const cta = React.useMemo(
+        () => computeCTA(purchasable, mode),
+        [mode, purchasable.isVariable, purchasable.isValid, purchasable.message,
+            purchasable.availability.isInStock] // add your price/availability keys if you have them
+    );
 
     const theme = THEMES[cta.mode];
     const disabled = cta.disabled || isLoading || !enabled;
 
     const priceTag = (
         <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="$3" mr={-20} minWidth={80}>
+            {/* uses purchasable context in modal; on cards you can swap this to ProductPriceLite */}
             <ProductPrice />
         </ThemedSurface>
     );
@@ -60,25 +67,4 @@ export const PurchaseButton = ({
             {isLoading && <ThemedSpinner />}
         </CallToActionButton>
     );
-}
-
-export type PurchaseCTAMode = 'buy' | 'select-variation' | 'unavailable';
-
-export type PurchaseCTAState = {
-    mode: PurchaseCTAMode;       // drives theme/icon
-    label: string;               // button label
-    disabled: boolean;           // final disabled state
-};
-
-
-
-export function derivePurchaseCTA(p: Purchasable): PurchaseCTAState {
-    if (!p.availability.isInStock) {
-        return { mode: 'unavailable', label: p.message, disabled: true };
-    }
-    if (p.isVariable && !p.isValid) {
-        return { mode: 'select-variation', label: p.message, disabled: false };
-    }
-    // simple or valid variation
-    return { mode: 'buy', label: p.message, disabled: false };
-}
+});
