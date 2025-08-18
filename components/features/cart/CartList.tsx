@@ -6,10 +6,10 @@ import { CartListItem } from './CartListItem';
 
 
 export const CartList = React.memo((): JSX.Element => {
-    const items = useCartStore(s => s.cart?.items ?? []); // subscribe only to items
 
+    const items = useCartStore(s => s.cart?.items ?? []);
 
-    if (items.length === 0) {
+    if (!items.length) {
         return <DefaultTextContent>Handlekurven er tom</DefaultTextContent>
     }
 

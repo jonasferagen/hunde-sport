@@ -1,11 +1,12 @@
 // PageView.tsx
 import { THEME_PAGE } from '@/config/app';
-import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 // Memoized backdrop so PageView re-renders don't recompute gradient math
+import { useIsFocused } from '@react-navigation/native';
+
 const PageBackdrop = React.memo(function PageBackdrop({
   token = 'background',
 }: { token?: string }) {
@@ -17,33 +18,22 @@ type PageViewProps = YStackProps & {
   gradientToken?: string;
 };
 
-import { useNavProgress } from '@/stores/navProgressStore';
-import { useIsFocused } from '@react-navigation/native';
 
-export const PageView = ({ children, withGradient = true, gradientToken = 'background', ...stackProps }: PageViewProps) => {
+
+export const PageView = React.memo(function PageView({
+  children,
+  withGradient = false,
+  gradientToken = 'background',
+  ...stackProps
+}: PageViewProps) {
+
   const isFocused = useIsFocused();
 
-  useFocusEffect(React.useCallback(() => {
-    useNavProgress.getState().stop();
-  }, []));
-
-
   return (
-    <>
-      <ThemedYStack
-        theme={THEME_PAGE}
-        f={1}
-        gap="none"
-        // if you still want it invisible and inert to touches while blurred:
-        pointerEvents={isFocused ? 'auto' : 'none'}
-        display={isFocused ? 'flex' : 'none'}
-        {...stackProps}
-      >
-        {withGradient ? <PageBackdrop token={gradientToken} /> : null}
-        {children}
-      </ThemedYStack>
-
-
-    </>
+    <ThemedYStack theme={THEME_PAGE} f={1} gap="none" style={{ opacity: isFocused ? 1 : 0 }} {...stackProps}>
+      {withGradient ? <PageBackdrop token={gradientToken} /> : null}
+      {children}
+    </ThemedYStack>
   );
-};
+});
+

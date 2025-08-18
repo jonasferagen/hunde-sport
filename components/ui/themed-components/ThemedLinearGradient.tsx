@@ -1,7 +1,7 @@
 // ThemedLinearGradient.tsx
 import { darken, getLuminance, lighten, rgba } from 'polished';
 import React, { useMemo } from 'react';
-import { getVariableValue, useTheme } from 'tamagui';
+import { getVariableValue, useTheme, YStack } from 'tamagui';
 import { LinearGradient } from 'tamagui/linear-gradient';
 
 type Props = (React.ComponentProps<typeof LinearGradient> & { token?: string });
@@ -9,10 +9,12 @@ type Props = (React.ComponentProps<typeof LinearGradient> & { token?: string });
 const START = Object.freeze([0, 0] as const);
 const END = Object.freeze([1, 1] as const);
 
-export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
+export const ThemedLinearGradient2 = React.memo(function ThemedLinearGradient({
     token = 'background',
     ...rest
 }: Props) {
+
+
     const theme = useTheme();
     // Read *just* the token so Tamagui only re-renders us when that token changes
     const tokenValue = theme[token as keyof typeof theme];
@@ -44,4 +46,18 @@ export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
     // super-cheap compare; if you pass dynamic props into the gradient, consider
     // comparing only the ones you actually use (token, start/end/colors/locations/etc.)
     return prev.token === next.token;
+});
+
+
+
+export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
+    token = 'background',
+    ...rest
+}: Props) {
+    return <YStack
+        fullscreen
+        pointerEvents="none"
+        bg={'$background'}
+
+    />
 });

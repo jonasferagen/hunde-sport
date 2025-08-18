@@ -6,7 +6,7 @@ import { useScreenReady } from '@/hooks/useScreenReady';
 import React from 'react';
 
 export const CartScreen = () => {
-    const ready = useScreenReady(0);
+    const ready = useScreenReady(); // or useScreenReady(50) to push a frame
     return (
         <PageView>
             <PageBody>

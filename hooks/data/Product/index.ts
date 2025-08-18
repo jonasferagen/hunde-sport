@@ -16,7 +16,6 @@ import {
 
 
 
-
 export const useProduct = (id: number): UseQueryResult<Product> => {
     const result = useQuery({
         queryKey: ['product', id],
@@ -44,12 +43,12 @@ export const useProductsByIds = (ids: number[]): QueryResult<PurchasableProduct>
     return handleQueryResult<PurchasableProduct>(result);
 }
 
-export const useProductsBySearch = (query: string): QueryResult<PurchasableProduct> => {
+export const useProductsBySearch = (query: string, options = { enabled: !!query }): QueryResult<PurchasableProduct> => {
     const result = useInfiniteQuery({
         queryKey: ['products-by-search', query],
         queryFn: ({ pageParam }) => fetchProductsBySearch(query, { page: pageParam }),
-        enabled: !!query,
-        ...queryOptions
+        ...options,
+        ...queryOptions,
     });
     return handleQueryResult<PurchasableProduct>(result);
 }

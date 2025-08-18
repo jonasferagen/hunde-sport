@@ -9,7 +9,7 @@ import { Linking } from 'react-native';
 import { ButtonProps, ThemeName } from 'tamagui';
 
 export const CheckoutButton = (props: Omit<ButtonProps, 'theme'>) => {
-    // 🔒 Narrow, primitive selectors = fewer re-renders
+
     const itemsCount = useCartStore(s => s.cart?.items_count ?? 0);
     const isUpdating = useCartStore(s => s.isUpdating);
     const formattedTotal = useCartStore(
