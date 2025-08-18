@@ -13,7 +13,7 @@ interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disable
     disabled?: boolean;
     icon?: ButtonProps['icon'];
     iconAfter?: ButtonProps['icon'];
-    theme?: ThemeName;
+    theme: ThemeName;
     label?: string;
 }
 
