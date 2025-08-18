@@ -6,7 +6,7 @@ import { useProductVariations } from '@/hooks/data/Product';
 
 // ProductVariationProvider.tsx
 import { ThemedYStack } from '@/components/ui';
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 
 
 export interface ProductVariationContextType {
@@ -27,18 +27,18 @@ export const ProductVariationProvider: React.FC<{ product: VariableProduct; chil
 }) => {
     const { isLoading, items } = useProductVariations(product);
 
-    // stable value object
-    const value = useMemo(
-        () => ({ productVariations: items, isLoading }),
+    const value = React.useMemo(
+        () => ({
+            productVariations: items ?? [],        // ← normalize to []
+            isLoading: !!isLoading,
+        }),
         [items, isLoading]
     );
 
     return (
         <ProductVariationContext.Provider value={value}>
-            {/* keep a stable flex box so the sheet layout never changes */}
-            <ThemedYStack f={1} mih={0}>
-                {children}
-            </ThemedYStack>
+            <ThemedYStack f={1} mih={0}>{children}</ThemedYStack>
         </ProductVariationContext.Provider>
     );
 };
+

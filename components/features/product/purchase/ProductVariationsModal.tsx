@@ -27,6 +27,7 @@ const Inner = React.memo(function Inner({ close }: { close: () => void }) {
     const { purchasable } = usePurchasableContext();
     const [loading, setLoading] = React.useState(false);
 
+
     // mount heavy bits after interactions (and after sheet anim)
     const ready = useDeferredOpen([purchasable.product.id], 50);
 

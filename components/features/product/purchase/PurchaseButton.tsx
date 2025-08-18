@@ -40,10 +40,16 @@ export const PurchaseButton = React.memo(function PurchaseButton({
 
     // only recompute when something that affects the CTA changes
     const cta = React.useMemo(
-        () => computeCTA(purchasable, mode),
-        [mode, purchasable.isVariable, purchasable.isValid, purchasable.message,
-            purchasable.availability.isInStock] // add your price/availability keys if you have them
+        () => computeCTA(purchasable, mode),          // your 'auto' | forced mode helper
+        [
+            mode,
+            purchasable.isVariable,
+            purchasable.isValid,
+            purchasable.message,
+            purchasable.availability.isInStock,         // minimal keys that affect CTA
+        ]
     );
+
 
     const theme = THEMES[cta.mode];
     const disabled = cta.disabled || isLoading || !enabled;

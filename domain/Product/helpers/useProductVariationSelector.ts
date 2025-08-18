@@ -1,7 +1,7 @@
 import { VariableProduct } from '@/domain/Product/Product';
 import { VariationSelection } from '@/domain/Product/helpers/VariationSelection';
 import { ProductVariation } from '@/types';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface UseProductVariationSelectorProps {
     product: VariableProduct;
@@ -9,6 +9,7 @@ interface UseProductVariationSelectorProps {
     onProductVariationSelected: (variation: ProductVariation | undefined) => void;
 
 }
+// useProductVariationSelector.ts
 
 export const useProductVariationSelector = ({
     product,
@@ -17,58 +18,64 @@ export const useProductVariationSelector = ({
 }: UseProductVariationSelectorProps) => {
     const [selections, setSelections] = useState<Record<string, string>>({});
 
-    const baseSelectionManager = useMemo(
-        () => VariationSelection.create(product, productVariations),
-        [product, productVariations]
+    const variations = productVariations ?? [];             // ← normalize
+
+    const pvKey = useMemo(
+        () => variations.map((v) => v.id).join(','),          // ← safe now
+        [variations]
     );
+
+    const baseSelectionManager = useMemo(
+        () => VariationSelection.create(product, variations),
+        [product.id, pvKey]
+    );
+
     const unavailableOptions = useMemo(() => {
         const result: Record<string, string[]> = {};
-
-        product.attributes.forEach(attribute => {
+        (product.attributes ?? []).forEach((attribute) => {
             const unavailable = baseSelectionManager
                 .getAvailableOptions(attribute.name)
-                .filter(option => !option.isAvailable)
-                .map(option => option.name);
-
-            if (unavailable.length > 0) {
-                result[attribute.name] = unavailable;
-            }
+                .filter((o) => !o.isAvailable)
+                .map((o) => o.name);
+            if (unavailable.length) result[attribute.name] = unavailable;
         });
-
         return result;
     }, [baseSelectionManager, product.attributes]);
 
-
     const selectionManager = useMemo(() => {
         return Object.entries(selections).reduce(
-            (manager, [attributeName, name]) => manager.select(attributeName, name),
+            (mgr, [attrName, name]) => mgr.select(attrName, name),
             baseSelectionManager
         );
     }, [baseSelectionManager, selections]);
 
+    const selectedVariation = useMemo(
+        () => selectionManager.getSelectedVariation(),
+        [selectionManager]
+    );
+    const selectedId = selectedVariation?.id ?? undefined;
+
+    const lastSentIdRef = useRef<number | undefined>(undefined);
     useEffect(() => {
-        const selectedVariation = selectionManager.getSelectedVariation();
+        if (selectedId === lastSentIdRef.current) return;
+        lastSentIdRef.current = selectedId;
         onProductVariationSelected(selectedVariation);
-    }, [selectionManager, onProductVariationSelected]);
+    }, [selectedId, selectedVariation, onProductVariationSelected]);
 
     const handleSelectOption = useCallback((attributeName: string, name: string | null) => {
-        setSelections(prevSelections => {
-            const newSelections = { ...prevSelections };
-            if (name) {
-                newSelections[attributeName] = name;
-            } else {
-                delete newSelections[attributeName];
-            }
-            return newSelections;
+        setSelections((prev) => {
+            if (name && prev[attributeName] === name) return prev; // no-op
+            const next = { ...prev };
+            if (name) next[attributeName] = name;
+            else delete next[attributeName];
+            return next;
         });
     }, []);
 
-    const attributes = useMemo(() => product.getAttributesForVariationSelection(), [product]);
+    const attributes = useMemo(
+        () => product.getAttributesForVariationSelection?.() ?? [],
+        [product]
+    );
 
-    return {
-        selectionManager,
-        attributes,
-        handleSelectOption,
-        unavailableOptions,
-    };
+    return { selectionManager, attributes, handleSelectOption, unavailableOptions };
 };

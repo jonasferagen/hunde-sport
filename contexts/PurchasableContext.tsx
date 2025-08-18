@@ -3,7 +3,7 @@
 
 import { createPurchasable } from '@/domain/Product/Purchasable';
 import { ProductVariation, Purchasable, PurchasableProduct } from "@/types";
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
 
 // Context for Purchasable
 export const PurchasableContext = createContext<{ purchasable: Purchasable; setProductVariation: (variation?: ProductVariation) => void } | undefined>(undefined);
@@ -21,10 +21,12 @@ export const PurchasableProviderInit: React.FC<{
     productVariation?: ProductVariation;
     children: React.ReactNode;
 }> = ({ product, productVariation, children }) => {
+
     const purchasable = React.useMemo(
         () => createPurchasable({ product, productVariation }),
         [product.id, productVariation?.id, product.priceKey, product.availabilityKey]
     );
+
     return <PurchasableProvider purchasable={purchasable}>{children}</PurchasableProvider>;
 };
 
@@ -34,30 +36,16 @@ export const PurchasableProvider: React.FC<{
     purchasable: Purchasable;
     children: React.ReactNode;
 }> = ({ purchasable: initialPurchasable, children }) => {
-    const [purchasable, setPurchasable] = React.useState(initialPurchasable);
+    const [purchasable, setPurchasable] = React.useState<Purchasable>(initialPurchasable);
 
-    // keep state in sync if the prop changes (e.g., new product id)
-    React.useEffect(() => {
-        if (purchasable.product.id !== initialPurchasable.product.id ||
-            purchasable.productVariation?.id !== initialPurchasable.productVariation?.id) {
-            setPurchasable(initialPurchasable);
-        }
-    }, [initialPurchasable, purchasable.product.id, purchasable.productVariation?.id]);
 
     // PurchasableProvider.tsx
-    const setProductVariation = React.useCallback(
-        (next?: ProductVariation) => {
-            const curId = purchasable.productVariation?.id ?? null;
-            const nextId = next?.id ?? null;
-
-            if (curId === nextId) return; // ✅ no-op if same selection
-            const newPurchasable = createPurchasable({ product: purchasable.product, productVariation: next })
-            setPurchasable(newPurchasable);
-            console.log(newPurchasable.product.id + ' ' + newPurchasable.productVariation?.id);
-
-        },
-        [purchasable.product, purchasable.productVariation?.id]
-    );
+    const setProductVariation = useCallback((next?: ProductVariation) => {
+        const curId = purchasable.productVariation?.id ?? undefined;
+        const nextId = next?.id ?? undefined;
+        if (curId === nextId) return;
+        setPurchasable(createPurchasable({ product: purchasable.product, productVariation: next }));
+    }, [purchasable.product, purchasable.productVariation?.id]);
 
 
     const contextValue = React.useMemo(

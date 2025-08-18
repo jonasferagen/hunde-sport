@@ -5,6 +5,7 @@ import { useProductVariationSelector } from '@/domain/Product/helpers/useProduct
 import { VariableProduct } from '@/domain/Product/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { haptic } from '@/lib/haptics';
+import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import React, { JSX } from 'react';
 import { XStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
@@ -52,13 +53,14 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
 
     const onSelect = React.useCallback(
         (name: string, value: string) => {
+
             haptic.selection();
             handleSelectOption(name, value);
         },
         [handleSelectOption]
     );
     if (isLoading) {
-        return <ThemedText>Henter varianter…</ThemedText>;
+        return <LoadingScreen />;
     }
 
     return (
@@ -77,7 +79,7 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
                         <AttributeSelector
                             options={filtered}
                             selectedValue={selectedValue}
-                            onSelect={(value: string | null) => onSelect(name, value || '')}
+                            onSelect={(value) => onSelect(name, value)}
                         />
                     </ThemedYStack>
                 );

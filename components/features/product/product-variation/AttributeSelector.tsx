@@ -21,9 +21,11 @@ export const AttributeSelector = ({ options, onSelect, selectedValue }: Attribut
         >
             {options.map((item) => {
                 const isSelected = selectedValue === item.name;
-                const handlePress = () => {
-                    onSelect(isSelected ? null : item.name);
-                };
+                const handlePress = React.useCallback(
+                    () => onSelect(isSelected ? null : item.name),
+                    [onSelect, isSelected, item.name]
+                );
+
 
                 return (
                     <AttributeOption
