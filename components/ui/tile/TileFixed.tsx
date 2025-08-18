@@ -1,6 +1,7 @@
 // TileFixed.tsx
 import type { StoreImage } from '@/domain/StoreImage';
 import { getScaledImageUrl } from '@/lib/helpers';
+import { ImageProps } from 'expo-image';
 import React from 'react';
 import { PixelRatio } from 'react-native';
 import type { YStackProps } from 'tamagui';
@@ -15,6 +16,7 @@ type TileFixedProps = YStackProps & {
     onPress?: () => void;
     showGradient?: boolean;
     titleLines?: number;
+    imagePriority?: ImageProps['priority'];
 };
 // TileFixed.tsx (only one pressable)
 export const TileFixed = React.memo(function TileFixed({
@@ -23,6 +25,7 @@ export const TileFixed = React.memo(function TileFixed({
     w,
     h,
     onPress,
+    imagePriority,
     showGradient = true,
     titleLines = 2,
     children,
@@ -45,6 +48,7 @@ export const TileFixed = React.memo(function TileFixed({
             {...props}
         >
             <ThemedImage
+                priority={imagePriority}
                 uri={uri}
                 title={title}
                 contentFit="cover"

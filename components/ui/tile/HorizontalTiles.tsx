@@ -137,24 +137,22 @@ export function HorizontalTiles<T extends { id: number | string }>({
 
     return (
         <Theme name={theme}>
-            <View style={styles.container} onLayout={onLayout} {...props}>
+            <View style={[styles.container, { height: estimatedItemCrossSize }]} onLayout={onLayout} {...props}>
                 <FlashList
                     horizontal
                     data={items}
                     renderItem={renderItem}
-                    keyExtractor={(item) => String(item.id)}
+                    keyExtractor={(p) => String(p.id)}
                     showsHorizontalScrollIndicator={false}
                     ItemSeparatorComponent={ItemSeparatorComponent}
                     // sizing hints
                     estimatedItemSize={estimatedItemSize}
                     estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
-                    overrideItemLayout={(layout) => {
-                        layout.size = estimatedItemSize;
-                        layout.span = 1;
-                    }}
-                    drawDistance={Math.ceil(SCREEN_W * 1.5)}
-                    onScroll={onScroll}
+                    overrideItemLayout={(layout) => { layout.size = estimatedItemSize; layout.span = 1; }}
+                    initialNumToRender={Math.ceil(SCREEN_W / estimatedItemSize) + 1} // only what's visible + 1
+                    drawDistance={Math.ceil(SCREEN_W * 0.8)}                          // ~80% screen overscan
                     scrollEventThrottle={32}
+
                     onContentSizeChange={onContentSizeChange}
                     onEndReached={onEndReached}
                     onEndReachedThreshold={0.5}

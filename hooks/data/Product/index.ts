@@ -63,7 +63,7 @@ export const useFeaturedProducts = (): QueryResult<PurchasableProduct> => {
     return handleQueryResult<PurchasableProduct>(result);
 }
 
-export const useDiscountedProducts = (): QueryResult<PurchasableProduct> => {
+export const useDiscountedProducts = (options = { enabled: true }): QueryResult<PurchasableProduct> => {
     const result = useInfiniteQuery({
         queryKey: ['on-sale-products'],
         queryFn: ({ pageParam }) => fetchDiscountedProducts({ page: pageParam }),

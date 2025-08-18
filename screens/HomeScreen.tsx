@@ -1,6 +1,7 @@
 import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductTiles';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
+import { Defer } from '@/components/ui/Defer';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECENT } from '@/config/app';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
@@ -45,9 +46,9 @@ export const HomeScreen = React.memo(() => {
                 </PageSection>
 
                 <PageSection title="Tilbud" bleedX >
-                    {ready &&
-                        <DiscountedProducts key='discounted' theme={THEME_PRODUCTS_DISCOUNTED} />
-                    }
+                    {true && <Defer minDelay={50} once>
+                        <DiscountedProducts limit={8} theme={THEME_PRODUCTS_DISCOUNTED} />
+                    </Defer>}
                 </PageSection>
                 <PageSection title="Utvalgte produkter" bleedX theme="dark_primary">
                     {ready &&
