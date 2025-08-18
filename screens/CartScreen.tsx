@@ -1,20 +1,22 @@
 import { CartList } from '@/components/features/cart/CartList';
 import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
 import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
+import { ThemedSpinner } from '@/components/ui';
+import { useScreenReady } from '@/hooks/useScreenReady';
 import React from 'react';
 
 export const CartScreen = () => {
-
+    const ready = useScreenReady(0);
     return (
         <PageView>
             <PageBody>
                 <PageSection f={1} p="none">
-                    <CartList />
+                    {ready ? <CartList /> : <ThemedSpinner />}
                 </PageSection>
             </PageBody>
             <PageFooter>
-                <CheckoutButton />
+                {ready ? <CheckoutButton /> : <ThemedSpinner />}
             </PageFooter>
-        </PageView>
+        </PageView >
     );
 };
