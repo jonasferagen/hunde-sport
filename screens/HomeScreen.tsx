@@ -1,7 +1,6 @@
 import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductTiles';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Defer } from '@/components/ui/Defer';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS, PRODUCT_TILE_HEIGHT, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECENT } from '@/config/app';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
@@ -19,6 +18,7 @@ const innerW = Dimensions.get('window').width - PAD_PX * 2;
 const tileW = (innerW - GAP_PX * (COLS - 1)) / COLS;
 const CATEGORY_GRID_H = Math.round(ROWS * tileW + GAP_PX * (ROWS - 1));
 
+const HOME_TILE_ROW_H = (PRODUCT_TILE_HEIGHT as number) + PAD_PX * 2;
 
 export const HomeScreen = React.memo(() => {
 
@@ -35,31 +35,23 @@ export const HomeScreen = React.memo(() => {
     return (
         <PageView>
             <PageHeader >
-                {<SearchBar onSubmit={handleSearch} />}
+                <SearchBar onSubmit={handleSearch} />
             </PageHeader>
             <PageBody mode="scroll" >
-                <PageSection title="Nyheter" bleedX >
-                    <Defer minDelay={50} once >
-                        <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
-                    </Defer>
+                <PageSection title="Nyheter" bleedX  >
+                    <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} />
                 </PageSection>
-                <PageSection title="Kategorier" theme="dark_primary" bleedX contentHeight={CATEGORY_GRID_H} >
-                    <ProductCategoryTiles key="categories" mx="$3" />
+                <PageSection title="Kategorier" bleedX theme="dark_primary">
+                    <ProductCategoryTiles key="categories" />
                 </PageSection>
                 <PageSection title="Tilbud" bleedX >
-                    <Defer minDelay={100} once>
-                        <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
-                    </Defer>
+                    <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} />
                 </PageSection>
                 <PageSection title="Utvalgte produkter" bleedX theme="dark_primary">
-                    <Defer minDelay={200} once>
-                        <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
-                    </Defer>
+                    <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} />
                 </PageSection>
                 <PageSection title="Debug" bleedX >
-                    <Defer minDelay={300} once>
-                        <DebugProducts key='debug' h={PRODUCT_TILE_HEIGHT} boc="red" bw={1} />
-                    </Defer>
+                    <DebugProducts key='debug' />
                 </PageSection>
             </PageBody>
         </PageView >

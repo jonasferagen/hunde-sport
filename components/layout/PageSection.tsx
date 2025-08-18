@@ -8,7 +8,7 @@ import { ThemedYStack } from '../ui/themed-components/ThemedStack';
 type PageSectionProps = YStackProps & {
   title?: string;
   /** Horizontal padding token for the section container */
-  pad?: '$2' | '$3' | '$4' | '$5';
+  p?: '$1' | '$2' | '$3' | '$4' | '$5';
   /** Let only the content bleed to screen edges; title remains aligned */
   bleedX?: boolean;
   /** Reserve vertical space for the content to avoid layout shift */
@@ -18,17 +18,17 @@ type PageSectionProps = YStackProps & {
 export const PageSection: React.FC<PageSectionProps> = ({
   title,
   children,
-  pad = '$3',
+  p = '$3',
   bleedX = false,
   contentHeight,
   ...stackProps
 }) => {
-  const padPx = useMemo(() => spacePx(pad), [pad]);
+  const padPx = useMemo(() => spacePx(p), [p]);
   const hasChildren = React.Children.toArray(children).some(Boolean);
   if (!hasChildren) return null;
 
   return (
-    <ThemedYStack box container pb="$4" {...stackProps} >
+    <ThemedYStack box container  {...stackProps} >
       {title ? (
         <ThemedText size="$6"  >
           {title}
@@ -38,7 +38,7 @@ export const PageSection: React.FC<PageSectionProps> = ({
       {/* Content wrapper: either padded or full-bleed via negative margins */}
       <ThemedYStack
         // normal padded content
-        px={bleedX ? undefined : pad}
+        px={bleedX ? undefined : padPx}
         // bleed to edges by canceling the container padding
         mx={bleedX ? -padPx : undefined}
         // optionally reserve a fixed height to avoid shift

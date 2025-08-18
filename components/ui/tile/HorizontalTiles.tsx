@@ -1,9 +1,10 @@
 // HorizontalTiles.tsx
+import { QueryResult } from '@/hooks/data/util';
 import { spacePx } from '@/lib/helpers';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { rgba } from 'polished';
 import React, { JSX, useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, StyleSheet } from 'react-native';
 import { Spinner, StackProps, View, XStack, getVariableValue, useTheme } from 'tamagui';
 import { ThemedLinearGradient } from '../themed-components';
 
@@ -43,11 +44,10 @@ const ScrollIndicator = React.memo(function ScrollIndicator({
 });
 
 interface HorizontalTilesProps<T> extends StackProps {
-    items?: T[];
+
     renderItem: ListRenderItem<T>;
-    isLoading?: boolean;
-    fetchNextPage?: () => void;
-    hasNextPage?: boolean;
+    queryResult: QueryResult<T>;
+    limit: number,
 
     // FlashList hints
     estimatedItemSize?: number;      // main axis (width, horizontal)
@@ -61,11 +61,10 @@ interface HorizontalTilesProps<T> extends StackProps {
 }
 
 export function HorizontalTiles<T extends { id: number | string }>({
-    items,
+
     renderItem,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
+    queryResult,
+    limit,
 
     estimatedItemSize = 160,
     estimatedItemCrossSize = 120,
@@ -79,15 +78,13 @@ export function HorizontalTiles<T extends { id: number | string }>({
     ...props
 }: HorizontalTilesProps<T>): JSX.Element {
     const leadPx = spacePx(leadingInsetToken ?? padToken); // how far the first item starts from the left
-
     const padPx = spacePx(padToken);
     const gapPx = spacePx(gapToken);
-
     const [atStart, setAtStart] = useState(true);
     const [atEnd, setAtEnd] = useState(false);
     const contentWRef = useRef(0);
     const containerWRef = useRef(0);
-    //    const lastStartRef = useRef(true);
+    const lastStartRef = useRef(true);
     const lastEndRef = useRef(false);
 
     const onContentSizeChange = useCallback((w: number) => {
@@ -103,7 +100,6 @@ export function HorizontalTiles<T extends { id: number | string }>({
         containerWRef.current = e.nativeEvent.layout.width;
     }, []);
 
-    /*
 
     const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
         const x = e.nativeEvent.contentOffset.x;
@@ -117,11 +113,19 @@ export function HorizontalTiles<T extends { id: number | string }>({
             lastEndRef.current = end;
             setAtEnd(end);
         }
-    }, []); */
+    }, []);
+
+    const { items: products = [], isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+
+    const staged = products;
+    //const staged = products.slice(0, limit);
+    // const     items = (queryResult.items ?? []).slice(0, limit); // e.g., 8
+
+    //  const staged = useProgressiveSlice(itemsToRender, limit, itemsToRender.length - limit, 120);
 
     const onEndReached = useCallback(() => {
-        if (!isLoading && hasNextPage && fetchNextPage) fetchNextPage();
-    }, [isLoading, hasNextPage, fetchNextPage]);
+        //if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage(); // Disable loading more for now
+    }, [isFetchingNextPage, hasNextPage, fetchNextPage]);
 
 
 
@@ -136,7 +140,8 @@ export function HorizontalTiles<T extends { id: number | string }>({
         () => ({ paddingLeft: leadPx, paddingRight: padPx }),
         [leadPx, padPx]
     );
-    if (!items?.length) return <></>;
+
+    if (!staged.length) return <></>;
 
     return (
 
@@ -149,7 +154,9 @@ export function HorizontalTiles<T extends { id: number | string }>({
         >
             <FlashList
                 horizontal
-                data={items}
+                onScroll={onScroll}
+                scrollEventThrottle={32}
+                data={staged}
                 renderItem={renderItem}
                 keyExtractor={(p) => String(p.id)}
                 showsHorizontalScrollIndicator={false}
@@ -161,7 +168,7 @@ export function HorizontalTiles<T extends { id: number | string }>({
                 drawDistance={leadPx + estimatedItemSize * 2}
                 getItemType={() => 'product'}
                 // ~80% screen overscan
-                scrollEventThrottle={32}
+
                 onContentSizeChange={onContentSizeChange}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.5}

@@ -25,8 +25,9 @@ export const ProductCategoryTiles = React.memo((props: StackProps): JSX.Element 
 
     const { to } = useCanonicalNav();
 
+
     return (
-        <ThemedYStack {...props} >
+        <ThemedYStack {...props} mx={gapPx}>
             <XStack fw="wrap" m={-half}>
                 {productCategories.map((cat) => (
                     <YStack key={cat.id} w={colPct} p={half}>

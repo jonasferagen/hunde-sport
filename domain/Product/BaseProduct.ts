@@ -1,9 +1,9 @@
-import { ProductPrices } from "@/domain/pricing";
+
+import { formatMinorWithHeader, formatRangeWithHeader, ProductPrices } from '@/domain/pricing';
 import { cleanHtml } from "@/lib/helpers";
 import { ProductCategory } from "../ProductCategory";
 import { StoreImage } from "../StoreImage";
 import { ProductAttribute } from "./ProductAttribute";
-
 
 // The raw representation of an attribute as it comes from the initial product API response.
 export type ApiVariationAttribute = {
@@ -44,6 +44,8 @@ export interface BaseProductData {
     attributes: ProductAttribute[];
     variations: VariationReference[];
     variation: string;
+
+
 }
 
 export class BaseProduct<T extends BaseProductData> {
@@ -66,6 +68,14 @@ export class BaseProduct<T extends BaseProductData> {
     attributes: ProductAttribute[];
     variations: VariationReference[];
     variation: string;
+    priceKey: string;
+    availabilityKey: string;
+    hasPriceRange: boolean;
+    displayPrice: string;
+    displayRegularPrice?: string | null;
+
+
+
 
     constructor(data: T) {
         this.id = data.id;
@@ -95,6 +105,39 @@ export class BaseProduct<T extends BaseProductData> {
         this.attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
         this.variations = data.variations || [];
         this.variation = data.variation;
+
+        const p = this.prices;
+        this.hasPriceRange = !!p.price_range;
+
+        // version keys (only fields that affect display)
+        this.priceKey = [
+            p.currency_code,
+            p.price,
+            p.sale_price,
+            p.regular_price,
+            this.hasPriceRange ? 'r' : '',
+        ].join('|');
+
+        this.availabilityKey = [
+            this.is_in_stock ? 1 : 0,
+            this.is_purchasable ? 1 : 0,
+            this.is_on_backorder ? 1 : 0,
+            this.on_sale ? 1 : 0,
+        ].join('');
+
+
+        // preformatted strings
+        if (this.hasPriceRange) {
+            this.displayPrice = formatRangeWithHeader(p.price_range!, p, { style: 'short' });
+            this.displayRegularPrice = null;
+        } else {
+            const unit = this.on_sale ? p.sale_price : p.price;
+            this.displayPrice = formatMinorWithHeader(unit, p, { style: 'short' });
+            this.displayRegularPrice = this.on_sale
+                ? formatMinorWithHeader(p.regular_price, p, { style: 'short' })
+                : null;
+        }
+
     }
 
     get featuredImage(): StoreImage {
@@ -109,14 +152,6 @@ export class BaseProduct<T extends BaseProductData> {
             isOnSale: this.on_sale,
             isOnBackOrder: this.is_on_backorder,
         };
-    }
-
-    get priceKey() {
-        const p = this.prices;
-        return `${p.currency_code}|${p.price}|${p.sale_price}|${p.regular_price}|${!!p.price_range}`;
-    }
-    get availabilityKey() {
-        return `${+this.is_in_stock}${+this.is_purchasable}${+this.is_on_backorder}${+this.on_sale}`;
     }
 
 }

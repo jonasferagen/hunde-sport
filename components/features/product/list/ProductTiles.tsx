@@ -4,7 +4,6 @@ import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
-import { useProgressiveSlice } from '@/hooks/useProgressiveSlice';
 import { PurchasableProduct } from '@/types';
 import React, { JSX } from 'react';
 import { StackProps } from 'tamagui';
@@ -39,16 +38,12 @@ type ProductTilesProps = {
 
 const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, limit = 4, ...stackProps }) => {
 
-    const all = queryResult.items ?? [];
-
-    //const items = (queryResult.items ?? []).slice(0, limit); // e.g., 8
-
-    const staged = useProgressiveSlice(all, limit, all.length - limit, 120);
     const { to } = useCanonicalNav();
 
     return (
         <HorizontalTiles
-            items={staged}
+            queryResult={queryResult}
+            limit={limit}
             estimatedItemSize={PRODUCT_TILE_WIDTH as number}
             estimatedItemCrossSize={PRODUCT_TILE_HEIGHT as number}
             gapToken="$3"

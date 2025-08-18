@@ -55,28 +55,28 @@ export const useProductsBySearch = (query: string, options = { enabled: !!query 
     return handleQueryResult<PurchasableProduct>(result);
 }
 
-export const useFeaturedProducts = (): QueryResult<PurchasableProduct> => {
+export const useFeaturedProducts = (options = { enabled: true, perPage: 3 }): QueryResult<PurchasableProduct> => {
     const result = useInfiniteQuery({
         queryKey: ['featured-products'],
-        queryFn: ({ pageParam }) => fetchFeaturedProducts({ page: pageParam }),
+        queryFn: ({ pageParam }) => fetchFeaturedProducts({ page: pageParam, per_page: options.perPage }),
         ...queryOptions
     });
     return handleQueryResult<PurchasableProduct>(result);
 }
 
-export const useDiscountedProducts = (options = { enabled: true }): QueryResult<PurchasableProduct> => {
+export const useDiscountedProducts = (options = { enabled: true, perPage: 3 }): QueryResult<PurchasableProduct> => {
     const result = useInfiniteQuery({
         queryKey: ['on-sale-products'],
-        queryFn: ({ pageParam }) => fetchDiscountedProducts({ page: pageParam }),
+        queryFn: ({ pageParam }) => fetchDiscountedProducts({ page: pageParam, per_page: options.perPage }),
         ...queryOptions
     });
     return handleQueryResult<PurchasableProduct>(result);
 }
 
-export const useRecentProducts = (): QueryResult<PurchasableProduct> => {
+export const useRecentProducts = (options = { enabled: true, perPage: 3 }): QueryResult<PurchasableProduct> => {
     const result = useInfiniteQuery({
         queryKey: ['recent-products'],
-        queryFn: ({ pageParam }) => fetchRecentProducts({ page: pageParam }),
+        queryFn: ({ pageParam }) => fetchRecentProducts({ page: pageParam, per_page: options.perPage }),
         ...queryOptions,
     });
     return handleQueryResult<PurchasableProduct>(result);
