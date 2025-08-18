@@ -1,12 +1,22 @@
 import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductTiles';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
-import { Defer } from '@/components/ui/Defer';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
-import { THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECENT } from '@/config/app';
+import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECENT } from '@/config/app';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { useScreenReady } from '@/hooks/useScreenReady';
+import { spacePx } from '@/lib/helpers';
 import React from 'react';
+import { Dimensions } from 'react-native';
+
+const COLS = NUM_CATEGORY_TILE_COLUMNS; // e.g. 3
+const ROWS = NUM_CATEGORY_TILE_ROWS;    // e.g. 3
+const GAP_PX = spacePx('$3');
+const PAD_PX = spacePx('$3');
+const innerW = Dimensions.get('window').width - PAD_PX * 2;
+const tileW = (innerW - GAP_PX * (COLS - 1)) / COLS;
+const CATEGORY_GRID_H = Math.round(ROWS * tileW + GAP_PX * (ROWS - 1));
+
 
 export const HomeScreen = React.memo(() => {
 
@@ -20,31 +30,30 @@ export const HomeScreen = React.memo(() => {
             <PageHeader >
                 {ready && <SearchBar onSubmit={handleSearch} />}
             </PageHeader>
-            <PageBody mode="scroll">
-                <PageSection title="Nyheter" scrollable>
-                    {ready && <Defer minDelay={60} once>
+            <PageBody mode="scroll" >
+                <PageSection title="Nyheter" bleedX >
+                    {ready &&
                         <RecentProducts theme={THEME_PRODUCTS_RECENT} />
-                    </Defer>}
+                    }
                 </PageSection>
-                <PageSection title="Kategorier" theme="dark_primary">
-                    {ready && <Defer minDelay={60} once>
-                        <ProductCategoryTiles key="categories" />
-                    </Defer>}
+                <PageSection title="Kategorier" theme="dark_primary" bleedX contentHeight={CATEGORY_GRID_H} >
+                    {ready && <ProductCategoryTiles key="categories" mx="$3" />}
                 </PageSection>
-                <PageSection title="Tilbud" scrollable>
-                    {ready && <Defer minDelay={60} once>
+
+                <PageSection title="Tilbud" bleedX >
+                    {ready &&
                         <DiscountedProducts key='discounted' theme={THEME_PRODUCTS_DISCOUNTED} />
-                    </Defer>}
+                    }
                 </PageSection>
-                <PageSection title="Utvalgte produkter" scrollable theme="dark_primary">
-                    {ready && <Defer minDelay={60} once>
+                <PageSection title="Utvalgte produkter" bleedX theme="dark_primary">
+                    {ready &&
                         <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} />
-                    </Defer>}
+                    }
                 </PageSection>
-                <PageSection title="Debug" scrollable >
-                    {ready && <Defer minDelay={60} once>
+                <PageSection title="Debug" bleedX >
+                    {ready &&
                         <DebugProducts key='debug' />
-                    </Defer>}
+                    }
                 </PageSection>
             </PageBody>
         </PageView >

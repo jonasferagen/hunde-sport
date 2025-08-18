@@ -26,7 +26,7 @@ export const ProductCategoryTiles = React.memo((props: StackProps): JSX.Element 
     const { to } = useCanonicalNav();
 
     return (
-        <ThemedYStack {...props}>
+        <ThemedYStack {...props} >
             <XStack fw="wrap" m={-half}>
                 {productCategories.map((cat) => (
                     <YStack key={cat.id} w={colPct} p={half}>
@@ -35,7 +35,7 @@ export const ProductCategoryTiles = React.memo((props: StackProps): JSX.Element 
                             <TileSquare
                                 title={cat.name}
                                 image={cat.image}
-                                approxW={Math.round(120 / NUM_CATEGORY_TILE_COLUMNS)} // if you have it
+                                approxW={Math.round(160 / NUM_CATEGORY_TILE_COLUMNS)} // if you have it
                                 onPress={() => to('product-category', cat)}
                             />
                         </YStack>

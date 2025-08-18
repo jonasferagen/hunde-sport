@@ -7,7 +7,6 @@ import { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { PurchasableProduct } from '@/types';
 import React, { JSX } from 'react';
-import { Dimensions } from 'react-native';
 import { StackProps } from 'tamagui';
 import { HorizontalTiles } from '../../../ui/tile/HorizontalTiles';
 import { ProductPriceTag } from '../display/ProductPriceTag';
@@ -35,7 +34,6 @@ interface ProductTilesProps extends StackProps {
     queryResult: QueryResult<PurchasableProduct>;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, ...stackProps }) => {
     const { to } = useCanonicalNav();

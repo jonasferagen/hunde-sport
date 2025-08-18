@@ -7,7 +7,5 @@ export async function fetchProductCategories(pagination?: PaginationOptions) {
     const response = await apiClient.get<any[]>(
         ENDPOINTS.CATEGORIES.LIST(pagination)
     );
-    console.log(ENDPOINTS.CATEGORIES.LIST(pagination));
-
     return responseTransformer(response, mapToProductCategory);
 }

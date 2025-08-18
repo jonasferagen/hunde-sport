@@ -56,7 +56,7 @@ export const ThemedImage = memo(function ThemedImage({
     }, [aspectRatio, borderRadiusPx, h]);
 
     return (
-        <View style={[{ width: w as any, height: h as any }, style]}>
+        <View style={[{ width: w as any, height: h as any, backgroundColor: "white" }, style]}>
             <ExpoImage
                 source={uri ? { uri } : undefined}
                 accessibilityLabel={title}
