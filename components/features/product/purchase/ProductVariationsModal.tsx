@@ -3,6 +3,7 @@ import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useAddToCart } from '@/hooks/useAddToCart';
 import { useDeferredOpen } from '@/hooks/useDeferredOpen';
+import { closeModal, setModalPosition, useModalStore } from '@/stores/modalStore';
 import { Purchasable } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
@@ -58,12 +59,17 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
         setLoading(true);
         try {
             const res = await addToCart(purchasable, 1);
-            if (res.ok) close();
+            if (res.ok) {
+                // (optional) slide sheet down first
+                setModalPosition(useModalStore.getState().snapPoints.length - 1);
+                // close after interactions so we don’t fight the background
+                closeModal();
+            }
         } finally {
-            console.log("finally");
             setLoading(false);
         }
     };
+
 
     return (
         <ThemedYStack f={1} mih={0} onLayout={onBodyLayout}>

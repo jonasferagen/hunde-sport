@@ -9,6 +9,7 @@ import { useAddToCart } from "@/hooks/useAddToCart";
 
 // ProductPurchaseFlow.tsx
 import { haptic } from '@/lib/haptics';
+import { Purchasable } from "@/types";
 
 export const ProductPurchaseFlow = () => {
     const addToCart = useAddToCart();
@@ -24,9 +25,9 @@ export const ProductPurchaseFlow = () => {
         haptic.selection(); // or haptic.light()
         openModal(
             (payload, api) => (
-                <ProductVariationsModal purchasable={payload} close={() => api.close()} />
+                <ProductVariationsModal purchasable={payload as Purchasable} close={() => api.close()} />
             ),
-            purchasable
+            purchasable,
         );
     };
 

@@ -15,9 +15,11 @@ interface BreadcrumbProps {
 export const Breadcrumb = React.memo(({ productCategory,
   isLast = false,
   isLastClickable = false,
-
 }: BreadcrumbProps) => {
-
+  if (!productCategory) {
+    return null;
+  }
+  const { linkProps } = useCanonicalNav();
   const breadcrumbText = (
     <ThemedText
       size="$6"
@@ -27,12 +29,6 @@ export const Breadcrumb = React.memo(({ productCategory,
     </ThemedText>
   );
 
-  if (!productCategory) {
-    return null;
-  }
-
-
-  const { linkProps } = useCanonicalNav();
 
   return (
     <ThemedXStack gap="none">
