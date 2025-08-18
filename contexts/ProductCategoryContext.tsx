@@ -20,10 +20,10 @@ export const ProductCategoryProvider = React.memo(
     ({ productCategoryId = 0, children }: { productCategoryId?: number; children: React.ReactNode }) => {
         const categories = useProductCategoryStore((s) => s.productCategories);
 
-        const productCategory = useMemo(
+        const productCategory = productCategoryId ? useMemo(
             () => categories.find((c) => c.id === productCategoryId),
             [categories, productCategoryId]
-        );
+        ) : undefined;
         const sub = useMemo(
             () => categories.filter((c) => c.parent === (productCategory?.id ?? 0) && c.shouldDisplay()),
             [categories, productCategory?.id]

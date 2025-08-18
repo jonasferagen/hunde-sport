@@ -7,24 +7,24 @@ import { ThemedXStack } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
+import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
-import { useLocalSearchParams } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { LoadingScreen } from './misc/LoadingScreen';
-import { NotFoundScreen } from './misc/NotFoundScreen';
 
 export const ProductScreen = () => {
-  const { id, productCategoryId: productCategoryIdFromParams } = useLocalSearchParams<{ id: string; productCategoryId?: string }>();
+  const { id, productCategoryId: productCategoryIdFromParams, } = useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
   const productCategoryId = productCategoryIdFromParams ? Number(productCategoryIdFromParams) : undefined;
 
   const { data: product, isLoading } = useProduct(productId);
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen />
   }
   if (!product) {
-    return <NotFoundScreen message="Beklager, produktet ble ikke funnet" />;
+    return <Redirect href="/" />;
   }
   const purchasableProduct = product as PurchasableProduct;
 
@@ -44,32 +44,34 @@ const ProductScreenContent = () => {
 
 
   return (
-    <PageView>
-      <PageHeader>
-        <Breadcrumbs isLastClickable={false} />
-      </PageHeader>
-      <PageBody mode="scroll">
-        <PageSection>
-          <ProductImage />
-          <ThemedXStack split>
-            <ProductTitle size="$5" fs={1} />
-            <ProductPrice size="$5" />
-          </ThemedXStack>
-        </PageSection>
-        <PageSection title="Produktinformasjon" theme="primary">
-          <ProductDescription long />
-        </PageSection>
-        <PageSection title="Produktbilder">
-          {product.images.length > 1 && <ProductImageGallery />}
-        </PageSection>
-        <PageSection title="Kategorier">
-          <ProductCategoryChips productCategories={product.categories} />
-        </PageSection>
-      </PageBody>
-      <PageFooter>
-        <ProductPurchaseFlow />
-      </PageFooter>
-    </PageView >
+    <Prof id="ProductScreen">
+      <PageView>
+        <PageHeader>
+          <Breadcrumbs isLastClickable={false} />
+        </PageHeader>
+        <PageBody mode="scroll">
+          <PageSection>
+            <ProductImage />
+            <ThemedXStack split>
+              <ProductTitle size="$5" fs={1} />
+              <ProductPrice size="$5" />
+            </ThemedXStack>
+          </PageSection>
+          <PageSection title="Produktinformasjon" theme="primary">
+            <ProductDescription long />
+          </PageSection>
+          <PageSection title="Produktbilder">
+            {product.images.length > 1 && <ProductImageGallery />}
+          </PageSection>
+          <PageSection title="Kategorier">
+            <ProductCategoryChips productCategories={product.categories} />
+          </PageSection>
+        </PageBody>
+        <PageFooter>
+          <ProductPurchaseFlow />
+        </PageFooter>
+      </PageView>
+    </Prof>
   );
 };
 

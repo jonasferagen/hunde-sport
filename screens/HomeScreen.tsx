@@ -7,7 +7,6 @@ import { THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECE
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import React from 'react';
 
-
 export const HomeScreen = React.memo(() => {
 
     const { to } = useCanonicalNav();

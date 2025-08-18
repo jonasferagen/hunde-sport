@@ -5,7 +5,7 @@ import { ProductPriceTag } from '../display/ProductPriceTag';
 
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useCanonicalNav } from "@/hooks/useCanonicalNav";
-import { Link } from 'expo-router';
+import { Link } from "expo-router";
 
 interface ProductTileProps extends YStackProps {
 }
@@ -15,10 +15,11 @@ export const ProductTile: React.FC<ProductTileProps> = ({
 }) => {
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
-    const { linkProps } = useCanonicalNav();
+    const { linkPropsWithoutOverlay } = useCanonicalNav();
+
     return (
         <Theme>
-            <Link {...linkProps('product', product)} asChild>
+            <Link {...linkPropsWithoutOverlay('product', product)} asChild>
                 <Tile
                     title={product.name}
                     image={product.featuredImage}

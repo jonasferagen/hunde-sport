@@ -38,21 +38,18 @@ export const CustomDrawer = React.memo(({ navigation }
         }
     }, [isOpen, showTree]);
 
-    const onNavigate = React.useCallback((name: keyof typeof routes) => {
+    const onNavigate = React.useCallback((name: keyof typeof routes, params?: Record<string, unknown>) => {
         const state = navigation.getState();
-        if (state.routeNames.includes(name as string)) {
-            navigation.dispatch(DrawerActions.closeDrawer());
 
-            setTimeout(() => {
-                useNavProgress.getState().start();
-            }, 50);
-            setTimeout(() => {
-                navigation.dispatch(DrawerActions.jumpTo(name as string));
-            }, 100);
+        if (state.routeNames.includes(name as string)) {
+            useNavProgress.getState().start();
+            navigation.dispatch(DrawerActions.closeDrawer());
+            navigation.dispatch(DrawerActions.jumpTo(name as string, params));
+
         }
     }, [navigation]);
 
-    const close = () => { navigation.closeDrawer() }
+    const close = () => { navigation.closeDrawer(); }
 
 
     return (
@@ -79,7 +76,7 @@ export const CustomDrawer = React.memo(({ navigation }
                     </ThemedYStack>
                     {/* heavy subtree */}
                     <Suspense fallback={null}>
-                        {showTree ? (
+                        {showTree && false ? (
                             <ThemedYStack display={isOpen ? 'flex' : 'none'}>
                                 <LazyCategoryTree />
                             </ThemedYStack>

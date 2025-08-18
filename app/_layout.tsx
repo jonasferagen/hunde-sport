@@ -1,4 +1,5 @@
 import { ModalHost } from '@/components/features/product/purchase/ModalHost';
+import { NavInspector } from '@/lib/debug/NavInspector';
 import { queryClient } from '@/lib/queryClient';
 import { appConfig } from '@/tamagui/tamagui.config';
 
@@ -11,12 +12,13 @@ import { enableFreeze, enableScreens } from 'react-native-screens';
 import { PortalProvider, TamaguiProvider } from 'tamagui';
 
 enableScreens(true);
-enableFreeze(true);
+enableFreeze(false);
 
 const RootLayout = (): JSX.Element => {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <NavInspector />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>

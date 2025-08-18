@@ -11,7 +11,7 @@ export const BreadCrumbsContainer = ({ ...stackProps }: StackProps & { defaultOp
 
     const { productCategories } = useProductCategoryContext();
     const [showCategories, setShowCategories] = React.useState(false);
-    console.log(productCategories);
+
 
     return (
         <ThemedYStack  {...stackProps}>

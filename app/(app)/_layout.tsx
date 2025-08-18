@@ -16,7 +16,7 @@ const AppLayout = React.memo((): React.ReactElement => {
         () => ({
             header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
             swipeEnabled: true,
-            freezeOnBlur: true,          // default
+            freezeOnBlur: false,          // default
             unmountOnBlur: false,        // default
             lazy: true
         }),
@@ -36,7 +36,9 @@ const AppLayout = React.memo((): React.ReactElement => {
                 <Drawer
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
-                    detachInactiveScreens={false}
+                    detachInactiveScreens
+                    initialRouteName='index'
+
                 >
                     {Object.values(routes).map((route) => (
                         <Drawer.Screen
