@@ -5,12 +5,13 @@ import { Sheet, Theme, YStack } from 'tamagui';
 
 import { THEME_MODAL } from '@/config/app';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { closeModal, setModalPosition, useModalStore } from '../../../../stores/modalStore';
+import { setModalPosition, useModalStore } from '../../../../stores/modalStore';
 
 export const ModalHost = () => {
-    const { open, renderer, payload, snapPoints, position } = useModalStore()
 
     const insets = useSafeAreaInsets();
+
+    const { open, closeModal, renderer, payload, snapPoints, position } = useModalStore()
 
     return (
         <Theme name={THEME_MODAL}>
@@ -33,7 +34,7 @@ export const ModalHost = () => {
                     <YStack f={1} mih={0}>
                         {renderer
                             ? renderer(payload, {
-                                close: () => closeModal(),               // uses smooth defaults
+                                close: () => closeModal(),
                                 setPosition: setModalPosition,
                             })
                             : null}

@@ -62,7 +62,7 @@ export const useModalStore = create<ModalState>((set, get) => ({
     open: false,
     payload: undefined,
     renderer: undefined,
-    snapPoints: [90, 40],      // use normalized decimals here (match your Sheet config)
+    snapPoints: [90, 50, 0],      // use normalized decimals here (match your Sheet config)
     position: 0,
     onClose: undefined,
 
@@ -72,7 +72,7 @@ export const useModalStore = create<ModalState>((set, get) => ({
                 open: true,
                 renderer,
                 payload,
-                snapPoints: opts?.snapPoints ?? [90, 40],
+                snapPoints: opts?.snapPoints ?? [90, 50, 0],
                 position: opts?.initialPosition ?? 0,
                 onClose: opts?.onClose,
             });

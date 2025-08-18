@@ -1,7 +1,6 @@
 import { ModalHost } from '@/components/features/product/purchase/ModalHost';
 import { AppToastProvider } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
-import { useModalStore } from '@/stores/modalStore';
 import { appConfig } from '@/tamagui/tamagui.config';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -14,17 +13,10 @@ import { enableFreeze, enableScreens } from 'react-native-screens';
 import { PortalProvider, TamaguiProvider } from 'tamagui';
 
 enableScreens(true);
-enableFreeze(false);
+enableFreeze(true);
 
 
 const RootLayout = (): JSX.Element => {
-  const { open, position, snapPoints } = useModalStore(s => ({
-    open: s.open,
-    position: s.position,
-    snapPoints: s.snapPoints,
-  }));
-  const lastIdx = Math.max(0, snapPoints.length - 1);
-  const modalActive = open || position !== lastIdx;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -34,7 +26,7 @@ const RootLayout = (): JSX.Element => {
             <PortalProvider>
               <AppToastProvider>
                 <ModalHost />
-                <Freeze freeze={modalActive}>
+                <Freeze freeze={false}>
                   <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="(app)" />
                   </Stack>

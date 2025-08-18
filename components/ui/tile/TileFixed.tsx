@@ -5,8 +5,12 @@ import { ImageProps } from 'expo-image';
 import React from 'react';
 import { PixelRatio } from 'react-native';
 import type { YStackProps } from 'tamagui';
+import { ThemedLinearGradient } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedSurface } from '../themed-components/ThemedSurface';
+
+
+
 
 type TileFixedProps = YStackProps & {
     title: string;
@@ -17,6 +21,7 @@ type TileFixedProps = YStackProps & {
     showGradient?: boolean;
     titleLines?: number;
     imagePriority?: ImageProps['priority'];
+    interactive?: boolean;
 };
 // TileFixed.tsx (only one pressable)
 export const TileFixed = React.memo(function TileFixed({
@@ -24,6 +29,7 @@ export const TileFixed = React.memo(function TileFixed({
     image,
     w,
     h,
+    interactive,
     onPress,
     imagePriority,
     showGradient = true,
@@ -43,8 +49,11 @@ export const TileFixed = React.memo(function TileFixed({
             h={h}
             ov="hidden"
             bw={2}
-            onPress={onPress}                         // <-- move onPress here
-            pressStyle={{ boc: '$borderColorInverse', bg: '$backgroundInverse' }}
+            // only attach interactivity when visible:
+            onPress={interactive ? onPress : undefined}
+            pressStyle={interactive ? PRESS_STYLE : undefined}
+            pointerEvents={interactive ? 'auto' : 'none'}
+
             {...props}
         >
             <ThemedImage
@@ -57,13 +66,13 @@ export const TileFixed = React.memo(function TileFixed({
                 recyclingKey={uri}
                 w="100%"
                 h="100%"
-                borderRadiusPx={8}
+                br="$3"
             />
 
             {children}
 
             {/* keep overlays non-blocking */}
-            {/* <ThemedLinearGradient pointerEvents="none" ... /> */}
+            {<ThemedLinearGradient start={[0, 0]} end={[1, .4]} colors={["$background", "$backgroundPress"]} opacity={0.5} />}
 
             {/* title */}
             {/* ... */}

@@ -48,7 +48,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                                 title: route.label,
                                 lazy: !route.showInDrawer,
                                 ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
-                                freezeOnBlur: route.name === 'index'
+                                freezeOnBlur: true
                             }}
                         />
                     ))}
