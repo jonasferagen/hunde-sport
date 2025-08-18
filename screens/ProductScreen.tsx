@@ -7,6 +7,8 @@ import { ThemedXStack } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
+import { useScreenReady } from '@/hooks/useScreenReady';
 import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
 import { Redirect, useLocalSearchParams } from 'expo-router';
@@ -14,13 +16,17 @@ import React from 'react';
 import { LoadingScreen } from './misc/LoadingScreen';
 
 export const ProductScreen = () => {
+  useRenderGuard('ProductScreen');
+  const ready = useScreenReady();
+
   const { id, productCategoryId: productCategoryIdFromParams, } = useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
   const productCategoryId = productCategoryIdFromParams ? Number(productCategoryIdFromParams) : undefined;
 
-  const { data: product, isLoading } = useProduct(productId);
 
-  if (isLoading) {
+  const { data: product, isLoading } = useProduct(productId, { enabled: ready });
+
+  if (!ready || isLoading) {
     return <LoadingScreen />
   }
   if (!product) {

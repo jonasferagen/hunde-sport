@@ -16,10 +16,11 @@ import {
 
 
 
-export const useProduct = (id: number): UseQueryResult<Product> => {
+export const useProduct = (id: number, options = { enabled: true }): UseQueryResult<Product> => {
     const result = useQuery({
         queryKey: ['product', id],
         queryFn: () => fetchProduct(id),
+        ...options,
     });
     return result;
 };

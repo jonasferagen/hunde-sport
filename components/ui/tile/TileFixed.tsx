@@ -2,11 +2,9 @@
 import type { StoreImage } from '@/domain/StoreImage';
 import { getScaledImageUrl } from '@/lib/helpers';
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { PixelRatio } from 'react-native';
 import type { YStackProps } from 'tamagui';
-import { ThemedText } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
-import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';
 import { ThemedSurface } from '../themed-components/ThemedSurface';
 
 type TileFixedProps = YStackProps & {
@@ -18,7 +16,7 @@ type TileFixedProps = YStackProps & {
     showGradient?: boolean;
     titleLines?: number;
 };
-
+// TileFixed.tsx (only one pressable)
 export const TileFixed = React.memo(function TileFixed({
     title,
     image,
@@ -30,19 +28,22 @@ export const TileFixed = React.memo(function TileFixed({
     children,
     ...props
 }: TileFixedProps) {
-    // Ask CDN for exact size; no measuring needed
-    const uri = React.useMemo(() => getScaledImageUrl(image.src, w, h), [image.src, w, h]);
+    const dpr = Math.min(PixelRatio.get(), 2); // crisper thumbs
+    const uri = React.useMemo(
+        () => getScaledImageUrl(image.src, Math.round(w * dpr), Math.round(h * dpr)),
+        [image.src, w, h, dpr]
+    );
 
-    const content = (
+    return (
         <ThemedSurface
             w={w}
             h={h}
-            ov="hidden"                 // keep if you rely on clipping; else remove for Android perf
+            ov="hidden"
             bw={2}
+            onPress={onPress}                         // <-- move onPress here
             pressStyle={{ boc: '$borderColorInverse', bg: '$backgroundInverse' }}
             {...props}
         >
-            {/* Image fills; zero transition for lists */}
             <ThemedImage
                 uri={uri}
                 title={title}
@@ -52,45 +53,16 @@ export const TileFixed = React.memo(function TileFixed({
                 recyclingKey={uri}
                 w="100%"
                 h="100%"
-                borderRadiusPx={8}       // faster than overflow clipping on Android
+                borderRadiusPx={8}
             />
 
-            {/* Badge or custom children */}
             {children}
 
-            {/* Title overlay */}
-            {showGradient && (
-                <>
-                    <ThemedLinearGradient
-                        style={StyleSheet.absoluteFillObject}
-                        start={[0, 0.2]}
-                        end={[0, 0.9]}
-                        opacity={0.8}
-                    />
-                    <ThemedText
-                        pos="absolute"
-                        b="$2.5"
-                        l="$2.5"
-                        r="$2.5"
-                        ta="center"
-                        bold
-                        col="$color"
-                        numberOfLines={titleLines}
-                        ellipse
-                    >
-                        {title}
-                    </ThemedText>
-                </>
-            )}
+            {/* keep overlays non-blocking */}
+            {/* <ThemedLinearGradient pointerEvents="none" ... /> */}
+
+            {/* title */}
+            {/* ... */}
         </ThemedSurface>
-    );
-
-    if (!onPress) return content;
-
-    // Light press feedback with minimal overhead
-    return (
-        <Pressable onPress={onPress} android_ripple={{ color: 'rgba(0,0,0,0.06)' }}>
-            {content}
-        </Pressable>
     );
 });

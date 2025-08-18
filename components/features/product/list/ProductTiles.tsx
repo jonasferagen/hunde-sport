@@ -47,11 +47,16 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, ...stackProps 
             // make sure HorizontalTiles passes these to FlashList:
             estimatedItemSize={PRODUCT_TILE_WIDTH as number} // width is the primary axis for horizontal
             renderItem={({ item: product }) => {
+
+                const onPress = () => {
+                    to('product', product);
+                }
+
                 return (
                     <PurchasableProviderInit product={product}>
                         <ProductTile w={PRODUCT_TILE_WIDTH} h={PRODUCT_TILE_HEIGHT} >
                             <TileFixed
-                                onPress={() => to('product', product)}
+                                onPress={onPress}
                                 title={product.name}
                                 image={product.featuredImage}
                                 w={PRODUCT_TILE_WIDTH as number}
