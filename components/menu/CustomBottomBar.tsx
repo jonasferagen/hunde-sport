@@ -40,8 +40,6 @@ const StyledTabsList = styled(Tabs.List, {
 });
 
 
-import { useNavProgress } from '@/stores/navProgressStore';
-import { startTransition } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = React.ComponentProps<typeof ThemedYStack> & {
@@ -53,7 +51,7 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
     const insets = useSafeAreaInsets();
     const pb = respectSafeArea ? insets.bottom : 0;
 
-    const { to } = useCanonicalNav();
+    const { to, } = useCanonicalNav();
     const pathname = usePathname();
     const currentTab = useMemo(
         () => pathname.split('/')[1] || 'index',
@@ -62,13 +60,10 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
 
     const onChange = useCallback((next: string) => {
         if (next !== currentTab) {
-            const { start } = useNavProgress.getState();
-            start();
-            startTransition(() => {
-                setTimeout(() => to(next as any), 200);
-            });
+            to(next as any);
         }
     }, [currentTab, to]);
+
 
 
 

@@ -50,11 +50,8 @@ const AppLayout = React.memo((): React.ReactElement => {
                     ))}
                 </Drawer>
             </Prof>
-
             <LoadingOverlay />
             <CustomBottomBar />
-
-
         </View >
     );
 });
