@@ -18,28 +18,43 @@ type PageViewProps = YStackProps & {
 };
 
 import { useNavProgress } from '@/stores/navProgressStore';
+<<<<<<< HEAD
 import { Freeze } from 'react-freeze';
 export const PageView = ({ children, withGradient = true, gradientToken = 'background', ...stackProps }: PageViewProps) => {
+=======
+import { useIsFocused } from '@react-navigation/native';
+
+export const PageView = ({ children, withGradient = true, gradientToken = 'background', ...stackProps }: PageViewProps) => {
+  const isFocused = useIsFocused();
+>>>>>>> temp
 
   useFocusEffect(React.useCallback(() => {
     useNavProgress.getState().stop();
   }, []));
 
+<<<<<<< HEAD
   const isFocused = false // useIsFocused();
   return (
     <Freeze freeze={isFocused}>
+=======
+
+  return (
+    <>
+>>>>>>> temp
       <ThemedYStack
         theme={THEME_PAGE}
         f={1}
         gap="none"
         // if you still want it invisible and inert to touches while blurred:
         pointerEvents={isFocused ? 'auto' : 'none'}
-        style={isFocused ? undefined : { display: 'none' }} // or { opacity: 0.0001 } to keep layout
+        style={isFocused ? { opacity: 1 } : { opacity: 0.0001 }} // to keep layout
         {...stackProps}
       >
         {withGradient ? <PageBackdrop token={gradientToken} /> : null}
         {children}
       </ThemedYStack>
-    </Freeze>
+
+
+    </>
   );
 };

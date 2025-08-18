@@ -11,7 +11,10 @@ export const useNavProgress = create<NavProgress>((set, get) => ({
     active: false,
     start: () => {
         if (!get().active) set({ active: true });
+<<<<<<< HEAD
 
+=======
+>>>>>>> temp
     },
     stop: () => {
         if (get().active) set({ active: false });

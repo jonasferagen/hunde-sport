@@ -2,6 +2,8 @@
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
+import { Prof } from '@/lib/debug/prof';
+import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
 import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
@@ -29,31 +31,26 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     return (
         <View f={1} >
-            <Drawer
-                drawerContent={drawerContent}
-                screenOptions={screenOptions}
-                detachInactiveScreens={false}
-            >
-                {Object.values(routes).map((route) => {
-                    return <Drawer.Screen
-                        key={route.name}
-                        name={route.name}
-                        options={{
-                            title: route.label,
-                            ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
-                        }}
-                    />
-                })}
-            </Drawer>
-
-
-            {/* <LoadingOverlay /> */}
-
-
-            {/* 
-            <View style={{ flex: 1, position: 'absolute', left: 0, right: 0, bottom: 0 }}>
-                <CustomBottomBar />
-            </View>Bottom bar */}
+            <Prof id="drawer">
+                <Drawer
+                    drawerContent={drawerContent}
+                    screenOptions={screenOptions}
+                    detachInactiveScreens={false}
+                >
+                    {Object.values(routes).map((route) => (
+                        <Drawer.Screen
+                            key={route.name}
+                            name={route.name}
+                            options={{
+                                title: route.label,
+                                ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
+                            }}
+                        />
+                    ))}
+                </Drawer>
+            </Prof>
+            <LoadingOverlay />
+            <CustomBottomBar />
         </View >
     );
 });

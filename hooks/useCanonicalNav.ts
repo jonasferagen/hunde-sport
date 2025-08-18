@@ -1,33 +1,51 @@
 // useCanonicalNav.ts
 import { cleanHref, routes } from '@/config/routes';
+import { useNavProgress } from '@/stores/navProgressStore';
 import { HrefObject, LinkProps, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
+import { startTransition } from 'react';
 
+// --- types + helpers (keep your route typing) ---
 type Routes = typeof routes;
 type RouteKey = keyof Routes;
 type ArgsOf<K extends RouteKey> =
     Routes[K] extends { path: (...a: infer A) => any } ? A : never;
 
-function callPath<K extends RouteKey>(k: K, ...a: ArgsOf<K>) {
-    return (routes[k].path as (...a: ArgsOf<K>) => HrefObject)(...a);
-}
+const pathFor = <K extends RouteKey>(k: K) =>
+    routes[k].path as (...a: ArgsOf<K>) => HrefObject;
 
 const stripTrailingSlash = (p?: string) => (p?.replace(/\/+$/, '') || '/');
 
 const normalizeParams = (obj?: Record<string, unknown>) => {
     const entries = Object.entries(obj ?? {}).flatMap(([k, v]) => {
-        if (v == null) return [];                         // drop null/undefined
-        if (Array.isArray(v)) v = v[0];                   // expo-router sometimes gives string[]
+        if (v == null) return [];
+        if (Array.isArray(v)) v = v[0];
         const s = String(v).trim();
-        if (!s) return [];                                // drop empty strings
-        return [[k, s] as const];
+        return s ? ([[k, s]] as const) : [];
     });
-    // sort for stable identity
+    // sort keys for stable identity
     entries.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
     return Object.fromEntries(entries);
 };
 
 const paramsKey = (obj?: Record<string, unknown>) => JSON.stringify(normalizeParams(obj));
+
+
+// inside useCanonicalNav.ts
+const scheduleNav = (fn: () => void, withoutOverlay: boolean) => {
+
+    if (withoutOverlay) { startTransition(fn); return; }
+    useNavProgress.getState().start();               // flip overlay now (no re-render)
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            // give overlay a paint
+            setTimeout(() => {
+                console.log("a");
+                startTransition(fn); /** Note: hack still needed for the overlay to work */
+            }, 1);
+        });
+    });
+};
 
 export function useCanonicalNav() {
     const rawPathname = usePathname();
@@ -36,42 +54,69 @@ export function useCanonicalNav() {
     const paramsObj = useLocalSearchParams();
     const currentParamsKey = React.useMemo(() => paramsKey(paramsObj as any), [paramsObj]);
 
-    const to = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
+    const coreTo = React.useCallback(<K extends RouteKey>(
+        key: K,
+        withoutOverlay: boolean,
+        ...args: ArgsOf<K>
+    ) => {
         const { nav, path } = routes[key];
-        const href = cleanHref(callPath(key, ...args));
+        const href = cleanHref(pathFor(key)(...args));
         const targetPath = stripTrailingSlash(href.pathname);
 
-        if (targetPath === pathname) {
-            if (nav === 'push') {
-                router.push(href); // product -> product
-            } else {
-                // only update params if actually different
-                const nextKey = paramsKey(href.params as any);
-                if (nextKey && nextKey !== currentParamsKey) {
-                    router.setParams(href.params as any);
+        // navigate action picker
+        scheduleNav(() => {
+            if (targetPath === pathname) {
+                if (nav === 'push') {
+                    router.push(href);
+                } else {
+                    const nextKey = paramsKey(href.params as any);
+                    if (nextKey && nextKey !== currentParamsKey) {
+                        router.setParams(href.params as any);
+                    }
                 }
+                return;
             }
-            return;
-        }
-
-        if (nav === 'push') router.push(href);
-        else if (nav === 'replace') router.replace(href);
-        else router.navigate(href); // 'switch'
+            if (nav === 'push') router.push(href);
+            else if (nav === 'replace') router.replace(href);
+            else router.navigate(href); // 'switch'
+        }, withoutOverlay);
     }, [pathname, currentParamsKey]);
+
+    // Public API
+    const to = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
+        coreTo(key, false, ...args);
+    }, [coreTo]);
+
+    const toWithoutOverlay = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
+        coreTo(key, true, ...args);
+    }, [coreTo]);
 
     const linkProps = React.useCallback(<K extends RouteKey>(
         key: K,
         ...args: ArgsOf<K>
     ): Pick<LinkProps, 'href' | 'replace'> => {
-        const href = cleanHref(callPath(key, ...args));
+        const href = cleanHref(pathFor(key)(...args));
         const replace = routes[key].nav !== 'push';
         return { href, replace };
     }, []);
 
-    const href = React.useCallback(<K extends RouteKey>(
+    // Intercept press to show overlay before navigating
+    const linkPropsWithoutOverlay = React.useCallback(<K extends RouteKey>(
         key: K,
         ...args: ArgsOf<K>
-    ): HrefObject => cleanHref(callPath(key, ...args)), []);
+    ): Pick<LinkProps, 'href' | 'replace' | 'onPress'> => {
+        const base = linkProps(key, ...args);
+        return {
+            ...base,
+            onPress: (e) => {
+                e?.preventDefault?.();
+                toWithoutOverlay(key, ...args);
+            },
+        };
+    }, [linkProps, toWithoutOverlay]);
 
-    return { to, linkProps, href };
+    const href = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>): HrefObject =>
+        cleanHref(pathFor(key)(...args)), []);
+
+    return { to, toWithoutOverlay, linkProps, linkPropsWithoutOverlay, href };
 }

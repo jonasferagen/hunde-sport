@@ -44,14 +44,17 @@ type Props = React.ComponentProps<typeof ThemedYStack> & {
     respectSafeArea?: boolean;
 };
 
+<<<<<<< HEAD
 import { useNavProgress } from '@/stores/navProgressStore';
 import { startTransition } from 'react';
+=======
+>>>>>>> temp
 export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: Props) => {
 
     const insets = useSafeAreaInsets();
     const pb = respectSafeArea ? insets.bottom : 0;
 
-    const { to } = useCanonicalNav();
+    const { to, } = useCanonicalNav();
     const pathname = usePathname();
     const currentTab = useMemo(
         () => pathname.split('/')[1] || 'index',
@@ -60,17 +63,28 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
 
     const onChange = useCallback((next: string) => {
         if (next !== currentTab) {
+<<<<<<< HEAD
             const { start } = useNavProgress.getState();
             start();
             startTransition(() => {
                 to(next as any);
             });
+=======
+            to(next as any);
+>>>>>>> temp
         }
     }, [currentTab, to]);
 
+
+
+
     return (
+<<<<<<< HEAD
         <ThemedYStack box theme={THEME_BOTTOM_BAR} {...rest} w="100%"  >
             <ThemedLinearGradient pointerEvents="none" />
+=======
+        <ThemedYStack theme={THEME_BOTTOM_BAR} {...rest} w="100%"  >
+>>>>>>> temp
             <StyledTabs
                 key={currentTab}
                 value={currentTab}           // <-- controlled
@@ -78,16 +92,22 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
                 activationMode="manual"      // avoid activating on focus moves
                 pb={pb}
             >
+<<<<<<< HEAD
                 <StyledTabsList>
                     <StyledTab value="index">
+=======
+                <StyledTabsList >
+                    <ThemedLinearGradient pointerEvents="none" />
+                    <StyledTab value="index" pb={pb}>
+>>>>>>> temp
                         <Home />
                         <Text>Hjem</Text>
                     </StyledTab>
-                    <StyledTab value="search">
+                    <StyledTab value="search" pb={pb}>
                         <Search />
                         <Text>Søk</Text>
                     </StyledTab>
-                    <StyledTab value="cart">
+                    <StyledTab value="cart" pb={pb}>
                         <ShoppingCart />
                         <Text>Handlekurv</Text>
                     </StyledTab>
