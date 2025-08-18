@@ -14,7 +14,7 @@ type ScreenReadyOptions = {
 };
 
 export function useScreenReady(opts: ScreenReadyOptions = {}) {
-    const { delayMs = 0, stopNavProgress = true, onReady } = opts;
+    const { delayMs = 50, stopNavProgress = true, onReady } = opts;
 
     const [ready, setReady] = React.useState(false);
     const stoppedRef = React.useRef(false);

@@ -1,41 +1,48 @@
-import { Product } from '@/types';
+// HorizontalTiles.tsx
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { rgba } from 'polished';
-import React, { JSX, useCallback, useState } from 'react';
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import React, { JSX, useCallback, useMemo, useRef, useState } from 'react';
+import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, StyleSheet } from 'react-native';
 import { Spinner, StackProps, Theme, View, XStack, getVariableValue, useTheme } from 'tamagui';
-import { ThemedLinearGradient, ThemedYStack } from '../themed-components';
+import { ThemedLinearGradient } from '../themed-components';
 
-interface ScrollIndicatorProps {
-    side: 'left' | 'right';
-    width: string;
-}
+// ---- constants (avoid re-allocations) ----
+const GAP_TOKEN = '$3';
+const INDICATOR_WIDTH = '$6';
+const SCREEN_W = Dimensions.get('window').width;
 
-const ScrollIndicator = React.memo(({ side, width }: ScrollIndicatorProps) => {
+// Stable separator component
+const Separator = React.memo(() => <View style={{ width: 12 }} />); // tweak to match GAP_TOKEN px
 
-    const gradientStart = side === 'left' ? [1, 0] : [0, 0];
-    const gradientEnd = side === 'left' ? [0, 0] : [1, 0];
+// ---- Indicators ----
+const ScrollIndicator = React.memo(function ScrollIndicator({
+    side,
+    width,
+}: { side: 'left' | 'right'; width: string }) {
+    const theme = useTheme();
+    const bg = getVariableValue(theme.background) as string;
 
-    const theme = useTheme()
-    const backgroundColor = (getVariableValue(theme.background) as string)
-    const backgroundTransparent = rgba(backgroundColor, 0);
+    // memoize the color array so we don't rebuild every render
+    const colors = useMemo<[string, string]>(() => {
+        // avoid 'polished' per-render; use transparent via rgba string
+        const transparent = bg.replace('rgb', 'rgba').replace(')', ',0)');
+        return side === 'left'
+            ? [transparent, bg]
+            : [bg, transparent];
+    }, [bg, side]);
+
+    const start: [number, number] = side === 'left' ? [1, 0] : [0, 0];
+    const end: [number, number] = side === 'left' ? [0, 0] : [1, 0];
 
     return (
         <XStack
-            pos="absolute"
-            l={side === 'left' ? 0 : undefined}
-            r={side === 'right' ? 0 : undefined}
-            w={width}
-            f={1}
-            ai="center"
-            jc="flex-end"
-            pe="none"
+            position="absolute"
+            left={side === 'left' ? 0 : undefined}
+            right={side === 'right' ? 0 : undefined}
+            width={width}
+            height="100%"
+            pointerEvents="none"
         >
-            <ThemedLinearGradient
-                colors={[backgroundTransparent, backgroundColor]}
-                start={gradientStart as [number, number]}
-                end={gradientEnd as [number, number]}
-            />
+            <ThemedLinearGradient colors={colors} start={start} end={end} />
         </XStack>
     );
 });
@@ -46,73 +53,114 @@ interface HorizontalTilesProps<T> extends StackProps {
     isLoading?: boolean;
     fetchNextPage?: () => void;
     hasNextPage?: boolean;
+    // Optional size hints for FlashList (recommended)
+    estimatedItemSize?: number;      // main axis size (width for horizontal)
+    estimatedItemCrossSize?: number; // height
 }
 
-export const HorizontalTiles = <T extends Product>({
+export function HorizontalTiles<T extends { id: number | string }>({
     items,
     renderItem,
     isLoading,
     fetchNextPage,
     hasNextPage,
+    estimatedItemSize = 160,       // match PRODUCT_TILE_WIDTH
+    estimatedItemCrossSize = 120,  // match PRODUCT_TILE_HEIGHT
+    theme,                          // from StackProps
     ...props
-}: HorizontalTilesProps<T>): JSX.Element => {
+}: HorizontalTilesProps<T>): JSX.Element {
+    // only track whether we’re at edges; don’t set state every frame
+    const [atStart, setAtStart] = useState(true);
+    const [atEnd, setAtEnd] = useState(false);
+    const contentWRef = useRef(0);
+    const containerWRef = useRef(0);
+    const lastStartRef = useRef(true);
+    const lastEndRef = useRef(false);
 
-    const [scrollOffset, setScrollOffset] = useState(0);
-    const [contentWidth, setContentWidth] = useState(0);
-    const [containerWidth, setContainerWidth] = useState(0);
-
-    const isScrollable = contentWidth > containerWidth;
-    const isAtStart = scrollOffset <= 10;
-    const isAtEnd = scrollOffset + containerWidth >= contentWidth - 10;
-
-    const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        setScrollOffset(event.nativeEvent.contentOffset.x);
+    const onContentSizeChange = useCallback((w: number /*, h: number*/) => {
+        contentWRef.current = w;
+        // recompute edges
+        const end = containerWRef.current + 0 >= w - 10;
+        if (end !== lastEndRef.current) {
+            lastEndRef.current = end;
+            setAtEnd(end);
+        }
     }, []);
 
-    const handleEndReached = useCallback(() => {
-        if (!isLoading && hasNextPage && fetchNextPage) {
-            fetchNextPage();
+    const onLayout = useCallback((e: any) => {
+        const w = e.nativeEvent.layout.width;
+        containerWRef.current = w;
+    }, []);
+
+    const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const x = e.nativeEvent.contentOffset.x;
+        const start = x <= 10;
+        const end = x + containerWRef.current >= contentWRef.current - 10;
+
+        if (start !== lastStartRef.current) {
+            lastStartRef.current = start;
+            setAtStart(start);
         }
+        if (end !== lastEndRef.current) {
+            lastEndRef.current = end;
+            setAtEnd(end);
+        }
+    }, []);
+
+    const onEndReached = useCallback(() => {
+        if (!isLoading && hasNextPage && fetchNextPage) fetchNextPage();
     }, [isLoading, hasNextPage, fetchNextPage]);
 
-    const SPACING = "$3";
+    if (!items?.length) return <></>;
 
-    const renderFooter = useCallback(() => {
-        if (!hasNextPage || !isLoading) return <View w={SPACING} h="100%" />;
-
-        return (
-            <View f={1} w="$10" ai="center" jc="center" ml={SPACING}>
-                <Spinner />
-            </View>
-        );
-    }, [hasNextPage, isLoading]);
-
-    if (!items || items.length === 0) {
-        return <></>;
-    }
-
+    // render once; Theme at list level (if you need it) is fine
     return (
-        <Theme name={props.theme}>
-            <View position="relative">
+        <Theme name={theme}>
+            <View style={styles.container} onLayout={onLayout} {...props}>
                 <FlashList
                     horizontal
                     data={items}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => String(item.id)}
                     showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={() => <ThemedYStack ml="$3" />}
-                    estimatedItemSize={100}
-                    onScroll={handleScroll}
-                    scrollEventThrottle={16} // Trigger onScroll every 16ms
-                    onContentSizeChange={setContentWidth}
-                    onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
-                    onEndReached={handleEndReached}
+                    ItemSeparatorComponent={Separator}
+                    // sizing hints so FlashList skips measuring
+                    estimatedItemSize={estimatedItemSize}
+                    estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
+                    overrideItemLayout={(layout /*, _item, _index*/) => {
+                        layout.size = estimatedItemSize; // width for horizontal
+                        layout.span = 1;
+                    }}
+                    // smaller window avoids extra work
+                    drawDistance={Math.ceil(SCREEN_W * 1.5)}
+                    // reduce state churn from scrolling
+                    onScroll={onScroll}
+                    scrollEventThrottle={32}
+                    // pagination
+                    onContentSizeChange={onContentSizeChange}
+                    onEndReached={onEndReached}
                     onEndReachedThreshold={0.5}
-                    ListFooterComponent={renderFooter}
+                    // spacing: use padding instead of a spacer Stack if you prefer
+                    contentContainerStyle={styles.content}
+                    ListFooterComponent={
+                        hasNextPage && isLoading ? (
+                            <View style={styles.footer}>
+                                <Spinner />
+                            </View>
+                        ) : <View style={{ width: 12 }} />
+                    }
                 />
-                {isScrollable && !isAtEnd && <ScrollIndicator side="right" width="$6" />}
-                {isScrollable && !isAtStart && <ScrollIndicator side="left" width="$6" />}
+
+                {/* edge fades without per-frame re-render */}
+                {!atEnd && <ScrollIndicator side="right" width={INDICATOR_WIDTH} />}
+                {!atStart && <ScrollIndicator side="left" width={INDICATOR_WIDTH} />}
             </View>
         </Theme>
     );
-};
+}
+
+const styles = StyleSheet.create({
+    container: { position: 'relative' },
+    content: { paddingHorizontal: 12 },
+    footer: { width: 40, alignItems: 'center', justifyContent: 'center', marginLeft: 12 },
+});

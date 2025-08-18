@@ -18,7 +18,7 @@ export const HomeScreen = React.memo(() => {
     return (
         <PageView>
             <PageHeader >
-                <SearchBar onSubmit={handleSearch} />
+                {false && <SearchBar onSubmit={handleSearch} />}
             </PageHeader>
             <PageBody mode="scroll">
                 <PageSection title="Nyheter" scrollable>
@@ -32,17 +32,17 @@ export const HomeScreen = React.memo(() => {
                     </Defer>}
                 </PageSection>
                 <PageSection title="Tilbud" scrollable>
-                    {ready && <Defer minDelay={60} once>
+                    {false && <Defer minDelay={60} once>
                         <DiscountedProducts key='discounted' theme={THEME_PRODUCTS_DISCOUNTED} />
                     </Defer>}
                 </PageSection>
                 <PageSection title="Utvalgte produkter" scrollable theme="dark_primary">
-                    {ready && <Defer minDelay={60} once>
+                    {false && <Defer minDelay={60} once>
                         <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} />
                     </Defer>}
                 </PageSection>
                 <PageSection title="Debug" scrollable >
-                    {ready && <Defer minDelay={60} once>
+                    {false && <Defer minDelay={60} once>
                         <DebugProducts key='debug' />
                     </Defer>}
                 </PageSection>

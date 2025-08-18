@@ -24,11 +24,16 @@ const PRODUCTS_LIST = (pagination: PaginationOptions = {}) => {
   return `${PRODUCTS_URL}?${PRODUCTS_FILTER}&page=${page}&per_page=${per_page}`
 }
 
+const CATEGORIES_LIST = (pagination: PaginationOptions = {}) => {
+  const { page = 1, per_page = 10 } = pagination;
+  return `${CATEGORIES_URL}?&page=${page}&per_page=${per_page}`
+}
+
 // API endpoints
 export const ENDPOINTS = {
   CATEGORIES: {
     GET: (id: number) => `${CATEGORIES_URL}/${id}`,
-    LIST: (pagination?: PaginationOptions) => `${CATEGORIES_URL}?${pagination}`,
+    LIST: (pagination?: PaginationOptions) => `${CATEGORIES_LIST(pagination)}`,
   },
   PRODUCTS: {
     GET: (id: number) => `${PRODUCTS_URL}/${id}`,

@@ -29,25 +29,29 @@ const CartInitializer = ({ onReady }: LoaderProps) => {
         }
     }, [isInitialized, onReady]);
 
-    return null; // Logic-only component
+    return null;
 };
 
 /**
  * Handles fetching all product categories and reports when ready.
  */
-const CategoryLoader = ({ onReady }: LoaderProps) => {
-    const { items: productCategories, isLoading } = useProductCategories();
+const CategoryLoader = ({ onReady }: LoaderProps): JSX.Element => {
+    const { items: productCategories, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useProductCategories();
     const setCategoriesInStore = useProductCategoryStore((state) => state.setProductCategories);
 
     useEffect(() => {
         // The loader is ready once fetching is complete and we have a definitive result.
-        if (!isLoading && productCategories) {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+
+        if (!isLoading && !hasNextPage && !isFetchingNextPage) {
             setCategoriesInStore(productCategories);
             onReady();
         }
-    }, [isLoading, productCategories, onReady, setCategoriesInStore]);
+    }, [isLoading, productCategories, onReady, setCategoriesInStore, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
-    return null; // Logic-only component
+    return <></>;
 };
 
 // --- Main Preloader Screen ---

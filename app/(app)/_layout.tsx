@@ -37,7 +37,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
                     detachInactiveScreens
-                    initialRouteName='index'
+                    initialRouteName='cart'
 
                 >
                     {Object.values(routes).map((route) => (
@@ -48,6 +48,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                                 title: route.label,
                                 lazy: !route.showInDrawer,
                                 ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
+                                freezeOnBlur: route.name === 'index'
                             }}
                         />
                     ))}
