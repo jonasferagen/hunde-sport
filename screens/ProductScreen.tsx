@@ -56,7 +56,7 @@ const ProductScreenContent = () => {
           <Breadcrumbs isLastClickable={false} />
         </PageHeader>
         <PageBody mode="scroll">
-          <PageSection>
+          <PageSection pt="$5">
             <ProductImage />
             <ThemedXStack split>
               <ProductTitle size="$5" fs={1} />

@@ -16,17 +16,10 @@ export const ProductPurchaseFlow = () => {
     const [loading, setLoading] = React.useState(false);
 
     const onPressSimple = async () => {
-        setLoading(true);
-        try {
-            await addToCart(purchasable, 1);
-            haptic.success();
-        } catch {
-            haptic.error();
-        } finally {
-            setLoading(false);
-        }
-    };
-
+        if (loading) return
+        setLoading(true)
+        try { await addToCart(purchasable, 1) } finally { setLoading(false) }
+    }
     const onPressVariable = () => {
         haptic.selection(); // or haptic.light()
         openModal(

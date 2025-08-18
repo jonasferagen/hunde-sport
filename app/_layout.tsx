@@ -1,4 +1,5 @@
 import { ModalHost } from '@/components/features/product/purchase/ModalHost';
+import { AppToastProvider } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
 import { appConfig } from '@/tamagui/tamagui.config';
 
@@ -21,10 +22,12 @@ const RootLayout = (): JSX.Element => {
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>
             <PortalProvider>
-              <ModalHost />
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(app)" />
-              </Stack>
+              <AppToastProvider>
+                <ModalHost />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="(app)" />
+                </Stack>
+              </AppToastProvider>
             </PortalProvider>
           </TamaguiProvider>
         </SafeAreaView>

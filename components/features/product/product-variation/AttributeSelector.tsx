@@ -13,6 +13,7 @@ interface AttributeSelectorProps {
 export const AttributeSelector = ({ options, onSelect, selectedValue }: AttributeSelectorProps) => {
     return (
         <XStack
+
             f={1}
             miw={0}
             mih={0}

@@ -8,8 +8,8 @@ export const CartScreen = () => {
     const ready = useScreenReady(); // or useScreenReady(50) to push a frame
     return (
         <PageView>
-            <PageBody>
-                <PageSection f={1} p="none">
+            <PageBody pad="none">
+                <PageSection useContainer={false} pad="none" fill f={1} mih={0}>
                     {ready && <CartList />}
                 </PageSection>
             </PageBody>
