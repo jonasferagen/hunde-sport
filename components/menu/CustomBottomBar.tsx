@@ -67,23 +67,23 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
     }, [currentTab, to]);
 
     return (
-        <ThemedYStack theme={THEME_BOTTOM_BAR} {...rest} w="100%" pb={pb} >
+        <ThemedYStack theme={THEME_BOTTOM_BAR} {...rest} w="100%"  >
             <StyledTabs
                 value={currentTab}           // <-- controlled
                 onValueChange={onChange}
                 activationMode="manual"      // avoid activating on focus moves
             >
-                <StyledTabsList>
+                <StyledTabsList >
                     <ThemedLinearGradient pointerEvents="none" />
-                    <StyledTab value="index">
+                    <StyledTab value="index" pb={pb}>
                         <Home />
                         <Text>Hjem</Text>
                     </StyledTab>
-                    <StyledTab value="search">
+                    <StyledTab value="search" pb={pb}>
                         <Search />
                         <Text>Søk</Text>
                     </StyledTab>
-                    <StyledTab value="cart">
+                    <StyledTab value="cart" pb={pb}>
                         <ShoppingCart />
                         <Text>Handlekurv</Text>
                     </StyledTab>

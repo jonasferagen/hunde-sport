@@ -3,11 +3,12 @@ import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { Prof } from '@/lib/debug/prof';
+import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
 import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View } from 'tamagui';
-import { DrawerScreens } from './_drawerScreens';
+
 const AppLayout = React.memo((): React.ReactElement => {
 
     const screenOptions = React.useMemo(
@@ -39,8 +40,10 @@ const AppLayout = React.memo((): React.ReactElement => {
                     <DrawerScreens />
                 </Drawer>
             </Prof>
+            {/* Global overlay */}
+            <LoadingOverlay />
 
-            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+            <View style={{ position: 'relative', left: 0, right: 0, bottom: 0 }}>
                 <CustomBottomBar />
             </View>
 
@@ -51,3 +54,22 @@ const AppLayout = React.memo((): React.ReactElement => {
 export default AppLayout;
 
 
+// app/(app)/DrawerScreens.tsx
+import { routes } from '@/config/routes';
+
+const DrawerScreens = React.memo((): React.ReactElement => {
+    return (
+        <>
+            {Object.values(routes).map((route) => (
+                <Drawer.Screen
+                    key={route.name}
+                    name={route.name}
+                    options={{
+                        title: route.label,
+                        ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
+                    }}
+                />
+            ))}
+        </>
+    );
+});
