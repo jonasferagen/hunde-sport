@@ -20,15 +20,19 @@ const CATEGORY_GRID_H = Math.round(ROWS * tileW + GAP_PX * (ROWS - 1));
 
 export const HomeScreen = React.memo(() => {
 
-    const ready = useScreenReady();
+
+    const uready = useScreenReady();
+    const ready = false;
 
     const { to } = useCanonicalNav();
     const handleSearch = (q: string) => to('search', q);
 
+
+
     return (
         <PageView>
             <PageHeader >
-                {ready && <SearchBar onSubmit={handleSearch} />}
+                {true && <SearchBar onSubmit={handleSearch} />}
             </PageHeader>
             <PageBody mode="scroll" >
                 <PageSection title="Nyheter" bleedX >
@@ -37,7 +41,7 @@ export const HomeScreen = React.memo(() => {
                     }
                 </PageSection>
                 <PageSection title="Kategorier" theme="dark_primary" bleedX contentHeight={CATEGORY_GRID_H} >
-                    {ready && <ProductCategoryTiles key="categories" mx="$3" />}
+                    {true && <ProductCategoryTiles key="categories" mx="$3" />}
                 </PageSection>
 
                 <PageSection title="Tilbud" bleedX >

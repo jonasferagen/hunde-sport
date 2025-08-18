@@ -30,7 +30,7 @@ const paths = {
 export const routes = {
     index: {
         name: 'index',
-        label: 'Hjem',
+        label: 'hunde-sport.no',
         icon: Home,
         path: () => ({ pathname: paths.home }),
         showInDrawer: true,
@@ -86,7 +86,7 @@ export const routes = {
 
 
 export const resolveTitle = (route: RouteProp<any, any>): string => {
-    return route?.params?.name || route?.name || 'hunde-sport.no';
+    return route?.params?.name || routes[route.name as keyof typeof routes]?.label;
 }
 
 export const cleanHref = (href: HrefObject): HrefObject => {

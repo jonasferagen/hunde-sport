@@ -45,7 +45,7 @@ export const SearchBar = React.memo(({
     }, [value, inner, onSubmit]);
 
     return (
-        <XStack ai="center" br="$4" px="$3">
+        <XStack ai="center" br="$4" >
             <ThemedInput
                 placeholder={placeholder}
                 value={value ?? inner}
