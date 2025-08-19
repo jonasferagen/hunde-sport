@@ -8,7 +8,8 @@
         "expo*",
         "react-native*",
         "@tamagui/*",
-        "metro-minify-terser"
+        "metro-minify-terser",
+        "burnt"
     ],
     "ignore": [
         "android/**",

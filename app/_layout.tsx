@@ -6,7 +6,6 @@ import appConfig from '@/tamagui/tamagui.config';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import React, { JSX } from 'react';
-import { Freeze } from 'react-freeze';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { enableFreeze, enableScreens } from 'react-native-screens';
@@ -26,11 +25,9 @@ const RootLayout = (): JSX.Element => {
             <PortalProvider>
               <AppToastProvider>
                 <ModalHost />
-                <Freeze freeze={false}>
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="(app)" />
-                  </Stack>
-                </Freeze>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="(app)" />
+                </Stack>
               </AppToastProvider>
             </PortalProvider>
           </TamaguiProvider>

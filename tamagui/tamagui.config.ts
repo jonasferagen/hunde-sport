@@ -11,8 +11,8 @@ export const font = createInterFont({
     lineHeight: { 1: 18, 2: 20, 3: 22, 4: 24, 5: 26, 6: 28 },
     weight: { 1: '300', 2: '400', 3: '400', 4: '500', 5: '600', 6: '600' },
     letterSpacing: { 1: 0, 2: 0, 3: 0, 4: 0, 5: -0.2, 6: -0.2 },
-
 })
+
 const animations = createAnimations({
     bouncy: { damping: 20, mass: 1.2, stiffness: 250 },
     lazy: { damping: 20, stiffness: 60 },

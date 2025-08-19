@@ -1,11 +1,12 @@
 // app/(app)/_layout.tsx
 import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
-import { CustomDrawer } from '@/components/menu/CustomDrawer';
+import { CustomDrawerNew } from '@/components/menu/CustomDrawerNew';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
 import { Prof } from '@/lib/debug/prof';
 import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
 import type { DrawerContentComponentProps, DrawerHeaderProps } from '@react-navigation/drawer';
+import { usePathname } from 'expo-router';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View } from 'tamagui';
@@ -18,21 +19,27 @@ const AppLayout = React.memo((): React.ReactElement => {
             swipeEnabled: true,
             freezeOnBlur: false,          // default
             unmountOnBlur: false,        // default
-            lazy: true
+            lazy: true,
+            detachInactiveScreens: true
         }),
         []
     );
 
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => (
-            <CustomDrawer navigation={props.navigation} />
+            <Prof id="Drawer contents" ><CustomDrawerNew navigation={props.navigation} /></Prof>
         ),
         []
     );
 
+    const pathname = usePathname();
+    const profId = React.useMemo(
+        () => `screen:${pathname.replace(/^\/|\/$/g, '') || 'index'}`,
+        [pathname]
+    );
     return (
         <View f={1} >
-            <Prof id="drawer">
+            <Prof id={profId} key={profId} disable>
                 <Drawer
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
@@ -53,6 +60,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                     ))}
                 </Drawer>
             </Prof>
+
             <LoadingOverlay />
             <CustomBottomBar />
         </View >

@@ -79,12 +79,3 @@ export const PreloaderScreen = (): JSX.Element => {
         </Theme>
     );
 };
-
-/*
-  <YStack ai="center" gap="$2"></YStack>
-<SizableText>Laster inn data...</SizableText>
-                    <Progress value={progress} w={200}>
-                        <Progress.Indicator animation="linearSlow" />
-                    </Progress>
-                    <SizableText theme="alt2">{categories.length} / {totalCategories}</SizableText>
-        */

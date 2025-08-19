@@ -1,6 +1,6 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 
-import { ThemedSpinner, ThemedText, ThemedXStack } from '@/components/ui';
+import { ThemedSpinner, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui';
 
 import { CartItemData } from '@/domain/Cart/Cart';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
@@ -24,55 +24,57 @@ export const CartListItem = ({ item, index, ...props }: CartListItemProps & Stac
     const { updateItem, removeItem, isUpdating } = useCartStore();
     const { quantity, key } = item;
 
-    return (<>
-        <ThemedSurface theme={THEME_CART_ITEM_1} {...props}>
-            <ThemedXStack container split>
-                {/* Row 1: Product name + unit price */}
-                <ThemedText size="$5">
-                    {item.name}
-                </ThemedText>
-                <ThemedText size="$5">
-                    {formatItemUnitPrice(item.prices)}
-                </ThemedText>
-            </ThemedXStack>
-        </ThemedSurface>
-        <ThemedSurface theme={THEME_CART_ITEM_2} {...props}>
-            <ThemedXStack container gap="$2">
-                {/* Row 2: Quantity + Subtotal + Remove */}
+    return (
+        <ThemedYStack boc="black" {...props} fs={1}>
+            <ThemedSurface theme={THEME_CART_ITEM_1} >
+                <ThemedXStack container split>
+                    {/* Row 1: Product name + unit price */}
+                    <ThemedText size="$5">
+                        {item.name}
+                    </ThemedText>
+                    <ThemedText size="$5">
+                        {formatItemUnitPrice(item.prices)}
+                    </ThemedText>
+                </ThemedXStack>
+            </ThemedSurface>
+            <ThemedSurface theme={THEME_CART_ITEM_2} boc="red" bw={1}>
+                <ThemedXStack container gap="$2">
+                    {/* Row 2: Quantity + Subtotal + Remove */}
 
-                <XStack ai="center" gap="$2">
+                    <XStack ai="center" gap="$2">
+                        <ThemedButton
+                            onPress={() => updateItem(key, quantity + 1)}
+                            circular
+                            disabled={false}
+                        >
+                            <Plus />
+                        </ThemedButton>
+                        <H4 w={30} ta="center">
+                            {quantity}
+                        </H4>
+                        <ThemedButton
+                            onPress={() => updateItem(key, quantity - 1)}
+                            circular
+                            disabled={quantity <= 1}
+                        >
+                            <Minus />
+                        </ThemedButton>
+                    </XStack>
+                    <XStack f={1} ai="center" jc="flex-end">
+                        {isUpdating ? <ThemedSpinner /> : <ThemedText f={1} ta="right" size="$5">
+                            {formatItemLineTotal(item.totals)}
+                        </ThemedText>}
+                    </XStack>
+                    {/* Remove Button */}
                     <ThemedButton
-                        onPress={() => updateItem(key, quantity + 1)}
+                        onPress={() => removeItem(key)}
                         circular
                         disabled={false}
                     >
-                        <Plus />
+                        <X />
                     </ThemedButton>
-                    <H4 w={30} ta="center">
-                        {quantity}
-                    </H4>
-                    <ThemedButton
-                        onPress={() => updateItem(key, quantity - 1)}
-                        circular
-                        disabled={quantity <= 1}
-                    >
-                        <Minus />
-                    </ThemedButton>
-                </XStack>
-                <XStack f={1} ai="center" jc="flex-end">
-                    {isUpdating ? <ThemedSpinner /> : <ThemedText f={1} ta="right" size="$5">
-                        {formatItemLineTotal(item.totals)}
-                    </ThemedText>}
-                </XStack>
-                {/* Remove Button */}
-                <ThemedButton
-                    onPress={() => removeItem(key)}
-                    circular
-                    disabled={false}
-                >
-                    <X />
-                </ThemedButton>
-            </ThemedXStack>
-        </ThemedSurface>
-    </>);
+                </ThemedXStack>
+            </ThemedSurface>
+        </ThemedYStack>
+    );
 };
