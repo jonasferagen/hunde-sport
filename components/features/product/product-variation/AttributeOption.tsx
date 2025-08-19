@@ -1,6 +1,6 @@
 // AttributeOption.tsx — compact row; no zIndex; fixed/min height
 import { THEME_OPTION, THEME_OPTION_SELECTED } from '@/config/app';
-import { formatMinorWithHeader } from '@/domain/pricing';
+import { CurrencyHeader, formatMinorWithHeader } from '@/domain/pricing';
 import { AttributeTermDetails } from '@/types';
 import React from 'react';
 import { Pressable } from 'react-native';
@@ -20,13 +20,16 @@ export const AttributeOption = React.memo(function AttributeOption({
     // allow selection unless the option is truly unavailable
     const disabled = !isAvailable;
 
+
     const priceText = React.useMemo(() => {
         const min = minPrices?.price ?? null;
         const max = maxPrices?.price ?? null;
+
+
         if (!min) return null;
         return min === max
-            ? formatMinorWithHeader(min, minPrices)
-            : `Fra ${formatMinorWithHeader(min, minPrices)}`;
+            ? formatMinorWithHeader(min, minPrices as CurrencyHeader)
+            : `Fra ${formatMinorWithHeader(min, minPrices as CurrencyHeader)}`;
     }, [minPrices?.price, maxPrices?.price]);
 
     return (

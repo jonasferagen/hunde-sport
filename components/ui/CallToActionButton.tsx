@@ -1,5 +1,4 @@
 import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
-import { ButtonProps } from '@tamagui/button';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { GestureResponderEvent } from 'react-native';
@@ -7,12 +6,15 @@ import { Theme, ThemeName } from 'tamagui';
 import { ThemedText } from './themed-components';
 
 
+type IconLike =
+    | React.ReactNode
+    | React.ComponentType<{ size?: number; color?: string }>
 
-interface CallToActionButtonProps extends Omit<ButtonProps, 'onPress' | 'disabled' | 'icon' | 'theme'> {
+interface CallToActionButtonProps extends Omit<typeof ThemedButton, 'onPress' | 'disabled' | 'icon' | 'theme'> {
     onPress?: ((event: GestureResponderEvent) => void) | null;
     disabled?: boolean;
-    icon?: ButtonProps['icon'];
-    iconAfter?: ButtonProps['icon'];
+    icon?: IconLike;
+    iconAfter?: IconLike;
     theme: ThemeName;
     label?: string;
 }
@@ -50,9 +52,7 @@ export const CallToActionButton = React.forwardRef<
                     <ThemedText>{label}</ThemedText>
                     {children}
                 </ThemedButton.Text>
-                <ThemedButton.Icon >
-                    {iconAfter}
-                </ThemedButton.Icon>
+                <ThemedButton.Icon>{iconAfter}</ThemedButton.Icon>
 
             </ThemedButton>
         </Theme>

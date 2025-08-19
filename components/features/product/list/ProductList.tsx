@@ -42,9 +42,6 @@ export const ProductList = React.memo(function ProductList({
             onEndReached={onEndReached}
             onEndReachedThreshold={0.8}
             ListFooterComponent={isLoadingMore ? <ThemedSpinner my="$3" /> : null}
-
-            // sizing & virtualization
-            style={{ flex: 1 }}                          // <- this fills because parents give height
             estimatedItemSize={ITEM_HEIGHT}
             overrideItemLayout={(l) => { l.size = ITEM_HEIGHT; }}
             estimatedListSize={{ width, height }}        // hint (not a constraint)

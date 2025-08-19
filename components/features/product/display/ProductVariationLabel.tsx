@@ -27,7 +27,7 @@ export const ProductVariationLabel = ({ ...props }: SizableTextProps) => {
                         {attr.name}:
                     </ThemedText>
                     <ThemedText
-                        variant="emphasized"
+                        bold
                         fos="$4"
                         tt="capitalize"
                     >

@@ -12,10 +12,11 @@ export const ThemedText = styled(
         disabledStyle: { opacity: 0.5, textDecorationLine: 'line-through' },
 
         variants: {
-            subtle: { true: { color: '$colorTransparent' } },
-            bold: {
-                true: { fontWeight: 'bold' },
+            variant: {
+                subtle: { color: '$colorTransparent' },
+                default: {} // optional no-op
             },
+            bold: { true: { fontWeight: 'bold' } },
         } as const,
     }
 );

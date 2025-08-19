@@ -23,10 +23,11 @@
     "@tamagui/lucide-icons": "^1.132.15",
     "@tamagui/portal": "^1.132.15",
     "@tamagui/react-native-web-lite": "^1.132.15",
-    "@tamagui/toast": "^1.132.15",
+    "@tamagui/toast": "^1.132.20",
     "@tanstack/react-query": "^5.82.0",
     "apisauce": "^3.2.0",
-    "expo": "53.0.20",
+    "burnt": "^0.13.0",
+    "expo": "^53.0.20",
     "expo-constants": "~17.1.7",
     "expo-dev-client": "~5.2.4",
     "expo-font": "~13.3.2",
@@ -54,7 +55,7 @@
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-webview": "13.13.5",
-    "tamagui": "^1.132.15",
+    "tamagui": "^1.132.20",
     "zustand": "^5.0.7"
   },
   "devDependencies": {
