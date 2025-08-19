@@ -229,7 +229,7 @@ export function HorizontalTiles({
                         h={PRODUCT_TILE_HEIGHT as number}
                         // tiny micro-optic: higher priority for first 3 tiles
                         imagePriority={index < 3 ? 'high' : 'low'}
-                        interactive={visible.has(index)}
+                        interactive={true || visible.has(index)}
                     >
                         <TileBadge pointerEvents="none">
                             <ProductPriceTag product={product} />

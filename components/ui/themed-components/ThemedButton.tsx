@@ -35,6 +35,7 @@ const FOCUS_STYLE = { backgroundColor: '$backgroundFocus', borderColor: '$border
 export const ButtonFrame = styled(ThemedSurface, {
     name: 'ThemedButton',
     context: ButtonContext,
+    bg: '$background',
     ai: 'center',
     fd: 'row',
     gap: '$2',

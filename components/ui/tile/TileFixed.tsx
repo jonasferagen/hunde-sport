@@ -1,29 +1,26 @@
-// TileFixed.tsx
-import type { StoreImage } from '@/domain/StoreImage';
-import { getScaledImageUrl } from '@/lib/helpers';
-import { ImageProps } from 'expo-image';
-import React from 'react';
-import { PixelRatio } from 'react-native';
-import type { YStackProps } from 'tamagui';
-import { ThemedLinearGradient, ThemedText, ThemedYStack } from '../themed-components';
-import { ThemedImage } from '../themed-components/ThemedImage';
-import { ThemedSurface } from '../themed-components/ThemedSurface';
-
-
-
+// TileFixed.tsx (refined)
+import type { StoreImage } from '@/domain/StoreImage'
+import { getScaledImageUrl } from '@/lib/helpers'
+import { ImageProps } from 'expo-image'
+import React from 'react'
+import { PixelRatio } from 'react-native'
+import type { YStackProps } from 'tamagui'
+import { ThemedLinearGradient, ThemedText, ThemedYStack } from '../themed-components'
+import { ThemedImage } from '../themed-components/ThemedImage'
+import { ThemedSurface } from '../themed-components/ThemedSurface'
 
 type TileFixedProps = YStackProps & {
-    title: string;
-    image: StoreImage;
-    w: number;              // px
-    h: number;              // px
-    onPress?: () => void;
-    showGradient?: boolean;
-    titleLines?: number;
-    imagePriority?: ImageProps['priority'];
-    interactive?: boolean;
-};
-// TileFixed.tsx (only one pressable)
+    title: string
+    image: StoreImage
+    w: number
+    h: number
+    onPress?: () => void
+    showGradient?: boolean
+    titleLines?: number
+    imagePriority?: ImageProps['priority']
+    interactive?: boolean
+}
+
 export const TileFixed = React.memo(function TileFixed({
     title,
     image,
@@ -37,22 +34,18 @@ export const TileFixed = React.memo(function TileFixed({
     children,
     ...props
 }: TileFixedProps) {
-    const dpr = Math.min(PixelRatio.get(), 2); // crisper thumbs
+    const dpr = Math.min(PixelRatio.get(), 2)
     const uri = React.useMemo(
         () => getScaledImageUrl(image.src, Math.round(w * dpr), Math.round(h * dpr)),
         [image.src, w, h, dpr]
-    );
-
+    )
     return (
         <ThemedSurface
             w={w}
             h={h}
-            interactive={interactive}
-            // only attach interactivity when visible:
-
-            onPress={interactive ? onPress : undefined}
-            pointerEvents={interactive ? 'auto' : 'none'}
-
+            interactive={true}
+            f={1}
+            onPress={onPress}
             {...props}
         >
             <ThemedImage
@@ -67,12 +60,17 @@ export const TileFixed = React.memo(function TileFixed({
                 h="100%"
                 br="$3"
             />
-            {/* keep overlays non-blocking */}
 
-
+            {/* overlays shouldn't block taps */}
             {showGradient && (
-                <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end">
-                    <ThemedLinearGradient fullscreen start={[0, 0.2]} end={[0, 0.9]} opacity={0.8} />
+                <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end" pointerEvents="none">
+                    <ThemedLinearGradient
+                        fullscreen
+                        start={[0, 0.2]}
+                        end={[0, 0.9]}
+                        opacity={0.8}
+                        pointerEvents="none"
+                    />
                     <ThemedText bold col="$color" numberOfLines={titleLines} ellipse ta="center">
                         {title}
                     </ThemedText>
@@ -80,15 +78,6 @@ export const TileFixed = React.memo(function TileFixed({
             )}
 
             {children}
-
-            {/* title */}
-            <ThemedText bold col="$color" numberOfLines={titleLines} ellipse ta="center">
-                {title}
-            </ThemedText>
-
-
-
-
         </ThemedSurface>
-    );
-});
+    )
+})
