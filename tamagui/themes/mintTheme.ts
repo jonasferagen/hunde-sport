@@ -10,12 +10,9 @@ export const config = {
     secondary: { light: '#DDE2C3', dark: '#474e25' },
     tertiary: { light: '#F1F5F9', dark: '#375c81' },
 
-
     accent1: { light: '#EA580C', dark: '#FB923C' }, // burnt orange
     accent2: { light: '#E11D48', dark: '#FB7185' }, // crimson
     accent3: { light: '#9d1432', dark: '#608f39' },
-
-    // NEW accents (4–13)
     accent4: { light: '#2563EB', dark: '#60A5FA' }, // vivid blue
     accent5: { light: '#4338CA', dark: '#8B8CF8' }, // indigo
     accent6: { light: '#06B6D4', dark: '#67E8F9' }, // sky cyan

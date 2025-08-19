@@ -39,7 +39,7 @@ const mergedThemes = {
 } as ThemeMap<AppThemeName>
 
 
-export const appConfig = createTamagui({
+const appConfig = createTamagui({
     animations,
     tokens,
     shorthands,

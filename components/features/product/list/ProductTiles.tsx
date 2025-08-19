@@ -1,10 +1,9 @@
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { useDiscountedProducts, useFeaturedProducts, useProductsByIds, useRecentProducts } from '@/hooks/data/Product';
 import { QueryResult } from '@/hooks/data/util';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { PurchasableProduct } from '@/types';
 import React, { JSX } from 'react';
-import { StackProps } from 'tamagui';
+import { StackProps, Theme } from 'tamagui';
 import { HorizontalTiles } from '../../../ui/tile/HorizontalTiles';
 
 type Props = {
@@ -31,14 +30,14 @@ export const DebugProducts = (props: Props): JSX.Element => {
 type ProductTilesProps = {
     queryResult: QueryResult<PurchasableProduct>;
     limit?: number; // NEW: cap items for home rows
+
 } & StackProps;
 
 const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, limit = 4, ...stackProps }) => {
 
-    const { to } = useCanonicalNav();
+    return (<Theme name={stackProps.theme || null}>
 
-    return (
-        <HorizontalTiles<PurchasableProduct>
+        <HorizontalTiles
             queryResult={queryResult}
             limit={limit}
             estimatedItemSize={PRODUCT_TILE_WIDTH as number}
@@ -49,5 +48,6 @@ const ProductTiles: React.FC<ProductTilesProps> = ({ queryResult, limit = 4, ...
             h={PRODUCT_TILE_HEIGHT}
             {...stackProps}
         />
-    );
+    </Theme>);
+
 };

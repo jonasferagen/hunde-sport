@@ -15,6 +15,7 @@ type TileSquareProps = YStackProps & {
     approxW?: number;        // e.g. pass columnWidthPx if you have it
     showGradient?: boolean;
     titleLines?: number;
+    onPress: () => void;
 };
 
 export const TileSquare = React.memo(function TileSquare({
@@ -22,6 +23,7 @@ export const TileSquare = React.memo(function TileSquare({
     image,
     approxW = 200, // safe default; CDN can upscale/downscale
     children,
+    onPress,
     showGradient = true,
     titleLines = 2,
     ...props

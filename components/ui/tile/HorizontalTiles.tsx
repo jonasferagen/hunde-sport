@@ -9,7 +9,7 @@ import { FlashList, ViewToken } from '@shopify/flash-list';
 import { rgba } from 'polished';
 import React, { JSX, useCallback, useMemo, useRef, useState } from 'react';
 import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, StyleSheet } from 'react-native';
-import { Spinner, StackProps, View, XStack, getVariableValue, useTheme } from 'tamagui';
+import { Spinner, StackProps, View, XStack } from 'tamagui';
 import { ThemedLinearGradient } from '../themed-components';
 import { TileBadge } from './TileBadge';
 import { TileFixed } from './TileFixed';
@@ -23,8 +23,7 @@ const ScrollIndicator = React.memo(function ScrollIndicator({
     side,
     widthToken,
 }: { side: 'left' | 'right'; widthToken: SpaceToken }) {
-    const theme = useTheme();
-    const bg = String(getVariableValue(theme.background));
+    const bg = '#fff';
 
     const colors = useMemo<[string, string]>(() => {
         const transparent = rgba(bg, 0);
@@ -166,7 +165,6 @@ export function HorizontalTiles({
         []
     );
 
-    console.log(products.length);
     if (!products.length) return <></>;
 
     return (

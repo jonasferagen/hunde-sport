@@ -1,6 +1,7 @@
 // button.ts
 import {
     createStyledContext,
+    getVariableValue,
     SizeTokens,
     styled,
     Text,
@@ -113,13 +114,20 @@ export const ButtonText = styled(Text, {
 })
 
 // Prefer a component prop over cloneElement to avoid new children each render
-type IconComp = React.ComponentType<{ size?: number; color?: string }>
-const ButtonIconBase = memo(({ as: Icon }: { as: IconComp }) => {
-    const theme = useTheme()
-    const size = ButtonContext.useStyledContext().size as SizeKey
-    const s = SIZES[size] ?? SIZES[DEFAULT_SIZE as SizeKey]
-    return Icon ? <Icon size={s.icon} color={theme.color?.val} /> : null
-})
+type IconComp = React.ComponentType<{ size?: number; color?: string }>;
+type ButtonIconProps = { icon?: IconComp };
+
+export const ButtonIconBase = memo<ButtonIconProps>(({ icon: Icon }) => {
+    const theme = useTheme();
+    const size = ButtonContext.useStyledContext().size as SizeKey;
+    const s = SIZES[size] ?? SIZES[DEFAULT_SIZE as SizeKey];
+
+    if (!Icon) return null;
+
+    const color = String(getVariableValue(theme.color));
+    return <Icon size={s.icon} color={color} />;
+});
+
 
 const ButtonAfter = ({ children }: { children: any }) => <View ml="auto">{children}</View>
 

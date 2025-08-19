@@ -6,7 +6,7 @@ import { spacePx } from '@/lib/helpers';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import React, { JSX, useMemo } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
-export const MAX_CATEGORIES = NUM_CATEGORY_TILE_COLUMNS * NUM_CATEGORY_TILE_ROWS;
+const MAX_CATEGORIES = NUM_CATEGORY_TILE_COLUMNS * NUM_CATEGORY_TILE_ROWS;
 
 
 export const ProductCategoryTiles = React.memo((props: StackProps): JSX.Element => {
@@ -26,13 +26,14 @@ export const ProductCategoryTiles = React.memo((props: StackProps): JSX.Element 
     const { to } = useCanonicalNav();
 
 
+
     return (
         <ThemedYStack {...props} mx={gapPx}>
             <XStack fw="wrap" m={-half}>
-                {productCategories.map((cat) => (
+                {productCategories.map((cat, index) => (
                     <YStack key={cat.id} w={colPct} p={half}>
                         {/* Square here; remove aspectRatio on Tile */}
-                        <YStack w="100%" aspectRatio={1} br="$2">
+                        <YStack w="100%" aspectRatio={1} br="$2" >
                             <TileSquare
                                 title={cat.name}
                                 image={cat.image}

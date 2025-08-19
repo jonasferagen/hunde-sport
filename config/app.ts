@@ -40,8 +40,17 @@ export const THEME_OPTION = 'light';
 export const THEME_OPTION_SELECTED = 'tertiary';
 
 
-export const THEME_PRODUCTS_DISCOUNTED = "tertiary";
+export const THEME_PRODUCTS_RECENT = "accent3";
+export const THEME_PRODUCTS_RECENT_BG = null;
 
-export const THEME_PRODUCTS_RECENT = "tertiary";
+export const THEME_CATEGORIES = "dark_accent3";
+export const THEME_CATEGORIES_BG = "dark_primary";
+
+export const THEME_PRODUCTS_DISCOUNTED = "tertiary_shade";
+export const THEME_PRODUCTS_DISCOUNTED_BG = null;
 
 export const THEME_PRODUCTS_FEATURED = "accent3";
+export const THEME_PRODUCTS_FEATURED_BG = "accent7_shade";
+
+
+

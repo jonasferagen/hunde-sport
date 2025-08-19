@@ -1,7 +1,7 @@
 import { ModalHost } from '@/components/features/product/purchase/ModalHost';
 import { AppToastProvider } from '@/contexts';
 import { queryClient } from '@/lib/queryClient';
-import { appConfig } from '@/tamagui/tamagui.config';
+import appConfig from '@/tamagui/tamagui.config';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';

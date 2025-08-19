@@ -3,9 +3,8 @@ import { usePurchasableContext } from '@/contexts';
 import React from 'react';
 import { SizableTextProps } from 'tamagui';
 
-interface ProductVariationLabelProps extends SizableTextProps { }
 
-export const ProductVariationLabel = ({ ...props }: ProductVariationLabelProps) => {
+export const ProductVariationLabel = ({ ...props }: SizableTextProps) => {
 
     const { purchasable } = usePurchasableContext();
     const { productVariation } = purchasable;

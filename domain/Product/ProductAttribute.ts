@@ -1,4 +1,4 @@
-import { ProductPrices } from "./ProductPrices";
+import { ProductPrices } from "../pricing";
 
 export interface ProductAttributeData {
   id: number;

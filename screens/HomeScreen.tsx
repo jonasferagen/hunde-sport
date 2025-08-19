@@ -2,7 +2,7 @@ import { ProductCategoryTiles } from '@/components/features/product-category/Pro
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductTiles';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
-import { THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_RECENT } from '@/config/app';
+import { THEME_CATEGORIES, THEME_CATEGORIES_BG, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_DISCOUNTED_BG, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_FEATURED_BG, THEME_PRODUCTS_RECENT, THEME_PRODUCTS_RECENT_BG } from '@/config/app';
 import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { useScreenReady } from '@/hooks/useScreenReady';
 import React from 'react';
@@ -29,16 +29,16 @@ export const HomeScreen = React.memo(() => {
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
             <PageBody mode="scroll" >
-                <PageSection title="Nyheter" bleedX  >
+                <PageSection title="Nyheter" bleedX theme={THEME_PRODUCTS_RECENT_BG} >
                     <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} />
                 </PageSection>
-                <PageSection title="Kategorier" bleedX theme="dark_primary">
-                    <ProductCategoryTiles key="categories" />
+                <PageSection title="Kategorier" bleedX theme={THEME_CATEGORIES_BG}>
+                    <ProductCategoryTiles key="categories" theme={THEME_CATEGORIES} />
                 </PageSection>
-                <PageSection title="Tilbud" bleedX >
+                <PageSection title="Tilbud" bleedX theme={THEME_PRODUCTS_DISCOUNTED_BG} >
                     <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} />
                 </PageSection>
-                <PageSection title="Utvalgte produkter" bleedX theme="dark_primary">
+                <PageSection title="Utvalgte produkter" bleedX theme={THEME_PRODUCTS_FEATURED_BG}>
                     <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} />
                 </PageSection>
                 <PageSection title="Debug" bleedX >

@@ -5,7 +5,7 @@ import { ImageProps } from 'expo-image';
 import React from 'react';
 import { PixelRatio } from 'react-native';
 import type { YStackProps } from 'tamagui';
-import { ThemedLinearGradient } from '../themed-components';
+import { ThemedLinearGradient, ThemedText, ThemedYStack } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedSurface } from '../themed-components/ThemedSurface';
 
@@ -47,11 +47,10 @@ export const TileFixed = React.memo(function TileFixed({
         <ThemedSurface
             w={w}
             h={h}
-            ov="hidden"
-            bw={2}
+            interactive={interactive}
             // only attach interactivity when visible:
+
             onPress={interactive ? onPress : undefined}
-            pressStyle={interactive ? PRESS_STYLE : undefined}
             pointerEvents={interactive ? 'auto' : 'none'}
 
             {...props}
@@ -68,14 +67,28 @@ export const TileFixed = React.memo(function TileFixed({
                 h="100%"
                 br="$3"
             />
+            {/* keep overlays non-blocking */}
+
+
+            {showGradient && (
+                <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end">
+                    <ThemedLinearGradient fullscreen start={[0, 0.2]} end={[0, 0.9]} opacity={0.8} />
+                    <ThemedText bold col="$color" numberOfLines={titleLines} ellipse ta="center">
+                        {title}
+                    </ThemedText>
+                </ThemedYStack>
+            )}
 
             {children}
 
-            {/* keep overlays non-blocking */}
-            {<ThemedLinearGradient start={[0, 0]} end={[1, .4]} colors={["$background", "$backgroundPress"]} opacity={0.5} />}
-
             {/* title */}
-            {/* ... */}
+            <ThemedText bold col="$color" numberOfLines={titleLines} ellipse ta="center">
+                {title}
+            </ThemedText>
+
+
+
+
         </ThemedSurface>
     );
 });

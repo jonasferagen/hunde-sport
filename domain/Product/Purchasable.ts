@@ -1,6 +1,6 @@
 import { ProductVariation, SimpleProduct, VariableProduct } from '@/domain/Product/Product';
 import { Product, ProductAvailability, PurchasableProduct } from '@/types';
-import { ProductPrices } from './ProductPrices';
+import { ProductPrices } from '../pricing';
 
 
 export type ValidationStatus = 'OK' | 'VARIATION_REQUIRED' | 'OUT_OF_STOCK' | 'INVALID_PRODUCT';
