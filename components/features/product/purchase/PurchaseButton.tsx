@@ -62,15 +62,17 @@ export const PurchaseButton = React.memo(function PurchaseButton({
     );
 
     return (
+        // Replace icon/iconAfter with before/after
         <CallToActionButton
             onPress={onPress}
             disabled={disabled}
-            icon={ICONS[cta.mode]}
+            before={ICONS[cta.mode]}
             theme={theme}
             label={isLoading ? undefined : cta.label}
-            iconAfter={priceTag}
+            after={priceTag}
         >
             {isLoading && <ThemedSpinner />}
         </CallToActionButton>
+
     );
 });

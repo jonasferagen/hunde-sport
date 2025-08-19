@@ -6,9 +6,9 @@ import { useCartStore } from '@/stores/cartStore';
 import { ExternalLink } from '@tamagui/lucide-icons';
 import React, { useCallback, useMemo } from 'react';
 import { Linking } from 'react-native';
-import { ButtonProps, ThemeName } from 'tamagui';
+import { ThemeName } from 'tamagui';
 
-export const CheckoutButton = (props: Omit<ButtonProps, 'theme'>) => {
+export const CheckoutButton = () => {
 
     const itemsCount = useCartStore(s => s.cart?.items_count ?? 0);
     const isUpdating = useCartStore(s => s.isUpdating);
@@ -40,7 +40,6 @@ export const CheckoutButton = (props: Omit<ButtonProps, 'theme'>) => {
 
     // Stable icon elements (avoid re-creating each render)
     const iconAfter = useMemo(() => <ExternalLink />, []);
-
     const theme: ThemeName = THEME_CTA_CHECKOUT;
 
     return (
@@ -48,10 +47,8 @@ export const CheckoutButton = (props: Omit<ButtonProps, 'theme'>) => {
             onPress={onPress}
             disabled={disabled || waiting}
             f={0}
-            icon={null}
-            iconAfter={iconAfter}
             theme={theme}
-            {...props}
+            after={iconAfter}
         >
             <ThemedXStack split p="none" w="100%" ai="center">
                 {waiting ? (

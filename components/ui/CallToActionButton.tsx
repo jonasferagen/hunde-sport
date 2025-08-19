@@ -1,41 +1,32 @@
-import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
-import * as Haptics from 'expo-haptics';
-import React from 'react';
-import { GestureResponderEvent } from 'react-native';
-import { Theme, ThemeName } from 'tamagui';
-import { ThemedText } from './themed-components';
+import { ThemedButton } from '@/components/ui/themed-components/ThemedButton'
+import * as Haptics from 'expo-haptics'
+import React from 'react'
+import { GestureResponderEvent } from 'react-native'
+import { Theme, ThemeName } from 'tamagui'
+import { ThemedText } from './themed-components'
 
-
-type IconLike =
-    | React.ReactNode
-    | React.ComponentType<{ size?: number; color?: string }>
-
-interface CallToActionButtonProps extends Omit<typeof ThemedButton, 'onPress' | 'disabled' | 'icon' | 'theme'> {
-    onPress?: ((event: GestureResponderEvent) => void) | null;
-    disabled?: boolean;
-    icon?: IconLike;
-    iconAfter?: IconLike;
-    theme: ThemeName;
-    label?: string;
+interface CallToActionButtonProps
+    extends Omit<React.ComponentProps<typeof ThemedButton>, 'onPress' | 'disabled' | 'theme'> {
+    onPress?: ((event: GestureResponderEvent) => void) | null
+    disabled?: boolean
+    before?: React.ReactNode
+    after?: React.ReactNode
+    theme: ThemeName
+    label?: string
 }
 
 export const CallToActionButton = React.forwardRef<
     React.ComponentRef<typeof ThemedButton>,
     CallToActionButtonProps
->(({ onPress,
-    disabled,
-    theme,
-    icon,
-    label,
-    iconAfter,
-    children,
-    ...props }, ref) => {
-
+>(function CallToActionButton(
+    { onPress, disabled, theme, before, after, label, children, ...props },
+    ref
+) {
     const handlePress = (event: GestureResponderEvent) => {
-        if (disabled) return;
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        onPress?.(event);
-    };
+        if (disabled) return
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+        onPress?.(event)
+    }
 
     return (
         <Theme name={theme}>
@@ -47,14 +38,15 @@ export const CallToActionButton = React.forwardRef<
                 bw={2}
                 {...props}
             >
-                <ThemedButton.Icon>{icon}</ThemedButton.Icon>
+                <ThemedButton.Before>{before}</ThemedButton.Before>
+
                 <ThemedButton.Text w="100%" fs={1}>
-                    <ThemedText>{label}</ThemedText>
+                    {label && <ThemedText>{label}</ThemedText>}
                     {children}
                 </ThemedButton.Text>
-                <ThemedButton.Icon>{iconAfter}</ThemedButton.Icon>
 
+                <ThemedButton.After>{after}</ThemedButton.After>
             </ThemedButton>
         </Theme>
-    );
-});
+    )
+})
