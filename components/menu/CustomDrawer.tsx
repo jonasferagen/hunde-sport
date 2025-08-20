@@ -6,10 +6,9 @@ import type { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
-import { Theme } from 'tamagui';
+import { H3, Theme } from 'tamagui';
 import { ThemedLinearGradient, ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
-import { ThemedText } from '../ui/themed-components/ThemedText';
 import { ProductCategoryTree } from './ProductCategoryTree';
 
 export const CustomDrawer = React.memo(({ navigation }: {
@@ -25,7 +24,7 @@ export const CustomDrawer = React.memo(({ navigation }: {
         <Theme name={THEME_DRAWER}>
             <ThemedYStack box f={1}>
                 <ThemedXStack container split>
-                    <ThemedText size="$6">hunde-sport.no</ThemedText>
+                    <H3>hunde-sport.no</H3>
                     <ThemedButton theme="tint" circular onPress={close}><X /></ThemedButton>
                 </ThemedXStack>
                 <ThemedYStack f={1} mih={0} theme="tertiary">

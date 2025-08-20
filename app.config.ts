@@ -44,8 +44,6 @@ export default (): ExpoConfig => ({
         'expo-router',
         'expo-font',
         ['expo-splash-screen', { image: './assets/images/splash-icon.png', imageWidth: 200, resizeMode: 'contain', backgroundColor: '#ffffff' }],
-        // If you want Sentry later, gate it so dev variant can opt in/out cleanly:
-        ...(process.env.SENTRY_ENABLED ? [['sentry-expo'] as any] : []),
     ],
     experiments: { typedRoutes: true },
     extra: { router: {}, eas: { projectId: PROJECT_ID } },

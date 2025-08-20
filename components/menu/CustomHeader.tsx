@@ -3,7 +3,7 @@ import { resolveTitle } from '@/config/routes';
 import { DrawerHeaderProps } from '@react-navigation/drawer';
 import { Menu } from '@tamagui/lucide-icons';
 import React from 'react';
-import { H4, Theme } from 'tamagui';
+import { H3, Theme } from 'tamagui';
 import { ThemedButton, ThemedLinearGradient, ThemedXStack } from '../ui/themed-components';
 
 const HeaderChrome = React.memo(function HeaderChrome({
@@ -17,7 +17,7 @@ const HeaderChrome = React.memo(function HeaderChrome({
         <Theme name={THEME_HEADER}>
             <ThemedXStack container split box>
                 <ThemedLinearGradient />
-                <H4 fs={1}>{title}</H4>
+                <H3>{title}</H3>
                 <ThemedButton circular onPress={onOpen}>
                     <Menu />
                 </ThemedButton>

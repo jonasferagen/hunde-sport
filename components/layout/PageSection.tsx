@@ -1,8 +1,8 @@
 // PageSection.tsx
 import { spacePx } from '@/lib/helpers';
 import React, { useMemo } from 'react';
-import { YStackProps } from 'tamagui';
-import { ThemedText } from '../ui';
+import { H4, YStackProps } from 'tamagui';
+
 import { ThemedYStack } from '../ui/themed-components/ThemedStacks';
 
 type SpaceToken = '$1' | '$2' | '$3' | '$4' | '$5' | 'none';
@@ -34,7 +34,7 @@ export const PageSection: React.FC<PageSectionProps> = ({
       {...(useContainer ? { container: true } : {})}  // <- turn off when you want edge-to-edge
       {...stackProps}
     >
-      {title ? <ThemedText size="$6" px={useContainer ? padPx : 0}>{title}</ThemedText> : null}
+      {title ? <H4 px={useContainer ? padPx : 0}>{title}</H4> : null}
 
       <ThemedYStack
         px={bleedX || !useContainer ? 0 : padPx}
