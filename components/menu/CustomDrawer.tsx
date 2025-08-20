@@ -20,6 +20,8 @@ export const CustomDrawer = React.memo(({ navigation }: {
         navigation.dispatch(DrawerActions.closeDrawer());
     }, [navigation]);
 
+    console.log(showTree);
+
     return (
         <Theme name={THEME_DRAWER}>
             <ThemedYStack box f={1}>
@@ -28,7 +30,7 @@ export const CustomDrawer = React.memo(({ navigation }: {
                     <ThemedButton theme="tint" circular onPress={close}><X /></ThemedButton>
                 </ThemedXStack>
                 <ThemedYStack f={1} mih={0} theme="tertiary">
-                    <ThemedLinearGradient />
+                    {showTree && <ThemedLinearGradient />}
                     {showTree ? <ProductCategoryTree /> : <LoadingScreen />}
                 </ThemedYStack>
             </ThemedYStack>

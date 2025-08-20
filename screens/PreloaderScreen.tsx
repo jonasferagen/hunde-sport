@@ -1,80 +1,83 @@
-import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
+// app/(preloader)/PreloaderScreen.tsx
+
+
 import { useProductCategories } from '@/hooks/data/ProductCategory';
 import { useCartStore } from '@/stores/cartStore';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
+import { useFonts } from 'expo-font';
 import { Redirect } from 'expo-router';
-import React, { JSX, useCallback, useEffect, useState } from 'react';
-import { Theme, YStack } from 'tamagui';
+import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Image, Paragraph, Theme, YStack } from 'tamagui';
+export const PreloaderScreen = () => {
 
-// --- Subcomponents for isolated data loading ---
+    const splashHidden = useRef(false);
 
-interface LoaderProps {
-    onReady: () => void;
-}
-
-/**
- * Handles initializing the cart and reports when it's ready.
- */
-const CartInitializer = ({ onReady }: LoaderProps) => {
-    const initializeCart = useCartStore((state) => state.initializeCart);
-    const isInitialized = useCartStore((state) => state.isInitialized);
-
+    // 1) Fonts
+    const [fontsLoaded] = useFonts({
+        Inter: require('@/assets/fonts/Inter/Inter-Regular.ttf'),
+        'Inter-Bold': require('@/assets/fonts/Inter/Inter-Bold.ttf'),
+        Montserrat: require('@/assets/fonts/Montserrat/Montserrat-Regular.ttf'),
+        'Montserrat-Bold': require('@/assets/fonts/Montserrat/Montserrat-Bold.ttf'),
+    });
     useEffect(() => {
-        initializeCart();
-    }, [initializeCart]);
-
-    useEffect(() => {
-        if (isInitialized) {
-            onReady();
+        // Hide splash as soon as we can render with correct fonts
+        if (fontsLoaded && !splashHidden.current) {
+            splashHidden.current = true;
+            SplashScreen.hideAsync().catch(() => { });
         }
-    }, [isInitialized, onReady]);
+    }, [fontsLoaded]);
+    // 2) Cart init (Zustand)
+    const initializeCart = useCartStore((s) => s.initializeCart);
 
-    return null;
-};
+    // 3) Categories (TanStack Query v5 — infinite)
+    //    Disable auto-fetch; we’ll drive it manually so we can finish all pages in one go.
+    const q = useProductCategories({ enabled: false } as any);
+    const setCategoriesInStore = useProductCategoryStore((s) => s.setProductCategories);
 
-/**
- * Handles fetching all product categories and reports when ready.
- */
-const CategoryLoader = ({ onReady }: LoaderProps): JSX.Element => {
-    const { items: productCategories, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useProductCategories();
-    const setCategoriesInStore = useProductCategoryStore((state) => state.setProductCategories);
+    const [ready, setReady] = useState(false);
+    const [error, setError] = useState<null | string>(null);
+    const mounted = useRef(true);
+    useEffect(() => () => { mounted.current = false; }, []);
 
+    // optional: user-facing progress labels
+    const [step, setStep] = useState<'fonts' | 'cart' | 'categories' | 'done'>('fonts');
+    const stepLabel = useMemo(() => {
+        switch (step) {
+            case 'fonts': return 'Laster skrifttyper…';
+            case 'cart': return 'Initialiserer handlekurv…';
+            case 'categories': return 'Henter kategorier…';
+            default: return 'Starter…';
+        }
+    }, [step]);
+
+    const queryResult = useProductCategories();
     useEffect(() => {
-        // The loader is ready once fetching is complete and we have a definitive result.
-        if (hasNextPage && !isFetchingNextPage) {
+        // wait for fonts first if you like
+        if (!fontsLoaded) return;
+
+        const { isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = queryResult;
+        const isDone = !isLoading && !hasNextPage && !isFetchingNextPage;
+
+        if (!isDone) {
             fetchNextPage();
+            return;
         }
+        const categories = queryResult.items;
+        setCategoriesInStore(categories);
+        setReady(true);
 
-        if (!isLoading && !hasNextPage && !isFetchingNextPage) {
-            setCategoriesInStore(productCategories);
-            onReady();
-        }
-    }, [isLoading, productCategories, onReady, setCategoriesInStore, hasNextPage, fetchNextPage, isFetchingNextPage]);
+    }, [fontsLoaded, queryResult]);
 
-    return <></>;
-};
-
-// --- Main Preloader Screen ---
-
-export const PreloaderScreen = (): JSX.Element => {
-    const [isCartReady, setCartReady] = useState(false);
-    const [areCategoriesReady, setCategoriesReady] = useState(false);
-
-    const handleCartReady = useCallback(() => setCartReady(true), []);
-    const handleCategoriesReady = useCallback(() => setCategoriesReady(true), []);
-
-
-
-    if (isCartReady && areCategoriesReady) {
-        return <Redirect href="/(app)" />;
-    }
-
+    if (ready) return <Redirect href="/(app)" />;
+    const splashImage = require('@/assets/images/splash-icon.png');
     return (
-        <Theme name="primary">
-            <CartInitializer onReady={handleCartReady} />
-            <CategoryLoader onReady={handleCategoriesReady} />
-            <YStack f={1} jc="center" ai="center" gap="$4">
-                <ThemedSpinner size="large" />
+        <Theme name="light">
+            <YStack f={1} jc="center" ai="center" bg="$background">
+                {/* same logo as splash */}
+                <Image source={splashImage} style={{ width: 200, height: 200, marginBottom: 16 }} />
+                {/* step label */}
+                {stepLabel && <Paragraph o={0.7}>{stepLabel}</Paragraph>}
             </YStack>
         </Theme>
     );

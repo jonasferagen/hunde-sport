@@ -63,7 +63,6 @@ const AppLayout = React.memo((): React.ReactElement => {
                         ))}
                     </Drawer>
                 </Prof>
-
                 <CustomBottomBar />
                 <LoadingOverlay zi={99} />
             </ThemedYStack>

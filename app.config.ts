@@ -43,7 +43,12 @@ export default (): ExpoConfig => ({
     plugins: [
         'expo-router',
         'expo-font',
-        ['expo-splash-screen', { image: './assets/images/splash-icon.png', imageWidth: 200, resizeMode: 'contain', backgroundColor: '#ffffff' }],
+        ['expo-splash-screen', {
+            image: './assets/images/splash-icon.png',
+            imageWidth: 200,
+            resizeMode: 'contain',
+            backgroundColor: '#ffffff'
+        }],
     ],
     experiments: { typedRoutes: true },
     extra: { router: {}, eas: { projectId: PROJECT_ID } },

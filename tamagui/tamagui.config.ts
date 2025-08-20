@@ -4,7 +4,7 @@ import { defaultConfig, tokens } from '@tamagui/config/v4';
 import { shorthands } from '@tamagui/shorthands';
 import { createTamagui } from 'tamagui';
 import { animations } from './animations';
-import { montserratFont } from './fonts';
+import { montserratFont as font } from './fonts';
 import { mintTheme } from './themes/mintTheme';
 
 
@@ -25,7 +25,7 @@ const appConfig = createTamagui({
     animations,
     tokens,
     shorthands,
-    fonts: { ...defaultConfig.fonts, heading: montserratFont, body: montserratFont },
+    fonts: { ...defaultConfig.fonts, heading: font, body: font },
     themes: mergedThemes,
     themeNames: mintTheme.themeNames,
 });

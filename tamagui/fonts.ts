@@ -1,5 +1,5 @@
 // fonts.ts
-import { createFont } from 'tamagui'
+import { createFont } from 'tamagui';
 
 // Same base size scale Tamagui uses (includes 1–16 + `true` alias)
 const baseSizes = {
@@ -28,6 +28,23 @@ const makeLineHeights = (sizes: Record<number, number>) =>
         keyof typeof sizes,
         number
     >
+export const systemFont = createFont({
+    family: 'System',   // <- resolves to SF on iOS, Roboto on Android
+    size: {
+        1: 11, 2: 12, 3: 13, 4: 14, 5: 16, 6: 18,
+        7: 20, 8: 23, 9: 30, 10: 46, 11: 55, 12: 62,
+        13: 72, 14: 92, 15: 114, 16: 134,
+    },
+    lineHeight: {
+        1: 21, 2: 22, 3: 23, 4: 24, 5: 26, 6: 28,
+        7: 30, 8: 33, 9: 40, 10: 56, 11: 65,
+        12: 72, 13: 82, 14: 102, 15: 124, 16: 144,
+    },
+    weight: {
+        1: '400',
+        6: '700',
+    }
+});
 
 // INTER: Regular (400) + Bold (700)
 export const interFont = createFont({
@@ -37,7 +54,7 @@ export const interFont = createFont({
     // Only two weights needed, but define both explicitly
     weight: {
         1: '400', 2: '400', 3: '400', 4: '400', 5: '400',
-        6: '700', 7: '700', 8: '700', 9: '700', 10: '700',
+        6: '400', 7: '400', 8: '400', 9: '400', 10: '400',
         11: '700', 12: '700', 13: '700', 14: '700', 15: '700', 16: '700',
     },
     letterSpacing: { 4: 0 }, // optional; keep default behavior
@@ -54,7 +71,7 @@ export const montserratFont = createFont({
     lineHeight: makeLineHeights(baseSizes),
     weight: {
         1: '400', 2: '400', 3: '400', 4: '400', 5: '400',
-        6: '700', 7: '700', 8: '700', 9: '700', 10: '700',
+        6: '400', 7: '400', 8: '400', 9: '400', 10: '400',
         11: '700', 12: '700', 13: '700', 14: '700', 15: '700', 16: '700',
     },
     face: {
