@@ -4,11 +4,9 @@ import { FlashList } from '@shopify/flash-list';
 import React, { JSX } from 'react';
 import { CartListItem } from './CartListItem';
 
-
 export const CartList = React.memo((): JSX.Element => {
 
     const items = useCartStore(s => s.cart?.items ?? []);
-
     if (!items.length) {
         return <DefaultTextContent>Handlekurven er tom</DefaultTextContent>
     }
@@ -20,6 +18,5 @@ export const CartList = React.memo((): JSX.Element => {
             estimatedItemSize={100}
         />
     );
-
 }
 );
