@@ -1,60 +1,64 @@
-// usePanelSettled.ts
-import { useEffect, useState } from 'react';
-import { InteractionManager } from 'react-native';
-import { runOnJS, useAnimatedReaction, type SharedValue } from 'react-native-reanimated';
-
 // hooks/useDrawerSettled.ts
 import { useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer';
-import { useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { InteractionManager } from 'react-native';
+import { runOnJS, useAnimatedReaction, useSharedValue, type SharedValue } from 'react-native-reanimated';
 
 type Options = {
-    eps?: number;                       // threshold for 0/1
-    readyDelay?: 'none' | 'interactions'; // when to flip 'readyForHeavyMount'
+    eps?: number;
+    readyDelay?: 'none' | 'interactions';
 };
 
-/**
- * Unified drawer "settled" hook.
- * Must be called under a drawer context (inside drawerContent, etc).
- */
 export function useDrawerSettled(opts: Options = {}) {
     const { eps = 0.001, readyDelay = 'none' } = opts;
 
     const status = useDrawerStatus(); // 'open' | 'closed'
-    // Progress is a SharedValue<number> on native; on web it may only jump 0/1
     const progress = useDrawerProgress() as unknown as SharedValue<number> | undefined;
 
-    // Seed from status so refresh while open is handled
+    // seed from status (covers hot reload when already open)
     const initiallyOpen = status === 'open';
+
     const [isFullyOpen, setIsFullyOpen] = useState(initiallyOpen);
     const [isFullyClosed, setIsFullyClosed] = useState(!initiallyOpen);
 
-    // “did we ever fully open?” one-shot
     const openedOnceRef = useRef(initiallyOpen);
     const [openedOnce, setOpenedOnce] = useState(initiallyOpen);
 
     const [readyForHeavyMount, setReady] = useState(initiallyOpen);
+    const queueReadyUpdate = useMemo(
+        () => () => {
+            if (readyDelay === 'interactions') {
+                InteractionManager.runAfterInteractions(() => setReady(true));
+            } else {
+                setReady(true);
+            }
+        },
+        [readyDelay]
+    );
 
-    function queueReadyUpdate() {
-        if (readyDelay === 'interactions') {
-            InteractionManager.runAfterInteractions(() => setReady(true));
-        } else {
-            setReady(true);
-        }
-    }
+    // JS helper (runs only on JS, can safely touch refs/state)
+    const markOpenedOnce = useMemo(
+        () => () => {
+            if (!openedOnceRef.current) {
+                openedOnceRef.current = true;
+                setOpenedOnce(true);
+                queueReadyUpdate();
+            }
+        },
+        [queueReadyUpdate]
+    );
 
-    // Update from status (fallback + initial sync)
+    // Fallback + initial sync from status (no progress available on web or edge cases)
     useEffect(() => {
         const atOpen = status === 'open';
         setIsFullyOpen(atOpen);
         setIsFullyClosed(!atOpen);
-        if (atOpen && !openedOnceRef.current) {
-            openedOnceRef.current = true;
-            setOpenedOnce(true);
-            queueReadyUpdate();
-        }
-    }, [status]);
+        if (atOpen) markOpenedOnce();
+    }, [status, markOpenedOnce]);
 
-    // Update from progress (UI thread; no reading .value in render)
+    // UI-thread bookkeeping: use a SharedValue to avoid touching JS refs in the worklet
+    const openedOnceSV = useSharedValue(initiallyOpen ? 1 : 0);
+
     useAnimatedReaction(
         () => (progress ? progress.value : undefined),
         (p, prev) => {
@@ -64,14 +68,13 @@ export function useDrawerSettled(opts: Options = {}) {
             const atOpen = p >= 1 - eps;
             const atClosed = p <= eps;
 
-            // initial sync (prev undefined on first call)
+            // initial call
             if (prev === undefined || prev === null) {
                 runOnJS(setIsFullyOpen)(atOpen);
                 runOnJS(setIsFullyClosed)(atClosed);
-                if (atOpen && !openedOnceRef.current) {
-                    openedOnceRef.current = true;
-                    runOnJS(setOpenedOnce)(true);
-                    runOnJS(queueReadyUpdate)();
+                if (atOpen && openedOnceSV.value === 0) {
+                    openedOnceSV.value = 1;
+                    runOnJS(markOpenedOnce)();
                 }
                 return;
             }
@@ -79,10 +82,9 @@ export function useDrawerSettled(opts: Options = {}) {
             const wasAtOpen = prev >= 1 - eps;
             if (atOpen !== wasAtOpen) {
                 runOnJS(setIsFullyOpen)(atOpen);
-                if (atOpen && !openedOnceRef.current) {
-                    openedOnceRef.current = true;
-                    runOnJS(setOpenedOnce)(true);
-                    runOnJS(queueReadyUpdate)();
+                if (atOpen && openedOnceSV.value === 0) {
+                    openedOnceSV.value = 1;
+                    runOnJS(markOpenedOnce)();
                 }
             }
 
@@ -95,4 +97,3 @@ export function useDrawerSettled(opts: Options = {}) {
 
     return { isFullyOpen, isFullyClosed, openedOnce, readyForHeavyMount };
 }
-

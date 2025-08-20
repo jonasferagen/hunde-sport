@@ -1,6 +1,6 @@
 // app/(app)/_layout.tsx
 import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
-import { CustomDrawerNew } from '@/components/menu/CustomDrawerNew';
+import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
 import { Prof } from '@/lib/debug/prof';
@@ -27,7 +27,7 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => (
-            <Prof id="Drawer contents" ><CustomDrawerNew navigation={props.navigation} /></Prof>
+            <Prof id="Drawer contents" ><CustomDrawer navigation={props.navigation} /></Prof>
         ),
         []
     );

@@ -2,7 +2,7 @@ import { ThemedImage } from '@/components/ui';
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { Link } from 'expo-router';
 import React, { JSX } from 'react';
@@ -16,7 +16,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
     const { purchasable } = usePurchasableContext();
     const { product } = purchasable;
-    const { linkProps } = useCanonicalNav();
+    const { linkProps } = useCanonicalNavigation();
 
     return (
         <ThemedYStack

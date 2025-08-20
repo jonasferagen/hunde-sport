@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ThemedText, ThemedXStack } from '@/components/ui';
 import { ProductCategory } from '@/domain/ProductCategory';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { ChevronRight } from '@tamagui/lucide-icons';
 
 interface BreadcrumbProps {
@@ -19,7 +19,7 @@ export const Breadcrumb = React.memo(({ productCategory,
   if (!productCategory) {
     return null;
   }
-  const { linkProps } = useCanonicalNav();
+  const { linkProps } = useCanonicalNavigation();
   const breadcrumbText = (
     <ThemedText
       size="$6"

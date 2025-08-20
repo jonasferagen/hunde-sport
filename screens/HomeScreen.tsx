@@ -3,7 +3,7 @@ import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } f
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { THEME_CATEGORIES, THEME_CATEGORIES_BG, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_DISCOUNTED_BG, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_FEATURED_BG, THEME_PRODUCTS_RECENT, THEME_PRODUCTS_RECENT_BG } from '@/config/app';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useScreenReady } from '@/hooks/useScreenReady';
 import React from 'react';
 import { LoadingScreen } from './misc/LoadingScreen';
@@ -12,7 +12,7 @@ import { LoadingScreen } from './misc/LoadingScreen';
 export const HomeScreen = React.memo(() => {
 
     const ready = useScreenReady();
-    const { to } = useCanonicalNav();
+    const { to } = useCanonicalNavigation();
     const handleSearch = (q: string) => {
         const text = q.trim();
         if (!text) { to('search'); return; }    // open search screen empty

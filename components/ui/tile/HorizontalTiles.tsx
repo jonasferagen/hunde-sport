@@ -2,7 +2,7 @@
 import { ProductPriceTag } from '@/components/features/product/display';
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import { QueryResult } from '@/hooks/data/util';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { spacePx } from '@/lib/helpers';
 import { PurchasableProduct } from '@/types';
 import { FlashList, ViewToken } from '@shopify/flash-list';
@@ -85,7 +85,7 @@ export function HorizontalTiles({
     const lastStartRef = useRef(true);
     const lastEndRef = useRef(false);
 
-    const { to } = useCanonicalNav();
+    const { to } = useCanonicalNavigation();
 
     const onContentSizeChange = useCallback((w: number) => {
         contentWRef.current = w;

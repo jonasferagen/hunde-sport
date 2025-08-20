@@ -1,10 +1,11 @@
 // ProductCategoryTree.tsx
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useCategoryById, useVisibleChildren } from '@/stores/productCategoryStore';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
-import React, { JSX, memo } from 'react';
-import { UIManager, findNodeHandle, type NativeScrollEvent, type NativeSyntheticEvent, type ScrollView } from 'react-native';
+import React, { JSX, memo, type ComponentRef } from 'react';
+import { UIManager, findNodeHandle, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import type { AnimatedRef } from 'react-native-reanimated';
 import { default as Animated, default as AnimatedR, FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { getTokenValue } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
@@ -12,8 +13,11 @@ import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
 import { useIsExpanded, useToggleExpanded } from './ProductCategoryTreeStore';
 
+// Instance type for Animated.ScrollView
+type AnimatedScrollViewRef = ComponentRef<typeof Animated.ScrollView>;
+
 type TreeCtxValue = {
-    scrollRef: React.MutableRefObject<ScrollView | null>; // instance ref
+    scrollRef: AnimatedRef<AnimatedScrollViewRef>; // instance ref
     lastYRef: { current: number };
     viewportYRef: { current: number };
     viewportHRef: { current: number };
@@ -23,7 +27,7 @@ const TreeCtx = React.createContext<TreeCtxValue | null>(null);
 export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
     const root = useVisibleChildren(0);
 
-    const scrollRef = useAnimatedRef<ScrollView>(); // instance
+    const scrollRef = useAnimatedRef<AnimatedScrollViewRef>(); // instance
     const lastYRef = React.useRef(0);
 
     // viewport of THIS tree (not full screen)
@@ -74,33 +78,36 @@ export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; leve
     const toggle = useToggleExpanded();
 
     return (
-        <ThemedYStack>
-            <ThemedXStack>
-                <ProductCategoryTreeItem
-                    productCategory={node}
-                    level={level}
-                    isExpanded={isExpanded}
-                    hasChildren={hasChildren}
-                    handleExpand={toggle}
-                />
-            </ThemedXStack>
+        <AnimatedR.View layout={LinearTransition.duration(150)}>
+            <ThemedYStack>
+                <ThemedXStack>
+                    <ProductCategoryTreeItem
+                        productCategory={node}
+                        level={level}
+                        isExpanded={isExpanded}
+                        hasChildren={hasChildren}
+                        handleExpand={toggle}
+                    />
+                </ThemedXStack>
 
-            {isExpanded && hasChildren && (
-                <AnimatedR.View
-                    entering={FadeIn.duration(150)}
-                    exiting={FadeOut.duration(120)}
-                    layout={LinearTransition.duration(150)}
-                    collapsable={false}
-                    style={{ width: '100%' }}
-                >
-                    <ThemedYStack pl="$4">
-                        {children.map((child) => (
-                            <ProductCategoryBranch key={child.id} id={child.id} level={level + 1} />
-                        ))}
-                    </ThemedYStack>
-                </AnimatedR.View>
-            )}
-        </ThemedYStack>
+                {isExpanded && hasChildren && (
+                    <AnimatedR.View
+                        entering={FadeIn.duration(150)}
+                        exiting={FadeOut.duration(120)}
+                        layout={LinearTransition.duration(150)}
+                        collapsable={false}
+                        style={{ width: '100%' }}
+                    >
+
+                        <ThemedYStack pl="$4">
+                            {children.map((child) => (
+                                <ProductCategoryBranch key={child.id} id={child.id} level={level + 1} />
+                            ))}
+                        </ThemedYStack>
+                    </AnimatedR.View>
+                )}
+            </ThemedYStack>
+        </AnimatedR.View>
     );
 });
 
@@ -115,7 +122,7 @@ interface RenderItemProps {
 const ProductCategoryTreeItem = React.memo(({
     productCategory, isExpanded, level, hasChildren, handleExpand,
 }: RenderItemProps): JSX.Element => {
-    const { linkProps } = useCanonicalNav();
+    const { linkProps } = useCanonicalNavigation();
     const ctx = React.useContext(TreeCtx);
     const INDENT = React.useMemo(() => getTokenValue('$2', 'space'), []);
 

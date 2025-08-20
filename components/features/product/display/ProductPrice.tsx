@@ -10,7 +10,7 @@ export const ProductPriceRange = (props: SizableTextProps) => {
     const prices = purchasable.activeProduct.prices as ProductPrices
     if (!prices.price_range) return null
     return (
-        <ThemedText {...props}>
+        <ThemedText {...props} boc="blue" bw={1} textWrap="nowrap">
             {formatRangeWithHeader(prices.price_range, prices, { style: 'short' })}
         </ThemedText>
     )

@@ -46,7 +46,7 @@ const scheduleNav = (fn: () => void, withoutOverlay: boolean) => {
     });
 };
 
-export function useCanonicalNav() {
+export function useCanonicalNavigation() {
     const rawPathname = usePathname();
     const pathname = React.useMemo(() => stripTrailingSlash(rawPathname), [rawPathname]);
 

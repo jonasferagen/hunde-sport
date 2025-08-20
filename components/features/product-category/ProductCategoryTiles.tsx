@@ -1,7 +1,7 @@
 import { ThemedYStack } from '@/components/ui';
 import { TileSquare } from '@/components/ui/tile/TileSquare';
 import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS } from '@/config/app';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { spacePx } from '@/lib/helpers';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import React, { JSX, useMemo } from 'react';
@@ -23,7 +23,7 @@ export const ProductCategoryTiles = React.memo((props: StackProps): JSX.Element 
     const cols = NUM_CATEGORY_TILE_COLUMNS;
     const colPct = `${100 / cols}%`;
 
-    const { to } = useCanonicalNav();
+    const { to } = useCanonicalNavigation();
 
 
 

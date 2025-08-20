@@ -1,5 +1,5 @@
 import { THEME_BOTTOM_BAR } from '@/config/app';
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname } from 'expo-router';
 import React, { useCallback, useMemo } from 'react';
@@ -46,7 +46,7 @@ type Props = React.ComponentProps<typeof ThemedYStack> & {
 export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: Props) => {
 
 
-    const { to, } = useCanonicalNav();
+    const { to, } = useCanonicalNavigation();
     const pathname = usePathname();
     const currentTab = useMemo(
         () => pathname.split('/')[1] || 'index',

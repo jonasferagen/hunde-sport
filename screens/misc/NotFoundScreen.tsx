@@ -1,4 +1,4 @@
-import { useCanonicalNav } from '@/hooks/useCanonicalNav';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { Prof } from '@/lib/debug/prof';
 import { Button, H1, YStack } from 'tamagui';
 interface NotFoundScreenProps {
@@ -8,7 +8,7 @@ interface NotFoundScreenProps {
 
 export const NotFoundScreen = ({ message = 'Siden ble ikke funnet.' }: NotFoundScreenProps) => {
 
-    const { to } = useCanonicalNav();
+    const { to } = useCanonicalNavigation();
     return (
         <Prof id="NotFoundScreen">
             <YStack flex={1} jc="center" ai="center" gap="$4">

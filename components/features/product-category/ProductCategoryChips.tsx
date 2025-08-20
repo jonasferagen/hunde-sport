@@ -1,13 +1,13 @@
 import { Chip } from "@/components/ui/chips/Chip";
 import { ThemedXStack } from "@/components/ui/themed-components";
-import { useCanonicalNav } from "@/hooks/useCanonicalNav";
+import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { ProductCategory } from "@/types";
 import { Link } from "expo-router";
 import React from "react";
 
 
 export const ProductCategoryChips = React.memo(({ productCategories }: { productCategories: ProductCategory[] }) => {
-    const { linkProps } = useCanonicalNav();
+    const { linkProps } = useCanonicalNavigation();
     return (
         <ThemedXStack fw="wrap" gap="$2">
             {productCategories.map((productCategory) => (
