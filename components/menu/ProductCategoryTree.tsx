@@ -3,7 +3,7 @@ import { useCanonicalNav } from '@/hooks/useCanonicalNav';
 import { useCategoryById, useVisibleChildren } from '@/stores/productCategoryStore';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
-import React, { memo } from 'react';
+import React, { JSX, memo } from 'react';
 import { UIManager, findNodeHandle, type NativeScrollEvent, type NativeSyntheticEvent, type ScrollView } from 'react-native';
 import { default as Animated, default as AnimatedR, FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { getTokenValue } from 'tamagui';
@@ -34,7 +34,7 @@ export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
         lastYRef.current = e.nativeEvent.contentOffset.y;
     }, []);
 
-    const onLayout = React.useCallback((e) => {
+    const onLayout = React.useCallback((e: NativeSyntheticEvent<any>) => {
         const { y, height } = e.nativeEvent.layout;
         viewportYRef.current = y;
         viewportHRef.current = height;
@@ -162,7 +162,7 @@ const ProductCategoryTreeItem = React.memo(({
                 opacity={hasChildren ? 1 : 0}
                 pointerEvents={hasChildren ? 'auto' : 'none'}
             >
-                {hasChildren && <AnimatedListExpansionIcon expanded={isExpanded} size="$4" />}
+                {hasChildren && <AnimatedListExpansionIcon expanded={isExpanded} />}
             </ThemedButton>
         </ThemedXStack>
     );
