@@ -57,7 +57,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
     const priceTag = (
         <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="$3" mr={-20} minWidth={80}>
             {/* uses purchasable context in modal; on cards you can swap this to ProductPriceLite */}
-            <ProductPrice />
+            <ProductPrice boc="red" bw={1} />
         </ThemedSurface>
     );
 

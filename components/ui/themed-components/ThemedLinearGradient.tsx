@@ -27,7 +27,7 @@ export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
     // Derive subtle 3-stop gradient
     // colors as a mutable array (or a mutable tuple)
     const colors = useMemo<[string, string, string]>(() => {
-        const top = rgba(isLight ? darken(0.05, base) : lighten(0.05, base), 0.9);
+        const top = rgba(isLight ? darken(0.1, base) : lighten(0.05, base), 0.9);
         const mid = rgba(base, 0.85);
         const bottom = rgba(isLight ? darken(0.1, base) : lighten(0.1, base), 0.9);
         return [top, mid, bottom];
