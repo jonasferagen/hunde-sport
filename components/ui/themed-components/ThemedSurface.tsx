@@ -3,8 +3,6 @@ import React from 'react'
 import { View, styled } from 'tamagui'
 
 const PRESS_STYLE = {
-    boc: '$borderColorInverse',
-    bg: '$backgroundInverse',
     opacity: 0.7,
 } as const
 
@@ -18,6 +16,7 @@ export const SurfaceBase = styled(View, {
     bw: '$borderWidth',
     boc: '$borderColor',
     bg: '$background',
+
     shadowColor: '$shadowColor',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -26,7 +25,7 @@ export const SurfaceBase = styled(View, {
 
 // ✅ always derive from `typeof <component>`
 type BaseProps = React.ComponentProps<typeof SurfaceBase>
-type BaseRef = React.ElementRef<typeof SurfaceBase>
+type BaseRef = React.ComponentRef<typeof SurfaceBase>
 
 // 🔒 Non-interactive may NOT have onPress
 type NonInteractiveProps = BaseProps & {
@@ -47,6 +46,7 @@ export const ThemedSurface = React.forwardRef<BaseRef, ThemedSurfaceProps>(
         return (
             <SurfaceBase
                 ref={ref}
+
                 pressStyle={interactive ? PRESS_STYLE : undefined}
                 animation={interactive ? 'fast' : undefined}
                 onPress={interactive ? onPress : undefined}

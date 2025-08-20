@@ -1,5 +1,6 @@
-import { ThemedSpinner, ThemedText, ThemedXStack } from '@/components/ui';
+import { ThemedSpinner, ThemedXStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
+import { ThemedText } from '@/components/ui/themed-components';
 import { THEME_CTA_CHECKOUT } from '@/config/app';
 import { formatCartGrandTotal } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
@@ -50,7 +51,7 @@ export const CheckoutButton = () => {
             theme={theme}
             after={iconAfter}
         >
-            <ThemedXStack split p="none" w="100%" ai="center">
+            <ThemedXStack split w="100%" ai="center" p="none">
                 {waiting ? (
                     <ThemedSpinner />
                 ) : (

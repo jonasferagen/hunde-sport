@@ -40,7 +40,12 @@ export const TileSquare = React.memo(function TileSquare({
     );
 
     return (
-        <ThemedSurface interactive={true} f={1} bw={2} onPress={onPress} {...props}>
+        <ThemedSurface
+            interactive={true}
+            f={1}
+            onPress={onPress}
+            {...props}
+        >
             <ThemedYStack fullscreen>
                 <ThemedImage uri={uri} title={title} contentFit="cover" />
                 {children}

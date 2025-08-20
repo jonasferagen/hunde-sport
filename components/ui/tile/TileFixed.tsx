@@ -48,6 +48,7 @@ export const TileFixed = React.memo(function TileFixed({
             h={h}
             interactive={true}
             f={1}
+            bw={1}
             onPress={onPress}
             {...props}
         >

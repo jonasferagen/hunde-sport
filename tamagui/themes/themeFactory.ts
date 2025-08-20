@@ -53,7 +53,7 @@ const AMOUNTS = {
     hover: 0.04,
     press: 0.09,
     focus: 0.12,
-    borderBase: 0.15,
+    borderBase: -0.15,
     borderHover: 0.04,
     borderPress: -0.08,
     textTransparent: 0.55,
@@ -125,7 +125,7 @@ export function makeTemplate(base: string): ThemeTemplate {
 }
 
 /** Apply variant adjustment to a base color */
-function variantBase(base: string, variant: '' | '_tint' | '_shade'): string {
+function variantBase(base: string, variant: VariantSuffix): string {
     if (variant === '_tint') return lighten(AMOUNTS.tint, base)
     if (variant === '_shade') return darken(AMOUNTS.shade, base)
     return base

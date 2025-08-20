@@ -21,7 +21,7 @@ export const THEME_FOOTER = 'secondary';
 export const THEME_BOTTOM_BAR = 'tertiary'
 export const THEME_MODAL = "tertiary";
 
-export const THEME_PAGE = "tertiary";
+export const THEME_PAGE = "light";
 export const THEME_PAGE_HEADER = "primary";
 export const THEME_PAGE_FOOTER = "dark_primary";
 
@@ -32,23 +32,23 @@ export const THEME_CTA_CHECKOUT = "dark_accent3";
 export const THEME_PRICE_TAG = 'light_accent1';
 export const THEME_PRICE_TAG_SALE = 'light_accent2';
 
-export const THEME_PRODUCT_ITEM_1 = 'tertiary';
-export const THEME_PRODUCT_ITEM_2 = 'dark_primary';
+export const THEME_PRODUCT_ITEM_1 = 'secondary';
+export const THEME_PRODUCT_ITEM_2 = 'secondary_tint';
 
-export const THEME_CART_ITEM_1 = 'tertiary';
-export const THEME_CART_ITEM_2 = 'tertiary_shade';
+export const THEME_CART_ITEM_1 = 'secondary';
+export const THEME_CART_ITEM_2 = 'secondary_tint';
 
 export const THEME_OPTION = 'light';
 export const THEME_OPTION_SELECTED = THEME_CTA_VARIATION;
 
 export const THEME_PRODUCTS_RECENT = "accent3";
-export const THEME_PRODUCTS_RECENT_BG = null;
+export const THEME_PRODUCTS_RECENT_BG = "light";
 
 export const THEME_CATEGORIES = "dark_accent3";
 export const THEME_CATEGORIES_BG = "dark_primary";
 
 export const THEME_PRODUCTS_DISCOUNTED = "tertiary_shade";
-export const THEME_PRODUCTS_DISCOUNTED_BG = null;
+export const THEME_PRODUCTS_DISCOUNTED_BG = "light";
 
 export const THEME_PRODUCTS_FEATURED = "accent3";
 export const THEME_PRODUCTS_FEATURED_BG = "accent7_shade";
