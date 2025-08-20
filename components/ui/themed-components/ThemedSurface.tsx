@@ -46,7 +46,6 @@ export const ThemedSurface = React.forwardRef<BaseRef, ThemedSurfaceProps>(
     ({ interactive, onPress, ...rest }, ref) => {
         return (
             <SurfaceBase
-
                 ref={ref}
                 pressStyle={interactive ? PRESS_STYLE : undefined}
                 animation={interactive ? 'fast' : undefined}

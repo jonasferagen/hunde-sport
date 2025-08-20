@@ -1,6 +1,6 @@
 import { ThemedImage } from '@/components/ui';
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
-import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStack';
+import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStacks';
 import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { getScaledImageUrl } from '@/lib/helpers';

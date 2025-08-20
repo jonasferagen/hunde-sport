@@ -3,7 +3,7 @@ import { spacePx } from '@/lib/helpers';
 import React, { useMemo } from 'react';
 import { YStackProps } from 'tamagui';
 import { ThemedText } from '../ui';
-import { ThemedYStack } from '../ui/themed-components/ThemedStack';
+import { ThemedYStack } from '../ui/themed-components/ThemedStacks';
 
 type SpaceToken = '$1' | '$2' | '$3' | '$4' | '$5' | 'none';
 
