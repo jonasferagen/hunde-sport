@@ -1,12 +1,11 @@
 import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
-import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductTiles';
+import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductRail';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { THEME_CATEGORIES, THEME_CATEGORIES_BG, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_DISCOUNTED_BG, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_FEATURED_BG, THEME_PRODUCTS_RECENT, THEME_PRODUCTS_RECENT_BG } from '@/config/app';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useScreenReady } from '@/hooks/useScreenReady';
 import React from 'react';
-import { LoadingScreen } from './misc/LoadingScreen';
 
 
 export const HomeScreen = React.memo(() => {
@@ -20,7 +19,7 @@ export const HomeScreen = React.memo(() => {
     };
 
     if (!ready) {
-        return <LoadingScreen />
+        return null;
     }
 
     return (

@@ -1,66 +1,57 @@
-// HorizontalTiles.tsx
+// HorizontalTiles.tsx (refactor)
 import { ProductPriceTag } from '@/components/features/product/display';
-import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
-import { QueryResult } from '@/hooks/data/util';
+import type { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { spacePx } from '@/lib/helpers';
-import { PurchasableProduct } from '@/types';
+import type { PurchasableProduct } from '@/types';
 import { FlashList, ViewToken } from '@shopify/flash-list';
 import { rgba } from 'polished';
-import React, { JSX, useCallback, useMemo, useRef, useState } from 'react';
-import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, StyleSheet } from 'react-native';
-import { Spinner, StackProps, View, XStack } from 'tamagui';
+import React, { JSX } from 'react';
+import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, View as RNView, StyleSheet } from 'react-native';
+import { SpaceTokens, StackProps, View, XStack } from 'tamagui';
 import { ThemedLinearGradient } from '../themed-components';
 import { TileBadge } from './TileBadge';
 import { TileFixed } from './TileFixed';
 
 const SCREEN_W = Dimensions.get('window').width;
 
-type SpaceToken = `$${number}`; // simple token type; adjust if you have Tamagui's SpaceTokens
-
 // ---- Indicators ----
 const ScrollIndicator = React.memo(function ScrollIndicator({
     side,
     widthToken,
-}: { side: 'left' | 'right'; widthToken: SpaceToken }) {
+}: { side: 'left' | 'right'; widthToken: SpaceTokens }) {
     const bg = '#fff';
-
-    const colors = useMemo<[string, string]>(() => {
+    const colors = React.useMemo<[string, string]>(() => {
         const transparent = rgba(bg, 0);
         const solid = rgba(bg, 1);
         return side === 'left' ? [transparent, solid] : [solid, transparent];
     }, [bg, side]);
-
-    const start: [number, number] = [1, 0];
-    const end: [number, number] = [0, 0];
 
     return (
         <XStack
             position="absolute"
             left={side === 'left' ? 0 : undefined}
             right={side === 'right' ? 0 : undefined}
-            width={widthToken}         // token (e.g. "$6")
+            width={widthToken}
             height="100%"
             pointerEvents="none"
         >
-            <ThemedLinearGradient colors={colors} start={start} end={end} />
+            <ThemedLinearGradient colors={colors} start={[1, 0]} end={[0, 0]} />
         </XStack>
     );
 });
 
 interface HorizontalTilesProps<T> extends StackProps {
     queryResult: QueryResult<T>;
-    limit: number,
+    limit: number;
 
-    // FlashList hints
-    estimatedItemSize?: number;      // main axis (width, horizontal)
-    estimatedItemCrossSize?: number; // cross axis (height)
+    estimatedItemSize?: number;      // item width
+    estimatedItemCrossSize?: number; // item height
 
-    // Tokenized spacing controls
-    gapToken?: SpaceToken;           // space between tiles (default "$3")
-    padToken?: SpaceToken;           // trailing padding right (default "$3")
-    leadingInsetToken?: SpaceToken;  // extra left inset before first tile (default = padToken)
-    indicatorWidthToken?: SpaceToken;// width of edge fades (default "$6")
+    gapToken?: SpaceTokens;
+    padToken?: SpaceTokens;
+    leadingInsetToken?: SpaceTokens;
+    indicatorWidthToken?: SpaceTokens;
 }
 
 export function HorizontalTiles({
@@ -75,100 +66,110 @@ export function HorizontalTiles({
     theme,
     ...props
 }: HorizontalTilesProps<PurchasableProduct>): JSX.Element {
-    const leadPx = spacePx(leadingInsetToken ?? padToken); // how far the first item starts from the left
-    const padPx = spacePx(padToken);
-    const gapPx = spacePx(gapToken);
-    const [atStart, setAtStart] = useState(true);
-    const [atEnd, setAtEnd] = useState(false);
-    const contentWRef = useRef(0);
-    const containerWRef = useRef(0);
-    const lastStartRef = useRef(true);
-    const lastEndRef = useRef(false);
+    const leadPx = spacePx((leadingInsetToken ?? padToken) as string);
+    const padPx = spacePx(padToken as string);
+    const gapPx = spacePx(gapToken as string);
+
+    const [atStart, setAtStart] = React.useState(true);
+    const [atEnd, setAtEnd] = React.useState(false);
+
+    const contentWRef = React.useRef(0);
+    const containerWRef = React.useRef(0);
+    const lastStartRef = React.useRef(true);
+    const lastEndRef = React.useRef(false);
 
     const { to } = useCanonicalNavigation();
 
-    const onContentSizeChange = useCallback((w: number) => {
-        contentWRef.current = w;
-        const end = containerWRef.current >= w - 10;
+    // ---- data (limit applied) ----
+    const { items = [], isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+    const products = React.useMemo(
+        () => (items as PurchasableProduct[]).slice(0, limit),
+        [items, limit]
+    );
+    if (products.length === 0) return <></>;
+
+    // ---- size + edges ----
+    const recomputeEdges = React.useCallback(() => {
+        const start = true; // when x==0 (we set at scroll time)
+        const end = containerWRef.current >= contentWRef.current - 1;
         if (end !== lastEndRef.current) {
             lastEndRef.current = end;
             setAtEnd(end);
         }
     }, []);
 
-    const onLayout = useCallback((e: any) => {
+    const onLayout = React.useCallback((e: any) => {
         containerWRef.current = e.nativeEvent.layout.width;
-    }, []);
+        recomputeEdges();
+    }, [recomputeEdges]);
 
+    const onContentSizeChange = React.useCallback((w: number) => {
+        contentWRef.current = w;
+        recomputeEdges();
+    }, [recomputeEdges]);
 
-    const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const onScroll = React.useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
         const x = e.nativeEvent.contentOffset.x;
-        const start = x <= 10;
-        const end = x + containerWRef.current >= contentWRef.current - 10;
-        if (start !== lastStartRef.current) {
-            lastStartRef.current = start;
-            setAtStart(start);
-        }
-        if (end !== lastEndRef.current) {
-            lastEndRef.current = end;
-            setAtEnd(end);
-        }
+        const start = x <= 1;
+        const end = x + containerWRef.current >= contentWRef.current - 1;
+        if (start !== lastStartRef.current) { lastStartRef.current = start; setAtStart(start); }
+        if (end !== lastEndRef.current) { lastEndRef.current = end; setAtEnd(end); }
     }, []);
 
-    // Stable separator using the computed gap
-    const ItemSeparatorComponent = useMemo(
-        () => React.memo(() => <View style={{ width: gapPx }} />),
+    // ---- viewability (for image priority / interaction) ----
+    const [visible, setVisible] = React.useState<Set<number>>(new Set());
+    const onViewableItemsChanged = React.useRef(({ changed }: { changed: ViewToken[] }) => {
+        setVisible(prev => {
+            let dirty = false; const next = new Set(prev);
+            for (const c of changed) {
+                if (c.index == null) continue;
+                if (c.isViewable) { if (!next.has(c.index)) { next.add(c.index); dirty = true; } }
+                else { if (next.delete(c.index)) dirty = true; }
+            }
+            return dirty ? next : prev;
+        });
+    }).current;
+    const viewabilityConfig = React.useMemo(() => ({ itemVisiblePercentThreshold: 50 }), []);
+
+    // ---- rendering ----
+    const HeaderSpacer = React.useMemo(
+        () => () => <RNView style={{ width: leadPx }} />,
+        [leadPx]
+    );
+    const Separator = React.useMemo(
+        () => () => <RNView style={{ width: gapPx }} />,
         [gapPx]
     );
-
-    // Content padding: bigger left inset (leadPx), normal right pad (padPx)
-    const contentStyle = useMemo(
-        () => ({ paddingLeft: leadPx, paddingRight: padPx }),
-        [leadPx, padPx]
+    const FooterSpacer = React.useMemo(
+        () => () => <RNView style={{ width: padPx }} />,
+        [padPx]
     );
 
-    const { items, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+    const onEndReached = React.useCallback(() => {
+        if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage();
+    }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
-    const products = items || [] as PurchasableProduct[];
-
-    //const staged = products.slice(0, limit);
-    // const     items = (queryResult.items ?? []).slice(0, limit); // e.g., 8
-
-    //  const staged = useProgressiveSlice(itemsToRender, limit, itemsToRender.length - limit, 120);
-
-    const onEndReached = useCallback(() => {
-        if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage(); // Disable loading more for now
-    }, [isFetchingNextPage, hasNextPage, fetchNextPage]);
-
-
-
-    const [visible, setVisible] = React.useState<Set<number>>(new Set());
-
-    const onViewableItemsChanged = React.useRef(
-        ({ changed }: { changed: ViewToken[] }) => {
-            // mutate a Set, then replace to update only when something actually changes
-            setVisible(prev => {
-                const next = new Set(prev);
-                let dirty = false;
-                for (const c of changed) {
-                    if (c.index == null) continue;
-                    if (c.isViewable) { if (!next.has(c.index)) { next.add(c.index); dirty = true; } }
-                    else { if (next.delete(c.index)) dirty = true; }
-                }
-                return dirty ? next : prev;
-            });
-        }
-    ).current;
-
-    const viewabilityConfig = React.useMemo(
-        () => ({ itemVisiblePercentThreshold: 50 }),
-        []
+    // stable item
+    const renderItem = React.useCallback(
+        ({ item, index }: { item: PurchasableProduct; index: number }) => (
+            <TileFixed
+                onPress={() => to('product', item)}
+                title={item.name}
+                image={item.featuredImage}
+                w={estimatedItemSize}
+                h={estimatedItemCrossSize}
+                imagePriority={index < 3 ? 'high' : 'low'}
+                interactive={visible.has(index)}
+            >
+                <TileBadge pointerEvents="none">
+                    <ProductPriceTag product={item} />
+                </TileBadge>
+            </TileFixed>
+        ),
+        [to, visible, estimatedItemSize, estimatedItemCrossSize]
     );
-
-    if (!products.length) return <></>;
 
     return (
-
         <View
             style={[styles.container, { height: estimatedItemCrossSize }]}
             onLayout={onLayout}
@@ -178,75 +179,45 @@ export function HorizontalTiles({
         >
             <FlashList
                 horizontal
-                onScroll={onScroll}
-                scrollEventThrottle={32}
                 data={products}
                 keyExtractor={(p) => String(p.id)}
+                renderItem={renderItem}
+                ItemSeparatorComponent={Separator}
+                ListHeaderComponent={HeaderSpacer}
+                ListFooterComponent={FooterSpacer}
                 showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={ItemSeparatorComponent}
+                onScroll={onScroll}
+                scrollEventThrottle={32}
                 onViewableItemsChanged={onViewableItemsChanged}
                 viewabilityConfig={viewabilityConfig}
 
-                // Good UX for carousels:
+                // UX: carousel feel
                 decelerationRate="fast"
                 snapToAlignment="start"
-                snapToInterval={estimatedItemSize + gapPx}      // if you want snapping
+                snapToInterval={estimatedItemSize + gapPx}
                 disableIntervalMomentum
-                // helps on Android when nested:
                 nestedScrollEnabled
 
                 // sizing hints
                 estimatedItemSize={estimatedItemSize}
                 estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
-                overrideItemLayout={(layout) => { layout.size = estimatedItemSize; layout.span = 1; }}
+                overrideItemLayout={(layout) => { layout.size = estimatedItemSize; }} // (offset optional in your v1 types)
+
+                // virtualization + paging
                 drawDistance={leadPx + estimatedItemSize * 2}
                 getItemType={() => 'product'}
-                // ~80% screen overscan
                 onContentSizeChange={onContentSizeChange}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.5}
-                contentContainerStyle={contentStyle}
-                ListFooterComponent={
-                    hasNextPage && isLoading ? (
-                        <View style={[styles.footer, { marginLeft: gapPx }]}>
-                            <Spinner />
-                        </View>
-                    ) : (
-                        <View style={{ width: padPx }} /> // match trailing padding
-                    )
-                }
-                renderItem={({
-                    item: product,
-                    index }: {
-                        item: PurchasableProduct;
-                        index: number
-                    }) => (
-                    <TileFixed
-                        onPress={() => to('product', product)}
-                        title={product.name}
-                        image={product.featuredImage}
-                        w={PRODUCT_TILE_WIDTH as number}
-                        h={PRODUCT_TILE_HEIGHT as number}
-                        // tiny micro-optic: higher priority for first 3 tiles
-                        imagePriority={index < 3 ? 'high' : 'low'}
-                        interactive={true || visible.has(index)}
-                    >
-                        <TileBadge pointerEvents="none">
-                            <ProductPriceTag product={product} />
-                        </TileBadge>
-                    </TileFixed>
-                )}
             />
 
-            {/* Edge fades sized by token */}
+            {/* Edge fades */}
             {!atEnd && <ScrollIndicator side="right" widthToken={indicatorWidthToken} />}
             {!atStart && <ScrollIndicator side="left" widthToken={indicatorWidthToken} />}
         </View>
-
     );
 }
 
 const styles = StyleSheet.create({
     container: { position: 'relative' },
-    footer: { width: 40, alignItems: 'center', justifyContent: 'center' },
 });
