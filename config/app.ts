@@ -9,6 +9,8 @@ export const PRODUCT_CATEGORY_TILE_HEIGHT: DimensionValue = 120;
 export const PRODUCT_TILE_WIDTH: DimensionValue = 160;
 export const PRODUCT_TILE_HEIGHT: DimensionValue = 120;
 
+export const BOTTOM_BAR_HEIGHT: DimensionValue = 80;
+
 export const DEBUG_PRODUCTS = false;
 
 export const THEME_MAIN = 'primary';

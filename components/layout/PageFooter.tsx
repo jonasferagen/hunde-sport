@@ -16,7 +16,9 @@ export const PageFooter: React.FC<PageFooterProps> = ({ children, ...props }) =>
                 container
                 box
                 btw={1}
+
                 {...props}
+
             >
                 {children}
 

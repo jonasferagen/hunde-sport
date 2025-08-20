@@ -1,4 +1,4 @@
-import { THEME_FOOTER } from '@/config/app';
+import { BOTTOM_BAR_HEIGHT, THEME_FOOTER } from '@/config/app';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname } from 'expo-router';
@@ -18,8 +18,8 @@ const StyledTab = styled(Tabs.Tab, {
     jc: 'center',
     py: '$3',
     gap: '$1',
-    bg: 'transparent',
-    h: 'auto',
+    bg: '$background',
+    h: BOTTOM_BAR_HEIGHT,
     bw: 1,
     boc: '$borderColor',
 });
@@ -61,7 +61,7 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
 
 
     return (
-        <ThemedYStack theme={THEME_FOOTER} {...rest} w="100%"  >
+        <ThemedYStack theme={THEME_FOOTER} {...rest} w="100%" pos="absolute" b={0} zi={10}>
             <StyledTabs
                 key={currentTab}
                 value={currentTab}           // <-- controlled

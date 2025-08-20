@@ -1,5 +1,5 @@
 // PageView.tsx
-import { THEME_PAGE } from '@/config/app';
+import { BOTTOM_BAR_HEIGHT, THEME_PAGE } from '@/config/app';
 import React from 'react';
 import { YStackProps } from 'tamagui';
 import { ThemedYStack } from '../ui';
@@ -30,7 +30,14 @@ export const PageView = React.memo(function PageView({
   const isFocused = useIsFocused();
 
   return (
-    <ThemedYStack theme={THEME_PAGE} f={1} gap="none" style={{ opacity: isFocused ? 1 : 0 }} {...stackProps}>
+    <ThemedYStack
+      theme={THEME_PAGE}
+      f={1}
+      gap="none"
+      style={{ opacity: isFocused ? 1 : 0 }}
+      {...stackProps}
+      mb={BOTTOM_BAR_HEIGHT}
+    >
       {withGradient ? <PageBackdrop token={gradientToken} /> : null}
       {children}
     </ThemedYStack>

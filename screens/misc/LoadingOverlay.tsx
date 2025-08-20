@@ -10,8 +10,9 @@ import Animated, {
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
+import { StackProps } from 'tamagui';
 
-export const LoadingOverlay = React.memo(() => {
+export const LoadingOverlay = React.memo(({ ...props }: StackProps) => {
     // always-mounted, controlled only by shared value
     const opacity = useSharedValue(0);
     const [pe, setPE] = useState<'none' | 'auto'>('none'); // gate touches (React state is fine)
@@ -47,7 +48,7 @@ export const LoadingOverlay = React.memo(() => {
             ]}
         >
             {/* your content */}
-            <ThemedYStack ai="center" jc="center" w="100%" h="100%" bg="black" o={0.3}>
+            <ThemedYStack ai="center" jc="center" w="100%" h="100%" bg="white" o={0.3} {...props}>
                 <ThemedSpinner size="large" />
             </ThemedYStack>
         </Animated.View>

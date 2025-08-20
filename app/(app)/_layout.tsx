@@ -2,6 +2,7 @@
 import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
+import { ThemedYStack } from '@/components/ui';
 import { routes } from '@/config/routes';
 import { Prof } from '@/lib/debug/prof';
 import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
@@ -38,31 +39,35 @@ const AppLayout = React.memo((): React.ReactElement => {
         [pathname]
     );
     return (
-        <View f={1} >
-            <Prof id={profId} key={profId} disable>
-                <Drawer
-                    drawerContent={drawerContent}
-                    screenOptions={screenOptions}
-                    detachInactiveScreens={false}
-                    initialRouteName='cart'
-                >
-                    {Object.values(routes).map((route) => (
-                        <Drawer.Screen
-                            key={route.name}
-                            name={route.name}
-                            options={{
-                                title: route.label,
-                                lazy: !route.showInDrawer,
-                                ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
-                                freezeOnBlur: true
-                            }}
-                        />
-                    ))}
-                </Drawer>
-            </Prof>
+        <View f={1} pos="relative">
+            <ThemedYStack fullscreen zi={20}>
 
-            <LoadingOverlay />
-            <CustomBottomBar />
+                <Prof id={profId} key={profId} disable>
+                    <Drawer
+                        drawerContent={drawerContent}
+                        screenOptions={screenOptions}
+                        detachInactiveScreens={false}
+                        initialRouteName='cart'
+                    >
+                        {Object.values(routes).map((route) => (
+                            <Drawer.Screen
+                                key={route.name}
+                                name={route.name}
+                                options={{
+                                    title: route.label,
+                                    lazy: !route.showInDrawer,
+                                    ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
+                                    freezeOnBlur: true
+                                }}
+                            />
+                        ))}
+                    </Drawer>
+                </Prof>
+
+                <CustomBottomBar />
+                <LoadingOverlay zi={99} />
+            </ThemedYStack>
+
         </View >
     );
 });
