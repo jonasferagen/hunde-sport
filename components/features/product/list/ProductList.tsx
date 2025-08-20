@@ -1,6 +1,9 @@
+import { ThemedXStack } from '@/components/ui';
+import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
+import { useEdgeFades } from '@/hooks/useEdgeFades';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
@@ -33,8 +36,9 @@ export const ProductList = React.memo(function ProductList({
         if (hasMore && !isLoadingMore) loadMore();
     }, [hasMore, isLoadingMore, loadMore]);
 
+    const edges = useEdgeFades('vertical');
 
-    return (
+    return (<ThemedXStack f={1} mih={0} pos="relative" onLayout={edges.onLayout}>
         <FlashList
             data={products as PurchasableProduct[]}
             renderItem={renderItem}
@@ -44,11 +48,24 @@ export const ProductList = React.memo(function ProductList({
             ListFooterComponent={isLoadingMore ? <ThemedSpinner my="$3" /> : null}
             estimatedItemSize={ITEM_HEIGHT}
             overrideItemLayout={(l) => { l.size = ITEM_HEIGHT; }}
-            estimatedListSize={{ width, height }}        // hint (not a constraint)
+            estimatedListSize={{ width, height }}
             drawDistance={800}
             getItemType={() => 'product'}
             removeClippedSubviews
+            onScroll={edges.onScroll}
+            scrollEventThrottle={32}
+            onContentSizeChange={edges.onContentSizeChange}
+            showsVerticalScrollIndicator={false}
+        // Optional: add top/bottom padding as ListHeader/Footers if you want fades to consider them
         />
+        <EdgeFadesOverlay
+            orientation="vertical"
+            visibleStart={edges.atStart}
+            visibleEnd={edges.atEnd}
+            heightToken="$1"   // fade thickness
+            bg="#888"
+        />
+    </ThemedXStack>
 
     );
 });

@@ -34,6 +34,9 @@ export const TileFixed = React.memo(function TileFixed({
     children,
     ...props
 }: TileFixedProps) {
+
+    interactive && console.log(title)
+
     const dpr = Math.min(PixelRatio.get(), 2)
     const uri = React.useMemo(
         () => getScaledImageUrl(image.src, Math.round(w * dpr), Math.round(h * dpr)),

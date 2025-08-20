@@ -1,53 +1,25 @@
-// HorizontalTiles.tsx (refactor)
+// HorizontalTiles.tsx
 import { ProductPriceTag } from '@/components/features/product/display';
+import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import type { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
+import { useEdgeFades } from '@/hooks/useEdgeFades';
 import { spacePx } from '@/lib/helpers';
 import type { PurchasableProduct } from '@/types';
 import { FlashList, ViewToken } from '@shopify/flash-list';
-import { rgba } from 'polished';
 import React, { JSX } from 'react';
-import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, View as RNView, StyleSheet } from 'react-native';
-import { SpaceTokens, StackProps, View, XStack } from 'tamagui';
-import { ThemedLinearGradient } from '../themed-components';
+import { Dimensions, View as RNView, StyleSheet } from 'react-native';
+import { SpaceTokens, StackProps, View } from 'tamagui';
 import { TileBadge } from './TileBadge';
 import { TileFixed } from './TileFixed';
 
 const SCREEN_W = Dimensions.get('window').width;
 
-// ---- Indicators ----
-const ScrollIndicator = React.memo(function ScrollIndicator({
-    side,
-    widthToken,
-}: { side: 'left' | 'right'; widthToken: SpaceTokens }) {
-    const bg = '#fff';
-    const colors = React.useMemo<[string, string]>(() => {
-        const transparent = rgba(bg, 0);
-        const solid = rgba(bg, 1);
-        return side === 'left' ? [transparent, solid] : [solid, transparent];
-    }, [bg, side]);
-
-    return (
-        <XStack
-            position="absolute"
-            left={side === 'left' ? 0 : undefined}
-            right={side === 'right' ? 0 : undefined}
-            width={widthToken}
-            height="100%"
-            pointerEvents="none"
-        >
-            <ThemedLinearGradient colors={colors} start={[1, 0]} end={[0, 0]} />
-        </XStack>
-    );
-});
-
 interface HorizontalTilesProps<T> extends StackProps {
     queryResult: QueryResult<T>;
     limit: number;
-
     estimatedItemSize?: number;      // item width
     estimatedItemCrossSize?: number; // item height
-
     gapToken?: SpaceTokens;
     padToken?: SpaceTokens;
     leadingInsetToken?: SpaceTokens;
@@ -63,64 +35,73 @@ export function HorizontalTiles({
     padToken = '$3',
     leadingInsetToken,
     indicatorWidthToken = '$6',
-    theme,
     ...props
 }: HorizontalTilesProps<PurchasableProduct>): JSX.Element {
-    const leadPx = spacePx((leadingInsetToken ?? padToken) as string);
-    const padPx = spacePx(padToken as string);
-    const gapPx = spacePx(gapToken as string);
-
-    const [atStart, setAtStart] = React.useState(true);
-    const [atEnd, setAtEnd] = React.useState(false);
-
-    const contentWRef = React.useRef(0);
-    const containerWRef = React.useRef(0);
-    const lastStartRef = React.useRef(true);
-    const lastEndRef = React.useRef(false);
-
-    const { to } = useCanonicalNavigation();
-
-    // ---- data (limit applied) ----
     const { items = [], isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+
+    // slice here; parent has no hooks so it's safe to return early
     const products = React.useMemo(
         () => (items as PurchasableProduct[]).slice(0, limit),
         [items, limit]
     );
     if (products.length === 0) return <></>;
 
-    // ---- size + edges ----
-    const recomputeEdges = React.useCallback(() => {
-        const start = true; // when x==0 (we set at scroll time)
-        const end = containerWRef.current >= contentWRef.current - 1;
-        if (end !== lastEndRef.current) {
-            lastEndRef.current = end;
-            setAtEnd(end);
-        }
-    }, []);
+    return (
+        <HorizontalTilesBody
+            products={products}
+            loadingState={{ isLoading, hasNextPage, isFetchingNextPage, fetchNextPage }}
+            estimatedItemSize={estimatedItemSize}
+            estimatedItemCrossSize={estimatedItemCrossSize}
+            gapToken={gapToken}
+            padToken={padToken}
+            leadingInsetToken={leadingInsetToken}
+            indicatorWidthToken={indicatorWidthToken}
+            {...props}
+        />
+    );
+}
 
-    const onLayout = React.useCallback((e: any) => {
-        containerWRef.current = e.nativeEvent.layout.width;
-        recomputeEdges();
-    }, [recomputeEdges]);
+type BodyProps = StackProps & {
+    products: PurchasableProduct[];
+    loadingState: {
+        isLoading: boolean;
+        hasNextPage: boolean | undefined;
+        isFetchingNextPage: boolean;
+        fetchNextPage: () => void;
+    };
+    estimatedItemSize: number;
+    estimatedItemCrossSize: number;
+    gapToken: SpaceTokens;
+    padToken: SpaceTokens;
+    leadingInsetToken?: SpaceTokens;
+    indicatorWidthToken?: SpaceTokens;
+};
 
-    const onContentSizeChange = React.useCallback((w: number) => {
-        contentWRef.current = w;
-        recomputeEdges();
-    }, [recomputeEdges]);
+const HorizontalTilesBody: React.FC<BodyProps> = ({
+    products,
+    loadingState,
+    estimatedItemSize,
+    estimatedItemCrossSize,
+    gapToken,
+    padToken,
+    leadingInsetToken,
+    indicatorWidthToken = '$6',
+    ...props
+}) => {
+    const leadPx = spacePx((leadingInsetToken ?? padToken) as string);
+    const padPx = spacePx(padToken as string);
+    const gapPx = spacePx(gapToken as string);
 
-    const onScroll = React.useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const x = e.nativeEvent.contentOffset.x;
-        const start = x <= 1;
-        const end = x + containerWRef.current >= contentWRef.current - 1;
-        if (start !== lastStartRef.current) { lastStartRef.current = start; setAtStart(start); }
-        if (end !== lastEndRef.current) { lastEndRef.current = end; setAtEnd(end); }
-    }, []);
+    // edge fades (INSIDE component)
+    const edges = useEdgeFades('horizontal');
 
-    // ---- viewability (for image priority / interaction) ----
+    const { to } = useCanonicalNavigation();
+
+    // viewability (for image priority / interaction)
     const [visible, setVisible] = React.useState<Set<number>>(new Set());
     const onViewableItemsChanged = React.useRef(({ changed }: { changed: ViewToken[] }) => {
         setVisible(prev => {
-            let dirty = false; const next = new Set(prev);
+            const next = new Set(prev); let dirty = false;
             for (const c of changed) {
                 if (c.index == null) continue;
                 if (c.isViewable) { if (!next.has(c.index)) { next.add(c.index); dirty = true; } }
@@ -131,48 +112,50 @@ export function HorizontalTiles({
     }).current;
     const viewabilityConfig = React.useMemo(() => ({ itemVisiblePercentThreshold: 50 }), []);
 
-    // ---- rendering ----
+    // spacers
     const HeaderSpacer = React.useMemo(
         () => () => <RNView style={{ width: leadPx }} />,
         [leadPx]
     );
-    const Separator = React.useMemo(
-        () => () => <RNView style={{ width: gapPx }} />,
-        [gapPx]
-    );
     const FooterSpacer = React.useMemo(
-        () => () => <RNView style={{ width: padPx }} />,
-        [padPx]
+        () => () => <RNView style={{ width: Math.max(padPx - gapPx, 0) }} />,
+        [padPx, gapPx]
     );
+
 
     const onEndReached = React.useCallback(() => {
+        const { isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = loadingState;
         if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage();
-    }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+    }, [loadingState]);
 
-    // stable item
     const renderItem = React.useCallback(
-        ({ item, index }: { item: PurchasableProduct; index: number }) => (
-            <TileFixed
-                onPress={() => to('product', item)}
-                title={item.name}
-                image={item.featuredImage}
-                w={estimatedItemSize}
-                h={estimatedItemCrossSize}
-                imagePriority={index < 3 ? 'high' : 'low'}
-                interactive={visible.has(index)}
-            >
-                <TileBadge pointerEvents="none">
-                    <ProductPriceTag product={item} />
-                </TileBadge>
-            </TileFixed>
-        ),
-        [to, visible, estimatedItemSize, estimatedItemCrossSize]
+        ({ item, index }: { item: PurchasableProduct; index: number }) => {
+            return (
+                <RNView style={{ marginRight: gapPx, width: estimatedItemSize, height: estimatedItemCrossSize }}>
+                    <TileFixed
+                        onPress={() => to('product', item)}
+                        title={item.name}
+                        image={item.featuredImage}
+                        w={estimatedItemSize}
+                        h={estimatedItemCrossSize}
+                        imagePriority={index < 3 ? 'high' : 'low'}
+                        interactive={visible.has(index)}
+                    >
+                        <TileBadge pointerEvents="none">
+                            <ProductPriceTag product={item} />
+                        </TileBadge>
+                    </TileFixed>
+                </RNView>
+            )
+        },
+        [to, visible, estimatedItemSize, estimatedItemCrossSize, gapPx]
     );
+
 
     return (
         <View
             style={[styles.container, { height: estimatedItemCrossSize }]}
-            onLayout={onLayout}
+            onLayout={edges.onLayout}
             mih={estimatedItemCrossSize}
             h={estimatedItemCrossSize}
             {...props}
@@ -182,41 +165,40 @@ export function HorizontalTiles({
                 data={products}
                 keyExtractor={(p) => String(p.id)}
                 renderItem={renderItem}
-                ItemSeparatorComponent={Separator}
+
                 ListHeaderComponent={HeaderSpacer}
                 ListFooterComponent={FooterSpacer}
                 showsHorizontalScrollIndicator={false}
-                onScroll={onScroll}
+                onScroll={edges.onScroll}
                 scrollEventThrottle={32}
                 onViewableItemsChanged={onViewableItemsChanged}
                 viewabilityConfig={viewabilityConfig}
-
-                // UX: carousel feel
                 decelerationRate="fast"
                 snapToAlignment="start"
-                snapToInterval={estimatedItemSize + gapPx}
+                snapToInterval={estimatedItemSize + gapPx} // still correct
                 disableIntervalMomentum
                 nestedScrollEnabled
-
-                // sizing hints
                 estimatedItemSize={estimatedItemSize}
                 estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
-                overrideItemLayout={(layout) => { layout.size = estimatedItemSize; }} // (offset optional in your v1 types)
-
-                // virtualization + paging
+                overrideItemLayout={(layout) => { layout.size = estimatedItemSize; }}
                 drawDistance={leadPx + estimatedItemSize * 2}
                 getItemType={() => 'product'}
-                onContentSizeChange={onContentSizeChange}
+                onContentSizeChange={(w, h) => edges.onContentSizeChange(w, h)}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.5}
             />
 
-            {/* Edge fades */}
-            {!atEnd && <ScrollIndicator side="right" widthToken={indicatorWidthToken} />}
-            {!atStart && <ScrollIndicator side="left" widthToken={indicatorWidthToken} />}
+            <EdgeFadesOverlay
+                orientation="horizontal"
+                visibleStart={edges.atStart}
+                visibleEnd={edges.atEnd}
+                widthToken={indicatorWidthToken}
+                bg="#fff"
+            />
         </View>
     );
-}
+
+};
 
 const styles = StyleSheet.create({
     container: { position: 'relative' },
