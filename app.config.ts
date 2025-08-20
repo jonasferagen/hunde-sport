@@ -1,15 +1,19 @@
-// app.config.ts
 import type { ExpoConfig } from '@expo/config';
 import pkg from './package.json' assert { type: 'json' };
 
-const VERSION = pkg.version as string;           // 1.0.1
-const RUNTIME = '1.0';                           // bump only on native changes
-
+const VERSION = pkg.version as string;
+const RUNTIME = '1.0';
 const PROJECT_ID = 'aa3dceb9-3292-426e-8e46-ff11539b7122';
-const NAME = 'Hundesport';
-const SLUG = "hunde-sport";
-const SCHEME = "hundesport";
-const PACKAGE = "com.anonymous.hundesport";
+
+// Decide variant: dev when APP_VARIANT=dev or when using the "internal-apk-dev" profile
+const profile = process.env.EAS_BUILD_PROFILE;
+const isDevVariant = process.env.APP_VARIANT === 'dev' || profile === 'internal-apk-dev';
+
+// IDs for store vs dev
+const NAME = isDevVariant ? 'Hundesport (Dev)' : 'Hundesport';
+const SLUG = 'hunde-sport';
+const SCHEME = isDevVariant ? 'hundesport-dev' : 'hundesport';
+const PACKAGE = isDevVariant ? 'com.anonymous.hundesport.dev' : 'com.anonymous.hundesport';
 
 export default (): ExpoConfig => ({
     name: NAME,
@@ -24,10 +28,10 @@ export default (): ExpoConfig => ({
     newArchEnabled: true,
     ios: {
         supportsTablet: true,
-        bundleIdentifier: PACKAGE, // set to your real org before App Store release
+        bundleIdentifier: PACKAGE, // iOS will also be ".dev" when dev variant
     },
     android: {
-        package: PACKAGE,         // immutable after Play release
+        package: PACKAGE,
         edgeToEdgeEnabled: true,
         softwareKeyboardLayoutMode: 'pan',
         adaptiveIcon: {
@@ -40,7 +44,8 @@ export default (): ExpoConfig => ({
         'expo-router',
         'expo-font',
         ['expo-splash-screen', { image: './assets/images/splash-icon.png', imageWidth: 200, resizeMode: 'contain', backgroundColor: '#ffffff' }],
-        'sentry-expo'
+        // If you want Sentry later, gate it so dev variant can opt in/out cleanly:
+        ...(process.env.SENTRY_ENABLED ? [['sentry-expo'] as any] : []),
     ],
     experiments: { typedRoutes: true },
     extra: { router: {}, eas: { projectId: PROJECT_ID } },

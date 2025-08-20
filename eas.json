@@ -5,11 +5,14 @@
       "distribution": "internal",
       "channel": "development"
     },
-    "internal-apk": {
+    "internal-apk-dev": {
       "distribution": "internal",
       "channel": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "APP_VARIANT": "dev"
       }
     },
     "production": {
