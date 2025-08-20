@@ -25,14 +25,22 @@ export const PreloaderScreen = () => {
         if (fontsLoaded && !splashHidden.current) {
             splashHidden.current = true;
             SplashScreen.hideAsync().catch(() => { });
+            setStep('cart');
         }
     }, [fontsLoaded]);
     // 2) Cart init (Zustand)
-    const initializeCart = useCartStore((s) => s.initializeCart);
+    const isInitialized = useCartStore(s => s.isInitialized);
+    const initializeCart = useCartStore(s => s.initializeCart);
 
+    useEffect(() => {
+        if (isInitialized) {
+            setStep('categories');
+            return;
+        }
+        initializeCart();
+    }, [isInitialized, initializeCart]);
     // 3) Categories (TanStack Query v5 — infinite)
-    //    Disable auto-fetch; we’ll drive it manually so we can finish all pages in one go.
-    const q = useProductCategories({ enabled: false } as any);
+
     const setCategoriesInStore = useProductCategoryStore((s) => s.setProductCategories);
 
     const [ready, setReady] = useState(false);
@@ -55,7 +63,7 @@ export const PreloaderScreen = () => {
     useEffect(() => {
         // wait for fonts first if you like
         if (!fontsLoaded) return;
-
+        setStep('categories');
         const { isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = queryResult;
         const isDone = !isLoading && !hasNextPage && !isFetchingNextPage;
 

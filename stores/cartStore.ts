@@ -168,7 +168,7 @@ export const useCartStore = create<CartState & CartActions>()(
                     });
                 } catch (e) {
                     log.error('CartStore: Initialization failed.');
-                    set({ isLoading: false });
+                    set({ isLoading: false, isInitialized: true });
                 }
             },
 
