@@ -30,10 +30,10 @@ export const SearchScreen = () => {
         setQuery(paramToString(params.query));
     }, [params.query]);
 
-    const debounced = useDebouncedValue(query, 250);
+    const searchQuery = useDebouncedValue(query, 250);
 
-    const result = useProductsBySearch(debounced, {
-        enabled: ready && debounced.trim().length > 0,
+    const result = useProductsBySearch(searchQuery, {
+        enabled: ready && searchQuery.trim().length > 0,
     });
 
     const router = useRouter();
@@ -44,9 +44,7 @@ export const SearchScreen = () => {
         router.setParams({ query: q || undefined });
     };
 
-
-
-    const isSearching = result.isLoading && !!debounced;
+    const isSearching = result.isLoading && !!searchQuery;
     const title = query
         ? `Søkeresultater for "${query}"`
         : 'Søk etter produkter, merker og kategorier.';
@@ -72,12 +70,13 @@ export const SearchScreen = () => {
                     {/* Show nothing (or a subtle placeholder) until ready */}
                     {!ready ? (
                         <LoadingScreen />
-                    ) : !debounced ? null : result.isLoading ? (
+                    ) : !searchQuery ? null : result.isLoading ? (
                         <LoadingScreen />
                     ) : !result.items?.length ? (
-                        <DefaultTextContent>Ingen resultater funnet for "{debounced}"</DefaultTextContent>
+                        <DefaultTextContent>Ingen resultater funnet for "{searchQuery}"</DefaultTextContent>
                     ) : (
                         <ProductList
+                            transitionKey={searchQuery}
                             products={result.items}
                             loadMore={result.fetchNextPage}
                             isLoadingMore={result.isLoading || result.isFetchingNextPage}

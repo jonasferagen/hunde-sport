@@ -100,7 +100,7 @@ export const ProductCategoryBranch = memo(({ id, level }: { id: number; level: n
                         collapsable={false}
                         style={{ width: '100%' }}
                     >
-                        <ThemedYStack pl="$4">
+                        <ThemedYStack>
                             {children.map((c) => (
                                 <ProductCategoryBranch key={c.id} id={c.id} level={level + 1} />
                             ))}
@@ -122,10 +122,10 @@ interface RenderItemProps {
 
 const ProductCategoryTreeItem = memo(({
     productCategory, isExpanded, level, hasChildren, handleExpand,
-}: RenderItemProps): JSX.Element => {
+}: RenderItemProps) => {
     const { linkProps } = useCanonicalNavigation();
     const ctx = React.useContext(TreeCtx);
-    const INDENT = React.useMemo(() => getTokenValue('$2', 'space'), []);
+    const INDENT = React.useMemo(() => getTokenValue('$6', 'space'), []);
     const rowRef = React.useRef<View>(null);
     const MIN_SPACE_BELOW = 160;
 
@@ -147,7 +147,7 @@ const ProductCategoryTreeItem = memo(({
 
     return (
         <ThemedXStack ref={rowRef} w="100%" ai="center" gap="$2" mb="$2">
-            <ThemedXStack ml={level * INDENT} f={1}>
+            <ThemedXStack ml={(level - 1) * INDENT} f={1}>
                 <Link {...linkProps('product-category', productCategory)} asChild>
                     <ThemedButton theme="shade" f={1}>
                         <ThemedText f={1} letterSpacing={0.5}>
@@ -168,7 +168,7 @@ const ProductCategoryTreeItem = memo(({
             >
                 {hasChildren && <AnimatedListExpansionIcon expanded={isExpanded} />}
             </ThemedButton>
-        </ThemedXStack>
+        </ThemedXStack >
     );
 });
 

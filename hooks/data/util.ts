@@ -36,11 +36,32 @@ export const queryOptions = {
 };
 
 
+
 export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, 'data'> & {
     total: number;
     totalPages: number;
     items: T[];
 };
+
+export type Page<T> = {
+    data: T[];
+    totalPages: number;
+    total: number;
+}
+
+
+export const makeQueryOptions = <T>() => {
+    return {
+        //  placeHolderData: (prev: QueryResult<T>) => prev,
+        initialPageParam: 1,
+        getNextPageParam: (lastPage: Page<T>, allPages: Page<T>[]) => {
+            if (!lastPage?.totalPages) return undefined;
+            const nextPage = allPages.length + 1;
+            return nextPage <= lastPage.totalPages ? nextPage : undefined;
+        }
+    };
+};
+
 
 
 export const handleQueryResult = <T>(result: UseInfiniteQueryResult<any, any>): QueryResult<T> => {

@@ -1,7 +1,7 @@
 import { Product, PurchasableProduct } from '@/domain/Product/Product';
 import { ProductCategory, ProductVariation } from '@/types';
 import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
-import { handleQueryResult, queryOptions, QueryResult } from '../util';
+import { handleQueryResult, makeQueryOptions, QueryResult } from '../util';
 import {
     fetchDiscountedProducts,
     fetchFeaturedProducts,
@@ -13,6 +13,8 @@ import {
     fetchRecentProducts
 } from './api';
 
+
+const queryOptions = makeQueryOptions<PurchasableProduct>();
 
 
 export const useProduct = (id: number, options = { enabled: true }): UseQueryResult<Product> => {
@@ -89,4 +91,4 @@ export const useProductsByCategory = (productCategory: ProductCategory): QueryRe
         ...queryOptions,
     });
     return handleQueryResult<PurchasableProduct>(result);
-}
+} 

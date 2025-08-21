@@ -8,17 +8,21 @@ import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
-import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { ProductCard } from '../display/ProductCard';
+
 
 interface ProductListProps {
     products: Product[];
     loadMore: () => void;
     isLoadingMore: boolean;
     hasMore: boolean;
+    /** Changes when the data identity changes (e.g. category id or search query) */
+    transitionKey: string | number;
 }
+
 export const ProductList = React.memo(function ProductList({
-    products, loadMore, isLoadingMore, hasMore,
+    products, loadMore, isLoadingMore, hasMore, transitionKey,
 }: ProductListProps) {
     const { width, height } = useWindowDimensions();
     const ITEM_HEIGHT = 170;
@@ -26,17 +30,9 @@ export const ProductList = React.memo(function ProductList({
     const keyExtractor = React.useCallback((p: PurchasableProduct) => String(p.id), []);
     const renderItem = React.useCallback(
         ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
-            <Animated.View
-                entering={FadeIn.duration(300)}
-                exiting={FadeOut.duration(300)}
-                layout={LinearTransition.duration(150)}
-                collapsable={false}
-                style={{ width: '100%' }}
-            >
-                <PurchasableProviderInit product={product}>
-                    <ProductCard theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2} />
-                </PurchasableProviderInit>
-            </Animated.View>
+            <PurchasableProviderInit product={product}>
+                <ProductCard theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2} />
+            </PurchasableProviderInit>
         ),
         []
     );
@@ -48,11 +44,16 @@ export const ProductList = React.memo(function ProductList({
     const edges = useEdgeFades('vertical');
 
     return (
-
-
-        <ThemedXStack f={1} mih={0} pos="relative" onLayout={edges.onLayout}>
-            <Animated.View layout={LinearTransition.duration(500)}>
+        <Animated.View
+            key={transitionKey}
+            entering={FadeIn.duration(300)}
+            exiting={FadeOut.duration(300)}
+            style={{ flex: 1 }}
+        >
+            <ThemedXStack f={1} mih={0} pos="relative" onLayout={edges.onLayout}>
                 <FlashList
+                    // also resetting FlashList internals on identity change is OK:
+                    key={transitionKey}
                     data={products as PurchasableProduct[]}
                     renderItem={renderItem}
                     keyExtractor={keyExtractor}
@@ -69,18 +70,15 @@ export const ProductList = React.memo(function ProductList({
                     scrollEventThrottle={32}
                     onContentSizeChange={edges.onContentSizeChange}
                     showsVerticalScrollIndicator={false}
-                // Optional: add top/bottom padding as ListHeader/Footers if you want fades to consider them
                 />
                 <EdgeFadesOverlay
                     orientation="vertical"
                     visibleStart={edges.atStart}
                     visibleEnd={edges.atEnd}
-                    heightToken="$1"   // fade thickness
+                    heightToken="$1"
                     bg="#888"
                 />
-            </Animated.View>
-        </ThemedXStack>
-
-
+            </ThemedXStack>
+        </Animated.View>
     );
 });
