@@ -1,5 +1,4 @@
 
-import { usePurchasableContext } from "@/contexts/";
 import React from "react";
 import { openModal } from "../../../../stores/modalStore";
 import { ProductVariationsModal } from "./ProductVariationsModal";
@@ -8,12 +7,18 @@ import { PurchaseButton } from "./PurchaseButton";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
 // ProductPurchaseFlow.tsx
+import { PurchasableProvider } from "@/contexts";
 import { haptic } from '@/lib/haptics';
-import { Purchasable } from "@/types";
+import { createPurchasable, Purchasable, PurchasableProduct } from "@/types";
 
-export const ProductPurchaseFlow = () => {
+export const ProductPurchaseFlow = ({ product }: { product: PurchasableProduct }) => {
     const addToCart = useAddToCart();
-    const { purchasable } = usePurchasableContext();
+
+    const purchasable = React.useMemo(
+        () => createPurchasable({ product, productVariation: undefined }),
+        [product.id, product.priceKey, product.availabilityKey]
+    );
+
     const [loading, setLoading] = React.useState(false);
 
     const onPressSimple = async () => {
@@ -22,7 +27,7 @@ export const ProductPurchaseFlow = () => {
         try { await addToCart(purchasable, 1) } finally { setLoading(false) }
     }
     const onPressVariable = () => {
-        haptic.selection(); // or haptic.light()
+        haptic.light(); // or haptic.light()
         openModal(
             (payload, api) => (
                 <ProductVariationsModal purchasable={payload as Purchasable} close={() => api.close()} />
@@ -32,5 +37,9 @@ export const ProductPurchaseFlow = () => {
     };
 
     const onPress = purchasable.isVariable ? onPressVariable : onPressSimple;
-    return <PurchaseButton onPress={onPress} isLoading={loading} />;
+
+    return (<PurchasableProvider purchasable={purchasable}>
+        <PurchaseButton onPress={onPress} isLoading={loading} />
+    </PurchasableProvider>);
+
 };

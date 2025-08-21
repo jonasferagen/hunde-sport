@@ -75,7 +75,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
         <ThemedYStack f={1} mih={0} onLayout={onBodyLayout}>
             {/* header */}
             <ThemedXStack split onLayout={onHeaderLayout}>
-                <ProductTitle fs={1} />
+                <ProductTitle product={purchasable.activeProduct} fs={1} />
                 <ThemedButton circular onPress={close}><ChevronDown /></ThemedButton>
             </ThemedXStack>
 

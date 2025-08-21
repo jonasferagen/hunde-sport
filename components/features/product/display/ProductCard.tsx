@@ -1,21 +1,24 @@
 import { ThemedImage } from '@/components/ui';
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStacks';
-import { usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { getScaledImageUrl } from '@/lib/helpers';
+import { PurchasableProduct } from '@/types';
 import { Link } from 'expo-router';
-import React, { JSX } from 'react';
+import React from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
 import { ProductDescription } from './ProductDescription';
 import { ProductTitle } from './ProductTitle';
 
-const IMAGE_SIZE = 80;
-export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
-    const { purchasable } = usePurchasableContext();
-    const { product } = purchasable;
+interface ProductCardProps extends StackProps {
+    product: PurchasableProduct;
+}
+
+const IMAGE_SIZE = 80;
+export const ProductCard = React.memo(({ product, ...props }: ProductCardProps) => {
+
     const { linkProps } = useCanonicalNavigation();
 
     return (
@@ -27,11 +30,11 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
             <ThemedLinearGradient />
             <Link {...linkProps('product', product)} asChild>
                 <ThemedXStack pressable>
-                    <ProductCardImage />
-                    <ProductCardDescription />
+                    <ProductCardImage product={product} />
+                    <ProductCardDescription product={product} />
                 </ThemedXStack>
             </Link>
-            <ProductPurchaseFlow />
+            <ProductPurchaseFlow product={product} />
         </ThemedYStack>
 
 
@@ -40,10 +43,7 @@ export const ProductCard = React.memo(({ ...props }: StackProps) => {
 
 });
 
-const ProductCardImage = ({ ...props }: StackProps): JSX.Element => {
-    const { purchasable } = usePurchasableContext();
-    const { product } = purchasable;
-
+const ProductCardImage = ({ product }: { product: PurchasableProduct }) => {
     const uri = getScaledImageUrl(product.featuredImage.src, IMAGE_SIZE, IMAGE_SIZE);
     return (
         <YStack
@@ -53,7 +53,6 @@ const ProductCardImage = ({ ...props }: StackProps): JSX.Element => {
             boc="$borderColor"
             br="$3"
             ov="hidden"
-            {...props}
         ><ThemedImage
                 uri={uri}
                 title={product.name}
@@ -65,7 +64,7 @@ const ProductCardImage = ({ ...props }: StackProps): JSX.Element => {
 
 };
 
-const ProductCardDescription = ({ ...stackProps }: StackProps): JSX.Element => {
+const ProductCardDescription = ({ product, ...stackProps }: StackProps & { product: PurchasableProduct }) => {
     return (
         <ThemedYStack
             f={1}
@@ -77,10 +76,11 @@ const ProductCardDescription = ({ ...stackProps }: StackProps): JSX.Element => {
                 ai="flex-start"
                 jc="space-between"
             >
-                <ProductTitle size="$5" fs={1} />
+                <ProductTitle size="$5" fs={1} product={product} />
 
             </XStack>
             <ProductDescription
+                product={product}
                 numberOfLines={2}
                 fow="normal"
             />

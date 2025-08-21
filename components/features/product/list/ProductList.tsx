@@ -1,7 +1,6 @@
 import { ThemedXStack } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
-import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
 import { useVisibleItems } from '@/hooks/useVisibleItems';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
@@ -29,14 +28,7 @@ export const ProductList = React.memo(function ProductList({
     const ITEM_HEIGHT = 170;
 
     const keyExtractor = React.useCallback((p: PurchasableProduct) => String(p.id), []);
-    const renderItem = React.useCallback(
-        ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
-            <PurchasableProviderInit product={product}>
-                <ProductCard theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2} />
-            </PurchasableProviderInit>
-        ),
-        []
-    );
+
 
     const onEndReached = React.useCallback(() => {
         if (hasMore && !isLoadingMore) loadMore();
@@ -53,6 +45,15 @@ export const ProductList = React.memo(function ProductList({
     }, []);
 
 
+    const renderItem = React.useCallback(
+        ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
+            <ProductCard
+                product={product}
+                theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
+            />
+        ),
+        []
+    );
 
     return (
         <Animated.View
@@ -82,6 +83,7 @@ export const ProductList = React.memo(function ProductList({
                     onScroll={onScroll}
                     scrollEventThrottle={32}
                     showsVerticalScrollIndicator={false}
+
                 />
                 <BottomMoreHint
                     ref={hintRef}
@@ -93,3 +95,4 @@ export const ProductList = React.memo(function ProductList({
         </Animated.View>
     );
 });
+

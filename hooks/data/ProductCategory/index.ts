@@ -1,7 +1,11 @@
 import { ProductCategory } from '@/types';
 import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
-import { handleQueryResult, queryOptions } from '../util';
+import { handleQueryResult, makeQueryOptions } from '../util';
 import { fetchProductCategories, fetchProductCategory } from './api';
+
+
+
+const queryOptions = makeQueryOptions<ProductCategory>();
 
 export const useProductCategories = () => {
 

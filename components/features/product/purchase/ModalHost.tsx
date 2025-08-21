@@ -24,7 +24,6 @@ export const ModalHost = () => {
 
 
     return (
-
         <Dialog open={open} onOpenChange={(o) => { if (!o) closeModal(); }}>
             {/* On native, always render as a bottom Sheet */}
             <Adapt platform="native">

@@ -1,16 +1,14 @@
 import { ThemedText } from '@/components/ui';
-import { usePurchasableContext } from '@/contexts/PurchasableContext';
+import { PurchasableProduct } from '@/types';
 import React from 'react';
 import { SizableTextProps } from 'tamagui';
 
 interface ProductDescriptionProps extends SizableTextProps {
     long?: boolean;
+    product: PurchasableProduct;
 }
 
-export const ProductDescription = ({ long = false, ...sizableTextProps }: ProductDescriptionProps) => {
-
-    const { purchasable } = usePurchasableContext();
-    const { product } = purchasable;
+export const ProductDescription = ({ long = false, product, ...sizableTextProps }: ProductDescriptionProps) => {
 
     const description = long ? product.description || product.short_description : product.short_description
 

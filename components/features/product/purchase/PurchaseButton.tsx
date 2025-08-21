@@ -36,6 +36,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
     enabled = true,
     mode = 'auto',
 }: PurchaseButtonProps) {
+
     const { purchasable } = usePurchasableContext();
 
     // only recompute when something that affects the CTA changes

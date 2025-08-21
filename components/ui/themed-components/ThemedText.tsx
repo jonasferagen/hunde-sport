@@ -1,42 +1,34 @@
-import { forwardRef } from 'react';
-import { SizableText, SizableTextProps, styled } from 'tamagui';
+import React from 'react'
+import { GetProps, SizableText, SizableTextProps, styled } from 'tamagui'
 
-const ThemedTextBase = styled(
-    SizableText,
-    {
-        name: 'ThemedText',
-        color: '$color',
-        // use font sizing via `size`, not layout `$size` via fontSize
-        size: '$3',
+const ThemedTextBase = styled(SizableText, {
+    name: 'ThemedText',
+    color: '$color',
+    size: '$3',
 
+    disabledStyle: { opacity: 0.5, textDecorationLine: 'line-through' },
 
-        disabledStyle: { opacity: 0.5, textDecorationLine: 'line-through' },
-
-        variants: {
-            variant: {
-                subtle: { color: '$colorTransparent' },
-                default: {},
-
-                price: {
-                    // keep on one line and shrink instead of ellipsis
-                    numberOfLines: 1,
-                    ellipsizeMode: 'clip',
-                    adjustsFontSizeToFit: true,
-                    minimumFontScale: 0.7,          // tweakable via priceScale below
-                    textWrap: 'nowrap',
-                    fontVariant: ['tabular-nums'],
-                    flexShrink: 1,                   // allow squeeze in flex rows
-                },
+    variants: {
+        variant: {
+            subtle: { color: '$colorTransparent' },
+            default: {},
+            price: {
+                numberOfLines: 1,
+                ellipsizeMode: 'clip',
+                adjustsFontSizeToFit: true,
+                minimumFontScale: 0.7,
+                // textWrap is not a React Native prop; consider removing if targeting native
+                // textWrap: 'nowrap',
+                fontVariant: ['tabular-nums'],
+                flexShrink: 1,
             },
-            bold: { true: { fontWeight: 'bold' } },
-        } as const,
-    }
-);
+        },
+        bold: { true: { fontWeight: 'bold' } },
+    } as const,
+})
 
-interface Props extends SizableTextProps {
-    bold?: boolean;
-}
+export type ThemedTextProps = GetProps<typeof ThemedTextBase> & SizableTextProps
 
-export const ThemedText = forwardRef<any, React.ComponentProps<typeof ThemedTextBase> & Props>(
-    (props, ref) => <ThemedTextBase ref={ref} {...props} />
-);
+export const ThemedText = ({ ...props }: ThemedTextProps) => (
+    <ThemedTextBase {...props} />
+)

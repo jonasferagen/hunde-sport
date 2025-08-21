@@ -1,18 +1,16 @@
-import { usePurchasableContext } from '@/contexts';
+import { Product } from '@/types';
 import React from 'react';
 import { Heading, SizableTextProps } from 'tamagui';
 
-interface ProductTitleProps extends SizableTextProps { }
+interface ProductTitleProps extends SizableTextProps { product: Product }
 
-export const ProductTitle = ({ children, ...props }: ProductTitleProps) => {
+export const ProductTitle = ({ product, children, ...props }: ProductTitleProps) => {
 
-    const { purchasable } = usePurchasableContext();
-    const { activeProduct } = purchasable;
     return <Heading
-        fontWeight="bold"
+        fow="bold"
         {...props}
     >
-        {activeProduct.name}
+        {product.name}
         {children}
     </Heading>;
 };

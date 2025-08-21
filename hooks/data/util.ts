@@ -1,6 +1,19 @@
 import { UseInfiniteQueryResult } from '@tanstack/react-query';
 import { ApiResponse } from 'apisauce';
-import { useMemo } from 'react';
+import React from 'react';
+
+export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, 'data'> & {
+    total: number;
+    totalPages: number;
+    items: T[];
+};
+
+export type Page<T> = {
+    data: T[];
+    totalPages: number;
+    total: number;
+}
+
 
 /**
  * Transforms an API response into a standardized format with pagination and mapped data.
@@ -25,30 +38,6 @@ export const responseTransformer = <T>(response: ApiResponse<any>, mapper: (item
     };
 }
 
-export const queryOptions = {
-    placeholderData: (prev: any) => prev,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage: any, allPages: any[]) => {
-        if (!lastPage?.totalPages) return undefined;
-        const nextPage = allPages.length + 1;
-        return nextPage <= lastPage.totalPages ? nextPage : undefined;
-    }
-};
-
-
-
-export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, 'data'> & {
-    total: number;
-    totalPages: number;
-    items: T[];
-};
-
-export type Page<T> = {
-    data: T[];
-    totalPages: number;
-    total: number;
-}
-
 
 export const makeQueryOptions = <T>() => {
     return {
@@ -63,21 +52,38 @@ export const makeQueryOptions = <T>() => {
 };
 
 
-
-export const handleQueryResult = <T>(result: UseInfiniteQueryResult<any, any>): QueryResult<T> => {
-
+export const handleQueryResult = <T extends { id: number }>(
+    result: UseInfiniteQueryResult<any, any>
+): QueryResult<T> => {
     const { data: dataResult, ...rest } = result;
 
-    const data = useMemo(() => {
-        const page = dataResult ? dataResult.pages[dataResult.pages.length - 1] : null;
-        const total = page ? page.total : 0;
-        const totalPages = page?.totalPages ?? 0;
-        const items = dataResult?.pages.flatMap((page: any) => page.data) as T[];
-        return { total, items, totalPages };
-    }, [dataResult]);
+    const data = React.useMemo(() => {
+        const pages = dataResult?.pages ?? [];
 
-    return {
-        ...rest,
-        ...data
-    };
-}
+        const indexById = new Map<number, number>();
+        const items: T[] = [];
+
+        for (const page of pages) {
+            for (const item of page.data as T[]) {
+                const idx = indexById.get(item.id);
+                if (idx === undefined) {
+                    indexById.set(item.id, items.length);
+                    items.push(item);
+                } else {
+                    // same id appeared again (refetch/overlap) → update in place
+                    items[idx] = item;
+                }
+            }
+        }
+
+        const last = pages.length ? pages[pages.length - 1] : null;
+        return {
+            total: last?.total ?? 0,
+            totalPages: last?.totalPages ?? 0,
+            items,
+        };
+    }, [dataResult?.pages]);
+
+    return { ...rest, ...data };
+};
+
