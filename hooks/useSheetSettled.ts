@@ -1,19 +1,15 @@
-
 import { useEffect, useRef, useState } from 'react';
-import { InteractionManager } from 'react-native';
+
 type Options = {
-    eps?: number;                       // threshold for 0/1
-    readyDelay?: 'none' | 'interactions'; // when to flip 'readyForHeavyMount'
+    openIndex?: number; // which snap index counts as "fully open" (0 = most open)
 };
-
-
 
 type SheetState = { open: boolean; position: number }; // position is snap index (0 = most open)
 export function useSheetSettled(
     state: SheetState,
-    opts: Options & { openIndex?: number } = {}
+    opts: Options = {}
 ) {
-    const { readyDelay = 'none', openIndex = 0 } = opts;
+    const { openIndex = 0 } = opts;
 
     const atOpenNow = !!state.open && (state.position ?? -1) === openIndex;
 
@@ -22,15 +18,6 @@ export function useSheetSettled(
 
     const openedOnceRef = useRef(atOpenNow);
     const [openedOnce, setOpenedOnce] = useState(atOpenNow);
-    const [readyForHeavyMount, setReady] = useState(atOpenNow);
-
-    const queueReady = () => {
-        if (readyDelay === 'interactions') {
-            InteractionManager.runAfterInteractions(() => setReady(true));
-        } else {
-            setReady(true);
-        }
-    };
 
     useEffect(() => {
         const atOpen = !!state.open && (state.position ?? -1) === openIndex;
@@ -43,10 +30,9 @@ export function useSheetSettled(
         if (atOpen && !openedOnceRef.current) {
             openedOnceRef.current = true;
             setOpenedOnce(true);
-            queueReady();
         }
         // We do NOT reset ready/openedOnce on close; they’re one-shot by design.
-    }, [state.open, state.position, openIndex, readyDelay]);
+    }, [state.open, state.position, openIndex]);
 
-    return { isFullyOpen, isFullyClosed, openedOnce, readyForHeavyMount };
+    return { isFullyOpen, isFullyClosed, openedOnce };
 }
