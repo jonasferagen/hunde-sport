@@ -1,3 +1,4 @@
+import { Loader } from '@/components/ui/Loader';
 import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 import { ProductVariationProvider, useProductVariationContext, usePurchasableContext } from '@/contexts';
 import { useProductVariationSelector } from '@/domain/Product/helpers/useProductVariationSelector';
@@ -49,6 +50,9 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
     const gapPx = spacePx(GAP);
     const half = Math.round(gapPx / 2);
     const colW = cols === 2 ? '50%' : '100%';
+
+
+    if (isLoading) return <Loader f={1} mih={0} />;
 
     return (
         <XStack fw="wrap" mx={-half} my={-half}>

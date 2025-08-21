@@ -1,23 +1,23 @@
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
-import { usePurchasableContext } from '@/contexts/';
 import { getScaledImageUrl } from '@/lib/helpers';
+import { Product } from '@/types';
 import { Galeria } from '@nandorojo/galeria';
-import React, { JSX } from 'react';
+import React from 'react';
 import { Dimensions } from 'react-native';
 import { YStack, YStackProps } from 'tamagui';
 
 const IMAGE_HEIGHT = 300;
 
 interface ProductImageProps {
+    product: Product;
     img_height?: number;
     stackProps?: YStackProps;
 }
 
-export const ProductImage = ({ img_height = IMAGE_HEIGHT, ...stackProps }: ProductImageProps): JSX.Element => {
-    const { purchasable } = usePurchasableContext();
-    const { activeProduct } = purchasable;
+export const ProductImage = ({ product, img_height = IMAGE_HEIGHT, ...stackProps }: ProductImageProps) => {
+
     const { width: screenWidth } = Dimensions.get('window');
-    const image = activeProduct.featuredImage;
+    const image = product.featuredImage;
     const uri = getScaledImageUrl(image.src, screenWidth, screenWidth);
 
     return (
@@ -29,7 +29,7 @@ export const ProductImage = ({ img_height = IMAGE_HEIGHT, ...stackProps }: Produ
                         w="100%"
                         h="100%"
                         uri={uri}
-                        title={activeProduct.name}
+                        title={product.name}
                     />
                 </Galeria.Image>
             </Galeria>

@@ -3,7 +3,7 @@ import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useAddToCart } from '@/hooks/useAddToCart';
 import { useDeferredOpen } from '@/hooks/useDeferredOpen';
-import { closeModal, setModalPosition, useModalStore } from '@/stores/modalStore';
+import { closeModal } from '@/stores/modalStore';
 import { Purchasable } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
@@ -23,15 +23,6 @@ export const ProductVariationsModal = ({
 };
 
 
-/*
-function useMeasure() {
-    const [h, setH] = React.useState(0);
-    const onLayout = React.useCallback((e: any) => {
-        const next = Math.round(e.nativeEvent.layout.height);
-        if (next !== h) setH(next);
-    }, [h]);
-    return [h, onLayout] as const;
-} */
 
 export const Inner = React.memo(function Inner({ close }: { close: () => void }) {
     const { purchasable } = usePurchasableContext();
@@ -55,32 +46,28 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
 
 
     const onPress = async () => {
+
         if (loading) return;
         setLoading(true);
+
         try {
-            const res = await addToCart(purchasable, 1);
-            if (res.ok) {
-                // (optional) slide sheet down first
-                setModalPosition(useModalStore.getState().snapPoints.length - 1);
-                // close after interactions so we don’t fight the background
-                closeModal();
-            }
+            await addToCart(purchasable, 1)
         } finally {
             setLoading(false);
+            closeModal();
         }
     };
-
 
     return (
         <ThemedYStack f={1} mih={0} onLayout={onBodyLayout}>
             {/* header */}
             <ThemedXStack split onLayout={onHeaderLayout}>
-                <ProductTitle product={purchasable.activeProduct} fs={1} />
+                <ProductTitle product={purchasable.product} fs={1} />
                 <ThemedButton circular onPress={close}><ChevronDown /></ThemedButton>
             </ThemedXStack>
 
             {/* image */}
-            <ProductImage img_height={IMAGE_H} />
+            <ProductImage product={purchasable.activeProduct} img_height={IMAGE_H} />
 
             {/* attributes (auto-fit; scroll only if needed) */}
             {ready ? (
@@ -90,7 +77,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
                     keyboardShouldPersistTaps="handled"
                     onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
                     scrollEnabled={contentH > availableForOptions}
-                    contentContainerStyle={{ paddingBottom: 12 }}
+                    contentContainerStyle={{ borderWidth: 12, minHeight: 0, borderColor: 'green' }}
                 >
                     {ready ? <ProductVariationSelect /> : null}
                 </Sheet.ScrollView>
@@ -101,7 +88,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
                 <ProductVariationLabel />
                 <ThemedXStack split>
                     <ProductStatus />
-                    <ProductPrice />
+                    <ProductPrice product={purchasable.activeProduct} />
                 </ThemedXStack>
             </ThemedYStack>
 

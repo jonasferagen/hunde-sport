@@ -21,6 +21,7 @@ export interface ProductAvailability {
     isPurchasable: boolean;
     isOnBackOrder: boolean;
     isOnSale: boolean;
+    isFree: boolean;
 }
 
 
@@ -144,6 +145,7 @@ export class BaseProduct<T extends BaseProductData> {
 
     get availability(): ProductAvailability {
         return {
+            isFree: this.prices.price === '0',
             isInStock: this.is_in_stock,
             isPurchasable: this.is_purchasable,
             isOnSale: this.on_sale,

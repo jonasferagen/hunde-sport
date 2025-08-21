@@ -36,6 +36,7 @@ export const THEME_CTA_VARIATION = "dark_tertiary_tint";
 export const THEME_CTA_CHECKOUT = "dark_tertiary";
 
 export const THEME_PRICE_TAG = 'dark_tertiary';
+export const THEME_PRICE_TAG_FREE = 'dark_tertiary';
 export const THEME_PRICE_TAG_SALE = 'dark_tertiary';
 
 export const THEME_PRODUCT_ITEM_1 = 'secondary';

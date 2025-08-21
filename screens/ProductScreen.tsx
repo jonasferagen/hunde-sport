@@ -5,10 +5,10 @@ import { ProductPurchaseFlow } from '@/components/features/product/purchase/Prod
 import { PageBody, PageFooter, PageHeader, PageSection, PageView } from '@/components/layout';
 import { ThemedXStack } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
-import { PurchasableProviderInit, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useProduct } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/useScreenReady';
+import { useScreenTitle } from '@/hooks/useScreenTitle';
 import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
 import { Redirect, useLocalSearchParams } from 'expo-router';
@@ -17,11 +17,11 @@ import { Loader } from '../components/ui/Loader';
 
 export const ProductScreen = () => {
   useRenderGuard('ProductScreen');
-  const ready = useScreenReady();
 
+  const ready = useScreenReady();
   const { id, productCategoryId: productCategoryIdFromParams, } = useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
-
+  const productCategoryId = Number(productCategoryIdFromParams);
   const { data: product, isLoading } = useProduct(productId, { enabled: ready });
 
   if (!ready) return null;
@@ -32,23 +32,17 @@ export const ProductScreen = () => {
   if (!product) {
     return <Redirect href="/" />;
   }
-  const purchasableProduct = product as PurchasableProduct;
-  const productCategoryId = productCategoryIdFromParams ? Number(productCategoryIdFromParams) : purchasableProduct.categories[0].id;
 
   return (
-    <ProductCategoryProvider productCategoryId={productCategoryId} >
-      <PurchasableProviderInit product={purchasableProduct}>
-        <ProductScreenContent />
-      </PurchasableProviderInit>
+    <ProductCategoryProvider productCategoryId={productCategoryId || product.categories[0].id} >
+      <ProductScreenContent product={product as PurchasableProduct} />
     </ProductCategoryProvider>
   );
 };
 
 
-const ProductScreenContent = () => {
-  const { purchasable } = usePurchasableContext();
-  const { product } = purchasable;
-
+const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
+  useScreenTitle(product.name);
 
   return (
     <Prof id="ProductScreen">
@@ -56,27 +50,26 @@ const ProductScreenContent = () => {
         <PageHeader><Breadcrumbs isLastClickable={false} /></PageHeader>
         <PageBody mode="scroll">
           <PageSection pt="$5">
-            <ProductImage />
+            <ProductImage product={product} />
             <ThemedXStack split>
-              <ProductTitle size="$5" fs={1} />
-              <ProductPrice size="$5" />
+              <ProductTitle product={product} size="$5" fs={1} />
+              <ProductPrice product={product} size="$5" />
             </ThemedXStack>
           </PageSection>
           <PageSection title="Produktinformasjon" theme="primary">
-            <ProductDescription long />
+            <ProductDescription product={product} long />
           </PageSection>
           <PageSection title="Produktbilder">
-            {product.images.length > 1 && <ProductImageGallery />}
+            {product.images.length > 1 && <ProductImageGallery product={product} />}
           </PageSection>
           <PageSection title="Kategorier">
             <ProductCategoryChips productCategories={product.categories} />
           </PageSection>
         </PageBody>
         <PageFooter>
-          <ProductPurchaseFlow />
+          <ProductPurchaseFlow product={product} />
         </PageFooter>
       </PageView>
     </Prof>
   );
 };
-

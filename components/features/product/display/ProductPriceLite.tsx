@@ -8,6 +8,10 @@ export const ProductPriceLite = React.memo(function ProductPriceLite({
     product,
     ...props
 }: { product: PurchasableProduct } & SizableTextProps) {
+
+
+
+
     if (product.hasPriceRange) {
         return <ThemedText {...props}>{product.displayPrice}</ThemedText>;
     }

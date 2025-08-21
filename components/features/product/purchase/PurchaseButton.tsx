@@ -4,10 +4,11 @@ import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { ThemedSurface } from '@/components/ui/themed-components/ThemedSurface';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { usePurchasableContext } from '@/contexts';
+import { Product } from '@/types';
 import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { Theme, type ThemeName } from 'tamagui';
-import { ProductPrice } from '../display/ProductPrice';
+import { ProductPrice } from '../display';
 import { computeCTA, type PurchaseCTAMode, type PurchaseCTAModeInput } from './purchase-cta';
 
 const ICONS: Record<PurchaseCTAMode, JSX.Element> = {
@@ -47,7 +48,6 @@ export const PurchaseButton = React.memo(function PurchaseButton({
             purchasable.isVariable,
             purchasable.isValid,
             purchasable.message,
-            purchasable.availability.isInStock,         // minimal keys that affect CTA
         ]
     );
 
@@ -60,7 +60,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
             <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="none" mr={-20} minWidth={80} >
                 {/* uses purchasable context in modal; on cards you can swap this to ProductPriceLite */}
 
-                <ProductPrice />
+                <ProductPrice product={purchasable.activeProduct as Product} />
             </ThemedSurface>
         </Theme>
 

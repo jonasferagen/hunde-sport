@@ -1,20 +1,21 @@
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
-import { usePurchasableContext } from '@/contexts';
 import { getScaledImageUrl, spacePx } from '@/lib/helpers';
+import { Product } from '@/types';
 import { Galeria } from '@nandorojo/galeria';
-import React, { JSX, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Dimensions } from 'react-native';
 import { ScrollView, XStack, YStack, YStackProps } from 'tamagui';
 
 interface ProductImageGalleryProps extends YStackProps {
+    product: Product;
     numColumns?: number;
 }
 export const ProductImageGallery = ({
+    product,
     numColumns = 4,
     ...stackProps
-}: ProductImageGalleryProps): JSX.Element => {
-    const { purchasable } = usePurchasableContext();
-    const { product } = purchasable;
+}: ProductImageGalleryProps) => {
+
     const { width: screenWidth } = Dimensions.get('window');
     const images = product.images;
 

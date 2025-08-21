@@ -1,14 +1,12 @@
 // components/product/ProductPrice.tsx
 import { ThemedText } from '@/components/ui/themed-components'
-import { usePurchasableContext } from '@/contexts'
 import { ProductPrices, formatMinorWithHeader, formatRangeWithHeader } from '@/domain/pricing'
-import { PurchasableProduct } from '@/types'
+import { Product } from '@/types'
 import { SizableTextProps, XStack } from 'tamagui'
 
-export const ProductPriceRange = (props: SizableTextProps) => {
-    const { purchasable } = usePurchasableContext()
-    const prices = purchasable.activeProduct.prices as ProductPrices
-    if (!prices.price_range) return null
+export const ProductPriceRange = ({ product, ...props }: { product: Product } & SizableTextProps) => {
+    const prices = product.prices as ProductPrices
+    if (!prices.price_range) throw new Error("product missing price_range", { cause: product })
     return (
         <ThemedText variant="price" {...props} >
             {formatRangeWithHeader(prices.price_range, prices, { style: 'short' })}
@@ -16,26 +14,16 @@ export const ProductPriceRange = (props: SizableTextProps) => {
     )
 }
 
-export const ProductPrice = (props: SizableTextProps) => {
-    const { purchasable } = usePurchasableContext()
-    return <ProductPriceImpl product={purchasable.activeProduct as PurchasableProduct} {...props} />
-}
-
-export const BaseProductPrice = (props: SizableTextProps) => {
-    const { purchasable } = usePurchasableContext()
-    return <ProductPriceImpl product={purchasable.product} {...props} />
-}
-
-const ProductPriceImpl = ({
+export const ProductPrice = ({
     product,
     ...props
-}: { product: PurchasableProduct } & SizableTextProps) => {
-    const { isInStock, isPurchasable, isOnSale } = product.availability
+}: { product: Product } & SizableTextProps) => {
+    const { isInStock, isPurchasable, isOnSale, isFree } = product.availability
     const prices = product.prices as ProductPrices
 
     // Variable products: show range
     if (prices.price_range) {
-        return <ProductPriceRange {...props} />
+        return <ProductPriceRange product={product} {...props} />
     }
 
     // Decide which exact amount to display and format that single field:
@@ -48,6 +36,14 @@ const ProductPriceImpl = ({
             <ThemedText disabled {...props}>
                 {unitFormatted}
             </ThemedText>
+        )
+    }
+
+    if (isFree) {
+        return (
+            <XStack ai="center" gap="$2">
+                <ThemedText bold {...props}>Gratis!</ThemedText>
+            </XStack>
         )
     }
 

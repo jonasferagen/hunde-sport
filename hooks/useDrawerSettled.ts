@@ -1,16 +1,14 @@
 // hooks/useDrawerSettled.ts
 import { useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { InteractionManager } from 'react-native';
 import { runOnJS, useAnimatedReaction, useSharedValue, type SharedValue } from 'react-native-reanimated';
 
 type Options = {
     eps?: number;
-    readyDelay?: 'none' | 'interactions';
 };
 
 export function useDrawerSettled(opts: Options = {}) {
-    const { eps = 0.001, readyDelay = 'none' } = opts;
+    const { eps = 0.001 } = opts;
 
     const status = useDrawerStatus(); // 'open' | 'closed'
     const progress = useDrawerProgress() as unknown as SharedValue<number> | undefined;
@@ -24,28 +22,15 @@ export function useDrawerSettled(opts: Options = {}) {
     const openedOnceRef = useRef(initiallyOpen);
     const [openedOnce, setOpenedOnce] = useState(initiallyOpen);
 
-    const [readyForHeavyMount, setReady] = useState(initiallyOpen);
-    const queueReadyUpdate = useMemo(
-        () => () => {
-            if (readyDelay === 'interactions') {
-                InteractionManager.runAfterInteractions(() => setReady(true));
-            } else {
-                setReady(true);
-            }
-        },
-        [readyDelay]
-    );
-
     // JS helper (runs only on JS, can safely touch refs/state)
     const markOpenedOnce = useMemo(
         () => () => {
             if (!openedOnceRef.current) {
                 openedOnceRef.current = true;
                 setOpenedOnce(true);
-                queueReadyUpdate();
             }
         },
-        [queueReadyUpdate]
+        []
     );
 
     // Fallback + initial sync from status (no progress available on web or edge cases)
@@ -95,5 +80,5 @@ export function useDrawerSettled(opts: Options = {}) {
         }
     );
 
-    return { isFullyOpen, isFullyClosed, openedOnce, readyForHeavyMount };
+    return { isFullyOpen, isFullyClosed, openedOnce };
 }

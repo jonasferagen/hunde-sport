@@ -15,7 +15,6 @@ export const useAddToCart = () => {
         try {
             const options = toAddItemOptions(p, qty)   // throws if !p.isValid
             await addItem(options)
-
             haptic.success()
             toast.show('Lagt til i handlekurv', { message: p.product.name })
             return { ok: true }
