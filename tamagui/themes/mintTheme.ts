@@ -1,4 +1,4 @@
-import { invert } from 'polished';
+import { darken } from 'polished';
 import { buildThemes } from './themeFactory';
 
 // theme-config.ts
@@ -8,7 +8,7 @@ export const config = {
 
     primary: { light: '#C8E6E5', dark: '#275554' },
     secondary: { light: '#DDE2C3', dark: '#474e25' },
-    tertiary: { light: '#94aa5f', dark: invert('#94aa5f') },
+    tertiary: { light: '#94aa5f', dark: darken(.5, '#94aa5f') },
     accent1: { light: '#EA580C', dark: '#FB923C' }, // burnt orange
     accent2: { light: '#E11D48', dark: '#FB7185' }, // crimson
     accent3: { light: '#9d1432', dark: '#608f39' },

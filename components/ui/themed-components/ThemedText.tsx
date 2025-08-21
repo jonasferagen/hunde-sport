@@ -15,7 +15,7 @@ export const ThemedText = styled(
             variant: {
                 subtle: { color: '$colorTransparent' },
                 default: {},
-                // 👇 new
+
                 price: {
                     // keep on one line and shrink instead of ellipsis
                     numberOfLines: 1,

@@ -18,8 +18,6 @@ type PageViewProps = YStackProps & {
   gradientToken?: string;
 };
 
-
-
 export const PageView = React.memo(function PageView({
   children,
   withGradient = false,

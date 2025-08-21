@@ -74,9 +74,6 @@ export class BaseProduct<T extends BaseProductData> {
     displayPrice: string;
     displayRegularPrice?: string | null;
 
-
-
-
     constructor(data: T) {
         this.id = data.id;
         this.name = cleanHtml(data.name);

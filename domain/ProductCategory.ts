@@ -30,9 +30,27 @@ export class ProductCategory implements ProductCategoryData {
     return this.description !== '#';
   }
 
-
   toString() {
     return 'Category ' + this.id + ': ' + this.name;
+  }
+
+  static create(id: number): ProductCategory {
+    return new ProductCategory({
+      id: id,
+      name: '',
+      parent: -1,
+      image: {
+        id: 0,
+        src: '',
+        name: '',
+        alt: '',
+        thumbnail: '',
+        srcset: '',
+        sizes: '',
+      },
+      description: '',
+      slug: '',
+    });
   }
 }
 

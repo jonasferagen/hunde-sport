@@ -71,8 +71,9 @@ export const PreloaderScreen = () => {
             fetchNextPage();
             return;
         }
+
         const categories = queryResult.items;
-        setCategoriesInStore(categories);
+        useProductCategoryStore.getState().setProductCategories(categories);
         setReady(true);
 
     }, [fontsLoaded, queryResult]);

@@ -13,10 +13,8 @@ export const SurfaceBase = styled(View, {
     h: '100%',
     ov: 'hidden',
     br: '$3',
-    bw: '$borderWidth',
     boc: '$borderColor',
     bg: '$background',
-
     shadowColor: '$shadowColor',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -46,7 +44,6 @@ export const ThemedSurface = React.forwardRef<BaseRef, ThemedSurfaceProps>(
         return (
             <SurfaceBase
                 ref={ref}
-
                 pressStyle={interactive ? PRESS_STYLE : undefined}
                 animation={interactive ? 'fast' : undefined}
                 onPress={interactive ? onPress : undefined}

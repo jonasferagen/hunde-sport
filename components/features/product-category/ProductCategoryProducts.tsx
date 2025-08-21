@@ -3,23 +3,25 @@ import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 
-import { ThemedYStack } from '@/components/ui';
-import React, { JSX } from 'react';
+import { ThemedText, ThemedYStack } from '@/components/ui';
+import React from 'react';
 import { ProductList } from '../product/list/ProductList';
 
-export const ProductCategoryProducts = (): JSX.Element => {
+export const ProductCategoryProducts = () => {
     useRenderGuard('ProductCategoryProducts');
     const { productCategory } = useProductCategoryContext();
+    const { items: products, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useProductsByCategory(productCategory);
 
-    const { items: products, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useProductsByCategory(productCategory!);
 
 
     return (
         <ThemedYStack f={1} mih={0}>
+            <ThemedText>{productCategory?.id}</ThemedText>
             {isLoading ? (
                 <LoadingScreen />
             ) : (
                 <ProductList
+                    key={productCategory?.id}
                     products={products}
                     loadMore={fetchNextPage}
                     isLoadingMore={isFetchingNextPage}

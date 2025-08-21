@@ -25,12 +25,6 @@ export type ThemeTemplate = {
     shadowColorFocus: string
     shadowColorHover: string
     shadowColorPress: string
-
-    /* Extra tokens, not tamagui defaults */
-    backgroundInverse: string
-    borderColorInverse: string
-    colorInverse: string
-    shadowColorInverse: string
 }
 
 /** Your input config */
@@ -53,7 +47,7 @@ const AMOUNTS = {
     hover: 0.04,
     press: 0.09,
     focus: 0.12,
-    borderBase: -0.15,
+    borderBase: 0.15,
     borderHover: 0.04,
     borderPress: -0.08,
     textTransparent: 0.55,
@@ -79,7 +73,7 @@ export function makeTemplate(base: string): ThemeTemplate {
 
     const step = (amt: number) => (isLightBg ? darken(amt, base) : lighten(amt, base))
 
-    const darkenBorders = true || isLightBg;
+    const darkenBorders = isLightBg;
 
     // Borders: derive from base, darker on light, lighter on dark
     const borderBase = darkenBorders ? darken(AMOUNTS.borderBase, base) : lighten(AMOUNTS.borderBase, base)
@@ -116,10 +110,7 @@ export function makeTemplate(base: string): ThemeTemplate {
         shadowColorPress: rgba('#000', Math.min(1, shadowAlpha + AMOUNTS.shadowPressDelta)),
         shadowColorFocus: rgba('#000', Math.min(1, shadowAlpha + AMOUNTS.shadowFocusDelta)),
 
-        backgroundInverse: base,
-        borderColorInverse: borderBase,
-        colorInverse: isLightBg ? '#FFFFFF' : '#000000',
-        shadowColorInverse: rgba('#000', 1 - shadowAlpha),
+
 
     }
 }
@@ -140,12 +131,6 @@ function makeVariantSet(base: string) {
     } as const
 }
 
-function patchInverse(target: ThemeTemplate, inverse: ThemeTemplate) {
-    target.backgroundInverse = inverse.background
-    target.borderColorInverse = inverse.borderColor
-    target.colorInverse = inverse.color
-    target.shadowColorInverse = inverse.shadowColor
-}
 
 /**
  * Build a flat set of themes like (per key):
@@ -164,9 +149,6 @@ export function buildThemes<C extends PaletteConfig>(config: C) {
         (['', '_tint', '_shade'] as const).forEach((v) => {
             const L = lightSet[v]
             const D = darkSet[v]
-            patchInverse(L, D)
-            patchInverse(D, L)
-
             themes[`light_${key}${v}` as ThemeNames<C>] = L
             themes[`dark_${key}${v}` as ThemeNames<C>] = D
         })

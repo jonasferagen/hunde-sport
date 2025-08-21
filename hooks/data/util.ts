@@ -33,7 +33,6 @@ export const queryOptions = {
         const nextPage = allPages.length + 1;
         return nextPage <= lastPage.totalPages ? nextPage : undefined;
     }
-
 };
 
 

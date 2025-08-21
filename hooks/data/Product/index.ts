@@ -15,7 +15,6 @@ import {
 
 
 
-
 export const useProduct = (id: number, options = { enabled: true }): UseQueryResult<Product> => {
     const result = useQuery({
         queryKey: ['product', id],
@@ -50,6 +49,7 @@ export const useProductsBySearch = (query: string, options = { enabled: !!query 
         queryFn: ({ pageParam }) => fetchProductsBySearch(query, { page: pageParam }),
         ...options,
         ...queryOptions,
+        placeholderData: undefined, // empty list
 
     });
     return handleQueryResult<PurchasableProduct>(result);
@@ -86,7 +86,7 @@ export const useProductsByCategory = (productCategory: ProductCategory): QueryRe
     const result = useInfiniteQuery({
         queryKey: ['products-by-category', productCategory.id],
         queryFn: ({ pageParam }) => fetchProductsByProductCategory(productCategory.id, { page: pageParam }),
-        ...queryOptions
+        ...queryOptions,
     });
     return handleQueryResult<PurchasableProduct>(result);
 }

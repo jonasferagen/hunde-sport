@@ -1,12 +1,13 @@
 // ProductCategoryTree.tsx
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
-import { useCategoryById, useVisibleChildren } from '@/stores/productCategoryStore';
+import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
+import { ProductCategory } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { JSX, memo, type ComponentRef } from 'react';
-import { UIManager, findNodeHandle, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import type { AnimatedRef } from 'react-native-reanimated';
-import { default as Animated, default as AnimatedR, FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { default as Animated, FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { getTokenValue } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
@@ -25,7 +26,7 @@ type TreeCtxValue = {
 const TreeCtx = React.createContext<TreeCtxValue | null>(null);
 
 export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
-    const root = useVisibleChildren(0);
+    const root = useProductCategories(0);
 
     const scrollRef = useAnimatedRef<AnimatedScrollViewRef>(); // instance
     const lastYRef = React.useRef(0);
@@ -59,7 +60,7 @@ export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
                     contentContainerStyle={{ paddingBottom: 12 }}
                 >
                     <ThemedYStack container>
-                        {root.map((c) => (
+                        {root.map((c: ProductCategory) => (
                             <ProductCategoryBranch key={c.id} id={c.id} level={level} />
                         ))}
                     </ThemedYStack>
@@ -70,28 +71,30 @@ export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
 });
 
 export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; level?: number }) => {
-    const node = useCategoryById(id)!;
-    const children = useVisibleChildren(id);
-    const hasChildren = children.length > 0;
+    const node = useProductCategory(id)!;
+    const subcategories = useProductCategories(id);
+    const hasChildren = subcategories.length > 0;
 
     const isExpanded = useIsExpanded(id);
     const toggle = useToggleExpanded();
 
     return (
-        <AnimatedR.View layout={LinearTransition.duration(150)}>
+        <Animated.View layout={LinearTransition.duration(150)}>
             <ThemedYStack>
-                <ThemedXStack>
-                    <ProductCategoryTreeItem
-                        productCategory={node}
-                        level={level}
-                        isExpanded={isExpanded}
-                        hasChildren={hasChildren}
-                        handleExpand={toggle}
-                    />
-                </ThemedXStack>
+                {id !== 0 && (
+                    <ThemedXStack>
+                        <ProductCategoryTreeItem
+                            productCategory={node}
+                            level={level}
+                            isExpanded={isExpanded}
+                            hasChildren={hasChildren}
+                            handleExpand={toggle}
+                        />
+                    </ThemedXStack>
+                )}
 
                 {isExpanded && hasChildren && (
-                    <AnimatedR.View
+                    <Animated.View
                         entering={FadeIn.duration(150)}
                         exiting={FadeOut.duration(120)}
                         layout={LinearTransition.duration(150)}
@@ -100,14 +103,18 @@ export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; leve
                     >
 
                         <ThemedYStack pl="$4">
-                            {children.map((child) => (
-                                <ProductCategoryBranch key={child.id} id={child.id} level={level + 1} />
+                            {subcategories.map((subcategory) => (
+                                <ProductCategoryBranch
+                                    key={subcategory.id}
+                                    id={subcategory.id}
+                                    level={level + 1}
+                                />
                             ))}
                         </ThemedYStack>
-                    </AnimatedR.View>
+                    </Animated.View>
                 )}
             </ThemedYStack>
-        </AnimatedR.View>
+        </Animated.View>
     );
 });
 
@@ -126,14 +133,14 @@ const ProductCategoryTreeItem = React.memo(({
     const ctx = React.useContext(TreeCtx);
     const INDENT = React.useMemo(() => getTokenValue('$2', 'space'), []);
 
-    const rowRef = React.useRef(null);
+    const rowRef = React.useRef<View>(null);
     const MIN_SPACE_BELOW = 160;
 
     const ensureRoomBelow = React.useCallback(() => {
         if (!ctx?.scrollRef.current || !rowRef.current) return;
 
-        const node = findNodeHandle(rowRef.current)!;
-        UIManager.measureInWindow(node, (_x, y, _w, h) => {
+        // const node = findNodeHandle(rowRef.current)!;
+        rowRef.current.measureInWindow((_x, y, _w, h) => {
             // visible bottom of this tree in window coords:
             const visibleBottom = ctx.viewportYRef.current + ctx.viewportHRef.current;
             const rowBottom = y + h;
@@ -182,8 +189,8 @@ const AnimatedListExpansionIcon = ({ expanded }: { expanded: boolean }) => {
     }, [expanded]);
     const animatedStyle = useAnimatedStyle(() => ({ transform: [{ rotateZ: `${rotation.value}deg` }] }));
     return (
-        <AnimatedR.View style={animatedStyle}>
+        <Animated.View style={animatedStyle}>
             <ChevronDown />
-        </AnimatedR.View>
+        </Animated.View>
     );
 };

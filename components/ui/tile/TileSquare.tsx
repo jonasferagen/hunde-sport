@@ -43,6 +43,7 @@ export const TileSquare = React.memo(function TileSquare({
         <ThemedSurface
             interactive={true}
             f={1}
+            bw={1}
             onPress={onPress}
             {...props}
         >
@@ -52,7 +53,7 @@ export const TileSquare = React.memo(function TileSquare({
                 {showGradient && (
                     <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end">
                         <ThemedLinearGradient fullscreen start={[0, 0.2]} end={[0, 0.9]} opacity={0.8} />
-                        <ThemedText bold col="$color" numberOfLines={titleLines} ellipse ta="center">
+                        <ThemedText fow="bold" col="black" numberOfLines={titleLines} ellipse ta="center">
                             {title}
                         </ThemedText>
                     </ThemedYStack>

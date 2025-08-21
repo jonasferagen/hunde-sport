@@ -3,17 +3,18 @@ import { TileSquare } from '@/components/ui/tile/TileSquare';
 import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS } from '@/config/app';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { spacePx } from '@/lib/helpers';
-import { useProductCategoryStore } from '@/stores/productCategoryStore';
-import React, { JSX, useMemo } from 'react';
+import { useProductCategories } from '@/stores/productCategoryStore';
+import React, { useMemo } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 const MAX_CATEGORIES = NUM_CATEGORY_TILE_COLUMNS * NUM_CATEGORY_TILE_ROWS;
 
 
-export const ProductCategoryTiles = React.memo((props: StackProps): JSX.Element => {
+export const ProductCategoryTiles = React.memo((props: StackProps) => {
 
-    const roots = useProductCategoryStore((s) => s.productCategories); // see store note below
+
+    const roots = useProductCategories(0);
     const productCategories = useMemo(
-        () => roots.filter((c) => c.parent === 0).slice(0, MAX_CATEGORIES),
+        () => roots.slice(0, MAX_CATEGORIES),
         [roots]
     );
 
