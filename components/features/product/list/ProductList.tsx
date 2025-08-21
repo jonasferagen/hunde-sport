@@ -1,14 +1,15 @@
 import { ThemedXStack } from '@/components/ui';
-import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
+import { Loader } from '@/components/ui/Loader';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
-import { useEdgeFades } from '@/hooks/useEdgeFades';
+import { useVisibleItems } from '@/hooks/useVisibleItems';
 import { Product, PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { ProductCard } from '../display/ProductCard';
+import { BottomMoreHint, BottomMoreHintHandle } from './BottomMoreHint';
 
 
 interface ProductListProps {
@@ -18,10 +19,11 @@ interface ProductListProps {
     hasMore: boolean;
     /** Changes when the data identity changes (e.g. category id or search query) */
     transitionKey: string | number;
+    totalProducts: number;
 }
 
 export const ProductList = React.memo(function ProductList({
-    products, loadMore, isLoadingMore, hasMore, transitionKey,
+    products, loadMore, isLoadingMore, hasMore, transitionKey, totalProducts,
 }: ProductListProps) {
     const { width, height } = useWindowDimensions();
     const ITEM_HEIGHT = 170;
@@ -40,7 +42,17 @@ export const ProductList = React.memo(function ProductList({
         if (hasMore && !isLoadingMore) loadMore();
     }, [hasMore, isLoadingMore, loadMore]);
 
-    const edges = useEdgeFades('vertical');
+
+    const { state: vis, onViewableItemsChanged, viewabilityConfig } = useVisibleItems();
+    const hintRef = React.useRef<BottomMoreHintHandle>(null);
+    const enabled = products.length < totalProducts;
+    const shown = Math.min((vis.last >= 0 ? vis.last + 1 : 0), totalProducts);
+
+    const onScroll = React.useCallback(() => {
+        hintRef.current?.kick();
+    }, []);
+
+
 
     return (
         <Animated.View
@@ -49,7 +61,7 @@ export const ProductList = React.memo(function ProductList({
             exiting={FadeOut.duration(300)}
             style={{ flex: 1 }}
         >
-            <ThemedXStack f={1} mih={0} pos="relative" onLayout={edges.onLayout}>
+            <ThemedXStack f={1} mih={0} pos="relative">
                 <FlashList
                     // also resetting FlashList internals on identity change is OK:
                     key={transitionKey}
@@ -58,19 +70,25 @@ export const ProductList = React.memo(function ProductList({
                     keyExtractor={keyExtractor}
                     onEndReached={onEndReached}
                     onEndReachedThreshold={0.8}
-                    ListFooterComponent={isLoadingMore ? <ThemedSpinner my="$3" /> : null}
+                    ListFooterComponent={isLoadingMore ? <Loader w="100%" h={ITEM_HEIGHT} /> : null}
                     estimatedItemSize={ITEM_HEIGHT}
                     overrideItemLayout={(l) => { l.size = ITEM_HEIGHT; }}
                     estimatedListSize={{ width, height }}
                     drawDistance={800}
                     getItemType={() => 'product'}
                     removeClippedSubviews
-                    onScroll={edges.onScroll}
+                    onViewableItemsChanged={onViewableItemsChanged}
+                    viewabilityConfig={viewabilityConfig}
+                    onScroll={onScroll}
                     scrollEventThrottle={32}
-                    onContentSizeChange={edges.onContentSizeChange}
                     showsVerticalScrollIndicator={false}
                 />
-
+                <BottomMoreHint
+                    ref={hintRef}
+                    enabled={enabled}
+                    shown={shown}
+                    total={totalProducts}
+                />
             </ThemedXStack>
         </Animated.View>
     );

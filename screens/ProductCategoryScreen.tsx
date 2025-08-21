@@ -8,7 +8,6 @@ import { useScreenReady } from '@/hooks/useScreenReady';
 import { useBreadcrumbTrail } from '@/stores/productCategoryStore';
 import { Redirect, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { memo } from 'react';
-import { LoadingScreen } from './misc/LoadingScreen';
 
 
 export const ProductCategoryScreen = memo(() => {
@@ -25,7 +24,7 @@ export const ProductCategoryScreen = memo(() => {
 
 
     if (!ready) {
-        return <LoadingScreen />
+        return null;
     }
     if (!id) {
         return <Redirect href="/" />;

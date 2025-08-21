@@ -1,7 +1,7 @@
 // ThemedStacks.tsx
 import { rgba } from 'polished';
-import { forwardRef, ReactNode } from 'react';
-import { getVariableValue, SizeTokens, styled, useTheme, XStack, YStack } from 'tamagui';
+import { ComponentProps, ComponentRef, forwardRef, ReactNode } from 'react';
+import { getVariableValue, SizeTokens, Stack, StackProps, styled, useTheme, XStack, XStackProps, YStack, YStackProps } from 'tamagui';
 
 const DEFAULT_SIZE = '$3';
 
@@ -35,15 +35,24 @@ const config = {
     }
 } as const;
 
+const ThemedStackBase = styled(Stack, config);
 const ThemedYStackBase = styled(YStack, config);
 const ThemedXStackBase = styled(XStack, config);
+
 type Props = { bgOpacity?: number };
 type WithChildren<P> = Omit<P, 'children'> & { children?: ReactNode };
 
-export const ThemedYStack = forwardRef<any, WithChildren<React.ComponentProps<typeof ThemedYStackBase> & Props>>(
+export type ThemedStackProps = WithChildren<ComponentProps<typeof ThemedYStackBase> & StackProps & Props>;
+export const ThemedStack = forwardRef<ComponentRef<typeof ThemedStackBase>, ThemedStackProps>(
+    (props, ref) => <ThemedStackBase ref={ref} {...props} />
+);
+
+export type ThemedYStackProps = WithChildren<ComponentProps<typeof ThemedYStackBase> & YStackProps & Props>;
+export const ThemedYStack = forwardRef<ComponentRef<typeof ThemedYStackBase>, ThemedYStackProps>(
     (props, ref) => <ThemedYStackBase ref={ref} {...props} />
 );
 
-export const ThemedXStack = forwardRef<any, WithChildren<React.ComponentProps<typeof ThemedXStackBase> & Props>>(
+export type ThemedXStackProps = WithChildren<ComponentProps<typeof ThemedXStackBase> & XStackProps & Props>;
+export const ThemedXStack = forwardRef<ComponentRef<typeof ThemedXStackBase>, ThemedXStackProps>(
     (props, ref) => <ThemedXStackBase ref={ref} {...props} />
 );

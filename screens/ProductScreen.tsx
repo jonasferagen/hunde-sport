@@ -13,7 +13,7 @@ import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { LoadingScreen } from './misc/LoadingScreen';
+import { Loader } from '../components/ui/Loader';
 
 export const ProductScreen = () => {
   useRenderGuard('ProductScreen');
@@ -27,7 +27,7 @@ export const ProductScreen = () => {
   if (!ready) return null;
 
   if (isLoading) {
-    return <LoadingScreen />
+    return <Loader />
   }
   if (!product) {
     return <Redirect href="/" />;

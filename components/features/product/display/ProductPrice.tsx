@@ -10,7 +10,7 @@ export const ProductPriceRange = (props: SizableTextProps) => {
     const prices = purchasable.activeProduct.prices as ProductPrices
     if (!prices.price_range) return null
     return (
-        <ThemedText {...props} variant="price">
+        <ThemedText variant="price" {...props} >
             {formatRangeWithHeader(prices.price_range, prices, { style: 'short' })}
         </ThemedText>
     )
@@ -43,7 +43,7 @@ const ProductPriceImpl = ({
     const unitFormatted = formatMinorWithHeader(unit, prices, { style: 'short' })
     const regularFormatted = formatMinorWithHeader(prices.regular_price, prices, { style: 'short' })
 
-    if (!isPurchasable || !isInStock) {
+    if (!isPurchasable) {
         return (
             <ThemedText disabled {...props}>
                 {unitFormatted}

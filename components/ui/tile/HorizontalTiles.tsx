@@ -4,9 +4,10 @@ import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import type { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useEdgeFades } from '@/hooks/useEdgeFades';
+import { useVisibleItems } from '@/hooks/useVisibleItems';
 import { spacePx } from '@/lib/helpers';
 import type { PurchasableProduct } from '@/types';
-import { FlashList, ViewToken } from '@shopify/flash-list';
+import { FlashList } from '@shopify/flash-list';
 import React, { JSX } from 'react';
 import { Dimensions, View as RNView, StyleSheet } from 'react-native';
 import { SpaceTokens, StackProps, View } from 'tamagui';
@@ -94,24 +95,9 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
 
     // edge fades (INSIDE component)
     const edges = useEdgeFades('horizontal');
-
     const { to } = useCanonicalNavigation();
 
-    // viewability (for image priority / interaction)
-    const [visible, setVisible] = React.useState<Set<number>>(new Set());
-    const onViewableItemsChanged = React.useRef(({ changed }: { changed: ViewToken[] }) => {
-        setVisible(prev => {
-            const next = new Set(prev); let dirty = false;
-            for (const c of changed) {
-                if (c.index == null) continue;
-                if (c.isViewable) { if (!next.has(c.index)) { next.add(c.index); dirty = true; } }
-                else { if (next.delete(c.index)) dirty = true; }
-            }
-            return dirty ? next : prev;
-        });
-    }).current;
-    const viewabilityConfig = React.useMemo(() => ({ itemVisiblePercentThreshold: 50 }), []);
-
+    const { state: vis, onViewableItemsChanged, viewabilityConfig } = useVisibleItems();
     // spacers
     const HeaderSpacer = React.useMemo(
         () => () => <RNView style={{ width: leadPx }} />,
@@ -121,7 +107,6 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
         () => () => <RNView style={{ width: Math.max(padPx - gapPx, 0) }} />,
         [padPx, gapPx]
     );
-
 
     const onEndReached = React.useCallback(() => {
         const { isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = loadingState;
@@ -139,7 +124,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                         w={estimatedItemSize}
                         h={estimatedItemCrossSize}
                         imagePriority={index < 3 ? 'high' : 'low'}
-                        interactive={visible.has(index)}
+                        interactive={vis.set.has(index)}
                     >
                         <TileBadge pointerEvents="none">
                             <ProductPriceTag product={item} />
@@ -148,7 +133,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                 </RNView>
             )
         },
-        [to, visible, estimatedItemSize, estimatedItemCrossSize, gapPx]
+        [to, vis, estimatedItemSize, estimatedItemCrossSize, gapPx]
     );
 
 
@@ -165,7 +150,6 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                 data={products}
                 keyExtractor={(p) => String(p.id)}
                 renderItem={renderItem}
-
                 ListHeaderComponent={HeaderSpacer}
                 ListFooterComponent={FooterSpacer}
                 showsHorizontalScrollIndicator={false}

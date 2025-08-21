@@ -1,7 +1,7 @@
 // CustomDrawerNew.tsx
+import { Loader } from '@/components/ui/Loader';
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 import { useDrawerSettled } from '@/hooks/useDrawerSettled';
-import { LoadingScreen } from '@/screens/misc/LoadingScreen';
 import type { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
@@ -35,9 +35,8 @@ export const CustomDrawer = React.memo(({ navigation, onSettledChange, ...props 
                 <H3>hunde-sport.no</H3>
                 <ThemedButton circular onPress={close}><X /></ThemedButton>
             </ThemedXStack>
-            <AppVersion />
             <ThemedYStack f={1} mih={0}>
-                {openedOnce ? <ProductCategoryTree /> : <LoadingScreen />}
+                {openedOnce ? <ProductCategoryTree /> : <Loader />}
             </ThemedYStack>
             <AppVersion />
         </ThemedYStack>

@@ -12,7 +12,7 @@ import { useScreenReady } from '@/hooks/useScreenReady';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { SizableText } from 'tamagui';
-import { LoadingScreen } from './misc/LoadingScreen';
+import { Loader } from '../components/ui/Loader';
 
 export const SearchScreen = () => {
     const ready = useScreenReady();
@@ -70,7 +70,7 @@ export const SearchScreen = () => {
                     {!ready ? (
                         null
                     ) : !searchQuery ? null : result.isLoading ? (
-                        <LoadingScreen />
+                        <Loader />
                     ) : !result.items?.length ? (
                         <DefaultTextContent>Ingen resultater funnet for "{searchQuery}"</DefaultTextContent>
                     ) : (

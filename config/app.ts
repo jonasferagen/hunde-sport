@@ -23,7 +23,9 @@ export const THEME_HEADER = 'primary';
 export const THEME_FOOTER = 'secondary';
 
 export const THEME_BOTTOM_BAR = 'secondary'
+
 export const THEME_MODAL = "tertiary";
+export const THEME_HINT = "dark_secondary_shade";
 
 export const THEME_PAGE = "light";
 export const THEME_PAGE_HEADER = "primary";
