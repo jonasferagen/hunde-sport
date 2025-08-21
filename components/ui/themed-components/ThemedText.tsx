@@ -1,6 +1,7 @@
-import { SizableText, styled } from 'tamagui';
+import { forwardRef } from 'react';
+import { SizableText, SizableTextProps, styled } from 'tamagui';
 
-export const ThemedText = styled(
+const ThemedTextBase = styled(
     SizableText,
     {
         name: 'ThemedText',
@@ -30,4 +31,12 @@ export const ThemedText = styled(
             bold: { true: { fontWeight: 'bold' } },
         } as const,
     }
+);
+
+interface Props extends SizableTextProps {
+    bold?: boolean;
+}
+
+export const ThemedText = forwardRef<any, React.ComponentProps<typeof ThemedTextBase> & Props>(
+    (props, ref) => <ThemedTextBase ref={ref} {...props} />
 );

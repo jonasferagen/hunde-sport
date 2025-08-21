@@ -28,6 +28,14 @@ export type WcItemTotals = CurrencyHeader & {
 
 import { formatMinorWithHeader } from "../pricing";
 
+
+// Cart grand total (already tax-inclusive in Store API)
+export const formatCartTotal = (totals: WcTotals) => {
+
+    const total = parseInt(totals.total_items, 10) + parseInt(totals.total_items_tax, 10);
+    return formatMinorWithHeader(total.toString(), totals, { style: 'full', omitPrefix: false });
+}
+
 // Cart grand total (already tax-inclusive in Store API)
 export const formatCartGrandTotal = (totals: WcTotals) =>
     formatMinorWithHeader(totals.total_price, totals, { style: 'full', omitPrefix: false });

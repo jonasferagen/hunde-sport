@@ -1,5 +1,4 @@
 // PurchaseButton.tsx
-import { ThemedLinearGradient } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { ThemedSurface } from '@/components/ui/themed-components/ThemedSurface';
@@ -7,7 +6,7 @@ import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { usePurchasableContext } from '@/contexts';
 import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
-import type { ThemeName } from 'tamagui';
+import { Theme, type ThemeName } from 'tamagui';
 import { ProductPrice } from '../display/ProductPrice';
 import { computeCTA, type PurchaseCTAMode, type PurchaseCTAModeInput } from './purchase-cta';
 
@@ -56,11 +55,14 @@ export const PurchaseButton = React.memo(function PurchaseButton({
     const disabled = cta.disabled || isLoading || !enabled;
 
     const priceTag = (
-        <ThemedSurface theme="secondary_tint" h="$6" ai="center" jc="center" px="none" mr={-20} minWidth={80}>
-            {/* uses purchasable context in modal; on cards you can swap this to ProductPriceLite */}
-            <ThemedLinearGradient />
-            <ProductPrice />
-        </ThemedSurface>
+        <Theme inverse>
+            <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="none" mr={-20} minWidth={80} >
+                {/* uses purchasable context in modal; on cards you can swap this to ProductPriceLite */}
+
+                <ProductPrice />
+            </ThemedSurface>
+        </Theme>
+
     );
 
     return (

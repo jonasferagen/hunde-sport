@@ -25,7 +25,7 @@ export const CartListItem = ({ item, index, ...props }: CartListItemProps & Stac
 
     return (
 
-        <ThemedYStack gap="$2" {...props}>
+        <ThemedYStack gap="none" {...props}>
             <ThemedYStack box theme={THEME_CART_ITEM_1}>
                 <ThemedXStack container split>
                     <ThemedText size="$5">{item.name}</ThemedText>

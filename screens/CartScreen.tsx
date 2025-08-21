@@ -9,7 +9,7 @@ export const CartScreen = () => {
     return (
         <PageView>
             <PageBody pad="none">
-                <PageSection useContainer={false} pad="none" fill h="100%">
+                <PageSection useContainer={false} pad="none" fill mih={0} f={1}>
                     {ready && <CartList />}
                 </PageSection>
             </PageBody>

@@ -1,5 +1,4 @@
 import { ThemedXStack } from '@/components/ui';
-import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { PurchasableProviderInit } from '@/contexts/PurchasableContext';
@@ -71,13 +70,7 @@ export const ProductList = React.memo(function ProductList({
                     onContentSizeChange={edges.onContentSizeChange}
                     showsVerticalScrollIndicator={false}
                 />
-                <EdgeFadesOverlay
-                    orientation="vertical"
-                    visibleStart={edges.atStart}
-                    visibleEnd={edges.atEnd}
-                    heightToken="$1"
-                    bg="#888"
-                />
+
             </ThemedXStack>
         </Animated.View>
     );

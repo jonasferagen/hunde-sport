@@ -2,7 +2,7 @@ import { ThemedSpinner, ThemedXStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ThemedText } from '@/components/ui/themed-components';
 import { THEME_CTA_CHECKOUT } from '@/config/app';
-import { formatCartGrandTotal } from '@/domain/Cart/pricing';
+import { formatCartTotal } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
 import { ExternalLink } from '@tamagui/lucide-icons';
 import React, { useCallback, useMemo } from 'react';
@@ -14,9 +14,8 @@ export const CheckoutButton = () => {
     const itemsCount = useCartStore(s => s.cart?.items_count ?? 0);
     const isUpdating = useCartStore(s => s.isUpdating);
     const formattedTotal = useCartStore(
-        s => (s.cart?.totals ? formatCartGrandTotal(s.cart.totals) : ''),
+        s => (s.cart?.totals ? formatCartTotal(s.cart.totals) : ''),
     );
-
     // Actions are stable in Zustand; read via getState to avoid subscribing
     const checkout = useCartStore.getState().checkout;
 

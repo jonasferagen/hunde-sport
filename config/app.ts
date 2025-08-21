@@ -27,11 +27,11 @@ export const THEME_MODAL = "tertiary";
 
 export const THEME_PAGE = "light";
 export const THEME_PAGE_HEADER = "primary";
-export const THEME_PAGE_FOOTER = "dark_primary";
+export const THEME_PAGE_FOOTER = "secondary_shade";
 
-export const THEME_CTA_BUY = "dark_tertiary";
-export const THEME_CTA_VARIATION = "dark_secondary";
-export const THEME_CTA_CHECKOUT = "dark_primary";
+export const THEME_CTA_BUY = "dark_tertiary_tint";
+export const THEME_CTA_VARIATION = "dark_tertiary_tint";
+export const THEME_CTA_CHECKOUT = "dark_tertiary";
 
 export const THEME_PRICE_TAG = 'dark_tertiary';
 export const THEME_PRICE_TAG_SALE = 'dark_tertiary';
