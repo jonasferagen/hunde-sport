@@ -1,44 +1,42 @@
 // ProductCategoryTree.tsx
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
-import { ProductCategory } from '@/types';
+import type { ProductCategory } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 import React, { JSX, memo, type ComponentRef } from 'react';
 import { View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import type { AnimatedRef } from 'react-native-reanimated';
-import { default as Animated, FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+    FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming
+} from 'react-native-reanimated';
 import { getTokenValue } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
-import { useIsExpanded, useToggleExpanded } from './ProductCategoryTreeStore';
+
 
 // Instance type for Animated.ScrollView
 type AnimatedScrollViewRef = ComponentRef<typeof Animated.ScrollView>;
 
 type TreeCtxValue = {
-    scrollRef: AnimatedRef<AnimatedScrollViewRef>; // instance ref
+    scrollRef: AnimatedRef<AnimatedScrollViewRef>;
     lastYRef: { current: number };
     viewportYRef: { current: number };
     viewportHRef: { current: number };
 };
 const TreeCtx = React.createContext<TreeCtxValue | null>(null);
 
-export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
-    const root = useProductCategories(0);
-
-    const scrollRef = useAnimatedRef<AnimatedScrollViewRef>(); // instance
+export const ProductCategoryTree = memo((): JSX.Element => {
+    // Single entry: start at root (id=0)
+    const scrollRef = useAnimatedRef<AnimatedScrollViewRef>();
     const lastYRef = React.useRef(0);
-
-    // viewport of THIS tree (not full screen)
     const viewportYRef = React.useRef(0);
     const viewportHRef = React.useRef(0);
 
     const onScroll = React.useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
         lastYRef.current = e.nativeEvent.contentOffset.y;
     }, []);
-
     const onLayout = React.useCallback((e: NativeSyntheticEvent<any>) => {
         const { y, height } = e.nativeEvent.layout;
         viewportYRef.current = y;
@@ -60,9 +58,8 @@ export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
                     contentContainerStyle={{ paddingBottom: 12 }}
                 >
                     <ThemedYStack container>
-                        {root.map((c: ProductCategory) => (
-                            <ProductCategoryBranch key={c.id} id={c.id} level={level} />
-                        ))}
+                        {/* Render from the dummy root downwards */}
+                        <ProductCategoryBranch id={0} level={0} />
                     </ThemedYStack>
                 </Animated.ScrollView>
             </ThemedYStack>
@@ -70,18 +67,20 @@ export const ProductCategoryTree = memo(({ level = 0 }: { level?: number }) => {
     );
 });
 
-export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; level?: number }) => {
-    const node = useProductCategory(id)!;
-    const subcategories = useProductCategories(id);
-    const hasChildren = subcategories.length > 0;
+export const ProductCategoryBranch = memo(({ id, level }: { id: number; level: number }) => {
+    const node = useProductCategory(id);
+    const children = useProductCategories(id);
+    const hasChildren = children.length > 0;
 
     const isExpanded = useIsExpanded(id);
     const toggle = useToggleExpanded();
 
+    const showSelf = id !== 0; // don’t render the dummy root row
+
     return (
         <Animated.View layout={LinearTransition.duration(150)}>
             <ThemedYStack>
-                {id !== 0 && (
+                {showSelf && (
                     <ThemedXStack>
                         <ProductCategoryTreeItem
                             productCategory={node}
@@ -101,14 +100,9 @@ export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; leve
                         collapsable={false}
                         style={{ width: '100%' }}
                     >
-
                         <ThemedYStack pl="$4">
-                            {subcategories.map((subcategory) => (
-                                <ProductCategoryBranch
-                                    key={subcategory.id}
-                                    id={subcategory.id}
-                                    level={level + 1}
-                                />
+                            {children.map((c) => (
+                                <ProductCategoryBranch key={c.id} id={c.id} level={level + 1} />
                             ))}
                         </ThemedYStack>
                     </Animated.View>
@@ -119,29 +113,25 @@ export const ProductCategoryBranch = memo(({ id, level = 0 }: { id: number; leve
 });
 
 interface RenderItemProps {
-    productCategory: any;
+    productCategory: ProductCategory;
     isExpanded: boolean;
     level: number;
     hasChildren: boolean;
     handleExpand: (id: number) => void;
 }
 
-const ProductCategoryTreeItem = React.memo(({
+const ProductCategoryTreeItem = memo(({
     productCategory, isExpanded, level, hasChildren, handleExpand,
 }: RenderItemProps): JSX.Element => {
     const { linkProps } = useCanonicalNavigation();
     const ctx = React.useContext(TreeCtx);
     const INDENT = React.useMemo(() => getTokenValue('$2', 'space'), []);
-
     const rowRef = React.useRef<View>(null);
     const MIN_SPACE_BELOW = 160;
 
     const ensureRoomBelow = React.useCallback(() => {
         if (!ctx?.scrollRef.current || !rowRef.current) return;
-
-        // const node = findNodeHandle(rowRef.current)!;
         rowRef.current.measureInWindow((_x, y, _w, h) => {
-            // visible bottom of this tree in window coords:
             const visibleBottom = ctx.viewportYRef.current + ctx.viewportHRef.current;
             const rowBottom = y + h;
             const deficit = MIN_SPACE_BELOW - (visibleBottom - rowBottom);
@@ -194,3 +184,26 @@ const AnimatedListExpansionIcon = ({ expanded }: { expanded: boolean }) => {
         </Animated.View>
     );
 };
+
+import { create } from 'zustand';
+
+type UI = {
+    expanded: Record<number, boolean>;
+    toggle: (id: number) => void;
+    setExpanded: (id: number, value: boolean) => void;
+};
+
+const useCategoryTreeStore = create<UI>((set, get) => ({
+    // default: root expanded
+    expanded: { 0: true },
+    toggle: (id) =>
+        set((s) => ({ expanded: { ...s.expanded, [id]: !s.expanded[id] } })),
+    setExpanded: (id, value) =>
+        set((s) => ({ expanded: { ...s.expanded, [id]: value } })),
+}));
+
+const useIsExpanded = (id: number) =>
+    useCategoryTreeStore((s) => !!s.expanded[id]); // no id===0 hack needed
+
+const useToggleExpanded = () =>
+    useCategoryTreeStore((s) => s.toggle);
