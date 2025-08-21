@@ -66,10 +66,9 @@ export const SearchScreen = () => {
             </PageHeader>
             <PageBody pad="none">
                 <PageSection useContainer={false} pad="none" fill f={1} mih={0}>
-
                     {/* Show nothing (or a subtle placeholder) until ready */}
                     {!ready ? (
-                        <LoadingScreen />
+                        null
                     ) : !searchQuery ? null : result.isLoading ? (
                         <LoadingScreen />
                     ) : !result.items?.length ? (

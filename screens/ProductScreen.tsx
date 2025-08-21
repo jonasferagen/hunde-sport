@@ -21,18 +21,19 @@ export const ProductScreen = () => {
 
   const { id, productCategoryId: productCategoryIdFromParams, } = useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
-  const productCategoryId = productCategoryIdFromParams ? Number(productCategoryIdFromParams) : undefined;
-
 
   const { data: product, isLoading } = useProduct(productId, { enabled: ready });
 
-  if (!ready || isLoading) {
+  if (!ready) return null;
+
+  if (isLoading) {
     return <LoadingScreen />
   }
   if (!product) {
     return <Redirect href="/" />;
   }
   const purchasableProduct = product as PurchasableProduct;
+  const productCategoryId = productCategoryIdFromParams ? Number(productCategoryIdFromParams) : purchasableProduct.categories[0].id;
 
   return (
     <ProductCategoryProvider productCategoryId={productCategoryId} >

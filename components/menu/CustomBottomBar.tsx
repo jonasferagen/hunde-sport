@@ -61,7 +61,7 @@ export const CustomBottomBar = React.memo(({ respectSafeArea = true, ...rest }: 
 
 
     return (
-        <ThemedYStack theme={THEME_BOTTOM_BAR} {...rest} w="100%" pos="absolute" b={0} zi={10}>
+        <ThemedYStack theme={THEME_BOTTOM_BAR} w="100%" pos="absolute" o={.5} b={0}  {...rest}>
             <StyledTabs
                 key={currentTab}
                 value={currentTab}           // <-- controlled

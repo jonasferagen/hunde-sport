@@ -3,14 +3,13 @@ import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 import { checkForUpdate, UpdateFlow } from 'react-native-in-app-updates';
 
-// The installed 'react-native-in-app-updates' exposes a functional API
-// via checkForUpdate(UpdateFlow), not a class-based one.
-
 type Options = {
-    checkOnStart?: boolean;     // default: true
-    checkOnForeground?: boolean;// default: true
-    immediate?: boolean;        // default: false (use FLEXIBLE)
-    cooldownMs?: number;        // default: 60_000
+    checkOnStart?: boolean;
+    checkOnForeground?: boolean;
+    immediate?: boolean;   // IMMEDIATE for verifying quickly
+    cooldownMs?: number;
+    startDelayMs?: number; // avoid racing Play right on cold start
+    onChecked?: (didPrompt: boolean) => void; // optional debug
 };
 
 export function usePlayStoreUpdates({
@@ -18,34 +17,46 @@ export function usePlayStoreUpdates({
     checkOnForeground = true,
     immediate = false,
     cooldownMs = 60_000,
+    startDelayMs = 1500,
+    onChecked,
 }: Options = {}) {
     const lastCheck = useRef(0);
 
     useEffect(() => {
-        // Skip on non-Android or on your sideload variant
         const pkg = Constants?.expoConfig?.android?.package;
-        if (!pkg || pkg.endsWith('.dev')) return;
+        if (!pkg || pkg.endsWith('.dev')) return;           // skip sideload variant
+
+        let mounted = true;
 
         const doCheck = async () => {
             const now = Date.now();
-            if (now - lastCheck.current < cooldownMs) return;
+            if (!mounted || now - lastCheck.current < cooldownMs) return;
             lastCheck.current = now;
 
             try {
                 await checkForUpdate(immediate ? UpdateFlow.IMMEDIATE : UpdateFlow.FLEXIBLE);
-                // For FLEXIBLE, library handles prompt & completes in background.
-                // For IMMEDIATE, user must finish update flow before continuing.
+                onChecked?.(true);  // update flow started (dialog/snackbar shown)
             } catch {
-                // ignore — don’t spam users if Play API not ready yet
+                onChecked?.(false); // no update or API not ready
             }
         };
 
-        if (checkOnStart) doCheck();
-
-        let sub: { remove(): void } | undefined;
-        if (checkOnForeground) {
-            sub = AppState.addEventListener('change', (s) => s === 'active' && doCheck());
+        if (checkOnStart) {
+            // small delay helps avoid “no update” if Play isn’t ready yet
+            const t = setTimeout(doCheck, startDelayMs);
+            return () => { mounted = false; clearTimeout(t); };
         }
-        return () => sub?.remove();
-    }, [checkOnStart, checkOnForeground, immediate, cooldownMs]);
+
+        return () => { mounted = false; };
+    }, [checkOnStart, cooldownMs, immediate, startDelayMs, onChecked]);
+
+    useEffect(() => {
+        if (!checkOnForeground) return;
+        const sub = AppState.addEventListener('change', s => s === 'active' && checkAgain());
+        function checkAgain() {
+            // reuse same effect by updating lastCheck gate:
+            lastCheck.current = Math.max(0, Date.now() - cooldownMs - 1);
+        }
+        return () => sub.remove();
+    }, [checkOnForeground, cooldownMs]);
 }
