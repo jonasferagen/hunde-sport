@@ -5,7 +5,8 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { ProductCategoryProvider } from '@/contexts';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/useScreenReady';
-import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useBreadcrumbTrail } from '@/stores/productCategoryStore';
+import { Redirect, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { memo } from 'react';
 import { LoadingScreen } from './misc/LoadingScreen';
 
@@ -13,7 +14,15 @@ import { LoadingScreen } from './misc/LoadingScreen';
 export const ProductCategoryScreen = memo(() => {
     useRenderGuard('ProductCategoryScreen');
     const ready = useScreenReady();
+    const nav = useNavigation();
     const { id } = useLocalSearchParams<{ id: string }>();
+
+    const trail = useBreadcrumbTrail(Number(id));
+    React.useLayoutEffect(() => {
+        const title = trail[0].name || undefined;
+        nav.setOptions({ title });
+    }, [nav, trail]);
+
 
     if (!ready) {
         return <LoadingScreen />
@@ -21,6 +30,7 @@ export const ProductCategoryScreen = memo(() => {
     if (!id) {
         return <Redirect href="/" />;
     }
+
     return (
         <ProductCategoryProvider productCategoryId={Number(id)}>
             <PageView>

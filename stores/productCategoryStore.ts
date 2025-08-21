@@ -71,6 +71,9 @@ export const useProductCategory = (id: number): ProductCategory =>
 export const useProductCategories = (parentId: number): readonly ProductCategory[] =>
     useProductCategoryStore((s) => s.subcategories.get(parentId) ?? EMPTY);
 
+
+
+
 export const useBreadcrumbTrail = (productCategoryId: number): readonly ProductCategory[] => {
     // Stable reference; only changes when setProductCategories() runs at app load
     const map = useProductCategoryStore((s) => s.map);

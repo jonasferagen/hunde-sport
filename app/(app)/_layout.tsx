@@ -41,7 +41,6 @@ const AppLayout = React.memo((): React.ReactElement => {
     return (
         <View f={1} pos="relative">
             <ThemedYStack fullscreen zi={20}>
-
                 <Prof id={profId} key={profId} disable>
                     <Drawer
                         drawerContent={drawerContent}
@@ -66,7 +65,6 @@ const AppLayout = React.memo((): React.ReactElement => {
                 <CustomBottomBar />
                 <LoadingOverlay zi={99} />
             </ThemedYStack>
-
         </View >
     );
 });

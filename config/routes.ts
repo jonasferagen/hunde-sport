@@ -86,6 +86,7 @@ export const routes = {
 
 
 export const resolveTitle = (route: RouteProp<any, any>): string => {
+    console.log(route);
     return route?.params?.name || routes[route.name as keyof typeof routes]?.label;
 }
 
