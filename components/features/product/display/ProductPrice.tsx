@@ -21,6 +21,14 @@ export const ProductPrice = ({
     const { isInStock, isPurchasable, isOnSale, isFree } = product.availability
     const prices = product.prices as ProductPrices
 
+    if (isFree) {
+        return (
+            <XStack ai="center" gap="$2">
+                <ThemedText bold {...props}>Gratis!</ThemedText>
+            </XStack>
+        )
+    }
+
     // Variable products: show range
     if (prices.price_range) {
         return <ProductPriceRange product={product} {...props} />
@@ -36,14 +44,6 @@ export const ProductPrice = ({
             <ThemedText disabled {...props}>
                 {unitFormatted}
             </ThemedText>
-        )
-    }
-
-    if (isFree) {
-        return (
-            <XStack ai="center" gap="$2">
-                <ThemedText bold {...props}>Gratis!</ThemedText>
-            </XStack>
         )
     }
 

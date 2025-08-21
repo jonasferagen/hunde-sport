@@ -9,16 +9,21 @@ import React from 'react';
 import { XStack, YStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
-interface ProductVariationSelectProps extends YStackProps { }
+interface ProductVariationSelectProps extends YStackProps {
+    onSelectionChange?: (selection: Record<string, string>) => void;
+    onProductVariationSelected?: (variation: ProductVariation | undefined) => void;
+}
 
 export const ProductVariationSelect = (props: ProductVariationSelectProps) => {
     const { purchasable } = usePurchasableContext();
     const variableProduct = purchasable.product as VariableProduct;
 
-    return <ProductVariationProvider product={variableProduct}>
-        <ProductVariationSelectContent {...props} />
-    </ProductVariationProvider>
-}
+    return (
+        <ProductVariationProvider product={variableProduct}>
+            <ProductVariationSelectContent {...props} />
+        </ProductVariationProvider>
+    );
+};
 
 export const ProductVariationSelectContent = React.memo(function ProductVariationSelectContent(
     props: ProductVariationSelectProps
@@ -28,6 +33,16 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
     const { productVariations, isLoading } = useProductVariationContext();
     const variableProduct = purchasable.product as VariableProduct;
 
+    const handleVariationSelected = React.useCallback(
+        (variation: ProductVariation | undefined) => {
+            // Keep existing behavior
+            setProductVariation(variation);
+            // And also notify external consumer
+            props.onProductVariationSelected?.(variation);
+        },
+        [setProductVariation, props.onProductVariationSelected]
+    );
+
     const {
         attributes,
         selectionManager,
@@ -36,8 +51,13 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
     } = useProductVariationSelector({
         product: variableProduct,
         productVariations,
-        onProductVariationSelected: setProductVariation,
+        onProductVariationSelected: handleVariationSelected,
     });
+
+    // Expose current selection to parent (modal) so it can render partial selections
+    React.useEffect(() => {
+        props.onSelectionChange?.(selectionManager.selections);
+    }, [props.onSelectionChange, selectionManager]);
 
     const unavailableSets = React.useMemo(() => {
         const m: Record<string, Set<string>> = {};
@@ -51,9 +71,8 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
     const half = Math.round(gapPx / 2);
     const colW = cols === 2 ? '50%' : '100%';
 
-
     if (isLoading) {
-        return <Loader h={props.h} />
+        return <Loader h={props.h} />;
     }
 
     return (
@@ -61,13 +80,15 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
             {attributes.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const unavailable = unavailableSets[name];
-                const filtered = unavailable ? options.filter(o => !unavailable.has(o.name)) : options;
+                const filtered = unavailable ? options.filter((o) => !unavailable.has(o.name)) : options;
                 const selectedValue = selectionManager.getSelectedOption(name);
                 if (!filtered.length) return null;
 
                 return (
                     <YStack key={id} w={colW} p={half}>
-                        <ThemedText tt="capitalize" bold mb="$1">{name}</ThemedText>
+                        <ThemedText tt="capitalize" bold mb="$1">
+                            {name}
+                        </ThemedText>
                         <AttributeSelector
                             options={filtered}
                             selectedValue={selectedValue}

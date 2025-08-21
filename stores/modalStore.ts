@@ -34,6 +34,7 @@ type ModalState = {
     renderer?: ModalRenderer<any>;
     snapPoints: number[];
     position: number;
+    openIndex: number;
     onClose?: () => void;
 
     // actions
@@ -64,6 +65,7 @@ export const useModalStore = create<ModalState>((set, get) => ({
     renderer: undefined,
     snapPoints: [90, 50, 0],      // use normalized decimals here (match your Sheet config)
     position: 0,
+    openIndex: 0,
     onClose: undefined,
 
     openModal: (renderer, payload, opts) => {
@@ -74,6 +76,7 @@ export const useModalStore = create<ModalState>((set, get) => ({
                 payload,
                 snapPoints: opts?.snapPoints ?? [90, 50, 0],
                 position: opts?.initialPosition ?? 0,
+                openIndex: opts?.initialPosition ?? 0,
                 onClose: opts?.onClose,
             });
 

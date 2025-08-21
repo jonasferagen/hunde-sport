@@ -12,7 +12,6 @@ export const ProductCategoryProducts = () => {
     const { productCategory } = useProductCategoryContext();
     const { items: products = [], isLoading, fetchNextPage, isFetchingNextPage, hasNextPage, total } = useProductsByCategory(productCategory);
 
-
     return (
         <ThemedYStack f={1} mih={0}>
             {isLoading ? (

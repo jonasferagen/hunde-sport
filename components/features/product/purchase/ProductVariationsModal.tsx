@@ -11,6 +11,7 @@ import { Sheet } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from '../display';
 import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
 import { PurchaseButton } from './PurchaseButton';
+
 export const ProductVariationsModal = ({
     close,
     purchasable,
@@ -29,6 +30,9 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const addToCart = useAddToCart();
     const [loading, setLoading] = React.useState(false);
     const ready = useDeferredOpen([purchasable.product.id], 50);
+
+    // Track partial selection for display in label
+    const [currentSelection, setCurrentSelection] = React.useState<Record<string, string>>({});
 
     const CTA_HEIGHT = 56; // your button height (+ margins)
     const [bodyH, setBodyH] = React.useState(0);
@@ -79,13 +83,21 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
                     scrollEnabled={contentH > availableForOptions}
                     contentContainerStyle={{}}
                 >
-                    {ready ? <ProductVariationSelect h={availableForOptions} /> : null}
+                    {ready ? (
+                        <ProductVariationSelect
+                            h={availableForOptions}
+                            onSelectionChange={setCurrentSelection}
+                        />
+                    ) : null}
                 </Sheet.ScrollView>
             ) : null}
 
             {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout}>
-                <ProductVariationLabel productVariation={purchasable.productVariation} />
+                <ProductVariationLabel
+                    currentSelection={currentSelection}
+                    productVariation={purchasable.productVariation}
+                />
                 <ThemedXStack split>
                     <ProductStatus product={purchasable.activeProduct} />
                     <ProductPrice product={purchasable.activeProduct} />
