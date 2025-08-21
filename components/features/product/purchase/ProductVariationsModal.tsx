@@ -85,9 +85,9 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
 
             {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout}>
-                <ProductVariationLabel />
+                <ProductVariationLabel productVariation={purchasable.productVariation} />
                 <ThemedXStack split>
-                    <ProductStatus />
+                    <ProductStatus product={purchasable.activeProduct} />
                     <ProductPrice product={purchasable.activeProduct} />
                 </ThemedXStack>
             </ThemedYStack>

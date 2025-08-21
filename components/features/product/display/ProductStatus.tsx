@@ -1,14 +1,16 @@
 
-import { usePurchasableContext } from '@/contexts';
+import { Product } from '@/types';
 import React from 'react';
 import { SizableText, SizableTextProps, XStack } from 'tamagui';
 
+interface Props extends SizableTextProps {
+    product: Product;
+    showInStock?: boolean;
+}
 
-export const ProductStatus = ({ showInStock = true, ...props }: { showInStock?: boolean } & SizableTextProps) => {
+export const ProductStatus = ({ product, showInStock = true, ...props }: Props) => {
 
-    const { purchasable } = usePurchasableContext();
-    const { activeProduct } = purchasable;
-    const { isInStock: inStock, isOnBackOrder } = activeProduct.availability;
+    const { isInStock: inStock, isOnBackOrder } = product.availability;
 
 
     const green = 'green'

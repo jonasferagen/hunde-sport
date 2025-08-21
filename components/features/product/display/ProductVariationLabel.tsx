@@ -1,17 +1,17 @@
 import { ThemedText, ThemedXStack } from '@/components/ui';
-import { usePurchasableContext } from '@/contexts';
+import { ProductVariation } from '@/types';
 import React from 'react';
 import { SizableTextProps } from 'tamagui';
 
+interface Props extends SizableTextProps {
+    productVariation?: ProductVariation;
+}
 
-export const ProductVariationLabel = ({ ...props }: SizableTextProps) => {
-
-    const { purchasable } = usePurchasableContext();
-    const { productVariation } = purchasable;
+export const ProductVariationLabel = ({ productVariation, ...props }: Props) => {
 
     const parsedVariation = productVariation?.getParsedVariation();
 
-    return <ThemedXStack gap="$1">
+    return <ThemedXStack gap="$2">
         {
             parsedVariation?.map((attr) => {
                 return <ThemedXStack
@@ -22,7 +22,6 @@ export const ProductVariationLabel = ({ ...props }: SizableTextProps) => {
                         fos="$3"
                         tt="capitalize"
                         height="auto"
-                        variant="subtle"
                     >
                         {attr.name}:
                     </ThemedText>

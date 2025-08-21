@@ -52,7 +52,9 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
     const colW = cols === 2 ? '50%' : '100%';
 
 
-    if (isLoading) return <Loader h={props.h} />;
+    if (isLoading) {
+        return <Loader h={props.h} />
+    }
 
     return (
         <XStack fw="wrap" mx={-half} my={-half}>
