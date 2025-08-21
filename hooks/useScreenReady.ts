@@ -1,5 +1,5 @@
 // @/hooks/useScreenReady.ts
-import { useNavProgress } from '@/stores/navProgressStore';
+import { useNavigationProgress } from '@/stores/navigationProgressStore';
 import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react';
 import { InteractionManager } from 'react-native';
@@ -46,7 +46,7 @@ export function useScreenReady(opts: ScreenReadyOptions = {}) {
     React.useEffect(() => {
         if (!ready) return;
         if (stopNavProgress && !stoppedRef.current) {
-            useNavProgress.getState().stop(); // idempotent, but we guard anyway
+            useNavigationProgress.getState().stop(); // idempotent, but we guard anyway
             stoppedRef.current = true;
         }
         onReady?.();

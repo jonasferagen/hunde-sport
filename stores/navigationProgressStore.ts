@@ -1,13 +1,13 @@
 // navProgressStore.ts
 import { create } from 'zustand';
 
-type NavProgress = {
+type NavigationProgress = {
     active: boolean;
     start: () => void;
     stop: () => void;
 };
 
-export const useNavProgress = create<NavProgress>((set, get) => ({
+export const useNavigationProgress = create<NavigationProgress>((set, get) => ({
     active: false,
     start: () => {
         if (!get().active) set({ active: true });

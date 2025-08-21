@@ -1,6 +1,6 @@
 // useCanonicalNav.ts
 import { cleanHref, routes } from '@/config/routes';
-import { useNavProgress } from '@/stores/navProgressStore';
+import { useNavigationProgress } from '@/stores/navigationProgressStore';
 import { HrefObject, LinkProps, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
 import { startTransition } from 'react';
@@ -35,7 +35,7 @@ const paramsKey = (obj?: Record<string, unknown>) => JSON.stringify(normalizePar
 const scheduleNav = (fn: () => void, withoutOverlay: boolean) => {
 
     if (withoutOverlay) { startTransition(fn); return; }
-    useNavProgress.getState().start();               // flip overlay now (no re-render)
+    useNavigationProgress.getState().start();               // flip overlay now (no re-render)
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             // give overlay a paint
