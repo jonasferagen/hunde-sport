@@ -77,9 +77,9 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
                     keyboardShouldPersistTaps="handled"
                     onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
                     scrollEnabled={contentH > availableForOptions}
-                    contentContainerStyle={{ borderWidth: 12, minHeight: 0, borderColor: 'green' }}
+                    contentContainerStyle={{}}
                 >
-                    {ready ? <ProductVariationSelect /> : null}
+                    {ready ? <ProductVariationSelect h={availableForOptions} /> : null}
                 </Sheet.ScrollView>
             ) : null}
 

@@ -5,13 +5,13 @@ import { useProductVariationSelector } from '@/domain/Product/helpers/useProduct
 import { VariableProduct } from '@/domain/Product/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { spacePx } from '@/lib/helpers';
-import React, { JSX } from 'react';
+import React from 'react';
 import { XStack, YStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 
 interface ProductVariationSelectProps extends YStackProps { }
 
-export const ProductVariationSelect = (props: ProductVariationSelectProps): JSX.Element => {
+export const ProductVariationSelect = (props: ProductVariationSelectProps) => {
     const { purchasable } = usePurchasableContext();
     const variableProduct = purchasable.product as VariableProduct;
 
@@ -52,7 +52,7 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
     const colW = cols === 2 ? '50%' : '100%';
 
 
-    if (isLoading) return <Loader f={1} mih={0} />;
+    if (isLoading) return <Loader h={props.h} />;
 
     return (
         <XStack fw="wrap" mx={-half} my={-half}>
