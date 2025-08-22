@@ -11,8 +11,8 @@ const MAX_CATEGORIES = NUM_CATEGORY_TILE_COLUMNS * NUM_CATEGORY_TILE_ROWS;
 
 export const ProductCategoryTiles = React.memo((props: StackProps) => {
 
-
     const roots = useProductCategories(0);
+
     const productCategories = useMemo(
         () => roots.slice(0, MAX_CATEGORIES),
         [roots]

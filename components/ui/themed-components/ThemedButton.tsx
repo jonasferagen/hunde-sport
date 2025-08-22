@@ -90,8 +90,8 @@ const useIconSizing = () => {
 }
 
 const ButtonBefore = memo(({ children }: { children?: React.ReactNode }) => {
-    if (!children) return null
     const { sz, col } = useIconSizing()
+    if (!children) return null
     if (isValidElement(children)) {
         const el: any = children
         return cloneElement(el, {
@@ -103,8 +103,8 @@ const ButtonBefore = memo(({ children }: { children?: React.ReactNode }) => {
 })
 
 const ButtonAfter = memo(({ children }: { children?: React.ReactNode }) => {
-    if (!children) return null
     const { sz, col } = useIconSizing()
+    if (!children) return null
     if (isValidElement(children)) {
         const el: any = children
         return <View ml="auto">{cloneElement(el, {

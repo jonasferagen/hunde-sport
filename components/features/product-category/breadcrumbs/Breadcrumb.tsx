@@ -38,7 +38,6 @@ export const Breadcrumb = React.memo(
             {text}
           </Link>
         )}
-        {!isLast && <ChevronRight size="$2" />}
       </ThemedXStack>
     );
   }

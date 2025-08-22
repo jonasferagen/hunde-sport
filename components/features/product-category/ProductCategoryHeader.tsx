@@ -26,7 +26,7 @@ export const ProductCategoryHeader: React.FC<Props> = ({ productCategories, ...p
 
     const ChipLink = ({ c }: { c: ProductCategory }) => (
         <Link {...linkProps('product-category', c)} asChild>
-            <Chip theme="tint">{c.name}</Chip>
+            <Chip >{c.name}</Chip>
         </Link>
     );
     if (count === 0) return null;
@@ -35,7 +35,7 @@ export const ProductCategoryHeader: React.FC<Props> = ({ productCategories, ...p
 
     return (
         <ThemedYStack {...props}>
-            <ThemedXStack fw="wrap" gap="$2">
+            <ThemedXStack fw="wrap" gap="$2" theme="primary">
                 {inline.map((c) => <ChipLink key={c.id} c={c} />)}
                 {many && (
                     <Chip theme="shade" onPress={openAll}>

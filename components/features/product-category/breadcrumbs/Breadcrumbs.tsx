@@ -1,11 +1,15 @@
 // Breadcrumbs.tsx
 import React from 'react';
-import { ScrollView } from 'tamagui';
-import { ThemedXStack, ThemedXStackProps } from '@/components/ui';
+import { H3, ScrollView } from 'tamagui';
+import { ThemedButton, ThemedXStack, ThemedXStackProps } from '@/components/ui';
 import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import { ProductCategory } from '@/types';
 import { Breadcrumb } from './Breadcrumb';
 import { useEdgeFades } from '@/hooks/useEdgeFades';
+import { ChevronRight } from '@tamagui/lucide-icons';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
+import { Link } from 'expo-router';
+import { Chip } from '@/components/ui/chips/Chip';
 
 interface BreadcrumbsProps extends ThemedXStackProps {
     isLastClickable?: boolean;
@@ -15,11 +19,13 @@ interface BreadcrumbsProps extends ThemedXStackProps {
 export const Breadcrumbs = React.memo(({ isLastClickable = false, trail, ...stackProps }: BreadcrumbsProps) => {
 
     const edges = useEdgeFades('horizontal');
+    const { linkProps } = useCanonicalNavigation();
 
+    console.log(trail);
 
     if (trail.length === 0) return null;
     return (
-        <ThemedXStack {...stackProps}>
+        <ThemedXStack {...stackProps} my="$3">
             <ScrollView
                 horizontal
                 onScroll={edges.onScroll}
@@ -30,15 +36,20 @@ export const Breadcrumbs = React.memo(({ isLastClickable = false, trail, ...stac
                 scrollEventThrottle={16}
 
             >
-                <ThemedXStack ai="center" gap="$2">
-                    {trail.map((cat, index) => (
-                        <Breadcrumb
-                            key={cat.id}
-                            productCategory={cat}
-                            isLast={index === trail.length - 1}
-                            isLastClickable={isLastClickable}
-                        />
-                    ))}
+                <ThemedXStack ai="center" gap="none">
+                    {trail.map((cat, index) => {
+                        const isLast = index === trail.length - 1;
+                        return (
+                            <>
+                                <Link key={cat.id} {...linkProps('product-category', cat)} asChild>
+                                    <Chip theme="secondary">
+                                        {cat.name}
+                                    </Chip>
+                                </Link>
+                                {!isLast && <ChevronRight size="$2" />}
+                            </>
+                        )
+                    })}
                 </ThemedXStack>
             </ScrollView>
             <EdgeFadesOverlay

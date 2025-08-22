@@ -34,10 +34,10 @@ export class ProductCategory implements ProductCategoryData {
     return 'Category ' + this.id + ': ' + this.name;
   }
 
-  static create(id: number): ProductCategory {
+  static createRoot(): ProductCategory {
     return new ProductCategory({
-      id: id,
-      name: '',
+      id: 0,
+      name: 'Alle',
       parent: -1,
       image: {
         id: 0,

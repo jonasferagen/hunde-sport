@@ -23,7 +23,7 @@ type ProductCategoryState = {
 const EMPTY: readonly ProductCategory[] = Object.freeze([]);
 
 export const useProductCategoryStore = create<ProductCategoryState>((set, get) => {
-    const dummyRoot = ProductCategory.create(0); // your factory
+    const dummyRoot = ProductCategory.createRoot(); // your factory
 
     return {
         items: [dummyRoot],
@@ -34,7 +34,6 @@ export const useProductCategoryStore = create<ProductCategoryState>((set, get) =
         setProductCategories: (cats) => {
             const { dummyRoot } = get();
 
-            // ensure 0 exists once; if incoming has id=0, dummy wins
             const all = [dummyRoot, ...cats.filter(c => c.id !== 0)];
 
             const map = new Map<Id, ProductCategory>();
@@ -42,16 +41,24 @@ export const useProductCategoryStore = create<ProductCategoryState>((set, get) =
 
             for (const c of all) {
                 map.set(c.id, c);
-                const p = c.parent ?? 0;
-                const arr = children.get(p) ?? [];
-                arr.push(c);
-                children.set(p, arr);
+
+                // normalize parent
+                const rawParent = c.parent;
+                const p = (typeof rawParent === 'number' && Number.isFinite(rawParent))
+                    ? rawParent
+                    : 0; // treat null/undefined as root’s children
+
+                // guard: avoid self-parent loops
+                const parentId = (p === c.id) ? 0 : p;
+
+                const arr = children.get(parentId) ?? [];
+                if (c.id !== 0) arr.push(c);          // don’t include dummyRoot as a child
+                children.set(parentId, arr);
             }
 
-            // pre-filter visibility once
             const subcategories = new Map<Id, readonly ProductCategory[]>();
             for (const [pid, arr] of children) {
-                const list = arr.filter((c) => c.shouldDisplay?.() ?? true);
+                const list = arr.filter(c => (c as any).shouldDisplay?.() ?? true);
                 subcategories.set(pid, Object.freeze(list));
             }
 
@@ -81,10 +88,11 @@ export const useBreadcrumbTrail = (productCategoryId: number): readonly ProductC
     return React.useMemo(() => {
         const trail: ProductCategory[] = [];
         let cur = map.get(productCategoryId);
-        while (cur && cur.id !== 0) {
+        while (cur && cur.parent !== -1) {
             trail.unshift(cur);
-            cur = map.get(cur.parent ?? 0);
+            cur = map.get(cur.parent);
         }
+
         return trail;
     }, [map, productCategoryId]);
 };
