@@ -7,9 +7,10 @@ import { useScreenTitle } from '@/hooks/useScreenTitle';
 import { useBreadcrumbTrail, useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Breadcrumbs } from '@/components/features/product-category/breadcrumbs/Breadcrumbs';
+import { Breadcrumbs } from '@/components/features/product-category/Breadcrumbs';
 import { ProductCategoryHeader } from '@/components/features/product-category/ProductCategoryHeader';
 import { Theme } from 'tamagui';
+import { ThemedXStack } from '@/components/ui';
 
 export const ProductCategoryScreen = React.memo(() => {
     useRenderGuard('ProductCategoryScreen');
@@ -31,7 +32,9 @@ export const ProductCategoryScreen = React.memo(() => {
         <PageView>
             <PageHeader theme="shade">
                 <Breadcrumbs trail={trail} isLastClickable />
-                <ProductCategoryHeader productCategories={productCategories} container box />
+                <ThemedXStack container box >
+                    <ProductCategoryHeader productCategories={productCategories} />
+                </ThemedXStack>
             </PageHeader>
             <PageBody>
                 <PageSection fill f={1} mih={0}>

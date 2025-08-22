@@ -7,75 +7,50 @@ import { ThemedStackProps, ThemedXStack, ThemedYStack } from '@/components/ui/th
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { Button, Sheet, Text, Separator } from 'tamagui';
 import type { ProductCategory } from '@/types';
+import { openModal } from '@/stores/modalStore';
+import { ProductCategoriesModal } from './ProductCategoriesModal';
 
-interface Props extends ThemedStackProps {
-    productCategories: readonly ProductCategory[];
-};
 
-const INLINE_LIMIT = 12;
-const INLINE_SHOW = 8; // when many, show this many + “+N flere”
-
-export const ProductCategoryHeader: React.FC<Props> = ({ productCategories, ...props }) => {
-    const [open, setOpen] = useState(false);
+export const ProductCategoryHeader: React.FC<{ productCategories: readonly ProductCategory[] }> = ({
+    productCategories }) => {
     const { linkProps } = useCanonicalNavigation();
 
     const count = productCategories.length;
 
-    const openAll = useCallback(() => setOpen(true), []);
-    const closeAll = useCallback(() => setOpen(false), []);
 
-    const ChipLink = ({ c }: { c: ProductCategory }) => (
-        <Link {...linkProps('product-category', c)} asChild>
-            <Chip >{c.name}</Chip>
-        </Link>
-    );
-    if (count === 0) return null;
+    const INLINE_LIMIT = 12;
+    const INLINE_SHOW = 8;
     const many = count > INLINE_LIMIT;
     const inline = many ? productCategories.slice(0, INLINE_SHOW) : productCategories;
 
+    const openAll = React.useCallback(() => {
+        openModal(
+            (payload, api) => (
+                <ProductCategoriesModal
+                    productCategories={payload as readonly ProductCategory[]}
+                    close={() => api.close()}
+                />
+            ),
+            productCategories
+        );
+    }, [productCategories]);
+
+    const ChipLink = ({ c }: { c: ProductCategory }) => (
+        <Link {...linkProps('product-category', c)} asChild>
+            <Chip theme="dark_primary">{c.name}</Chip>
+        </Link>
+    );
+    if (count === 0) return null;
     return (
-        <ThemedYStack {...props}>
-            <ThemedXStack fw="wrap" gap="$2" theme="primary">
+        <ThemedYStack pb="$2">
+            <ThemedXStack fw="wrap" gap="$2" theme="dark_primary_tint">
                 {inline.map((c) => <ChipLink key={c.id} c={c} />)}
                 {many && (
-                    <Chip theme="shade" onPress={openAll}>
+                    <Chip onPress={openAll}>
                         +{count - INLINE_SHOW} flere
                     </Chip>
                 )}
             </ThemedXStack>
-
-            <Sheet
-                modal
-                native
-                open={open}
-                onOpenChange={(o: boolean) => !o && closeAll()}
-                snapPointsMode="percent"
-                snapPoints={[80]}
-                position={0}
-                dismissOnSnapToBottom
-                animation="fast"
-            >
-                <Sheet.Overlay />
-                <Sheet.Frame p="$4" gap="$3" mih={0}>
-                    <Text fos="$7">Alle underkategorier</Text>
-                    <Separator />
-                    <FlatList
-                        data={productCategories}
-                        keyExtractor={(c) => String(c.id)}
-                        numColumns={3}
-                        columnWrapperStyle={{ gap: 8 }}
-                        contentContainerStyle={{ gap: 8, paddingBottom: 8 }}
-                        renderItem={({ item }) => (
-                            <Link {...linkProps('product-category', item)} asChild>
-                                <Chip theme="tint">{item.name}</Chip>
-                            </Link>
-                        )}
-                    />
-                    <Button mt="$2" onPress={closeAll}>
-                        Lukk
-                    </Button>
-                </Sheet.Frame>
-            </Sheet>
         </ThemedYStack>
     );
 };

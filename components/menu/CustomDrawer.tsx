@@ -19,7 +19,7 @@ interface Props extends YStackProps {
 
 export const CustomDrawer = React.memo(({ navigation, onSettledChange, ...props }: Props) => {
 
-    const { openedOnce, isFullyClosed } = useDrawerSettled();
+    const { hasOpened, isFullyClosed } = useDrawerSettled();
     const close = React.useCallback(() => {
         navigation.dispatch(DrawerActions.closeDrawer());
     }, [navigation]);
@@ -36,7 +36,7 @@ export const CustomDrawer = React.memo(({ navigation, onSettledChange, ...props 
                 <ThemedButton circular onPress={close}><X /></ThemedButton>
             </ThemedXStack>
             <ThemedYStack f={1} mih={0}>
-                {openedOnce ? <ProductCategoryTree /> : <Loader />}
+                {hasOpened ? <ProductCategoryTree /> : <Loader />}
             </ThemedYStack>
             <AppVersion />
         </ThemedYStack>

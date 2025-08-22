@@ -1,11 +1,9 @@
 // ProductVariationsModal.tsx
-import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui';
+import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useAddToCart } from '@/hooks/useAddToCart';
-import { useDeferredOpen } from '@/hooks/useDeferredOpen';
-import { closeModal } from '@/stores/modalStore';
 import { Purchasable } from '@/types';
-import { ChevronDown, Loader } from '@tamagui/lucide-icons';
+import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Sheet } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle } from '../display';
@@ -13,6 +11,7 @@ import { ProductVariationSelect } from '../product-variation/ProductVariationSel
 import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
 import { PurchaseButton } from './PurchaseButton';
 import { spacePx } from '@/lib/helpers';
+import { useModalState } from '@/hooks/useModalState';
 
 const gapPx = spacePx("$3");
 
@@ -27,13 +26,11 @@ export const ProductVariationsModal = ({
     );
 };
 
-
-
 export const Inner = React.memo(function Inner({ close }: { close: () => void }) {
     const { purchasable } = usePurchasableContext();
     const addToCart = useAddToCart();
     const [loading, setLoading] = React.useState(false);
-    const ready = useDeferredOpen([purchasable.product.id], 50);
+    const { isFullyOpen } = useModalState();
 
     // Track partial selection for display in label
     const [currentSelection, setCurrentSelection] = React.useState<Record<string, string>>({});
@@ -62,9 +59,10 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
             await addToCart(purchasable, 1)
         } finally {
             setLoading(false);
-            closeModal();
+            close();
         }
     };
+
 
     return (
         <ThemedYStack f={1} mih={0} onLayout={onBodyLayout} gap="$3">
@@ -75,28 +73,26 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
             </ThemedXStack>
 
             {/* image */}
-            {ready &&
-                <ProductImage product={purchasable.activeProduct} img_height={IMAGE_H} />
-            }
+
+            <ProductImage product={purchasable.activeProduct} img_height={IMAGE_H} />
+
 
             {/* attributes (auto-fit; scroll only if needed) */}
-            {ready ? (
-                <Sheet.ScrollView
-                    // IMPORTANT: do not set f={1} or flex here
-                    style={availableForOptions ? { maxHeight: availableForOptions } : undefined}
-                    keyboardShouldPersistTaps="handled"
-                    onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
-                    scrollEnabled={contentH > availableForOptions}
-                    contentContainerStyle={{}}
-                >
-                    {ready ? (
-                        <ProductVariationSelect
-                            h={availableForOptions}
-                            onSelectionChange={setCurrentSelection}
-                        />
-                    ) : null}
-                </Sheet.ScrollView>
-            ) : null}
+
+            <Sheet.ScrollView
+                // IMPORTANT: do not set f={1} or flex here
+                style={availableForOptions ? { maxHeight: availableForOptions } : undefined}
+                keyboardShouldPersistTaps="handled"
+                onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
+                scrollEnabled={contentH > availableForOptions}
+                contentContainerStyle={{}}
+            >
+                {isFullyOpen && <ProductVariationSelect
+                    h={availableForOptions}
+                    onSelectionChange={setCurrentSelection}
+                />}
+            </Sheet.ScrollView>
+
 
             {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout} >

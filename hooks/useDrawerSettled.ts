@@ -3,9 +3,7 @@ import { useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { runOnJS, useAnimatedReaction, useSharedValue, type SharedValue } from 'react-native-reanimated';
 
-type Options = {
-    eps?: number;
-};
+type Options = { eps?: number };
 
 export function useDrawerSettled(opts: Options = {}) {
     const { eps = 0.001 } = opts;
@@ -13,36 +11,34 @@ export function useDrawerSettled(opts: Options = {}) {
     const status = useDrawerStatus(); // 'open' | 'closed'
     const progress = useDrawerProgress() as unknown as SharedValue<number> | undefined;
 
-    // seed from status (covers hot reload when already open)
     const initiallyOpen = status === 'open';
 
     const [isFullyOpen, setIsFullyOpen] = useState(initiallyOpen);
     const [isFullyClosed, setIsFullyClosed] = useState(!initiallyOpen);
 
-    const openedOnceRef = useRef(initiallyOpen);
-    const [openedOnce, setOpenedOnce] = useState(initiallyOpen);
+    // one-shot
+    const hasOpenedRef = useRef(initiallyOpen);
+    const [hasOpened, setHasOpened] = useState(initiallyOpen);
 
-    // JS helper (runs only on JS, can safely touch refs/state)
-    const markOpenedOnce = useMemo(
+    const markHasOpened = useMemo(
         () => () => {
-            if (!openedOnceRef.current) {
-                openedOnceRef.current = true;
-                setOpenedOnce(true);
+            if (!hasOpenedRef.current) {
+                hasOpenedRef.current = true;
+                setHasOpened(true);
             }
         },
         []
     );
 
-    // Fallback + initial sync from status (no progress available on web or edge cases)
+    // fallback / initial sync
     useEffect(() => {
         const atOpen = status === 'open';
         setIsFullyOpen(atOpen);
         setIsFullyClosed(!atOpen);
-        if (atOpen) markOpenedOnce();
-    }, [status, markOpenedOnce]);
+        if (atOpen) markHasOpened();
+    }, [status, markHasOpened]);
 
-    // UI-thread bookkeeping: use a SharedValue to avoid touching JS refs in the worklet
-    const openedOnceSV = useSharedValue(initiallyOpen ? 1 : 0);
+    const hasOpenedSV = useSharedValue(initiallyOpen ? 1 : 0);
 
     useAnimatedReaction(
         () => (progress ? progress.value : undefined),
@@ -53,13 +49,12 @@ export function useDrawerSettled(opts: Options = {}) {
             const atOpen = p >= 1 - eps;
             const atClosed = p <= eps;
 
-            // initial call
             if (prev === undefined || prev === null) {
                 runOnJS(setIsFullyOpen)(atOpen);
                 runOnJS(setIsFullyClosed)(atClosed);
-                if (atOpen && openedOnceSV.value === 0) {
-                    openedOnceSV.value = 1;
-                    runOnJS(markOpenedOnce)();
+                if (atOpen && hasOpenedSV.value === 0) {
+                    hasOpenedSV.value = 1;
+                    runOnJS(markHasOpened)();
                 }
                 return;
             }
@@ -67,9 +62,9 @@ export function useDrawerSettled(opts: Options = {}) {
             const wasAtOpen = prev >= 1 - eps;
             if (atOpen !== wasAtOpen) {
                 runOnJS(setIsFullyOpen)(atOpen);
-                if (atOpen && openedOnceSV.value === 0) {
-                    openedOnceSV.value = 1;
-                    runOnJS(markOpenedOnce)();
+                if (atOpen && hasOpenedSV.value === 0) {
+                    hasOpenedSV.value = 1;
+                    runOnJS(markHasOpened)();
                 }
             }
 
@@ -80,5 +75,5 @@ export function useDrawerSettled(opts: Options = {}) {
         }
     );
 
-    return { isFullyOpen, isFullyClosed, openedOnce };
+    return { isFullyOpen, isFullyClosed, hasOpened };
 }

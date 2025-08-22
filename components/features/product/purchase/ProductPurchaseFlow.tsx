@@ -1,6 +1,6 @@
 
 import React from "react";
-import { openModal } from "../../../../stores/modalStore";
+import { openModal } from "@/stores/modalStore";
 import { ProductVariationsModal } from "./ProductVariationsModal";
 import { PurchaseButton } from "./PurchaseButton";
 

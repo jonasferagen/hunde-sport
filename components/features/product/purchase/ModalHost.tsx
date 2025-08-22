@@ -1,26 +1,43 @@
 // ModalHost.tsx
 import { ThemedLinearGradient } from '@/components/ui';
 import React from 'react';
-import { Sheet, YStack } from 'tamagui';
+import { Sheet, YStack, Adapt, Dialog } from 'tamagui';
 
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
-import { useSheetSettled } from '@/hooks/useSheetSettled';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Adapt, Dialog } from 'tamagui';
-import { setModalPosition, useModalStore } from '../../../../stores/modalStore';
-
+import { setModalPosition, useModalStore } from '@/stores/modalStore';
+import { useShallow } from 'zustand/react/shallow';
+import { useModalState } from '@/hooks/useModalState';
 export const ModalHost = () => {
 
-    const insets = useSafeAreaInsets();
+    // ...
+    const {
+        open,
+        renderer,
+        payload,
+        snapPoints,
+        position,
+        closeModal,
+    } = useModalStore(
+        useShallow((s) => ({
+            open: s.open,
+            renderer: s.renderer,
+            payload: s.payload,
+            snapPoints: s.snapPoints,
+            position: s.position,
+            closeModal: s.closeModal,
+        }))
+    );
 
-    const { open, closeModal, renderer, payload, snapPoints, position } = useModalStore()
+    const { isFullyOpen, onHostLayout } = useModalState();
 
-    const { isFullyOpen } = useSheetSettled({ open, position });
 
     const body = isFullyOpen
         ? renderer?.(payload, { close: () => closeModal(), setPosition: setModalPosition })
         : null;
+
+    const insets = useSafeAreaInsets();
 
 
     return (
@@ -38,7 +55,7 @@ export const ModalHost = () => {
                     animation="fast"
                 >
                     <Sheet.Overlay bg="black" opacity={0.15} />
-                    <Sheet.Frame f={1} mih={0} p="$4" gap="$3" mb={insets.bottom}>
+                    <Sheet.Frame f={1} mih={0} p="$4" gap="$3" mb={insets.bottom} onLayout={onHostLayout}>
                         <ThemedLinearGradient />
                         <Adapt.Contents />
                     </Sheet.Frame>

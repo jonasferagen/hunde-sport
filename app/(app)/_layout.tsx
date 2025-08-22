@@ -33,9 +33,6 @@ const AppLayout = React.memo((): React.ReactElement => {
         []
     );
 
-    const bottombarZi = React.useMemo(() => {
-        return -1;
-    }, []);
 
     return (
         <View f={1} pos="relative">

@@ -1,4 +1,4 @@
-import { Breadcrumbs } from '@/components/features/product-category/breadcrumbs/Breadcrumbs';
+import { Breadcrumbs } from '@/components/features/product-category/Breadcrumbs';
 import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductTitle } from '@/components/features/product/display/';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
