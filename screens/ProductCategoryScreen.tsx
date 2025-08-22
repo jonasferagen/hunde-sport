@@ -1,11 +1,10 @@
-import { ProductCategoryScreenHeader } from '@/components/features/product-category/ProductCategoryScreenHeader';
 import { ProductCategoryProducts } from '@/components/features/product-category/ProductCategoryProducts';
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/useScreenReady';
 import { useScreenTitle } from '@/hooks/useScreenTitle';
-import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
+import { useBreadcrumbTrail, useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Breadcrumbs } from '@/components/features/product-category/breadcrumbs/Breadcrumbs';
@@ -17,6 +16,7 @@ export const ProductCategoryScreen = React.memo(() => {
     const { id } = useLocalSearchParams<{ id: string }>();
     const productCategory = useProductCategory(Number(id));
     const productCategories = useProductCategories(Number(id));
+    const trail = useBreadcrumbTrail(Number(id));
 
     useScreenTitle(productCategory?.name);
 
@@ -29,13 +29,11 @@ export const ProductCategoryScreen = React.memo(() => {
 
     return (
         <PageView>
-            <PageHeader>
-                <Breadcrumbs productCategory={productCategory} isLastClickable />
-                <ProductCategoryHeader
-                    title={productCategory.name}
-                    productCategories={productCategories}
-                />
+            <PageHeader px="none" >
+                <Breadcrumbs trail={trail} isLastClickable />
+                <ProductCategoryHeader productCategories={productCategories} />
             </PageHeader>
+
             <PageBody>
                 <PageSection fill f={1} mih={0}>
                     <ProductCategoryProducts productCategory={productCategory} />

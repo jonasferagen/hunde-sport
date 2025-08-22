@@ -1,35 +1,28 @@
-// ProductCategoryHeader.tsx
-import React, { useMemo, useState, useCallback } from 'react';
+// ProductCategoryHeader.tsx (simplified)
+import React, { useState, useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { Link } from 'expo-router';
 import { Chip } from '@/components/ui/chips/Chip';
-import { ThemedXStack, ThemedYStack, ThemedLinearGradient } from '@/components/ui/themed-components';
-import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
+import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
-import { Button, ScrollView, Sheet, Text, Separator, XStack, YStack } from 'tamagui';
-import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
+import { Button, Sheet, Text, Separator } from 'tamagui';
 import type { ProductCategory } from '@/types';
 
 type Props = {
-    title: string;
     productCategories: readonly ProductCategory[];
 };
 
-const INLINE_MAX = 8;   // <=8 chips inline
-const HSCROLL_MAX = 16; // <=16 chips in one horizontal row
+const INLINE_LIMIT = 12;
+const INLINE_SHOW = 8; // when many, show this many + “+N flere”
 
-export const ProductCategoryHeader: React.FC<Props> = ({ title, productCategories }) => {
-    const [openSheet, setOpenSheet] = useState(false);
+export const ProductCategoryHeader: React.FC<Props> = ({ productCategories }) => {
+    const [open, setOpen] = useState(false);
     const { linkProps } = useCanonicalNavigation();
 
     const count = productCategories.length;
 
-    const mode: 'inline' | 'hscroll' | 'popular+more' =
-        count <= INLINE_MAX ? 'inline' :
-            count <= HSCROLL_MAX ? 'hscroll' : 'popular+more';
-
-    const openAll = useCallback(() => setOpenSheet(true), []);
-    const closeAll = useCallback(() => setOpenSheet(false), []);
+    const openAll = useCallback(() => setOpen(true), []);
+    const closeAll = useCallback(() => setOpen(false), []);
 
     const ChipLink = ({ c }: { c: ProductCategory }) => (
         <Link {...linkProps('product-category', c)} asChild>
@@ -37,42 +30,24 @@ export const ProductCategoryHeader: React.FC<Props> = ({ title, productCategorie
         </Link>
     );
     if (count === 0) return null;
+    const many = count > INLINE_LIMIT;
+    const inline = many ? productCategories.slice(0, INLINE_SHOW) : productCategories;
+
     return (
-        <ThemedYStack bg="$background" pb="$2">
-            <ThemedLinearGradient />
-            <XStack ai="center" jc="space-between" mb="$2">
-                {mode !== 'inline' && (
-                    <Button size="$2" chromeless iconAfter={ChevronDown} onPress={openAll}>
-                        Vis alle
+        <ThemedYStack container>
+            <ThemedXStack fw="wrap" gap="$2">
+                {inline.map((c) => <ChipLink key={c.id} c={c} />)}
+                {many && (
+                    <Button size="$2" onPress={openAll}>
+                        +{count - INLINE_SHOW} flere
                     </Button>
                 )}
-            </XStack>
+            </ThemedXStack>
 
-            {mode === 'inline' && (
-                <ThemedXStack fw="wrap" gap="$2">
-                    {productCategories.map(c => <ChipLink key={c.id} c={c} />)}
-                </ThemedXStack>
-            )}
-
-            {mode === 'hscroll' && (
-                <YStack>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        <ThemedXStack ai="center" gap="$2" px="$1">
-                            {productCategories.map(c => <ChipLink key={c.id} c={c} />)}
-                            <Button size="$2" chromeless iconAfter={ChevronDown} onPress={openAll}>
-                                Vis alle
-                            </Button>
-                        </ThemedXStack>
-                    </ScrollView>
-                </YStack>
-            )}
-
-
-            {/* Bottom sheet grid */}
             <Sheet
                 modal
                 native
-                open={openSheet}
+                open={open}
                 onOpenChange={(o: boolean) => !o && closeAll()}
                 snapPointsMode="percent"
                 snapPoints={[80]}
@@ -96,7 +71,7 @@ export const ProductCategoryHeader: React.FC<Props> = ({ title, productCategorie
                             </Link>
                         )}
                     />
-                    <Button mt="$2" chromeless icon={ChevronUp} onPress={closeAll}>
+                    <Button mt="$2" onPress={closeAll}>
                         Lukk
                     </Button>
                 </Sheet.Frame>

@@ -1,29 +1,52 @@
-import { ThemedXStack } from '@/components/ui';
-import { useBreadcrumbTrail } from '@/stores/productCategoryStore';
+// Breadcrumbs.tsx
 import React from 'react';
-import { Breadcrumb } from './Breadcrumb';
+import { ScrollView } from 'tamagui';
+import { ThemedXStack } from '@/components/ui';
+import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import { ProductCategory } from '@/types';
+import { Breadcrumb } from './Breadcrumb';
+import { useEdgeFades } from '@/hooks/useEdgeFades';
 
 interface BreadcrumbsProps {
     isLastClickable?: boolean;
-    productCategory: ProductCategory;
+    trail: readonly ProductCategory[];
 }
 
-export const Breadcrumbs = React.memo(({ isLastClickable = false, productCategory }: BreadcrumbsProps) => {
+export const Breadcrumbs = React.memo(({ isLastClickable = false, trail }: BreadcrumbsProps) => {
 
-    const trail = useBreadcrumbTrail(productCategory.id);
+    const edges = useEdgeFades('horizontal');
 
-    return (trail.length > 0 ?
-        <ThemedXStack gap="none" ai="center" fw="wrap">
-            {trail.map((breadcrumbCategory, index) => (
-                <Breadcrumb
-                    key={breadcrumbCategory.id}
-                    productCategory={breadcrumbCategory}
-                    isLast={index === trail.length - 1}
-                    isLastClickable={isLastClickable}
-                />
-            ))}
+    console.log(edges);
+    if (trail.length === 0) return null;
+    return (
+        <ThemedXStack>
+            <ScrollView
+                horizontal
+                onScroll={edges.onScroll}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 4 }}
+                onLayout={edges.onLayout}
+                onContentSizeChange={edges.onContentSizeChange}
+                scrollEventThrottle={16}
+
+            >
+                <ThemedXStack ai="center" gap="$2">
+                    {trail.map((cat, index) => (
+                        <Breadcrumb
+                            key={cat.id}
+                            productCategory={cat}
+                            isLast={index === trail.length - 1}
+                            isLastClickable={isLastClickable}
+                        />
+                    ))}
+                </ThemedXStack>
+            </ScrollView>
+            <EdgeFadesOverlay
+                orientation="horizontal"
+                visibleStart={edges.atStart}
+                visibleEnd={edges.atEnd}
+                bg="#fff"
+            />
         </ThemedXStack>
-        : null);
+    );
 });
-

@@ -14,7 +14,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...prop
     return (
         <Theme name={THEME_PAGE_HEADER}>
             <ThemedYStack
-                container
                 btw={0}
                 {...props}
             >

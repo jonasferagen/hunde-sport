@@ -40,6 +40,8 @@ export function useEdgeFades(orientation: Orientation) {
         const start = off <= 1;
         const end = off + containerMain.current >= contentMain.current - 1;
 
+        console.log(contentMain.current);
+
         if (start !== lastStart.current) { lastStart.current = start; setAtStart(start); }
         if (end !== lastEnd.current) { lastEnd.current = end; setAtEnd(end); }
     }, [orientation]);
