@@ -8,10 +8,9 @@ import { useScreenReady } from '@/hooks/useScreenReady';
 import { useScreenTitle } from '@/hooks/useScreenTitle';
 import { useBreadcrumbTrail } from '@/stores/productCategoryStore';
 import { Redirect, useLocalSearchParams } from 'expo-router';
-import React, { memo } from 'react';
+import React from 'react';
 
-
-export const ProductCategoryScreen = memo(() => {
+export const ProductCategoryScreen = React.memo(() => {
     useRenderGuard('ProductCategoryScreen');
     const ready = useScreenReady();
     const { id } = useLocalSearchParams<{ id: string }>();

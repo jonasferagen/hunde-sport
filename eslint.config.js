@@ -13,5 +13,9 @@ module.exports = defineConfig([
       'build/**',
       'coverage/**',
     ],
+    rules: {
+      "react/display-name": "off"
+    }
   },
+
 ]);

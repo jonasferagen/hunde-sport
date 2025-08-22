@@ -48,13 +48,10 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const onFooterLayout = (e: any) => setFooterH(Math.round(e.nativeEvent.layout.height));
 
     const IMAGE_H = 200;
-    const gaps = 3 * gapPx; // if your frame has vertical padding, add it here
+    const gaps = 3 * gapPx; // compensate for vertical padding between 
 
     const cH = headerH + footerH + IMAGE_H + gaps;
-
     const availableForOptions = Math.max(0, bodyH - cH);
-
-    console.log(footerH);
 
     const onPress = async () => {
 
