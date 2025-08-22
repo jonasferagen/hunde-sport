@@ -1,42 +1,46 @@
-import { BreadCrumbsContainer } from '@/components/features/product-category/breadcrumbs/BreadCrumbsContainer';
+import { ProductCategoryScreenHeader } from '@/components/features/product-category/ProductCategoryScreenHeader';
 import { ProductCategoryProducts } from '@/components/features/product-category/ProductCategoryProducts';
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { ProductCategoryProvider } from '@/contexts';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/useScreenReady';
 import { useScreenTitle } from '@/hooks/useScreenTitle';
-import { useBreadcrumbTrail } from '@/stores/productCategoryStore';
+import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
+import { Breadcrumbs } from '@/components/features/product-category/breadcrumbs/Breadcrumbs';
+import { ProductCategoryHeader } from '@/components/features/product-category/ProductCategoryHeader';
 
 export const ProductCategoryScreen = React.memo(() => {
     useRenderGuard('ProductCategoryScreen');
     const ready = useScreenReady();
     const { id } = useLocalSearchParams<{ id: string }>();
+    const productCategory = useProductCategory(Number(id));
+    const productCategories = useProductCategories(Number(id));
 
-    const trail = useBreadcrumbTrail(Number(id));
-    useScreenTitle(trail[0]?.name);
+    useScreenTitle(productCategory?.name);
 
     if (!ready) {
         return null;
     }
-    if (!id) {
+    if (!productCategory) {
         return <Redirect href="/" />;
     }
 
     return (
-        <ProductCategoryProvider productCategoryId={Number(id)}>
-            <PageView>
-                <PageHeader>
-                    <BreadCrumbsContainer />
-                </PageHeader>
-                <PageBody >
-                    <PageSection fill f={1} mih={0}>
-                        <ProductCategoryProducts />
-                    </PageSection>
-                </PageBody>
-            </PageView>
-        </ProductCategoryProvider>
+        <PageView>
+            <PageHeader>
+                <Breadcrumbs productCategory={productCategory} isLastClickable />
+                <ProductCategoryHeader
+                    title={productCategory.name}
+                    productCategories={productCategories}
+                />
+            </PageHeader>
+            <PageBody>
+                <PageSection fill f={1} mih={0}>
+                    <ProductCategoryProducts productCategory={productCategory} />
+                </PageSection>
+            </PageBody>
+        </PageView>
     )
 });
