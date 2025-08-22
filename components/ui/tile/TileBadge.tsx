@@ -15,6 +15,7 @@ interface TileBadgeProps extends StackProps {
 export const TileBadge = ({
     corner = 'tr',
     offset = '$2',
+
     theme,
     children,
     ...props
@@ -34,8 +35,9 @@ export const TileBadge = ({
             ai="center"
             jc="center"
             p="$1"
+            px="$2"
             gap="$1"
-            br="$5"
+            br="$3"
             bg="$background"
             ov="hidden"
             elevation="$2"

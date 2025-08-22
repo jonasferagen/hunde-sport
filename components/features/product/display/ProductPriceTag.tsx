@@ -11,7 +11,7 @@ export const ProductPriceTag = React.memo(function ProductPriceTag({
     const { isOnSale, isFree } = product.availability;
 
     return (
-        <XStack ai="center" mx="$1" >
+        <XStack ai="center"  >
             {(isOnSale || isFree) ? <StarFull scale={0.5} color="gold" /> : null}
             <ProductPrice product={product as PurchasableProduct} />
         </XStack>

@@ -24,8 +24,8 @@ export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
         box
         f={1}
         mih={0}
-        gap="none"
         p="none"
+        gap="none"
         {...props}
       >
         {children}

@@ -27,7 +27,7 @@ export const HomeScreen = React.memo(() => {
             <PageHeader >
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
-            <PageBody mode="scroll" >
+            <PageBody mode="scroll">
                 <PageSection title="Nyheter" theme={THEME_PRODUCTS_RECENT_BG}>
                     <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} />
                 </PageSection>

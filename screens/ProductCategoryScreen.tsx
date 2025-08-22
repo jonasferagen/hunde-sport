@@ -32,8 +32,8 @@ export const ProductCategoryScreen = memo(() => {
                 <PageHeader>
                     <BreadCrumbsContainer />
                 </PageHeader>
-                <PageBody p="none">
-                    <PageSection p="none" fill f={1} mih={0}>
+                <PageBody >
+                    <PageSection fill f={1} mih={0}>
                         <ProductCategoryProducts />
                     </PageSection>
                 </PageBody>

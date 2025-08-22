@@ -9,28 +9,34 @@ import { ThemedYStack } from '../ui/themed-components/ThemedStacks';
 type PageSectionProps = YStackProps & {
   title?: string;
   fill?: boolean;                 // let children (e.g. FlashList) own height
+  padded?: boolean;
 };
+
+const SPACE = '$3';
 
 export const PageSection: React.FC<PageSectionProps> = ({
   title,
   children,
-  p = "none",
   fill = false,
+  padded = false,
   ...stackProps
 }) => {
 
   const hasChildren = React.Children.toArray(children).some(Boolean);
   if (!hasChildren) return null;
 
+  const py = title ? SPACE : 'none';
+  const px = padded ? SPACE : 'none';
+  const mx = padded ? 'none' : SPACE;
+
   return (
     <ThemedYStack
       box
-      py={title ? '$3' : 'none'}
-
-
+      py={py}
+      px={px}
       {...stackProps}
     >
-      {title ? <H4 mx="$3">{title}</H4> : null}
+      {title ? <H4 mx={mx}>{title}</H4> : null}
 
       <ThemedYStack
 

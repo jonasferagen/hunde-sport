@@ -1,10 +1,11 @@
+import { ThemedYStack } from '@/components/ui';
 import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { Product } from '@/types';
 import { Galeria } from '@nandorojo/galeria';
 import React from 'react';
 import { Dimensions } from 'react-native';
-import { YStack, YStackProps } from 'tamagui';
+import { YStackProps } from 'tamagui';
 
 const IMAGE_HEIGHT = 300;
 
@@ -21,11 +22,15 @@ export const ProductImage = ({ product, img_height = IMAGE_HEIGHT, ...stackProps
     const uri = getScaledImageUrl(image.src, screenWidth, screenWidth);
 
     return (
-        <YStack w="100%" h={img_height} ov="hidden" boc="$borderColor" br="$3" {...stackProps}>
+        <ThemedYStack
+            w="100%"
+            h={img_height}
+            ov="hidden"
+            boc="$borderColor"
+            {...stackProps}>
             <Galeria urls={[uri!]}>
                 <Galeria.Image>
                     <ThemedImage
-
                         w="100%"
                         h="100%"
                         uri={uri}
@@ -33,6 +38,6 @@ export const ProductImage = ({ product, img_height = IMAGE_HEIGHT, ...stackProps
                     />
                 </Galeria.Image>
             </Galeria>
-        </YStack>
+        </ThemedYStack>
     );
 };

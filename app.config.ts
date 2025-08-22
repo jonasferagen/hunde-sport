@@ -38,6 +38,11 @@ export default (): ExpoConfig => ({
             foregroundImage: './assets/images/adaptive-icon.png',
             backgroundColor: '#ffffff',
         },
+        permissions: [
+            'INTERNET',
+            'ACCESS_NETWORK_STATE',
+            'VIBRATE',
+        ],
     },
     web: { bundler: 'metro', output: 'static', favicon: './assets/images/favicon.png' },
     plugins: [

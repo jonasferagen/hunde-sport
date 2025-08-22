@@ -49,20 +49,22 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
       <PageView>
         <PageHeader><Breadcrumbs isLastClickable={false} /></PageHeader>
         <PageBody mode="scroll">
-          <PageSection pt="$5">
+          <PageSection>
             <ProductImage product={product} />
+          </PageSection>
+          <PageSection padded>
             <ThemedXStack split>
               <ProductTitle product={product} size="$5" fs={1} />
               <ProductPrice product={product} size="$5" />
             </ThemedXStack>
           </PageSection>
-          <PageSection title="Produktinformasjon" theme="primary">
+          <PageSection padded title="Produktinformasjon" theme="primary">
             <ProductDescription product={product} long />
           </PageSection>
-          <PageSection title="Produktbilder">
-            {product.images.length > 1 && <ProductImageGallery product={product} />}
+          <PageSection padded title="Produktbilder">
+            {product.images.length > 0 && <ProductImageGallery product={product} />}
           </PageSection>
-          <PageSection title="Kategorier">
+          <PageSection padded title="Kategorier">
             <ProductCategoryChips productCategories={product.categories} />
           </PageSection>
         </PageBody>
