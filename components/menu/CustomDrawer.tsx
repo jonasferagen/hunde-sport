@@ -11,24 +11,19 @@ import { ThemedLinearGradient, ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { AppVersion } from './AppVersion';
 import { ProductCategoryTree } from './ProductCategoryTree';
+import { useDrawerStore } from '@/stores/drawerStore';
 
 interface Props extends YStackProps {
     navigation: DrawerContentComponentProps['navigation'],
-    onSettledChange?: (isFullyClosed: boolean) => void;
 }
 
-export const CustomDrawer = React.memo(({ navigation, onSettledChange, ...props }: Props) => {
+export const CustomDrawer = React.memo(({ navigation, ...props }: Props) => {
 
-    const { hasOpened, isFullyClosed } = useDrawerSettled();
+    useDrawerSettled();
+    const hasOpened = useDrawerStore((s) => s.hasOpened);
     const close = React.useCallback(() => {
         navigation.dispatch(DrawerActions.closeDrawer());
     }, [navigation]);
-
-
-
-    React.useEffect(() => {
-        onSettledChange?.(isFullyClosed);
-    }, [isFullyClosed, onSettledChange]);
 
     return (
         <ThemedYStack f={1} theme={THEME_SHEET} {...props}>

@@ -4,14 +4,15 @@ import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
 import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
+import { useDrawerStore } from '@/stores/drawerStore';
 import { type DrawerContentComponentProps, type DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View, YStack } from 'tamagui';
-
+import { useDrawerSettled } from '@/hooks/useDrawerSettled';
 const AppLayout = React.memo((): React.ReactElement => {
 
-    const [drawerFullyClosed, setDrawerFullyClosed] = React.useState(true)
+
 
     const screenOptions = React.useMemo(
         () => ({
@@ -28,11 +29,12 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     const drawerContent = React.useCallback(
         (props: DrawerContentComponentProps) => (
-            <CustomDrawer navigation={props.navigation} onSettledChange={setDrawerFullyClosed} />
+            <CustomDrawer navigation={props.navigation} />
         ),
         []
     );
 
+    const isFullyClosed = useDrawerStore((s) => s.isFullyClosed);
 
     return (
         <View f={1} pos="relative">
@@ -60,7 +62,7 @@ const AppLayout = React.memo((): React.ReactElement => {
                     ))}
                 </Drawer>
                 <LoadingOverlay zi={99} />
-                <CustomBottomBar zi={drawerFullyClosed ? 0 : -1} />
+                <CustomBottomBar zi={isFullyClosed ? 0 : -1} />
             </YStack>
         </View >
     );
