@@ -12,6 +12,7 @@ import { ProductVariationStatus } from '../product-variation/ProductVariationSta
 import { PurchaseButton } from './PurchaseButton';
 import { spacePx } from '@/lib/helpers';
 import { useModalState } from '@/hooks/useModalState';
+import { Loader } from '@/components/ui/Loader';
 
 const gapPx = spacePx("$3");
 
@@ -30,7 +31,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const { purchasable } = usePurchasableContext();
     const addToCart = useAddToCart();
     const [loading, setLoading] = React.useState(false);
-    const { isFullyOpen } = useModalState();
+    const { hasOpened } = useModalState();
 
     // Track partial selection for display in label
     const [currentSelection, setCurrentSelection] = React.useState<Record<string, string>>({});
@@ -74,10 +75,11 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
 
             {/* image */}
 
-            <ProductImage product={purchasable.activeProduct} img_height={IMAGE_H} />
-
-
-            {/* attributes (auto-fit; scroll only if needed) */}
+            <ThemedYStack w="100%" h={IMAGE_H} >
+                {hasOpened ? (
+                    <ProductImage product={purchasable.activeProduct} img_height={IMAGE_H} />
+                ) : null}
+            </ThemedYStack>
 
             <Sheet.ScrollView
                 // IMPORTANT: do not set f={1} or flex here
@@ -87,12 +89,11 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
                 scrollEnabled={contentH > availableForOptions}
                 contentContainerStyle={{}}
             >
-                {isFullyOpen && <ProductVariationSelect
+                {hasOpened && <ProductVariationSelect
                     h={availableForOptions}
                     onSelectionChange={setCurrentSelection}
                 />}
             </Sheet.ScrollView>
-
 
             {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout} >

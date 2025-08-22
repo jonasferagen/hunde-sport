@@ -30,10 +30,9 @@ export const ModalHost = () => {
         }))
     );
 
-    const { isFullyOpen, onHostLayout } = useModalState();
+    const { isVisible, onHostLayout } = useModalState();
 
-
-    const body = isFullyOpen
+    const body = isVisible
         ? renderer?.(payload, { close: () => closeModal(), setPosition: setModalPosition })
         : null;
 
@@ -52,7 +51,7 @@ export const ModalHost = () => {
                     onPositionChange={setModalPosition}
                     unmountChildrenWhenHidden
                     dismissOnSnapToBottom
-                    animation="fast"
+                    animation="lazy"
                 >
                     <Sheet.Overlay bg="black" opacity={0.15} />
                     <Sheet.Frame f={1} mih={0} p="$4" gap="$3" mb={insets.bottom} onLayout={onHostLayout}>
