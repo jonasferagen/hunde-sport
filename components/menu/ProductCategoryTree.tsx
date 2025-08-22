@@ -27,7 +27,7 @@ type TreeCtxValue = {
 };
 const TreeCtx = React.createContext<TreeCtxValue | null>(null);
 
-export const ProductCategoryTree = memo((): JSX.Element => {
+export const ProductCategoryTree = () => {
     // Single entry: start at root (id=0)
     const scrollRef = useAnimatedRef<AnimatedScrollViewRef>();
     const lastYRef = React.useRef(0);
@@ -65,9 +65,11 @@ export const ProductCategoryTree = memo((): JSX.Element => {
             </ThemedYStack>
         </TreeCtx.Provider>
     );
-});
+};
 
 export const ProductCategoryBranch = memo(({ id, level }: { id: number; level: number }) => {
+
+
     const node = useProductCategory(id);
     const children = useProductCategories(id);
     const hasChildren = children.length > 0;
@@ -75,22 +77,25 @@ export const ProductCategoryBranch = memo(({ id, level }: { id: number; level: n
     const isExpanded = useIsExpanded(id);
     const toggle = useToggleExpanded();
 
-    const showSelf = id !== 0; // don’t render the dummy root row
+
+
+
 
     return (
         <Animated.View layout={LinearTransition.duration(150)}>
             <ThemedYStack>
-                {showSelf && (
-                    <ThemedXStack>
-                        <ProductCategoryTreeItem
-                            productCategory={node}
-                            level={level}
-                            isExpanded={isExpanded}
-                            hasChildren={hasChildren}
-                            handleExpand={toggle}
-                        />
-                    </ThemedXStack>
-                )}
+
+                {id > 0 && <ThemedXStack>
+                    <ProductCategoryTreeItem
+                        productCategory={node}
+                        level={level}
+                        isExpanded={isExpanded}
+                        hasChildren={hasChildren}
+                        handleExpand={toggle}
+                    />
+                </ThemedXStack>
+                }
+
 
                 {isExpanded && hasChildren && (
                     <Animated.View

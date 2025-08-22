@@ -32,6 +32,7 @@ const HOVER_STYLE = { backgroundColor: '$backgroundHover', borderColor: '$border
 const PRESS_STYLE = { backgroundColor: '$backgroundPress', borderColor: '$borderColor' } as const
 const FOCUS_STYLE = { backgroundColor: '$backgroundFocus', borderColor: '$borderColor', outlineWidth: 2, outlineStyle: 'solid' } as const
 
+
 export const ButtonFrame = styled(ThemedSurface, {
     name: 'ThemedButton',
     context: ButtonContext,
@@ -47,20 +48,22 @@ export const ButtonFrame = styled(ThemedSurface, {
         },
         size: {
             '...size': (token: SizeTokens) => {
-                const s = SIZES[(token as SizeKey) ?? (DEFAULT_SIZE as SizeKey)]
-                return { height: s.h, paddingHorizontal: s.px, gap: s.gap }
+                const s = SIZES[(token as SizeKey) ?? (DEFAULT_SIZE as SizeKey)];
+                return { height: s.h, paddingHorizontal: s.px, gap: s.gap };
             },
         },
         circular: {
             true: (_val: boolean, { props }: { props: { size?: SizeTokens } }) => {
-                const s = SIZES[(props.size as SizeKey) ?? (DEFAULT_SIZE as SizeKey)]
-                return { bw: 0, br: 9999, w: s.h, h: s.h, px: 0, ai: 'center', jc: 'center', gap: 0 }
+                const s = SIZES[(props.size as SizeKey) ?? (DEFAULT_SIZE as SizeKey)];
+                return { bw: 0, br: 9999, w: s.h, h: s.h, px: 0, ai: 'center', jc: 'center', gap: 0 };
             },
             false: {},
         },
     } as const,
     defaultVariants: { interactive: true, size: DEFAULT_SIZE },
-})
+});
+
+
 
 export const ButtonText = styled(Text, {
     name: 'ButtonText',
@@ -115,7 +118,33 @@ const ButtonAfter = memo(({ children }: { children?: React.ReactNode }) => {
     return <View ml="auto">{children}</View>
 })
 
-export const ThemedButton = withStaticProperties(ButtonFrame, {
+
+
+
+// --- NEW: thin wrapper that auto-disables when onPress is missing ---
+type ButtonProps = React.ComponentProps<typeof ButtonFrame>;
+
+const ThemedButtonBase = React.forwardRef<any, ButtonProps>((props, ref) => {
+    const { onPress, disabled, interactive, ...rest } = props;
+
+    // If there’s no onPress, force non-interactive + disabled + strip handlers
+    const isInteractive = interactive ?? !!onPress;
+    const isDisabled = disabled ?? !onPress;
+
+    return (
+        <ButtonFrame
+            ref={ref}
+            interactive={isInteractive && !isDisabled}
+            disabled={isDisabled}
+            onPress={isDisabled ? undefined : onPress}
+            {...rest}
+        />
+    );
+});
+
+
+
+export const ThemedButton = withStaticProperties(ThemedButtonBase, {
     Props: ButtonContext.Provider,
     Text: ButtonText,
     Before: ButtonBefore,

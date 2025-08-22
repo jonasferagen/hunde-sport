@@ -9,15 +9,15 @@ import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { AppVersion } from './AppVersion';
 import { ProductCategoryTree } from './ProductCategoryTree';
 import { useDrawerStore } from '@/stores/drawerStore';
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
 
-export const CustomDrawer = () => {
+import React from 'react';
+import { DrawerContentComponentProps } from '@react-navigation/drawer';
+
+export const CustomDrawer = ({ navigation }: { navigation: DrawerContentComponentProps['navigation'] }) => {
     useDrawerSettled();
 
     const installControls = useDrawerStore((s) => s.installControls);
     const clearControls = useDrawerStore((s) => s.clearControls);
-    const navigation = useNavigation(); // from @react-navigation/native
 
     React.useEffect(() => {
         installControls(navigation as any);
@@ -37,10 +37,10 @@ const CustomDrawerContent = () => {
             <ThemedLinearGradient fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} />
             <ThemedXStack container split>
                 <H3>hunde-sport.no</H3>
-                <ThemedButton circular disabled={!closeDrawer} onPress={closeDrawer}><X /></ThemedButton>
+                <ThemedButton circular onPress={closeDrawer}><X /></ThemedButton>
             </ThemedXStack>
-            <ThemedYStack f={1} mih={0}>
-                {hasOpened ? <ProductCategoryTree /> : <Loader />}
+            <ThemedYStack f={1} mih={0} >
+                {hasOpened ? <ProductCategoryTree /> : <ProductCategoryTree />}
             </ThemedYStack>
             <AppVersion />
         </ThemedYStack>

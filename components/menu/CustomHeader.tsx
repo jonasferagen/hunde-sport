@@ -18,6 +18,7 @@ export const CustomHeader = React.memo(({ route, options }: DrawerHeaderProps) =
             : computed;
 
     const openDrawer = useDrawerStore((s) => s.openDrawer);
+
     return (
         <Theme name={THEME_HEADER}>
             <ThemedXStack container split box>

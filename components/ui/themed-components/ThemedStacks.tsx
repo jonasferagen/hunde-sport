@@ -28,8 +28,6 @@ const config = {
                 const tokenValue = theme['background'];
                 const base = String(getVariableValue(tokenValue)); // resolve $background
                 const a = Math.max(0, Math.min(1, Number(alpha) || 0));   // clamp 0..1
-
-                console.log(rgba(base, a));
                 return { bg: rgba(base, a) };
             },
     }

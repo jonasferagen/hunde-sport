@@ -12,6 +12,13 @@ import { View, YStack } from 'tamagui';
 
 const AppLayout = React.memo((): React.ReactElement => {
 
+    const isFullyClosed = useDrawerStore((s) => s.isFullyClosed);
+
+    const drawerContent = React.useCallback(
+        (props: DrawerContentComponentProps) => <CustomDrawer navigation={props.navigation} />,
+        []
+    );
+
     const screenOptions = React.useMemo(
         () => ({
             header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
@@ -23,22 +30,14 @@ const AppLayout = React.memo((): React.ReactElement => {
         []
     );
 
-    const drawerContent = React.useCallback(
-        (_props: DrawerContentComponentProps) => <CustomDrawer />,
-        []
-    );
-
-    const isFullyClosed = useDrawerStore((s) => s.isFullyClosed);
-
     return (
         <View f={1} pos="relative">
-            <YStack pos="absolute" fullscreen zIndex={0}>
+            <YStack pos="absolute" fullscreen>
                 <Drawer
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
                     detachInactiveScreens={false}
                     initialRouteName='index'
-
                 >
                     {Object.values(routes).map((route) => (
                         <Drawer.Screen
@@ -50,7 +49,6 @@ const AppLayout = React.memo((): React.ReactElement => {
                                 ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
                                 freezeOnBlur: true,
                                 sceneStyle: { backgroundColor: 'transparent' },
-
                             }}
                         />
                     ))}

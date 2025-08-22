@@ -5,7 +5,7 @@ import type { LayoutChangeEvent } from 'react-native';
 import { useModalStore } from '@/stores/modalStore';
 import { useShallow } from 'zustand/react/shallow';
 
-const OPEN_SETTLE_DELAY_MS = 1000; // tune to your Sheet animation
+const OPEN_SETTLE_DELAY_MS = 200; // tune to your Sheet animation
 const CLOSE_SETTLE_DELAY_MS = 50;  // small buffer
 
 export function useModalSettled() {

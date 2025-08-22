@@ -31,13 +31,11 @@ export const ModalHost = () => {
     );
 
     const { isFullyClosed, onHostLayout } = useModalSettled();
-
     const body = isFullyClosed
         ? null
         : renderer?.(payload, { close: () => closeModal(), setPosition: setModalPosition })
 
     const insets = useSafeAreaInsets();
-
 
     return (
         <Dialog open={open} onOpenChange={(o) => { if (!o) closeModal(); }}>
@@ -51,7 +49,7 @@ export const ModalHost = () => {
                     onPositionChange={setModalPosition}
                     unmountChildrenWhenHidden
                     dismissOnSnapToBottom
-                    animation="lazy"
+                    animation="fast"
                 >
                     <Sheet.Overlay bg="black" opacity={0.15} />
                     <Sheet.Frame f={1} mih={0} p="$4" gap="$3" mb={insets.bottom} onLayout={onHostLayout}>

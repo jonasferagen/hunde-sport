@@ -12,6 +12,7 @@ import { ProductVariationStatus } from '../product-variation/ProductVariationSta
 import { PurchaseButton } from './PurchaseButton';
 import { spacePx } from '@/lib/helpers';
 import { useModalSettled } from '@/hooks/useModalSettled';
+import { Loader } from '@/components/ui/Loader';
 
 const gapPx = spacePx("$3");
 
@@ -75,9 +76,9 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
             {/* image */}
 
             <ThemedYStack w="100%" h={IMAGE_H} >
-                {hasOpened ? (
+                {hasOpened &&
                     <ProductImage product={purchasable.activeProduct} img_height={IMAGE_H} />
-                ) : null}
+                }
             </ThemedYStack>
 
             <Sheet.ScrollView
