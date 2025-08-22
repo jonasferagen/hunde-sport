@@ -8,7 +8,7 @@ import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setModalPosition, useModalStore } from '@/stores/modalStore';
 import { useShallow } from 'zustand/react/shallow';
-import { useModalSettled } from '@/hooks/useModalState';
+import { useModalSettled } from '@/hooks/useModalSettled';
 export const ModalHost = () => {
 
     // ...

@@ -13,24 +13,24 @@ import { AppVersion } from './AppVersion';
 import { ProductCategoryTree } from './ProductCategoryTree';
 import { useDrawerStore } from '@/stores/drawerStore';
 
-interface Props extends YStackProps {
-    navigation: DrawerContentComponentProps['navigation'],
-}
 
-export const CustomDrawer = React.memo(({ navigation, ...props }: Props) => {
-
+export const CustomDrawer = () => {
     useDrawerSettled();
+    return <CustomDrawerContent />
+};
+
+
+const CustomDrawerContent = () => {
+
     const hasOpened = useDrawerStore((s) => s.hasOpened);
-    const close = React.useCallback(() => {
-        navigation.dispatch(DrawerActions.closeDrawer());
-    }, [navigation]);
+    const closeDrawer = useDrawerStore((s) => s.closeDrawer);
 
     return (
-        <ThemedYStack f={1} theme={THEME_SHEET} {...props}>
+        <ThemedYStack f={1} theme={THEME_SHEET}>
             <ThemedLinearGradient fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} />
             <ThemedXStack container split>
                 <H3>hunde-sport.no</H3>
-                <ThemedButton circular onPress={close}><X /></ThemedButton>
+                <ThemedButton circular onPress={closeDrawer}><X /></ThemedButton>
             </ThemedXStack>
             <ThemedYStack f={1} mih={0}>
                 {hasOpened ? <ProductCategoryTree /> : <Loader />}
@@ -38,5 +38,4 @@ export const CustomDrawer = React.memo(({ navigation, ...props }: Props) => {
             <AppVersion />
         </ThemedYStack>
     );
-});
-
+};

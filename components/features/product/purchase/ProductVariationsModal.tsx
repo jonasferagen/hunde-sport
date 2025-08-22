@@ -11,7 +11,7 @@ import { ProductVariationSelect } from '../product-variation/ProductVariationSel
 import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
 import { PurchaseButton } from './PurchaseButton';
 import { spacePx } from '@/lib/helpers';
-import { useModalSettled } from '@/hooks/useModalState';
+import { useModalSettled } from '@/hooks/useModalSettled';
 
 const gapPx = spacePx("$3");
 
