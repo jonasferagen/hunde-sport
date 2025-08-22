@@ -80,19 +80,18 @@ export const useProductCategories = (parentId: number): readonly ProductCategory
 
 
 
-
 export const useBreadcrumbTrail = (productCategoryId: number): readonly ProductCategory[] => {
-    // Stable reference; only changes when setProductCategories() runs at app load
     const map = useProductCategoryStore((s) => s.map);
 
     return React.useMemo(() => {
         const trail: ProductCategory[] = [];
         let cur = map.get(productCategoryId);
-        while (cur && cur.parent !== -1) {
-            trail.unshift(cur);
+
+        while (cur) {
+            trail.unshift(cur);           // include current
+            if (cur.parent === -1) break; // stop after adding root
             cur = map.get(cur.parent);
         }
-
         return trail;
     }, [map, productCategoryId]);
 };

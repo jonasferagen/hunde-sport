@@ -21,8 +21,6 @@ export const Breadcrumbs = React.memo(({ isLastClickable = false, trail, ...stac
     const edges = useEdgeFades('horizontal');
     const { linkProps } = useCanonicalNavigation();
 
-    console.log(trail);
-
     if (trail.length === 0) return null;
     return (
         <ThemedXStack {...stackProps} my="$3">
