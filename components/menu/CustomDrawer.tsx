@@ -24,6 +24,8 @@ export const CustomDrawer = React.memo(({ navigation, onSettledChange, ...props 
         navigation.dispatch(DrawerActions.closeDrawer());
     }, [navigation]);
 
+
+
     React.useEffect(() => {
         onSettledChange?.(isFullyClosed);
     }, [isFullyClosed, onSettledChange]);

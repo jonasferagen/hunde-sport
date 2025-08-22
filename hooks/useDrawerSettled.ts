@@ -74,6 +74,7 @@ export function useDrawerSettled(opts: Options = {}) {
             }
         }
     );
+    const isVisible = !isFullyClosed;
 
-    return { isFullyOpen, isFullyClosed, hasOpened };
+    return { isFullyOpen, isFullyClosed, isVisible, hasOpened };
 }

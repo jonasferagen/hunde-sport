@@ -1,4 +1,5 @@
-// hooks/useModalState.ts
+// hooks/ModalSettled
+// .ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { useModalStore } from '@/stores/modalStore';
@@ -7,7 +8,7 @@ import { useShallow } from 'zustand/react/shallow';
 const OPEN_SETTLE_DELAY_MS = 1000; // tune to your Sheet animation
 const CLOSE_SETTLE_DELAY_MS = 50;  // small buffer
 
-export function useModalState() {
+export function useModalSettled() {
     const { open, status, setStatus } = useModalStore(
         useShallow((s) => ({
             open: s.open,
@@ -87,8 +88,7 @@ export function useModalState() {
     // derived flags from the store (like your working version)
     const isFullyOpen = status === 'open';
     const isFullyClosed = status === 'closed';
-    const isVisible = status !== 'closed';
     // (you can also expose isOpening/ isClosing if needed)
 
-    return { isFullyOpen, isFullyClosed, isVisible, hasOpened, onHostLayout };
+    return { isFullyOpen, isFullyClosed, hasOpened, onHostLayout };
 }

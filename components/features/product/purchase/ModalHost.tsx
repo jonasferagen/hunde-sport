@@ -8,7 +8,7 @@ import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setModalPosition, useModalStore } from '@/stores/modalStore';
 import { useShallow } from 'zustand/react/shallow';
-import { useModalState } from '@/hooks/useModalState';
+import { useModalSettled } from '@/hooks/useModalState';
 export const ModalHost = () => {
 
     // ...
@@ -30,11 +30,11 @@ export const ModalHost = () => {
         }))
     );
 
-    const { isVisible, onHostLayout } = useModalState();
+    const { isFullyClosed, onHostLayout } = useModalSettled();
 
-    const body = isVisible
-        ? renderer?.(payload, { close: () => closeModal(), setPosition: setModalPosition })
-        : null;
+    const body = isFullyClosed
+        ? null
+        : renderer?.(payload, { close: () => closeModal(), setPosition: setModalPosition })
 
     const insets = useSafeAreaInsets();
 

@@ -11,8 +11,7 @@ import { ProductVariationSelect } from '../product-variation/ProductVariationSel
 import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
 import { PurchaseButton } from './PurchaseButton';
 import { spacePx } from '@/lib/helpers';
-import { useModalState } from '@/hooks/useModalState';
-import { Loader } from '@/components/ui/Loader';
+import { useModalSettled } from '@/hooks/useModalState';
 
 const gapPx = spacePx("$3");
 
@@ -31,7 +30,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const { purchasable } = usePurchasableContext();
     const addToCart = useAddToCart();
     const [loading, setLoading] = React.useState(false);
-    const { hasOpened } = useModalState();
+    const { hasOpened } = useModalSettled();
 
     // Track partial selection for display in label
     const [currentSelection, setCurrentSelection] = React.useState<Record<string, string>>({});
