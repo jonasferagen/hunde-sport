@@ -3,19 +3,19 @@ import React, { useState, useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { Link } from 'expo-router';
 import { Chip } from '@/components/ui/chips/Chip';
-import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components';
+import { ThemedStackProps, ThemedXStack, ThemedYStack } from '@/components/ui/themed-components';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { Button, Sheet, Text, Separator } from 'tamagui';
 import type { ProductCategory } from '@/types';
 
-type Props = {
+interface Props extends ThemedStackProps {
     productCategories: readonly ProductCategory[];
 };
 
 const INLINE_LIMIT = 12;
 const INLINE_SHOW = 8; // when many, show this many + “+N flere”
 
-export const ProductCategoryHeader: React.FC<Props> = ({ productCategories }) => {
+export const ProductCategoryHeader: React.FC<Props> = ({ productCategories, ...props }) => {
     const [open, setOpen] = useState(false);
     const { linkProps } = useCanonicalNavigation();
 
@@ -26,7 +26,7 @@ export const ProductCategoryHeader: React.FC<Props> = ({ productCategories }) =>
 
     const ChipLink = ({ c }: { c: ProductCategory }) => (
         <Link {...linkProps('product-category', c)} asChild>
-            <Chip theme="shade">{c.name}</Chip>
+            <Chip theme="tint">{c.name}</Chip>
         </Link>
     );
     if (count === 0) return null;
@@ -34,13 +34,13 @@ export const ProductCategoryHeader: React.FC<Props> = ({ productCategories }) =>
     const inline = many ? productCategories.slice(0, INLINE_SHOW) : productCategories;
 
     return (
-        <ThemedYStack container>
+        <ThemedYStack {...props}>
             <ThemedXStack fw="wrap" gap="$2">
                 {inline.map((c) => <ChipLink key={c.id} c={c} />)}
                 {many && (
-                    <Button size="$2" onPress={openAll}>
+                    <Chip theme="shade" onPress={openAll}>
                         +{count - INLINE_SHOW} flere
-                    </Button>
+                    </Chip>
                 )}
             </ThemedXStack>
 
@@ -67,7 +67,7 @@ export const ProductCategoryHeader: React.FC<Props> = ({ productCategories }) =>
                         contentContainerStyle={{ gap: 8, paddingBottom: 8 }}
                         renderItem={({ item }) => (
                             <Link {...linkProps('product-category', item)} asChild>
-                                <Chip theme="shade">{item.name}</Chip>
+                                <Chip theme="tint">{item.name}</Chip>
                             </Link>
                         )}
                     />

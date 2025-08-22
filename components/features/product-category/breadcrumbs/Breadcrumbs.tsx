@@ -1,25 +1,25 @@
 // Breadcrumbs.tsx
 import React from 'react';
 import { ScrollView } from 'tamagui';
-import { ThemedXStack } from '@/components/ui';
+import { ThemedXStack, ThemedXStackProps } from '@/components/ui';
 import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import { ProductCategory } from '@/types';
 import { Breadcrumb } from './Breadcrumb';
 import { useEdgeFades } from '@/hooks/useEdgeFades';
 
-interface BreadcrumbsProps {
+interface BreadcrumbsProps extends ThemedXStackProps {
     isLastClickable?: boolean;
     trail: readonly ProductCategory[];
 }
 
-export const Breadcrumbs = React.memo(({ isLastClickable = false, trail }: BreadcrumbsProps) => {
+export const Breadcrumbs = React.memo(({ isLastClickable = false, trail, ...stackProps }: BreadcrumbsProps) => {
 
     const edges = useEdgeFades('horizontal');
 
-    console.log(edges);
+
     if (trail.length === 0) return null;
     return (
-        <ThemedXStack>
+        <ThemedXStack {...stackProps}>
             <ScrollView
                 horizontal
                 onScroll={edges.onScroll}
@@ -45,7 +45,6 @@ export const Breadcrumbs = React.memo(({ isLastClickable = false, trail }: Bread
                 orientation="horizontal"
                 visibleStart={edges.atStart}
                 visibleEnd={edges.atEnd}
-                bg="#fff"
             />
         </ThemedXStack>
     );

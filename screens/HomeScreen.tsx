@@ -24,7 +24,7 @@ export const HomeScreen = React.memo(() => {
 
     return (
         <PageView>
-            <PageHeader >
+            <PageHeader container >
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
             <PageBody mode="scroll">

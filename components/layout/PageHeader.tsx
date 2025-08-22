@@ -7,6 +7,7 @@ import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradie
 interface PageHeaderProps extends YStackProps {
     title?: string;
     children?: React.ReactNode;
+    container?: boolean;
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...props }) => {
@@ -15,6 +16,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, children, ...prop
         <Theme name={THEME_PAGE_HEADER}>
             <ThemedYStack
                 btw={0}
+                gap="none"
                 {...props}
             >
                 <ThemedLinearGradient />

@@ -52,14 +52,16 @@ export const SearchScreen = () => {
 
     return (
         <PageView>
-            <PageHeader>
-                <SearchBar
-                    value={query}
-                    onChangeText={setQuery}
-                    onSubmit={submitInThisScreen}   // <- keep URL & state in sync
-                    placeholder="Produktsøk"
-                />
-                <ThemedXStack container split>
+            <PageHeader container>
+                <ThemedYStack>
+                    <SearchBar
+                        value={query}
+                        onChangeText={setQuery}
+                        onSubmit={submitInThisScreen}   // <- keep URL & state in sync
+                        placeholder="Produktsøk"
+                    />
+                </ThemedYStack>
+                <ThemedXStack split>
                     <SizableText f={1}>{title}</SizableText>
                     <SizableText f={0}>{total}</SizableText>
                 </ThemedXStack>
