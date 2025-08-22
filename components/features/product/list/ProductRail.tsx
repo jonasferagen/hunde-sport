@@ -19,7 +19,7 @@ type ProductRailProps = StackProps & {
 export const ProductRail: React.FC<ProductRailProps> = ({
     useQuery,
     limit = 4,
-    leadingInsetToken = '$6',
+    leadingInsetToken = '$3',
     gapToken = '$3',
     padToken = '$3',
     theme,
@@ -28,7 +28,7 @@ export const ProductRail: React.FC<ProductRailProps> = ({
     const queryResult = useQuery();
 
     return (
-        <Theme name={theme || null}>
+        <Theme name={theme || null} >
             <HorizontalTiles
                 queryResult={queryResult}
                 limit={limit}

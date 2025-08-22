@@ -8,8 +8,9 @@ import { Purchasable } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Sheet } from 'tamagui';
-import { ProductImage, ProductPrice, ProductStatus, ProductTitle, ProductVariationLabel } from '../display';
+import { ProductImage, ProductPrice, ProductStatus, ProductTitle } from '../display';
 import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
+import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
 import { PurchaseButton } from './PurchaseButton';
 
 export const ProductVariationsModal = ({
@@ -47,7 +48,6 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const IMAGE_H = 200;
     const paddings = 0; // if your frame has vertical padding, add it here
     const availableForOptions = Math.max(0, bodyH - headerH - IMAGE_H - footerH - CTA_HEIGHT - paddings);
-
 
     const onPress = async () => {
 
@@ -94,9 +94,10 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
 
             {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout}>
-                <ProductVariationLabel
-                    currentSelection={currentSelection}
+                <ProductVariationStatus
+                    product={purchasable.product}
                     productVariation={purchasable.productVariation}
+                    currentSelection={currentSelection}
                 />
                 <ThemedXStack split>
                     <ProductStatus product={purchasable.activeProduct} />

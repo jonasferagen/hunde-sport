@@ -5,7 +5,7 @@ import { ThemedSurface } from '@/components/ui/themed-components/ThemedSurface';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { usePurchasableContext } from '@/contexts';
 import { Product } from '@/types';
-import { Boxes, ShoppingCart, X } from '@tamagui/lucide-icons';
+import { Boxes, ShoppingCart, XCircle } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { Theme, type ThemeName } from 'tamagui';
 import { ProductPrice } from '../display';
@@ -14,7 +14,7 @@ import { computeCTA, type PurchaseCTAMode, type PurchaseCTAModeInput } from './p
 const ICONS: Record<PurchaseCTAMode, JSX.Element> = {
     buy: <ShoppingCart />,
     'select-variation': <Boxes />,
-    unavailable: <X />,
+    unavailable: <XCircle />,
 };
 
 const THEMES: Record<PurchaseCTAMode, ThemeName> = {
@@ -50,7 +50,6 @@ export const PurchaseButton = React.memo(function PurchaseButton({
             purchasable.message,
         ]
     );
-
 
     const theme = THEMES[cta.mode];
     const disabled = cta.disabled || isLoading || !enabled;

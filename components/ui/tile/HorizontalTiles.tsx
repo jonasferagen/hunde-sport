@@ -1,6 +1,7 @@
 // HorizontalTiles.tsx
 import { ProductPriceTag } from '@/components/features/product/display';
 import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
+import { THEME_PRICE_TAG } from '@/config/app';
 import type { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useEdgeFades } from '@/hooks/useEdgeFades';
@@ -11,6 +12,7 @@ import { FlashList } from '@shopify/flash-list';
 import React, { JSX } from 'react';
 import { Dimensions, View as RNView, StyleSheet } from 'react-native';
 import { SpaceTokens, StackProps, View } from 'tamagui';
+import { ThemedText, ThemedYStack } from '../themed-components';
 import { TileBadge } from './TileBadge';
 import { TileFixed } from './TileFixed';
 
@@ -126,9 +128,22 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                         imagePriority={index < 3 ? 'high' : 'low'}
                         interactive={vis.set.has(index)}
                     >
-                        <TileBadge pointerEvents="none">
+                        {/* Price pill */}
+                        <TileBadge theme={THEME_PRICE_TAG} corner="tr">
                             <ProductPriceTag product={item} />
                         </TileBadge>
+
+                        {!item.availability.isInStock && (
+                            <>
+                                <ThemedYStack bg="black" fullscreen pos="absolute" o={.4} pointerEvents="none" />
+                                <TileBadge theme="secondary" corner="tl" >
+                                    <ThemedText ai="center" jc="center" gap="$1">
+                                        Utsolgt!
+                                    </ThemedText>
+
+                                </TileBadge>
+                            </>
+                        )}
                     </TileFixed>
                 </RNView>
             )

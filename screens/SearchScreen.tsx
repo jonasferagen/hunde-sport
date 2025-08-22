@@ -1,7 +1,7 @@
 // SearchScreen.tsx
 import { ProductList } from '@/components/features/product/list/ProductList';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
-import { ThemedXStack } from '@/components/ui';
+import { ThemedXStack, ThemedYStack } from '@/components/ui';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
@@ -64,8 +64,8 @@ export const SearchScreen = () => {
                     <SizableText f={0}>{total}</SizableText>
                 </ThemedXStack>
             </PageHeader>
-            <PageBody pad="none">
-                <PageSection useContainer={false} pad="none" fill f={1} mih={0}>
+            <PageBody p="none">
+                <PageSection p="none" fill f={1} mih={0} >
                     {/* Show nothing (or a subtle placeholder) until ready */}
                     {!ready ? (
                         null
@@ -74,13 +74,16 @@ export const SearchScreen = () => {
                     ) : !result.items?.length ? (
                         <DefaultTextContent>Ingen resultater funnet for "{searchQuery}"</DefaultTextContent>
                     ) : (
-                        <ProductList
-                            transitionKey={searchQuery}
-                            products={result.items}
-                            loadMore={result.fetchNextPage}
-                            isLoadingMore={result.isLoading || result.isFetchingNextPage}
-                            hasMore={result.hasNextPage}
-                        />
+                        <ThemedYStack f={1} mih={0}>
+                            <ProductList
+                                transitionKey={searchQuery}
+                                products={result.items}
+                                loadMore={result.fetchNextPage}
+                                isLoadingMore={result.isLoading || result.isFetchingNextPage}
+                                hasMore={result.hasNextPage}
+                                totalProducts={result.total}
+                            />
+                        </ThemedYStack>
                     )}
 
                 </PageSection>

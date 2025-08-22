@@ -5,6 +5,7 @@ import { useProductVariationSelector } from '@/domain/Product/helpers/useProduct
 import { VariableProduct } from '@/domain/Product/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { spacePx } from '@/lib/helpers';
+import { ProductVariation } from '@/types';
 import React from 'react';
 import { XStack, YStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
@@ -54,7 +55,7 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
         onProductVariationSelected: handleVariationSelected,
     });
 
-    // Expose current selection to parent (modal) so it can render partial selections
+    // Expose current selection whenever it changes
     React.useEffect(() => {
         props.onSelectionChange?.(selectionManager.selections);
     }, [props.onSelectionChange, selectionManager]);

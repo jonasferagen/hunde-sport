@@ -28,19 +28,19 @@ export const HomeScreen = React.memo(() => {
                 <SearchBar onSubmit={handleSearch} />
             </PageHeader>
             <PageBody mode="scroll" >
-                <PageSection title="Nyheter" bleedX theme={THEME_PRODUCTS_RECENT_BG} >
+                <PageSection title="Nyheter" theme={THEME_PRODUCTS_RECENT_BG}>
                     <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} />
                 </PageSection>
-                <PageSection title="Kategorier" bleedX theme={THEME_CATEGORIES_BG}>
+                <PageSection title="Kategorier" theme={THEME_CATEGORIES_BG}>
                     <ProductCategoryTiles key="categories" theme={THEME_CATEGORIES} />
                 </PageSection>
-                <PageSection title="Tilbud" bleedX theme={THEME_PRODUCTS_DISCOUNTED_BG} >
+                <PageSection title="Tilbud" theme={THEME_PRODUCTS_DISCOUNTED_BG} >
                     <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} />
                 </PageSection>
-                <PageSection title="Utvalgte produkter" bleedX theme={THEME_PRODUCTS_FEATURED_BG}>
+                <PageSection title="Utvalgte produkter" theme={THEME_PRODUCTS_FEATURED_BG}>
                     <FeaturedProducts key='featured' theme={THEME_PRODUCTS_FEATURED} />
                 </PageSection>
-                <PageSection title="Debug" bleedX >
+                <PageSection title="Debug"  >
                     <DebugProducts key='debug' />
                 </PageSection>
             </PageBody>

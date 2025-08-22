@@ -1,9 +1,8 @@
-import Constants from "expo-constants";
+import * as Application from 'expo-application';
 import { ThemedText, ThemedXStack } from "../ui";
-
 export const AppVersion = () => {
-  const version = Constants.expoConfig?.version;
-  const build = Constants.expoConfig?.android?.versionCode || "N/A";
+  const version = Application.nativeApplicationVersion ?? '?.?'; // versionName / CFBundleShortVersionString
+  const build = Application.nativeBuildVersion ?? 'N/A';         // versionCode / CFBundleVersion
 
   return (
     <ThemedXStack container ai="center" jc="flex-end">

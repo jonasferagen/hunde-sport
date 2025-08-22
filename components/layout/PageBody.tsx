@@ -1,5 +1,4 @@
 // PageBody.tsx
-import { spacePx } from '@/lib/helpers';
 import React from 'react';
 import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,8 +15,8 @@ interface PageBodyProps extends YStackProps {
 }
 
 export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
-  ({ children, mode = 'static', pad = 'none', ...props }, ref) => {
-    const padPx = pad === 'none' ? 0 : spacePx(pad);
+  ({ children, mode = 'static', ...props }, ref) => {
+
     const insets = useSafeAreaInsets();
     const bottomInset = insets.bottom;
     const content = (
@@ -26,7 +25,7 @@ export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
         f={1}
         mih={0}
         gap="none"
-        px={padPx}
+        p="none"
         {...props}
       >
         {children}
@@ -38,7 +37,7 @@ export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
         ref={ref}
         style={{ flex: 1 }}
         contentContainerStyle={{
-          paddingHorizontal: padPx,   // padding only here in scroll mode
+          paddingHorizontal: 0,   // padding only here in scroll mode
           paddingBottom: bottomInset, // keep content above the bottom bar
         }}
         keyboardShouldPersistTaps="handled"

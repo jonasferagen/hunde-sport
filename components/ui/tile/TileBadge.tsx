@@ -1,18 +1,48 @@
-import { JSX } from "react";
-import { YStack, YStackProps } from "tamagui";
+// components/ui/TileBadge.tsx
+import { ThemedXStack } from '@/components/ui';
+import React from 'react';
+import { StackProps, ThemeName } from 'tamagui';
 
-interface TileBadgeProps extends YStackProps { }
+type Corner = 'tl' | 'tr' | 'bl' | 'br';
 
-export const TileBadge = ({ children, ...props }: TileBadgeProps): JSX.Element => {
+interface TileBadgeProps extends StackProps {
+    corner?: Corner;        // which corner to pin the badge to
+    offset?: number | string; // spacing from edges, defaults to $2
+    theme?: ThemeName;         // theme name for the pill
+    children: React.ReactNode;
+}
+
+export const TileBadge = ({
+    corner = 'tr',
+    offset = '$2',
+    theme,
+    children,
+    ...props
+}: TileBadgeProps) => {
+    const pos: Record<Corner, Partial<StackProps>> = {
+        tl: { t: offset, l: offset },
+        tr: { t: offset, r: offset },
+        bl: { b: offset, l: offset },
+        br: { b: offset, r: offset },
+    };
+
     return (
-        <YStack
+        <ThemedXStack
+            theme={theme}
             pos="absolute"
-            t="$2"
-            r="$2"
-
+            {...pos[corner]}
+            ai="center"
+            jc="center"
+            p="$1"
+            gap="$1"
+            br="$5"
+            bg="$background"
+            ov="hidden"
+            elevation="$2"
+            pointerEvents="none" // badges are decorative by default
             {...props}
         >
             {children}
-        </YStack>
+        </ThemedXStack>
     );
 };
