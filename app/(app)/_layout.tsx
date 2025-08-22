@@ -3,12 +3,11 @@ import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 import { CustomDrawer } from '@/components/menu/CustomDrawer';
 import { CustomHeader } from '@/components/menu/CustomHeader';
 import { routes } from '@/config/routes';
-import { useDrawerSettled } from '@/hooks/useDrawerSettled';
 import { LoadingOverlay } from '@/screens/misc/LoadingOverlay';
 import { useDrawerStore } from '@/stores/drawerStore';
 import { type DrawerContentComponentProps, type DrawerHeaderProps } from '@react-navigation/drawer';
 import Drawer from 'expo-router/drawer';
-import React, { JSX } from 'react';
+import React from 'react';
 import { View, YStack } from 'tamagui';
 
 const AppLayout = React.memo((): React.ReactElement => {
@@ -20,16 +19,14 @@ const AppLayout = React.memo((): React.ReactElement => {
             freezeOnBlur: false,          // default
             unmountOnBlur: false,        // default
             lazy: true,
-            detachInactiveScreens: true,
-            drawerStyle: { zIndex: 1000 },
         }),
         []
     );
 
-    const drawerContent = React.useCallback((props: DrawerContentComponentProps): JSX.Element => {
-        useDrawerStore.getState().installControls(props.navigation);
-        return <CustomDrawer />
-    }, []);
+    const drawerContent = React.useCallback(
+        (_props: DrawerContentComponentProps) => <CustomDrawer />,
+        []
+    );
 
     const isFullyClosed = useDrawerStore((s) => s.isFullyClosed);
 

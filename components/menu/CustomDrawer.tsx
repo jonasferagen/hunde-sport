@@ -2,23 +2,30 @@
 import { Loader } from '@/components/ui/Loader';
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 import { useDrawerSettled } from '@/hooks/useDrawerSettled';
-import type { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { DrawerActions } from '@react-navigation/native';
 import { X } from '@tamagui/lucide-icons';
-import React from 'react';
-import { H3, YStackProps } from 'tamagui';
+import { H3 } from 'tamagui';
 import { ThemedLinearGradient, ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { AppVersion } from './AppVersion';
 import { ProductCategoryTree } from './ProductCategoryTree';
 import { useDrawerStore } from '@/stores/drawerStore';
-
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
 
 export const CustomDrawer = () => {
     useDrawerSettled();
+
+    const installControls = useDrawerStore((s) => s.installControls);
+    const clearControls = useDrawerStore((s) => s.clearControls);
+    const navigation = useNavigation(); // from @react-navigation/native
+
+    React.useEffect(() => {
+        installControls(navigation as any);
+        return clearControls;
+    }, [installControls, clearControls, navigation]);
+
     return <CustomDrawerContent />
 };
-
 
 const CustomDrawerContent = () => {
 
@@ -30,7 +37,7 @@ const CustomDrawerContent = () => {
             <ThemedLinearGradient fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} />
             <ThemedXStack container split>
                 <H3>hunde-sport.no</H3>
-                <ThemedButton circular onPress={closeDrawer}><X /></ThemedButton>
+                <ThemedButton circular disabled={!closeDrawer} onPress={closeDrawer}><X /></ThemedButton>
             </ThemedXStack>
             <ThemedYStack f={1} mih={0}>
                 {hasOpened ? <ProductCategoryTree /> : <Loader />}

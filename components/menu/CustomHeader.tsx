@@ -23,7 +23,7 @@ export const CustomHeader = React.memo(({ route, options }: DrawerHeaderProps) =
             <ThemedXStack container split box>
                 <ThemedLinearGradient />
                 <H3>{title}</H3>
-                <ThemedButton circular onPress={openDrawer}>
+                <ThemedButton circular disabled={!openDrawer} onPress={openDrawer}>
                     <Menu />
                 </ThemedButton>
             </ThemedXStack>
