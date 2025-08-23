@@ -12,8 +12,6 @@ export const LinearGradientBase = styled(LinearGradient, {
     pointerEvents: 'none',
 })
 
-
-
 type ThemeRef = {
     theme: string
     token?: string

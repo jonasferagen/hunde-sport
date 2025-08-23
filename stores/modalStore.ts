@@ -37,12 +37,12 @@ export const useModalStore = create<ModalState>((set, get) => ({
     status: 'closed',
     renderer: undefined,
     payload: undefined,
-    snapPoints: [85],
+    snapPoints: [95],
     position: 0,
     onClose: undefined,
 
     openModal: (renderer, payload, opts) => {
-        const snaps = opts?.snapPoints ?? [85];
+        const snaps = opts?.snapPoints ?? [95];
         const initial = Math.min(Math.max(opts?.initialPosition ?? 0, 0), Math.max(0, snaps.length - 1));
         set({
             open: true,

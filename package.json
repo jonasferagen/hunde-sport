@@ -1,7 +1,7 @@
 {
   "name": "hunde-sport",
   "main": "index.ts",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@nandorojo/galeria": "^1.2.0",
+    "@react-native-community/hooks": "^100.1.0",
     "@react-navigation/drawer": "^7.3.9",
     "@react-navigation/native": "^7.1.6",
     "@shopify/flash-list": "1.7.6",
@@ -36,6 +37,7 @@
     "apisauce": "^3.2.0",
     "burnt": "^0.13.0",
     "expo": "53.0.20",
+    "expo-application": "~6.1.5",
     "expo-constants": "~17.1.7",
     "expo-dev-client": "~5.2.4",
     "expo-file-system": "~18.1.11",
@@ -66,8 +68,7 @@
     "react-native-svg": "15.11.2",
     "react-native-webview": "13.13.5",
     "tamagui": "^1.132.20",
-    "zustand": "^5.0.7",
-    "expo-application": "~6.1.5"
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

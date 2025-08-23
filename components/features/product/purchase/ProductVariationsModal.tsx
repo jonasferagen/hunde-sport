@@ -45,7 +45,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const onHeaderLayout = (e: any) => setHeaderH(Math.round(e.nativeEvent.layout.height));
     const onFooterLayout = (e: any) => setFooterH(Math.round(e.nativeEvent.layout.height));
 
-    const IMAGE_H = 200;
+    const IMAGE_H = 150;
     const gaps = 3 * gapPx; // compensate for vertical padding between 
 
     const cH = headerH + footerH + IMAGE_H + gaps;
@@ -82,12 +82,12 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
             </ThemedYStack>
 
             <Sheet.ScrollView
-                // IMPORTANT: do not set f={1} or flex here
+
                 style={availableForOptions ? { maxHeight: availableForOptions } : undefined}
-                keyboardShouldPersistTaps="handled"
+                keyboardShouldPersistTaps="always"
                 onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
                 scrollEnabled={contentH > availableForOptions}
-                contentContainerStyle={{}}
+                contentContainerStyle={{}}  // IMPORTANT: do not set f={1} or flex here
             >
                 {hasOpened && <ProductVariationSelect
                     h={availableForOptions}

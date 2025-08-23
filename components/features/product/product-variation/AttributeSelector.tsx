@@ -11,15 +11,12 @@ export const AttributeSelector = React.memo(function AttributeSelector({
         <YStack w="100%" gap="$2">
             {options.map((item) => {
                 const isSelected = selectedValue === item.name;
-                const handlePress = React.useCallback(
-                    () => onSelect(isSelected ? null : item.name),
-                    [onSelect, isSelected, item.name]
-                );
+
                 return (
                     <AttributeOption
                         key={item.name}
                         option={item.name}
-                        selectOption={handlePress}
+                        selectOption={() => onSelect(isSelected ? null : item.name)}
                         isSelected={isSelected}
                         item={item}
                     />

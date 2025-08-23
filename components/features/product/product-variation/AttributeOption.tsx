@@ -3,8 +3,10 @@ import { THEME_OPTION, THEME_OPTION_SELECTED } from '@/config/app';
 import { CurrencyHeader, formatMinorWithHeader } from '@/domain/pricing';
 import { AttributeTermDetails } from '@/types';
 import React from 'react';
-import { Pressable } from 'react-native';
+
 import { SizableText, Theme, XStack } from 'tamagui';
+
+import { Pressable } from 'react-native-gesture-handler';
 // AttributeOption.tsx
 interface AttributeOptionProps {
     option: string;
@@ -30,7 +32,7 @@ export const AttributeOption = React.memo(function AttributeOption({
         return min === max
             ? formatMinorWithHeader(min, minPrices as CurrencyHeader)
             : `Fra ${formatMinorWithHeader(min, minPrices as CurrencyHeader)}`;
-    }, [minPrices?.price, maxPrices?.price]);
+    }, [minPrices, maxPrices]);
 
     return (
         <Theme name={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}>
