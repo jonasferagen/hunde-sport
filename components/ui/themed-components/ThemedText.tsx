@@ -1,7 +1,7 @@
 import React from 'react'
-import { GetProps, SizableText, SizableTextProps, styled } from 'tamagui'
+import { SizableText, styled } from 'tamagui'
 
-const ThemedTextBase = styled(SizableText, {
+export const ThemedTextBase = styled(SizableText, {
     name: 'ThemedText',
     color: '$color',
     size: '$3',
@@ -10,25 +10,30 @@ const ThemedTextBase = styled(SizableText, {
 
     variants: {
         variant: {
-            subtle: { color: '$colorTransparent' },
             default: {},
             price: {
                 numberOfLines: 1,
                 ellipsizeMode: 'clip',
                 adjustsFontSizeToFit: true,
                 minimumFontScale: 0.7,
-                // textWrap is not a React Native prop; consider removing if targeting native
-                // textWrap: 'nowrap',
                 fontVariant: ['tabular-nums'],
                 flexShrink: 1,
             },
         },
-        bold: { true: { fontWeight: 'bold' } },
+        bold: { true: { fow: 'bold' } },
+        subtle: { true: { col: '$colorTransparent' } },
     } as const,
-})
+} as const)
 
-export type ThemedTextProps = GetProps<typeof ThemedTextBase> & SizableTextProps
+export type ThemedTextProps = React.ComponentProps<typeof ThemedTextBase> & {
+    bold?: boolean,
+    subtle?: boolean,
+    variant?: 'default' | 'price'
+}
 
-export const ThemedText = ({ ...props }: ThemedTextProps) => (
-    <ThemedTextBase {...props} />
+
+type ThemedTextRef = React.ComponentRef<typeof SizableText>
+
+export const ThemedText = React.forwardRef<ThemedTextRef, ThemedTextProps>(
+    (props, ref) => <ThemedTextBase ref={ref} {...props} />
 )

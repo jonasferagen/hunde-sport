@@ -41,7 +41,7 @@ export const CallToActionButton = React.forwardRef<
                 <ThemedButton.Before>{before}</ThemedButton.Before>
 
                 <ThemedButton.Text w="100%" fs={1}>
-                    {label && <ThemedText>{label}</ThemedText>}
+                    {label && <ThemedText bold>{label}</ThemedText>}
                     {children}
                 </ThemedButton.Text>
 

@@ -33,15 +33,16 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
     const { purchasable, setProductVariation } = usePurchasableContext();
     const { productVariations, isLoading } = useProductVariationContext();
     const variableProduct = purchasable.product as VariableProduct;
+    const { onSelectionChange, onProductVariationSelected } = props;
 
     const handleVariationSelected = React.useCallback(
         (variation: ProductVariation | undefined) => {
             // Keep existing behavior
             setProductVariation(variation);
             // And also notify external consumer
-            props.onProductVariationSelected?.(variation);
+            onProductVariationSelected?.(variation);
         },
-        [setProductVariation, props.onProductVariationSelected]
+        [setProductVariation, onProductVariationSelected]
     );
 
     const {
@@ -57,8 +58,8 @@ export const ProductVariationSelectContent = React.memo(function ProductVariatio
 
     // Expose current selection whenever it changes
     React.useEffect(() => {
-        props.onSelectionChange?.(selectionManager.selections);
-    }, [props.onSelectionChange, selectionManager]);
+        onSelectionChange?.(selectionManager.selections);
+    }, [onSelectionChange, selectionManager.selections]);
 
     const unavailableSets = React.useMemo(() => {
         const m: Record<string, Set<string>> = {};

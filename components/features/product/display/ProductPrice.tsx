@@ -1,10 +1,9 @@
 // components/product/ProductPrice.tsx
-import { ThemedText } from '@/components/ui/themed-components';
+import { ThemedText, ThemedTextProps, ThemedXStack } from '@/components/ui/themed-components';
 import { ProductPrices, formatMinorWithHeader, formatRangeWithHeader } from '@/domain/pricing';
 import { Product } from '@/types';
-import { SizableTextProps, XStack } from 'tamagui';
 
-type PriceStyleFlags = Pick<SizableTextProps, 'bold' | 'disabled' | 'subtle'>;
+type PriceStyleFlags = Pick<ThemedTextProps, 'bold' | 'disabled' | 'subtle'>;
 
 /** Merge orthogonal style flags, keeping incoming props override-friendly */
 const withFlags = <P extends object>(
@@ -15,12 +14,12 @@ const withFlags = <P extends object>(
 export const ProductPriceRange = ({
     product,
     ...props
-}: { product: Product } & SizableTextProps) => {
+}: { product: Product } & ThemedTextProps) => {
     const prices = product.prices as ProductPrices;
     if (!prices.price_range) throw new Error('product missing price_range', { cause: product });
 
     const { availability } = product;
-    const { isInStock, isPurchasable, isOnSale, isFree } = availability;
+    const { isInStock, isPurchasable, isFree } = availability;
 
     const content = formatRangeWithHeader(prices.price_range, prices, { style: 'short' });
 
@@ -41,7 +40,7 @@ export const ProductPriceRange = ({
 export const ProductPrice = ({
     product,
     ...props
-}: { product: Product } & SizableTextProps) => {
+}: { product: Product } & ThemedTextProps) => {
     const { isInStock, isPurchasable, isOnSale, isFree } = product.availability;
     const prices = product.prices as ProductPrices;
 
@@ -65,14 +64,14 @@ export const ProductPrice = ({
     // Special case: sale adds the crossed-out regular price
     if (isOnSale) {
         return (
-            <XStack ai="center" gap="$2">
+            <ThemedXStack ai="center" gap="$2">
                 <ThemedText disabled>
                     {regularFormatted}
                 </ThemedText>
                 <ThemedText {...withFlags(props, flags)}>
                     {unitFormatted}
                 </ThemedText>
-            </XStack>
+            </ThemedXStack>
         );
     }
 
