@@ -27,6 +27,7 @@ export const ProductImage = ({ product, img_height = IMAGE_HEIGHT, ...stackProps
             h={img_height}
             ov="hidden"
             boc="$borderColor"
+            br="$3"
             {...stackProps}>
             <Galeria urls={[uri!]}>
                 <Galeria.Image>

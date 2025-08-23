@@ -78,12 +78,9 @@ export const ProductCategoryBranch = memo(({ id, level }: { id: number; level: n
     const toggle = useToggleExpanded();
 
 
-
-
-
     return (
         <Animated.View layout={LinearTransition.duration(150)}>
-            <ThemedYStack>
+            <ThemedYStack >
 
                 {id > 0 && <ThemedXStack>
                     <ProductCategoryTreeItem

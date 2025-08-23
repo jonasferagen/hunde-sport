@@ -3,7 +3,7 @@ import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useAddToCart } from '@/hooks/useAddToCart';
 import { Purchasable } from '@/types';
-import { ChevronDown } from '@tamagui/lucide-icons';
+import { ChevronDown, CircleX, X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Sheet } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle } from '../display';
@@ -70,7 +70,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
             {/* header */}
             <ThemedXStack split onLayout={onHeaderLayout}>
                 <ProductTitle product={purchasable.product} fs={1} />
-                <ThemedButton circular onPress={close}><ChevronDown /></ThemedButton>
+                <ThemedButton circular onPress={close}><X /></ThemedButton>
             </ThemedXStack>
 
             {/* image */}

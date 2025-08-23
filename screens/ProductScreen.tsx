@@ -14,6 +14,7 @@ import { PurchasableProduct } from '@/types';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Loader } from '../components/ui/Loader';
+import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 
 export const ProductScreen = () => {
   useRenderGuard('ProductScreen');
@@ -46,24 +47,24 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
 
   return (
     <Prof id="ProductScreen">
-      <PageView>
+      <PageView theme="secondary">
         <PageBody mode="scroll">
-          <PageSection>
+          <PageSection theme={THEME_PRODUCT_ITEM_2}>
             <ProductImage product={product} />
           </PageSection>
-          <PageSection padded>
+          <PageSection theme={THEME_PRODUCT_ITEM_1} padded>
             <ThemedXStack split>
               <ProductTitle product={product} size="$5" fs={1} />
               <ProductPrice product={product} size="$5" />
             </ThemedXStack>
           </PageSection>
-          <PageSection padded title="Produktinformasjon" theme="primary">
+          <PageSection padded title="Produktinformasjon" theme={THEME_PRODUCT_ITEM_2} >
             <ProductDescription product={product} long />
           </PageSection>
-          <PageSection padded title="Produktbilder">
+          <PageSection padded title="Produktbilder" theme={THEME_PRODUCT_ITEM_1}>
             {product.images.length > 0 && <ProductImageGallery product={product} />}
           </PageSection>
-          <PageSection padded title="Kategorier">
+          <PageSection padded title="Kategorier" theme={THEME_PRODUCT_ITEM_2}>
             <ProductCategoryChips productCategories={product.categories} />
           </PageSection>
         </PageBody>

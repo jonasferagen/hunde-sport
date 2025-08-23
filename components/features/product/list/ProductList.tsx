@@ -22,7 +22,12 @@ interface ProductListProps {
 }
 
 export const ProductList = React.memo(function ProductList({
-    products, loadMore, isLoadingMore, hasMore, transitionKey, totalProducts,
+    products,
+    loadMore,
+    isLoadingMore,
+    hasMore,
+    transitionKey,
+    totalProducts,
 }: ProductListProps) {
     const { width, height } = useWindowDimensions();
     const ITEM_HEIGHT = 170;

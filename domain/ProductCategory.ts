@@ -37,7 +37,7 @@ export class ProductCategory implements ProductCategoryData {
   static createRoot(): ProductCategory {
     return new ProductCategory({
       id: 0,
-      name: 'Alle',
+      name: 'Hjem',
       parent: -1,
       image: {
         id: 0,

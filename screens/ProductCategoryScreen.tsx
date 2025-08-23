@@ -9,7 +9,7 @@ import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Breadcrumbs } from '@/components/features/product-category/Breadcrumbs';
 import { ProductCategoryHeader } from '@/components/features/product-category/ProductCategoryHeader';
-import { Theme } from 'tamagui';
+import { Theme, YStack } from 'tamagui';
 import { ThemedXStack } from '@/components/ui';
 
 export const ProductCategoryScreen = React.memo(() => {
@@ -24,16 +24,20 @@ export const ProductCategoryScreen = React.memo(() => {
     if (!ready) {
         return null;
     }
-    if (!productCategory) {
+    if (!productCategory || productCategory.id === 0) {
         return <Redirect href="/" />;
     }
 
     return (
         <PageView>
             <PageHeader theme="shade">
-                <Breadcrumbs trail={trail} isLastClickable />
-                <ThemedXStack container box >
-                    <ProductCategoryHeader productCategories={productCategories} />
+                <ThemedXStack box split>
+                    <YStack f={1}>
+                        <Breadcrumbs trail={trail} isLastClickable />
+                    </YStack>
+                    <YStack>
+                        <ProductCategoryHeader productCategory={productCategory} productCategories={productCategories} />
+                    </YStack>
                 </ThemedXStack>
             </PageHeader>
             <PageBody>
@@ -41,6 +45,6 @@ export const ProductCategoryScreen = React.memo(() => {
                     <ProductCategoryProducts productCategory={productCategory} />
                 </PageSection>
             </PageBody>
-        </PageView>
+        </PageView >
     )
 });

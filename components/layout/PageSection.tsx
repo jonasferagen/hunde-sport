@@ -25,7 +25,7 @@ export const PageSection: React.FC<PageSectionProps> = ({
   const hasChildren = React.Children.toArray(children).some(Boolean);
   if (!hasChildren) return null;
 
-  const py = title ? SPACE : 'none';
+  const py = padded || title ? SPACE : 'none';
   const px = padded ? SPACE : 'none';
   const mx = padded ? 'none' : SPACE;
 

@@ -32,9 +32,12 @@ export const useProductCategoryStore = create<ProductCategoryState>((set, get) =
         dummyRoot,
 
         setProductCategories: (cats) => {
+            const sorted = [...cats].sort((a, b) =>
+                a.name.localeCompare(b.name, 'nb', { sensitivity: 'base' })
+            );
             const { dummyRoot } = get();
 
-            const all = [dummyRoot, ...cats.filter(c => c.id !== 0)];
+            const all = [dummyRoot, ...sorted.filter(c => c.id !== 0)];
 
             const map = new Map<Id, ProductCategory>();
             const children = new Map<Id, ProductCategory[]>();
