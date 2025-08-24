@@ -7,7 +7,6 @@ import { ApiResponse } from 'apisauce';
 const handleResponse = (
     response: ApiResponse<any>,
     context: string,
-    currentCartToken?: string
 ): Cart => {
     if (response.problem) {
         throw new Error(response.problem);
@@ -29,19 +28,19 @@ const handleResponse = (
 
 /**
  * Fetches the cart from the API.
- * @returns {Promise<{data: Cart}>} The cart data and token.
+ * @returns {Promise<Cart>} The cart data and token.
  */
 export async function fetchCart(): Promise<Cart> {
 
-
-    if (Math.random() < 0.99) {
-        throw new ApiError('Simulated category fetch failure', {
-            status: 500,
-            retriable: true,
-            problem: 'SERVER_ERROR',
-            isNetworkError: false,
-        });
-    }
+    /*
+        if (Math.random() < 0.99) {
+            throw new ApiError('Simulated category fetch failure', {
+                status: 500,
+                retriable: true,
+                problem: 'SERVER_ERROR',
+                isNetworkError: false,
+            });
+        } */
     const response = await apiClient.get<any>(ENDPOINTS.CART.GET());
     return handleResponse(response, 'fetchCart');
 }

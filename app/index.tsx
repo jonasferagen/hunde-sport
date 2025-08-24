@@ -1,8 +1,8 @@
-import { PreloaderScreen } from '@/screens/PreloaderScreen';
+import { PreloaderScreen } from '@/screens/Preloader/PreloaderScreen';
 import { JSX } from 'react';
 
 
-const App = (): JSX.Element => {
+const App = () => {
     return <PreloaderScreen />;
 };
 

@@ -25,13 +25,12 @@ export const DebugProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [isOpen, setIsOpen] = useState(false);
 
     // Cart test logic (dev-only)
-    const isInitialized = useCartStore((s) => s.isInitialized);
     const addItem = useCartStore((s) => s.addItem);
     const [cartTestDone, setCartTestDone] = useState(false);
     const [autoCartTest, setAutoCartTest] = useState<boolean>(typeof __DEV__ !== 'undefined' ? __DEV__ : false);
 
     useEffect(() => {
-        if (!isInitialized) return;
+
         if (!autoCartTest || cartTestDone) return;
         console.log('TEST: Cart initialized. Adding test item...');
         addItem({ id: 248212, quantity: 1, variation: [] }).finally(() => {
