@@ -31,7 +31,7 @@ export const ProductPriceRange = ({
     };
 
     return (
-        <ThemedText variant="price" {...withFlags(props, flags)}>
+        <ThemedText price {...withFlags(props, flags)}>
             {content}
         </ThemedText>
     );

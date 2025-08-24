@@ -1,9 +1,9 @@
-import { ThemedButton } from '@/components/ui/themed-components/ThemedButton'
+import { ThemedButton, ThemedText } from '@/components/ui/themed-components'
 import * as Haptics from 'expo-haptics'
 import React from 'react'
 import { GestureResponderEvent } from 'react-native'
 import { Theme, ThemeName } from 'tamagui'
-import { ThemedText } from './themed-components'
+
 
 interface CallToActionButtonProps
     extends Omit<React.ComponentProps<typeof ThemedButton>, 'onPress' | 'disabled' | 'theme'> {
