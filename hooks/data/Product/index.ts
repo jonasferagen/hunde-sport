@@ -1,7 +1,7 @@
 import { Product, PurchasableProduct } from '@/domain/Product/Product';
 import { ProductCategory, ProductVariation } from '@/types';
 import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
-import { handleQueryResult, makeQueryOptions, QueryResult } from '../util';
+import { useQueryResult, makeQueryOptions, QueryResult } from '../util';
 import {
     fetchDiscountedProducts,
     fetchFeaturedProducts,
@@ -32,7 +32,7 @@ export const useProductVariations = (product: Product): QueryResult<ProductVaria
         queryFn: ({ pageParam }) => fetchProductVariations(product.id, { page: pageParam, per_page: 100 }),
         ...queryOptions
     });
-    return handleQueryResult<ProductVariation>(result);
+    return useQueryResult<ProductVariation>(result);
 };
 
 export const useProductsByIds = (ids: number[]): QueryResult<PurchasableProduct> => {
@@ -42,7 +42,7 @@ export const useProductsByIds = (ids: number[]): QueryResult<PurchasableProduct>
         enabled: !!ids && ids.length > 0,
         ...queryOptions
     });
-    return handleQueryResult<PurchasableProduct>(result);
+    return useQueryResult<PurchasableProduct>(result);
 }
 
 export const useProductsBySearch = (query: string, options = { enabled: !!query }): QueryResult<PurchasableProduct> => {
@@ -54,7 +54,7 @@ export const useProductsBySearch = (query: string, options = { enabled: !!query 
         placeholderData: undefined, // empty list
 
     });
-    return handleQueryResult<PurchasableProduct>(result);
+    return useQueryResult<PurchasableProduct>(result);
 }
 
 export const useFeaturedProducts = (options = { enabled: true, perPage: 3 }): QueryResult<PurchasableProduct> => {
@@ -63,7 +63,7 @@ export const useFeaturedProducts = (options = { enabled: true, perPage: 3 }): Qu
         queryFn: ({ pageParam }) => fetchFeaturedProducts({ page: pageParam, per_page: options.perPage }),
         ...queryOptions
     });
-    return handleQueryResult<PurchasableProduct>(result);
+    return useQueryResult<PurchasableProduct>(result);
 }
 
 export const useDiscountedProducts = (options = { enabled: true, perPage: 3 }): QueryResult<PurchasableProduct> => {
@@ -72,7 +72,7 @@ export const useDiscountedProducts = (options = { enabled: true, perPage: 3 }): 
         queryFn: ({ pageParam }) => fetchDiscountedProducts({ page: pageParam, per_page: options.perPage }),
         ...queryOptions
     });
-    return handleQueryResult<PurchasableProduct>(result);
+    return useQueryResult<PurchasableProduct>(result);
 }
 
 export const useRecentProducts = (options = { enabled: true, perPage: 3 }): QueryResult<PurchasableProduct> => {
@@ -81,7 +81,7 @@ export const useRecentProducts = (options = { enabled: true, perPage: 3 }): Quer
         queryFn: ({ pageParam }) => fetchRecentProducts({ page: pageParam, per_page: options.perPage }),
         ...queryOptions,
     });
-    return handleQueryResult<PurchasableProduct>(result);
+    return useQueryResult<PurchasableProduct>(result);
 }
 
 export const useProductsByCategory = (productCategory: ProductCategory): QueryResult<PurchasableProduct> => {
@@ -90,5 +90,5 @@ export const useProductsByCategory = (productCategory: ProductCategory): QueryRe
         queryFn: ({ pageParam }) => fetchProductsByProductCategory(productCategory.id, { page: pageParam }),
         ...queryOptions,
     });
-    return handleQueryResult<PurchasableProduct>(result);
+    return useQueryResult<PurchasableProduct>(result);
 } 

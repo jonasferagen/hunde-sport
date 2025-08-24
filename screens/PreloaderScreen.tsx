@@ -1,92 +1,128 @@
 // app/(preloader)/PreloaderScreen.tsx
-
-
-import { useProductCategories } from '@/hooks/data/ProductCategory';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+import { Redirect } from 'expo-router';
+import { Image, Paragraph, Theme, YStack, Button } from 'tamagui';
+import { useFonts } from 'expo-font';
 import { useCartStore } from '@/stores/cartStore';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
-import { useFonts } from 'expo-font';
-import { Redirect } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Image, Paragraph, Theme, YStack } from 'tamagui';
+import { useProductCategories } from '@/hooks/data/ProductCategory';
+import { queryClient } from '@/lib/queryClient';
+
+SplashScreen.preventAutoHideAsync().catch(() => { });
+
 export const PreloaderScreen = () => {
-
     const splashHidden = useRef(false);
+    const hideSplash = () => {
+        if (!splashHidden.current) {
+            splashHidden.current = true;
+            SplashScreen.hideAsync().catch(() => { });
+        }
+    };
 
-    // 1) Fonts
-    const [fontsLoaded] = useFonts({
+    // Fonts
+    const [fontsReady] = useFonts({
         Inter: require('@/assets/fonts/Inter/Inter-Regular.ttf'),
         'Inter-Bold': require('@/assets/fonts/Inter/Inter-Bold.ttf'),
         Montserrat: require('@/assets/fonts/Montserrat/Montserrat-Regular.ttf'),
         'Montserrat-Bold': require('@/assets/fonts/Montserrat/Montserrat-Bold.ttf'),
     });
-    useEffect(() => {
-        // Hide splash as soon as we can render with correct fonts
-        if (fontsLoaded && !splashHidden.current) {
-            splashHidden.current = true;
-            SplashScreen.hideAsync().catch(() => { });
-            setStep('cart');
-        }
-    }, [fontsLoaded]);
-    // 2) Cart init (Zustand)
-    const isInitialized = useCartStore(s => s.isInitialized);
+
+    // Cart
     const initializeCart = useCartStore(s => s.initializeCart);
+    const cartReady = useCartStore(s => s.isInitialized);
 
+    // Categories (infinite)
+    const cats = useProductCategories();
+    const setCategories = useProductCategoryStore(s => s.setProductCategories);
+    const [catsReady, setCatsReady] = useState(false);
+
+    // Start cart when fonts are ready
     useEffect(() => {
-        if (isInitialized) {
-            setStep('categories');
-            return;
-        }
-        initializeCart();
-    }, [isInitialized, initializeCart]);
-    // 3) Categories (TanStack Query v5 — infinite)
+        if (fontsReady && !cartReady) initializeCart();
+    }, [fontsReady, cartReady, initializeCart]);
 
-    const setCategoriesInStore = useProductCategoryStore((s) => s.setProductCategories);
-
-    const [ready, setReady] = useState(false);
-    const [error, setError] = useState<null | string>(null);
-    const mounted = useRef(true);
-    useEffect(() => () => { mounted.current = false; }, []);
-
-    // optional: user-facing progress labels
-    const [step, setStep] = useState<'fonts' | 'cart' | 'categories' | 'done'>('fonts');
-    const stepLabel = useMemo(() => {
-        switch (step) {
-            case 'fonts': return 'Laster skrifttyper…';
-            case 'cart': return 'Initialiserer handlekurv…';
-            case 'categories': return 'Henter kategorier…';
-            default: return 'Starter…';
-        }
-    }, [step]);
-
-    const queryResult = useProductCategories();
+    // Hide native splash once fonts are ready (so our UI renders correctly)
     useEffect(() => {
-        // wait for fonts first if you like
-        if (!fontsLoaded) return;
-        setStep('categories');
-        const { isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = queryResult;
-        const isDone = !isLoading && !hasNextPage && !isFetchingNextPage;
+        if (fontsReady) hideSplash();
+    }, [fontsReady]);
 
-        if (!isDone) {
+
+    const { error, isLoading, hasNextPage, isFetching, isFetchingNextPage, fetchNextPage } = cats;
+
+    // Drain categories page-by-page (no while-loop, no ref)
+    useEffect(() => {
+        if (error) return; // wait for user retry
+        if (isLoading) return;
+
+        if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
             return;
         }
 
-        const categories = queryResult.items;
-        useProductCategoryStore.getState().setProductCategories(categories);
-        setReady(true);
+        // no more pages + nothing in flight => ready
+        if (!hasNextPage && !isFetching && !isFetchingNextPage) {
+            setCatsReady(true);
+        }
+    }, [
+        hasNextPage,
+        isFetchingNextPage,
+        isFetching,
+        isLoading,
+        error,
+        fetchNextPage,
+    ]);
 
-    }, [fontsLoaded, queryResult]);
+    // Push flattened items into your store whenever they change
+    useEffect(() => {
+        setCategories(cats.items);
+    }, [cats.items, setCategories]);
 
-    if (ready) return <Redirect href="/(app)" />;
+    // Step label (first unmet gate)
+    const stepLabel = useMemo(() => {
+        if (!fontsReady) return 'Laster skrifttyper…';
+        if (!cartReady) return 'Initialiserer handlekurv…';
+
+        const count = cats.items?.length ?? 0;
+        const total = cats.total ?? 0;
+        if (cats.error) return 'Kunne ikke hente kategorier';
+        if (!catsReady) {
+            const suffix =
+                total > 0 ? ` (${Math.min(count, total)}/${total})` : count ? ` (${count}…)` : '';
+            return `Henter kategorier…${suffix}`;
+        }
+        return 'Starter…';
+    }, [fontsReady, cartReady, catsReady, cats.items, cats.total, cats.error]);
+
+    // All ready?
+    if (fontsReady && cartReady && catsReady) {
+        return <Redirect href="/(app)" />;
+    }
+
     const splashImage = require('@/assets/images/splash-icon.png');
+
     return (
         <Theme name="light">
-            <YStack f={1} jc="center" ai="center" bg="$background">
-                {/* same logo as splash */}
-                <Image source={splashImage} style={{ width: 200, height: 200, marginBottom: 16 }} />
-                {/* step label */}
-                {stepLabel && <Paragraph o={0.7}>{stepLabel}</Paragraph>}
+            <YStack f={1} jc="center" ai="center" bg="$background" gap="$3" p="$4">
+                <Image source={splashImage} style={{ width: 200, height: 200 }} />
+                {!!stepLabel && <Paragraph o={0.7}>{stepLabel}</Paragraph>}
+
+                {cats.error && (
+                    <>
+                        <Paragraph ta="center" o={0.8}>
+                            {cats.error instanceof Error ? cats.error.message : 'Ukjent feil'}
+                        </Paragraph>
+                        <Button
+                            onPress={async () => {
+                                await queryClient.resetQueries({ queryKey: ['product-categories'] });
+                                setCatsReady(false);
+                                cats.refetch();
+                            }}
+                        >
+                            Prøv igjen
+                        </Button>
+                    </>
+                )}
             </YStack>
         </Theme>
     );

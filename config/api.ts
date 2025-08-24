@@ -21,7 +21,7 @@ const ALL_STOCK_STATUSES = 'stock_status=instock,onbackorder,outofstock';
 const PRODUCTS_FILTER = `${ALL_STATUSES}&${ALL_STOCK_STATUSES}`;
 const PRODUCTS_LIST = (pagination: PaginationOptions = {}) => {
   const { page = 1, per_page = 10 } = pagination;
-  return `${PRODUCTS_URL}?${PRODUCTS_FILTER}&page=${page}&per_page=${per_page}`
+  return `${PRODUCTS_URL}?${PRODUCTS_FILTER}&page=${page}&per_page=${per_page}&orderby=title&order=asc`
 }
 
 const CATEGORIES_LIST = (pagination: PaginationOptions = {}) => {

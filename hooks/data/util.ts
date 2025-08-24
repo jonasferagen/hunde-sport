@@ -52,7 +52,7 @@ export const makeQueryOptions = <T>() => {
 };
 
 
-export const handleQueryResult = <T extends { id: number }>(
+export const useQueryResult = <T extends { id: number }>(
     result: UseInfiniteQueryResult<any, any>
 ): QueryResult<T> => {
     const { data: dataResult, ...rest } = result;
@@ -86,4 +86,3 @@ export const handleQueryResult = <T extends { id: number }>(
 
     return { ...rest, ...data };
 };
-

@@ -22,14 +22,16 @@ const ThemedTextBase = styled(SizableText, {
     }
 } as const);
 
+/* Shouldnt be necessary to be explicit about the psops here */
 
 export type ThemedTextProps = React.ComponentProps<typeof ThemedTextBase> & {
     bold?: boolean;
     subtle?: boolean;
     price?: boolean;
 };
+export type ThemedTextRef = React.ComponentRef<typeof ThemedTextBase>
 
 export const ThemedText = React.forwardRef<
-    ComponentRef<typeof ThemedTextBase>, ThemedTextProps>(
+    ThemedTextRef, ThemedTextProps>(
         (props, ref) => <ThemedTextBase ref={ref} {...props} />
     );

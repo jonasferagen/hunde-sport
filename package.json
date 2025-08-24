@@ -68,7 +68,8 @@
     "react-native-svg": "15.11.2",
     "react-native-webview": "13.13.5",
     "tamagui": "^1.132.20",
-    "zustand": "^5.0.7"
+    "zustand": "^5.0.7",
+    "@react-native-community/netinfo": "11.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

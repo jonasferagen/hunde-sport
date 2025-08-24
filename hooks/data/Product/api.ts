@@ -97,5 +97,8 @@ export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
  */
 export const fetchProductsByProductCategory = async (product_category_id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(product_category_id, pagination));
+
+    console.log(response);
+
     return responseTransformer(response, mapToProduct);
 }
