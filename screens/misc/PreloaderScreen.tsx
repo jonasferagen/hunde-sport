@@ -10,7 +10,7 @@ import { useProductCategories } from '@/hooks/data/ProductCategory';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import { useCartStore } from '@/stores/cartStore';
 import { useCart } from '@/hooks/data/Cart';
-import { ThemedButton } from '@/components/ui';
+import { ThemedButton, ThemedYStack } from '@/components/ui';
 import { RefreshCw } from '@tamagui/lucide-icons';
 SplashScreen.preventAutoHideAsync().catch(() => { });
 
@@ -51,48 +51,46 @@ export const PreloaderScreen = () => {
     const LOGO_DIM = 200;
 
     return (
-        <Theme name="light">
-            <YStack f={1} bg="$background" p="$4">
-                {/* Top half: logo sits at bottom */}
-                <YStack f={1} jc="flex-end" ai="center" mt={Math.round(LOGO_DIM / 2)}>
-                    <Image source={splashImage} style={{ width: LOGO_DIM, height: LOGO_DIM }} />
-                </YStack>
 
-                {/* Bottom half: status panel + extra text, aligned to top */}
-                <YStack f={1} jc="flex-start" ai="center" gap="$4">
-                    {/* Status panel */}
-                    <YStack
-                        gap="$2"
-                        w="100%"
-                        maw={420}
-                        p="$2"
-                        br="$2"
-                        bg="$backgroundHover"
-                        minHeight={120}
-                        ai="center"
-                        opacity={label || error ? 1 : 0}
-                    >
-                        {!!label && (
-                            <Paragraph ta="center" o={error ? 1 : 0.9}>
-                                {label}
-                            </Paragraph>
-                        )}
+        <ThemedYStack f={1} box p="$4">
+            {/* Top half: logo sits at bottom */}
+            <ThemedYStack f={1} jc="flex-end" ai="center" mt={Math.round(LOGO_DIM / 2)}>
+                <Image source={splashImage} style={{ width: LOGO_DIM, height: LOGO_DIM }} />
+            </ThemedYStack>
 
-                        {error && (
-                            <>
-                                <Paragraph ta="center" o={0.8}>{error.message}</Paragraph>
-                                {!!retry && (
-                                    <ThemedButton f={0} theme="primary" onPress={retry}>
-                                        <ThemedButton.Text>Prøv igjen</ThemedButton.Text>
-                                        <ThemedButton.After><RefreshCw /></ThemedButton.After>
-                                    </ThemedButton>
-                                )}
-                            </>
-                        )}
-                    </YStack>
-                </YStack>
-            </YStack>
-        </Theme>
+            {/* Bottom half: status panel + extra text, aligned to top */}
+            <ThemedYStack f={1} jc="flex-start" ai="center" >
+                {/* Status panel */}
+                <ThemedYStack
+                    w="100%"
+                    maw={420}
+                    p="$2"
+                    br="$2"
+                    bg="$backgroundHover"
+                    minHeight={120}
+                    ai="center"
+                    opacity={label || error ? 1 : 0}
+                >
+                    {!!label && (
+                        <Paragraph ta="center" o={error ? 1 : 0.9}>
+                            {label}
+                        </Paragraph>
+                    )}
+
+                    {error && (
+                        <>
+                            <Paragraph ta="center" o={0.8}>{error.message}</Paragraph>
+                            {!!retry && (
+                                <ThemedButton f={0} theme="primary" onPress={retry}>
+                                    <ThemedButton.Text>Prøv igjen</ThemedButton.Text>
+                                    <ThemedButton.After><RefreshCw /></ThemedButton.After>
+                                </ThemedButton>
+                            )}
+                        </>
+                    )}
+                </ThemedYStack>
+            </ThemedYStack>
+        </ThemedYStack>
 
     );
 }

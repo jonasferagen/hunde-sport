@@ -1,9 +1,6 @@
-import { PreloaderScreen } from '@/screens/Preloader/PreloaderScreen';
-import { JSX } from 'react';
+import { Redirect } from 'expo-router';
 
-
-const App = () => {
-    return <PreloaderScreen />;
-};
-
-export default App;
+export default function Root() {
+    // always go to preloader first
+    return <Redirect href="/(preloader)" />;
+}
