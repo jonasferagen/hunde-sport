@@ -6,7 +6,6 @@ import { Storage } from 'expo-storage';
 import { log } from '@/lib/logger';
 import {
     addItem as apiAddItem,
-    fetchCart as apiFetchCart,  // still used by hooks, not store
     removeItem as apiRemoveItem,
     updateItem as apiUpdateItem,
 } from '@/hooks/data/Cart/api';
@@ -33,8 +32,6 @@ const smartExpoStorage = {
 interface CartState {
     cart: Cart | null;
     cartToken: string;
-    isInitialized: boolean;
-    isLoading: boolean;   // you can phase this out if you rely on Query’s states
     isUpdating: boolean;
     error: string | null;
 }
@@ -48,10 +45,7 @@ export interface AddItemOptions {
 interface CartActions {
     // removed initializeCart
     setCart: (cart: Cart | null) => void;
-    setInitialized: (ok: boolean) => void;
-    setError: (msg: string | null) => void;
     reset: () => void;
-
     addItem: (options: AddItemOptions) => Promise<void>;
     updateItem: (key: string, quantity: number) => Promise<void>;
     removeItem: (key: string) => Promise<void>;
@@ -61,8 +55,6 @@ interface CartActions {
 const initialState: CartState = {
     cart: null,
     cartToken: '',
-    isInitialized: false,
-    isLoading: false,
     isUpdating: false,
     error: null,
 };
@@ -111,8 +103,7 @@ export const useCartStore = create<CartState & CartActions>()(
                 cart,
                 cartToken: cart?.token ?? '',
             }),
-            setInitialized: (ok) => set({ isInitialized: ok }),
-            setError: (msg) => set({ error: msg ?? null }),
+
             reset: () => set({ ...initialState }),
 
             // optimistic actions (unchanged)

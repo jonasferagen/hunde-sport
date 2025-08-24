@@ -10,7 +10,8 @@ import { useProductCategories } from '@/hooks/data/ProductCategory';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import { useCartStore } from '@/stores/cartStore';
 import { useCart } from '@/hooks/data/Cart';
-
+import { ThemedButton } from '@/components/ui';
+import { RefreshCw } from '@tamagui/lucide-icons';
 SplashScreen.preventAutoHideAsync().catch(() => { });
 
 type LoaderState = {
@@ -30,50 +31,69 @@ export const PreloaderScreen = () => {
 
     const loaders: LoaderState[] = [fonts, cart, categories];
     const allReady = loaders.every(l => l.ready);
+    if (allReady) return <Redirect href="/(app)" />;
 
     const splashImage = require('@/assets/images/splash-icon.png');
 
-    const [activeStep, setActiveStep] = React.useState<LoaderState | null>(null);
-
-    React.useEffect(() => {
-        if (categories.ready) setActiveStep(null);
-        if (cart.ready) setActiveStep(categories);
-        if (fonts.ready) setActiveStep(cart);
-    }, [fonts, cart, categories]);
-
+    // derive the *only* active step:
+    const active =
+        !fonts.ready || fonts.error ? fonts :
+            !cart.ready || cart.error ? cart :
+                !categories.ready || categories.error ? categories :
+                    null;
 
 
-    if (allReady) return <Redirect href="/(app)" />;
+    const label = active ? active.label : null;
+    const error = active?.error;
+    const retry = active?.retry;
 
-    const label = activeStep?.label;
-    const error = activeStep?.error;
-    const retry = activeStep?.retry;
+
+    const LOGO_DIM = 200;
 
     return (
         <Theme name="light">
-            <YStack f={1} jc="center" ai="center" gap="$4" p="$4" bg="$background">
-                <Image source={splashImage} style={{ width: 200, height: 200 }} />
+            <YStack f={1} bg="$background" p="$4">
+                {/* Top half: logo sits at bottom */}
+                <YStack f={1} jc="flex-end" ai="center" mt={Math.round(LOGO_DIM / 2)}>
+                    <Image source={splashImage} style={{ width: LOGO_DIM, height: LOGO_DIM }} />
+                </YStack>
 
-                {(label || error) && (
-                    <YStack gap="$2" w="100%" maw={420} p="$2" br="$2" bg="$backgroundHover">
-                        {label && <Paragraph o={error ? 1 : 0.9}>{label}</Paragraph>}
+                {/* Bottom half: status panel + extra text, aligned to top */}
+                <YStack f={1} jc="flex-start" ai="center" gap="$4">
+                    {/* Status panel */}
+                    <YStack
+                        gap="$2"
+                        w="100%"
+                        maw={420}
+                        p="$2"
+                        br="$2"
+                        bg="$backgroundHover"
+                        minHeight={120}
+                        ai="center"
+                        opacity={label || error ? 1 : 0}
+                    >
+                        {!!label && (
+                            <Paragraph ta="center" o={error ? 1 : 0.9}>
+                                {label}
+                            </Paragraph>
+                        )}
 
                         {error && (
                             <>
-                                <Paragraph ta="left" o={0.8}>
-                                    {error?.message}
-                                </Paragraph>
+                                <Paragraph ta="center" o={0.8}>{error.message}</Paragraph>
                                 {!!retry && (
-                                    <Button size="$2" onPress={retry}>
-                                        Prøv igjen
-                                    </Button>
+                                    <ThemedButton f={0} theme="primary" onPress={retry}>
+                                        <ThemedButton.Text>Prøv igjen</ThemedButton.Text>
+                                        <ThemedButton.After><RefreshCw /></ThemedButton.After>
+                                    </ThemedButton>
                                 )}
                             </>
                         )}
                     </YStack>
-                )}
+                </YStack>
             </YStack>
         </Theme>
+
     );
 }
 
@@ -113,19 +133,16 @@ export function useFontsLoader(): LoaderState {
 export function useCartLoader({ enabled }: Opts): LoaderState {
     const { data, error, isSuccess, isError, refetch } = useCart({ enabled });
     const setCart = useCartStore(s => s.setCart);
-    const setCartError = useCartStore(s => s.setError);
+
 
     React.useEffect(() => {
         if (isSuccess) {
             setCart(data ?? null);
-            setCartError(null);
-        } else if (isError) {
-            setCartError(error instanceof Error ? error.message : 'Ukjent feil');
         }
-    }, [isSuccess, isError, data, error, setCart, setCartError]);
+    }, [isSuccess, data, setCart]);
 
     const ready = !!data && isSuccess;
-    const progress = enabled && !isSuccess && !isError ? 'Initialiserer handlekurv…' : undefined;
+    const progress = enabled && !isSuccess && !isError ? 'Henter handlekurv…' : undefined;
 
     return {
         key: 'cart',
