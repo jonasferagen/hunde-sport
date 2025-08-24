@@ -12,6 +12,7 @@ import { useCartStore } from '@/stores/cartStore';
 import { useCart } from '@/hooks/data/Cart';
 import { ThemedButton, ThemedYStack } from '@/components/ui';
 import { RefreshCw } from '@tamagui/lucide-icons';
+import { CallToActionButton } from '@/components/ui/CallToActionButton';
 SplashScreen.preventAutoHideAsync().catch(() => { });
 
 type LoaderState = {
@@ -81,10 +82,12 @@ export const PreloaderScreen = () => {
                         <>
                             <Paragraph ta="center" o={0.8}>{error.message}</Paragraph>
                             {!!retry && (
-                                <ThemedButton f={0} theme="primary" onPress={retry}>
-                                    <ThemedButton.Text>Prøv igjen</ThemedButton.Text>
-                                    <ThemedButton.After><RefreshCw /></ThemedButton.After>
-                                </ThemedButton>
+                                <CallToActionButton
+                                    w="60%"
+                                    label="Prøv igjen"
+                                    after={<RefreshCw />}
+                                    onPress={retry}
+                                />
                             )}
                         </>
                     )}

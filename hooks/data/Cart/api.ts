@@ -31,16 +31,6 @@ const handleResponse = (
  * @returns {Promise<Cart>} The cart data and token.
  */
 export async function fetchCart(): Promise<Cart> {
-
-
-    if (Math.random() < 0.99) {
-        throw new ApiError('Simulated category fetch failure', {
-            status: 500,
-            retriable: true,
-            problem: 'SERVER_ERROR',
-            isNetworkError: false,
-        });
-    }
     const response = await apiClient.get<any>(ENDPOINTS.CART.GET());
     return handleResponse(response, 'fetchCart');
 }

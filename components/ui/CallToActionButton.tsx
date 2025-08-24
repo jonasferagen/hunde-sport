@@ -1,4 +1,4 @@
-import { ThemedButton, ThemedText, ThemedTextProps } from '@/components/ui/themed-components'
+import { ThemedButton, ThemedLinearGradient, ThemedText, ThemedTextProps } from '@/components/ui/themed-components'
 import * as Haptics from 'expo-haptics'
 import React from 'react'
 import { GestureResponderEvent } from 'react-native'
@@ -39,7 +39,7 @@ export const CallToActionButton = React.forwardRef<
             >
                 <ThemedButton.Before>{before}</ThemedButton.Before>
 
-                <ThemedButton.Text w="100%">
+                <ThemedButton.Text>
                     {label && <ThemedText price>{label}</ThemedText>}
                     {children}
                 </ThemedButton.Text>
