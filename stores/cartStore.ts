@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/config/api';
-import { CartData } from '@/domain/Cart/Cart';
+import { Cart } from '@/domain/Cart/Cart';
 import { createCartRestoreToken } from '@/hooks/checkout/api';
 import {
     addItem as apiAddItem,
@@ -11,6 +11,9 @@ import { log } from '@/lib/logger';
 import { Storage } from 'expo-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+
+import { useCart } from '@/hooks/data/Cart';
+import { useProductCategory } from './productCategoryStore';
 
 
 let lastPersistedValue: string | null = null;
@@ -38,7 +41,7 @@ const smartExpoStorage = {
  * Defines the shape of the cart's state.
  */
 interface CartState {
-    cart: CartData | null;
+    cart: Cart | null;
     cartToken: string;
     isInitialized: boolean;
     isLoading: boolean;
@@ -91,8 +94,8 @@ const handleCartAction = async (
     actionName: keyof Pick<CartActions, 'addItem' | 'updateItem' | 'removeItem'>,
     get: () => CartState,
     set: (partial: Partial<CartState>) => void,
-    apiCall: (cartToken: string) => Promise<{ data: CartData }>,
-    optimisticCart: CartData | null
+    apiCall: (cartToken: string) => Promise<Cart>,
+    optimisticCart: Cart | null
 ) => {
     log.info(`CartStore: ${actionName} invoked.`);
 
@@ -123,8 +126,8 @@ const handleCartAction = async (
         }
 
         const apiCart = {
-            ...result.data,
-            lastUpdated: result.data.lastUpdated ?? Date.now(),
+            ...result,
+            lastUpdated: result.lastUpdated ?? Date.now(),
         };
 
         set({
@@ -159,10 +162,11 @@ export const useCartStore = create<CartState & CartActions>()(
                 set({ isLoading: true });
 
                 try {
-                    const { data } = await apiFetchCart();
+
+                    const cart = await apiFetchCart();
                     set({
-                        cart: data,
-                        cartToken: data.token,
+                        cart,
+                        cartToken: cart.token,
                         isInitialized: true,
                         isLoading: false,
                     });

@@ -1,14 +1,14 @@
 import { ENDPOINTS } from '@/config/api';
-import { CartData } from '@/domain/Cart/Cart';
-import { mapCartData } from '@/domain/Cart/CartMapper';
+import { Cart, mapToCart } from '@/domain/Cart/Cart';
 import { apiClient } from '@/lib/apiClient';
+import { ApiError } from '@/lib/httpError';
 import { ApiResponse } from 'apisauce';
 
 const handleResponse = (
     response: ApiResponse<any>,
     context: string,
     currentCartToken?: string
-): { data: CartData } => {
+): Cart => {
     if (response.problem) {
         throw new Error(response.problem);
     }
@@ -23,16 +23,25 @@ const handleResponse = (
         throw new Error('Cart token not found in response headers');
     }
 
-    return { data: mapCartData(response.data, token) };
+    return mapToCart(response.data, token);
 };
 
 
 /**
  * Fetches the cart from the API.
- * @returns {Promise<{data: CartData}>} The cart data and token.
+ * @returns {Promise<{data: Cart}>} The cart data and token.
  */
-export async function fetchCart(): Promise<{ data: CartData }> {
+export async function fetchCart(): Promise<Cart> {
 
+
+    if (Math.random() < 0.99) {
+        throw new ApiError('Simulated category fetch failure', {
+            status: 500,
+            retriable: true,
+            problem: 'SERVER_ERROR',
+            isNetworkError: false,
+        });
+    }
     const response = await apiClient.get<any>(ENDPOINTS.CART.GET());
     return handleResponse(response, 'fetchCart');
 }
@@ -43,9 +52,16 @@ export async function fetchCart(): Promise<{ data: CartData }> {
  * @param {number} id - The product ID to add.
  * @param {number} quantity - The quantity of the product to add.
  * @param {object[]} variation - The product variation attributes.
- * @returns {Promise<{data: CartData}>} An object containing the updated cart data.
+ * @returns {Promise<Cart>} An object containing the updated cart data.
  */
-export async function addItem(cartToken: string, { id, quantity, variation }: { id: number, quantity: number, variation: { attribute: string; value: string }[] }): Promise<{ data: CartData }> {
+export async function addItem(cartToken: string, {
+    id,
+    quantity,
+    variation }: {
+        id: number,
+        quantity: number,
+        variation: { attribute: string; value: string }[]
+    }): Promise<Cart> {
     apiClient.headers['cart-token'] = cartToken;
 
     const payload = { id, quantity, variation };
@@ -62,9 +78,11 @@ export async function addItem(cartToken: string, { id, quantity, variation }: { 
  * @param {string} cartToken - The cart token for the current session.
  * @param {string} key - The unique key of the item in the cart.
  * @param {number} quantity - The new quantity for the item.
- * @returns {Promise<{data: CartData}>} An object containing the updated cart data.
+ * @returns {Promise<Cart>} An object containing the updated cart data.
  */
-export async function updateItem(cartToken: string, { key, quantity }: { key: string, quantity: number }): Promise<{ data: CartData }> {
+export async function updateItem(
+    cartToken: string,
+    { key, quantity }: { key: string, quantity: number }): Promise<Cart> {
     apiClient.headers['cart-token'] = cartToken;
     const response = await apiClient.post<any>(
         ENDPOINTS.CART.UPDATE_ITEM(),
@@ -77,9 +95,9 @@ export async function updateItem(cartToken: string, { key, quantity }: { key: st
  * Removes an item from the cart.
  * @param {string} cartToken - The cart token for the current session.
  * @param {string} key - The unique key of the item in the cart.
- * @returns {Promise<{data: CartData}>} An object containing the updated cart data.
+ * @returns {Promise<Cart>} An object containing the updated cart data.
  */
-export async function removeItem(cartToken: string, { key }: { key: string }): Promise<{ data: CartData }> {
+export async function removeItem(cartToken: string, { key }: { key: string }): Promise<Cart> {
     apiClient.headers['cart-token'] = cartToken;
     const response = await apiClient.post<any>( // Woocommerce uses POST for removal
         ENDPOINTS.CART.REMOVE_ITEM(),
