@@ -1,8 +1,7 @@
 // ProductCategoriesModal.tsx
-import React from 'react';
+
 import { FlatList } from 'react-native';
-import { Link } from 'expo-router';
-import { H4, Separator } from 'tamagui';
+import { H4 } from 'tamagui';
 import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import type { ProductCategory } from '@/types';
