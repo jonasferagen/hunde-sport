@@ -1,6 +1,6 @@
 // components/product/ProductPrice.tsx
 import React from 'react';
-import { ThemedText, ThemedTextProps, ThemedXStack } from '@/components/ui/themed-components';
+import { ThemedSpinner, ThemedText, ThemedTextProps, ThemedXStack } from '@/components/ui/themed-components';
 import { Loader } from '@/components/ui/Loader';
 import { formatPrice, useProductPricing } from '@/domain/pricing';
 import { Product, ProductPrices } from '@/types';
@@ -12,9 +12,9 @@ type ProductPriceProps = {
 } & ThemedTextProps;
 
 const PriceLine = ({ showIcon, children }: React.PropsWithChildren<{ showIcon?: boolean }>) => (
-    <ThemedXStack ai="center" gap="$2">
+    <ThemedXStack ai="center" gap="$2" pos="relative">
         {showIcon ? <StarFull scale={0.5} color="gold" /> : null}
-        {children}
+        <ThemedText>{children}</ThemedText>
     </ThemedXStack>
 );
 
@@ -31,7 +31,7 @@ export const ProductPrice = React.memo(function ProductPrice({
     const maxPrices = priceRange?.max as ProductPrices;
 
     // Compute once
-    const { hasRange, prefix, saleValid } = React.useMemo(() => {
+    const { saleValid } = React.useMemo(() => {
         const minVal = parseInt(minPrices?.price ?? '0', 10);
         const maxVal = parseInt(maxPrices?.price ?? '0', 10);
         const saleVal = parseInt(minPrices?.sale_price ?? '0', 10);
@@ -44,20 +44,20 @@ export const ProductPrice = React.memo(function ProductPrice({
         };
     }, [minPrices, maxPrices, isOnSale]);
 
-    if (isLoading) return <PriceLine><Loader /></PriceLine>;
+    if (isLoading) return <PriceLine><ThemedSpinner size="small" /></PriceLine>;
     // Flags (forward caller overrides)
     const subtle = (!isInStock || !isPurchasable) || textProps.subtle;
-    const disabled = (!isPurchasable) || textProps.disabled;
+
 
 
     // Sale: crossed regular + sale (only if it actually makes sense)
     if (saleValid) {
         return (
             <PriceLine showIcon={showIcon}>
-                <ThemedText disabled {...textProps}>
+                <ThemedText disabled subtle {...textProps}>
                     {formatPrice(minPrices, { field: 'regular_price' })}
                 </ThemedText>
-                <ThemedText {...textProps} subtle={subtle} disabled={disabled}>
+                <ThemedText {...textProps} subtle={subtle}>
                     {formatPrice(minPrices, { field: 'sale_price' })}
                 </ThemedText>
             </PriceLine>
@@ -68,10 +68,9 @@ export const ProductPrice = React.memo(function ProductPrice({
     const label = isFree ? 'Gratis!' : formatPrice(minPrices, { field: 'price' });
     return (
         <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
-            <ThemedText {...textProps}  >
-                {hasRange ? prefix : ''}
+            <ThemedText {...textProps} subtle={subtle}>
                 {label}
             </ThemedText>
-        </PriceLine>
+        </PriceLine >
     );
 });

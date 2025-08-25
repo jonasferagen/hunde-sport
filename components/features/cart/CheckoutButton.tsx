@@ -1,13 +1,10 @@
-import { ThemedSpinner, ThemedXStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
-import { ThemedText } from '@/components/ui/themed-components';
 import { THEME_CTA_CHECKOUT } from '@/config/app';
 import { formatCartItemsTotal } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
 import { ExternalLink } from '@tamagui/lucide-icons';
 import React, { useCallback, useMemo } from 'react';
 import { Linking } from 'react-native';
-import { ThemeName } from 'tamagui';
 
 export const CheckoutButton = () => {
 
@@ -34,35 +31,21 @@ export const CheckoutButton = () => {
     const disabled = itemsCount === 0;
     const waiting = isUpdating || isRedirecting;
     const label = useMemo(
-        () => `${itemsCount} ${itemsCount === 1 ? 'vare' : 'varer'}`,
-        [itemsCount]
+        () => `${itemsCount} ${itemsCount === 1 ? 'vare' : 'varer'}, ${formattedTotal}`,
+        [itemsCount, formattedTotal]
     );
 
     // Stable icon elements (avoid re-creating each render)
     const iconAfter = useMemo(() => <ExternalLink />, []);
-    const theme: ThemeName = THEME_CTA_CHECKOUT;
 
     return (
         <CallToActionButton
             onPress={onPress}
             disabled={disabled || waiting}
-            theme={theme}
+            theme={THEME_CTA_CHECKOUT}
             after={iconAfter}
-        >
-            <ThemedXStack container ai="center" p="none">
-                {waiting ? (
-                    <ThemedSpinner />
-                ) : (
-                    <>
-                        <ThemedText size="$5" price>
-                            {label}
-                        </ThemedText>
-                        <ThemedText size="$5" price>
-                            {formattedTotal}
-                        </ThemedText>
-                    </>
-                )}
-            </ThemedXStack>
-        </CallToActionButton>
+            label={label}
+            loading={waiting}
+        />
     );
 };

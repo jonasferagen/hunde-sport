@@ -51,7 +51,7 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
           <PageSection theme={THEME_PRODUCT_ITEM_1} padded>
             <ThemedXStack split>
               <ProductTitle product={product} size="$5" fs={1} />
-              <ProductPrice product={product} size="$5" />
+              <ProductPrice product={product} size="$5" showIcon />
             </ThemedXStack>
           </PageSection>
           <PageSection padded title="Produktinformasjon" theme={THEME_PRODUCT_ITEM_2} >

@@ -1,5 +1,5 @@
 import { ProductVariation, SimpleProduct, VariableProduct } from '@/domain/Product/Product';
-import { Product, ProductPricing, PurchasableProduct } from '@/types';
+import { Product, ProductAvailability, PurchasableProduct } from '@/types';
 import { ProductPrices } from '../pricing';
 
 
@@ -25,11 +25,10 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
         };
     }
 
-
-
     if (product instanceof SimpleProduct && productVariation) {
         throw new Error('SimpleProduct cannot have a product variation');
     }
+
 
     // If the main product is out of stock - no variations are assumed to be in stock
     const productToCheck = productVariation || product;
@@ -42,14 +41,12 @@ const validate = ({ product, productVariation }: { product: PurchasableProduct, 
             message: 'Utsolgt'
         };
     }
-
-
     // Rule 2: Variable products must have a variation selected.
     if (product instanceof VariableProduct && !productVariation) {
         return {
             isValid: false,
             status: 'VARIATION_REQUIRED',
-            message: 'Velg variant'
+            message: 'Se varianter'
         };
     }
 
@@ -68,7 +65,7 @@ export interface Purchasable extends ValidationResult {
     productVariation?: ProductVariation;
     activeProduct: Product;
     prices: ProductPrices;
-    availability: ProductPricing;
+    availability: ProductAvailability;
     isVariable: boolean;
 }
 

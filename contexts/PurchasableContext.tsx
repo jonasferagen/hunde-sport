@@ -24,7 +24,7 @@ export const PurchasableProviderInit: React.FC<{
 
     const purchasable = React.useMemo(
         () => createPurchasable({ product, productVariation }),
-        [product.id, productVariation?.id, product.priceKey, product.availabilityKey]
+        [product, productVariation]
     );
 
     return <PurchasableProvider purchasable={purchasable}>{children}</PurchasableProvider>;

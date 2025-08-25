@@ -125,6 +125,9 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                         imagePriority={index < 3 ? 'high' : 'low'}
                         interactive={vis.set.has(index)}
                     >
+                        {!item.availability.isInStock &&
+                            <ThemedYStack bg="$background" fullscreen pos="absolute" o={.4} pointerEvents="none" />
+                        }
                         {/* Price pill */}
                         <TileBadge theme={THEME_PRICE_TAG} corner="tr">
                             <ProductPrice product={item} showIcon />
@@ -132,12 +135,12 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
 
                         {!item.availability.isInStock && (
                             <>
-                                <ThemedYStack bg="black" fullscreen pos="absolute" o={.4} pointerEvents="none" />
-                                <TileBadge theme="secondary" corner="tl" >
-                                    <ThemedText ai="center" jc="center" gap="$1">
+                                <TileBadge theme={THEME_PRICE_TAG} corner="tl" >
+                                    <ThemedText ai="center" jc="center" gap="$1" col="gold">
                                         Utsolgt!
                                     </ThemedText>
                                 </TileBadge>
+
                             </>
                         )}
                     </TileFixed>

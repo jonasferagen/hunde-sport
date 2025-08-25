@@ -9,6 +9,8 @@ import {
     removeItem as apiRemoveItem,
     updateItem as apiUpdateItem,
 } from '@/hooks/data/Cart/api';
+import { createCartRestoreToken } from '@/hooks/checkout/api';
+import { ENDPOINTS } from '@/config/api';
 
 // unchanged smartExpoStorage...
 let lastPersistedValue: string | null = null;
@@ -147,8 +149,20 @@ export const useCartStore = create<CartState & CartActions>()(
             },
 
             checkout: async () => {
-                // unchanged…
-                throw new Error('Implement your checkout here (omitted for brevity)');
+
+                log.info('CartStore: checkout invoked.');
+                const { cartToken } = get();
+                try {
+                    const restoreToken = await createCartRestoreToken(cartToken);
+                    log.info('CartStore: restore token created', restoreToken.substring(0, 10) + '...');
+                    const checkoutUrl = new URL(ENDPOINTS.CHECKOUT.CHECKOUT(restoreToken));
+                    log.info('CartStore: checkout URL created');
+                    return checkoutUrl;
+                } catch (error) {
+                    log.error('CartStore: checkout failed.', error);
+                    throw error;
+                }
+
             },
         }),
         {
