@@ -10,7 +10,7 @@ import Drawer from 'expo-router/drawer';
 import React from 'react';
 import { View, YStack } from 'tamagui';
 
-const AppLayout = React.memo((): React.ReactElement => {
+const AppLayout = () => {
 
     const isFullyClosed = useDrawerStore((s) => s.isFullyClosed);
 
@@ -21,7 +21,7 @@ const AppLayout = React.memo((): React.ReactElement => {
 
     const screenOptions = React.useMemo(
         () => ({
-            header: (props: DrawerHeaderProps) => <CustomHeader {...props} />,
+            header: () => <CustomHeader />,
             swipeEnabled: true,
             freezeOnBlur: false,          // default
             unmountOnBlur: false,        // default
@@ -39,28 +39,14 @@ const AppLayout = React.memo((): React.ReactElement => {
                     detachInactiveScreens={false}
                     initialRouteName='(shop)'
                 >
-                    <Drawer.Screen name="(shop)/index" options={{ title: 'Butikk' }} />
+                    <Drawer.Screen name="(shop)" />
                 </Drawer>
                 <LoadingOverlay zi={99} />
                 <CustomBottomBar zi={isFullyClosed ? 0 : -1} />
             </YStack>
         </View >
     );
-});
+};
 
 export default AppLayout;
 
-/* 
-                    {Object.values(routes).map((route) => (
-                        <Drawer.Screen
-                            key={route.name}
-                            name={route.name}
-                            options={{
-                                title: route.label,
-                                lazy: !route.showInDrawer,
-                                ...(route.showInDrawer ? {} : { drawerItemStyle: { display: 'none' as const } }),
-                                freezeOnBlur: true,
-                                sceneStyle: { backgroundColor: 'transparent' },
-                            }}
-                        />
-                    ))} */

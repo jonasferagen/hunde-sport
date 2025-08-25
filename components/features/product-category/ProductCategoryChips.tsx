@@ -7,15 +7,15 @@ import React from "react";
 
 
 export const ProductCategoryChips = React.memo(({ productCategories }: { productCategories: ProductCategory[] }) => {
-    const { linkProps } = useCanonicalNavigation();
+    const { to } = useCanonicalNavigation();
     return (
         <ThemedXStack fw="wrap" gap="$2">
             {productCategories.map((productCategory) => (
-                <Link key={productCategory.id} {...linkProps('product-category', productCategory)} asChild>
+                <ThemedXStack key={productCategory.id} onPress={() => to('product-category', productCategory)}>
                     <Chip theme="shade">
                         {productCategory.name}
                     </Chip>
-                </Link>
+                </ThemedXStack>
             ))}
         </ThemedXStack>
     );

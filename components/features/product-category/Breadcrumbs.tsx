@@ -60,7 +60,7 @@ interface BreadcrumbProps {
 }
 
 const Breadcrumb = ({ category, isLast, isLastClickable }: BreadcrumbProps) => {
-    const { linkProps } = useCanonicalNavigation();
+    const { to } = useCanonicalNavigation();
     const clickable = !isLast || isLastClickable;
 
     const TextEl = (
@@ -79,9 +79,9 @@ const Breadcrumb = ({ category, isLast, isLastClickable }: BreadcrumbProps) => {
     return (
         <ThemedXStack ai="center" gap="$1">
             {clickable ? (
-                <Link {...linkProps('product-category', category)} asChild>
+                <ThemedXStack onPress={() => to('product-category', category)}>
                     {TextEl}
-                </Link>
+                </ThemedXStack>
             ) : (
                 TextEl
             )}

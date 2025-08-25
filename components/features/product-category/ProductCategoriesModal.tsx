@@ -17,7 +17,7 @@ export function ProductCategoriesModal({
     title: string;
     close: () => void;
 }) {
-    const { linkProps } = useCanonicalNavigation();
+    const { to } = useCanonicalNavigation();
 
     return (
         <ThemedYStack f={1} mih={0} p="$2" gap="$3">
@@ -33,18 +33,16 @@ export function ProductCategoriesModal({
                 data={productCategories}
                 keyExtractor={(c) => String(c.id)}
                 renderItem={({ item, index }) => (
-                    <Link {...linkProps('product-category', item)} asChild>
-                        <ThemedButton
-                            w="100%"
-                            justifyContent="space-between"
-                            size="$5"
-                            mt={index > 0 ? '$2' : undefined}
-                            onPress={close}               // ← close the modal when selecting
-                        >
-                            <H4>{item.name}</H4>
-                            <ChevronRight />
-                        </ThemedButton>
-                    </Link>
+                    <ThemedButton
+                        w="100%"
+                        justifyContent="space-between"
+                        size="$5"
+                        mt={index > 0 ? '$2' : undefined}
+                        onPress={() => { to('product-category', item); close(); }}               // ← close the modal when selecting
+                    >
+                        <H4>{item.name}</H4>
+                        <ChevronRight />
+                    </ThemedButton>
                 )}
             />
 

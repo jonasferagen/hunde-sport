@@ -125,7 +125,7 @@ interface RenderItemProps {
 const ProductCategoryTreeItem = memo(({
     productCategory, isExpanded, level, hasChildren, handleExpand,
 }: RenderItemProps) => {
-    const { linkProps } = useCanonicalNavigation();
+    const { to } = useCanonicalNavigation();
     const ctx = React.useContext(TreeCtx);
     const INDENT = React.useMemo(() => getTokenValue('$6', 'space'), []);
     const rowRef = React.useRef<View>(null);
@@ -150,13 +150,11 @@ const ProductCategoryTreeItem = memo(({
     return (
         <ThemedXStack ref={rowRef} w="100%" ai="center" gap="$2" mb="$2">
             <ThemedXStack ml={(level - 1) * INDENT} f={1}>
-                <Link {...linkProps('product-category', productCategory)} asChild>
-                    <ThemedButton theme="shade" f={1}>
-                        <ThemedText f={1} letterSpacing={0.5}>
-                            {productCategory.name}
-                        </ThemedText>
-                    </ThemedButton>
-                </Link>
+                <ThemedButton theme="shade" f={1} onPress={() => to('product-category', productCategory)}>
+                    <ThemedText f={1} letterSpacing={0.5}>
+                        {productCategory.name}
+                    </ThemedText>
+                </ThemedButton>
             </ThemedXStack>
 
             <ThemedButton

@@ -8,10 +8,10 @@ import { H3, Theme } from 'tamagui';
 import { ThemedButton, ThemedLinearGradient, ThemedXStack } from '../ui/themed-components';
 import { useDrawerStore } from '@/stores/drawerStore';
 
-export const CustomHeader = React.memo(({ route, options }: DrawerHeaderProps) => {
+export const CustomHeader = () => {
 
-    const title = useHeaderTitle();
     const openDrawer = useDrawerStore((s) => s.openDrawer);
+    const title = useHeaderTitle();
 
     return (
         <Theme name={THEME_HEADER}>
@@ -24,4 +24,4 @@ export const CustomHeader = React.memo(({ route, options }: DrawerHeaderProps) =
             </ThemedXStack>
         </Theme>
     );
-});
+};
