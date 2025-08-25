@@ -3,13 +3,12 @@ import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/useScreenReady';
-import { useScreenTitle } from '@/hooks/useScreenTitle';
 import { useBreadcrumbTrail, useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Breadcrumbs } from '@/components/features/product-category/Breadcrumbs';
 import { ProductCategoryHeader } from '@/components/features/product-category/ProductCategoryHeader';
-import { Theme, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
 import { ThemedXStack } from '@/components/ui';
 
 export const ProductCategoryScreen = React.memo(() => {

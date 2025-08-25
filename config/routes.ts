@@ -91,7 +91,7 @@ const lastNonGroupSegment = (pathname: string) => {
     return visible.at(-1) ?? 'index';
 };
 
-export const useResolveTitle = () => {
+export const useHeaderTitle = () => {
     const pathname = usePathname();
     const params = useGlobalSearchParams<{ name?: string }>();
     const key = React.useMemo(

@@ -1,18 +1,16 @@
-import { Breadcrumbs } from '@/components/features/product-category/Breadcrumbs';
+
 import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductTitle } from '@/components/features/product/display/';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
-import { PageBody, PageFooter, PageHeader, PageSection, PageView } from '@/components/layout';
+import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
 import { ThemedXStack } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { useProduct } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/useScreenReady';
-import { useScreenTitle } from '@/hooks/useScreenTitle';
 import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
 import { Redirect, useLocalSearchParams } from 'expo-router';
-import React from 'react';
 import { Loader } from '../components/ui/Loader';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 
@@ -40,7 +38,6 @@ export const ProductScreen = () => {
     </ProductCategoryProvider>
   );
 };
-
 
 const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
 

@@ -1,6 +1,6 @@
 // CustomHeader.tsx
 import { THEME_HEADER } from '@/config/app';
-import { useResolveTitle } from '@/config/routes';
+import { useHeaderTitle } from '@/config/routes';
 import type { DrawerHeaderProps } from '@react-navigation/drawer';
 import { Menu } from '@tamagui/lucide-icons';
 import React from 'react';
@@ -10,8 +10,7 @@ import { useDrawerStore } from '@/stores/drawerStore';
 
 export const CustomHeader = React.memo(({ route, options }: DrawerHeaderProps) => {
 
-    const title = useResolveTitle();
-
+    const title = useHeaderTitle();
     const openDrawer = useDrawerStore((s) => s.openDrawer);
 
     return (
