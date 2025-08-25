@@ -2,7 +2,7 @@ import { ThemedSpinner, ThemedXStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { ThemedText } from '@/components/ui/themed-components';
 import { THEME_CTA_CHECKOUT } from '@/config/app';
-import { formatCartTotal } from '@/domain/Cart/pricing';
+import { formatCartItemsTotal } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
 import { ExternalLink } from '@tamagui/lucide-icons';
 import React, { useCallback, useMemo } from 'react';
@@ -14,7 +14,7 @@ export const CheckoutButton = () => {
     const itemsCount = useCartStore(s => s.cart?.items_count ?? 0);
     const isUpdating = useCartStore(s => s.isUpdating);
     const formattedTotal = useCartStore(
-        s => (s.cart?.totals ? formatCartTotal(s.cart.totals) : ''),
+        s => (s.cart?.totals ? formatCartItemsTotal(s.cart.totals) : ''),
     );
     // Actions are stable in Zustand; read via getState to avoid subscribing
     const checkout = useCartStore.getState().checkout;
@@ -46,17 +46,18 @@ export const CheckoutButton = () => {
         <CallToActionButton
             onPress={onPress}
             disabled={disabled || waiting}
-            f={0}
             theme={theme}
             after={iconAfter}
         >
-            <ThemedXStack split w="100%" ai="center" p="none">
+            <ThemedXStack container ai="center" p="none">
                 {waiting ? (
                     <ThemedSpinner />
                 ) : (
                     <>
-                        <ThemedText size="$5">{label}</ThemedText>
-                        <ThemedText size="$5" bold>
+                        <ThemedText size="$5" price>
+                            {label}
+                        </ThemedText>
+                        <ThemedText size="$5" price>
                             {formattedTotal}
                         </ThemedText>
                     </>

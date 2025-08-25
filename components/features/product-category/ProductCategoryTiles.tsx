@@ -18,9 +18,7 @@ export const ProductCategoryTiles = React.memo((props: StackProps) => {
     const half = Math.round(gapPx / 2);
     const cols = NUM_CATEGORY_TILE_COLUMNS;
     const colPct = `${100 / cols}%`;
-
     const { to } = useCanonicalNavigation();
-
 
     return (
         <ThemedYStack {...props} mx={gapPx}>

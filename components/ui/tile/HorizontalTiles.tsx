@@ -1,5 +1,5 @@
 // HorizontalTiles.tsx
-import { ProductPriceTag } from '@/components/features/product/display';
+import { ProductPrice } from '@/components/features/product/display';
 import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
 import { THEME_PRICE_TAG } from '@/config/app';
 import type { QueryResult } from '@/hooks/data/util';
@@ -40,13 +40,8 @@ export function HorizontalTiles({
     indicatorWidthToken = '$6',
     ...props
 }: HorizontalTilesProps<PurchasableProduct>): JSX.Element {
-    const { items = [], isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
+    const { items: products, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
 
-    // slice here; parent has no hooks so it's safe to return early
-    const products = React.useMemo(
-        () => (items as PurchasableProduct[]).slice(0, limit),
-        [items, limit]
-    );
     if (products.length === 0) return <></>;
 
     return (
@@ -132,10 +127,10 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                     >
                         {/* Price pill */}
                         <TileBadge theme={THEME_PRICE_TAG} corner="tr">
-                            <ProductPriceTag product={item} />
+                            <ProductPrice product={item} showIcon />
                         </TileBadge>
 
-                        {!item.is_in_stock && (
+                        {!item.availability.isInStock && (
                             <>
                                 <ThemedYStack bg="black" fullscreen pos="absolute" o={.4} pointerEvents="none" />
                                 <TileBadge theme="secondary" corner="tl" >

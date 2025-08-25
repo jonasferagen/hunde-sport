@@ -1,66 +1,77 @@
 // components/product/ProductPrice.tsx
+import React from 'react';
 import { ThemedText, ThemedTextProps, ThemedXStack } from '@/components/ui/themed-components';
-import { formatPrice, useProductPricing } from '@/domain/pricing';
-import { Product } from '@/types';
-import type { PropsWithChildren } from "react";
-
 import { Loader } from '@/components/ui/Loader';
+import { formatPrice, useProductPricing } from '@/domain/pricing';
+import { Product, ProductPrices } from '@/types';
 import { StarFull } from '@tamagui/lucide-icons';
-
-
-
 
 type ProductPriceProps = {
     product: Product;
     showIcon?: boolean;
-    outOfStockLabel?: string;                      // default "Utsolgt"
 } & ThemedTextProps;
 
-export const ProductPrice = ({
+const PriceLine = ({ showIcon, children }: React.PropsWithChildren<{ showIcon?: boolean }>) => (
+    <ThemedXStack ai="center" gap="$2">
+        {showIcon ? <StarFull scale={0.5} color="gold" /> : null}
+        {children}
+    </ThemedXStack>
+);
+
+export const ProductPrice = React.memo(function ProductPrice({
     product,
     showIcon = false,
-    outOfStockLabel = 'Utsolgt',
-    ...props
-}: ProductPriceProps) => {
-    // use injected pricing if provided, else fetch
-    const computed = useProductPricing(product);
-    const { isLoading, isFree, priceRange } = computed;
+    ...textProps
+}: ProductPriceProps) {
     const { isInStock, isPurchasable, isOnSale } = product.availability;
+    const { isLoading, isFree, priceRange } = useProductPricing(product);
+
+    // Safety guard (in case a future change makes range optional)
+    const minPrices = priceRange?.min as ProductPrices;
+    const maxPrices = priceRange?.max as ProductPrices;
+
+    // Compute once
+    const { hasRange, prefix, saleValid } = React.useMemo(() => {
+        const minVal = parseInt(minPrices?.price ?? '0', 10);
+        const maxVal = parseInt(maxPrices?.price ?? '0', 10);
+        const saleVal = parseInt(minPrices?.sale_price ?? '0', 10);
+        const regVal = parseInt(minPrices?.regular_price ?? '0', 10);
+
+        return {
+            hasRange: minVal !== maxVal,
+            prefix: minVal < maxVal ? 'Fra ' : '',
+            saleValid: isOnSale && saleVal > 0 && regVal > 0 && saleVal < regVal,
+        };
+    }, [minPrices, maxPrices, isOnSale]);
 
     if (isLoading) return <PriceLine><Loader /></PriceLine>;
+    // Flags (forward caller overrides)
+    const subtle = (!isInStock || !isPurchasable) || textProps.subtle;
+    const disabled = (!isPurchasable) || textProps.disabled;
 
 
-
-    const minPrices = priceRange.min;
-    const maxPrices = priceRange.max;
-    const subtle = (!isInStock || !isPurchasable) ? true : false;
-
-    // Sale: crossed regular + sale
-    if (isOnSale) {
+    // Sale: crossed regular + sale (only if it actually makes sense)
+    if (saleValid) {
         return (
-            <PriceLine star={showIcon}>
-                <ThemedText disabled>
+            <PriceLine showIcon={showIcon}>
+                <ThemedText disabled {...textProps}>
                     {formatPrice(minPrices, { field: 'regular_price' })}
                 </ThemedText>
-                <ThemedText>
+                <ThemedText {...textProps} subtle={subtle} disabled={disabled}>
                     {formatPrice(minPrices, { field: 'sale_price' })}
                 </ThemedText>
             </PriceLine>
         );
     }
-    const prefix = Number(minPrices.price) < Number(maxPrices.price) ? 'Fra ' : '';
+
+    // Regular / Free
     const label = isFree ? 'Gratis!' : formatPrice(minPrices, { field: 'price' });
     return (
-        <PriceLine star={showIcon && isFree}>
-            <ThemedText subtle={subtle}>{prefix}{label}</ThemedText>
+        <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
+            <ThemedText {...textProps}  >
+                {hasRange ? prefix : ''}
+                {label}
+            </ThemedText>
         </PriceLine>
     );
-};
-
-const PriceLine = ({ star, children }: React.PropsWithChildren<{ star?: boolean }>) => (
-
-    <ThemedXStack ai="center" gap="$2">
-        {star && <StarFull scale={0.5} color="gold" />}
-        {children}
-    </ThemedXStack>
-);
+});

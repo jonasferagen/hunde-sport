@@ -25,75 +25,71 @@ export type ProductPriceRange = {
     max: ProductPrices;
 };
 
+type StringKeys<T> = { [K in keyof T]-?: T[K] extends string ? K : never }[keyof T];
 
-export function formatPrice(
-    prices: ProductPrices,
-    opts?: {
-        style?: "full" | "short";
-        omitPrefix?: boolean;
-        field?: keyof Pick<ProductPrices, "price" | "regular_price" | "sale_price">;
-    }
+function formatMinorWithHeader(
+    minorStr: string,
+    h: CurrencyHeader,
+    opts?: { style?: 'full' | 'short'; omitPrefix?: boolean }
 ): string {
-    const field = opts?.field ?? "price";
-    const minorStr = prices[field] ?? "0";
-    const style = opts?.style ?? "short";
+    const style = opts?.style ?? 'short';
     const omitPrefix = opts?.omitPrefix ?? true;
 
-    const {
-        currency_minor_unit,
-        currency_decimal_separator,
-        currency_thousand_separator,
-        currency_prefix,
-        currency_suffix,
-    } = prices;
+    const mu = h.currency_minor_unit;
+    const ds = h.currency_decimal_separator;
+    const ts = h.currency_thousand_separator;
 
-    const n = parseInt(minorStr || "0", 10);
-    const sign = n < 0 ? "-" : "";
+    const n = parseInt(minorStr || '0', 10);
+    const sign = n < 0 ? '-' : '';
     const abs = Math.abs(n);
-    const base = 10 ** currency_minor_unit;
+    const base = 10 ** mu;
 
     const intPart = Math.floor(abs / base).toString();
-    const fracPart = (abs % base).toString().padStart(currency_minor_unit, "0");
-    const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, currency_thousand_separator);
-    const hasFraction = currency_minor_unit > 0 && Number(fracPart) !== 0;
+    const fracPart = (abs % base).toString().padStart(mu, '0');
+    const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ts);
+    const hasFraction = mu > 0 && Number(fracPart) !== 0;
 
     let body: string;
-    if (style === "short") {
-        if (currency_minor_unit > 0 && !hasFraction) body = `${intWithSep}${currency_decimal_separator}-`; // e.g. 120,- 
-        else if (currency_minor_unit > 0) body = `${intWithSep}${currency_decimal_separator}${fracPart}`;
+    if (style === 'short') {
+        if (mu > 0 && !hasFraction) body = `${intWithSep}${ds}-`;
+        else if (mu > 0) body = `${intWithSep}${ds}${fracPart}`;
         else body = intWithSep;
     } else {
-        body = currency_minor_unit > 0 ? `${intWithSep}${currency_decimal_separator}${fracPart}` : intWithSep;
+        body = mu > 0 ? `${intWithSep}${ds}${fracPart}` : intWithSep;
     }
 
-    const effectivePrefix = omitPrefix ? "" : currency_prefix;
-    return `${sign}${effectivePrefix}${body}${currency_suffix}`;
+    const prefix = omitPrefix ? '' : h.currency_prefix;
+    return `${sign}${prefix}${body}${h.currency_suffix}`;
 }
 
-/**
- * Price range:
- * - If min == max: show single price.
- * - Else: "Fra {min}" (configurable label).
- */
-export function formatPriceRange(
-    range: ProductPriceRange,
-    opts?: { style?: "full" | "short"; fromLabel?: string; omitPrefix?: boolean }
+// ---------- Overloads
+export function formatPrice<T extends CurrencyHeader>(
+    obj: T,
+    opts?: { style?: 'full' | 'short'; omitPrefix?: boolean; field?: StringKeys<T> }
+): string;
+export function formatPrice(
+    minorStr: string,
+    header: CurrencyHeader,
+    opts?: { style?: 'full' | 'short'; omitPrefix?: boolean }
+): string;
+
+// ---------- Implementation
+export function formatPrice(
+    a: any,
+    b?: any,
+    c?: any
 ): string {
-    const style = opts?.style ?? "short";
-    const fromLabel = opts?.fromLabel ?? "Fra ";
-
-
-    const { min, max } = range;
-    if (!min || !max) return ""; // nothing purchasable
-
-    if (min === max) {
-        return formatPrice(min, { style, omitPrefix: opts?.omitPrefix });
+    // form: (objWithHeader, { field })
+    if (a && typeof a === 'object' && 'currency_code' in a && 'currency_minor_unit' in a) {
+        const obj = a as CurrencyHeader & Record<string, unknown>;
+        const opts = (b ?? {}) as { style?: 'full' | 'short'; omitPrefix?: boolean; field?: string };
+        const field = opts.field ?? 'price';
+        const minor = (obj as any)[field] ?? '0';
+        return formatMinorWithHeader(minor, obj, opts);
     }
-
-    const minFormatted = formatPrice(min, { style, omitPrefix: opts?.omitPrefix });
-    return `${fromLabel}${minFormatted}`;
+    // form: (minorStr, header, opts)
+    return formatMinorWithHeader(a as string, b as CurrencyHeader, c);
 }
-
 
 /**
  * Compute min/max from a list of ProductPrices.
