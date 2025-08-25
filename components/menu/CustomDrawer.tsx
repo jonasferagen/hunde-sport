@@ -4,7 +4,7 @@ import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 import { useDrawerSettled } from '@/hooks/useDrawerSettled';
 import { X } from '@tamagui/lucide-icons';
 import { H3 } from 'tamagui';
-import { ThemedLinearGradient, ThemedXStack, ThemedYStack } from '../ui';
+import { ThemedLinearGradient, ThemedSpinner, ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { AppVersion } from './AppVersion';
 import { ProductCategoryTree } from './ProductCategoryTree';
@@ -40,7 +40,7 @@ const CustomDrawerContent = () => {
                 <ThemedButton circular onPress={closeDrawer}><X /></ThemedButton>
             </ThemedXStack>
             <ThemedYStack f={1} mih={0} >
-                {hasOpened ? <ProductCategoryTree /> : null}
+                {hasOpened ? <ProductCategoryTree /> : <Loader />}
             </ThemedYStack>
             <AppVersion />
         </ThemedYStack>

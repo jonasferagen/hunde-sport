@@ -11,10 +11,6 @@ type DrawerState = {
     openDrawer?: () => void;
     closeDrawer?: () => void;
 
-    // derived convenience (keep for existing callers)
-    get isFullyClosed(): boolean;
-
-    // setters
     setStatus: (s: DrawerStatus) => void;
     markHasOpened: () => void;
 
@@ -29,10 +25,6 @@ type DrawerState = {
 export const useDrawerStore = create<DrawerState>((set, get) => ({
     status: 'closed',
     hasOpened: false,
-
-    get isFullyClosed() {
-        return get().status === 'closed';
-    },
 
     setStatus: (status) => set({ status }),
     markHasOpened: () => set({ hasOpened: true }),

@@ -37,7 +37,7 @@ export function ProductCategoriesModal({
                         justifyContent="space-between"
                         size="$5"
                         mt={index > 0 ? '$2' : undefined}
-                        onPress={() => { to('product-category', item); close(); }}               // ← close the modal when selecting
+                        onPress={() => { to('product-category', item); }}               // ← close the modal when selecting
                     >
                         <H4>{item.name}</H4>
                         <ChevronRight />

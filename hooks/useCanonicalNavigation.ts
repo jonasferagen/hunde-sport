@@ -5,6 +5,7 @@ import { HrefObject, router, useLocalSearchParams, usePathname } from 'expo-rout
 import * as React from 'react';
 import { startTransition } from 'react';
 import { useDrawerStore } from '@/stores/drawerStore';
+import { useModalStore } from '@/stores/modalStore';
 
 type Routes = typeof routes;
 type RouteKey = keyof Routes;
@@ -55,8 +56,8 @@ export function useCanonicalNavigation() {
     ): Promise<void> => {
         // 1) Ensure transient UI is gone first (drawer, modal)
         //    If you want to make either optional, split these into flags.
-        // await ensureModalClosed();
         await ensureDrawerClosed();
+        await ensureModalClosed();
 
         // 2) Compute target and navigate (unchanged logic)
         const { nav } = routes[key];
@@ -100,4 +101,10 @@ async function ensureDrawerClosed() {
     const s = useDrawerStore.getState();
     if (s.status !== 'closed') s.closeDrawer?.();
     await useDrawerStore.getState().waitUntilClosed();
+}
+
+async function ensureModalClosed() {
+    const s = useModalStore.getState();
+    if (s.status !== 'closed') s.closeModal();
+    await useModalStore.getState().waitUntilClosed();
 }

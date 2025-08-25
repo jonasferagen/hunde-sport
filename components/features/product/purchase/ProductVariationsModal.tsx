@@ -3,7 +3,6 @@ import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { PurchasableProvider, usePurchasableContext } from '@/contexts/PurchasableContext';
 import { useAddToCart } from '@/hooks/useAddToCart';
 import { Purchasable } from '@/types';
-import { ChevronDown, CircleX, X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Sheet } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle } from '../display';
@@ -11,8 +10,8 @@ import { ProductVariationSelect } from '../product-variation/ProductVariationSel
 import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
 import { PurchaseButton } from './PurchaseButton';
 import { spacePx } from '@/lib/helpers';
-import { useModalSettled } from '@/hooks/useModalSettled';
-import { Loader } from '@/components/ui/Loader';
+import { useModalStore } from '@/stores/modalStore';
+import { X } from '@tamagui/lucide-icons';
 
 const gapPx = spacePx("$3");
 
@@ -31,7 +30,7 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
     const { purchasable } = usePurchasableContext();
     const addToCart = useAddToCart();
     const [loading, setLoading] = React.useState(false);
-    const { hasOpened } = useModalSettled();
+    const hasOpened = useModalStore((s) => s.status === "open");
 
     // Track partial selection for display in label
     const [currentSelection, setCurrentSelection] = React.useState<Record<string, string>>({});
@@ -63,7 +62,6 @@ export const Inner = React.memo(function Inner({ close }: { close: () => void })
             close();
         }
     };
-
 
     return (
         <ThemedYStack f={1} mih={0} onLayout={onBodyLayout} gap="$3">

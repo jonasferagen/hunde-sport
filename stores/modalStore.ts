@@ -30,6 +30,9 @@ type ModalState = {
     closeModal: () => void;
     setPosition: (pos: number) => void;
     setStatus: (s: ModalStatus) => void;
+
+    // waiters
+    waitUntilClosed: () => Promise<void>;
 };
 
 export const useModalStore = create<ModalState>((set, get) => ({
@@ -65,6 +68,19 @@ export const useModalStore = create<ModalState>((set, get) => ({
 
     setPosition: (pos) => set({ position: pos }),
     setStatus: (s) => set({ status: s }),
+
+    // ---- NEW: promise resolves only when status === 'closed' ----
+    waitUntilClosed: () =>
+        new Promise<void>((resolve) => {
+            if (get().status === 'closed') return resolve();
+            let unsub: () => void;
+            unsub = useModalStore.subscribe((state) => {
+                if (state.status === 'closed') {
+                    unsub();
+                    resolve();
+                }
+            });
+        }),
 }));
 
 // tiny helpers (kept minimal)

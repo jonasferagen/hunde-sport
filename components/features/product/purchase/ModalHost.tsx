@@ -1,7 +1,7 @@
 // ModalHost.tsx
-import { ThemedLinearGradient } from '@/components/ui';
+import { ThemedLinearGradient, ThemedYStack } from '@/components/ui';
 import React from 'react';
-import { Sheet, YStack, Adapt, Dialog } from 'tamagui';
+import { Sheet, Adapt, Dialog } from 'tamagui';
 
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 
@@ -21,6 +21,7 @@ export const ModalHost = () => {
         snapPoints,
         position,
         closeModal,
+        status,
     } = useModalStore(
         useShallow((s) => ({
             open: s.open,
@@ -29,11 +30,12 @@ export const ModalHost = () => {
             snapPoints: s.snapPoints,
             position: s.position,
             closeModal: s.closeModal,
+            status: s.status,
         }))
     );
 
-    const { isFullyClosed, onHostLayout } = useModalSettled();
-    const body = isFullyClosed
+    const { onHostLayout } = useModalSettled();
+    const body = status === "closed"
         ? null
         : renderer?.(payload, { close: () => closeModal(), setPosition: setModalPosition })
 
@@ -67,9 +69,9 @@ export const ModalHost = () => {
             </Adapt>
             <Dialog.Content theme={THEME_SHEET}>
                 <ThemedLinearGradient fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} />
-                <YStack f={1} mih={0}>
+                <ThemedYStack f={1} mih={0}>
                     {body}
-                </YStack>
+                </ThemedYStack>
             </Dialog.Content>
         </Dialog>
     )
