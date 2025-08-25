@@ -31,7 +31,7 @@ export const ProductPrice = React.memo(function ProductPrice({
     const maxPrices = priceRange?.max as ProductPrices;
 
     // Compute once
-    const { saleValid } = React.useMemo(() => {
+    const { saleValid, prefix } = React.useMemo(() => {
         const minVal = parseInt(minPrices?.price ?? '0', 10);
         const maxVal = parseInt(maxPrices?.price ?? '0', 10);
         const saleVal = parseInt(minPrices?.sale_price ?? '0', 10);
@@ -48,8 +48,6 @@ export const ProductPrice = React.memo(function ProductPrice({
     // Flags (forward caller overrides)
     const subtle = (!isInStock || !isPurchasable) || textProps.subtle;
 
-
-
     // Sale: crossed regular + sale (only if it actually makes sense)
     if (saleValid) {
         return (
@@ -65,7 +63,7 @@ export const ProductPrice = React.memo(function ProductPrice({
     }
 
     // Regular / Free
-    const label = isFree ? 'Gratis!' : formatPrice(minPrices, { field: 'price' });
+    const label = isFree ? 'Gratis!' : prefix + formatPrice(minPrices, { field: 'price' });
     return (
         <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
             <ThemedText {...textProps} subtle={subtle}>

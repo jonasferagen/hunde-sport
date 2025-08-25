@@ -79,7 +79,7 @@ export const ProductCategoryBranch = memo(({ id, level }: { id: number; level: n
 
 
     return (
-        <Animated.View layout={LinearTransition.duration(150)}>
+        <Animated.View layout={LinearTransition.duration(150)} collapsable={false}>
             <ThemedYStack >
 
                 {id > 0 && <ThemedXStack>
@@ -98,7 +98,6 @@ export const ProductCategoryBranch = memo(({ id, level }: { id: number; level: n
                     <Animated.View
                         entering={FadeIn.duration(150)}
                         exiting={FadeOut.duration(120)}
-                        layout={LinearTransition.duration(150)}
                         collapsable={false}
                         style={{ width: '100%' }}
                     >

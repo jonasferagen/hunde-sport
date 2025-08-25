@@ -22,9 +22,9 @@ const AppLayout = () => {
         () => ({
             header: () => <CustomHeader />,
             swipeEnabled: true,
-            freezeOnBlur: false,          // default
+            freezeOnBlur: true,          // default
             unmountOnBlur: false,        // default
-            lazy: true,
+            lazy: false,
         }),
         []
     );

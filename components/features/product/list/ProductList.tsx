@@ -34,7 +34,6 @@ export const ProductList = React.memo(function ProductList({
 
     const keyExtractor = React.useCallback((p: PurchasableProduct) => String(p.id), []);
 
-
     const onEndReached = React.useCallback(() => {
         if (hasMore && !isLoadingMore) loadMore();
     }, [hasMore, isLoadingMore, loadMore]);
@@ -49,28 +48,36 @@ export const ProductList = React.memo(function ProductList({
         hintRef.current?.kick();
     }, []);
 
-
     const renderItem = React.useCallback(
-        ({ item: product, index }: { item: PurchasableProduct; index: number }) => (
-            <ProductCard
-                product={product}
-                theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
-            />
-        ),
+        ({ item: product, index }: { item: PurchasableProduct; index: number }) => {
+
+            return (
+                <ProductCard
+                    product={product}
+                    theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
+                />)
+        },
         []
     );
+
+    const listRef = React.useRef<FlashList<PurchasableProduct>>(null);
+
+    // whenever the screen/category changes (i.e., before the fade)
+    React.useEffect(() => {
+        listRef.current?.prepareForLayoutAnimationRender();
+    }, [transitionKey]);
 
     return (
         <Animated.View
             key={transitionKey}
+            collapsable={false}
             entering={FadeIn.duration(300)}
             exiting={FadeOut.duration(300)}
             style={{ flex: 1 }}
         >
             <ThemedXStack f={1} mih={0} pos="relative">
                 <FlashList
-                    // also resetting FlashList internals on identity change is OK:
-                    key={transitionKey}
+                    ref={listRef}
                     data={products as PurchasableProduct[]}
                     renderItem={renderItem}
                     keyExtractor={keyExtractor}
@@ -82,7 +89,7 @@ export const ProductList = React.memo(function ProductList({
                     estimatedListSize={{ width, height }}
                     drawDistance={800}
                     getItemType={() => 'product'}
-                    removeClippedSubviews
+                    removeClippedSubviews={false}
                     onViewableItemsChanged={onViewableItemsChanged}
                     viewabilityConfig={viewabilityConfig}
                     onScroll={onScroll}

@@ -5,11 +5,12 @@ import { Sheet, Adapt, Dialog } from 'tamagui';
 
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setModalPosition, useModalStore } from '@/stores/modalStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useModalSettled } from '@/hooks/useModalSettled';
 import { useBackHandler } from '@react-native-community/hooks'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AppToastProvider } from '@/contexts';
 
 export const ModalHost = () => {
 
@@ -47,33 +48,41 @@ export const ModalHost = () => {
     });
 
     return (
-        <Dialog open={open} onOpenChange={(o) => { if (!o) closeModal(); }}>
-            {/* On native, always render as a bottom Sheet */}
-            <Adapt platform="native">
-                <Sheet
-                    modal
-                    snapPointsMode="percent"
-                    snapPoints={snapPoints}         // e.g. [85]
-                    position={position}
-                    onPositionChange={setModalPosition}
-                    unmountChildrenWhenHidden
-                    dismissOnSnapToBottom
-                    animation="fast"
-                >
-                    <Sheet.Overlay bg="black" opacity={0.15} />
-                    <Sheet.Frame f={1} mih={0} p="$4" gap="$3" mb={insets.bottom} onLayout={onHostLayout}>
-                        <ThemedLinearGradient pointerEvents="none" />
-                        <Adapt.Contents />
-                    </Sheet.Frame>
-                </Sheet>
-            </Adapt>
-            <Dialog.Content theme={THEME_SHEET}>
-                <ThemedLinearGradient fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} />
+
+        <Sheet
+            modal
+            native
+            open={open}
+            onOpenChange={(o: boolean) => { if (!o) closeModal(); }}
+            snapPointsMode="percent"
+            snapPoints={snapPoints}          // e.g. [85]
+            position={position}
+            onPositionChange={setModalPosition}
+            unmountChildrenWhenHidden
+            dismissOnSnapToBottom
+            animation="fast"
+
+        >
+            <Sheet.Overlay animation="fast" enterStyle={{ opacity: 0 }} style={{ backgroundColor: 'rgba(0,0,0,0.15)' }} />
+            <Sheet.Handle />
+            <Sheet.Frame
+                f={1}
+                mih={0}
+                p="$4"
+                mb={insets.bottom}
+                gap="$3"
+                onLayout={onHostLayout}
+                theme={THEME_SHEET}
+            >
+                <ThemedLinearGradient pointerEvents="none" fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} />
                 <ThemedYStack f={1} mih={0}>
-                    {body}
+                    <AppToastProvider>
+                        {body}
+                    </AppToastProvider>
                 </ThemedYStack>
-            </Dialog.Content>
-        </Dialog>
+            </Sheet.Frame>
+        </Sheet>
+
     )
 }
 //               

@@ -27,8 +27,8 @@ export const CartListItem = ({ item, index, ...props }: CartListItemProps & Stac
 
         <ThemedYStack gap="none" {...props}>
             <ThemedYStack box theme={THEME_CART_ITEM_1}>
-                <ThemedXStack container split>
-                    <ThemedText size="$5">{item.name}</ThemedText>
+                <ThemedXStack container split f={1}>
+                    <ThemedText size="$5" fs={1}  >{item.name}</ThemedText>
                     <ThemedText size="$5">{formatItemUnitPrice(item.prices)}</ThemedText>
                 </ThemedXStack>
             </ThemedYStack>
@@ -48,7 +48,7 @@ export const CartListItem = ({ item, index, ...props }: CartListItemProps & Stac
                     <ThemedButton onPress={() => removeItem(key)} circular><X /></ThemedButton>
                 </ThemedXStack>
             </ThemedYStack>
-        </ThemedYStack>
+        </ThemedYStack >
     );
 };
 

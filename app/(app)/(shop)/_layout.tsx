@@ -14,8 +14,9 @@ export default function ShopLayout() {
                         name={route.name}
                         options={{
                             title: route.label,
-                            freezeOnBlur: true,
+                            freezeOnBlur: false,
                         }}
+
                     />
                 ))}
             </Stack>
@@ -28,6 +29,7 @@ const BackGuard = () => {
     const canGoBack = useNavigationState((s: any) => !!s?.routes?.find((r: any) => r.name === '(shop)')?.state?.index);
 
     useBackHandler(() => {
+
         if (!canGoBack) return false;
         router.back();
         return true;

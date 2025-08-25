@@ -5,7 +5,7 @@ import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { PurchasableProduct } from '@/types';
 import React from 'react';
-import { StackProps, XStack, YStack } from 'tamagui';
+import { StackProps } from 'tamagui';
 import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
 import { ProductDescription } from './ProductDescription';
 import { ProductTitle } from './ProductTitle';
@@ -37,7 +37,7 @@ export const ProductCard = React.memo(({ product, ...props }: ProductCardProps) 
 const ProductCardImage = ({ product }: { product: PurchasableProduct }) => {
     const uri = getScaledImageUrl(product.featuredImage.src, IMAGE_SIZE, IMAGE_SIZE);
     return (
-        <YStack
+        <ThemedYStack
             w={IMAGE_SIZE}
             h={IMAGE_SIZE}
             bw={1}
@@ -50,7 +50,7 @@ const ProductCardImage = ({ product }: { product: PurchasableProduct }) => {
                 w={IMAGE_SIZE}
                 h={IMAGE_SIZE}
             />
-        </YStack>
+        </ThemedYStack>
     );
 
 };

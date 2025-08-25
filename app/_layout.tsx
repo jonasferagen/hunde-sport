@@ -9,7 +9,7 @@ import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { enableFreeze, enableScreens } from 'react-native-screens';
-import { TamaguiProvider } from 'tamagui';
+import { PortalProvider, TamaguiProvider } from 'tamagui';
 
 enableScreens(true);
 enableFreeze(true);
@@ -21,16 +21,18 @@ const RootLayout = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>
           <TamaguiProvider config={appConfig}>
+
             <AppToastProvider>
               <ModalHost />
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(app)" />
               </Stack>
             </AppToastProvider>
+
           </TamaguiProvider>
         </SafeAreaView>
       </GestureHandlerRootView>
-    </QueryClientProvider>
+    </QueryClientProvider >
   );
 };
 

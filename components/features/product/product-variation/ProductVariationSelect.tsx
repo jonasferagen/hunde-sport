@@ -5,7 +5,7 @@ import { useProductVariationSelector } from '@/domain/Product/helpers/useProduct
 import { VariableProduct } from '@/domain/Product/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { spacePx } from '@/lib/helpers';
-import { ProductVariation } from '@/types';
+import { ProductVariation, Purchasable } from '@/types';
 import React from 'react';
 import { XStack, YStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
@@ -14,25 +14,23 @@ import { useProductVariations } from '@/hooks/data/Product';
 interface ProductVariationSelectProps extends YStackProps {
     onSelectionChange?: (selection: Record<string, string>) => void;
     onProductVariationSelected?: (variation: ProductVariation | undefined) => void;
+    purchasable: Purchasable;
 }
 
 
 export const ProductVariationSelect = React.memo((props: ProductVariationSelectProps) => {
     useRenderGuard('ProductVariationSelect');
 
-    const { purchasable, setProductVariation } = usePurchasableContext();
+    const { purchasable } = props;
     const variableProduct = purchasable.product as VariableProduct;
     const { items: productVariations, isLoading } = useProductVariations(purchasable.product);
     const { onSelectionChange, onProductVariationSelected } = props;
 
     const handleVariationSelected = React.useCallback(
         (variation: ProductVariation | undefined) => {
-            // Keep existing behavior
-            setProductVariation(variation);
-            // And also notify external consumer
             onProductVariationSelected?.(variation);
         },
-        [setProductVariation, onProductVariationSelected]
+        [onProductVariationSelected]
     );
 
     const {
