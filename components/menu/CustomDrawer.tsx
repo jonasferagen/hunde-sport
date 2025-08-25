@@ -40,7 +40,7 @@ const CustomDrawerContent = () => {
                 <ThemedButton circular onPress={closeDrawer}><X /></ThemedButton>
             </ThemedXStack>
             <ThemedYStack f={1} mih={0} >
-                {hasOpened ? <ProductCategoryTree /> : <ProductCategoryTree />}
+                {hasOpened ? <ProductCategoryTree /> : null}
             </ThemedYStack>
             <AppVersion />
         </ThemedYStack>

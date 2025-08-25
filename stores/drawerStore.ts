@@ -1,31 +1,40 @@
 // stores/drawerStore.ts
 import { create } from 'zustand';
 import { DrawerActions } from '@react-navigation/native';
-import { type DrawerContentComponentProps } from '@react-navigation/drawer';
+import type { DrawerContentComponentProps } from '@react-navigation/drawer';
+
+export type DrawerStatus = 'closed' | 'opening' | 'open' | 'closing';
 
 type DrawerState = {
-    isFullyClosed: boolean;
+    status: DrawerStatus;            // ← new
     hasOpened: boolean;
-    // controls installed at runtime
     openDrawer?: () => void;
     closeDrawer?: () => void;
 
+    // derived convenience (keep for existing callers)
+    get isFullyClosed(): boolean;
+
     // setters
-    setFullyClosed: (v: boolean) => void;
+    setStatus: (s: DrawerStatus) => void;
     markHasOpened: () => void;
 
-    // installer (called inside drawer with navigation)
+    // wiring
     installControls: (nav: DrawerContentComponentProps['navigation']) => void;
     clearControls: () => void;
+
+    // util
+    waitUntilClosed: () => Promise<void>;
 };
 
-export const useDrawerStore = create<DrawerState>((set) => ({
-    isFullyClosed: true,
+export const useDrawerStore = create<DrawerState>((set, get) => ({
+    status: 'closed',
     hasOpened: false,
-    openDrawer: undefined,
-    closeDrawer: undefined,
 
-    setFullyClosed: (v) => set({ isFullyClosed: v }),
+    get isFullyClosed() {
+        return get().status === 'closed';
+    },
+
+    setStatus: (status) => set({ status }),
     markHasOpened: () => set({ hasOpened: true }),
 
     installControls: (nav) =>
@@ -35,8 +44,18 @@ export const useDrawerStore = create<DrawerState>((set) => ({
         }),
 
     clearControls: () => set({ openDrawer: undefined, closeDrawer: undefined }),
-}));
 
-// Optional convenience calls
-export const openDrawer = () => useDrawerStore.getState().openDrawer?.();
-export const closeDrawer = () => useDrawerStore.getState().closeDrawer?.();
+    waitUntilClosed: () =>
+        new Promise<void>((resolve) => {
+            if (get().status === 'closed') return resolve();
+
+            let unsub: () => void;
+            // Subscribe to the WHOLE state (v5 signature)
+            unsub = useDrawerStore.subscribe((state) => {
+                if (state.status === 'closed') {
+                    unsub();
+                    resolve();
+                }
+            });
+        }),
+}));

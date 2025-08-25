@@ -4,6 +4,7 @@ import { useNavigationProgress } from '@/stores/navigationProgressStore';
 import { HrefObject, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
 import { startTransition } from 'react';
+import { useDrawerStore } from '@/stores/drawerStore';
 
 type Routes = typeof routes;
 type RouteKey = keyof Routes;
@@ -46,18 +47,24 @@ export function useCanonicalNavigation() {
     const paramsObj = useLocalSearchParams();
     const currentParamsKey = React.useMemo(() => paramsKey(paramsObj as any), [paramsObj]);
 
-    const coreTo = React.useCallback(<K extends RouteKey>(
+
+    const coreTo = React.useCallback(async <K extends RouteKey>(
         key: K,
         withoutOverlay: boolean,
         ...args: ArgsOf<K>
-    ) => {
+    ): Promise<void> => {
+        // 1) Ensure transient UI is gone first (drawer, modal)
+        //    If you want to make either optional, split these into flags.
+        // await ensureModalClosed();
+        await ensureDrawerClosed();
+
+        // 2) Compute target and navigate (unchanged logic)
         const { nav } = routes[key];
         const href = cleanHref(pathFor(key)(...args));
         const targetPath = stripTrailingSlash(href.pathname);
         const policy: NavPolicy = nav;
 
         scheduleNav(() => {
-            // same-path navigation => either push (stack) or just update params
             if (targetPath === pathname) {
                 if (policy === 'push') {
                     router.push(href);
@@ -69,14 +76,11 @@ export function useCanonicalNavigation() {
                 }
                 return;
             }
-
-            // cross-path navigation
             if (policy === 'push') router.push(href);
             else if (policy === 'switch') router.navigate(href);
             else router.replace(href);
         }, withoutOverlay);
     }, [pathname, currentParamsKey]);
-
     // Public API
     const to = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
         coreTo(key, false, ...args);
@@ -90,4 +94,10 @@ export function useCanonicalNavigation() {
         cleanHref(pathFor(key)(...args)), []);
 
     return { to, toWithoutOverlay, href };
+}
+
+async function ensureDrawerClosed() {
+    const s = useDrawerStore.getState();
+    if (s.status !== 'closed') s.closeDrawer?.();
+    await useDrawerStore.getState().waitUntilClosed();
 }
