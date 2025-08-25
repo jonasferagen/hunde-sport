@@ -1,22 +1,17 @@
 import { ThemedYStack } from '@/components/ui';
 import { TileSquare } from '@/components/ui/tile/TileSquare';
-import { NUM_CATEGORY_TILE_COLUMNS, NUM_CATEGORY_TILE_ROWS } from '@/config/app';
+import { NUM_CATEGORY_TILE_COLUMNS } from '@/config/app';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { spacePx } from '@/lib/helpers';
 import { useProductCategories } from '@/stores/productCategoryStore';
 import React, { useMemo } from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
-const MAX_CATEGORIES = NUM_CATEGORY_TILE_COLUMNS * NUM_CATEGORY_TILE_ROWS;
+
 
 
 export const ProductCategoryTiles = React.memo((props: StackProps) => {
 
-    const roots = useProductCategories(0);
-
-    const productCategories = useMemo(
-        () => roots.slice(0, MAX_CATEGORIES),
-        [roots]
-    );
+    const productCategories = useProductCategories(0);
 
     const GAP = '$3';
     const gapPx = spacePx(GAP);
@@ -25,7 +20,6 @@ export const ProductCategoryTiles = React.memo((props: StackProps) => {
     const colPct = `${100 / cols}%`;
 
     const { to } = useCanonicalNavigation();
-
 
 
     return (

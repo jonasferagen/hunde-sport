@@ -66,7 +66,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
         // Replace icon/iconAfter with before/after
         <CallToActionButton
             onPress={onPress}
-            disabled={false}
+            disabled={disabled}
             before={ICONS[cta.mode]}
             theme={theme}
             label={isLoading ? undefined : cta.label}
@@ -90,8 +90,8 @@ function computeCTA(p: Purchasable, mode: PurchaseCTAModeInput = 'auto'): Purcha
     if (mode !== 'auto') {
         // caller forces what the button looks like/does
         switch (mode) {
-            case 'unavailable': return { mode, label: p.message, disabled: true };
             case 'select-variation': return { mode, label: p.message, disabled: false };
+            case 'unavailable': return { mode, label: p.message, disabled: true };
             case 'buy': return { mode, label: p.message, disabled: false };
         }
     }

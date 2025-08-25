@@ -87,11 +87,12 @@ export const useProductsByCategory = (productCategory: ProductCategory): QueryRe
 
 
 
-export const useProductVariations = (variableProduct: VariableProduct, options = { enabled: true, perPage: 100 }): QueryResult<ProductVariation> => {
+export const useProductVariations = (product: Product, options = { perPage: 100 }): QueryResult<ProductVariation> => {
     const result = useInfiniteQuery({
-        queryKey: ['product-variations', variableProduct.id],
-        queryFn: ({ pageParam }) => fetchProductVariations(variableProduct.id, { page: pageParam, per_page: options.perPage }),
-        ...queryOptions
+        queryKey: ['product-variations', product.id],
+        queryFn: ({ pageParam }) => fetchProductVariations(product.id, { page: pageParam, per_page: options.perPage }),
+        enabled: product.isVariable,
+        ...queryOptions,
     });
     return useQueryResult<ProductVariation>(result);
 };

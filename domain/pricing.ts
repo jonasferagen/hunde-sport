@@ -1,5 +1,7 @@
-// domain/pricing.ts
-import { ProductVariation } from "@/types";
+
+import { Product, VariableProduct } from '@/types';
+import React from 'react';
+import { useProductVariations } from '@/hooks/data/Product';
 
 /** --- Shared types --- */
 export type CurrencyHeader = {
@@ -19,11 +21,9 @@ export type ProductPrices = CurrencyHeader & {
 
 /** Normalized range: one header + min/max amounts (minor-unit strings) */
 export type ProductPriceRange = {
-    min: ProductPrices | null;
-    max: ProductPrices | null;
+    min: ProductPrices;
+    max: ProductPrices;
 };
-
-
 
 
 export function formatPrice(
@@ -82,7 +82,6 @@ export function formatPriceRange(
     const style = opts?.style ?? "short";
     const fromLabel = opts?.fromLabel ?? "Fra ";
 
-    console.log(range.min);
 
     const { min, max } = range;
     if (!min || !max) return ""; // nothing purchasable
@@ -106,27 +105,63 @@ export function getProductPriceRange(prices: ProductPrices[]): {
     max: ProductPrices;
 } {
     if (prices.length === 0) {
-        throw new Error("getProductPriceRange called with empty prices array");
+        throw new Error("No prices provided");
     }
 
-    let min: ProductPrices | null = null;
-    let max: ProductPrices | null = null;
+    // Keep only valid, non-zero prices
+    const valid = prices.filter((p) => {
+        const n = Number(p.price);
+        return Number.isFinite(n) && n !== 0;
+    });
 
-    for (const p of prices) {
-        const priceNum = Number(p.price);
-        if (!priceNum) continue; // skip "0" or invalid
+    // If no valid prices, fall back to the first element
+    const list = valid.length > 0 ? valid : [prices[0]];
 
-        if (min === null || priceNum < Number(min.price)) {
+    // Seed min/max with the first item to avoid nulls
+    let min = list[0];
+    let max = list[0];
+
+    for (let i = 1; i < list.length; i++) {
+        const p = list[i];
+        const n = Number(p.price);
+        if (n < Number(min.price)) {
             min = p;
         }
-        if (max === null || priceNum > Number(max.price)) {
+        if (n > Number(max.price)) {
             max = p;
         }
     }
 
-    // If all prices were "0" / unavailable → fall back to first element
-    if (min === null || max === null) {
-        min = max = prices[0];
-    }
     return { min, max };
 }
+
+
+
+
+export type ProductPricing = {
+    isLoading: boolean;
+    isFree: boolean;                 // true if purchasable range is 0–0
+    priceRange: ProductPriceRange;
+};
+
+
+export function useProductPricing(product: Product): ProductPricing {
+
+    const variable = product as VariableProduct;
+    const { items: productVariations = [], isLoading } = useProductVariations(variable);
+
+    const priceRange = React.useMemo(() => {
+        const prices = productVariations.map(v => v.prices);
+        return getProductPriceRange(prices.length ? prices : [product.prices]);
+    }, [productVariations, product.prices]);
+
+    const isFree = priceRange.min.price === '0' && priceRange.max.price === '0';
+
+
+    return {
+        isLoading,
+        isFree,
+        priceRange,
+    };
+}
+

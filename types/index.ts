@@ -5,6 +5,6 @@ export * from '@/domain/Product/Product';
 export * from '@/domain/Product/ProductAttribute';
 export * from '@/domain/Product/Purchasable';
 export * from '@/domain/ProductCategory';
-
+export * from '@/domain/pricing';
 
 

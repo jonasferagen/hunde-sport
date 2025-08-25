@@ -1,5 +1,5 @@
 import { ProductVariation, SimpleProduct, VariableProduct } from '@/domain/Product/Product';
-import { Product, ProductAvailability, PurchasableProduct } from '@/types';
+import { Product, ProductPricing, PurchasableProduct } from '@/types';
 import { ProductPrices } from '../pricing';
 
 
@@ -68,7 +68,7 @@ export interface Purchasable extends ValidationResult {
     productVariation?: ProductVariation;
     activeProduct: Product;
     prices: ProductPrices;
-    availability: ProductAvailability;
+    availability: ProductPricing;
     isVariable: boolean;
 }
 

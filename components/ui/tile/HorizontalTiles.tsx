@@ -135,7 +135,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                             <ProductPriceTag product={item} />
                         </TileBadge>
 
-                        {!item.availability.isInStock && (
+                        {!item.is_in_stock && (
                             <>
                                 <ThemedYStack bg="black" fullscreen pos="absolute" o={.4} pointerEvents="none" />
                                 <TileBadge theme="secondary" corner="tl" >
