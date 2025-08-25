@@ -6,6 +6,8 @@ import * as React from 'react';
 import { startTransition } from 'react';
 import { useDrawerStore } from '@/stores/drawerStore';
 import { useModalStore } from '@/stores/modalStore';
+import { useBackHandler } from '@react-native-community/hooks';
+import { useNavigation } from '@react-navigation/native';
 
 type Routes = typeof routes;
 type RouteKey = keyof Routes;
@@ -40,7 +42,7 @@ const scheduleNav = (fn: () => void, withoutOverlay: boolean) => {
         });
     });
 };
-
+// useCanonicalNav.ts
 export function useCanonicalNavigation() {
     const rawPathname = usePathname();
     const pathname = React.useMemo(() => stripTrailingSlash(rawPathname), [rawPathname]);
@@ -48,47 +50,50 @@ export function useCanonicalNavigation() {
     const paramsObj = useLocalSearchParams();
     const currentParamsKey = React.useMemo(() => paramsKey(paramsObj as any), [paramsObj]);
 
+    // simple in-flight guard
+    const navLock = React.useRef<Promise<void> | null>(null);
 
     const coreTo = React.useCallback(async <K extends RouteKey>(
         key: K,
         withoutOverlay: boolean,
         ...args: ArgsOf<K>
     ): Promise<void> => {
-        // 1) Ensure transient UI is gone first (drawer, modal)
-        //    If you want to make either optional, split these into flags.
-        await ensureDrawerClosed();
-        await ensureModalClosed();
+        // prevent overlapping navigations
+        if (navLock.current) return;
+        navLock.current = (async () => {
+            await ensureTransientUiClosed(); // close modal first, then drawer
 
-        // 2) Compute target and navigate (unchanged logic)
-        const { nav } = routes[key];
-        const href = cleanHref(pathFor(key)(...args));
-        const targetPath = stripTrailingSlash(href.pathname);
-        const policy: NavPolicy = nav;
+            const { nav } = routes[key];
+            const href = cleanHref(pathFor(key)(...args));
+            const targetPath = stripTrailingSlash(href.pathname);
+            const policy: NavPolicy = nav;
 
-        scheduleNav(() => {
-            if (targetPath === pathname) {
-                if (policy === 'push') {
-                    router.push(href);
-                } else {
-                    const nextKey = paramsKey(href.params as any);
-                    if (nextKey && nextKey !== currentParamsKey) {
-                        router.setParams(href.params as any);
+            scheduleNav(() => {
+                if (targetPath === pathname) {
+                    if (policy === 'push') router.push(href);
+                    else {
+                        const nextKey = paramsKey(href.params as any);
+                        if (nextKey && nextKey !== currentParamsKey) {
+                            router.setParams(href.params as any);
+                        }
                     }
+                    return;
                 }
-                return;
-            }
-            if (policy === 'push') router.push(href);
-            else if (policy === 'switch') router.navigate(href);
-            else router.replace(href);
-        }, withoutOverlay);
+                if (policy === 'push') router.push(href);
+                else if (policy === 'switch') router.navigate(href);
+                else router.replace(href);
+            }, withoutOverlay);
+        })();
+
+        try { await navLock.current; } finally { navLock.current = null; }
     }, [pathname, currentParamsKey]);
-    // Public API
+
     const to = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
-        coreTo(key, false, ...args);
+        void coreTo(key, false, ...args);
     }, [coreTo]);
 
     const toWithoutOverlay = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>) => {
-        coreTo(key, true, ...args);
+        void coreTo(key, true, ...args);
     }, [coreTo]);
 
     const href = React.useCallback(<K extends RouteKey>(key: K, ...args: ArgsOf<K>): HrefObject =>
@@ -97,14 +102,43 @@ export function useCanonicalNavigation() {
     return { to, toWithoutOverlay, href };
 }
 
-async function ensureDrawerClosed() {
-    const s = useDrawerStore.getState();
-    if (s.status !== 'closed') s.closeDrawer?.();
-    await useDrawerStore.getState().waitUntilClosed();
+async function ensureTransientUiClosed() {
+    // close modal first (if any), then drawer; kick both, then await
+    const m = useModalStore.getState();
+    const d = useDrawerStore.getState();
+
+    const wantsModalClose = m.status !== 'closed';
+    const wantsDrawerClose = d.status !== 'closed';
+
+    if (wantsModalClose) m.closeModal();
+    if (wantsDrawerClose) d.closeDrawer?.();
+
+    await Promise.all([
+        wantsModalClose ? useModalStore.getState().waitUntilClosed() : Promise.resolve(),
+        wantsDrawerClose ? useDrawerStore.getState().waitUntilClosed() : Promise.resolve(),
+    ]);
 }
 
-async function ensureModalClosed() {
-    const s = useModalStore.getState();
-    if (s.status !== 'closed') s.closeModal();
-    await useModalStore.getState().waitUntilClosed();
+
+export function useCanonicalBackHandler(options?: { enabled?: boolean }) {
+    const { enabled = true } = options ?? {};
+    const navigation = useNavigation();
+
+    useBackHandler(React.useCallback(() => {
+        if (!enabled) return false;
+
+        // 1) close modal if open
+        const m = useModalStore.getState();
+        if (m.status !== 'closed') { m.closeModal(); return true; }
+
+        // 2) close drawer if open
+        const d = useDrawerStore.getState();
+        if (d.status !== 'closed') { d.closeDrawer?.(); return true; }
+
+        // 3) go back in stack if possible
+        if (navigation.canGoBack()) { navigation.goBack(); return true; }
+
+        // 4) let OS handle (exit/minimize)
+        return false;
+    }, [enabled, navigation]));
 }

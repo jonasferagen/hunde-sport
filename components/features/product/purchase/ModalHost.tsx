@@ -8,7 +8,6 @@ import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 import { setModalPosition, useModalStore } from '@/stores/modalStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useModalSettled } from '@/hooks/useModalSettled';
-import { useBackHandler } from '@react-native-community/hooks'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppToastProvider } from '@/contexts';
 
@@ -42,10 +41,6 @@ export const ModalHost = () => {
 
     const insets = useSafeAreaInsets();
 
-    useBackHandler(() => {
-        closeModal();
-        return true;
-    });
 
     return (
 
@@ -61,9 +56,12 @@ export const ModalHost = () => {
             unmountChildrenWhenHidden
             dismissOnSnapToBottom
             animation="fast"
-
         >
-            <Sheet.Overlay animation="fast" enterStyle={{ opacity: 0 }} style={{ backgroundColor: 'rgba(0,0,0,0.15)' }} />
+            <Sheet.Overlay
+                animation="fast"
+                enterStyle={{ opacity: 0 }}
+                style={{ backgroundColor: 'rgba(0,0,0,0.15)' }}
+            />
             <Sheet.Handle />
             <Sheet.Frame
                 f={1}

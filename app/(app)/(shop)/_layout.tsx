@@ -1,12 +1,12 @@
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { routes } from '@/config/routes';
 
-import { useBackHandler } from '@react-native-community/hooks';
-import { useNavigationState } from '@react-navigation/native';
+import { useCanonicalBackHandler } from '@/hooks/useCanonicalNavigation';
 
 export default function ShopLayout() {
+    useCanonicalBackHandler();
     return (
-        <><BackGuard />
+        <>
             <Stack screenOptions={{ headerShown: false }}>
                 {Object.values(routes).map((route) => (
                     <Stack.Screen
@@ -24,16 +24,3 @@ export default function ShopLayout() {
     );
 }
 
-const BackGuard = () => {
-
-    const canGoBack = useNavigationState((s: any) => !!s?.routes?.find((r: any) => r.name === '(shop)')?.state?.index);
-
-    useBackHandler(() => {
-
-        if (!canGoBack) return false;
-        router.back();
-        return true;
-    });
-
-    return null;
-}
