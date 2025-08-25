@@ -8,6 +8,7 @@ import { ProductPrice } from './ProductPrice';
 export const ProductPriceTag = React.memo(function ProductPriceTag({
     product,
 }: { product: Product }) {
+
     const { isOnSale, isFree } = product.availability;
 
     return (

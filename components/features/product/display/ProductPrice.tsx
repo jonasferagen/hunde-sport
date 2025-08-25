@@ -1,7 +1,9 @@
 // components/product/ProductPrice.tsx
 import { ThemedText, ThemedTextProps, ThemedXStack } from '@/components/ui/themed-components';
-import { ProductPrices, formatMinorWithHeader, formatRangeWithHeader } from '@/domain/pricing';
-import { Product } from '@/types';
+import { ProductPrices, formatPrice, formatPriceRange, getProductPriceRange } from '@/domain/pricing';
+import { useProductVariations } from '@/hooks/data/Product';
+import { Product, VariableProduct } from '@/types';
+import { Loader } from '@/components/ui/Loader';
 
 type PriceStyleFlags = Pick<ThemedTextProps, 'bold' | 'disabled' | 'subtle'>;
 
@@ -12,16 +14,21 @@ const withFlags = <P extends object>(
 ): P & PriceStyleFlags => ({ ...flags, ...props });
 
 export const ProductPriceRange = ({
-    product,
+    variableProduct,
     ...props
-}: { product: Product } & ThemedTextProps) => {
-    const prices = product.prices as ProductPrices;
-    if (!prices.price_range) throw new Error('product missing price_range', { cause: product });
+}: { variableProduct: VariableProduct } & ThemedTextProps) => {
+    const { isLoading, items: productVariations } = useProductVariations(variableProduct);
 
-    const { availability } = product;
+    if (isLoading) {
+        return <Loader />
+    }
+    const prices = productVariations.map(v => v.prices);
+    const productPriceRange = getProductPriceRange(prices);
+
+    const { availability } = variableProduct;
     const { isInStock, isPurchasable, isFree } = availability;
 
-    const content = formatRangeWithHeader(prices.price_range, prices, { style: 'short' });
+    const content = formatPriceRange(productPriceRange!);
 
     // Orthogonal flags
     const flags: PriceStyleFlags = {
@@ -41,19 +48,13 @@ export const ProductPrice = ({
     product,
     ...props
 }: { product: Product } & ThemedTextProps) => {
+
+    if (product.type === 'variable') {
+        return <ProductPriceRange variableProduct={product as VariableProduct} {...props} />;
+    }
     const { isInStock, isPurchasable, isOnSale, isFree } = product.availability;
     const prices = product.prices as ProductPrices;
-
-    // Variable products → delegate to range (and still apply flags there)
-    if (prices.price_range) {
-        return <ProductPriceRange product={product} {...props} />;
-    }
-
-
-    // Figure out display amounts
-    const unit = isOnSale ? prices.sale_price : prices.price;
-    const unitFormatted = isFree ? 'Gratis!' : formatMinorWithHeader(unit, prices, { style: 'short' });
-    const regularFormatted = formatMinorWithHeader(prices.regular_price, prices, { style: 'short' });
+    const priceFormatted = isFree ? 'Gratis!' : formatPrice(prices);
 
     // Orthogonal style flags applied to all outputs
     const flags: PriceStyleFlags = {
@@ -67,10 +68,10 @@ export const ProductPrice = ({
         return (
             <ThemedXStack ai="center" gap="$2">
                 <ThemedText disabled>
-                    {regularFormatted}
+                    {formatPrice(prices, { field: 'regular_price' })}
                 </ThemedText>
                 <ThemedText {...withFlags(props, flags)}>
-                    {unitFormatted}
+                    {formatPrice(prices, { field: 'sale_price' })}
                 </ThemedText>
             </ThemedXStack>
         );
@@ -79,7 +80,8 @@ export const ProductPrice = ({
     // Regular single price
     return (
         <ThemedText {...withFlags(props, flags)}>
-            {unitFormatted}
+            {priceFormatted}
         </ThemedText>
     );
 };
+

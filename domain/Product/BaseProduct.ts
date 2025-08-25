@@ -1,5 +1,5 @@
 
-import { formatMinorWithHeader, formatRangeWithHeader, ProductPrices } from '@/domain/pricing';
+import { ProductPrices } from '@/domain/pricing';
 import { cleanHtml } from "@/lib/helpers";
 import { ProductCategory } from "../ProductCategory";
 import { StoreImage } from "../StoreImage";
@@ -71,9 +71,6 @@ export class BaseProduct<T extends BaseProductData> {
     variation: string;
     priceKey: string;
     availabilityKey: string;
-    hasPriceRange: boolean;
-    displayPrice: string;
-    displayRegularPrice?: string | null;
 
     constructor(data: T) {
         this.id = data.id;
@@ -105,7 +102,6 @@ export class BaseProduct<T extends BaseProductData> {
         this.variation = data.variation;
 
         const p = this.prices;
-        this.hasPriceRange = !!p.price_range;
 
         // version keys (only fields that affect display)
         this.priceKey = [
@@ -113,7 +109,6 @@ export class BaseProduct<T extends BaseProductData> {
             p.price,
             p.sale_price,
             p.regular_price,
-            this.hasPriceRange ? 'r' : '',
         ].join('|');
 
         this.availabilityKey = [
@@ -124,24 +119,15 @@ export class BaseProduct<T extends BaseProductData> {
         ].join('');
 
 
-        // preformatted strings
-        if (this.hasPriceRange) {
-            this.displayPrice = formatRangeWithHeader(p.price_range!, p, { style: 'short' });
-            this.displayRegularPrice = null;
-        } else {
-            const unit = this.on_sale ? p.sale_price : p.price;
-            this.displayPrice = formatMinorWithHeader(unit, p, { style: 'short' });
-            this.displayRegularPrice = this.on_sale
-                ? formatMinorWithHeader(p.regular_price, p, { style: 'short' })
-                : null;
-        }
-
     }
 
     get featuredImage(): StoreImage {
         return this.images[0];
     }
 
+    get isVariable(): boolean {
+        return this.type === 'variable';
+    }
 
     get availability(): ProductAvailability {
         return {

@@ -56,7 +56,6 @@ export const PurchaseButton = React.memo(function PurchaseButton({
         <Theme inverse>
             <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="none" mr={-20} minWidth={80} >
                 {/* uses purchasable context in modal; on cards you can swap this to ProductPriceLite */}
-
                 <ProductPrice product={purchasable.activeProduct as Product} />
             </ThemedSurface>
         </Theme>
@@ -67,7 +66,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
         // Replace icon/iconAfter with before/after
         <CallToActionButton
             onPress={onPress}
-            disabled={disabled}
+            disabled={false}
             before={ICONS[cta.mode]}
             theme={theme}
             label={isLoading ? undefined : cta.label}

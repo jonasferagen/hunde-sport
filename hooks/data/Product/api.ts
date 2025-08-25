@@ -65,17 +65,6 @@ export const fetchProductsBySearch = async (query: string, pagination?: Paginati
     return responseTransformer(response, mapToProduct);
 }
 
-/**
- * Fetch product variations.
- *
- * @param id - The ID of the product to fetch variations for.
- * @param pagination - Optional pagination options.
- * @returns The fetched variations.
- */
-export const fetchProductVariations = async (id: number, pagination?: PaginationOptions) => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.VARIATIONS(id, pagination));
-    return responseTransformer(response, mapToProduct);
-}
 
 /**
  * Fetch recent products.
@@ -96,6 +85,20 @@ export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
  * @returns The fetched products.
  */
 export const fetchProductsByProductCategory = async (product_category_id: number, pagination?: PaginationOptions) => {
-    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_CATEGORY(product_category_id, pagination));
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(product_category_id, pagination));
+    return responseTransformer(response, mapToProduct);
+}
+
+
+
+/**
+ * Fetch product variations.
+ *
+ * @param id - The ID of the product to fetch variations for.
+ * @param pagination - Optional pagination options.
+ * @returns The fetched variations.
+ */
+export const fetchProductVariations = async (id: number, pagination?: PaginationOptions) => {
+    const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCT_VARIATIONS.LIST(id, pagination));
     return responseTransformer(response, mapToProduct);
 }

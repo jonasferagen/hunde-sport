@@ -6,6 +6,14 @@ import type { PurchasableProduct } from '@/types';
 import React from 'react';
 import { SpaceTokens, StackProps, Theme } from 'tamagui';
 
+import {
+    useDiscountedProducts,
+    useFeaturedProducts,
+    useProductsByIds,
+    useRecentProducts,
+} from '@/hooks/data/Product';
+
+
 type UseProducts = () => QueryResult<PurchasableProduct>;
 
 type ProductRailProps = StackProps & {
@@ -45,14 +53,6 @@ export const ProductRail: React.FC<ProductRailProps> = ({
 };
 
 
-// rails (kept for readability; easy to delete later)
-import {
-    useDiscountedProducts,
-    useFeaturedProducts,
-    useProductsByIds,
-    useRecentProducts,
-} from '@/hooks/data/Product';
-
 
 export const RecentProducts = (p: StackProps) =>
     <ProductRail {...p} useQuery={useRecentProducts} />;
@@ -63,6 +63,8 @@ export const DiscountedProducts = (p: StackProps) =>
 export const FeaturedProducts = (p: StackProps) =>
     <ProductRail {...p} useQuery={useFeaturedProducts} />;
 
-// Debug keeps the API: pass a closure that calls the hook with params
+// Debug keeps the API: wrap in a custom hook to satisfy Rules of Hooks
+const useDebugProducts = () => useProductsByIds([246557, 35961, 27445]);
+
 export const DebugProducts = (p: StackProps) =>
-    <ProductRail {...p} useQuery={() => useProductsByIds([246557, 35961, 27445])} />;
+    <ProductRail {...p} useQuery={useDebugProducts} />;

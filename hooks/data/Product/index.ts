@@ -1,4 +1,4 @@
-import { Product, PurchasableProduct } from '@/domain/Product/Product';
+import { Product, PurchasableProduct, VariableProduct } from '@/domain/Product/Product';
 import { ProductCategory, ProductVariation } from '@/types';
 import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useQueryResult, makeQueryOptions, QueryResult } from '../util';
@@ -26,14 +26,6 @@ export const useProduct = (id: number, options = { enabled: true }): UseQueryRes
     return result;
 };
 
-export const useProductVariations = (product: Product): QueryResult<ProductVariation> => {
-    const result = useInfiniteQuery({
-        queryKey: ['product-variations', product.id],
-        queryFn: ({ pageParam }) => fetchProductVariations(product.id, { page: pageParam, per_page: 100 }),
-        ...queryOptions
-    });
-    return useQueryResult<ProductVariation>(result);
-};
 
 export const useProductsByIds = (ids: number[]): QueryResult<PurchasableProduct> => {
     const result = useInfiniteQuery({
@@ -91,4 +83,15 @@ export const useProductsByCategory = (productCategory: ProductCategory): QueryRe
         ...queryOptions,
     });
     return useQueryResult<PurchasableProduct>(result);
-} 
+}
+
+
+
+export const useProductVariations = (variableProduct: VariableProduct, options = { enabled: true, perPage: 100 }): QueryResult<ProductVariation> => {
+    const result = useInfiniteQuery({
+        queryKey: ['product-variations', variableProduct.id],
+        queryFn: ({ pageParam }) => fetchProductVariations(variableProduct.id, { page: pageParam, per_page: options.perPage }),
+        ...queryOptions
+    });
+    return useQueryResult<ProductVariation>(result);
+};

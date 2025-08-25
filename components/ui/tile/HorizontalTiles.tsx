@@ -98,7 +98,6 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
     // edge fades (INSIDE component)
     const edges = useEdgeFades('horizontal');
     const { to } = useCanonicalNavigation();
-
     const { state: vis, onViewableItemsChanged, viewabilityConfig } = useVisibleItems();
     // spacers
     const HeaderSpacer = React.useMemo(
@@ -115,8 +114,11 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
         if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage();
     }, [loadingState]);
 
+
     const renderItem = React.useCallback(
         ({ item, index }: { item: PurchasableProduct; index: number }) => {
+
+
             return (
                 <RNView style={{ marginRight: gapPx, width: estimatedItemSize, height: estimatedItemCrossSize }}>
                     <TileFixed
@@ -140,7 +142,6 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                                     <ThemedText ai="center" jc="center" gap="$1">
                                         Utsolgt!
                                     </ThemedText>
-
                                 </TileBadge>
                             </>
                         )}

@@ -9,30 +9,20 @@ import { ProductVariation } from '@/types';
 import React from 'react';
 import { XStack, YStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
+import { useProductVariations } from '@/hooks/data/Product';
 
 interface ProductVariationSelectProps extends YStackProps {
     onSelectionChange?: (selection: Record<string, string>) => void;
     onProductVariationSelected?: (variation: ProductVariation | undefined) => void;
 }
 
-export const ProductVariationSelect = (props: ProductVariationSelectProps) => {
-    const { purchasable } = usePurchasableContext();
-    const variableProduct = purchasable.product as VariableProduct;
 
-    return (
-        <ProductVariationProvider product={variableProduct}>
-            <ProductVariationSelectContent {...props} />
-        </ProductVariationProvider>
-    );
-};
-
-export const ProductVariationSelectContent = React.memo(function ProductVariationSelectContent(
-    props: ProductVariationSelectProps
-) {
+export const ProductVariationSelect = React.memo((props: ProductVariationSelectProps) => {
     useRenderGuard('ProductVariationSelect');
+
     const { purchasable, setProductVariation } = usePurchasableContext();
-    const { productVariations, isLoading } = useProductVariationContext();
     const variableProduct = purchasable.product as VariableProduct;
+    const { items: productVariations, isLoading } = useProductVariations(purchasable.product);
     const { onSelectionChange, onProductVariationSelected } = props;
 
     const handleVariationSelected = React.useCallback(

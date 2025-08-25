@@ -1,5 +1,7 @@
 // domain/pricing.ts
-// One header shape used by both product.prices and cart totals/item prices
+import { ProductVariation } from "@/types";
+
+/** --- Shared types --- */
 export type CurrencyHeader = {
     currency_code: string;
     currency_minor_unit: number;
@@ -9,86 +11,122 @@ export type CurrencyHeader = {
     currency_thousand_separator: string;
 };
 
-// Product prices (from WC Store API)
 export type ProductPrices = CurrencyHeader & {
-    price: string;          // minor units, e.g. "24900"
-    regular_price: string;  // minor units
-    sale_price: string;     // minor units
-    price_range: ProductPriceRange | null;
+    price: string;         // effective price, minor units
+    regular_price: string; // minor units
+    sale_price: string;    // minor units
 };
 
+/** Normalized range: one header + min/max amounts (minor-unit strings) */
 export type ProductPriceRange = {
-    min_amount: string;     // minor units
-    max_amount: string;     // minor units
+    min: ProductPrices | null;
+    max: ProductPrices | null;
 };
 
 
-// domain/pricing.ts
 
-export function formatMinorWithHeader(
-    minorStr: string,
-    h: CurrencyHeader,
+
+export function formatPrice(
+    prices: ProductPrices,
     opts?: {
-        style?: 'full' | 'short';     // default = 'short'
-        omitPrefix?: boolean;         // drop "kr " etc. (great for cart UI)
+        style?: "full" | "short";
+        omitPrefix?: boolean;
+        field?: keyof Pick<ProductPrices, "price" | "regular_price" | "sale_price">;
     }
 ): string {
-    const style = opts?.style ?? 'short';
+    const field = opts?.field ?? "price";
+    const minorStr = prices[field] ?? "0";
+    const style = opts?.style ?? "short";
     const omitPrefix = opts?.omitPrefix ?? true;
-    const mu = h.currency_minor_unit;
-    const ds = h.currency_decimal_separator;
-    const ts = h.currency_thousand_separator;
 
-    const n = parseInt(minorStr || '0', 10);
-    const sign = n < 0 ? '-' : '';
+    const {
+        currency_minor_unit,
+        currency_decimal_separator,
+        currency_thousand_separator,
+        currency_prefix,
+        currency_suffix,
+    } = prices;
+
+    const n = parseInt(minorStr || "0", 10);
+    const sign = n < 0 ? "-" : "";
     const abs = Math.abs(n);
-    const intPart = Math.floor(abs / 10 ** mu).toString();
-    const fracPart = (abs % 10 ** mu).toString().padStart(mu, '0');
-    const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ts);
+    const base = 10 ** currency_minor_unit;
 
-    const hasFraction = mu > 0 && Number(fracPart) !== 0;
+    const intPart = Math.floor(abs / base).toString();
+    const fracPart = (abs % base).toString().padStart(currency_minor_unit, "0");
+    const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, currency_thousand_separator);
+    const hasFraction = currency_minor_unit > 0 && Number(fracPart) !== 0;
 
     let body: string;
-    if (style === 'short') {
-        if (mu > 0 && !hasFraction) {
-            body = `${intWithSep}${ds}-`; // e.g. 120,- 
-        } else if (mu > 0) {
-            body = `${intWithSep}${ds}${fracPart}`;
-        } else {
-            body = intWithSep;
-        }
-    } else { // full
-        body = mu > 0 ? `${intWithSep}${ds}${fracPart}` : intWithSep;
+    if (style === "short") {
+        if (currency_minor_unit > 0 && !hasFraction) body = `${intWithSep}${currency_decimal_separator}-`; // e.g. 120,- 
+        else if (currency_minor_unit > 0) body = `${intWithSep}${currency_decimal_separator}${fracPart}`;
+        else body = intWithSep;
+    } else {
+        body = currency_minor_unit > 0 ? `${intWithSep}${currency_decimal_separator}${fracPart}` : intWithSep;
     }
 
-    const prefix = omitPrefix ? '' : h.currency_prefix;
-    return `${sign}${prefix}${body}${h.currency_suffix}`;
+    const effectivePrefix = omitPrefix ? "" : currency_prefix;
+    return `${sign}${effectivePrefix}${body}${currency_suffix}`;
 }
 
 /**
  * Price range:
- * - If min == max: show a single price.
- * - Else: "Fra {minPrice}" (configurable label).
+ * - If min == max: show single price.
+ * - Else: "Fra {min}" (configurable label).
  */
-export function formatRangeWithHeader(
+export function formatPriceRange(
     range: ProductPriceRange,
-    h: CurrencyHeader,
-    opts?: {
-        style?: 'full' | 'short';     // default = 'short'
-        fromLabel?: string;           // default = 'Fra '
-        omitPrefix?: boolean;         // pass through to inner formatter
-    }
+    opts?: { style?: "full" | "short"; fromLabel?: string; omitPrefix?: boolean }
 ): string {
-    const style = opts?.style ?? 'short';
-    const fromLabel = opts?.fromLabel ?? 'Fra ';
-    const min = parseInt(range.min_amount || '0', 10);
-    const max = parseInt(range.max_amount || '0', 10);
+    const style = opts?.style ?? "short";
+    const fromLabel = opts?.fromLabel ?? "Fra ";
+
+    console.log(range.min);
+
+    const { min, max } = range;
+    if (!min || !max) return ""; // nothing purchasable
 
     if (min === max) {
-        // single price
-        return formatMinorWithHeader(range.min_amount, h, { style, omitPrefix: opts?.omitPrefix });
+        return formatPrice(min, { style, omitPrefix: opts?.omitPrefix });
     }
 
-    const minFormatted = formatMinorWithHeader(range.min_amount, h, { style, omitPrefix: opts?.omitPrefix });
+    const minFormatted = formatPrice(min, { style, omitPrefix: opts?.omitPrefix });
     return `${fromLabel}${minFormatted}`;
+}
+
+
+/**
+ * Compute min/max from a list of ProductPrices.
+ * - Ignores zero/empty prices (sold out/unavailable).
+ * - Always returns min/max (throws if input array is empty).
+ */
+export function getProductPriceRange(prices: ProductPrices[]): {
+    min: ProductPrices;
+    max: ProductPrices;
+} {
+    if (prices.length === 0) {
+        throw new Error("getProductPriceRange called with empty prices array");
+    }
+
+    let min: ProductPrices | null = null;
+    let max: ProductPrices | null = null;
+
+    for (const p of prices) {
+        const priceNum = Number(p.price);
+        if (!priceNum) continue; // skip "0" or invalid
+
+        if (min === null || priceNum < Number(min.price)) {
+            min = p;
+        }
+        if (max === null || priceNum > Number(max.price)) {
+            max = p;
+        }
+    }
+
+    // If all prices were "0" / unavailable → fall back to first element
+    if (min === null || max === null) {
+        min = max = prices[0];
+    }
+    return { min, max };
 }
