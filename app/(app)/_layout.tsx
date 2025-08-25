@@ -37,8 +37,20 @@ const AppLayout = React.memo((): React.ReactElement => {
                     drawerContent={drawerContent}
                     screenOptions={screenOptions}
                     detachInactiveScreens={false}
-                    initialRouteName='index'
+                    initialRouteName='(shop)'
                 >
+                    <Drawer.Screen name="(shop)/index" options={{ title: 'Butikk' }} />
+                </Drawer>
+                <LoadingOverlay zi={99} />
+                <CustomBottomBar zi={isFullyClosed ? 0 : -1} />
+            </YStack>
+        </View >
+    );
+});
+
+export default AppLayout;
+
+/* 
                     {Object.values(routes).map((route) => (
                         <Drawer.Screen
                             key={route.name}
@@ -51,14 +63,4 @@ const AppLayout = React.memo((): React.ReactElement => {
                                 sceneStyle: { backgroundColor: 'transparent' },
                             }}
                         />
-                    ))}
-                </Drawer>
-                <LoadingOverlay zi={99} />
-                <CustomBottomBar zi={isFullyClosed ? 0 : -1} />
-            </YStack>
-        </View >
-    );
-});
-
-export default AppLayout;
-
+                    ))} */

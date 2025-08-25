@@ -43,7 +43,6 @@ export const ProductScreen = () => {
 
 
 const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
-  useScreenTitle(product.name);
 
   return (
     <Prof id="ProductScreen">

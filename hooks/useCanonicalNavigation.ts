@@ -1,11 +1,14 @@
 // useCanonicalNav.ts
-import { cleanHref, routes } from '@/config/routes';
+import { cleanHref, routes, type NavPolicy } from '@/config/routes';
 import { useNavigationProgress } from '@/stores/navigationProgressStore';
 import { HrefObject, LinkProps, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
 import { startTransition } from 'react';
 
 // --- types + helpers (keep your route typing) ---
+
+
+
 type Routes = typeof routes;
 type RouteKey = keyof Routes;
 type ArgsOf<K extends RouteKey> =
@@ -58,14 +61,16 @@ export function useCanonicalNavigation() {
         withoutOverlay: boolean,
         ...args: ArgsOf<K>
     ) => {
-        const { nav, path } = routes[key];
+        const { nav } = routes[key];
         const href = cleanHref(pathFor(key)(...args));
         const targetPath = stripTrailingSlash(href.pathname);
 
         // navigate action picker
         scheduleNav(() => {
+            const policy: NavPolicy = nav;
+
             if (targetPath === pathname) {
-                if (nav === 'push') {
+                if (policy === 'push') {
                     router.push(href);
                 } else {
                     const nextKey = paramsKey(href.params as any);
@@ -75,9 +80,9 @@ export function useCanonicalNavigation() {
                 }
                 return;
             }
-            if (nav === 'push') router.push(href);
-            else if (nav === 'replace') router.replace(href);
-            else router.navigate(href); // 'switch'
+            if (policy === 'push') router.push(href);
+            else if (policy === 'switch') router.navigate(href);
+            else router.replace(href);
         }, withoutOverlay);
     }, [pathname, currentParamsKey]);
 

@@ -1,7 +1,7 @@
 // ThemedStacks.tsx
 import { rgba } from 'polished';
 import { ComponentProps, ComponentRef, forwardRef, ReactNode } from 'react';
-import { getVariableValue, SizeTokens, Stack, StackProps, styled, useTheme, XStack, XStackProps, YStack, YStackProps } from 'tamagui';
+import { getVariableValue, SizeTokens, Stack, StackProps, styled, ThemeName, useTheme, XStack, XStackProps, YStack, YStackProps } from 'tamagui';
 
 const DEFAULT_SIZE = '$3';
 
@@ -23,8 +23,7 @@ const config = {
         box: { true: { bw: 0, boc: '$borderColor', bg: '$background' } },
         rounded: { true: { br: '$3' } },
         bgOpacity:
-            (alpha: number) => {
-                const theme = useTheme();
+            (alpha: number, { theme }: { theme: any }) => {
                 const tokenValue = theme['background'];
                 const base = String(getVariableValue(tokenValue)); // resolve $background
                 const a = Math.max(0, Math.min(1, Number(alpha) || 0));   // clamp 0..1

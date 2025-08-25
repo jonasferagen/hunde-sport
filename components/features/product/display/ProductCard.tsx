@@ -4,7 +4,6 @@ import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/Th
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { getScaledImageUrl } from '@/lib/helpers';
 import { PurchasableProduct } from '@/types';
-import { Link } from 'expo-router';
 import React from 'react';
 import { StackProps, XStack, YStack } from 'tamagui';
 import { ProductPurchaseFlow } from '../purchase/ProductPurchaseFlow';
@@ -18,9 +17,7 @@ interface ProductCardProps extends StackProps {
 
 const IMAGE_SIZE = 80;
 export const ProductCard = React.memo(({ product, ...props }: ProductCardProps) => {
-
-    const { linkProps } = useCanonicalNavigation();
-
+    const { to } = useCanonicalNavigation();
     return (
         <ThemedYStack
             container
@@ -28,19 +25,13 @@ export const ProductCard = React.memo(({ product, ...props }: ProductCardProps) 
             {...props}
         >
             <ThemedLinearGradient />
-            <Link {...linkProps('product', product)} asChild>
-                <ThemedXStack pressable>
-                    <ProductCardImage product={product} />
-                    <ProductCardDescription product={product} />
-                </ThemedXStack>
-            </Link>
+            <ThemedXStack onPress={() => { to('product', product) }}>
+                <ProductCardImage product={product} />
+                <ProductCardDescription product={product} />
+            </ThemedXStack>
             <ProductPurchaseFlow product={product} />
         </ThemedYStack>
-
-
     );
-
-
 });
 
 const ProductCardImage = ({ product }: { product: PurchasableProduct }) => {
@@ -71,14 +62,14 @@ const ProductCardDescription = ({ product, ...stackProps }: StackProps & { produ
             jc="flex-start"
             gap="$2"
             {...stackProps}>
-            <XStack
+            <ThemedXStack
                 gap="$2"
                 ai="flex-start"
                 jc="space-between"
             >
                 <ProductTitle size="$5" fs={1} product={product} />
 
-            </XStack>
+            </ThemedXStack>
             <ProductDescription
                 product={product}
                 numberOfLines={2}

@@ -1,14 +1,11 @@
-// routes.ts
+// config/routes.ts
 import { ProductCategory } from '@/domain/ProductCategory';
 import { SimpleProduct, VariableProduct } from '@/types';
-import { RouteProp } from '@react-navigation/native';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
-import { HrefObject } from 'expo-router';
 
-export type NavPolicy = 'switch' | 'replace' | 'push';
-// switch  = top-level switch (Drawer/BottomBar) -> router.navigate
-// replace = top-level w/o stacking               -> router.replace
-// push    = detail/drill-down                    -> router.push
+import { usePathname, useGlobalSearchParams, HrefObject } from 'expo-router';
+import React from 'react';
+export type NavPolicy = 'switch' | 'push'; // | 'replace';
 
 export interface Route<TArgs extends any[] = any[]> {
     name: string;
@@ -19,12 +16,15 @@ export interface Route<TArgs extends any[] = any[]> {
     nav: NavPolicy;
 }
 
+// single source of truth for the segment:
+const SHOP = '/(app)/(shop)';
+
 const paths = {
-    home: '/',
-    search: '/search',
-    productCategory: '/product-category',
-    product: '/product',
-    cart: '/cart',
+    home: `${SHOP}`,                 // index of (shop)
+    search: `${SHOP}/search`,
+    productCategory: `${SHOP}/product-category`,
+    product: `${SHOP}/product`,
+    cart: `${SHOP}/cart`,
 } as const;
 
 export const routes = {
@@ -34,7 +34,7 @@ export const routes = {
         icon: Home,
         path: () => ({ pathname: paths.home }),
         showInDrawer: true,
-        nav: 'replace',          // bottom-bar/drawer targets: don't stack
+        nav: 'switch',                 // top-level switch (doesn't stack)
     } satisfies Route,
 
     cart: {
@@ -43,7 +43,7 @@ export const routes = {
         icon: ShoppingCart,
         path: () => ({ pathname: paths.cart }),
         showInDrawer: true,
-        nav: 'replace',
+        nav: 'switch',                 // switching sections shouldn't stack
     } satisfies Route,
 
     search: {
@@ -52,17 +52,19 @@ export const routes = {
         icon: Search,
         path: (query?: string) => ({ pathname: paths.search, params: { query } }),
         showInDrawer: true,
-        nav: 'replace',          // switching queries shouldn't stack
+        nav: 'switch',                 // switching queries shouldn't stack
     } satisfies Route<[string?]>,
 
     'product-category': {
         name: 'product-category',
         label: 'Kategori',
         icon: () => null,
-        path: (c: ProductCategory) =>
-            ({ pathname: paths.productCategory, params: { id: String(c.id), name: c.name } }),
+        path: (c: ProductCategory) => ({
+            pathname: paths.productCategory,
+            params: { id: String(c.id), name: c.name },
+        }),
         showInDrawer: false,
-        nav: 'push',             // drill-down
+        nav: 'push',                   // drill-down
     } satisfies Route<[ProductCategory]>,
 
     product: {
@@ -78,26 +80,33 @@ export const routes = {
             return { pathname: paths.product, params };
         },
         showInDrawer: false,
-        nav: 'push',             // drill-down
+        nav: 'push',                   // drill-down
     } satisfies Route<[SimpleProduct | VariableProduct, number?]>,
-
-
 } as const;
 
 
-export const resolveTitle = (route: RouteProp<any, any>): string => {
-    return route?.params?.name || routes[route.name as keyof typeof routes]?.label;
-}
+const lastNonGroupSegment = (pathname: string) => {
+    const parts = pathname.split('/').filter(Boolean);
+    const visible = parts.filter(s => !(s.startsWith('(') && s.endsWith(')')));
+    return visible.at(-1) ?? 'index';
+};
+
+export const useResolveTitle = () => {
+    const pathname = usePathname();
+    const params = useGlobalSearchParams<{ name?: string }>();
+    const key = React.useMemo(
+        () => lastNonGroupSegment(pathname),
+        [pathname]
+    );
+    return params?.name
+        ?? routes[key as keyof typeof routes]?.label
+        ?? '';
+};
 
 export const cleanHref = (href: HrefObject): HrefObject => {
     const p = href.params ?? {};
     const params = Object.fromEntries(
-        Object.entries(p).filter(([, v]) => {
-            if (v == null) return false;                // drop null/undefined
-            if (typeof v === 'string' && v.trim() === '') return false; // drop empty
-            return true;
-        })
+        Object.entries(p).filter(([, v]) => v != null && (typeof v !== 'string' || v.trim() !== ''))
     );
-
     return Object.keys(params).length ? { ...href, params } : { pathname: href.pathname };
 };

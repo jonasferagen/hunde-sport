@@ -4,12 +4,23 @@ import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { ThemedSurface } from '@/components/ui/themed-components/ThemedSurface';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 import { usePurchasableContext } from '@/contexts';
-import { Product } from '@/types';
+import { Product, Purchasable } from '@/types';
 import { Boxes, ShoppingCart, XCircle } from '@tamagui/lucide-icons';
 import React, { JSX } from 'react';
 import { Theme, type ThemeName } from 'tamagui';
 import { ProductPrice } from '../display';
-import { computeCTA, type PurchaseCTAMode, type PurchaseCTAModeInput } from './purchase-cta';
+
+
+type PurchaseCTAMode = 'buy' | 'select-variation' | 'unavailable';
+type PurchaseCTAModeInput = 'auto' | PurchaseCTAMode;
+
+type PurchaseButtonProps = {
+    onPress: () => void;
+    isLoading?: boolean;
+    enabled?: boolean;
+    /** Force the visual/logic mode. Default 'auto' derives from purchasable. */
+    mode?: PurchaseCTAModeInput;
+};
 
 const ICONS: Record<PurchaseCTAMode, JSX.Element> = {
     buy: <ShoppingCart />,
@@ -23,14 +34,6 @@ const THEMES: Record<PurchaseCTAMode, ThemeName> = {
     unavailable: THEME_CTA_VARIATION, // or a danger theme if you prefer
 };
 
-type PurchaseButtonProps = {
-    onPress: () => void;
-    isLoading?: boolean;
-    enabled?: boolean;
-    /** Force the visual/logic mode. Default 'auto' derives from purchasable. */
-    mode?: PurchaseCTAModeInput;
-};
-
 export const PurchaseButton = React.memo(function PurchaseButton({
     onPress,
     isLoading = false,
@@ -42,13 +45,8 @@ export const PurchaseButton = React.memo(function PurchaseButton({
 
     // only recompute when something that affects the CTA changes
     const cta = React.useMemo(
-        () => computeCTA(purchasable, mode),          // your 'auto' | forced mode helper
-        [
-            mode,
-            purchasable.isVariable,
-            purchasable.isValid,
-            purchasable.message,
-        ]
+        () => computeCTA(purchasable, mode),
+        [purchasable, mode]
     );
 
     const theme = THEMES[cta.mode];
@@ -80,3 +78,31 @@ export const PurchaseButton = React.memo(function PurchaseButton({
 
     );
 });
+
+
+
+export type PurchaseCTAState = {
+    mode: PurchaseCTAMode;
+    label: string;
+    disabled: boolean;
+};
+
+function computeCTA(p: Purchasable, mode: PurchaseCTAModeInput = 'auto'): PurchaseCTAState {
+    if (mode !== 'auto') {
+        // caller forces what the button looks like/does
+        switch (mode) {
+            case 'unavailable': return { mode, label: p.message, disabled: true };
+            case 'select-variation': return { mode, label: p.message, disabled: false };
+            case 'buy': return { mode, label: p.message, disabled: false };
+        }
+    }
+
+    // auto: derive from purchasable
+    if (!p.availability.isInStock) {
+        return { mode: 'unavailable', label: p.message, disabled: true };
+    }
+    if (p.isVariable && !p.isValid) {
+        return { mode: 'select-variation', label: p.message, disabled: false };
+    }
+    return { mode: 'buy', label: p.message, disabled: false };
+}

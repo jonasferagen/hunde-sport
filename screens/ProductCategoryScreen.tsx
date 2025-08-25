@@ -19,7 +19,6 @@ export const ProductCategoryScreen = React.memo(() => {
     const productCategory = useProductCategory(Number(id));
     const productCategories = useProductCategories(Number(id));
     const trail = useBreadcrumbTrail(Number(id));
-    useScreenTitle(productCategory?.name);
 
     if (!ready) {
         return null;

@@ -49,6 +49,7 @@ export const ProductPrice = ({
         return <ProductPriceRange product={product} {...props} />;
     }
 
+
     // Figure out display amounts
     const unit = isOnSale ? prices.sale_price : prices.price;
     const unitFormatted = isFree ? 'Gratis!' : formatMinorWithHeader(unit, prices, { style: 'short' });

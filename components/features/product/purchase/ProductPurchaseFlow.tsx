@@ -16,7 +16,7 @@ export const ProductPurchaseFlow = ({ product }: { product: PurchasableProduct }
 
     const purchasable = React.useMemo(
         () => createPurchasable({ product, productVariation: undefined }),
-        [product.id, product.priceKey, product.availabilityKey]
+        [product]
     );
 
     const [loading, setLoading] = React.useState(false);
