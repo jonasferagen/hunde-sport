@@ -3,18 +3,18 @@ import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
 import type { ProductCategory } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
-import { Link } from 'expo-router';
-import React, { JSX, memo, type ComponentRef } from 'react';
+import React, { memo, type ComponentRef } from 'react';
 import { View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import type { AnimatedRef } from 'react-native-reanimated';
 import Animated, {
     FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming
 } from 'react-native-reanimated';
-import { getTokenValue } from 'tamagui';
+import { getTokenValue, useTheme } from 'tamagui';
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
-
+import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
+import { useEdgeFades } from '@/hooks/ui/useEdgeFades';
 
 // Instance type for Animated.ScrollView
 type AnimatedScrollViewRef = ComponentRef<typeof Animated.ScrollView>;
@@ -34,19 +34,15 @@ export const ProductCategoryTree = () => {
     const viewportYRef = React.useRef(0);
     const viewportHRef = React.useRef(0);
 
-    const onScroll = React.useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-        lastYRef.current = e.nativeEvent.contentOffset.y;
-    }, []);
-    const onLayout = React.useCallback((e: NativeSyntheticEvent<any>) => {
-        const { y, height } = e.nativeEvent.layout;
-        viewportYRef.current = y;
-        viewportHRef.current = height;
-    }, []);
 
     const ctx = React.useMemo(
         () => ({ scrollRef, lastYRef, viewportYRef, viewportHRef }),
         [scrollRef]
     );
+    const { atStart, atEnd, onLayout, onContentSizeChange, onScroll } =
+        useEdgeFades('vertical');
+    //LOG  #C8E6E5
+    //   LOG  #DDE2C3
 
     return (
         <TreeCtx.Provider value={ctx}>
@@ -55,6 +51,7 @@ export const ProductCategoryTree = () => {
                     ref={scrollRef}
                     onScroll={onScroll}
                     scrollEventThrottle={16}
+                    onContentSizeChange={(w, h) => onContentSizeChange(w, h)}
                     contentContainerStyle={{ paddingBottom: 12 }}
                 >
                     <ThemedYStack container>
@@ -62,6 +59,12 @@ export const ProductCategoryTree = () => {
                         <ProductCategoryBranch id={0} level={0} />
                     </ThemedYStack>
                 </Animated.ScrollView>
+                <EdgeFadesOverlay
+                    orientation="vertical"
+                    heightToken="$2"              // tweak (e.g. $3–$6)
+                    visibleStart={atStart}        // show top fade when NOT at top
+                    visibleEnd={atEnd}            // show bottom fade when NOT at bottom
+                />
             </ThemedYStack>
         </TreeCtx.Provider>
     );

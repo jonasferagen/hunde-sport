@@ -17,6 +17,7 @@ export function useEdgeFades(orientation: Orientation) {
         // If content shorter than viewport → both fades off
         const end = containerMain.current >= contentMain.current - 1;
         if (end !== lastEnd.current) { lastEnd.current = end; setAtEnd(end); }
+        if (end && !lastStart.current) { lastStart.current = true; setAtStart(true); }
     }, []);
 
     const onLayout = React.useCallback((e: any) => {
@@ -37,8 +38,9 @@ export function useEdgeFades(orientation: Orientation) {
             ? e.nativeEvent.contentOffset.x
             : e.nativeEvent.contentOffset.y;
 
-        const start = off <= 1;
-        const end = off + containerMain.current >= contentMain.current - 1;
+        const PAD = 4; // was 1
+        const start = off <= PAD;
+        const end = off + containerMain.current >= contentMain.current - PAD;
 
         if (start !== lastStart.current) { lastStart.current = start; setAtStart(start); }
         if (end !== lastEnd.current) { lastEnd.current = end; setAtEnd(end); }

@@ -1,10 +1,10 @@
 // HorizontalTiles.tsx
 import { ProductPrice } from '@/components/features/product/display';
-import { EdgeFadesOverlay } from '@/components/ui/list/EdgeFadesOverlay';
+import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
 import { THEME_PRICE_TAG } from '@/config/app';
 import type { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
-import { useEdgeFades } from '@/hooks/useEdgeFades';
+import { useEdgeFades } from '@/hooks/ui/useEdgeFades';
 import { useVisibleItems } from '@/hooks/ui/useVisibleItems';
 import { spacePx } from '@/lib/helpers';
 import type { PurchasableProduct } from '@/types';

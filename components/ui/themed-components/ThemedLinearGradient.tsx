@@ -60,7 +60,6 @@ export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
     // cross-theme probes (lazy resolve)
     const [fromColor, setFromColor] = useState<string | null>(null)
     const [toColor, setToColor] = useState<string | null>(null)
-
     const resolvedFrom = fromTheme ? fromColor ?? currentBase : currentBase
     const resolvedTo = toTheme ? toColor : null
 
