@@ -2,13 +2,13 @@
 import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { spacePx } from '@/lib/helpers';
 import { useModalStore } from '@/stores/ui/modalStore';
-import { createPurchasable, ProductVariation, Purchasable } from '@/types';
+import { createPurchasable, ProductVariation, Purchasable, VariableProduct } from '@/types';
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Sheet } from 'tamagui';
-import { ProductImage, ProductPrice, ProductStatus, ProductTitle } from '../display';
+import { ProductAvailabilityStatus, ProductImage, ProductPriceSimple, ProductTitle } from '../display';
 import { ProductSelectionStatus } from '../product-variation/ProductVariationLabel';
-import { ProductVariationSelect, TermSelection } from '../product-variation/ProductVariationSelectNew';
+import { ProductVariationSelect, TermSelection } from '../product-variation/ProductVariationSelect';
 import { PurchaseButtonSmart } from './PurchaseButtonSmart';
 
 const gapPx = spacePx("$3");
@@ -60,7 +60,6 @@ export const Inner = React.memo(function Inner({
 
     const [currentSelection, setCurrentSelection] = React.useState<TermSelection>(new Map());
 
-
     const [bodyH, setBodyH] = React.useState(0);
     const [headerH, setHeaderH] = React.useState(0);
     const [footerH, setFooterH] = React.useState(0);
@@ -75,6 +74,7 @@ export const Inner = React.memo(function Inner({
     const cH = headerH + footerH + IMAGE_H + gaps;
     const availableForOptions = Math.max(0, bodyH - cH);
 
+    const variableProduct = purchasable.product as VariableProduct;
 
     return (
         <ThemedYStack f={1} mih={0} onLayout={onBodyLayout} gap="$3">
@@ -98,7 +98,7 @@ export const Inner = React.memo(function Inner({
             >
                 {hasOpened && (
                     <ProductVariationSelect
-                        purchasable={purchasable}
+                        variableProduct={variableProduct}
                         h={availableForOptions}
                         onSelectionChange={setCurrentSelection}
                         // CHANGED: child reports a variation; we derive purchasable here
@@ -113,8 +113,8 @@ export const Inner = React.memo(function Inner({
                     currentSelection={currentSelection}
                 />
                 <ThemedXStack split>
-                    <ProductStatus product={purchasable.activeProduct} />
-                    <ProductPrice product={purchasable.activeProduct} />
+                    <ProductAvailabilityStatus productAvailability={purchasable.activeProduct.availability} />
+                    <ProductPriceSimple productPrices={purchasable.prices} productAvailability={purchasable.availability} />
                 </ThemedXStack>
                 <PurchaseButtonSmart
                     purchasable={purchasable}
@@ -126,5 +126,3 @@ export const Inner = React.memo(function Inner({
         </ThemedYStack>
     );
 });
-
-

@@ -1,33 +1,28 @@
 // lib/VariableProductOptions.ts
-import { ProductAttribute, ProductAttributeTerm } from '@/domain/Product/ProductAttribute';
+import { TermSelection } from '@/components/features/product/product-variation/ProductVariationSelect';
+import { ProductAttribute } from '@/domain/Product/ProductAttribute';
 import type { VariableProduct } from '@/domain/Product/VariableProduct';
+import type { ProductPriceRange } from '@/types';
 
 const norm = (s: string) => String(s ?? '').trim().toLowerCase();
+const cap  = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
-
-export type Term = {
-  attributeLabel: string; // e.g. "Størrelse"
-  taxonomy: string;       // e.g. "pa_storrelse"
-  slug: string;           // e.g. "xl"
-  label: string;          // e.g. "XL"
+export type Taxonomy = {
+  name: string;   // e.g. "pa_storrelse"
+  label: string;  // e.g. "Størrelse"
 };
 
-export type Linked = {
-  variationId: number;
-  term: Term | null; // "other" term only
-};
+export type Term = Readonly<{
+  taxonomy: Taxonomy;
+  slug: string;
+  label: string;
+}>;
 
-export type Option = {
+export type SelectOption = {
+  variationIds: number[];
   term: Term;
-  linked: Linked[];
-};
-
-export type OptionGroup = {
-  taxonomy: string; // e.g., "pa_storrelse"
-  label: string;    // capitalized, e.g. "Størrelse"
-  options: Option[];
+  productPriceRange?: ProductPriceRange; // (computed in component)
+  enabled?: boolean; // <-- new
 };
 
 type VariationAny = {
@@ -36,106 +31,121 @@ type VariationAny = {
 };
 
 export class VariableProductOptions {
-  private attributeMap: Record<string, ProductAttributeTerm[]> = {};
-  private variationByAttribute: Record<string, Record<string, number[]>> = {};
-  private variationIdToTerms: Record<number, Term[]> = {};
-  private taxonomyToAttribute: Record<string, ProductAttribute> = {};
-  private nameToTaxonomy: Record<string, string> = {};
+  constructor() {}
 
-  constructor(private product: VariableProduct) {
-    this.buildIndex();
-  }
+  static create(product: VariableProduct): SelectOption[] {
+    const attributes: ProductAttribute[] = product.attributes ?? [];
+    const variations: VariationAny[] = (product.variations ?? []) as VariationAny[];
 
-  private buildIndex() {
-    const attributes: ProductAttribute[] = this.product.attributes ?? [];
-    const variations: VariationAny[] = (this.product.variations ?? []) as VariationAny[];
-
-    this.attributeMap = attributes
-      .filter(a => a.has_variations)
-      .reduce<Record<string, ProductAttributeTerm[]>>((acc, a) => {
-        acc[a.taxonomy] = a.terms;
-        return acc;
-      }, {});
+    const nameToTaxonomy: Record<string, string> = {};
+    const taxonomyToAttribute: Record<string, ProductAttribute> = {};
+    const variationByAttr: Record<string, Record<string, number[]>> = {};
 
     for (const a of attributes) {
-      this.taxonomyToAttribute[a.taxonomy] = a;
-      this.nameToTaxonomy[norm(a.name)] = a.taxonomy;
+      nameToTaxonomy[norm(a.name)] = a.taxonomy;
+      taxonomyToAttribute[a.taxonomy] = a;
     }
 
     for (const v of variations) {
-      const termsForThisVariation: Term[] = [];
-
       for (const attr of v.attributes ?? []) {
-        const taxonomy = this.nameToTaxonomy[norm(attr.name)] ?? norm(attr.name);
-        const raw = attr.value ?? attr.option ?? '';
+        const taxonomy = nameToTaxonomy[norm(attr.name)] ?? norm(attr.name);
+        const raw = (attr as any).value ?? (attr as any).option ?? '';
         const slug = norm(raw);
         if (!taxonomy || !slug) continue;
 
-        if (!this.variationByAttribute[taxonomy]) this.variationByAttribute[taxonomy] = {};
-        if (!this.variationByAttribute[taxonomy][slug]) this.variationByAttribute[taxonomy][slug] = [];
-        this.variationByAttribute[taxonomy][slug].push(v.id);
+        variationByAttr[taxonomy] ??= {};
+        variationByAttr[taxonomy][slug] ??= [];
+        variationByAttr[taxonomy][slug].push(v.id);
+      }
+    }
 
-        // fallback label from raw if we don’t know better
-        const attribute = this.taxonomyToAttribute[taxonomy];
-        const attributeLabel = attribute ? capitalize(attribute.name) : taxonomy;
+    const out: SelectOption[] = [];
+    for (const [taxonomyName, attr] of Object.entries(taxonomyToAttribute)) {
+      if (!attr.has_variations) continue;
 
-        termsForThisVariation.push({
-          attributeLabel,
-          taxonomy,
-          slug,
-          label: raw,
+      const taxonomy: Taxonomy = { name: taxonomyName, label: cap(attr.name) };
+
+      for (const t of attr.terms ?? []) {
+        const slug = norm(t.slug);
+        const variationIds = variationByAttr[taxonomyName]?.[slug] ?? [];
+        out.push({
+          term: { taxonomy, slug, label: cap(t.name) },
+          variationIds,
+          enabled: true, // default; will be recomputed
         });
       }
-
-      this.variationIdToTerms[v.id] = termsForThisVariation;
     }
+    return out;
   }
 
-  getOptionGroups(): OptionGroup[] {
-    const groups: OptionGroup[] = [];
+  static group(options: SelectOption[]) {
+    const taxonomies = options.map(opt => opt.term.taxonomy);
+    const uniqueTaxonomies = Array.from(new Set(taxonomies));
+    return uniqueTaxonomies.map(taxonomy => ({
+      taxonomy,
+      options: options.filter(opt => opt.term.taxonomy === taxonomy),
+    }));
+  }
 
-    for (const taxonomy of Object.keys(this.attributeMap)) {
-      const attribute = this.taxonomyToAttribute[taxonomy];
-      if (!attribute) continue;
+  // --- Enabled recompute (single source of truth) ---
+  private static intersectIds(sets: Array<Set<number>>): Set<number> {
+    if (sets.length === 0) return new Set<number>();
+    let acc = sets[0];
+    for (let i = 1; i < sets.length; i++) {
+      acc = new Set([...acc].filter(id => sets[i].has(id)));
+    }
+    return acc;
+  }
 
-      const attributeLabel = capitalize(attribute.name);
+  /** Returns a new array where each option has `enabled` set based on the selection.
+   * Rules:
+   * - 0 terms: all options enabled (with any variations).
+   * - 1 term: all options in the selected taxonomy enabled; other taxonomy only those compatible.
+   * - 2 terms: only options compatible with the intersection enabled (both taxonomies).
+   * Throws if a non-empty selection yields no matching variations.
+   */
+  static withEnabled(options: SelectOption[], selection: TermSelection): SelectOption[] {
+    const selected = Array.from(selection.values()).filter((t): t is Term => t !== null);
 
-      const options: Option[] = (this.attributeMap[taxonomy] ?? []).map(termData => {
-        const slug = norm(termData.slug);
-        const variationIds = this.variationByAttribute[taxonomy]?.[slug] ?? [];
+    // 0 terms: enable everything that participates in any variation
+    if (selected.length === 0) {
+      return options.map(o => ({ ...o, enabled: (o.variationIds?.length ?? 0) > 0 }));
+    }
 
-        const linked: Linked[] = variationIds.map(variationId => {
-          const allTerms = this.variationIdToTerms[variationId] ?? [];
-          const other = allTerms.find(t => t.taxonomy !== taxonomy) ?? null;
-          return { variationId, term: other };
-        });
+    // Lookup selected options & collect their variation sets
+    const findOpt = (term: Term) =>
+      options.find(o =>
+        o.term.taxonomy.name === term.taxonomy.name &&
+        o.term.slug === term.slug
+      );
 
-        const term: Term = {
-          attributeLabel,
-          taxonomy,
-          slug,
-          label: capitalize(termData.name),
-        };
+    const selectedSets = selected.map(term => {
+      const opt = findOpt(term);
+      if (!opt) {
+        throw new Error(`No options found for term: ${term.taxonomy.name}=${term.slug}`);
+      }
+      return new Set(opt.variationIds);
+    });
 
-        return { term, linked };
-      });
+    // Intersection across all selected terms
+    const matchingIds = this.intersectIds(selectedSets);
+    if (matchingIds.size === 0) {
+      throw new Error('No options matched the provided selection.');
+    }
 
-      groups.push({
-        taxonomy,
-        label: attributeLabel,
-        options,
+    if (selected.length === 1) {
+      const selectedTax = selected[0].taxonomy.name;
+      return options.map(o => {
+        const sameTax = o.term.taxonomy.name === selectedTax;
+        const compatible = o.variationIds.some(id => matchingIds.has(id));
+        return { ...o, enabled: sameTax ? true : compatible };
       });
     }
 
-    return groups;
-  }
-
-  get debug() {
-    return {
-      attributeMap: this.attributeMap,
-      variationByAttribute: this.variationByAttribute,
-      variationIdToTerms: this.variationIdToTerms,
-    };
+    // 2 terms (or more): enabled iff participates in the intersection
+    return options.map(o => ({
+      ...o,
+      enabled: o.variationIds.some(id => matchingIds.has(id)),
+    }));
   }
 }
-

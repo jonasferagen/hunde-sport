@@ -1,6 +1,5 @@
 // lib/ProductVariationCollection.ts
 import type { ProductVariation } from '@/domain/Product/ProductVariation';
-import type { Option } from '@/domain/Product/helpers/VariableProductOptions';
 import { getProductPriceRange } from '@/types';
 
 type WithIdAndPrices = Pick<ProductVariation, 'id' | 'prices'>;
@@ -28,11 +27,5 @@ export class ProductVariationCollection<T extends WithIdAndPrices = WithIdAndPri
 
         if (prices.length === 0) return null as ReturnType<typeof getProductPriceRange> | null;
         return getProductPriceRange(prices);
-    }
-
-    /** Compute a price range for a VariableProductOptions Option */
-    priceRangeForOption(option: Option) {
-        const ids = option.linked.map(l => l.variationId);
-        return this.priceRangeForVariationIds(ids);
     }
 }

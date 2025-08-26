@@ -1,6 +1,6 @@
 import { ThemedText, ThemedXStack } from '@/components/ui';
 import React from 'react';
-import type { TermSelection } from './ProductVariationStatus';
+import type { TermSelection } from './ProductVariationSelect';
 
 type Pair = { name: string; value: string };
 
@@ -12,7 +12,7 @@ export const ProductSelectionStatus: React.FC<Props> = ({ currentSelection, ...t
   const pairs = React.useMemo<Pair[]>(() => {
     const out: Pair[] = [];
     for (const [, term] of currentSelection.entries()) {
-      if (term) out.push({ name: term.attributeLabel, value: term.label });
+      if (term) out.push({ name: term.taxonomy.label, value: term.label });
     }
     return out;
   }, [currentSelection]);

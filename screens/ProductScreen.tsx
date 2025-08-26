@@ -1,19 +1,17 @@
-
 import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
-import { ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductStatus, ProductTitle } from '@/components/features/product/display/';
+import { ProductAvailabilityStatus, ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductTitle } from '@/components/features/product/display/';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
 import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
-import { ThemedText, ThemedXStack } from '@/components/ui';
+import { ThemedXStack } from '@/components/ui';
+import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { useProduct } from '@/hooks/data/Product';
-import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { useScreenReady } from '@/hooks/ui/useScreenReady';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import { Loader } from '../components/ui/Loader';
-import { THEME_PRICE_TAG, THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
-import { TileBadge } from '@/components/ui/tile/TileBadge';
 
 export const ProductScreen = () => {
   useRenderGuard('ProductScreen');
@@ -54,11 +52,11 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
           </PageSection>
           <PageSection theme={THEME_PRODUCT_ITEM_1} padded>
             <ThemedXStack split>
-              <ProductTitle product={product} size="$5" fs={1} />
-              <ProductPrice product={product} size="$5" showIcon />
+              <ProductTitle product={product} />
+              <ProductPrice product={product} showIcon />
             </ThemedXStack>
             <ThemedXStack split>
-              <ProductStatus product={product} size="$5" fs={1} />
+              <ProductAvailabilityStatus productAvailability={product.availability} />
             </ThemedXStack>
           </PageSection>
           <PageSection padded title="Produktinformasjon" theme={THEME_PRODUCT_ITEM_2} >

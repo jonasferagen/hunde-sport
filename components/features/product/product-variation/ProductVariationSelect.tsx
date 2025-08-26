@@ -1,95 +1,172 @@
 import { Loader } from '@/components/ui/Loader';
-import { ThemedText } from '@/components/ui/themed-components/ThemedText';
-
-import { useProductVariationSelector } from '@/domain/Product/helpers/useProductVariationSelector';
+import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui/themed-components';
+import { THEME_OPTION, THEME_OPTION_SELECTED } from '@/config/app';
+import { ProductVariationCollection } from '@/domain/Product/helpers/ProductVariationCollection';
+import { VariableProductOptions, type SelectOption, type Term } from '@/domain/Product/helpers/VariableProductOptions';
 import { VariableProduct } from '@/domain/Product/VariableProduct';
-import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { spacePx } from '@/lib/helpers';
-import { ProductVariation, Purchasable } from '@/types';
-import React from 'react';
-import { XStack, YStack, YStackProps } from 'tamagui';
-import { AttributeSelector } from './AttributeSelector';
 import { useProductVariations } from '@/hooks/data/Product';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
+import { type ProductVariation } from '@/types';
+import React from 'react';
+import { H3 } from 'tamagui';
+import { ProductPriceRange } from '../display';
 
 
-interface ProductVariationSelectProps extends YStackProps {
-    onSelectionChange?: (selection: Record<string, string>) => void;
-    onProductVariationSelected?: (variation: ProductVariation | undefined) => void;
-    purchasable: Purchasable;
+export type TermSelection = Map<string, Term | null>;
+
+interface ProductVariationSelectProps {
+  onSelectionChange: (selection: TermSelection) => void;
+  variableProduct: VariableProduct;
+  h?: number;
 }
 
+export const ProductVariationSelect = ({ ...props }: ProductVariationSelectProps) => {
+  useRenderGuard('ProductVariationSelect');
+  const { isLoading, items:productVariations} = useProductVariations(props.variableProduct); // variations fetched elsewhere later
 
-export const ProductVariationSelect = React.memo((props: ProductVariationSelectProps) => {
-    useRenderGuard('ProductVariationSelect');
+  const collection = new ProductVariationCollection(productVariations);
+  if (isLoading) return <Loader h={props.h} />;
+  return <ProductVariationSelectContent {...props} collection={collection} />;
+}
 
-    const { purchasable } = props;
-    const variableProduct = purchasable.product as VariableProduct;
-    const { items: productVariations, isLoading } = useProductVariations(purchasable.product);
-    const { onSelectionChange, onProductVariationSelected } = props;
+interface ProductVariationSelectContentProps extends ProductVariationSelectProps {
+    collection: ProductVariationCollection<ProductVariation>;
+    onSelectionChange: (selection: TermSelection) => void;
+}
 
-    const handleVariationSelected = React.useCallback(
-        (variation: ProductVariation | undefined) => {
-            onProductVariationSelected?.(variation);
-        },
-        [onProductVariationSelected]
-    );
+export const ProductVariationSelectContent = ({ 
+  collection, 
+  onSelectionChange, 
+  ...props 
+}: ProductVariationSelectContentProps ) => {
+  useRenderGuard('ProductVariationSelectContent');
+
+  const allOptions = VariableProductOptions.create(props.variableProduct);
+  const baseGroups = VariableProductOptions.group(allOptions);
+  
+  // init selection from baseGroups ...
+  const [selection, setSelection] = React.useState<TermSelection>(() => {
+    const next = new Map<string, Term | null>();
+    for (const g of baseGroups) next.set(g.taxonomy.name, null);
+    return next;
+  });
+  // recompute enabled flags when selection changes
+  const flaggedOptions = React.useMemo(
+    () => VariableProductOptions.withEnabled(allOptions, selection),
+    [allOptions, selection]
+  );
+  const optionGroups = React.useMemo(
+    () => VariableProductOptions.group(flaggedOptions),
+    [flaggedOptions]
+  );
+
+  const handleSelect = React.useCallback((taxonomy: string, term: Term | null) => {
+    selection.set(taxonomy, term);
+    setSelection(selection);
+    //onSelectionChange(selection);
+
+  }, [selection]);
+
+  return (
+    <ThemedXStack split ai="flex-start" gap="$2">
+      {optionGroups.map(group => {
+        const { taxonomy } = group;
+        const selected = selection.get(taxonomy.name) ?? null;
+        const optionsInTax = group.options.filter(o => o.variationIds.length > 0);
+
+        return (
+          <ThemedYStack key={taxonomy.name} f={1}>
+            <H3 tt="capitalize" size="$6" mb="$1">{taxonomy.label}</H3>
+            <AttributeSelector
+              options={optionsInTax}
+              selected={selected}
+              onSelect={handleSelect}
+              collection={collection}
+            />
+          </ThemedYStack>
+        );
+      })}
+    </ThemedXStack>
+  );
+};
+// AttributeSelector: no enabledSlugs; use option.enabled
+type AttributeSelectorProps = {
+  options: SelectOption[];
+  selected: Term | null;
+  onSelect: (taxonomy: string, term: Term | null) => void;
+  collection: ProductVariationCollection<ProductVariation>;
+};
+
+const AttributeSelector = React.memo(({ options, selected, onSelect, collection }: AttributeSelectorProps) => {
+  return (
+    <ThemedYStack w="100%" gap="$2">
+      {options.map(opt => {
+        const { term, enabled } = opt;
+        const isSelected = selected?.slug === term.slug;
+        const handlePress = enabled ? () => onSelect(term.taxonomy.name, isSelected ? null : term) : undefined;
+
+        return (
+          <AttributeOption
+            key={term.slug}
+            option={opt}
+            isSelected={isSelected}
+            onPress={handlePress}
+            collection={collection}
+          />
+        );
+      })}
+    </ThemedYStack>
+  );
+});
 
 
-    const {
-        attributes,
-        selectionManager,
-        handleSelectOption,
-        unavailableOptions,
-    } = useProductVariationSelector({
-        product: variableProduct,
-        productVariations,
-        onProductVariationSelected: handleVariationSelected,
-    });
+// AttributeOption: compute price range + availability on demand via collection
+type AttributeOptionProps = {
+  option: SelectOption;
+  isSelected?: boolean;
+  onPress?: () => void;
+  collection: ProductVariationCollection<ProductVariation>;
+};
 
-    // Expose current selection whenever it changes
-    React.useEffect(() => {
-        onSelectionChange?.(selectionManager.selections);
-    }, [onSelectionChange, selectionManager.selections]);
+export const AttributeOption = React.memo(function AttributeOption({
+  option,
+  isSelected = false,
+  onPress,
+  collection,
+}: AttributeOptionProps) {
+  const { term } = option;
 
-    const unavailableSets = React.useMemo(() => {
-        const m: Record<string, Set<string>> = {};
-        for (const [name, arr] of Object.entries(unavailableOptions)) m[name] = new Set(arr);
-        return m;
-    }, [unavailableOptions]);
+  // stable dep for memo; avoids array reference churn
+  const idsKey = React.useMemo(() => option.variationIds.join('|'), [option.variationIds]);
 
+  const productPriceRange = React.useMemo(() => {
+    return collection.priceRangeForVariationIds(option.variationIds) ?? undefined;
+  }, [collection, idsKey]);
+/*
+  const variationAvailability = React.useMemo(() => {
+    return option.variationIds
+      .map(id => collection.get(id)?.availability)
+      .filter(Boolean);
+  }, [collection, idsKey]);
+*/
+  return (
+    <ThemedXStack ai="center" gap="$2" theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}>
+      <ThemedButton
+        size="$4"
+        bw={2}
+        aria-label={term.label}
+        onPress={onPress}    // null/undefined disables it (as you wanted)
+      >
+        <ThemedXStack f={1} split>
+          <ThemedXStack gap="$1">
+            <ThemedText>{term.label}</ThemedText>
+          </ThemedXStack>
 
-    const cols = Math.min(2, attributes.length || 1);
-    const GAP = '$2';
-    const gapPx = spacePx(GAP);
-    const half = Math.round(gapPx / 2);
-    const colW = cols === 2 ? '50%' : '100%';
-
-    if (isLoading) {
-        return <Loader h={props.h} />;
-    }
-
-    return (
-        <XStack fw="wrap" mx={-half} my={-half}>
-            {attributes.map(({ id, name }) => {
-                const options = selectionManager.getAvailableOptions(name);
-                const unavailable = unavailableSets[name];
-                const filtered = unavailable ? options.filter((o) => !unavailable.has(o.name)) : options;
-                const selectedValue = selectionManager.getSelectedOption(name);
-                if (!filtered.length) return null;
-
-                return (
-                    <YStack key={id} w={colW} p={half}>
-                        <ThemedText tt="capitalize" bold mb="$1">
-                            {name}
-                        </ThemedText>
-                        <AttributeSelector
-                            options={filtered}
-                            selectedValue={selectedValue}
-                            onSelect={(value) => handleSelectOption(name, value)}
-                        />
-                    </YStack>
-                );
-            })}
-        </XStack>
-    );
+          {productPriceRange ? (
+            <ProductPriceRange productPriceRange={productPriceRange} />
+          ) : null}
+        </ThemedXStack>
+      </ThemedButton>
+    </ThemedXStack>
+  );
 });

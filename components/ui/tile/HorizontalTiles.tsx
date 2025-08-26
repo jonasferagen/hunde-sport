@@ -1,17 +1,17 @@
-import { ProductPrice, ProductStatus } from '@/components/features/product/display';
+import { ProductAvailabilityStatus, ProductPriceSimple } from '@/components/features/product/display';
 import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
 import { THEME_PRICE_TAG } from '@/config/app';
 import type { QueryResult } from '@/hooks/data/util';
-import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useEdgeFades } from '@/hooks/ui/useEdgeFades';
 import { useVisibleItems } from '@/hooks/ui/useVisibleItems';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { spacePx } from '@/lib/helpers';
 import type { PurchasableProduct } from '@/types';
 import { FlashList, FlashListRef } from '@shopify/flash-list';
 import React, { JSX } from 'react';
 import { Dimensions, View as RNView, StyleSheet } from 'react-native';
 import { SpaceTokens, StackProps, View } from 'tamagui';
-import { ThemedText, ThemedYStack } from '../themed-components';
+import { ThemedYStack } from '../themed-components';
 import { TileBadge } from './TileBadge';
 import { TileFixed } from './TileFixed';
 
@@ -124,8 +124,8 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
 
 
                     <TileBadge theme={THEME_PRICE_TAG} corner="tr" >
-                        <ProductStatus product={item} showInStock={false} />
-                        <ProductPrice product={item} showIcon />
+                        <ProductAvailabilityStatus productAvailability={item.availability} showInStock={false} />
+                        <ProductPriceSimple productPrices={item.prices} productAvailability={item.availability} showIcon />
                     </TileBadge>
 
                 </TileFixed>

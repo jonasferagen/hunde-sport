@@ -1,7 +1,7 @@
 
+import { useProductVariations } from '@/hooks/data/Product';
 import { Product, VariableProduct } from '@/types';
 import React from 'react';
-import { useProductVariations } from '@/hooks/data/Product';
 
 /** --- Shared types --- */
 export type CurrencyHeader = {
@@ -96,10 +96,7 @@ export function formatPrice(
  * - Ignores zero/empty prices (sold out/unavailable).
  * - Always returns min/max (throws if input array is empty).
  */
-export function getProductPriceRange(prices: ProductPrices[]): {
-    min: ProductPrices;
-    max: ProductPrices;
-} {
+export function getProductPriceRange(prices: ProductPrices[]): ProductPriceRange {
     if (prices.length === 0) {
         throw new Error("No prices provided");
     }
