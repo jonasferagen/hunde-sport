@@ -40,7 +40,10 @@ export const ProductScreen = () => {
   );
 };
 
+
+
 const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
+
 
   return (
     <Prof id="ProductScreen">

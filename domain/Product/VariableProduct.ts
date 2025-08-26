@@ -11,6 +11,7 @@ export class VariableProduct extends BaseProduct<BaseProductData> {
             throw new Error('Invalid data type for VariableProduct');
         }
         super(data);
+
     }
 
     getAttributesForVariationSelection(): ProductAttribute[] {
