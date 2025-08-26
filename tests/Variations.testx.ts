@@ -1,4 +1,4 @@
-import { Variations } from './Variations';
+import { Variations } from './ProductVariationOptions';
 
 const sample = {
     attributes: [

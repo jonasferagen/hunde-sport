@@ -1,6 +1,7 @@
 import { ENDPOINTS, PaginationOptions } from '@/config/api';
 import { apiClient } from '@/lib/apiClient';
-
+import { promises as fs } from "fs";
+import path from "path";
 import { mapToProduct, Product } from '@/domain/Product/Product';
 import { responseTransformer } from '../util';
 
@@ -100,5 +101,7 @@ export const fetchProductsByProductCategory = async (product_category_id: number
  */
 export const fetchProductVariations = async (id: number, pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCT_VARIATIONS.LIST(id, pagination));
+
+    console.log(ENDPOINTS.PRODUCT_VARIATIONS.LIST(id, pagination));
     return responseTransformer(response, mapToProduct);
 }
