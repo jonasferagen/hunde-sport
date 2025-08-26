@@ -2,7 +2,6 @@
 import { BaseProduct, BaseProductData } from "./BaseProduct";
 import { ProductAttribute } from "./ProductAttribute";
 
-
 export class VariableProduct extends BaseProduct<BaseProductData> {
     readonly type: 'variable' = 'variable';
 

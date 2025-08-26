@@ -4,8 +4,9 @@ import * as fs from "fs";
 
 import { mapToProduct, Product } from '@/domain/Product/Product';
 import { ProductVariation } from '@/domain/Product/ProductVariation';
-import { VariableProductOptions } from './VariableProductOptions';
-import { ProductVariationCollection } from "./ProductVariationCollection";
+import { VariableProductOptions } from '../domain/Product/helpers/VariableProductOptions';
+import { ProductVariationCollection } from "../domain/Product/helpers/ProductVariationCollection";
+import { getProductPriceRange } from "@/types";
 
 
 const raw1 = fs.readFileSync("tests/main.json", "utf-8");
@@ -25,11 +26,21 @@ for (const variation of variations) {
     items.push(mapToProduct(variation));
 }
 
-
-console.log(items[0].prices);
+console.log(items[0].availability);
 
 const variationCollection = new ProductVariationCollection(items);
-console.log('Has 35987?', variationCollection.has(35987));
+
+const groups = opts.getOptionGroups();
+const sizeGroup = groups.find(g => g.taxonomy === 'pa_storrelse');
+if (sizeGroup) {
+    const xl = sizeGroup.options.find(o => o.slug === 'xl');
+    if (xl) {
+        const range = variationCollection.priceRangeForOption(xl);
+        console.log('XL price range:', range);
+    }
+}
+
+
 
 it('builds maps correctly', () => {
     expect(true).toBe(true);

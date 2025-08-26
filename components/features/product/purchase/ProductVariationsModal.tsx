@@ -4,7 +4,7 @@ import { createPurchasable, ProductVariation, Purchasable } from '@/types';
 import React from 'react';
 import { Sheet } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle } from '../display';
-import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
+import { ProductVariationSelect } from '../product-variation/ProductVariationSelectNew';
 import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
 import { PurchaseButtonSmart } from './PurchaseButtonSmart';
 import { spacePx } from '@/lib/helpers';

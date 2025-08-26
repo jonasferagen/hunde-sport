@@ -2,7 +2,7 @@ import { Loader } from '@/components/ui/Loader';
 import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 
 import { useProductVariationSelector } from '@/domain/Product/helpers/useProductVariationSelector';
-import { VariableProduct } from '@/domain/Product/VariableProduct';
+import { VariableProduct } from '@/domain/Product/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { spacePx } from '@/lib/helpers';
 import { ProductVariation, Purchasable } from '@/types';
@@ -10,7 +10,7 @@ import React from 'react';
 import { XStack, YStack, YStackProps } from 'tamagui';
 import { AttributeSelector } from './AttributeSelector';
 import { useProductVariations } from '@/hooks/data/Product';
-
+import { VariableProductOptions } from '@/domain/Product/helpers/VariableProductOptions';
 
 interface ProductVariationSelectProps extends YStackProps {
     onSelectionChange?: (selection: Record<string, string>) => void;
@@ -25,40 +25,10 @@ export const ProductVariationSelect = React.memo((props: ProductVariationSelectP
     const { purchasable } = props;
     const variableProduct = purchasable.product as VariableProduct;
     const { items: productVariations, isLoading } = useProductVariations(purchasable.product);
-    const { onSelectionChange, onProductVariationSelected } = props;
 
-    const handleVariationSelected = React.useCallback(
-        (variation: ProductVariation | undefined) => {
-            onProductVariationSelected?.(variation);
-        },
-        [onProductVariationSelected]
-    );
+    const optionGroups = new VariableProductOptions(variableProduct).getOptionGroups();
 
-
-    const {
-        attributes,
-        selectionManager,
-        handleSelectOption,
-        unavailableOptions,
-    } = useProductVariationSelector({
-        product: variableProduct,
-        productVariations,
-        onProductVariationSelected: handleVariationSelected,
-    });
-
-    // Expose current selection whenever it changes
-    React.useEffect(() => {
-        onSelectionChange?.(selectionManager.selections);
-    }, [onSelectionChange, selectionManager.selections]);
-
-    const unavailableSets = React.useMemo(() => {
-        const m: Record<string, Set<string>> = {};
-        for (const [name, arr] of Object.entries(unavailableOptions)) m[name] = new Set(arr);
-        return m;
-    }, [unavailableOptions]);
-
-
-    const cols = Math.min(2, attributes.length || 1);
+    const cols = Math.min(2, optionGroups.size || 1);
     const GAP = '$2';
     const gapPx = spacePx(GAP);
     const half = Math.round(gapPx / 2);
@@ -68,9 +38,11 @@ export const ProductVariationSelect = React.memo((props: ProductVariationSelectP
         return <Loader h={props.h} />;
     }
 
+
+
     return (
         <XStack fw="wrap" mx={-half} my={-half}>
-            {attributes.map(({ id, name }) => {
+            {optionGroups.map(({ id, name }) => {
                 const options = selectionManager.getAvailableOptions(name);
                 const unavailable = unavailableSets[name];
                 const filtered = unavailable ? options.filter((o) => !unavailable.has(o.name)) : options;

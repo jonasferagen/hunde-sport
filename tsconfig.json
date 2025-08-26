@@ -33,7 +33,10 @@
     "App.tsx",
     "expo-env.d.ts",
     ".expo/types/**/*.ts",
-    "tests"
+    "tests",
+    "domain/Product/helpers/ProductVariationCollection.ts",
+    "domain/Product/helpers/VariableProductOptions.ts",
+    "domain/Product/helpers/selectionStore.ts"
   ],
   "exclude": [
     "node_modules",
