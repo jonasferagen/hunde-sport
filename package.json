@@ -87,6 +87,8 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
     "react-test-renderer": "^19.0.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3"

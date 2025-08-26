@@ -1,15 +1,15 @@
 // ProductVariationsModal.tsx
 import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
+import { spacePx } from '@/lib/helpers';
+import { useModalStore } from '@/stores/ui/modalStore';
 import { createPurchasable, ProductVariation, Purchasable } from '@/types';
+import { X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Sheet } from 'tamagui';
 import { ProductImage, ProductPrice, ProductStatus, ProductTitle } from '../display';
-import { ProductVariationSelect } from '../product-variation/ProductVariationSelectNew';
-import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
+import { ProductSelectionStatus } from '../product-variation/ProductVariationLabel';
+import { ProductVariationSelect, TermSelection } from '../product-variation/ProductVariationSelectNew';
 import { PurchaseButtonSmart } from './PurchaseButtonSmart';
-import { spacePx } from '@/lib/helpers';
-import { useModalStore } from '@/stores/ui/modalStore';
-import { X } from '@tamagui/lucide-icons';
 
 const gapPx = spacePx("$3");
 
@@ -58,7 +58,9 @@ export const Inner = React.memo(function Inner({
     }, [purchasable, onPurchasableUpdated]);
 
 
-    const [currentSelection, setCurrentSelection] = React.useState<Record<string, string>>({});
+    const [currentSelection, setCurrentSelection] = React.useState<TermSelection>(new Map());
+
+
     const [bodyH, setBodyH] = React.useState(0);
     const [headerH, setHeaderH] = React.useState(0);
     const [footerH, setFooterH] = React.useState(0);
@@ -107,9 +109,7 @@ export const Inner = React.memo(function Inner({
 
             {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout}>
-                <ProductVariationStatus
-                    product={purchasable.product}
-                    productVariation={purchasable.productVariation}
+                <ProductSelectionStatus
                     currentSelection={currentSelection}
                 />
                 <ThemedXStack split>

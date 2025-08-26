@@ -13,9 +13,10 @@ module.exports = defineConfig([
       'build/**',
       'coverage/**',
     ],
-    rules: {
-      "react/display-name": "off"
-    }
+    rules: {},
+     plugins: [], 
+     settings: {}, 
+     extends: ["eslint-config-prettier"]
   },
 
 ]);

@@ -2,7 +2,12 @@
 import { createStore } from 'zustand/vanilla';
 import { VariableProductOptions, Option, OptionGroup } from './VariableProductOptions';
 import { ProductVariationCollection } from './ProductVariationCollection';
+
+import * as React from 'react';
+import { useStore } from 'zustand';
+
 import type { VariableProduct } from '../VariableProduct';
+import type { ProductVariation } from '../ProductVariation';
 
 
 type Taxonomy = string;
@@ -157,4 +162,25 @@ export function createVariationStore() {
             return ids.length === 1 ? ids[0] : null;
         },
     }));
+}
+
+
+// hooks/useVariationStore.ts
+
+export function useVariationStore(variableProduct: VariableProduct) {
+  const store = React.useMemo(() => createVariationStore(), []);
+  // build collection from the product’s variations (already mapped domain objects)
+  React.useEffect(() => {
+    const collection = new ProductVariationCollection(
+      (variableProduct.variations ?? []) as ProductVariation[]
+    );
+    store.getState().setProduct(variableProduct, collection);
+  }, [variableProduct, store]);
+
+  // selectors
+  const selection = useStore(store, s => s.selection);
+  const select = useStore(store, s => s.select);
+  const filteredGroups = useStore(store, s => s.getFilteredOptionGroups());
+
+  return { store, selection, select, filteredGroups };
 }
