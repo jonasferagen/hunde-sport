@@ -1,3 +1,4 @@
+; (global as any).navigator = { product: 'node' };
 import { BaseProductData } from './BaseProduct';
 import { VariableProduct } from './VariableProduct';
 import { SimpleProduct } from './SimpleProduct';
@@ -32,7 +33,7 @@ export const mapToProduct = (data: any) => {
         parent: data.parent,
         categories: data.categories || [],
         attributes: data.attributes || [],
-        variations: data.variations || [],
+        _variations: data.variations || [],
         variation: data.variation || '',
         type: data.type,
     };

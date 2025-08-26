@@ -1,5 +1,6 @@
-import { cleanHtml } from "@/lib/helpers";
+//import { cleanHtml } from "@/lib/helpers";
 import { ProductPrices } from "../pricing";
+import { cleanHtml } from "./BaseProduct";
 
 export interface ProductAttributeData {
   id: number;

@@ -1,9 +1,56 @@
 
-import { ProductPrices } from '@/domain/pricing';
-import { cleanHtml } from "@/lib/helpers";
-import { ProductCategory } from "../ProductCategory";
-import { StoreImage } from "../StoreImage";
-import { ProductAttribute } from "./ProductAttribute";
+; (global as any).navigator = { product: 'node' };
+import { decode } from 'he';
+import { parseDocument } from 'htmlparser2';
+
+import { ProductAttribute } from './ProductAttribute';
+
+export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
+const isAllWhitespace = (str: string) => /^\s*$/.test(str);
+
+
+const htmlToPlainText = (html: string): string => {
+    const dom = parseDocument(html);
+
+    const walk = (nodes: any[]): string => {
+        let text = '';
+        nodes.forEach((node, index) => {
+            if (node.type === 'text') {
+                if (!isAllWhitespace(node.data)) {
+                    text += node.data;
+                }
+            } else if (node.type === 'tag') {
+                let childrenText = walk(node.children || []);
+                if (node.name === 'p' || node.name === 'div') {
+                    // Add double newline after paragraphs or divs, but only if they contain non-whitespace text.
+                    if (!isAllWhitespace(childrenText)) {
+                        text += childrenText + '\n\n';
+                    }
+                } else if (node.name === 'br') {
+                    text += '\n';
+                } else if (node.name === 'strong' || node.name === 'b') {
+                    text += `**${childrenText}**`;
+                } else {
+                    text += childrenText;
+                }
+            }
+        });
+        return text;
+    };
+
+    // Process and clean up the final text
+    let result = walk(dom.children);
+    // Trim leading/trailing whitespace and collapse multiple newlines into a maximum of two
+    return result.replace(/\n{3,}/g, '\n\n').trim();
+};
+
+
+//
+//import { ProductPrices } from '@/domain/pricing';
+//import { cleanHtml } from "@/lib/helpers";
+//import { ProductCategory } from "../ProductCategory";
+//import { StoreImage } from "../StoreImage";
+//import { ProductAttribute } from "./ProductAttribute";
 
 // The raw representation of an attribute as it comes from the initial product API response.
 export type ApiVariationAttribute = {
@@ -42,7 +89,8 @@ export interface BaseProductData {
     categories: ProductCategory[];
     type: 'simple' | 'variable' | 'variation';
     attributes: ProductAttribute[];
-    variations: VariationReference[];
+    _variations: VariationReference[];
+    variations: any[];
     variation: string;
 
 
@@ -66,17 +114,13 @@ export class BaseProduct<T extends BaseProductData> {
     categories: ProductCategory[];
     type: 'simple' | 'variable' | 'variation';
     attributes: ProductAttribute[];
-    variations: VariationReference[];
+    _variations: VariationReference[];
+    variations: any[];
     variation: string;
     priceKey: string;
     availabilityKey: string;
 
     constructor(data: T) {
-
-        if (data.id === 26998) {
-            console.log(JSON.stringify(data, null, 2));
-        }
-
 
         this.id = data.id;
         this.name = cleanHtml(data.name);
@@ -103,7 +147,7 @@ export class BaseProduct<T extends BaseProductData> {
         this.categories = data.categories;
         this.type = data.type;
         this.attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
-        this.variations = data.variations || [];
+        this.variations = data._variations || [];
         this.variation = cleanHtml(data.variation);
 
 

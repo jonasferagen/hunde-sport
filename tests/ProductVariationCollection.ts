@@ -1,30 +1,16 @@
 // lib/ProductVariationCollection.ts
-import type { ProductVariation } from "./ProductVariationOptions";
+import type { ProductVariation } from '@/domain/Product/ProductVariation';
 
 export class ProductVariationCollection {
-    private byId: Map<number, ProductVariation>;
+    private byId = new Map<number, ProductVariation>();
 
     constructor(variations: ProductVariation[]) {
-        this.byId = new Map(variations.map(v => [v.id, v]));
+        for (const v of variations ?? []) this.byId.set(v.id, v);
     }
 
-    get(id: number): ProductVariation | undefined {
-        return this.byId.get(id);
-    }
-
-    has(id: number): boolean {
-        return this.byId.has(id);
-    }
-
-    size(): number {
-        return this.byId.size;
-    }
-
-    ids(): number[] {
-        return Array.from(this.byId.keys());
-    }
-
-    values(): ProductVariation[] {
-        return Array.from(this.byId.values());
-    }
+    get(id: number) { return this.byId.get(id); }
+    has(id: number) { return this.byId.has(id); }
+    ids() { return [...this.byId.keys()]; }
+    values() { return [...this.byId.values()]; }
+    size() { return this.byId.size; }
 }
