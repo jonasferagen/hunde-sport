@@ -41,7 +41,11 @@ export const ProductVariationSelectContent = ({
 }: ProductVariationSelectContentProps ) => {
   useRenderGuard('ProductVariationSelectContent');
 
-  const allOptions = VariableProductOptions.create(props.variableProduct);
+  const allOptions = React.useMemo(
+    () => VariableProductOptions.create(props.variableProduct),
+    [props.variableProduct]
+  );
+  
   const baseGroups = VariableProductOptions.group(allOptions);
   
   // init selection from baseGroups ...
@@ -61,11 +65,14 @@ export const ProductVariationSelectContent = ({
   );
 
   const handleSelect = React.useCallback((taxonomy: string, term: Term | null) => {
-    selection.set(taxonomy, term);
-    setSelection(selection);
-    //onSelectionChange(selection);
-
-  }, [selection]);
+    setSelection(prev => {
+      const next = new Map(prev);   // <- new Map instance
+      next.set(taxonomy, term);
+      onSelectionChange(next);      // if you want to notify immediately
+      return next;
+    });
+  }, [onSelectionChange]);
+  
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
