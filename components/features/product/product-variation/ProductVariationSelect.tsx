@@ -56,10 +56,6 @@ export const ProductVariationSelect = React.memo((props: ProductVariationSelectP
     }, [unavailableOptions]);
 
 
-
-
-
-
     const cols = Math.min(2, attributes.length || 1);
     const GAP = '$2';
     const gapPx = spacePx(GAP);

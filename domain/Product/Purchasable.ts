@@ -1,4 +1,9 @@
-import { ProductVariation, SimpleProduct, VariableProduct } from '@/domain/Product/Product';
+
+
+import { ProductVariation } from '@/domain/Product/ProductVariation';
+import { SimpleProduct } from '@/domain/Product/SimpleProduct';
+import { VariableProduct } from '@/domain/Product/VariableProduct';
+
 import { Product, ProductAvailability, PurchasableProduct } from '@/types';
 import { ProductPrices } from '../pricing';
 

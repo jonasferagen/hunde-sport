@@ -27,3 +27,4 @@ android/
 ios/
 
 credentials.json
+.env.local

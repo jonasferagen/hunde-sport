@@ -7,6 +7,8 @@ import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import React from 'react';
 import { ThemedButton, ThemedText } from '@/components/ui';
+import { Button } from 'react-native';
+import * as Sentry from '@sentry/react-native';
 
 
 
@@ -45,6 +47,7 @@ export const HomeScreen = React.memo(() => {
                 <PageSection title="Debug"  >
                     <DebugProducts key='debug' />
                     <ThemedButton onPress={() => { throw Error("Test") }} ><ThemedText>kræsj</ThemedText></ThemedButton>
+                    <Button title='Try!' onPress={() => { Sentry.captureException(new Error('First error')) }} />
                 </PageSection>
             </PageBody>
         </PageView >

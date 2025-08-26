@@ -2,6 +2,7 @@ import { VariableProduct } from '@/domain/Product/Product';
 import { VariationSelection } from '@/domain/Product/helpers/VariationSelection';
 import { ProductVariation } from '@/types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { normName, normValue } from '@/domain/Product/Product';
 
 interface UseProductVariationSelectorProps {
     product: VariableProduct;
@@ -9,67 +10,53 @@ interface UseProductVariationSelectorProps {
     onProductVariationSelected: (variation: ProductVariation | undefined) => void;
 
 }
-// useProductVariationSelector.ts
 
 export const useProductVariationSelector = ({
     product,
-    productVariations,
+    productVariations, // still in BaseProduct for prices flags; not needed now if already in product.variations
     onProductVariationSelected,
 }: UseProductVariationSelectorProps) => {
-    const [selections, setSelections] = useState<Record<string, string>>({});
+    const [selection, setSelection] = useState<Record<string, string>>({}); // { [attrKey]: termSlug }
 
-
-    const baseSelectionManager = useMemo(
-        () => VariationSelection.create(product, productVariations),
-        [product, productVariations]
-    );
-
+    // compute availability per attribute for UI
     const unavailableOptions = useMemo(() => {
         const result: Record<string, string[]> = {};
-        (product.attributes ?? []).forEach((attribute) => {
-            const unavailable = baseSelectionManager
-                .getAvailableOptions(attribute.name)
-                .filter((o) => !o.isAvailable)
-                .map((o) => o.name);
-            if (unavailable.length) result[attribute.name] = unavailable;
-        });
+        for (const key of product.getRequiredAttributeKeys()) {
+            const options = product.getOptionsFor(key, selection);
+            const unavailable = options.filter(o => !o.isAvailable).map(o => o.label);
+            if (unavailable.length) result[key] = unavailable;
+        }
         return result;
-    }, [baseSelectionManager, product.attributes]);
+    }, [product, selection]);
 
-    const selectionManager = useMemo(() => {
-        return Object.entries(selections).reduce(
-            (mgr, [attrName, name]) => mgr.select(attrName, name),
-            baseSelectionManager
-        );
-    }, [baseSelectionManager, selections]);
-
+    // selected variation (if unique)
     const selectedVariation = useMemo(
-        () => selectionManager.getSelectedVariation(),
-        [selectionManager]
+        () => product.resolveVariation(selection),
+        [product, selection]
     );
-    const selectedId = selectedVariation?.id ?? undefined;
 
-    const lastSentIdRef = useRef<number | undefined>(undefined);
     useEffect(() => {
-        if (selectedId === lastSentIdRef.current) return;
-        lastSentIdRef.current = selectedId;
-        onProductVariationSelected(selectedVariation);
-    }, [selectedId, selectedVariation, onProductVariationSelected]);
+        if (!onProductVariationSelected) return;
+        // You may want to map VariationEntry -> ProductVariation shape here
+        // For now, pass undefined or a minimal object
+        onProductVariationSelected(selectedVariation as any);
+    }, [selectedVariation, onProductVariationSelected]);
 
-    const handleSelectOption = useCallback((attributeName: string, name: string | null) => {
-        setSelections((prev) => {
-            if (name && prev[attributeName] === name) return prev; // no-op
+    const select = useCallback((attrKey: string, termSlugOrLabel: string | null) => {
+        const key = normName(attrKey);
+        setSelection((prev) => {
             const next = { ...prev };
-            if (name) next[attributeName] = name;
-            else delete next[attributeName];
+            if (termSlugOrLabel) next[key] = normValue(termSlugOrLabel);
+            else delete next[key];
             return next;
         });
     }, []);
 
-    const attributes = useMemo(
-        () => product.getAttributesForVariationSelection?.() ?? [],
-        [product]
-    );
-
-    return { selectionManager, attributes, handleSelectOption, unavailableOptions };
+    return {
+        selection,                 // normalized { key: slug }
+        select,                    // update selection
+        unavailableOptions,        // for greying out chips
+        optionsIndex: product.getOptionsIndex(), // { key: [{slug,label,id}] }
+        selectedVariation,
+    };
 };

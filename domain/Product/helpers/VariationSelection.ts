@@ -1,4 +1,6 @@
-import { ProductVariation, VariableProduct } from '../Product';
+import { ProductVariation } from '../ProductVariation';
+import { VariableProduct } from '../VariableProduct';
+
 import { AttributeTermDetails } from '../ProductAttribute';
 import { VariationDataResolver } from './VariationDataResolver';
 

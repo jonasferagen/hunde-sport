@@ -54,6 +54,13 @@ export default (): ExpoConfig => ({
             resizeMode: 'contain',
             backgroundColor: '#ffffff'
         }],
+        ['@sentry/react-native/expo',
+            {
+                'url': 'https://sentry.io/',
+                'project': 'hunde-sport',
+                'organization': 'jonas-feragen-enk'
+            }
+        ]
     ],
     experiments: { typedRoutes: true },
     extra: { router: {}, eas: { projectId: PROJECT_ID } },

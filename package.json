@@ -1,7 +1,7 @@
 {
   "name": "hunde-sport",
   "main": "index.ts",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -25,6 +25,7 @@
     "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/drawer": "^7.3.9",
     "@react-navigation/native": "^7.1.6",
+    "@sentry/react-native": "^6.20.0",
     "@shopify/flash-list": "^2.0.0",
     "@tamagui/animations-css": "^1.132.15",
     "@tamagui/animations-react-native": "^1.132.15",

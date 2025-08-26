@@ -7,7 +7,6 @@ import { animations } from './animations';
 import { montserratFont as font } from './fonts';
 import { mintTheme } from './themes/mintTheme';
 
-
 // 1) Names as a typed union
 type BuiltThemeName = (typeof mintTheme.themeNames)[number]
 type NativeThemeName = keyof typeof defaultConfig.themes

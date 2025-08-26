@@ -1,6 +1,7 @@
-import { getPriceRange, ProductPriceRange } from '../pricing';
-import { BaseProduct, BaseProductData } from './BaseProduct';
-import { ProductAttribute } from './ProductAttribute';
+import { BaseProductData } from './BaseProduct';
+import { VariableProduct } from './VariableProduct';
+import { SimpleProduct } from './SimpleProduct';
+import { ProductVariation } from './ProductVariation';
 
 export type Product = SimpleProduct | VariableProduct | ProductVariation;
 export type PurchasableProduct = SimpleProduct | VariableProduct;
@@ -49,62 +50,4 @@ export const mapToProduct = (data: any) => {
 };
 
 
-export class ProductVariation extends BaseProduct<BaseProductData> {
-    readonly type: 'variation' = 'variation';
-    constructor(data: BaseProductData) {
-        if (data.type !== 'variation') {
-            throw new Error('Cannot construct ProductVariation with type other than "variation".');
-        }
-        super(data);
-    }
 
-    getParsedVariation(): { name: string; value: string }[] {
-        if (!this.variation) {
-            return [];
-        }
-
-        return this.variation
-            .split(',')
-            .map((pair) => {
-                const [attribute, value] = pair.split(':');
-                if (!attribute || !value) {
-                    return null;
-                }
-                return {
-                    name: attribute.trim(),
-                    value: value.trim(),
-                };
-            })
-            .filter((v): v is { name: string; value: string } => v !== null);
-    }
-    getLabel(): string {
-        return this.getParsedVariation().map((v) => v.value).join(', ');
-    }
-}
-
-export class SimpleProduct extends BaseProduct<BaseProductData> {
-    readonly type: 'simple' = 'simple';
-    constructor(data: BaseProductData) {
-        if (data.type !== 'simple') {
-            throw new Error('Cannot construct SimpleProduct with type other than "simple".');
-        }
-        super(data);
-    }
-}
-
-export class VariableProduct extends BaseProduct<BaseProductData> {
-    readonly type: 'variable' = 'variable';
-
-    constructor(data: BaseProductData) {
-        if (data.type !== 'variable') {
-            throw new Error('Invalid data type for VariableProduct');
-        }
-        super(data);
-    }
-
-    getAttributesForVariationSelection(): ProductAttribute[] {
-        return this.attributes.filter((attribute) => attribute.has_variations);
-    }
-
-
-}

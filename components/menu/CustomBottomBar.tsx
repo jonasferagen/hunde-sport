@@ -4,7 +4,7 @@ import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname } from 'expo-router';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { styled, Tabs, Text } from 'tamagui';
-import { ThemedLinearGradient, ThemedYStack } from '../ui';
+import { ThemedLinearGradient, ThemedText, ThemedYStack } from '../ui';
 import { useDrawerStore } from '@/stores/ui/drawerStore';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -102,15 +102,15 @@ export const CustomBottomBarContents = () => {
                     <ThemedLinearGradient />
                     <StyledTab value="index">
                         <Home />
-                        <Text>Hjem</Text>
+                        <ThemedText>Hjem</ThemedText>
                     </StyledTab>
                     <StyledTab value="search">
                         <Search />
-                        <Text>Søk</Text>
+                        <ThemedText>Søk</ThemedText>
                     </StyledTab>
                     <StyledTab value="cart">
                         <ShoppingCart />
-                        <Text>Handlekurv</Text>
+                        <ThemedText>Handlekurv</ThemedText>
                     </StyledTab>
                 </StyledTabsList>
             </StyledTabs>

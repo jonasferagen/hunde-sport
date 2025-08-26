@@ -11,6 +11,23 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { enableFreeze, enableScreens } from 'react-native-screens';
 import { PortalProvider, TamaguiProvider } from 'tamagui';
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://b7fe570697a6a8f88822825ef7d9462f@o4509876451606528.ingest.de.sentry.io/4509909104722000',
+
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  // Configure Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+  integrations: [Sentry.mobileReplayIntegration(), Sentry.feedbackIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 
 enableScreens(true);
@@ -38,4 +55,4 @@ const RootLayout = () => {
   );
 };
 
-export default RootLayout;
+export default Sentry.wrap(RootLayout);
