@@ -1,7 +1,8 @@
 import { Stack } from 'expo-router';
 import { routes } from '@/config/routes';
-
+import { PortalItem } from 'tamagui';
 import { useCanonicalBackHandler } from '@/hooks/useCanonicalNavigation';
+import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
 
 export default function ShopLayout() {
     useCanonicalBackHandler();
@@ -14,12 +15,15 @@ export default function ShopLayout() {
                         name={route.name}
                         options={{
                             title: route.label,
-                            freezeOnBlur: false,
+                            contentStyle: { backgroundColor: "transparent" }
                         }}
-
                     />
                 ))}
             </Stack>
+            <PortalItem>
+                <CustomBottomBar />
+            </PortalItem>
+
         </>
     );
 }

@@ -1,6 +1,5 @@
 // ProductVariationsModal.tsx
 import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
-import { useAddToCart } from '@/hooks/useAddToCart';
 import { createPurchasable, ProductVariation, Purchasable } from '@/types';
 import React from 'react';
 import { Sheet } from 'tamagui';
@@ -9,7 +8,7 @@ import { ProductVariationSelect } from '../product-variation/ProductVariationSel
 import { ProductVariationStatus } from '../product-variation/ProductVariationStatus';
 import { PurchaseButtonSmart } from './PurchaseButtonSmart';
 import { spacePx } from '@/lib/helpers';
-import { useModalStore } from '@/stores/modalStore';
+import { useModalStore } from '@/stores/ui/modalStore';
 import { X } from '@tamagui/lucide-icons';
 
 const gapPx = spacePx("$3");

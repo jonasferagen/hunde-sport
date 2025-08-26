@@ -6,6 +6,7 @@ import { ThemedYStack } from '../ui';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 // Memoized backdrop so PageView re-renders don't recompute gradient math
 import { useIsFocused } from '@react-navigation/native';
+import { BottomInsetSpacer, CustomBottomBar } from '../menu/CustomBottomBar';
 
 const PageBackdrop = React.memo(function PageBackdrop({
   token = 'background',
@@ -33,11 +34,12 @@ export const PageView = React.memo(function PageView({
       gap="none"
       style={{ opacity: isFocused ? 1 : 0 }}
       {...stackProps}
-      mb={BOTTOM_BAR_HEIGHT}
     >
       {withGradient ? <PageBackdrop token={gradientToken} /> : null}
       {children}
+      <BottomInsetSpacer />
     </ThemedYStack>
   );
 });
 
+// 

@@ -7,7 +7,7 @@ import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useProductsBySearch } from '@/hooks/data/Product';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'; // simple 200–300ms debounce hook
-import { useScreenReady } from '@/hooks/useScreenReady';
+import { useScreenReady } from '@/hooks/ui/useScreenReady';
 
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';

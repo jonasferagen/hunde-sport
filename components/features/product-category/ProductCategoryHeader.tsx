@@ -1,11 +1,11 @@
 // ProductCategoryHeader.tsx
 import React from 'react';
-import { Chip } from '@/components/ui/chips/Chip';
-import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui/themed-components';
+
+import { ThemedButton } from '@/components/ui/themed-components';
 import type { ProductCategory } from '@/types';
-import { openModal } from '@/stores/modalStore';
+import { openModal } from '@/stores/ui/modalStore';
 import { ProductCategoriesModal } from './ProductCategoriesModal';
-import { ChevronRight, Ellipsis, Plus } from '@tamagui/lucide-icons';
+import { Ellipsis } from '@tamagui/lucide-icons';
 import { Theme } from 'tamagui';
 
 export const ProductCategoryHeader: React.FC<{

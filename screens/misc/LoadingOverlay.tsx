@@ -1,7 +1,7 @@
 // LoadingOverlay.tsx
 import { ThemedYStack } from '@/components/ui';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
-import { useNavigationProgress } from '@/stores/navigationProgressStore'; // { active, start, stop }
+import { useNavigationProgress } from '@/stores/ui/navigationProgressStore'; // { active, start, stop }
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {

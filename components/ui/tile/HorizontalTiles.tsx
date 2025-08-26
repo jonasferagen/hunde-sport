@@ -5,7 +5,7 @@ import { THEME_PRICE_TAG } from '@/config/app';
 import type { QueryResult } from '@/hooks/data/util';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useEdgeFades } from '@/hooks/useEdgeFades';
-import { useVisibleItems } from '@/hooks/useVisibleItems';
+import { useVisibleItems } from '@/hooks/ui/useVisibleItems';
 import { spacePx } from '@/lib/helpers';
 import type { PurchasableProduct } from '@/types';
 import { FlashList } from '@shopify/flash-list';

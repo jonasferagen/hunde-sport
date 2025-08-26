@@ -7,7 +7,7 @@ import { ThemedXStack } from '@/components/ui';
 import { ProductCategoryProvider } from '@/contexts/ProductCategoryContext';
 import { useProduct } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { useScreenReady } from '@/hooks/useScreenReady';
+import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
 import { Redirect, useLocalSearchParams } from 'expo-router';

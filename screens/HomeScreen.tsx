@@ -4,7 +4,7 @@ import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { THEME_CATEGORIES, THEME_CATEGORIES_BG, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_DISCOUNTED_BG, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_FEATURED_BG, THEME_PRODUCTS_RECENT, THEME_PRODUCTS_RECENT_BG } from '@/config/app';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
-import { useScreenReady } from '@/hooks/useScreenReady';
+import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import React from 'react';
 
 

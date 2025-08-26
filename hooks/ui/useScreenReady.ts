@@ -1,5 +1,5 @@
 // @/hooks/useScreenReady.ts
-import { useNavigationProgress } from '@/stores/navigationProgressStore';
+import { useNavigationProgress } from '@/stores/ui/navigationProgressStore';
 import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react';
 import { InteractionManager } from 'react-native';

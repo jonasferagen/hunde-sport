@@ -1,7 +1,7 @@
 import { CartList } from '@/components/features/cart/CartList';
 import { CheckoutButton } from '@/components/features/cart/CheckoutButton';
 import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
-import { useScreenReady } from '@/hooks/useScreenReady';
+import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import React from 'react';
 
 export const CartScreen = () => {

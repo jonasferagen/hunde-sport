@@ -2,7 +2,7 @@
 // .ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
-import { useModalStore } from '@/stores/modalStore';
+import { useModalStore } from '@/stores/ui/modalStore';
 import { useShallow } from 'zustand/react/shallow';
 
 const OPEN_SETTLE_DELAY_MS = 300; // tune to your Sheet animation

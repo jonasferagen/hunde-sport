@@ -1,13 +1,14 @@
 // ModalHost.tsx
 import { ThemedLinearGradient, ThemedYStack } from '@/components/ui';
 import React from 'react';
-import { Sheet, Adapt, Dialog } from 'tamagui';
+import { Sheet } from 'tamagui';
 
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 
-import { setModalPosition, useModalStore } from '@/stores/modalStore';
+import { setModalPosition, useModalStore } from '@/stores/ui/modalStore';
 import { useShallow } from 'zustand/react/shallow';
-import { useModalSettled } from '@/hooks/useModalSettled';
+import { useModalSettled } from '@/hooks/ui/useModalSettled';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppToastProvider } from '@/contexts';
 

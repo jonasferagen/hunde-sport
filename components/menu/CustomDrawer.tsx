@@ -1,14 +1,14 @@
 // CustomDrawerNew.tsx
 import { Loader } from '@/components/ui/Loader';
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
-import { useDrawerSettled } from '@/hooks/useDrawerSettled';
+import { useDrawerSettled } from '@/hooks/ui/useDrawerSettled';
 import { X } from '@tamagui/lucide-icons';
 import { H3 } from 'tamagui';
-import { ThemedLinearGradient, ThemedSpinner, ThemedXStack, ThemedYStack } from '../ui';
-import { ThemedButton } from '../ui/themed-components/ThemedButton';
+import { ThemedLinearGradient, ThemedXStack, ThemedYStack } from '../ui';
+import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 import { AppVersion } from './AppVersion';
 import { ProductCategoryTree } from './ProductCategoryTree';
-import { useDrawerStore } from '@/stores/drawerStore';
+import { useDrawerStore } from '@/stores/ui/drawerStore';
 
 import React from 'react';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';

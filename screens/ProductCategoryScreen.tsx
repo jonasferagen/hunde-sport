@@ -2,7 +2,7 @@ import { ProductCategoryProducts } from '@/components/features/product-category/
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { useScreenReady } from '@/hooks/useScreenReady';
+import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import { useBreadcrumbTrail, useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
 import { Redirect, useLocalSearchParams } from 'expo-router';
 import React from 'react';
