@@ -41,8 +41,7 @@ export const ProductCategoryTree = () => {
     );
     const { atStart, atEnd, onLayout, onContentSizeChange, onScroll } =
         useEdgeFades('vertical');
-    //LOG  #C8E6E5
-    //   LOG  #DDE2C3
+
 
     return (
         <TreeCtx.Provider value={ctx}>
@@ -64,7 +63,10 @@ export const ProductCategoryTree = () => {
                     heightToken="$2"              // tweak (e.g. $3–$6)
                     visibleStart={atStart}        // show top fade when NOT at top
                     visibleEnd={atEnd}            // show bottom fade when NOT at bottom
+                    bgStart="#C8E6E5"
+                    bgEnd="#DDE2C3"
                 />
+
             </ThemedYStack>
         </TreeCtx.Provider>
     );
