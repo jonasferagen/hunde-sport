@@ -1,4 +1,5 @@
 
+import { ThemedText, ThemedXStack } from '@/components/ui';
 import { Product } from '@/types';
 import React from 'react';
 import { SizableText, SizableTextProps, XStack } from 'tamagui';
@@ -20,11 +21,11 @@ export const ProductStatus = ({ product, showInStock = true, ...props }: Props) 
     const color = inStock ? green : isOnBackOrder ? yellow : red;
     const text = inStock ? 'På lager' : isOnBackOrder ? 'På vei' : 'Utsolgt';
 
-    return (
-        <XStack gap="$1" ai="center" >
-            <SizableText fos="$3" fow="bold" {...props}><SizableText col={color}>⬤</SizableText> {text}</SizableText>
+    return showInStock || !inStock ? (
+        <XStack gap="$1">
+            <ThemedText col={color}>⬤</ThemedText><ThemedText> {text}</ThemedText>
         </XStack>
-    );
+    ) : null;
 
 };
 

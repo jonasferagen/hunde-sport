@@ -72,6 +72,12 @@ export class BaseProduct<T extends BaseProductData> {
     availabilityKey: string;
 
     constructor(data: T) {
+
+        if (data.id === 26998) {
+            console.log(JSON.stringify(data, null, 2));
+        }
+
+
         this.id = data.id;
         this.name = cleanHtml(data.name);
         this.slug = data.slug;
@@ -98,7 +104,8 @@ export class BaseProduct<T extends BaseProductData> {
         this.type = data.type;
         this.attributes = (data.attributes || []).map((attr) => new ProductAttribute(attr));
         this.variations = data.variations || [];
-        this.variation = data.variation;
+        this.variation = cleanHtml(data.variation);
+
 
         const p = this.prices;
 

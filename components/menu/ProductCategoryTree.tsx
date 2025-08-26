@@ -27,7 +27,7 @@ type TreeCtxValue = {
 };
 const TreeCtx = React.createContext<TreeCtxValue | null>(null);
 
-export const ProductCategoryTree = () => {
+export const ProductCategoryTree = ({ colors }: { colors: [string, string] }) => {
     // Single entry: start at root (id=0)
     const scrollRef = useAnimatedRef<AnimatedScrollViewRef>();
     const lastYRef = React.useRef(0);
@@ -63,8 +63,8 @@ export const ProductCategoryTree = () => {
                     heightToken="$2"              // tweak (e.g. $3–$6)
                     visibleStart={atStart}        // show top fade when NOT at top
                     visibleEnd={atEnd}            // show bottom fade when NOT at bottom
-                    bgStart="#C8E6E5"
-                    bgEnd="#DDE2C3"
+                    bgStart={colors[0]}
+                    bgEnd={colors[1]}
                 />
 
             </ThemedYStack>

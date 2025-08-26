@@ -11,6 +11,7 @@ import { useModalSettled } from '@/hooks/ui/useModalSettled';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppToastProvider } from '@/contexts';
+import { resolveThemeToken } from '@/lib/helpers';
 
 export const ModalHost = () => {
 
@@ -42,7 +43,8 @@ export const ModalHost = () => {
 
     const insets = useSafeAreaInsets();
 
-
+    const c1 = resolveThemeToken(THEME_SHEET_BG1, 'background');
+    const c2 = resolveThemeToken(THEME_SHEET_BG2, 'background');
     return (
 
         <Sheet
@@ -73,7 +75,7 @@ export const ModalHost = () => {
                 onLayout={onHostLayout}
                 theme={THEME_SHEET}
             >
-                <ThemedLinearGradient pointerEvents="none" fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} />
+                <ThemedLinearGradient fromColor={c1} toColor={c2} alpha={1} />
                 <ThemedYStack f={1} mih={0}>
                     <AppToastProvider>
                         {body}

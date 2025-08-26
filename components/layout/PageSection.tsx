@@ -8,7 +8,7 @@ import { ThemedYStack } from '../ui/themed-components/ThemedStacks';
 
 type PageSectionProps = YStackProps & {
   title?: string;
-  fill?: boolean;                 // let children (e.g. FlashList) own height
+  fill?: boolean;
   padded?: boolean;
 };
 

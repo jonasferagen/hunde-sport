@@ -18,16 +18,10 @@ export const useProductVariationSelector = ({
 }: UseProductVariationSelectorProps) => {
     const [selections, setSelections] = useState<Record<string, string>>({});
 
-    const variations = productVariations ?? [];             // ← normalize
-
-    const pvKey = useMemo(
-        () => variations.map((v) => v.id).join(','),          // ← safe now
-        [variations]
-    );
 
     const baseSelectionManager = useMemo(
-        () => VariationSelection.create(product, variations),
-        [product.id, pvKey]
+        () => VariationSelection.create(product, productVariations),
+        [product, productVariations]
     );
 
     const unavailableOptions = useMemo(() => {

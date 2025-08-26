@@ -10,7 +10,7 @@ import { useProductCategories } from '@/hooks/data/ProductCategory';
 import { useProductCategoryStore } from '@/stores/productCategoryStore';
 import { useCartStore } from '@/stores/cartStore';
 import { useCart } from '@/hooks/data/Cart';
-import { ThemedButton, ThemedYStack } from '@/components/ui';
+import { ThemedButton, ThemedText, ThemedYStack } from '@/components/ui';
 import { RefreshCw } from '@tamagui/lucide-icons';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 SplashScreen.preventAutoHideAsync().catch(() => { });
@@ -73,9 +73,9 @@ export const PreloaderScreen = () => {
                     opacity={label || error ? 1 : 0}
                 >
                     {!!label && (
-                        <Paragraph ta="center" o={error ? 1 : 0.9}>
+                        <ThemedText size="$4" tabular ta="center" o={error ? 1 : 0.9}>
                             {label}
-                        </Paragraph>
+                        </ThemedText>
                     )}
 
                     {error && (

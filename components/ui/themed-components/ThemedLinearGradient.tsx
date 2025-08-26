@@ -1,113 +1,61 @@
-// ThemedLinearGradient.tsx
-import { darken, getLuminance, lighten, rgba } from 'polished'
-import React, { useEffect, useMemo, useState } from 'react'
-import { DimensionValue } from 'react-native'
-import { Theme, ThemeName, getVariableValue, styled, useTheme } from 'tamagui'
-import type { LinearGradientProps } from 'tamagui/linear-gradient'
-import { LinearGradient } from 'tamagui/linear-gradient'
-/** Base styled gradient */
-export const LinearGradientBase = styled(LinearGradient, {
-    name: 'ThemedLinearGradient',
-    fullscreen: true,
-    pointerEvents: 'none',
-})
+import React, { useMemo } from 'react';
+import { LinearGradient } from 'tamagui/linear-gradient';
+import { useTheme, getVariableValue } from 'tamagui';
+import { rgba, lighten, darken, getLuminance } from 'polished';
 
-type ThemeRef = {
-    theme: string
-    token?: string
-}
+type Props = React.ComponentProps<typeof LinearGradient> & {
+    /** Explicit start color. If omitted, uses current theme token (default 'background'). */
+    fromColor?: string;
+    /** Explicit end color. If omitted, we derive it by lightening/darkening fromColor. */
+    toColor?: string;
+    /** Theme token to use when fromColor is not provided (default 'background'). */
+    token?: string;
+    /** Alpha applied to the computed colors (default 0.9). */
+    alpha?: number;
+    /** When deriving without toColor, how much to tweak the top color. */
+    amountTop?: number;      // default 0.05
+    /** When deriving without toColor, how much to tweak the bottom color. */
+    amountBottom?: number;   // default 0.10
+};
 
-export type ThemedLinearGradientProps = LinearGradientProps & {
-    token?: string
-    fromTheme?: ThemeRef
-    toTheme?: ThemeRef
-    alpha?: number
-    amountTop?: number
-    amountBottom?: number
-}
-
-/** Resolve a token within the wrapping <Theme> and report its color string */
-const ThemeColorProbe: React.FC<{
-    token: string
-    onColor: (c: string) => void
-}> = ({ token, onColor }) => {
-    const theme = useTheme()
-    const tval = theme[token as keyof typeof theme]
-    const color = useMemo(() => String(getVariableValue(tval)), [tval])
-    useEffect(() => onColor(color), [color, onColor])
-    return null
-}
-
-const DEFAULT_START: [DimensionValue, DimensionValue] = [0, 0];
-const DEFAULT_END: [DimensionValue, DimensionValue] = [1, 1]
-
-export const ThemedLinearGradient = React.memo(function ThemedLinearGradient({
+export const ThemedLinearGradient: React.FC<Props> = ({
+    fromColor,
+    toColor,
     token = 'background',
-    fromTheme,
-    toTheme,
     alpha = 0.9,
     amountTop = 0.05,
     amountBottom = 0.1,
-    start = DEFAULT_START as any,
-    end = DEFAULT_END as any,
+    start = [0, 0] as any,
+    end = [1, 1] as any,
+    fullscreen = true,
+    pointerEvents = 'none',
     ...rest
-}: ThemedLinearGradientProps) {
-    // base color from current theme
-    const theme = useTheme()
-    const tokenValue = theme[token as keyof typeof theme]
-    const currentBase = useMemo(() => String(getVariableValue(tokenValue)), [tokenValue])
+}) => {
+    // Fallback when no fromColor provided: read current theme token once
+    const theme = useTheme();
+    const tokenColor = useMemo(
+        () => String(getVariableValue((theme as any)[token])),
+        [theme, token]
+    );
+    const base = fromColor ?? tokenColor;
 
-    // cross-theme probes (lazy resolve)
-    const [fromColor, setFromColor] = useState<string | null>(null)
-    const [toColor, setToColor] = useState<string | null>(null)
-    const resolvedFrom = fromTheme ? fromColor ?? currentBase : currentBase
-    const resolvedTo = toTheme ? toColor : null
-
-    const isLight = useMemo(() => getLuminance(resolvedFrom) > 0.5, [resolvedFrom])
-
-    const [top, bottom] = useMemo<[string, string]>(() => {
-        if (resolvedTo) {
-            return [rgba(resolvedFrom, alpha), rgba(resolvedTo, alpha)]
-        }
-        const topC = rgba(isLight ? darken(amountTop, resolvedFrom) : lighten(amountTop, resolvedFrom), alpha)
-        const botC = rgba(isLight ? darken(amountBottom, resolvedFrom) : lighten(amountBottom, resolvedFrom), alpha)
-        return [topC, botC]
-    }, [resolvedFrom, resolvedTo, alpha, amountTop, amountBottom, isLight])
+    // If toColor given, just use it; else derive a subtle vertical delta
+    const isLight = getLuminance(base) > 0.5;
+    const top = toColor
+        ? rgba(base, alpha)
+        : rgba(isLight ? darken(amountTop, base) : lighten(amountTop, base), alpha);
+    const bottom = toColor
+        ? rgba(toColor, alpha)
+        : rgba(isLight ? darken(amountBottom, base) : lighten(amountBottom, base), alpha);
 
     return (
-        <>
-            {fromTheme && (
-                <Theme name={fromTheme.theme as ThemeName}>
-                    <ThemeColorProbe token={fromTheme.token ?? 'background'} onColor={setFromColor} />
-                </Theme>
-            )}
-            {toTheme && (
-                <Theme name={toTheme.theme as ThemeName}>
-                    <ThemeColorProbe token={toTheme.token ?? 'background'} onColor={setToColor} />
-                </Theme>
-            )}
-
-            {/* Cast tuple vectors back to the native gradient prop type to avoid the style-prop collision */}
-            <LinearGradientBase
-                start={start as any}
-                end={end as any}
-                colors={[top, bottom]}
-                {...rest}
-            />
-        </>
-    )
-}, (prev, next) => {
-    const je = JSON.stringify
-    return (
-        prev.token === next.token &&
-        prev.alpha === next.alpha &&
-        prev.amountTop === next.amountTop &&
-        prev.amountBottom === next.amountBottom &&
-        je(prev.start ?? DEFAULT_START) === je(next.start ?? DEFAULT_START) &&
-        je(prev.end ?? DEFAULT_END) === je(next.end ?? DEFAULT_END) &&
-        (prev.fromTheme?.theme ?? '') === (next.fromTheme?.theme ?? '') &&
-        (prev.fromTheme?.token ?? 'background') === (next.fromTheme?.token ?? 'background') &&
-        (prev.toTheme?.theme ?? '') === (next.toTheme?.theme ?? '') &&
-        (prev.toTheme?.token ?? 'background') === (next.toTheme?.token ?? 'background')
-    )
-})
+        <LinearGradient
+            start={start}
+            end={end}
+            colors={[top, bottom]}
+            fullscreen={fullscreen}
+            pointerEvents={pointerEvents}
+            {...rest}
+        />
+    );
+};

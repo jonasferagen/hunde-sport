@@ -3,7 +3,7 @@ import { Loader } from '@/components/ui/Loader';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { useVisibleItems } from '@/hooks/ui/useVisibleItems';
 import { Product, PurchasableProduct } from '@/types';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, FlashListRef } from '@shopify/flash-list';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
@@ -60,7 +60,7 @@ export const ProductList = React.memo(function ProductList({
         []
     );
 
-    const listRef = React.useRef<FlashList<PurchasableProduct>>(null);
+    const listRef = React.useRef<FlashListRef<PurchasableProduct>>(null);
 
     // whenever the screen/category changes (i.e., before the fade)
     React.useEffect(() => {
@@ -84,9 +84,6 @@ export const ProductList = React.memo(function ProductList({
                     onEndReached={onEndReached}
                     onEndReachedThreshold={0.8}
                     ListFooterComponent={isLoadingMore ? <Loader w="100%" h={ITEM_HEIGHT} /> : null}
-                    estimatedItemSize={ITEM_HEIGHT}
-                    overrideItemLayout={(l) => { l.size = ITEM_HEIGHT; }}
-                    estimatedListSize={{ width, height }}
                     drawDistance={800}
                     getItemType={() => 'product'}
                     removeClippedSubviews={false}

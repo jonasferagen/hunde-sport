@@ -64,7 +64,7 @@ export const FeaturedProducts = (p: StackProps) =>
     <ProductRail {...p} useQuery={useFeaturedProducts} />;
 
 // Debug keeps the API: wrap in a custom hook to satisfy Rules of Hooks
-const useDebugProducts = () => useProductsByIds([246557, 35961, 27445]);
+const useDebugProducts = () => useProductsByIds([246557, 35961, 27445, 26995]);
 
 export const DebugProducts = (p: StackProps) =>
     <ProductRail {...p} useQuery={useDebugProducts} />;

@@ -1,5 +1,4 @@
-// HorizontalTiles.tsx
-import { ProductPrice } from '@/components/features/product/display';
+import { ProductPrice, ProductStatus } from '@/components/features/product/display';
 import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
 import { THEME_PRICE_TAG } from '@/config/app';
 import type { QueryResult } from '@/hooks/data/util';
@@ -8,7 +7,7 @@ import { useEdgeFades } from '@/hooks/ui/useEdgeFades';
 import { useVisibleItems } from '@/hooks/ui/useVisibleItems';
 import { spacePx } from '@/lib/helpers';
 import type { PurchasableProduct } from '@/types';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, FlashListRef } from '@shopify/flash-list';
 import React, { JSX } from 'react';
 import { Dimensions, View as RNView, StyleSheet } from 'react-native';
 import { SpaceTokens, StackProps, View } from 'tamagui';
@@ -21,8 +20,8 @@ const SCREEN_W = Dimensions.get('window').width;
 interface HorizontalTilesProps<T> extends StackProps {
     queryResult: QueryResult<T>;
     limit: number;
-    estimatedItemSize?: number;      // item width
-    estimatedItemCrossSize?: number; // item height
+    estimatedItemSize?: number;      // keep as "itemWidth" for your tiles
+    estimatedItemCrossSize?: number; // keep as "itemHeight" for your tiles
     gapToken?: SpaceTokens;
     padToken?: SpaceTokens;
     leadingInsetToken?: SpaceTokens;
@@ -32,8 +31,8 @@ interface HorizontalTilesProps<T> extends StackProps {
 export function HorizontalTiles({
     queryResult,
     limit,
-    estimatedItemSize = 160,
-    estimatedItemCrossSize = 120,
+    estimatedItemSize = 160,        // acts as itemWidth (still used by your Tile)
+    estimatedItemCrossSize = 120,   // acts as itemHeight
     gapToken = '$3',
     padToken = '$3',
     leadingInsetToken,
@@ -41,7 +40,6 @@ export function HorizontalTiles({
     ...props
 }: HorizontalTilesProps<PurchasableProduct>): JSX.Element {
     const { items: products, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = queryResult;
-
     if (products.length === 0) return <></>;
 
     return (
@@ -90,11 +88,10 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
     const padPx = spacePx(padToken as string);
     const gapPx = spacePx(gapToken as string);
 
-    // edge fades (INSIDE component)
     const edges = useEdgeFades('horizontal');
     const { to } = useCanonicalNavigation();
     const { state: vis, onViewableItemsChanged, viewabilityConfig } = useVisibleItems();
-    // spacers
+
     const HeaderSpacer = React.useMemo(
         () => () => <RNView style={{ width: leadPx }} />,
         [leadPx]
@@ -109,47 +106,35 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
         if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage();
     }, [loadingState]);
 
-
     const renderItem = React.useCallback(
-        ({ item, index }: { item: PurchasableProduct; index: number }) => {
+        ({ item, index }: { item: PurchasableProduct; index: number }) => (
+            <RNView style={{ marginRight: gapPx, width: estimatedItemSize, height: estimatedItemCrossSize }}>
+                <TileFixed
+                    onPress={() => to('product', item)}
+                    title={item.name}
+                    image={item.featuredImage}
+                    w={estimatedItemSize}
+                    h={estimatedItemCrossSize}
+                    imagePriority={index < 3 ? 'high' : 'low'}
+                    interactive={vis.set.has(index)}
+                >
+                    {!item.availability.isInStock &&
+                        <ThemedYStack bg="$background" fullscreen pos="absolute" o={.4} pointerEvents="none" />
+                    }
 
 
-            return (
-                <RNView style={{ marginRight: gapPx, width: estimatedItemSize, height: estimatedItemCrossSize }}>
-                    <TileFixed
-                        onPress={() => to('product', item)}
-                        title={item.name}
-                        image={item.featuredImage}
-                        w={estimatedItemSize}
-                        h={estimatedItemCrossSize}
-                        imagePriority={index < 3 ? 'high' : 'low'}
-                        interactive={vis.set.has(index)}
-                    >
-                        {!item.availability.isInStock &&
-                            <ThemedYStack bg="$background" fullscreen pos="absolute" o={.4} pointerEvents="none" />
-                        }
-                        {/* Price pill */}
-                        <TileBadge theme={THEME_PRICE_TAG} corner="tr">
-                            <ProductPrice product={item} showIcon />
-                        </TileBadge>
+                    <TileBadge theme={THEME_PRICE_TAG} corner="tr" >
+                        <ProductStatus product={item} showInStock={false} />
+                        <ProductPrice product={item} showIcon />
+                    </TileBadge>
 
-                        {!item.availability.isInStock && (
-                            <>
-                                <TileBadge theme={THEME_PRICE_TAG} corner="tl" >
-                                    <ThemedText ai="center" jc="center" gap="$1" col="gold">
-                                        Utsolgt!
-                                    </ThemedText>
-                                </TileBadge>
-
-                            </>
-                        )}
-                    </TileFixed>
-                </RNView>
-            )
-        },
+                </TileFixed>
+            </RNView>
+        ),
         [to, vis, estimatedItemSize, estimatedItemCrossSize, gapPx]
     );
 
+    const listRef = React.useRef<FlashListRef<PurchasableProduct>>(null);
 
     return (
         <View
@@ -160,6 +145,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
             {...props}
         >
             <FlashList
+                ref={listRef}
                 horizontal
                 data={products}
                 keyExtractor={(p) => String(p.id)}
@@ -173,12 +159,9 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                 viewabilityConfig={viewabilityConfig}
                 decelerationRate="fast"
                 snapToAlignment="start"
-                snapToInterval={estimatedItemSize + gapPx} // still correct
+                snapToInterval={estimatedItemSize + gapPx} // still correct with fixed-size tiles
                 disableIntervalMomentum
                 nestedScrollEnabled
-                estimatedItemSize={estimatedItemSize}
-                estimatedListSize={{ width: SCREEN_W, height: estimatedItemCrossSize }}
-                overrideItemLayout={(layout) => { layout.size = estimatedItemSize; }}
                 drawDistance={leadPx + estimatedItemSize * 2}
                 getItemType={() => 'product'}
                 onContentSizeChange={(w, h) => edges.onContentSizeChange(w, h)}
@@ -191,11 +174,10 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                 visibleStart={edges.atStart}
                 visibleEnd={edges.atEnd}
                 widthToken={indicatorWidthToken}
-                bg="#fff"
+                bg="$background"
             />
         </View>
     );
-
 };
 
 const styles = StyleSheet.create({

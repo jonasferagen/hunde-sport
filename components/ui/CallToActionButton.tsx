@@ -60,13 +60,12 @@ export const CallToActionButton = React.forwardRef<
                 {...props}
             >
                 <ThemedButton.Before>{before}</ThemedButton.Before>
-
                 <ThemedButton.Text>
                     {loading
                         ? (loadingLabel !== null
                             ? <ThemedText>{loadingLabel}</ThemedText>
                             : (spinner ?? <ThemedSpinner />))
-                        : (label ? <ThemedText price>{label}</ThemedText> : null)}
+                        : (label ? <ThemedText tabular>{label}</ThemedText> : null)}
                 </ThemedButton.Text>
 
                 <ThemedButton.After>{after}</ThemedButton.After>

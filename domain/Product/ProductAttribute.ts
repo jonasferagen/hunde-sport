@@ -1,3 +1,4 @@
+import { cleanHtml } from "@/lib/helpers";
 import { ProductPrices } from "../pricing";
 
 export interface ProductAttributeData {
@@ -25,7 +26,7 @@ export class ProductAttribute {
 
   constructor(data: ProductAttributeData) {
     this.id = data.id;
-    this.name = data.name;
+    this.name = cleanHtml(data.name);
     this.taxonomy = data.taxonomy;
     this.has_variations = data.has_variations;
     this.terms = data.terms.map((termData) => new ProductAttributeTerm(termData));
@@ -47,7 +48,7 @@ export class ProductAttributeTerm {
 
   constructor(data: ProductAttributeTermData) {
     this.id = data.id;
-    this.name = data.name;
+    this.name = cleanHtml(data.name);
     this.slug = data.slug;
     this.default = data.default;
   }

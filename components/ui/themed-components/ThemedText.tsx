@@ -1,4 +1,4 @@
-import React, { ComponentRef, } from 'react'
+import React from 'react'
 import { SizableText, styled } from 'tamagui'
 
 const ThemedTextBase = styled(SizableText, {
@@ -9,7 +9,7 @@ const ThemedTextBase = styled(SizableText, {
     variants: {
         bold: { true: { fow: 'bold' } },
         subtle: { true: { col: '$colorTransparent' } },
-        price: {
+        tabular: {
             true: {
                 numberOfLines: 1,
                 ellipsizeMode: 'clip',
@@ -27,7 +27,7 @@ const ThemedTextBase = styled(SizableText, {
 export type ThemedTextProps = React.ComponentProps<typeof ThemedTextBase> & {
     bold?: boolean;
     subtle?: boolean;
-    price?: boolean;
+    tabular?: boolean;
 };
 export type ThemedTextRef = React.ComponentRef<typeof ThemedTextBase>
 

@@ -12,7 +12,7 @@ type ProductPriceProps = {
 } & ThemedTextProps;
 
 const PriceLine = ({ showIcon, children }: React.PropsWithChildren<{ showIcon?: boolean }>) => (
-    <ThemedXStack ai="center" gap="$2" pos="relative">
+    <ThemedXStack ai="center" gap="$1" pos="relative">
         {showIcon ? <StarFull scale={0.5} color="gold" /> : null}
         <ThemedText>{children}</ThemedText>
     </ThemedXStack>

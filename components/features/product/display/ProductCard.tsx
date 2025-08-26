@@ -1,4 +1,4 @@
-import { ThemedImage } from '@/components/ui';
+import { ThemedImage, ThemedText } from '@/components/ui';
 import { ThemedLinearGradient } from '@/components/ui/themed-components/ThemedLinearGradient';
 import { ThemedXStack, ThemedYStack } from '@/components/ui/themed-components/ThemedStacks';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
@@ -68,6 +68,7 @@ const ProductCardDescription = ({ product, ...stackProps }: StackProps & { produ
                 jc="space-between"
             >
                 <ProductTitle size="$5" fs={1} product={product} />
+                <ThemedText>{product.id}</ThemedText>
 
             </ThemedXStack>
             <ProductDescription

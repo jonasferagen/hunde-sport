@@ -13,6 +13,7 @@ import * as Application from 'expo-application';
 import React, { useMemo } from 'react';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { rgba } from 'polished';
+import { resolveThemeToken } from '@/lib/helpers';
 
 export const CustomDrawer = ({ navigation }: { navigation: DrawerContentComponentProps['navigation'] }) => {
     useDrawerSettled();
@@ -34,6 +35,8 @@ const CustomDrawerContent = () => {
     const closeDrawer = useDrawerStore((s) => s.closeDrawer);
     const version = Application.nativeApplicationVersion ?? '?.?'; // versionName / CFBundleShortVersionString
     const build = Application.nativeBuildVersion ?? 'N/A';         // versionCode / CFBundleVersion
+    const c1 = resolveThemeToken(THEME_SHEET_BG1, 'background');
+    const c2 = resolveThemeToken(THEME_SHEET_BG2, 'background');
 
     return (
         <ThemedYStack f={1} gap="$0">
@@ -42,8 +45,8 @@ const CustomDrawerContent = () => {
                 <ThemedButton circular onPress={closeDrawer}><X /></ThemedButton>
             </ThemedXStack>
             <ThemedYStack f={1} mih={0}>
-                <ThemedLinearGradient fromTheme={{ theme: THEME_SHEET_BG1 }} toTheme={{ theme: THEME_SHEET_BG2 }} alpha={1} />
-                {hasOpened ? <ProductCategoryTree /> : <Loader />}
+                <ThemedLinearGradient fromColor={c1} toColor={c2} alpha={1} />
+                {hasOpened ? <ProductCategoryTree colors={[c1, c2]} /> : <Loader />}
             </ThemedYStack>
             <ThemedYStack box container jc="flex-end" theme={THEME_SHEET_BG2}>
                 <ThemedText size="$1" ta="right" >

@@ -6,6 +6,8 @@ import { THEME_CATEGORIES, THEME_CATEGORIES_BG, THEME_PRODUCTS_DISCOUNTED, THEME
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import React from 'react';
+import { ThemedButton, ThemedText } from '@/components/ui';
+
 
 
 export const HomeScreen = React.memo(() => {
@@ -42,6 +44,7 @@ export const HomeScreen = React.memo(() => {
                 </PageSection>
                 <PageSection title="Debug"  >
                     <DebugProducts key='debug' />
+                    <ThemedButton onPress={() => { throw Error("Test") }} ><ThemedText>kræsj</ThemedText></ThemedButton>
                 </PageSection>
             </PageBody>
         </PageView >
