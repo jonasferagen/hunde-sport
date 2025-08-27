@@ -1,21 +1,11 @@
-//import { cleanHtml } from "@/lib/helpers";
-import { ProductPrices } from "../pricing";
-import { cleanHtml } from "./BaseProduct";
+import { cleanHtml } from "@/lib/helpers";
 
-export interface ProductAttributeData {
+export interface _ProductAttributeData {
   id: number;
   name: string;
   taxonomy: string;
   has_variations: boolean;
-  terms: ProductAttributeTermData[];
-}
-
-export interface AttributeTermDetails extends ProductAttributeTerm {
-  isAvailable: boolean;
-  isPurchasable: boolean;
-  inStock: boolean;
-  maxPrices: ProductPrices | null;
-  minPrices: ProductPrices | null;
+  terms: _ProductAttributeTermData[];
 }
 
 export class ProductAttribute {
@@ -23,34 +13,51 @@ export class ProductAttribute {
   name: string;
   taxonomy: string;
   has_variations: boolean;
-  terms: ProductAttributeTerm[];
+  terms: _ProductAttributeTerm[];
 
-  constructor(data: ProductAttributeData) {
+  constructor(data: _ProductAttributeData) {
     this.id = data.id;
     this.name = cleanHtml(data.name);
     this.taxonomy = data.taxonomy;
     this.has_variations = data.has_variations;
-    this.terms = data.terms.map((termData) => new ProductAttributeTerm(termData));
+    this.terms = data.terms.map(
+      (termData) => new _ProductAttributeTerm(termData)
+    );
   }
 }
 
-export interface ProductAttributeTermData {
+export interface _ProductAttributeTermData {
   id: number;
   name: string;
   slug: string;
   default?: boolean;
 }
 
-export class ProductAttributeTerm {
+export class _ProductAttributeTerm {
   id: number;
   name: string;
   slug: string;
   default?: boolean;
 
-  constructor(data: ProductAttributeTermData) {
+  constructor(data: _ProductAttributeTermData) {
     this.id = data.id;
     this.name = cleanHtml(data.name);
     this.slug = data.slug;
     this.default = data.default;
   }
 }
+
+export type _ProductAttribute = {
+  name: string;
+  taxonomy: ProductAttributeTaxonomy;
+  has_variations: boolean;
+  terms: ProductAttributeTerm[];
+};
+
+export type ProductAttributeTaxonomy = { name: string; label: string };
+export type ProductAttributeTerm = {
+  taxonomy: ProductAttributeTaxonomy;
+  slug: string;
+  label: string;
+  default?: boolean;
+};

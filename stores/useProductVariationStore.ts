@@ -1,50 +1,51 @@
-// stores/useProductVariationStore.ts
+// stores/useProductVariationStore.ts (leaner state)
+/** Reactive selectors (v5 + useShallow) */
 import { create } from "zustand";
+import { useShallow } from "zustand/react/shallow";
 
+import { ProductAttributeHelper } from "@/domain/Product/ProductAttributeHelper";
 import {
-  type SelectOption,
-  type Taxonomy,
-  type Term,
-  VariableProductOptions,
-} from "@/domain/Product/helpers/VariableProductOptions";
-import type { VariableProduct } from "@/domain/Product/VariableProduct";
-import type { ProductPriceRange, ProductVariation } from "@/types";
-import { getProductPriceRange } from "@/types";
+  getProductPriceRange,
+  ProductAttributeTaxonomy as Taxonomy,
+  ProductAttributeTerm as Term,
+  ProductPriceRange,
+  ProductVariation,
+  VariableProduct,
+} from "@/types";
 
 export type TermSelection = Map<string, Term | null>;
-type Group = { taxonomy: Taxonomy; options: SelectOption[] };
+export type TermOption = {
+  variationIds: number[];
+  term: Term;
+  enabled?: boolean; // computed; not stored in state
+};
+export type TermOptionGroup = {
+  taxonomy: Taxonomy;
+  options: TermOption[];
+};
 
 type State = {
   product: VariableProduct | null;
-  options: SelectOption[]; // base options (no variation deps)
-  flaggedOptions: SelectOption[]; // options with enabled flag
-  groups: Group[]; // grouped flaggedOptions
+  options: TermOption[];
   selection: TermSelection;
   variationById: Map<number, ProductVariation>;
 };
 
 type Actions = {
-  init(product: VariableProduct): void; // reset + build from product only
-  setVariations(variations: ProductVariation[]): void; // supply variations later
-  select(taxonomy: string, term: Term | null): void; // update selection
+  init(product: VariableProduct): void;
+  setVariations(variations: ProductVariation[]): void;
+  select(taxonomy: string, term: Term | null): void;
   reset(): void;
-
-  // lookups/util
   getVariation(id: number): ProductVariation | undefined;
   priceRangeForIds(ids: number[]): ProductPriceRange | null;
-
-  // derived getters (non-reactive unless used via a selector)
   getSelectedVariationId(): number | undefined;
   getSelectedVariation(): ProductVariation | undefined;
 };
 
 const emptySelection = () => new Map<string, Term | null>();
-
 const initialState: State = {
   product: null,
   options: [],
-  flaggedOptions: [],
-  groups: [],
   selection: emptySelection(),
   variationById: new Map(),
 };
@@ -58,52 +59,30 @@ export const useVariableProductStore = create<State & Actions>()(
     },
 
     init(product) {
-      // Build from product only (atomic snapshot)
-      const options = VariableProductOptions.create(product);
-      const baseGroups = VariableProductOptions.group(options);
-
+      const options = ProductAttributeHelper.create(product);
+      // seed empty selection with all taxonomies from options
       const selection = emptySelection();
-      for (const g of baseGroups) selection.set(g.taxonomy.name, null);
-
-      const flaggedOptions = VariableProductOptions.withEnabled(
-        options,
-        selection
+      ProductAttributeHelper.groupByTaxonomy(options).forEach((g) =>
+        selection.set(g.taxonomy.name, null)
       );
-      const groups = VariableProductOptions.group(flaggedOptions);
-
       set({
         ...initialState,
         product,
         options,
-        flaggedOptions,
-        groups,
         selection,
-        variationById: new Map(), // no variations yet
+        variationById: new Map(),
       });
     },
 
     setVariations(variations) {
-      console.warn("setting variations");
-
-      const variationById = new Map<number, ProductVariation>(
-        (variations ?? []).map((v) => [v.id, v])
-      );
-      set({ variationById });
+      set({ variationById: new Map(variations.map((v) => [v.id, v])) });
     },
 
     select(taxonomy, term) {
-      const { selection: prevSel, options } = get();
-
-      const selection = new Map(prevSel);
-      selection.set(taxonomy, term);
-
-      const flaggedOptions = VariableProductOptions.withEnabled(
-        options,
-        selection
-      );
-      const groups = VariableProductOptions.group(flaggedOptions);
-
-      set({ selection, flaggedOptions, groups });
+      const prev = get().selection;
+      const next = new Map(prev);
+      next.set(taxonomy, term);
+      set({ selection: next });
     },
 
     getVariation(id) {
@@ -118,10 +97,10 @@ export const useVariableProductStore = create<State & Actions>()(
       return prices.length ? getProductPriceRange(prices) : null;
     },
 
-    // ----- Derived getters -----
     getSelectedVariationId() {
       const { options, selection } = get();
-      return VariableProductOptions.resolveSelectedVariationId(
+
+      return ProductAttributeHelper.resolveSelectedVariationId(
         options,
         selection
       );
@@ -134,11 +113,24 @@ export const useVariableProductStore = create<State & Actions>()(
   })
 );
 
-/** Reactive selector for selected variation (recommended for components). */
-export const selectSelectedVariation = (s: State) => {
-  const id = VariableProductOptions.resolveSelectedVariationId(
-    s.options,
-    s.selection
+export const useGroups = () =>
+  useVariableProductStore(
+    useShallow((s) => {
+      const flagged = ProductAttributeHelper.withEnabled(
+        s.options,
+        s.selection
+      );
+      return ProductAttributeHelper.groupByTaxonomy(flagged);
+    })
   );
-  return id ? s.variationById.get(id) : undefined;
-};
+
+export const useSelectedVariation = () =>
+  useVariableProductStore(
+    useShallow((s) => {
+      const id = ProductAttributeHelper.resolveSelectedVariationId(
+        s.options,
+        s.selection
+      );
+      return id ? s.variationById.get(id) : undefined;
+    })
+  );

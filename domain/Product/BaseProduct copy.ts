@@ -1,26 +1,49 @@
-import { cleanHtml } from "@/lib/helpers";
+import { decode } from "he";
+import { parseDocument } from "htmlparser2";
 
-import { ProductPrices } from "../pricing";
+import { ProductPrices } from "@/domain/pricing";
+
 import { ProductCategory } from "../ProductCategory";
 import { StoreImage } from "../StoreImage";
 import { ProductAttribute } from "./ProductAttribute";
+(global as any).navigator = { product: "node" };
 
-//
-//import { ProductPrices } from '@/domain/pricing';
-//import { cleanHtml } from "@/lib/helpers";
-//import { ProductCategory } from "../ProductCategory";
-//import { StoreImage } from "../StoreImage";
-//import { ProductAttribute } from "./ProductAttribute";
+export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
+const isAllWhitespace = (str: string) => /^\s*$/.test(str);
 
-// The raw representation of an attribute as it comes from the initial product API response.
-export type ApiVariationAttribute = {
-  name: string; // The attribute's "nice" name, e.g., "Farge"
-  value: string; // The selected term slug, e.g., "red"
-};
+const htmlToPlainText = (html: string): string => {
+  const dom = parseDocument(html);
 
-export type VariationReference = {
-  id: number;
-  attributes: ApiVariationAttribute[];
+  const walk = (nodes: any[]): string => {
+    let text = "";
+    nodes.forEach((node, index) => {
+      if (node.type === "text") {
+        if (!isAllWhitespace(node.data)) {
+          text += node.data;
+        }
+      } else if (node.type === "tag") {
+        let childrenText = walk(node.children || []);
+        if (node.name === "p" || node.name === "div") {
+          // Add double newline after paragraphs or divs, but only if they contain non-whitespace text.
+          if (!isAllWhitespace(childrenText)) {
+            text += childrenText + "\n\n";
+          }
+        } else if (node.name === "br") {
+          text += "\n";
+        } else if (node.name === "strong" || node.name === "b") {
+          text += `**${childrenText}**`;
+        } else {
+          text += childrenText;
+        }
+      }
+    });
+    return text;
+  };
+
+  // Process and clean up the final text
+  let result = walk(dom.children);
+  // Trim leading/trailing whitespace and collapse multiple newlines into a maximum of two
+  return result.replace(/\n{3,}/g, "\n\n").trim();
 };
 
 export interface ProductAvailability {
@@ -48,7 +71,6 @@ export interface BaseProductData {
   categories: ProductCategory[];
   type: "simple" | "variable" | "variation";
   attributes: ProductAttribute[];
-  _variations: VariationReference[];
   variations: any[];
   variation: string;
 }
@@ -71,7 +93,6 @@ export class BaseProduct<T extends BaseProductData> {
   categories: ProductCategory[];
   type: "simple" | "variable" | "variation";
   attributes: ProductAttribute[];
-  _variations: VariationReference[];
   variations: any[];
   variation: string;
   priceKey: string;
@@ -110,7 +131,7 @@ export class BaseProduct<T extends BaseProductData> {
     this.attributes = (data.attributes || []).map(
       (attr) => new ProductAttribute(attr)
     );
-    this.variations = data._variations || [];
+    this.variations = data.variations || [];
     this.variation = cleanHtml(data.variation);
 
     const p = this.prices;

@@ -1,16 +1,16 @@
-// ProductSelectionStatus.tsx
-/*
 import React from "react";
 
 import { ThemedText, ThemedXStack } from "@/components/ui";
-import { useVariableProductStore } from "@/stores/useProductVariationStore";
+import { TermSelection } from "@/stores/useProductVariationStore";
 
-type Props = React.ComponentProps<typeof ThemedText>;
+type Props = React.ComponentProps<typeof ThemedText> & {
+  storeSelection: TermSelection;
+};
 
-export const ProductSelectionStatus: React.FC<Props> = ({ ...textProps }) => {
-  // Fallback to store if no explicit selection is passed
-  const storeSelection = useVariableProductStore((s) => s.selection);
-
+export const ProductVariationStatus: React.FC<Props> = ({
+  storeSelection,
+  ...textProps
+}) => {
   return (
     <ThemedXStack gap="$2">
       {Array.from(storeSelection.entries()).map(([taxonomyName, term]) => (
@@ -26,4 +26,3 @@ export const ProductSelectionStatus: React.FC<Props> = ({ ...textProps }) => {
     </ThemedXStack>
   );
 };
-*/

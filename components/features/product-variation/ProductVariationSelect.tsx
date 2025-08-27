@@ -1,8 +1,8 @@
 // ProductVariationSelect.tsx
 import React from "react";
 import { H3 } from "tamagui";
+import { useShallow } from "zustand/react/shallow";
 
-import { Loader } from "@/components/ui/Loader";
 import {
   ThemedButton,
   ThemedText,
@@ -10,138 +10,109 @@ import {
   ThemedYStack,
 } from "@/components/ui/themed-components";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
-import type {
-  SelectOption,
-  Term,
-} from "@/domain/Product/helpers/VariableProductOptions";
-import { useProductVariations } from "@/hooks/data/Product";
-import { useRenderGuard } from "@/hooks/useRenderGuard";
-import { useVariableProductStore } from "@/stores/useProductVariationStore";
-import type { VariableProduct } from "@/types"; // adjust paths
+import { ProductAttributeTerm as Term } from "@/domain/Product/ProductAttribute";
+import { ProductAttributeHelper } from "@/domain/Product/ProductAttributeHelper";
+import {
+  TermOption,
+  TermOptionGroup,
+  useGroups,
+  useVariableProductStore,
+} from "@/stores/useProductVariationStore";
+import type { ProductAttributeTaxonomy as Taxonomy } from "@/types";
 
 import { ProductPriceRange } from "../product/display/ProductPrice";
 
-export type TermSelection = Map<string, Term | null>;
+export function ProductVariationSelect() {
+  const { options, selection, select, priceRangeForIds } =
+    useVariableProductStore(
+      useShallow((s) => ({
+        options: s.options,
+        selection: s.selection,
+        select: s.select,
+        priceRangeForIds: s.priceRangeForIds,
+      }))
+    );
 
-interface Props {
-  variableProduct: VariableProduct;
-  h?: number;
-}
+  // add enabled flags based on current selection
+  const flagged = React.useMemo(
+    () => ProductAttributeHelper.withEnabled(options, selection),
+    [options, selection]
+  );
 
-export const ProductVariationSelect = ({ variableProduct, h }: Props) => {
-  useRenderGuard("ProductVariationSelect");
-
-  const { isLoading, items: productVariations } =
-    useProductVariations(variableProduct);
-
-  const init = useVariableProductStore((s) => s.init);
-  const setVariations = useVariableProductStore((s) => s.setVariations);
-
-  React.useEffect(() => {
-    init(variableProduct);
-    return () => useVariableProductStore.getState().reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [variableProduct.id, init]); // <-- use the id
-
-  // supply variations when they arrive
-  React.useEffect(() => {
-    if (!isLoading && productVariations.length) {
-      setVariations(productVariations);
+  // ordered unique taxonomies (objects with name + label)
+  const taxonomies: Taxonomy[] = React.useMemo(() => {
+    const seen = new Set<string>();
+    const out: Taxonomy[] = [];
+    for (const o of flagged) {
+      const t = o.term.taxonomy;
+      if (!seen.has(t.name)) {
+        seen.add(t.name);
+        out.push(t);
+      }
     }
-  }, [isLoading, productVariations, setVariations]);
+    return out;
+  }, [flagged]);
 
-  const groups = useVariableProductStore((s) => s.groups);
-
-  const selection = useVariableProductStore((s) => s.selection);
-  const select = useVariableProductStore((s) => s.select);
-  if (isLoading || groups.length === 0) return <Loader h={h} />;
+  if (taxonomies.length === 0) return null;
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
-      {groups.map((group) => {
-        const { taxonomy } = group;
+      {taxonomies.map((taxonomy) => {
         const selected = selection.get(taxonomy.name) ?? null;
-        const optionsInTax = group.options.filter(
-          (o) => o.variationIds.length > 0
+        const optionsInTax = flagged.filter(
+          (o) =>
+            o.term.taxonomy.name === taxonomy.name && o.variationIds.length > 0
         );
 
         return (
           <ThemedYStack key={taxonomy.name} f={1}>
             <H3 tt="capitalize" size="$6" mb="$1">
-              {taxonomy.label}
+              {taxonomy.label} {/* <-- real label */}
             </H3>
             <ThemedYStack w="100%" gap="$2">
-              {optionsInTax.map((opt) => (
-                <AttributeOption
-                  key={`${taxonomy.name}:${opt.term.slug}`} // <-- change
-                  option={opt}
-                  selected={selected}
-                  onSelect={select}
-                />
-              ))}
+              {optionsInTax.map((opt) => {
+                const { term, enabled = true } = opt;
+                const isSelected =
+                  !!selected &&
+                  selected.slug === term.slug &&
+                  selected.taxonomy.name === term.taxonomy.name;
+
+                const onPress = enabled
+                  ? () => select(term.taxonomy.name, isSelected ? null : term)
+                  : undefined;
+
+                const price = priceRangeForIds(opt.variationIds) ?? undefined;
+
+                return (
+                  <ThemedXStack
+                    key={`${taxonomy.name}:${term.slug}`}
+                    ai="center"
+                    gap="$2"
+                    theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}
+                  >
+                    <ThemedButton
+                      size="$4"
+                      bw={2}
+                      aria-label={term.label}
+                      onPress={onPress}
+                      disabled={!enabled}
+                    >
+                      <ThemedXStack f={1} split>
+                        <ThemedXStack gap="$1">
+                          <ThemedText>{term.label}</ThemedText>
+                        </ThemedXStack>
+                        {price ? (
+                          <ProductPriceRange productPriceRange={price} />
+                        ) : null}
+                      </ThemedXStack>
+                    </ThemedButton>
+                  </ThemedXStack>
+                );
+              })}
             </ThemedYStack>
           </ThemedYStack>
         );
       })}
     </ThemedXStack>
   );
-};
-
-type AttributeOptionProps = {
-  option: SelectOption;
-  selected: Term | null;
-  onSelect: (taxonomy: string, term: Term | null) => void;
-};
-
-const AttributeOption = React.memo(function AttributeOption({
-  option,
-  selected,
-  onSelect,
-}: AttributeOptionProps) {
-  const { term, enabled = true } = option;
-  const priceRangeForIds = useVariableProductStore((s) => s.priceRangeForIds);
-
-  const isSelected =
-    !!selected &&
-    selected.slug === term.slug &&
-    selected.taxonomy.name === term.taxonomy.name;
-
-  const idsKey = React.useMemo(
-    () => option.variationIds.join("|"),
-    [option.variationIds]
-  );
-  const productPriceRange = React.useMemo(
-    () => priceRangeForIds(option.variationIds) ?? undefined,
-    [priceRangeForIds, idsKey]
-  );
-
-  const onPress = enabled
-    ? () => onSelect(term.taxonomy.name, isSelected ? null : term)
-    : undefined;
-
-  return (
-    <ThemedXStack
-      ai="center"
-      gap="$2"
-      theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}
-    >
-      <ThemedButton
-        size="$4"
-        bw={2}
-        aria-label={term.label}
-        onPress={onPress}
-        disabled={!enabled}
-      >
-        <ThemedXStack f={1} split>
-          <ThemedXStack gap="$1">
-            <ThemedText>{term.label}</ThemedText>
-          </ThemedXStack>
-
-          {productPriceRange ? (
-            <ProductPriceRange productPriceRange={productPriceRange} />
-          ) : null}
-        </ThemedXStack>
-      </ThemedButton>
-    </ThemedXStack>
-  );
-});
+}

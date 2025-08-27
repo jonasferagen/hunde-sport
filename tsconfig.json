@@ -8,16 +8,9 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
-    "types": [
-      "react",
-      "react-native",
-      "expo",
-      "jest"
-    ]
+    "types": ["react", "react-native", "expo", "jest"]
   },
   "include": [
     "app",
@@ -35,9 +28,10 @@
     ".expo/types/**/*.ts",
     "tests",
     "domain/Product/helpers/ProductVariationCollection.ts",
-    "domain/Product/helpers/VariableProductOptions.ts",
-    "domain/Product/helpers/selectionStore.ts"
-, "stores/useProductVariationStore.ts"  ],
+    "domain/Product/ProductAttributeHelper.ts",
+    "domain/Product/helpers/selectionStore.ts",
+    "stores/useProductVariationStore.ts"
+  ],
   "exclude": [
     "node_modules",
     "android",
