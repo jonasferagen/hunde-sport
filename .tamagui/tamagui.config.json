@@ -28353,6 +28353,9 @@
           },
           "900": {
             "normal": "Montserrat-Bold"
+          },
+          "bold": {
+            "normal": "Montserrat-Bold"
           }
         }
       },
@@ -28441,6 +28444,9 @@
             "normal": "Montserrat-Bold"
           },
           "900": {
+            "normal": "Montserrat-Bold"
+          },
+          "bold": {
             "normal": "Montserrat-Bold"
           }
         }
