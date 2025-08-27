@@ -6,60 +6,61 @@ import { Sheet } from "tamagui";
 import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { spacePx } from "@/lib/helpers";
 import { useModalStore } from "@/stores/ui/modalStore";
-import { createPurchasable, Purchasable, VariableProduct } from "@/types";
-
 import { useVariableProductStore } from "@/stores/useProductVariationStore";
+import {
+  createPurchasable,
+  Product,
+  Purchasable as VariableProduct,
+  PurchasableProduct,
+  VariableProduct,
+} from "@/types";
+
 import {
   ProductAvailabilityStatus,
   ProductImage,
   ProductPriceSimple,
   ProductTitle,
 } from "../product/display";
+import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
 import { ProductSelectionStatus } from "./ProductVariationLabel";
 import { ProductVariationSelect } from "./ProductVariationSelect";
-import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
 
 const gapPx = spacePx("$3");
 
 export const ProductVariationsModal = ({
   close,
-  purchasable,
+  variableProduct,
 }: {
   close: () => void;
-  purchasable: Purchasable;
+  variableProduct: VariableProduct;
 }) => {
-  return <Inner close={close} purchasable={purchasable} />;
+  return <Inner close={close} variableProduct={variableProduct} />;
 };
 type InnerProps = {
   close: () => void;
-  purchasable: Purchasable; // incoming base
-  onPurchasableUpdated?: (p: Purchasable) => void; // NEW (optional)
+  variableProduct: VariableProduct; // incoming base
+  onPurchasableUpdated?: (p: VariableProduct) => void; // NEW (optional)
 };
 
 export const Inner = React.memo(function Inner({
   close,
-  purchasable: basePurchasable,
-  onPurchasableUpdated,
+  variableProduct,
 }: InnerProps) {
   const hasOpened = useModalStore((s) => s.status === "open");
   // 1) Track selected variation locally
-
-  const productVariation = useVariableProductStore((s) => s.selectedVariation);
+  const getSelectedVariation = useVariableProductStore(
+    (s) => s.getSelectedVariation
+  );
+  // const productVariation = getSelectedVariation();
 
   // 2) Derive the working purchasable from (product, variation)
   const purchasable = React.useMemo(
     () =>
       createPurchasable({
-        product: basePurchasable.product,
-        productVariation: productVariation,
+        product: variableProduct as PurchasableProduct,
       }),
-    [basePurchasable.product, productVariation]
+    [variableProduct]
   );
-
-  // 3) Notify parent when the derived purchasable changes
-  React.useEffect(() => {
-    onPurchasableUpdated?.(purchasable);
-  }, [purchasable, onPurchasableUpdated]);
 
   const [bodyH, setBodyH] = React.useState(0);
   const [headerH, setHeaderH] = React.useState(0);
@@ -77,8 +78,6 @@ export const Inner = React.memo(function Inner({
   const gaps = 3 * gapPx;
   const cH = headerH + footerH + IMAGE_H + gaps;
   const availableForOptions = Math.max(0, bodyH - cH);
-
-  const variableProduct = purchasable.product as VariableProduct;
 
   return (
     <ThemedYStack f={1} mih={0} onLayout={onBodyLayout} gap="$3">

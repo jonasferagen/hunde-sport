@@ -1,2 +1,2 @@
-import { ProductCategoryScreen } from '@/screens/ProductCategoryScreen';
-export default () => <ProductCategoryScreen />;    
+import { ProductCategoryScreen } from "@/screens/ProductCategoryScreen";
+export default () => <ProductCategoryScreen />;

@@ -1,7 +1,12 @@
 import React from "react";
 
 import { openModal } from "@/stores/ui/modalStore";
-import { createPurchasable, Purchasable, PurchasableProduct } from "@/types";
+import {
+  createPurchasable,
+  Purchasable,
+  PurchasableProduct,
+  VariableProduct,
+} from "@/types";
 
 import { ProductVariationsModal } from "../../product-variation/ProductVariationsModal";
 import { PurchaseButtonSmart } from "./PurchaseButtonSmart";
@@ -16,11 +21,11 @@ export const ProductPurchaseFlow = ({
     [product]
   );
 
-  const onRequestVariation = (purchasable: Purchasable) =>
+  const onRequestVariation = (variableProduct: VariableProduct) =>
     openModal(
       (payload, api) => (
         <ProductVariationsModal
-          purchasable={payload as Purchasable}
+          variableProduct={variableProduct}
           close={() => api.close()}
         />
       ),

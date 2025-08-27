@@ -18,6 +18,7 @@ import { useProductVariations } from "@/hooks/data/Product";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
 import { useVariableProductStore } from "@/stores/useProductVariationStore";
 import type { VariableProduct } from "@/types"; // adjust paths
+
 import { ProductPriceRange } from "../product/display/ProductPrice";
 
 export type TermSelection = Map<string, Term | null>;
@@ -34,23 +35,24 @@ export const ProductVariationSelect = ({ variableProduct, h }: Props) => {
     useProductVariations(variableProduct);
 
   const init = useVariableProductStore((s) => s.init);
+  const setVariations = useVariableProductStore((s) => s.setVariations);
+
+  // init from product (hard reset inside init)
+  React.useEffect(() => {
+    init(variableProduct);
+    return () => useVariableProductStore.getState().reset(); // unmount cleanup
+  }, [variableProduct, init]);
+
+  // supply variations when they arrive
+  React.useEffect(() => {
+    if (!isLoading && productVariations.length) {
+      setVariations(productVariations);
+    }
+  }, [isLoading, productVariations, setVariations]);
+
   const groups = useVariableProductStore((s) => s.groups);
   const selection = useVariableProductStore((s) => s.selection);
   const select = useVariableProductStore((s) => s.select);
-
-  // init store when data is ready
-  React.useEffect(() => {
-    if (!isLoading && productVariations.length) {
-      init(variableProduct, productVariations);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, variableProduct.id]); //
-
-  React.useEffect(() => {
-    return () => {
-      useVariableProductStore.getState().reset();
-    };
-  }, []);
 
   if (isLoading) return <Loader h={h} />;
 
