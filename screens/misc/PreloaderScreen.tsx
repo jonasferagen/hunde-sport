@@ -24,9 +24,9 @@ export const PreloaderScreen = () => {
 
   // static labels for the 3 sequential steps
   const labels = [
-    "Henter skrifttyper",
-    "Henter handlekurv",
-    "Henter kategorier",
+    "Henter skrifttyper..",
+    "Henter handlekurv..",
+    "Henter kategorier..",
   ] as const;
 
   // figure out which step is active purely from readiness
@@ -125,9 +125,7 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
   const progress = draining
     ? total && total > 0
       ? `(${Math.min(count, total)}/${total})`
-      : count
-        ? `(${count}…)`
-        : "…"
+      : undefined
     : undefined;
 
   const retry = error
