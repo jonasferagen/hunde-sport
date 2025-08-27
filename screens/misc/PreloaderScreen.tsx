@@ -122,11 +122,8 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
 
   const count = items.length;
   const draining = enabled && (isFetching || hasNextPage);
-  const progress = draining
-    ? total && total > 0
-      ? `(${Math.min(count, total)}/${total})`
-      : undefined
-    : undefined;
+  const progress =
+    draining && total > 0 ? `(${Math.min(count, total)}/${total})` : undefined;
 
   const retry = error
     ? async () => {
