@@ -3,7 +3,6 @@ import React from "react";
 import { openModal } from "@/stores/ui/modalStore";
 import {
   createPurchasable,
-  Purchasable,
   PurchasableProduct,
   VariableProduct,
 } from "@/types";
@@ -29,7 +28,7 @@ export const ProductPurchaseFlow = ({
           close={() => api.close()}
         />
       ),
-      purchasable
+      product as VariableProduct
     );
 
   return (

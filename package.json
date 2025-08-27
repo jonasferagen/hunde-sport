@@ -2,6 +2,10 @@
   "name": "hunde-sport",
   "main": "index.ts",
   "version": "1.0.9",
+  "config": {
+    "app_pkg_prod": "com.anonymous.hundesport",
+    "app_pkg_dev": "com.anonymous.hundesport.dev"
+  },
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
@@ -9,14 +13,20 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "android:prebuild": "expo prebuild --platform android --clean",
-    "android:logs": "adb logcat -v color -v time --pid $(adb shell pidof -s com.anonymous.hundesport) ReactNativeJS:V ReactNative:V *:S",
+    "android:logs:dev": "adb logcat -v color -v time --pid $(adb shell pidof -s $npm_package_config_app_pkg_dev) ReactNativeJS:V ReactNative:V *:S",
+    "android:logs:prod": "adb logcat -v color -v time --pid $(adb shell pidof -s $npm_package_config_app_pkg_prod) ReactNativeJS:V ReactNative:V *:S",
+    "android:install": "adb install -r $(ls -t dist/*.apk | head -n1)",
+    "android:build": "eas build --local -p android --profile production --output ./dist/app-${npm_package_version}-prod.aab",
+    "android:build-apk": "eas build --local -p android --profile internal-apk-dev --output ./dist/app-${npm_package_version}-dev.apk",
+    "android:package": "adb shell pm list packages | grep hundesport && adb shell dumpsys package ${npm_package_config_app_pkg_dev} | grep version || true && adb shell dumpsys package ${npm_package_config_app_pkg_prod} | grep version || true",
+    "android:open": "PKG=$npm_package_config_app_pkg_dev; adb shell pm path $PKG >/dev/null 2>&1 || PKG=$npm_package_config_app_pkg_prod; echo Launching $PKG && adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1",
+    "android:stop": "PKG=$npm_package_config_app_pkg_dev; adb shell pm path $PKG >/dev/null 2>&1 || PKG=$npm_package_config_app_pkg_prod; echo Stopping $PKG && adb shell am force-stop $PKG",
+    "android:clear": "PKG=$npm_package_config_app_pkg_dev; adb shell pm path $PKG >/dev/null 2>&1 || PKG=$npm_package_config_app_pkg_prod; echo Clearing $PKG && adb shell pm clear $PKG",
+    "android:which": "for P in $npm_package_config_app_pkg_dev $npm_package_config_app_pkg_prod; do adb shell pm path $P >/dev/null 2>&1 && echo Found $P && adb shell dumpsys package $P | grep -iE 'version(Name|Code)'; done",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "typecheck": "tsc --noEmit",
-    "build:aab": "eas build --local -p android --profile production --output ./dist/app-${npm_package_version}-prod.aab",
-    "build:apk": "eas build --local -p android --profile internal-apk-dev --output ./dist/app-${npm_package_version}-dev.apk",
-    "install:apk": "adb install -r $(ls -t dist/*.apk | head -n1)"
+    "typecheck": "tsc --noEmit"
   },
   "engines": {
     "node": "22.18.0",

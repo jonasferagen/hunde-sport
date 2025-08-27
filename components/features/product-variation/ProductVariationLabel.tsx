@@ -1,4 +1,5 @@
 // ProductSelectionStatus.tsx
+/*
 import React from "react";
 
 import { ThemedText, ThemedXStack } from "@/components/ui";
@@ -25,3 +26,4 @@ export const ProductSelectionStatus: React.FC<Props> = ({ ...textProps }) => {
     </ThemedXStack>
   );
 };
+*/

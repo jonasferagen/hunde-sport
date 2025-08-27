@@ -1,28 +1,35 @@
 // ProductVariationsModal.tsx
 import { X } from "@tamagui/lucide-icons";
 import React from "react";
-import { Sheet } from "tamagui";
+import { ScrollView, Sheet } from "tamagui";
 
-import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
+import {
+  ThemedButton,
+  ThemedText,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui";
 import { spacePx } from "@/lib/helpers";
 import { useModalStore } from "@/stores/ui/modalStore";
-import { useVariableProductStore } from "@/stores/useProductVariationStore";
+/*
+import {
+  //selectSelectedVariation,
+  useVariableProductStore,
+} from "@/stores/useProductVariationStore"; */
 import {
   createPurchasable,
-  Product,
-  Purchasable as VariableProduct,
   PurchasableProduct,
   VariableProduct,
 } from "@/types";
 
 import {
-  ProductAvailabilityStatus,
+  // ProductAvailabilityStatus,
   ProductImage,
   ProductPriceSimple,
   ProductTitle,
 } from "../product/display";
 import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
-import { ProductSelectionStatus } from "./ProductVariationLabel";
+//import { ProductSelectionStatus } from "./ProductVariationLabel";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 const gapPx = spacePx("$3");
@@ -48,88 +55,108 @@ export const Inner = React.memo(function Inner({
 }: InnerProps) {
   const hasOpened = useModalStore((s) => s.status === "open");
   // 1) Track selected variation locally
+
+  /*
   const getSelectedVariation = useVariableProductStore(
     (s) => s.getSelectedVariation
   );
-  // const productVariation = getSelectedVariation();
-
+  */
+  //const productVariation = getSelectedVariation();
+  const productVariation = undefined;
   // 2) Derive the working purchasable from (product, variation)
   const purchasable = React.useMemo(
     () =>
       createPurchasable({
         product: variableProduct as PurchasableProduct,
+        productVariation,
       }),
-    [variableProduct]
+    [variableProduct, productVariation]
   );
+  /*
+  const selectedVariation = useVariableProductStore(selectSelectedVariation);
+  const selection = useVariableProductStore((s) => s.selection);
+  React.useEffect(() => {
+    console.log(selection);
+    console.log(selectedVariation?.id);
+  }, [selection, selectedVariation]);
 
+  */
   const [bodyH, setBodyH] = React.useState(0);
   const [headerH, setHeaderH] = React.useState(0);
   const [footerH, setFooterH] = React.useState(0);
-  const [contentH, setContentH] = React.useState(0);
 
-  const onBodyLayout = (e: any) =>
-    setBodyH(Math.round(e.nativeEvent.layout.height));
-  const onHeaderLayout = (e: any) =>
-    setHeaderH(Math.round(e.nativeEvent.layout.height));
-  const onFooterLayout = (e: any) =>
-    setFooterH(Math.round(e.nativeEvent.layout.height));
+  // avoid setState loops from tiny layout jitter
+  const setRounded = (set: (n: number) => void) => (e: any) => {
+    const h = Math.round(e.nativeEvent.layout.height);
+    set((prev) => (prev === h ? prev : h));
+  };
+
+  const onBodyLayout = setRounded(setBodyH);
+  const onHeaderLayout = setRounded(setHeaderH);
+  const onFooterLayout = setRounded(setFooterH);
 
   const IMAGE_H = 150;
   const gaps = 3 * gapPx;
-  const cH = headerH + footerH + IMAGE_H + gaps;
-  const availableForOptions = Math.max(0, bodyH - cH);
+
+  const layoutReady = bodyH > 0 && headerH > 0 && footerH > 0;
+  const availableForOptions = React.useMemo(
+    () => Math.max(0, bodyH - (headerH + footerH + IMAGE_H + gaps)),
+    [bodyH, headerH, footerH]
+  );
 
   return (
-    <ThemedYStack f={1} mih={0} onLayout={onBodyLayout} gap="$3">
+    <ThemedYStack
+      f={1}
+      mih={0}
+      onLayout={onBodyLayout}
+      gap="$3"
+      collapsable={false}
+    >
       {/* header */}
       <ThemedXStack split onLayout={onHeaderLayout}>
-        <ProductTitle product={purchasable.product} fs={1} />
+        <ProductTitle product={variableProduct} fs={1} />
         <ThemedButton circular onPress={close}>
           <X />
         </ThemedButton>
       </ThemedXStack>
 
       {/* image */}
-      <ThemedYStack w="100%" h={IMAGE_H}>
+      <ThemedYStack w="100%" h={IMAGE_H} boc="green" bw={1}>
         {hasOpened && (
-          <ProductImage
-            product={purchasable.activeProduct}
-            img_height={IMAGE_H}
-          />
+          <ProductImage product={variableProduct} img_height={IMAGE_H} />
         )}
       </ThemedYStack>
 
       {/* variations */}
-      <Sheet.ScrollView
-        style={
-          availableForOptions ? { maxHeight: availableForOptions } : undefined
-        }
-        keyboardShouldPersistTaps="always"
-        onContentSizeChange={(_w, h) => setContentH(Math.round(h))}
-        scrollEnabled={contentH > availableForOptions}
+      <ScrollView
+        // Do NOT control scrollEnabled; don't use onContentSizeChange
+        keyboardShouldPersistTaps="handled"
+        style={layoutReady ? { maxHeight: availableForOptions } : undefined}
+        // Optional: prevents unmounting children while scrolling on Android
+        removeClippedSubviews={false}
       >
-        {hasOpened && (
+        {hasOpened && layoutReady && (
           <ProductVariationSelect
+            key={variableProduct.id} // stable key
             variableProduct={variableProduct}
             h={availableForOptions}
           />
         )}
-      </Sheet.ScrollView>
+      </ScrollView>
 
       {/* status & price */}
       <ThemedYStack onLayout={onFooterLayout}>
-        <ProductSelectionStatus />
         <ThemedXStack split>
-          <ProductAvailabilityStatus
-            productAvailability={purchasable.activeProduct.availability}
-          />
           <ProductPriceSimple
-            productPrices={purchasable.prices}
-            productAvailability={purchasable.availability}
+            productPrices={variableProduct.prices}
+            productAvailability={variableProduct.availability}
           />
         </ThemedXStack>
         <PurchaseButtonSmart
-          purchasable={purchasable}
+          purchasable={createPurchasable({
+            product: variableProduct as PurchasableProduct,
+            productVariation: undefined, // wire from store if you want
+          })}
           onSuccess={close}
           inModal
         />

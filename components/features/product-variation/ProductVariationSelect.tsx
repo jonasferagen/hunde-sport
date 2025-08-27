@@ -37,11 +37,11 @@ export const ProductVariationSelect = ({ variableProduct, h }: Props) => {
   const init = useVariableProductStore((s) => s.init);
   const setVariations = useVariableProductStore((s) => s.setVariations);
 
-  // init from product (hard reset inside init)
   React.useEffect(() => {
     init(variableProduct);
-    return () => useVariableProductStore.getState().reset(); // unmount cleanup
-  }, [variableProduct, init]);
+    return () => useVariableProductStore.getState().reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variableProduct.id, init]); // <-- use the id
 
   // supply variations when they arrive
   React.useEffect(() => {
@@ -51,10 +51,10 @@ export const ProductVariationSelect = ({ variableProduct, h }: Props) => {
   }, [isLoading, productVariations, setVariations]);
 
   const groups = useVariableProductStore((s) => s.groups);
+
   const selection = useVariableProductStore((s) => s.selection);
   const select = useVariableProductStore((s) => s.select);
-
-  if (isLoading) return <Loader h={h} />;
+  if (isLoading || groups.length === 0) return <Loader h={h} />;
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
@@ -73,7 +73,7 @@ export const ProductVariationSelect = ({ variableProduct, h }: Props) => {
             <ThemedYStack w="100%" gap="$2">
               {optionsInTax.map((opt) => (
                 <AttributeOption
-                  key={opt.term.slug}
+                  key={`${taxonomy.name}:${opt.term.slug}`} // <-- change
                   option={opt}
                   selected={selected}
                   onSelect={select}
@@ -130,7 +130,7 @@ const AttributeOption = React.memo(function AttributeOption({
         bw={2}
         aria-label={term.label}
         onPress={onPress}
-        disabled={!onPress}
+        disabled={!enabled}
       >
         <ThemedXStack f={1} split>
           <ThemedXStack gap="$1">

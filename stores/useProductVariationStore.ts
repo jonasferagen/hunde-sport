@@ -83,6 +83,8 @@ export const useVariableProductStore = create<State & Actions>()(
     },
 
     setVariations(variations) {
+      console.warn("setting variations");
+
       const variationById = new Map<number, ProductVariation>(
         (variations ?? []).map((v) => [v.id, v])
       );

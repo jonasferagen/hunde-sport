@@ -30,10 +30,7 @@ export default (): ExpoConfig => ({
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
-  ios: {
-    supportsTablet: true,
-    bundleIdentifier: PACKAGE, // iOS will also be ".dev" when dev variant
-  },
+  platforms: ["android"],
   android: {
     package: PACKAGE,
     edgeToEdgeEnabled: true,
@@ -43,11 +40,6 @@ export default (): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     permissions: ["INTERNET", "ACCESS_NETWORK_STATE", "VIBRATE"],
-  },
-  web: {
-    bundler: "metro",
-    output: "static",
-    favicon: "./assets/images/favicon.png",
   },
   plugins: [
     "expo-router",
