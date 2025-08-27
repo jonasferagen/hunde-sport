@@ -1,8 +1,7 @@
-import { PreloaderScreen } from '@/screens/misc/PreloaderScreen';
-
+import { PreloaderScreen } from "@/screens/misc/PreloaderScreen";
 
 const App = () => {
-    return <PreloaderScreen />;
+  return <PreloaderScreen />;
 };
 
 export default App;

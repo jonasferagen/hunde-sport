@@ -1,225 +1,211 @@
 // app/(preloader)/PreloaderScreen.tsx
-import { RefreshCw } from '@tamagui/lucide-icons';
-import { useFonts } from 'expo-font';
-import { Redirect } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import React from 'react';
-import { Button, Image, Paragraph, Theme, XStack,YStack } from 'tamagui';
+import { RefreshCw } from "@tamagui/lucide-icons";
+import { useFonts } from "expo-font";
+import { router } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import React from "react";
+import { Image, Paragraph } from "tamagui";
 
-import { ThemedButton, ThemedText, ThemedYStack } from '@/components/ui';
-import { CallToActionButton } from '@/components/ui/CallToActionButton';
-import { useCart } from '@/hooks/data/Cart';
-import { useProductCategories } from '@/hooks/data/ProductCategory';
-import { queryClient } from '@/lib/queryClient';
-import { useCartStore } from '@/stores/cartStore';
-import { useProductCategoryStore } from '@/stores/productCategoryStore';
-SplashScreen.preventAutoHideAsync().catch(() => { });
+import { ThemedText, ThemedYStack } from "@/components/ui";
+import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { useCart } from "@/hooks/data/Cart";
+import { useProductCategories } from "@/hooks/data/ProductCategory";
+import { queryClient } from "@/lib/queryClient";
+import { useCartStore } from "@/stores/cartStore";
+import { useProductCategoryStore } from "@/stores/productCategoryStore";
 
-type LoaderState = {
-    key: 'fonts' | 'cart' | 'categories';
-    ready: boolean;
-    error: Error | null;
-    progress?: string;          // optional granular progress
-    label: string | null;              // human-facing summary reflecting state/error/progress
-    retry?: () => void;
-};
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 /** -------------------- Screen -------------------- **/
 export const PreloaderScreen = () => {
-    const fonts = useFontsLoader();
-    const cart = useCartLoader({ enabled: fonts.ready });
-    const categories = useProductCategoriesLoader({ enabled: cart.ready });
+  const fonts = useFontsStep();
+  const cart = useCartStep({ enabled: fonts.ready });
+  const categories = useCategoriesStep({ enabled: cart.ready });
 
-    const loaders: LoaderState[] = [fonts, cart, categories];
-    const allReady = loaders.every(l => l.ready);
-    if (allReady) return <Redirect href="/(app)" />;
+  // static labels for the 3 sequential steps
+  const labels = [
+    "Henter skrifttyper",
+    "Henter handlekurv",
+    "Henter kategorier",
+  ] as const;
 
-    const splashImage = require('@/assets/images/splash-icon.png');
+  // figure out which step is active purely from readiness
+  const steps = [fonts, cart, categories] as const;
+  const activeIndex = steps.findIndex((s) => !s.ready);
+  const allReady = activeIndex === -1;
+  const active = allReady ? null : steps[activeIndex];
 
-    // derive the *only* active step:
-    const active =
-        !fonts.ready || fonts.error ? fonts :
-            !cart.ready || cart.error ? cart :
-                !categories.ready || categories.error ? categories :
-                    null;
+  React.useEffect(() => {
+    if (fonts.ready) SplashScreen.hideAsync().catch(() => {});
+  }, [fonts.ready]);
 
+  React.useEffect(() => {
+    if (allReady) router.replace("/(app)");
+  }, [allReady]);
 
-    const label = active ? active.label : null;
-    const error = active?.error;
-    const retry = active?.retry;
+  return (
+    <PreloaderView
+      label={allReady ? null : labels[activeIndex]}
+      progress={active?.progress}
+      error={active?.error}
+      onRetry={active?.retry}
+    />
+  );
+};
 
+/** -------------------- Steps -------------------- **/
+type StepState = {
+  ready: boolean;
+  progress?: string;
+  error?: Error | null;
+  retry?: () => void;
+};
 
-    const LOGO_DIM = 200;
+/* 1) Fonts */
+function useFontsStep(): StepState {
+  const [ready] = useFonts({
+    Montserrat: require("@/assets/fonts/Montserrat/Montserrat-Regular.ttf"),
+    "Montserrat-Bold": require("@/assets/fonts/Montserrat/Montserrat-Bold.ttf"),
+  });
+  return { ready };
+}
 
-    return (
+/* 2) Cart */
+function useCartStep({ enabled }: { enabled: boolean }): StepState {
+  const { data, isSuccess, isError, error, refetch, isFetching } = useCart({
+    enabled,
+  });
+  const setCart = useCartStore((s) => s.setCart);
 
-        <ThemedYStack f={1} box p="$4">
-            {/* Top half: logo sits at bottom */}
-            <ThemedYStack f={1} jc="flex-end" ai="center" mt={Math.round(LOGO_DIM / 2)}>
-                <Image source={splashImage} style={{ width: LOGO_DIM, height: LOGO_DIM }} />
-            </ThemedYStack>
+  React.useEffect(() => {
+    if (isSuccess) setCart(data ?? null);
+  }, [isSuccess, data, setCart]);
 
-            {/* Bottom half: status panel + extra text, aligned to top */}
-            <ThemedYStack f={1} jc="flex-start" ai="center" >
-                {/* Status panel */}
-                <ThemedYStack
-                    w="100%"
-                    maw={420}
-                    p="$2"
-                    br="$2"
-                    bg="$backgroundHover"
-                    minHeight={120}
-                    ai="center"
-                    opacity={label || error ? 1 : 0}
-                >
-                    {!!label && (
-                        <ThemedText size="$4" tabular ta="center" o={error ? 1 : 0.9}>
-                            {label}
-                        </ThemedText>
-                    )}
+  const ready = !!data && isSuccess;
+  const progress = enabled && isFetching ? "…" : undefined;
+  const retry = isError ? () => refetch() : undefined;
 
-                    {error && (
-                        <>
-                            <Paragraph ta="center" o={0.8}>{error.message}</Paragraph>
-                            {!!retry && (
-                                <CallToActionButton
-                                    w="60%"
-                                    label="Prøv igjen"
-                                    after={<RefreshCw />}
-                                    onPress={retry}
-                                />
-                            )}
-                        </>
-                    )}
-                </ThemedYStack>
-            </ThemedYStack>
+  return {
+    ready,
+    progress,
+    error: (isError ? (error as Error) : null) ?? null,
+    retry,
+  };
+}
+
+/* 3) Product Categories */
+function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
+  const setProductCategories = useProductCategoryStore(
+    (s) => s.setProductCategories
+  );
+
+  const {
+    items,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    isFetching,
+    refetch,
+    total,
+  } = useProductCategories({ enabled });
+
+  // drain pages while this step is active
+  React.useEffect(() => {
+    if (!enabled) return;
+    if (!isFetching && hasNextPage) fetchNextPage();
+  }, [enabled, isFetching, hasNextPage, fetchNextPage]);
+
+  // push into store
+  React.useEffect(() => {
+    if (enabled) setProductCategories(items);
+  }, [enabled, items, setProductCategories]);
+
+  const count = items.length;
+  const draining = enabled && (isFetching || hasNextPage);
+  const progress = draining
+    ? total && total > 0
+      ? `(${Math.min(count, total)}/${total})`
+      : count
+        ? `(${count}…)`
+        : "…"
+    : undefined;
+
+  const retry = error
+    ? async () => {
+        await queryClient.resetQueries({ queryKey: ["product-categories"] });
+        refetch();
+      }
+    : undefined;
+
+  const ready = enabled && !draining && !error;
+
+  return { ready, progress, error: (error as Error) ?? null, retry };
+}
+
+/** -------------------- View -------------------- **/
+type PreloaderViewProps = {
+  label: string | null;
+  progress?: string;
+  error?: Error | null;
+  onRetry?: () => void;
+};
+
+function PreloaderView({
+  label,
+  progress,
+  error,
+  onRetry,
+}: PreloaderViewProps) {
+  const showPanel = !!label || !!progress || !!error;
+  return (
+    <ThemedYStack f={1} box p="$4">
+      <ThemedYStack f={1} jc="flex-end" ai="center" mt={Math.round(200 / 2)}>
+        <Image
+          source={require("@/assets/images/splash-icon.png")}
+          style={{ width: 200, height: 200 }}
+        />
+      </ThemedYStack>
+
+      <ThemedYStack f={1} jc="flex-start" ai="center">
+        <ThemedYStack
+          w="100%"
+          maw={420}
+          p="$2"
+          br="$2"
+          bg="$backgroundHover"
+          minHeight={120}
+          ai="center"
+          opacity={showPanel ? 1 : 0}
+        >
+          {!!label && (
+            <ThemedText size="$4" tabular ta="center" o={error ? 1 : 0.9}>
+              {label}
+            </ThemedText>
+          )}
+
+          {!!progress && !error && (
+            <Paragraph ta="center" o={0.8}>
+              {progress}
+            </Paragraph>
+          )}
+
+          {error && (
+            <>
+              <Paragraph ta="center" o={0.8}>
+                {error.message}
+              </Paragraph>
+              {!!onRetry && (
+                <CallToActionButton
+                  w="60%"
+                  label="Prøv igjen"
+                  after={<RefreshCw />}
+                  onPress={onRetry}
+                />
+              )}
+            </>
+          )}
         </ThemedYStack>
-
-    );
-}
-
-/** -------------------- Loaders -------------------- **/
-type Opts = { enabled: boolean };
-
-/* Fonts */
-export function useFontsLoader(): LoaderState {
-    const [ready] = useFonts({
-        Inter: require('@/assets/fonts/Inter/Inter-Regular.ttf'),
-        'Inter-Bold': require('@/assets/fonts/Inter/Inter-Bold.ttf'),
-        Montserrat: require('@/assets/fonts/Montserrat/Montserrat-Regular.ttf'),
-        'Montserrat-Bold': require('@/assets/fonts/Montserrat/Montserrat-Bold.ttf'),
-    });
-
-    // hide native splash when fonts are ready so our UI renders correctly
-    const hidden = React.useRef(false);
-    React.useEffect(() => {
-        if (ready && !hidden.current) {
-            hidden.current = true;
-            SplashScreen.hideAsync().catch(() => { });
-        }
-    }, [ready]);
-
-    const progress = ready ? undefined : 'Laster skrifttyper…';
-
-    return {
-        key: 'fonts',
-        ready,
-        error: null,
-        progress,
-        label: ready ? null : (progress ?? 'Laster skrifttyper…'),
-    };
-}
-
-/* Cart */
-export function useCartLoader({ enabled }: Opts): LoaderState {
-    const { data, error, isSuccess, isError, refetch } = useCart({ enabled });
-    const setCart = useCartStore(s => s.setCart);
-
-
-    React.useEffect(() => {
-        if (isSuccess) {
-            setCart(data ?? null);
-        }
-    }, [isSuccess, data, setCart]);
-
-    const ready = !!data && isSuccess;
-    const progress = enabled && !isSuccess && !isError ? 'Henter handlekurv…' : undefined;
-
-    return {
-        key: 'cart',
-        ready,
-        error: isError ? (error as Error) : null,
-        progress,
-        label:
-            isError
-                ? 'Handlekurv: kunne ikke hentes'
-                : ready
-                    ? null
-                    : (progress ?? 'Initialiserer handlekurv…'),
-        retry: () => refetch(),
-    };
-}
-
-/* Product Categories */
-export function useProductCategoriesLoader({ enabled }: Opts): LoaderState & {
-    count: number; total?: number;
-} {
-    const setProductCategories = useProductCategoryStore(s => s.setProductCategories);
-
-    const {
-        error,
-        items,
-        isLoading,
-        refetch,
-        hasNextPage,
-        isFetchingNextPage,
-        fetchNextPage,
-        isFetching,
-        total,
-    } = useProductCategories();
-
-    // drain pages while enabled
-    React.useEffect(() => {
-        if (!enabled) return;
-        if (error || isLoading) return;
-        if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-        }
-    }, [enabled, error, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-    // push to store
-    React.useEffect(() => {
-        setProductCategories(items);
-    }, [items, setProductCategories]);
-
-    const draining = isLoading || isFetching || isFetchingNextPage || hasNextPage;
-    const count = items.length;
-
-    const progress =
-        enabled && !error && draining
-            ? `Henter kategorier…${total > 0 ? ` (${Math.min(count, total)}/${total})`
-                : count ? ` (${count}…)` : ''
-            }`
-            : undefined;
-
-    const ready = enabled && !draining && !error;
-
-    return {
-        key: 'categories',
-        ready,
-        error: error ?? null,
-        progress,
-        label:
-            error
-                ? 'Kategorier: kunne ikke hentes'
-                : ready
-                    ? null
-                    : (progress ?? 'Henter kategorier…'),
-        retry: async () => {
-            await queryClient.resetQueries({ queryKey: ['product-categories'] });
-            refetch();
-        },
-        count,
-        total,
-    };
+      </ThemedYStack>
+    </ThemedYStack>
+  );
 }

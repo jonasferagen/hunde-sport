@@ -15,7 +15,8 @@
     "prebuild:android": "expo prebuild --platform android --clean",
     "build:aab": "eas build --local -p android --profile production --output ./dist/app-${npm_package_version}-prod.aab",
     "build:apk": "eas build --local -p android --profile internal-apk-dev --output ./dist/app-${npm_package_version}-dev.apk",
-    "install:apk": "adb install -r $(ls -t dist/*.apk | head -n1)"
+    "install:apk": "adb install -r $(ls -t dist/*.apk | head -n1)",
+    "logs:apk": "adb logcat -v color -v time --pid $(adb shell pidof -s com.anonymous.hundesport) ReactNativeJS:V ReactNative:V *:S"
   },
   "engines": {
     "node": "22.18.0",
