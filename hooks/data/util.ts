@@ -44,15 +44,10 @@ export const makeQueryOptions = <T>() => {
   return {
     //  placeHolderData: (prev: QueryResult<T>) => prev,
     initialPageParam: 1,
-    getNextPageParam: (
-      lastPage: Page<T>,
-      allPages: Page<T>[],
-      lastPageParam: number
-    ) => {
+    getNextPageParam: (lastPage: Page<T>, allPages: Page<T>[]) => {
       const nextPage = allPages.length + 1;
       const totalPages = lastPage?.totalPages;
       const out = totalPages && nextPage <= totalPages ? nextPage : undefined;
-      console.log("[GNP]", { lastPageParam, nextPage, totalPages, out }); // 👈
       return out;
     },
   };

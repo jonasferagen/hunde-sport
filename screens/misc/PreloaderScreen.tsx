@@ -101,6 +101,7 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
 
   const {
     items,
+    status,
     error,
     hasNextPage,
     fetchNextPage,
@@ -110,24 +111,52 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
     refetch,
     total,
   } = useProductCategories({ enabled });
+  const count = items.length;
+  console.log(isFetchingNextPage, isFetching, hasNextPage, total, count);
+  console.log(
+    "enabled:" + enabled,
+    "fetchStatus:" + fetchStatus,
+    "status:" + status,
+    error
+  );
 
-  console.log(isFetchingNextPage, isFetching, hasNextPage, total, items.length);
-  console.log(fetchStatus, error);
-
-  // drain pages while this step is active
   React.useEffect(() => {
-    if (!enabled || !hasNextPage) return;
-    if (!isFetchingNextPage && fetchStatus !== "paused") fetchNextPage();
-  }, [enabled, isFetchingNextPage, hasNextPage, fetchNextPage, fetchStatus]);
+    if (!enabled) return;
+    if (status !== "success") return; // wait for first page
+    if (!hasNextPage) return;
+    if (fetchStatus === "paused") return;
+    if (isFetchingNextPage) return;
+
+    // new page arrived (pages increased) or first success — kick next fetch
+    void fetchNextPage();
+
+    console.warn(
+      count,
+      enabled,
+      status,
+      hasNextPage,
+      isFetchingNextPage,
+      fetchNextPage,
+      fetchStatus
+    );
+  }, [
+    count,
+    enabled,
+    status,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    fetchStatus,
+  ]);
 
   // push into store
   React.useEffect(() => {
     if (enabled) setProductCategories(items);
   }, [enabled, items, setProductCategories]);
 
-  const count = items.length;
-  const draining = enabled && (isFetching || hasNextPage);
-  const progress = draining
+  const ready = status === "success" && !hasNextPage && !isFetchingNextPage;
+
+  const progress = !ready
     ? total && total > 0
       ? `(${Math.min(count, total)}/${total})`
       : undefined
@@ -139,8 +168,6 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
         refetch();
       }
     : undefined;
-
-  const ready = enabled && !draining && !error;
 
   return { ready, progress, error: (error as Error) ?? null, retry };
 }

@@ -84,15 +84,7 @@ export const TileFixed = React.memo(function TileFixed({
             opacity={0.8}
             pointerEvents="none"
           />
-          <ThemedText
-            bold
-            col="$color"
-            numberOfLines={titleLines}
-            ellipse
-            ta="center"
-          >
-            {title}
-          </ThemedText>
+          <ThemedText ta="center">{title}</ThemedText>
         </ThemedYStack>
       )}
 
