@@ -1,10 +1,11 @@
 
 import React from "react";
 
-import { createPurchasable, Purchasable, PurchasableProduct } from "@/types";
-import { PurchaseButtonSmart } from "./PurchaseButtonSmart";
 import { openModal } from "@/stores/ui/modalStore";
+import { createPurchasable, Purchasable, PurchasableProduct } from "@/types";
+
 import { ProductVariationsModal } from "./ProductVariationsModal";
+import { PurchaseButtonSmart } from "./PurchaseButtonSmart";
 
 export const ProductPurchaseFlow = ({ product }: { product: PurchasableProduct }) => {
 

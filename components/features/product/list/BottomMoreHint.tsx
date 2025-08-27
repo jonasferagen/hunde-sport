@@ -1,9 +1,10 @@
 // components/misc/BottomMoreHint.tsx
-import { ThemedText, ThemedXStack } from '@/components/ui';
-import { THEME_HINT } from '@/config/app';
 import { ChevronDown } from '@tamagui/lucide-icons';
 import React from 'react';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+
+import { ThemedText, ThemedXStack } from '@/components/ui';
+import { THEME_HINT } from '@/config/app';
 
 export type BottomMoreHintHandle = {
     kick: () => void;   // show now + restart idle timer

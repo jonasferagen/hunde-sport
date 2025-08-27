@@ -1,7 +1,8 @@
 // components/ui/TileBadge.tsx
-import { ThemedXStack } from '@/components/ui';
 import React from 'react';
 import { StackProps, ThemeName } from 'tamagui';
+
+import { ThemedXStack } from '@/components/ui';
 
 type Corner = 'tl' | 'tr' | 'bl' | 'br';
 

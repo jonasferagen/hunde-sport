@@ -141,7 +141,7 @@ function makeVariantSet(base: string) {
 export function buildThemes<C extends PaletteConfig>(config: C) {
     const themes = {} as Record<ThemeNames<C>, ThemeTemplate>
 
-    for (const key of Object.keys(config) as Array<Extract<keyof C, string>>) {
+    for (const key of Object.keys(config) as Extract<keyof C, string>[]) {
         const { light, dark } = config[key]
         const lightSet = makeVariantSet(light);
         const darkSet = makeVariantSet(dark);

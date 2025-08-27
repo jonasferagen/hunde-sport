@@ -1,10 +1,10 @@
 // config/routes.ts
+import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
+import { HrefObject,useGlobalSearchParams, usePathname } from 'expo-router';
+import React from 'react';
+
 import { ProductCategory } from '@/domain/ProductCategory';
 import { SimpleProduct, VariableProduct } from '@/types';
-import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
-
-import { usePathname, useGlobalSearchParams, HrefObject } from 'expo-router';
-import React from 'react';
 export type NavPolicy = 'switch' | 'push'; // | 'replace';
 
 export interface Route<TArgs extends any[] = any[]> {

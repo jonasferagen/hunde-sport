@@ -1,9 +1,10 @@
 // components/product/ProductPrice.tsx
-import { ThemedSpinner, ThemedText, ThemedTextProps, ThemedXStack } from '@/components/ui/themed-components';
-import { formatPrice, useProductPricing } from '@/domain/pricing';
-import { Product, ProductAvailability, ProductPrices, ProductPriceRange as TProductPriceRange } from '@/types';
 import { StarFull } from '@tamagui/lucide-icons';
 import React from 'react';
+
+import { ThemedSpinner, ThemedText, ThemedTextProps, ThemedXStack } from '@/components/ui/themed-components';
+import { formatPrice, useProductPricing } from '@/domain/pricing';
+import { Product, ProductAvailability, ProductPriceRange as TProductPriceRange,ProductPrices } from '@/types';
 
 type ProductPriceProps = {
     product: Product;

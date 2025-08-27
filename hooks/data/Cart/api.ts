@@ -1,8 +1,9 @@
+import { ApiResponse } from 'apisauce';
+
 import { ENDPOINTS } from '@/config/api';
 import { Cart, mapToCart } from '@/domain/Cart/Cart';
 import { apiClient } from '@/lib/apiClient';
 import { ApiError } from '@/lib/httpError';
-import { ApiResponse } from 'apisauce';
 
 const handleResponse = (
     response: ApiResponse<any>,

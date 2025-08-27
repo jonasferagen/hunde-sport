@@ -1,13 +1,15 @@
-import { BOTTOM_BAR_HEIGHT, THEME_BOTTOM_BAR } from '@/config/app';
-import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { Home, Search, ShoppingCart } from '@tamagui/lucide-icons';
 import { usePathname } from 'expo-router';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { styled, Tabs, Text } from 'tamagui';
-import { ThemedLinearGradient, ThemedText, ThemedYStack } from '../ui';
-import { useDrawerStore } from '@/stores/ui/drawerStore';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { styled, Tabs, Text } from 'tamagui';
+
+import { BOTTOM_BAR_HEIGHT, THEME_BOTTOM_BAR } from '@/config/app';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
+import { useDrawerStore } from '@/stores/ui/drawerStore';
+
+import { ThemedLinearGradient, ThemedText, ThemedYStack } from '../ui';
 
 
 const StyledTab = styled(Tabs.Tab, {

@@ -1,4 +1,5 @@
 import * as Application from 'expo-application';
+
 import { ThemedText, ThemedXStack } from "../ui";
 export const AppVersion = () => {
   const version = Application.nativeApplicationVersion ?? '?.?'; // versionName / CFBundleShortVersionString

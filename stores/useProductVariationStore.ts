@@ -1,9 +1,10 @@
 // stores/useVariableProductStore.ts
-import { VariableProductOptions, type SelectOption, type Taxonomy, type Term } from '@/domain/Product/helpers/VariableProductOptions';
+import { create } from 'zustand';
+
+import { type SelectOption, type Taxonomy, type Term,VariableProductOptions } from '@/domain/Product/helpers/VariableProductOptions';
 import type { VariableProduct } from '@/domain/Product/VariableProduct';
 import type { ProductPriceRange, ProductVariation } from '@/types';
 import { getProductPriceRange } from '@/types';
-import { create } from 'zustand';
 
 export type TermSelection = Map<string, Term | null>;
 

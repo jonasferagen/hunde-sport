@@ -1,7 +1,7 @@
 // stores/drawerStore.ts
-import { create } from 'zustand';
-import { DrawerActions } from '@react-navigation/native';
 import type { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { DrawerActions } from '@react-navigation/native';
+import { create } from 'zustand';
 
 export type DrawerStatus = 'closed' | 'opening' | 'open' | 'closing';
 

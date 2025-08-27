@@ -1,11 +1,12 @@
 // ProductCategoriesModal.tsx
 
+import { ChevronRight,X } from '@tamagui/lucide-icons';
 import { FlatList } from 'react-native';
 import { H4 } from 'tamagui';
+
 import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import type { ProductCategory } from '@/types';
-import { X, ChevronRight } from '@tamagui/lucide-icons';
 
 export function ProductCategoriesModal({
     productCategories,

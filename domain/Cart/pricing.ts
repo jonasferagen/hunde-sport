@@ -1,4 +1,4 @@
-import { formatPrice, CurrencyHeader } from "@/domain/pricing";
+import { CurrencyHeader,formatPrice } from "@/domain/pricing";
 // types from your message
 export type WcTotals = CurrencyHeader & {
     total_price: string;

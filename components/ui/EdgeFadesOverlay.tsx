@@ -1,9 +1,10 @@
 // components/lists/EdgeFadesOverlay.tsx
-import { ThemedLinearGradient } from '@/components/ui';
 import { rgba } from 'polished';
-import React, { useMemo, useEffect, useCallback } from 'react';
+import React, { useCallback,useEffect, useMemo } from 'react';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { getVariableValue, useTheme, XStack, YStack } from 'tamagui';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+
+import { ThemedLinearGradient } from '@/components/ui';
 
 type Props = {
     orientation: 'horizontal' | 'vertical';

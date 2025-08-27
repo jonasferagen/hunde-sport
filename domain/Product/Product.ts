@@ -1,8 +1,8 @@
-; (global as any).navigator = { product: 'node' };
 import { BaseProductData } from './BaseProduct';
-import { VariableProduct } from './VariableProduct';
-import { SimpleProduct } from './SimpleProduct';
 import { ProductVariation } from './ProductVariation';
+import { SimpleProduct } from './SimpleProduct';
+import { VariableProduct } from './VariableProduct';
+; (global as any).navigator = { product: 'node' };
 
 export type Product = SimpleProduct | VariableProduct | ProductVariation;
 export type PurchasableProduct = SimpleProduct | VariableProduct;

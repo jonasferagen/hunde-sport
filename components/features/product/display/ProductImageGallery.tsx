@@ -1,10 +1,11 @@
-import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
-import { getScaledImageUrl, spacePx } from '@/lib/helpers';
-import { Product } from '@/types';
 import { Galeria } from '@nandorojo/galeria';
 import React, { useMemo, useState } from 'react';
 import { Dimensions } from 'react-native';
 import { ScrollView, XStack, YStack, YStackProps } from 'tamagui';
+
+import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
+import { getScaledImageUrl, spacePx } from '@/lib/helpers';
+import { Product } from '@/types';
 
 interface ProductImageGalleryProps extends YStackProps {
     product: Product;

@@ -1,11 +1,12 @@
-import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
+import React from 'react';
+
 import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from '@/components/features/product/list/ProductRail';
+import { ProductCategoryTiles } from '@/components/features/product-category/ProductCategoryTiles';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { THEME_CATEGORIES, THEME_CATEGORIES_BG, THEME_PRODUCTS_DISCOUNTED, THEME_PRODUCTS_DISCOUNTED_BG, THEME_PRODUCTS_FEATURED, THEME_PRODUCTS_FEATURED_BG, THEME_PRODUCTS_RECENT, THEME_PRODUCTS_RECENT_BG } from '@/config/app';
 import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
-import React from 'react';
 
 
 

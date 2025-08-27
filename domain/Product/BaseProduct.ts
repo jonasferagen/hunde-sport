@@ -1,9 +1,9 @@
 
-; (global as any).navigator = { product: 'node' };
 import { decode } from 'he';
 import { parseDocument } from 'htmlparser2';
 
 import { ProductAttribute } from './ProductAttribute';
+; (global as any).navigator = { product: 'node' };
 
 export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
 const isAllWhitespace = (str: string) => /^\s*$/.test(str);

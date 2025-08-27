@@ -1,12 +1,14 @@
+import { FlashList, FlashListRef } from '@shopify/flash-list';
+import React from 'react';
+import { useWindowDimensions } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
 import { ThemedXStack } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
 import { useVisibleItems } from '@/hooks/ui/useVisibleItems';
 import { Product, PurchasableProduct } from '@/types';
-import { FlashList, FlashListRef } from '@shopify/flash-list';
-import React from 'react';
-import { useWindowDimensions } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
 import { ProductCard } from '../display/ProductCard';
 import { BottomMoreHint, BottomMoreHintHandle } from './BottomMoreHint';
 

@@ -1,9 +1,10 @@
 // useAddToCart.ts
+import { useToastController } from '@tamagui/toast'
+import React from 'react'
+
 import { Purchasable } from '@/domain/Product/Purchasable'
 import { haptic } from '@/lib/haptics'
 import { AddItemOptions, useCartStore } from '@/stores/cartStore'
-import { useToastController } from '@tamagui/toast'
-import React from 'react'
 
 type AddResult = { ok: true } | { ok: false; error?: string }
 

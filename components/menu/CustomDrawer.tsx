@@ -1,19 +1,20 @@
 // CustomDrawerNew.tsx
+import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { X } from '@tamagui/lucide-icons';
+import * as Application from 'expo-application';
+import { rgba } from 'polished';
+import React, { useMemo } from 'react';
+import { getVariableValue, H3, Theme, useTheme } from 'tamagui';
+
 import { Loader } from '@/components/ui/Loader';
+import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 import { THEME_CTA_CHECKOUT, THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from '@/config/app';
 import { useDrawerSettled } from '@/hooks/ui/useDrawerSettled';
-import { X } from '@tamagui/lucide-icons';
-import { getVariableValue, H3, Theme, useTheme } from 'tamagui';
-import { ThemedLinearGradient, ThemedText, ThemedXStack, ThemedYStack } from '../ui';
-import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
-
-import { ProductCategoryTree } from './ProductCategoryTree';
-import { useDrawerStore } from '@/stores/ui/drawerStore';
-import * as Application from 'expo-application';
-import React, { useMemo } from 'react';
-import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { rgba } from 'polished';
 import { resolveThemeToken } from '@/lib/helpers';
+import { useDrawerStore } from '@/stores/ui/drawerStore';
+
+import { ThemedLinearGradient, ThemedText, ThemedXStack, ThemedYStack } from '../ui';
+import { ProductCategoryTree } from './ProductCategoryTree';
 
 export const CustomDrawer = ({ navigation }: { navigation: DrawerContentComponentProps['navigation'] }) => {
     useDrawerSettled();

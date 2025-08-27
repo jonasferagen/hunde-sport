@@ -1,7 +1,8 @@
 // productCategoryStore.ts
-import { ProductCategory } from '@/domain/ProductCategory';
 import React from 'react';
 import { create } from 'zustand';
+
+import { ProductCategory } from '@/domain/ProductCategory';
 
 type Id = number;
 

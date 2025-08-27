@@ -1,9 +1,10 @@
 // hooks/useDrawerSettled.ts
 import { useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer';
 import { useEffect } from 'react';
-import { runOnJS, useAnimatedReaction, useSharedValue, type SharedValue } from 'react-native-reanimated';
-import { DrawerStatus, useDrawerStore } from '@/stores/ui/drawerStore';
+import { runOnJS, type SharedValue,useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 import { useShallow } from 'zustand/react/shallow';
+
+import { DrawerStatus, useDrawerStore } from '@/stores/ui/drawerStore';
 
 type Options = { eps?: number };
 

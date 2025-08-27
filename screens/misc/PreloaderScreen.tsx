@@ -1,18 +1,18 @@
 // app/(preloader)/PreloaderScreen.tsx
-import React from 'react';
-import { Redirect } from 'expo-router';
-import { Theme, YStack, Paragraph, Button, Image, XStack } from 'tamagui';
-import * as SplashScreen from 'expo-splash-screen';
-import { useFonts } from 'expo-font';
-
-import { queryClient } from '@/lib/queryClient';
-import { useProductCategories } from '@/hooks/data/ProductCategory';
-import { useProductCategoryStore } from '@/stores/productCategoryStore';
-import { useCartStore } from '@/stores/cartStore';
-import { useCart } from '@/hooks/data/Cart';
-import { ThemedButton, ThemedText, ThemedYStack } from '@/components/ui';
 import { RefreshCw } from '@tamagui/lucide-icons';
+import { useFonts } from 'expo-font';
+import { Redirect } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import React from 'react';
+import { Button, Image, Paragraph, Theme, XStack,YStack } from 'tamagui';
+
+import { ThemedButton, ThemedText, ThemedYStack } from '@/components/ui';
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
+import { useCart } from '@/hooks/data/Cart';
+import { useProductCategories } from '@/hooks/data/ProductCategory';
+import { queryClient } from '@/lib/queryClient';
+import { useCartStore } from '@/stores/cartStore';
+import { useProductCategoryStore } from '@/stores/productCategoryStore';
 SplashScreen.preventAutoHideAsync().catch(() => { });
 
 type LoaderState = {

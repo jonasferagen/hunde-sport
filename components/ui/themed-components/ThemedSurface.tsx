@@ -1,6 +1,6 @@
 // ThemedSurface.ts
 import React from 'react'
-import { View, styled } from 'tamagui'
+import { styled,View } from 'tamagui'
 
 const PRESS_STYLE = {
     opacity: 0.7,

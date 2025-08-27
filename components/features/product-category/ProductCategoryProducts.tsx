@@ -1,10 +1,10 @@
+import { ThemedYStack } from '@/components/ui';
 import { Loader } from '@/components/ui/Loader';
 import { useProductsByCategory } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-
-import { ThemedYStack } from '@/components/ui';
-import { ProductList } from '../product/list/ProductList';
 import { ProductCategory } from '@/types';
+
+import { ProductList } from '../product/list/ProductList';
 
 export const ProductCategoryProducts = ({ productCategory }: { productCategory: ProductCategory }) => {
     useRenderGuard('ProductCategoryProducts');

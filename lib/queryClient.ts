@@ -1,7 +1,8 @@
 // src/lib/queryClient.ts
-import { QueryClient, onlineManager, focusManager } from '@tanstack/react-query';
 import NetInfo from '@react-native-community/netinfo';
+import { focusManager,onlineManager, QueryClient } from '@tanstack/react-query';
 import { AppState } from 'react-native';
+
 import { ApiError } from '@/lib/httpError';
 
 onlineManager.setEventListener((setOnline) => {

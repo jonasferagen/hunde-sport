@@ -1,10 +1,12 @@
 // CustomHeader.tsx
-import { THEME_HEADER } from '@/config/app';
-import { useHeaderTitle } from '@/config/routes';
 import { Menu } from '@tamagui/lucide-icons';
 import { H3, Theme } from 'tamagui';
-import { ThemedButton, ThemedLinearGradient, ThemedXStack } from '../ui/themed-components';
+
+import { THEME_HEADER } from '@/config/app';
+import { useHeaderTitle } from '@/config/routes';
 import { useDrawerStore } from '@/stores/ui/drawerStore';
+
+import { ThemedButton, ThemedLinearGradient, ThemedXStack } from '../ui/themed-components';
 
 export const CustomHeader = () => {
 

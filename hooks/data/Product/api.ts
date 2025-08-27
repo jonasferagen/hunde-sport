@@ -1,6 +1,7 @@
 import { ENDPOINTS, PaginationOptions } from '@/config/api';
 import { mapToProduct, Product } from '@/domain/Product/Product';
 import { apiClient } from '@/lib/apiClient';
+
 import { responseTransformer } from '../util';
 
 /**

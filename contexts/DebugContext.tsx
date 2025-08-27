@@ -1,6 +1,7 @@
+import React, { createContext, JSX, useContext, useEffect, useState } from 'react';
+
 import { PurchasableProduct } from '@/domain/Product/Product';
 import { useCartStore } from '@/stores/cartStore';
-import React, { createContext, JSX, useContext, useEffect, useState } from 'react';
 
 interface DebugContextType {
     product: PurchasableProduct | null;

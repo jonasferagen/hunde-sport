@@ -1,12 +1,13 @@
 // ProductCategoryHeader.tsx
+import { Ellipsis } from '@tamagui/lucide-icons';
 import React from 'react';
+import { Theme } from 'tamagui';
 
 import { ThemedButton } from '@/components/ui/themed-components';
-import type { ProductCategory } from '@/types';
 import { openModal } from '@/stores/ui/modalStore';
+import type { ProductCategory } from '@/types';
+
 import { ProductCategoriesModal } from './ProductCategoriesModal';
-import { Ellipsis } from '@tamagui/lucide-icons';
-import { Theme } from 'tamagui';
 
 export const ProductCategoryHeader: React.FC<{
     productCategory: ProductCategory;

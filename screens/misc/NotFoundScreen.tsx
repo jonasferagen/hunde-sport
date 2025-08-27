@@ -1,6 +1,7 @@
+import { Button, H1, YStack } from 'tamagui';
+
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { Prof } from '@/lib/debug/prof';
-import { Button, H1, YStack } from 'tamagui';
 interface NotFoundScreenProps {
     message?: string;
 }

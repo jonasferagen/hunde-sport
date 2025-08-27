@@ -1,12 +1,13 @@
 // Breadcrumbs.tsx
+import { ChevronRight } from '@tamagui/lucide-icons';
+import { Link } from 'expo-router';
 import React from 'react';
 import { ScrollView } from 'tamagui';
-import { Link } from 'expo-router';
-import { ChevronRight } from '@tamagui/lucide-icons';
-import { ThemedXStack, ThemedText, ThemedXStackProps } from '@/components/ui';
+
+import { ThemedText, ThemedXStack, ThemedXStackProps } from '@/components/ui';
 import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
-import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { useEdgeFades } from '@/hooks/ui/useEdgeFades';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import type { ProductCategory } from '@/types';
 
 interface BreadcrumbsProps extends ThemedXStackProps {

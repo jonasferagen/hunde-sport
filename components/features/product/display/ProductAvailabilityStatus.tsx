@@ -1,6 +1,7 @@
+import { XStack } from 'tamagui';
+
 import { ThemedText } from '@/components/ui';
 import { ProductAvailability } from '@/types';
-import { XStack } from 'tamagui';
 
 
 interface Props {

@@ -1,12 +1,13 @@
 
-import * as util from "util";
 import * as fs from "fs";
+import * as util from "util";
 
 import { mapToProduct, Product } from '@/domain/Product/Product';
 import { ProductVariation } from '@/domain/Product/ProductVariation';
-import { VariableProductOptions } from '../domain/Product/helpers/VariableProductOptions';
-import { ProductVariationCollection } from "../domain/Product/helpers/ProductVariationCollection";
 import { getProductPriceRange } from "@/types";
+
+import { ProductVariationCollection } from "../domain/Product/helpers/ProductVariationCollection";
+import { VariableProductOptions } from '../domain/Product/helpers/VariableProductOptions';
 
 
 const raw1 = fs.readFileSync("tests/main.json", "utf-8");

@@ -27,7 +27,7 @@ export type SelectOption = {
 
 type VariationAny = {
   id: number;
-  attributes: Array<{ name: string; value?: string; option?: string }>;
+  attributes: { name: string; value?: string; option?: string }[];
 };
 
 export class VariableProductOptions {
@@ -88,7 +88,7 @@ export class VariableProductOptions {
   }
 
   // --- Enabled recompute (single source of truth) ---
-  private static intersectIds(sets: Array<Set<number>>): Set<number> {
+  private static intersectIds(sets: Set<number>[]): Set<number> {
     if (sets.length === 0) return new Set<number>();
     let acc = sets[0];
     for (let i = 1; i < sets.length; i++) {

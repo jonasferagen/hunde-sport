@@ -1,3 +1,8 @@
+import { FlashList, FlashListRef } from '@shopify/flash-list';
+import React, { JSX } from 'react';
+import { Dimensions, StyleSheet,View as RNView } from 'react-native';
+import { SpaceTokens, StackProps, View } from 'tamagui';
+
 import { ProductAvailabilityStatus, ProductPriceSimple } from '@/components/features/product/display';
 import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
 import { THEME_PRICE_TAG } from '@/config/app';
@@ -7,10 +12,7 @@ import { useVisibleItems } from '@/hooks/ui/useVisibleItems';
 import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
 import { spacePx } from '@/lib/helpers';
 import type { PurchasableProduct } from '@/types';
-import { FlashList, FlashListRef } from '@shopify/flash-list';
-import React, { JSX } from 'react';
-import { Dimensions, View as RNView, StyleSheet } from 'react-native';
-import { SpaceTokens, StackProps, View } from 'tamagui';
+
 import { ThemedYStack } from '../themed-components';
 import { TileBadge } from './TileBadge';
 import { TileFixed } from './TileFixed';

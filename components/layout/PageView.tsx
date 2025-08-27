@@ -1,12 +1,14 @@
 // PageView.tsx
-import { BOTTOM_BAR_HEIGHT } from '@/config/app';
-import React from 'react';
-import { YStackProps } from 'tamagui';
-import { ThemedYStack } from '../ui';
-import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 // Memoized backdrop so PageView re-renders don't recompute gradient math
 import { useIsFocused } from '@react-navigation/native';
+import React from 'react';
+import { YStackProps } from 'tamagui';
+
+import { BOTTOM_BAR_HEIGHT } from '@/config/app';
+
 import { BottomInsetSpacer, CustomBottomBar } from '../menu/CustomBottomBar';
+import { ThemedYStack } from '../ui';
+import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 
 const PageBackdrop = React.memo(function PageBackdrop({
   token = 'background',

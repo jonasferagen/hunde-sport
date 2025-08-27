@@ -1,11 +1,8 @@
-import { decode } from 'he';
-import { DimensionValue } from 'react-native';
-
 import { tokens } from '@tamagui/config/v4';
-import { getVariableValue } from 'tamagui';
+import { decode } from 'he';
 import { parseDocument } from 'htmlparser2';
-
-
+import { DimensionValue } from 'react-native';
+import { getVariableValue } from 'tamagui';
 
 import appConfig from '@/tamagui/tamagui.config';
 

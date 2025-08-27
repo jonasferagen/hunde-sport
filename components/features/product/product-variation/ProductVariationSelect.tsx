@@ -1,16 +1,18 @@
 // ProductVariationSelect.tsx
+import React from 'react';
+import { H3 } from 'tamagui';
+
 import { Loader } from '@/components/ui/Loader';
 import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui/themed-components';
 import { THEME_OPTION, THEME_OPTION_SELECTED } from '@/config/app';
 import type { SelectOption, Term } from '@/domain/Product/helpers/VariableProductOptions';
 import { useProductVariations } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
+import { useVariableProductStore } from '@/stores/useProductVariationStore';
 import type { VariableProduct } from '@/types'; // adjust paths
-import React from 'react';
-import { H3 } from 'tamagui';
-import { ProductPriceRange } from '../display';
-import { useVariableProductStore } from './useProductVariationStore';
 
+import { ProductPriceRange } from '../display';
+ 
 export type TermSelection = Map<string, Term | null>;
 
 interface Props {

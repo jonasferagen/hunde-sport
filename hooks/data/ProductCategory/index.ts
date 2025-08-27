@@ -1,6 +1,8 @@
-import { ProductCategory } from '@/types';
 import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
-import { useQueryResult, makeQueryOptions } from '../util';
+
+import { ProductCategory } from '@/types';
+
+import { makeQueryOptions,useQueryResult } from '../util';
 import { fetchProductCategories, fetchProductCategory } from './api';
 
 

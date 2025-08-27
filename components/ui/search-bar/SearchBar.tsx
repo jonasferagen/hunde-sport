@@ -1,7 +1,9 @@
 // components/ui/search-bar/SearchBar.tsx
-import { useRenderGuard } from '@/hooks/useRenderGuard';
 import React from 'react';
 import { XStack } from 'tamagui';
+
+import { useRenderGuard } from '@/hooks/useRenderGuard';
+
 import { ThemedInput } from '../themed-components';
 
 export interface SearchBarProps {

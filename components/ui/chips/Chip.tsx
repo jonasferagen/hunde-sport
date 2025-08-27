@@ -1,5 +1,6 @@
 import { JSX } from 'react';
 import { StackProps } from 'tamagui';
+
 import { ThemedText, ThemedXStack } from '../themed-components';
 
 

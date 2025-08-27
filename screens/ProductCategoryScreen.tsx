@@ -1,15 +1,16 @@
+import { Redirect, useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { YStack } from 'tamagui';
+
+import { Breadcrumbs } from '@/components/features/product-category/Breadcrumbs';
+import { ProductCategoryHeader } from '@/components/features/product-category/ProductCategoryHeader';
 import { ProductCategoryProducts } from '@/components/features/product-category/ProductCategoryProducts';
 import { PageBody, PageSection, PageView } from '@/components/layout';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { useScreenReady } from '@/hooks/ui/useScreenReady';
-import { useBreadcrumbTrail, useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
-import { Redirect, useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { Breadcrumbs } from '@/components/features/product-category/Breadcrumbs';
-import { ProductCategoryHeader } from '@/components/features/product-category/ProductCategoryHeader';
-import { YStack } from 'tamagui';
 import { ThemedXStack } from '@/components/ui';
+import { useScreenReady } from '@/hooks/ui/useScreenReady';
+import { useRenderGuard } from '@/hooks/useRenderGuard';
+import { useBreadcrumbTrail, useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
 
 export const ProductCategoryScreen = React.memo(() => {
     useRenderGuard('ProductCategoryScreen');

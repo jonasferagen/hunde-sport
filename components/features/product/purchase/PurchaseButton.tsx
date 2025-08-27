@@ -1,9 +1,10 @@
 // PurchaseButton.tsx (view-only)
-import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { Boxes, ShoppingCart, XCircle } from '@tamagui/lucide-icons';
 import React from 'react';
 import { type JSX } from 'react';
 import { type ThemeName } from 'tamagui';
+
+import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { THEME_CTA_BUY, THEME_CTA_VARIATION } from '@/config/app';
 
 export type PurchaseCTAMode = 'buy' | 'select-variation' | 'unavailable';

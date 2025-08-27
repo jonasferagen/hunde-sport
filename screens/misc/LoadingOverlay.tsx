@@ -1,7 +1,4 @@
 // LoadingOverlay.tsx
-import { ThemedYStack } from '@/components/ui';
-import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
-import { useNavigationProgress } from '@/stores/ui/navigationProgressStore'; // { active, start, stop }
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
@@ -11,6 +8,10 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 import { StackProps } from 'tamagui';
+
+import { ThemedYStack } from '@/components/ui';
+import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
+import { useNavigationProgress } from '@/stores/ui/navigationProgressStore'; // { active, start, stop }
 
 export const LoadingOverlay = React.memo(({ ...props }: StackProps) => {
     // always-mounted, controlled only by shared value

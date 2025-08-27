@@ -1,20 +1,23 @@
 // ProductCategoryTree.tsx
-import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
-import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
-import type { ProductCategory } from '@/types';
 import { ChevronDown } from '@tamagui/lucide-icons';
-import React, { memo, type ComponentRef } from 'react';
-import { View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import React, { type ComponentRef,memo } from 'react';
+import { type NativeScrollEvent, type NativeSyntheticEvent,View } from 'react-native';
 import type { AnimatedRef } from 'react-native-reanimated';
 import Animated, {
     FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming
 } from 'react-native-reanimated';
 import { getTokenValue, useTheme } from 'tamagui';
+import { create } from 'zustand';
+
+import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
+import { useEdgeFades } from '@/hooks/ui/useEdgeFades';
+import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
+import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
+import type { ProductCategory } from '@/types';
+
 import { ThemedXStack, ThemedYStack } from '../ui';
 import { ThemedButton } from '../ui/themed-components/ThemedButton';
 import { ThemedText } from '../ui/themed-components/ThemedText';
-import { EdgeFadesOverlay } from '@/components/ui/EdgeFadesOverlay';
-import { useEdgeFades } from '@/hooks/ui/useEdgeFades';
 
 // Instance type for Animated.ScrollView
 type AnimatedScrollViewRef = ComponentRef<typeof Animated.ScrollView>;
@@ -188,8 +191,6 @@ const AnimatedListExpansionIcon = ({ expanded }: { expanded: boolean }) => {
         </Animated.View>
     );
 };
-
-import { create } from 'zustand';
 
 type UI = {
     expanded: Record<number, boolean>;

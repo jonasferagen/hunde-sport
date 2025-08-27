@@ -1,6 +1,8 @@
-import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
+import { Redirect, useLocalSearchParams } from 'expo-router';
+
 import { ProductAvailabilityStatus, ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductTitle } from '@/components/features/product/display/';
 import { ProductPurchaseFlow } from '@/components/features/product/purchase/ProductPurchaseFlow';
+import { ProductCategoryChips } from '@/components/features/product-category/ProductCategoryChips';
 import { PageBody, PageFooter, PageSection, PageView } from '@/components/layout';
 import { ThemedXStack } from '@/components/ui';
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from '@/config/app';
@@ -10,7 +12,7 @@ import { useScreenReady } from '@/hooks/ui/useScreenReady';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
 import { Prof } from '@/lib/debug/prof';
 import { PurchasableProduct } from '@/types';
-import { Redirect, useLocalSearchParams } from 'expo-router';
+
 import { Loader } from '../components/ui/Loader';
 
 export const ProductScreen = () => {

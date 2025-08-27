@@ -1,11 +1,12 @@
-import { ThemedYStack } from '@/components/ui';
-import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
-import { getScaledImageUrl } from '@/lib/helpers';
-import { Product } from '@/types';
 import { Galeria } from '@nandorojo/galeria';
 import React from 'react';
 import { Dimensions } from 'react-native';
 import { YStackProps } from 'tamagui';
+
+import { ThemedYStack } from '@/components/ui';
+import { ThemedImage } from '@/components/ui/themed-components/ThemedImage';
+import { getScaledImageUrl } from '@/lib/helpers';
+import { Product } from '@/types';
 
 const IMAGE_HEIGHT = 300;
 

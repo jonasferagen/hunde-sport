@@ -1,15 +1,17 @@
 // ProductVariationsModal.tsx
+import { X } from '@tamagui/lucide-icons';
+import React from 'react';
+import { Sheet } from 'tamagui';
+
 import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { spacePx } from '@/lib/helpers';
 import { useModalStore } from '@/stores/ui/modalStore';
 import { createPurchasable, Purchasable, VariableProduct } from '@/types';
-import { X } from '@tamagui/lucide-icons';
-import React from 'react';
-import { Sheet } from 'tamagui';
+
+import { useVariableProductStore } from '../../../../stores/useProductVariationStore';
 import { ProductAvailabilityStatus, ProductImage, ProductPriceSimple, ProductTitle } from '../display';
 import { ProductSelectionStatus } from '../product-variation/ProductVariationLabel';
 import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
-import { useVariableProductStore } from '../product-variation/useProductVariationStore';
 import { PurchaseButtonSmart } from './PurchaseButtonSmart';
 
 const gapPx = spacePx("$3");

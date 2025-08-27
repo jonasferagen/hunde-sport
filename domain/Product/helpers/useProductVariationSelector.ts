@@ -1,7 +1,8 @@
-import { VariableProduct } from '@/domain/Product/VariableProduct';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import { VariationSelection } from '@/domain/Product/helpers/VariationSelection';
 import { ProductVariation } from '@/domain/Product/ProductVariation';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { VariableProduct } from '@/domain/Product/VariableProduct';
 
 interface UseProductVariationSelectorProps {
     product: VariableProduct;

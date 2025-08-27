@@ -10,6 +10,7 @@ import {
     View,
     withStaticProperties,
 } from 'tamagui'
+
 import { ThemedSurface } from './ThemedSurface'
 
 const DEFAULT_SIZE: SizeTokens = '$4'

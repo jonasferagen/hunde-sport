@@ -1,16 +1,17 @@
 // stores/cartStore.ts
-import { Cart } from '@/domain/Cart/Cart';
+import { Storage } from 'expo-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { Storage } from 'expo-storage';
-import { log } from '@/lib/logger';
+
+import { ENDPOINTS } from '@/config/api';
+import { Cart } from '@/domain/Cart/Cart';
+import { createCartRestoreToken } from '@/hooks/checkout/api';
 import {
     addItem as apiAddItem,
     removeItem as apiRemoveItem,
     updateItem as apiUpdateItem,
 } from '@/hooks/data/Cart/api';
-import { createCartRestoreToken } from '@/hooks/checkout/api';
-import { ENDPOINTS } from '@/config/api';
+import { log } from '@/lib/logger';
 
 // unchanged smartExpoStorage...
 let lastPersistedValue: string | null = null;

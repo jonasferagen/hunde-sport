@@ -1,13 +1,14 @@
 // useCanonicalNav.ts
-import { cleanHref, routes, type NavPolicy } from '@/config/routes';
-import { useNavigationProgress } from '@/stores/ui/navigationProgressStore';
+import { useBackHandler } from '@react-native-community/hooks';
+import { useNavigation } from '@react-navigation/native';
 import { HrefObject, router, useLocalSearchParams, usePathname } from 'expo-router';
 import * as React from 'react';
 import { startTransition } from 'react';
+
+import { cleanHref, type NavPolicy,routes } from '@/config/routes';
 import { useDrawerStore } from '@/stores/ui/drawerStore';
 import { useModalStore } from '@/stores/ui/modalStore';
-import { useBackHandler } from '@react-native-community/hooks';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigationProgress } from '@/stores/ui/navigationProgressStore';
 
 
 type Routes = typeof routes;

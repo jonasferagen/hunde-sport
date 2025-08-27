@@ -1,17 +1,16 @@
-import { ModalHost } from '@/components/features/product/purchase/ModalHost';
-
-import { AppToastProvider } from '@/contexts';
-import { usePlayStoreUpdates } from '@/hooks/usePlayStoreUpdates';
-import { queryClient } from '@/lib/queryClient';
-import appConfig from '@/tamagui/tamagui.config';
+import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
-
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { enableFreeze, enableScreens } from 'react-native-screens';
 import { PortalProvider, TamaguiProvider } from 'tamagui';
-import * as Sentry from '@sentry/react-native';
+
+import { ModalHost } from '@/components/features/product/purchase/ModalHost';
+import { AppToastProvider } from '@/contexts';
+import { usePlayStoreUpdates } from '@/hooks/usePlayStoreUpdates';
+import { queryClient } from '@/lib/queryClient';
+import appConfig from '@/tamagui/tamagui.config';
 
 Sentry.init({
   dsn: 'https://b7fe570697a6a8f88822825ef7d9462f@o4509876451606528.ingest.de.sentry.io/4509909104722000',

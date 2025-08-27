@@ -1,6 +1,7 @@
+import { ApiResponse } from 'apisauce';
+
 import { ENDPOINTS } from '@/config/api';
 import { apiClient } from '@/lib/apiClient';
-import { ApiResponse } from 'apisauce';
 
 interface RestoreTokenResponse {
     success: boolean;

@@ -1,13 +1,12 @@
 // @/domain/Product/helpers/createVariationStore.ts
-import { createStore } from 'zustand/vanilla';
-import { VariableProductOptions, Option, OptionGroup } from './VariableProductOptions';
-import { ProductVariationCollection } from './ProductVariationCollection';
-
 import * as React from 'react';
 import { useStore } from 'zustand';
+import { createStore } from 'zustand/vanilla';
 
-import type { VariableProduct } from '../VariableProduct';
 import type { ProductVariation } from '../ProductVariation';
+import type { VariableProduct } from '../VariableProduct';
+import { ProductVariationCollection } from './ProductVariationCollection';
+import { Option, OptionGroup,VariableProductOptions } from './VariableProductOptions';
 
 
 type Taxonomy = string;
@@ -111,7 +110,7 @@ export function createVariationStore() {
             const st = get();
             const internal = st.internal;
             if (!internal) return [];
-            const pairs = Object.entries(st.selection).filter(([, s]) => !!s) as Array<[Taxonomy, Slug]>;
+            const pairs = Object.entries(st.selection).filter(([, s]) => !!s) as [Taxonomy, Slug][];
             if (pairs.length === 0) return internal.allVariationIds.slice();
 
             const idsFor = (tx: Taxonomy, slug: Slug): number[] => {
@@ -138,7 +137,7 @@ export function createVariationStore() {
 
             return internal.groups.map(group => {
                 const otherPairs = Object.entries(st.selection)
-                    .filter(([tx, s]) => tx !== group.taxonomy && !!s) as Array<[Taxonomy, Slug]>;
+                    .filter(([tx, s]) => tx !== group.taxonomy && !!s) as [Taxonomy, Slug][];
 
                 const baseIds =
                     otherPairs.length === 0

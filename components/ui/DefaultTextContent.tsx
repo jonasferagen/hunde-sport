@@ -1,6 +1,7 @@
-import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 import React from 'react';
 import { StackProps, YStack } from 'tamagui';
+
+import { ThemedText } from '@/components/ui/themed-components/ThemedText';
 
 interface DefaultTextContentProps {
     children: React.ReactNode;

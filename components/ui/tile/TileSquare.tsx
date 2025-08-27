@@ -1,9 +1,11 @@
 // TileSquare.tsx
-import { StoreImage } from '@/domain/StoreImage';
-import { getScaledImageUrl } from '@/lib/helpers';
 import React, { useMemo } from 'react';
 import { PixelRatio } from 'react-native';
 import { YStackProps } from 'tamagui';
+
+import { StoreImage } from '@/domain/StoreImage';
+import { getScaledImageUrl } from '@/lib/helpers';
+
 import { ThemedText, ThemedYStack } from '../themed-components';
 import { ThemedImage } from '../themed-components/ThemedImage';
 import { ThemedLinearGradient } from '../themed-components/ThemedLinearGradient';

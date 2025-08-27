@@ -1,7 +1,9 @@
+import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
+
 import { Product, PurchasableProduct, VariableProduct } from '@/domain/Product/Product';
 import { ProductCategory, ProductVariation } from '@/types';
-import { useInfiniteQuery, useQuery, UseQueryResult } from '@tanstack/react-query';
-import { useQueryResult, makeQueryOptions, QueryResult } from '../util';
+
+import { makeQueryOptions, QueryResult,useQueryResult } from '../util';
 import {
     fetchDiscountedProducts,
     fetchFeaturedProducts,

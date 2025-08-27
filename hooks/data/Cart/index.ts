@@ -1,5 +1,7 @@
-import { Cart } from '@/domain/Cart/Cart';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
+
+import { Cart } from '@/domain/Cart/Cart';
+
 import { fetchCart } from './api';
 
 

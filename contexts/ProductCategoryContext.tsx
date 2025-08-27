@@ -1,7 +1,8 @@
 // ProductCategoryProvider.tsx
+import React, { createContext, useContext, useMemo } from 'react';
+
 import { ProductCategory } from '@/domain/ProductCategory';
 import { useProductCategories, useProductCategory } from '@/stores/productCategoryStore';
-import React, { createContext, useContext, useMemo } from 'react';
 
 interface ProductCategoryContextType {
     /** Always defined (dummy root when id=0/missing) */

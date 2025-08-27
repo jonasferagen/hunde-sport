@@ -1,17 +1,17 @@
 // ProductRail.tsx
-import { HorizontalTiles } from '@/components/ui/tile/HorizontalTiles';
-import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
-import type { QueryResult } from '@/hooks/data/util';
-import type { PurchasableProduct } from '@/types';
 import React from 'react';
 import { SpaceTokens, StackProps, Theme } from 'tamagui';
 
+import { HorizontalTiles } from '@/components/ui/tile/HorizontalTiles';
+import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from '@/config/app';
 import {
     useDiscountedProducts,
     useFeaturedProducts,
     useProductsByIds,
     useRecentProducts,
 } from '@/hooks/data/Product';
+import type { QueryResult } from '@/hooks/data/util';
+import type { PurchasableProduct } from '@/types';
 
 
 type UseProducts = () => QueryResult<PurchasableProduct>;

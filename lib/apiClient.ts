@@ -1,7 +1,9 @@
 // src/lib/apiClient.ts
+import { ApiResponse, create } from 'apisauce';
+
 import { API_BASE_URL } from '@/config/api';
 import { log } from '@/lib/logger';
-import { ApiResponse, create } from 'apisauce';
+
 import { ApiError, isRetriable } from './httpError';
 
 const apiClient = create({

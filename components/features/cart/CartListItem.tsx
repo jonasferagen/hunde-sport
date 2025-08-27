@@ -1,13 +1,11 @@
-import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
-
-import { ThemedSpinner, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui';
-
-import { CartItemData } from '@/domain/Cart/Cart';
 import { Minus, Plus, X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { H4, StackProps, XStack } from 'tamagui';
 
+import { ThemedSpinner, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui';
+import { ThemedButton } from '@/components/ui/themed-components/ThemedButton';
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from '@/config/app';
+import { CartItemData } from '@/domain/Cart/Cart';
 import { formatItemLineTotal, formatItemUnitPrice } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
 

@@ -1,8 +1,10 @@
 // ProductSelectionStatus.tsx
+import React from 'react';
+
 import { ThemedText, ThemedXStack } from '@/components/ui';
 import type { Term } from '@/domain/Product/helpers/VariableProductOptions';
-import React from 'react';
-import { useVariableProductStore } from './useProductVariationStore';
+
+import { useVariableProductStore } from '../../../../stores/useProductVariationStore';
 
 type Props = React.ComponentProps<typeof ThemedText>;
 

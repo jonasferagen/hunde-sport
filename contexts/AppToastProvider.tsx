@@ -1,7 +1,8 @@
-import { AppToast } from '@/components/ui/AppToast';
 // AppToastProvider.tsx
 import { ToastProvider, ToastViewport } from '@tamagui/toast';
 import React from 'react';
+
+import { AppToast } from '@/components/ui/AppToast';
 
 
 export const AppToastProvider = ({ children }: { children: React.ReactNode }) => (

@@ -1,8 +1,10 @@
+import { FlashList, FlashListRef } from '@shopify/flash-list';
+import React, { JSX } from 'react';
+
 import { ThemedYStack } from '@/components/ui';
 import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { useCartStore } from '@/stores/cartStore';
-import { FlashList, FlashListRef } from '@shopify/flash-list';
-import React, { JSX } from 'react';
+
 import { CartListItem } from './CartListItem';
 
 export const CartList = React.memo((): JSX.Element => {

@@ -2,10 +2,12 @@
 // PurchaseButtonSmart.tsx
 import React from 'react';
 import { Theme } from 'tamagui';
-import { ProductPrice } from '../display';
+
 import { ThemedSurface } from '@/components/ui/themed-components/ThemedSurface';
-import type { Product, Purchasable } from '@/types';
 import { useAddToCart } from '@/hooks/useAddToCart';
+import type { Product, Purchasable } from '@/types';
+
+import { ProductPrice } from '../display';
 import { PurchaseButtonBase } from './PurchaseButton'; // view-only
 
 type Props = {

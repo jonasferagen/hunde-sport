@@ -1,10 +1,11 @@
 // components/ui/CallToActionButton.tsx
-import React from 'react';
 import * as Haptics from 'expo-haptics';
+import React from 'react';
 import { GestureResponderEvent } from 'react-native';
 import { Theme, ThemeName } from 'tamagui';
-import { ThemedButton, ThemedText } from '@/components/ui/themed-components';
+
 import { ThemedSpinner } from '@/components/ui'; // assuming this re-exports a spinner
+import { ThemedButton, ThemedText } from '@/components/ui/themed-components';
 
 type CallToActionButtonProps = React.ComponentProps<typeof ThemedButton> & {
     label?: string;

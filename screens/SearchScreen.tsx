@@ -1,4 +1,8 @@
 // SearchScreen.tsx
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React from 'react';
+import { SizableText } from 'tamagui';
+
 import { ProductList } from '@/components/features/product/list/ProductList';
 import { PageBody, PageHeader, PageSection, PageView } from '@/components/layout';
 import { ThemedXStack, ThemedYStack } from '@/components/ui';
@@ -6,12 +10,9 @@ import { DefaultTextContent } from '@/components/ui/DefaultTextContent';
 import { SearchBar } from '@/components/ui/search-bar/SearchBar';
 import { ThemedSpinner } from '@/components/ui/themed-components/ThemedSpinner';
 import { useProductsBySearch } from '@/hooks/data/Product';
-import { useDebouncedValue } from '@/hooks/useDebouncedValue'; // simple 200–300ms debounce hook
 import { useScreenReady } from '@/hooks/ui/useScreenReady';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'; // simple 200–300ms debounce hook
 
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React from 'react';
-import { SizableText } from 'tamagui';
 import { Loader } from '../components/ui/Loader';
 
 export const SearchScreen = () => {

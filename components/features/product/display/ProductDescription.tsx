@@ -1,7 +1,8 @@
-import { ThemedText } from '@/components/ui';
-import { PurchasableProduct } from '@/types';
 import React from 'react';
 import { SizableTextProps } from 'tamagui';
+
+import { ThemedText } from '@/components/ui';
+import { PurchasableProduct } from '@/types';
 
 interface ProductDescriptionProps extends SizableTextProps {
     long?: boolean;

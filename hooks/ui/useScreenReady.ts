@@ -1,8 +1,9 @@
 // @/hooks/useScreenReady.ts
-import { useNavigationProgress } from '@/stores/ui/navigationProgressStore';
 import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react';
 import { InteractionManager } from 'react-native';
+
+import { useNavigationProgress } from '@/stores/ui/navigationProgressStore';
 
 type ScreenReadyOptions = {
     /** Extra delay after interactions to push heavy work by a frame or two */

@@ -1,8 +1,9 @@
 import { Stack } from 'expo-router';
-import { routes } from '@/config/routes';
 import { PortalItem } from 'tamagui';
-import { useCanonicalBackHandler } from '@/hooks/useCanonicalNavigation';
+
 import { CustomBottomBar } from '@/components/menu/CustomBottomBar';
+import { routes } from '@/config/routes';
+import { useCanonicalBackHandler } from '@/hooks/useCanonicalNavigation';
 
 export default function ShopLayout() {
     useCanonicalBackHandler();

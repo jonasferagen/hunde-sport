@@ -1,10 +1,11 @@
+import { ExternalLink } from '@tamagui/lucide-icons';
+import React, { useCallback, useMemo } from 'react';
+import { Linking } from 'react-native';
+
 import { CallToActionButton } from '@/components/ui/CallToActionButton';
 import { THEME_CTA_CHECKOUT } from '@/config/app';
 import { formatCartItemsTotal } from '@/domain/Cart/pricing';
 import { useCartStore } from '@/stores/cartStore';
-import { ExternalLink } from '@tamagui/lucide-icons';
-import React, { useCallback, useMemo } from 'react';
-import { Linking } from 'react-native';
 
 export const CheckoutButton = () => {
 

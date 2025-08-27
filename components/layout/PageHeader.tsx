@@ -1,6 +1,8 @@
-import { THEME_PAGE_HEADER } from '@/config/app';
 import React from 'react';
 import { Theme, YStackProps } from 'tamagui';
+
+import { THEME_PAGE_HEADER } from '@/config/app';
+
 import { ThemedText, ThemedYStack } from '../ui';
 import { ThemedLinearGradient } from '../ui/themed-components/ThemedLinearGradient';
 
