@@ -49,7 +49,7 @@ export const ENDPOINTS = {
     DISCOUNTED: (pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&on_sale=true`,
     SEARCH: (query: string, pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&search=${query}`,
     BY_IDS: (product_ids: number[], pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&include=${product_ids.join(',')}`,
-    RECENT: (pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&orderby=date`,
+    RECENT: (pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&orderby=date&order=desc`,
     BY_PRODUCT_CATEGORY: (product_category_id: number, pagination?: PaginationOptions) => `${PRODUCTS_LIST(pagination)}&category=${product_category_id}`,
   },
 

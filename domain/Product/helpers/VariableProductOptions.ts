@@ -148,4 +148,28 @@ export class VariableProductOptions {
       enabled: o.variationIds.some(id => matchingIds.has(id)),
     }));
   }
+
+  // Returns the unique variation id implied by the current selection, or undefined
+  static resolveSelectedVariationId(options: SelectOption[], selection: TermSelection): number | undefined {
+    const selected = Array.from(selection.values()).filter((t): t is Term => t !== null);
+    if (selected.length === 0) return undefined;
+
+    const findOpt = (term: Term) =>
+      options.find(o =>
+        o.term.taxonomy.name === term.taxonomy.name &&
+        o.term.slug === term.slug
+      );
+
+    const selectedSets = selected.map(term => {
+      const opt = findOpt(term);
+      return opt ? new Set(opt.variationIds) : new Set<number>();
+    });
+
+    if (selectedSets.some(s => s.size === 0)) return undefined;
+
+    const matchingIds = this.intersectIds(selectedSets);
+    if (matchingIds.size !== 1) return undefined;
+
+    return [...matchingIds][0];
+  }
 }

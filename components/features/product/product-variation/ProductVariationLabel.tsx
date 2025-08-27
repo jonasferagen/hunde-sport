@@ -1,33 +1,32 @@
+// ProductSelectionStatus.tsx
 import { ThemedText, ThemedXStack } from '@/components/ui';
+import type { Term } from '@/domain/Product/helpers/VariableProductOptions';
 import React from 'react';
-import type { TermSelection } from './ProductVariationSelect';
+import { useVariableProductStore } from './useProductVariationStore';
 
-type Pair = { name: string; value: string };
+type Props = React.ComponentProps<typeof ThemedText>;
 
-type Props = React.ComponentProps<typeof ThemedText> & {
-  currentSelection: TermSelection;
-};
+export const ProductSelectionStatus: React.FC<Props> = ({ ...textProps }) => {
+  // Fallback to store if no explicit selection is passed
+  const storeSelection = useVariableProductStore(s => s.selection);
 
-export const ProductSelectionStatus: React.FC<Props> = ({ currentSelection, ...textProps }) => {
-  const pairs = React.useMemo<Pair[]>(() => {
-    const out: Pair[] = [];
-    for (const [, term] of currentSelection.entries()) {
-      if (term) out.push({ name: term.taxonomy.label, value: term.label });
-    }
-    return out;
-  }, [currentSelection]);
+  // extract non-null terms (order preserved)
+  const terms = React.useMemo(
+    () => Array.from(storeSelection.values()).filter((t): t is Term => !!t),
+    [storeSelection]
+  );
 
-  if (!pairs.length) return null;
+  if (terms.length === 0) return null;
 
   return (
     <ThemedXStack gap="$2">
-      {pairs.map(({ name, value }) => (
-        <ThemedXStack key={`${name}:${value}`} gap="$1">
+      {terms.map(term => (
+        <ThemedXStack key={term.taxonomy.name} gap="$1">
           <ThemedText fos="$3" tt="capitalize" height="auto" {...textProps}>
-            {name}:
+            {term.taxonomy.label}:
           </ThemedText>
           <ThemedText bold fos="$4" tt="capitalize" {...textProps}>
-            {value}
+            {term.label}
           </ThemedText>
         </ThemedXStack>
       ))}

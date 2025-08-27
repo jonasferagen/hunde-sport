@@ -1,82 +1,45 @@
+// ProductVariationSelect.tsx
 import { Loader } from '@/components/ui/Loader';
 import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from '@/components/ui/themed-components';
 import { THEME_OPTION, THEME_OPTION_SELECTED } from '@/config/app';
-import { ProductVariationCollection } from '@/domain/Product/helpers/ProductVariationCollection';
-import { VariableProductOptions, type SelectOption, type Term } from '@/domain/Product/helpers/VariableProductOptions';
-import { VariableProduct } from '@/domain/Product/VariableProduct';
+import type { SelectOption, Term } from '@/domain/Product/helpers/VariableProductOptions';
 import { useProductVariations } from '@/hooks/data/Product';
 import { useRenderGuard } from '@/hooks/useRenderGuard';
-import { type ProductVariation } from '@/types';
+import type { VariableProduct } from '@/types'; // adjust paths
 import React from 'react';
 import { H3 } from 'tamagui';
 import { ProductPriceRange } from '../display';
-
+import { useVariableProductStore } from './useProductVariationStore';
 
 export type TermSelection = Map<string, Term | null>;
 
-interface ProductVariationSelectProps {
-  onSelectionChange: (selection: TermSelection) => void;
+interface Props {
   variableProduct: VariableProduct;
   h?: number;
 }
 
-export const ProductVariationSelect = ({ ...props }: ProductVariationSelectProps) => {
+export const ProductVariationSelect = ({ variableProduct, h }: Props) => {
   useRenderGuard('ProductVariationSelect');
-  const { isLoading, items:productVariations} = useProductVariations(props.variableProduct); // variations fetched elsewhere later
 
-  const collection = new ProductVariationCollection(productVariations);
-  if (isLoading) return <Loader h={props.h} />;
-  return <ProductVariationSelectContent {...props} collection={collection} />;
-}
+  const { isLoading, items: productVariations } = useProductVariations(variableProduct);
 
-interface ProductVariationSelectContentProps extends ProductVariationSelectProps {
-    collection: ProductVariationCollection<ProductVariation>;
-    onSelectionChange: (selection: TermSelection) => void;
-}
+  const init   = useVariableProductStore(s => s.init);
+  const groups = useVariableProductStore(s => s.groups);
+  const selection = useVariableProductStore(s => s.selection);
+  const selectedVariation = useVariableProductStore(s => s.selectedVariation);
+  const select = useVariableProductStore(s => s.select);
 
-export const ProductVariationSelectContent = ({ 
-  collection, 
-  onSelectionChange, 
-  ...props 
-}: ProductVariationSelectContentProps ) => {
-  useRenderGuard('ProductVariationSelectContent');
+  // init store when data is ready
+  React.useEffect(() => {
+    if (!isLoading) init(variableProduct, productVariations);
+    return () => useVariableProductStore.getState().reset();
+  }, [isLoading, variableProduct, productVariations, init]);
 
-  const allOptions = React.useMemo(
-    () => VariableProductOptions.create(props.variableProduct),
-    [props.variableProduct]
-  );
-  
-  const baseGroups = VariableProductOptions.group(allOptions);
-  
-  // init selection from baseGroups ...
-  const [selection, setSelection] = React.useState<TermSelection>(() => {
-    const next = new Map<string, Term | null>();
-    for (const g of baseGroups) next.set(g.taxonomy.name, null);
-    return next;
-  });
-  // recompute enabled flags when selection changes
-  const flaggedOptions = React.useMemo(
-    () => VariableProductOptions.withEnabled(allOptions, selection),
-    [allOptions, selection]
-  );
-  const optionGroups = React.useMemo(
-    () => VariableProductOptions.group(flaggedOptions),
-    [flaggedOptions]
-  );
-
-  const handleSelect = React.useCallback((taxonomy: string, term: Term | null) => {
-    setSelection(prev => {
-      const next = new Map(prev);   // <- new Map instance
-      next.set(taxonomy, term);
-      onSelectionChange(next);      // if you want to notify immediately
-      return next;
-    });
-  }, [onSelectionChange]);
-  
+  if (isLoading) return <Loader h={h} />;
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
-      {optionGroups.map(group => {
+      {groups.map(group => {
         const { taxonomy } = group;
         const selected = selection.get(taxonomy.name) ?? null;
         const optionsInTax = group.options.filter(o => o.variationIds.length > 0);
@@ -84,85 +47,58 @@ export const ProductVariationSelectContent = ({
         return (
           <ThemedYStack key={taxonomy.name} f={1}>
             <H3 tt="capitalize" size="$6" mb="$1">{taxonomy.label}</H3>
-            <AttributeSelector
-              options={optionsInTax}
-              selected={selected}
-              onSelect={handleSelect}
-              collection={collection}
-            />
+            <ThemedYStack w="100%" gap="$2">
+              {optionsInTax.map(opt => (
+                <AttributeOption
+                  key={opt.term.slug}
+                  option={opt}
+                  selected={selected}
+                  onSelect={select}
+                />
+              ))}
+            </ThemedYStack>
           </ThemedYStack>
         );
       })}
     </ThemedXStack>
   );
 };
-// AttributeSelector: no enabledSlugs; use option.enabled
-type AttributeSelectorProps = {
-  options: SelectOption[];
-  selected: Term | null;
-  onSelect: (taxonomy: string, term: Term | null) => void;
-  collection: ProductVariationCollection<ProductVariation>;
-};
 
-const AttributeSelector = React.memo(({ options, selected, onSelect, collection }: AttributeSelectorProps) => {
-  return (
-    <ThemedYStack w="100%" gap="$2">
-      {options.map(opt => {
-        const { term, enabled } = opt;
-        const isSelected = selected?.slug === term.slug;
-        const handlePress = enabled ? () => onSelect(term.taxonomy.name, isSelected ? null : term) : undefined;
-
-        return (
-          <AttributeOption
-            key={term.slug}
-            option={opt}
-            isSelected={isSelected}
-            onPress={handlePress}
-            collection={collection}
-          />
-        );
-      })}
-    </ThemedYStack>
-  );
-});
-
-
-// AttributeOption: compute price range + availability on demand via collection
 type AttributeOptionProps = {
   option: SelectOption;
-  isSelected?: boolean;
-  onPress?: () => void;
-  collection: ProductVariationCollection<ProductVariation>;
+  selected: Term | null;
+  onSelect: (taxonomy: string, term: Term | null) => void;
 };
 
-export const AttributeOption = React.memo(function AttributeOption({
+const AttributeOption = React.memo(function AttributeOption({
   option,
-  isSelected = false,
-  onPress,
-  collection,
+  selected,
+  onSelect,
 }: AttributeOptionProps) {
-  const { term } = option;
+  const { term, enabled = true } = option;
+  const priceRangeForIds = useVariableProductStore(s => s.priceRangeForIds);
 
-  // stable dep for memo; avoids array reference churn
+  const isSelected =
+    !!selected &&
+    selected.slug === term.slug &&
+    selected.taxonomy.name === term.taxonomy.name;
+
   const idsKey = React.useMemo(() => option.variationIds.join('|'), [option.variationIds]);
+  const productPriceRange = React.useMemo(
+    () => priceRangeForIds(option.variationIds) ?? undefined,
+    [priceRangeForIds, idsKey]
+  );
 
-  const productPriceRange = React.useMemo(() => {
-    return collection.priceRangeForVariationIds(option.variationIds) ?? undefined;
-  }, [collection, idsKey]);
-/*
-  const variationAvailability = React.useMemo(() => {
-    return option.variationIds
-      .map(id => collection.get(id)?.availability)
-      .filter(Boolean);
-  }, [collection, idsKey]);
-*/
+  const onPress = enabled ? () => onSelect(term.taxonomy.name, isSelected ? null : term) : undefined;
+
   return (
     <ThemedXStack ai="center" gap="$2" theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}>
       <ThemedButton
         size="$4"
         bw={2}
         aria-label={term.label}
-        onPress={onPress}    // null/undefined disables it (as you wanted)
+        onPress={onPress}
+        disabled={!onPress}
       >
         <ThemedXStack f={1} split>
           <ThemedXStack gap="$1">

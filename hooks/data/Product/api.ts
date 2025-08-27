@@ -1,8 +1,6 @@
 import { ENDPOINTS, PaginationOptions } from '@/config/api';
-import { apiClient } from '@/lib/apiClient';
-import { promises as fs } from "fs";
-import path from "path";
 import { mapToProduct, Product } from '@/domain/Product/Product';
+import { apiClient } from '@/lib/apiClient';
 import { responseTransformer } from '../util';
 
 /**
@@ -75,6 +73,7 @@ export const fetchProductsBySearch = async (query: string, pagination?: Paginati
  */
 export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
     const response = await apiClient.get<any[]>(ENDPOINTS.PRODUCTS.RECENT(pagination));
+    console.log(ENDPOINTS.PRODUCTS.RECENT(pagination));
     return responseTransformer(response, mapToProduct);
 }
 

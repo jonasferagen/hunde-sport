@@ -2,13 +2,14 @@
 import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
 import { spacePx } from '@/lib/helpers';
 import { useModalStore } from '@/stores/ui/modalStore';
-import { createPurchasable, ProductVariation, Purchasable, VariableProduct } from '@/types';
+import { createPurchasable, Purchasable, VariableProduct } from '@/types';
 import { X } from '@tamagui/lucide-icons';
 import React from 'react';
 import { Sheet } from 'tamagui';
 import { ProductAvailabilityStatus, ProductImage, ProductPriceSimple, ProductTitle } from '../display';
 import { ProductSelectionStatus } from '../product-variation/ProductVariationLabel';
-import { ProductVariationSelect, TermSelection } from '../product-variation/ProductVariationSelect';
+import { ProductVariationSelect } from '../product-variation/ProductVariationSelect';
+import { useVariableProductStore } from '../product-variation/useProductVariationStore';
 import { PurchaseButtonSmart } from './PurchaseButtonSmart';
 
 const gapPx = spacePx("$3");
@@ -33,14 +34,8 @@ export const Inner = React.memo(function Inner({
 
     const hasOpened = useModalStore((s) => s.status === 'open');
     // 1) Track selected variation locally
-    const [productVariation, setProductVariation] = React.useState<ProductVariation | undefined>(
-        basePurchasable.productVariation
-    );
 
-    // Reset selection if the modal is reused for a different product
-    React.useEffect(() => {
-        setProductVariation(basePurchasable.productVariation);
-    }, [basePurchasable.product.id, basePurchasable.productVariation]);
+    const productVariation = useVariableProductStore(s => s.selectedVariation);
 
     // 2) Derive the working purchasable from (product, variation)
     const purchasable = React.useMemo(
@@ -57,8 +52,6 @@ export const Inner = React.memo(function Inner({
         onPurchasableUpdated?.(purchasable);
     }, [purchasable, onPurchasableUpdated]);
 
-
-    const [currentSelection, setCurrentSelection] = React.useState<TermSelection>(new Map());
 
     const [bodyH, setBodyH] = React.useState(0);
     const [headerH, setHeaderH] = React.useState(0);
@@ -100,18 +93,13 @@ export const Inner = React.memo(function Inner({
                     <ProductVariationSelect
                         variableProduct={variableProduct}
                         h={availableForOptions}
-                        onSelectionChange={setCurrentSelection}
-                        // CHANGED: child reports a variation; we derive purchasable here
-                        onProductVariationSelected={setProductVariation}
                     />
                 )}
             </Sheet.ScrollView>
 
             {/* status & price */}
             <ThemedYStack onLayout={onFooterLayout}>
-                <ProductSelectionStatus
-                    currentSelection={currentSelection}
-                />
+                <ProductSelectionStatus                />
                 <ThemedXStack split>
                     <ProductAvailabilityStatus productAvailability={purchasable.activeProduct.availability} />
                     <ProductPriceSimple productPrices={purchasable.prices} productAvailability={purchasable.availability} />
