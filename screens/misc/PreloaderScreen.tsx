@@ -105,15 +105,20 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
     hasNextPage,
     fetchNextPage,
     isFetching,
+    isFetchingNextPage,
+    fetchStatus,
     refetch,
     total,
   } = useProductCategories({ enabled });
 
+  console.log(isFetchingNextPage, isFetching, hasNextPage, total, items.length);
+  console.log(fetchStatus, error);
+
   // drain pages while this step is active
   React.useEffect(() => {
-    if (!enabled) return;
-    if (!isFetching && hasNextPage) fetchNextPage();
-  }, [enabled, isFetching, hasNextPage, fetchNextPage]);
+    if (!enabled || !hasNextPage) return;
+    if (!isFetchingNextPage && fetchStatus !== "paused") fetchNextPage();
+  }, [enabled, isFetchingNextPage, hasNextPage, fetchNextPage, fetchStatus]);
 
   // push into store
   React.useEffect(() => {
@@ -122,8 +127,11 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
 
   const count = items.length;
   const draining = enabled && (isFetching || hasNextPage);
-  const progress =
-    draining && total > 0 ? `(${Math.min(count, total)}/${total})` : undefined;
+  const progress = draining
+    ? total && total > 0
+      ? `(${Math.min(count, total)}/${total})`
+      : undefined
+    : undefined;
 
   const retry = error
     ? async () => {
