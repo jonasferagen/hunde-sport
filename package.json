@@ -9,14 +9,14 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "android:prebuild": "expo prebuild --platform android --clean",
+    "android:logs": "adb logcat -v color -v time --pid $(adb shell pidof -s com.anonymous.hundesport) ReactNativeJS:V ReactNative:V *:S",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
     "build:aab": "eas build --local -p android --profile production --output ./dist/app-${npm_package_version}-prod.aab",
     "build:apk": "eas build --local -p android --profile internal-apk-dev --output ./dist/app-${npm_package_version}-dev.apk",
-    "install:apk": "adb install -r $(ls -t dist/*.apk | head -n1)",
-    "logs:apk": "adb logcat -v color -v time --pid $(adb shell pidof -s com.anonymous.hundesport) ReactNativeJS:V ReactNative:V *:S"
+    "install:apk": "adb install -r $(ls -t dist/*.apk | head -n1)"
   },
   "engines": {
     "node": "22.18.0",
