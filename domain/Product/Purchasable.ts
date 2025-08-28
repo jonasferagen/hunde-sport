@@ -5,9 +5,8 @@ import { ProductVariation } from "@/domain/Product/ProductVariation";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 
 import { ProductPrices } from "../pricing";
-import { SimpleProduct } from "./SimpleProduct";
 
-export type PurchasableProduct = VariableProduct | SimpleProduct;
+// Removed unused SimpleProduct import
 
 type AttributeKey = string;
 type TermKey = string;
@@ -31,11 +30,7 @@ export interface Purchasable extends ValidationResult {
   prices: ProductPrices;
   availability: ProductAvailability;
   isVariable: true;
-
-  /** Current selection (attrKey -> termKey|null) */
   selection?: VariationSelection;
-
-  /** For missing selection: which attribute keys are still unset */
   missingAttributes?: string[];
 }
 
@@ -48,7 +43,6 @@ export const createPurchasable = ({
   productVariation?: ProductVariation;
   selection?: VariationSelection;
 }): Purchasable => {
-  // guard: only VariableProduct supported here
   if (variableProduct.type !== "variable") {
     throw new Error("createPurchasable expects a VariableProduct");
   }
@@ -57,31 +51,21 @@ export const createPurchasable = ({
   const prices = activeProduct.prices;
   const availability = activeProduct.availability;
 
-  // derive missing attribute keys from selection (if provided)
+  // ✅ FIX: check `.selected`, not truthiness of the state object
   let missingAttributes: string[] | undefined;
   if (selection) {
     const allKeys = [...variableProduct.attributes.keys()];
-    missingAttributes = allKeys.filter((k) => !selection.get(k));
+    missingAttributes = allKeys.filter(
+      (k) => (selection.get(k)?.selected ?? null) == null
+    );
   }
 
-  // build message
   const isValid = !!productVariation;
-  const message = isValid
-    ? "Legg til"
-    : (() => {
-        if (!selection) return "Velg ...(A)";
-        const missing = missingAttributes ?? [];
-        if (missing.length > 0) {
-          const labels = missing.map(
-            (k) => variableProduct.attributes.get(k)?.label ?? k
-          );
-
-          console.warn(labels);
-
-          return `Velg ${formatListNo(labels)}`;
-        }
-        return "Velg ...(B)";
-      })();
+  const missing = missingAttributes ?? [];
+  const labels = missing.map(
+    (k) => variableProduct.attributes.get(k)?.label ?? k
+  );
+  const message = missing.length > 0 ? `Velg ${formatListNo(labels)}` : "";
 
   return {
     variableProduct,
@@ -97,7 +81,7 @@ export const createPurchasable = ({
   };
 };
 
-// Norwegian-ish list joiner: "farge", "størrelse" → "farge og størrelse"
+// Norwegian-ish list joiner
 function formatListNo(items: string[]): string {
   if (items.length <= 1) return items[0] ?? "";
   if (items.length === 2) return `${items[0]} og ${items[1]}`;
@@ -108,7 +92,6 @@ export function buildVariationSelection(
   vp: VariableProduct,
   current: Map<AttributeKey, TermKey | null>
 ): VariationSelection {
-  // Pre-index (attribute, term) → Set<variantId>
   const byAttrTerm = new Map<AttributeKey, Map<TermKey, Set<number>>>();
   for (const v of vp.variants) {
     for (const opt of v.options) {
@@ -124,7 +107,6 @@ export function buildVariationSelection(
   const out: VariationSelection = new Map();
 
   for (const a of vp.attributes.values()) {
-    // candidate set from other selected attributes
     let candidate: Set<number> | null = null;
     for (const [attr, term] of current) {
       if (!term || attr === a.key) continue;
@@ -150,7 +132,8 @@ export function buildVariationSelection(
   return out;
 }
 
-function intersect(a: Set<number>, b: Set<number>): Set<number> {
+// If you need this elsewhere, export it.
+export function intersect(a: Set<number>, b: Set<number>): Set<number> {
   const out = new Set<number>();
   const [small, large] = a.size <= b.size ? [a, b] : [b, a];
   for (const x of small) if (large.has(x)) out.add(x);

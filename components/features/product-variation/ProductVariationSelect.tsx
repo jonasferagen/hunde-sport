@@ -3,25 +3,19 @@
 import React from "react";
 import { H3 } from "tamagui";
 
-import {
-  ThemedButton,
-  ThemedText,
-  ThemedXStack,
-  ThemedYStack,
-} from "@/components/ui";
-import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
+import { ThemedXStack, ThemedYStack } from "@/components/ui";
 import type { ProductPrices } from "@/domain/pricing";
 import { getProductPriceRange } from "@/domain/pricing";
+import { ProductVariation } from "@/domain/Product/ProductVariation";
 import {
   buildVariationSelection,
   intersect,
   VariationSelection,
-} from "@/domain/Product/helpers/variationSelection";
-import { ProductVariation } from "@/domain/Product/ProductVariation";
+} from "@/domain/Product/Purchasable";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 import { useProductVariations } from "@/hooks/data/Product";
 
-import { ProductPriceRange } from "../product/display";
+import { ProductAttributeOption } from "./ProductAttributeOption";
 
 export type OnSelectPayload = {
   selection: VariationSelection;
@@ -145,35 +139,22 @@ function VariationSelectLogic({
                     variableProduct.terms.get(termKey)?.label ?? termKey;
                   const enabled = variantIds.length > 0;
                   const isSelected = state.selected === termKey;
-                  const onPress = enabled
-                    ? () => select(attrKey, isSelected ? null : termKey)
-                    : undefined;
+                  const onPress = () =>
+                    select(attrKey, isSelected ? null : termKey);
+
                   const price = priceRangeForIds(variantIds) ?? undefined;
 
                   return (
-                    <ThemedXStack
+                    <ProductAttributeOption
                       key={`${attrKey}:${termKey}`}
-                      ai="center"
-                      gap="$2"
-                      theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}
-                    >
-                      <ThemedButton
-                        size="$4"
-                        bw={2}
-                        aria-label={termLabel}
-                        onPress={onPress}
-                        disabled={!enabled}
-                      >
-                        <ThemedXStack f={1} split>
-                          <ThemedXStack gap="$1">
-                            <ThemedText>{termLabel}</ThemedText>
-                          </ThemedXStack>
-                          {price ? (
-                            <ProductPriceRange productPriceRange={price} />
-                          ) : null}
-                        </ThemedXStack>
-                      </ThemedButton>
-                    </ThemedXStack>
+                      attribute={attrKey}
+                      term={termKey}
+                      isSelected={isSelected}
+                      enabled={enabled}
+                      label={termLabel}
+                      onPress={onPress}
+                      price={price}
+                    />
                   );
                 }
               )}

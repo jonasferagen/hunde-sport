@@ -10,8 +10,12 @@ import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui";
-import { createPurchasable, Purchasable } from "@/domain/Product/Purchasable";
+import {
+  createPurchasable,
+  VariationSelection,
+} from "@/domain/Product/Purchasable";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
+import { ProductVariation } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
 import { PurchasableButton } from "../product/purchase/PurchasableButton";
@@ -22,8 +26,21 @@ const IMAGE_H = 200;
 type Props = { close: () => void; variableProduct: VariableProduct };
 
 export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
-  const [purchasable, setPurchasable] = React.useState<Purchasable>(
-    createPurchasable({ variableProduct })
+  const [selection, setSelection] = React.useState<
+    VariationSelection | undefined
+  >(undefined);
+  const [selectedVariation, setSelectedVariation] = React.useState<
+    ProductVariation | undefined
+  >(undefined);
+
+  const purchasable = React.useMemo(
+    () =>
+      createPurchasable({
+        variableProduct,
+        productVariation: selectedVariation,
+        selection,
+      }),
+    [variableProduct, selectedVariation, selection]
   );
 
   return (
@@ -51,15 +68,10 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
         >
           <ProductVariationSelect
             variableProduct={variableProduct}
-            onSelect={(payload) =>
-              setPurchasable(
-                createPurchasable({
-                  variableProduct,
-                  productVariation: payload.selectedVariation,
-                  selection: payload.selection,
-                })
-              )
-            }
+            onSelect={({ selection, selectedVariation }) => {
+              setSelection(selection);
+              setSelectedVariation(selectedVariation);
+            }}
           />
         </ScrollView>
       </ThemedYStack>
@@ -75,12 +87,3 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
     </ThemedYStack>
   );
 };
-
-/* 
-        <ThemedXStack split>
-          {/* If a variation is resolved, show its price & availability; otherwise fall back to parent 
-          <ProductPriceSimple
-            productPrices={purchasable.activeProduct.prices}
-            productAvailability={purchasable.activeProduct.availability}
-          />
-        </ThemedXStack> */
