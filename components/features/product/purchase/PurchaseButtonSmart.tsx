@@ -52,7 +52,6 @@ export const PurchaseButtonSmart = React.memo(function PurchaseButtonSmart({
       // Optionally toast/log here
       // toast.error(typeof err === 'string' ? err : 'Kunne ikke legge i handlekurv');
     } finally {
-      console.log(ok);
       setLoading(false);
 
       if (ok) onSuccess?.(); // ← guarantees it fires only after success

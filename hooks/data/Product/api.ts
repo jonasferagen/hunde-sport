@@ -2,7 +2,7 @@ import { ENDPOINTS, PaginationOptions } from "@/config/api";
 import { SimpleProduct } from "@/domain/Product/SimpleProduct";
 import { apiClient } from "@/lib/apiClient";
 import { mapToProduct } from "@/mappers/mapToProduct";
-import { ProductVariation, VariableProduct } from "@/types";
+import { ProductCategory, ProductVariation, VariableProduct } from "@/types";
 
 import { responseTransformer } from "../util";
 
@@ -71,6 +71,16 @@ export const fetchProductsBySearch = async (
   return responseTransformer(response, mapToProduct);
 };
 
+export const fetchProductsByProductCategory = async (
+  productCategory: ProductCategory,
+  pagination?: PaginationOptions
+) => {
+  const response = await apiClient.get<any[]>(
+    ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(productCategory.id, pagination)
+  );
+  return responseTransformer(response, mapToProduct);
+};
+
 /**
  * Fetch recent products.
  *
@@ -80,6 +90,15 @@ export const fetchProductsBySearch = async (
 export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.RECENT(pagination)
+  );
+  return responseTransformer(response, mapToProduct);
+};
+
+export const fetchDiscountedProducts = async (
+  pagination?: PaginationOptions
+) => {
+  const response = await apiClient.get<any[]>(
+    ENDPOINTS.PRODUCTS.DISCOUNTED(pagination)
   );
   return responseTransformer(response, mapToProduct);
 };

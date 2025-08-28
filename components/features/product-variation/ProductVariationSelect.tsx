@@ -37,7 +37,6 @@ type OptionGroup = {
 export type OnSelectPayload = {
   selection: VariationSelection;
   selectedVariation?: ProductVariation;
-  isComplete: boolean;
 };
 
 type Props = {
@@ -134,14 +133,9 @@ function VariationSelectLogic({
   const selectedVariation =
     candidateIds.length === 1 ? byId.get(candidateIds[0]) : undefined;
 
-  const isComplete = React.useMemo(() => {
-    for (const [, term] of selection) if (!term) return false;
-    return true;
-  }, [selection]);
-
   React.useEffect(() => {
-    onSelect?.({ selection, selectedVariation, isComplete });
-  }, [onSelect, selection, selectedVariation, isComplete]);
+    onSelect?.({ selection, selectedVariation });
+  }, [onSelect, selection, selectedVariation]);
 
   // View: straight from groups (no “taxonomies/flagged” adapter)
   return (

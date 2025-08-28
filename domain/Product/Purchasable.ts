@@ -1,9 +1,12 @@
+// domain/purchase/purchasable.ts
 import { ProductAvailability } from "@/domain/Product/BaseProduct";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
 import { SimpleProduct } from "@/domain/Product/SimpleProduct";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 
 import { ProductPrices } from "../pricing";
+
+export type VariationSelection = Map<string, string | null>;
 
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 
@@ -19,11 +22,6 @@ export interface ValidationResult {
   message: string;
 }
 
-/**
- * Validates if a purchasable item is ready to be added to the cart.
- * @param purchasable The item to validate.
- * @returns A ValidationResult object.
- */
 const validate = ({
   product,
   productVariation,
@@ -43,10 +41,8 @@ const validate = ({
     throw new Error("SimpleProduct cannot have a product variation");
   }
 
-  // If the main product is out of stock - no variations are assumed to be in stock
   const productToCheck = productVariation || product;
 
-  // The product must be in stock.
   if (!productToCheck.is_in_stock) {
     return {
       isValid: false,
@@ -54,7 +50,7 @@ const validate = ({
       message: "Utsolgt",
     };
   }
-  // Rule 2: Variable products must have a variation selected.
+
   if (product instanceof VariableProduct && !productVariation) {
     return {
       isValid: false,
@@ -63,7 +59,6 @@ const validate = ({
     };
   }
 
-  // All checks passed.
   return {
     isValid: true,
     status: "OK",
@@ -78,14 +73,22 @@ export interface Purchasable extends ValidationResult {
   prices: ProductPrices;
   availability: ProductAvailability;
   isVariable: boolean;
+
+  /** Optional: current selection (only meaningful for VariableProduct) */
+  selection?: VariationSelection;
+
+  /** For VariableProduct + missing selection: which attribute keys are still unset */
+  missingAttributes?: string[];
 }
 
 export const createPurchasable = ({
   product,
   productVariation,
+  selection,
 }: {
   product: PurchasableProduct;
   productVariation?: ProductVariation;
+  selection?: VariationSelection;
 }): Purchasable => {
   const validationResult = validate({ product, productVariation });
   const activeProduct = productVariation || product;
@@ -93,13 +96,22 @@ export const createPurchasable = ({
   const prices = activeProduct.prices;
   const availability = activeProduct.availability;
 
+  // Derive missing attribute keys if we have a selection & variable product
+  let missingAttributes: string[] | undefined = undefined;
+  if (selection && product instanceof VariableProduct && !productVariation) {
+    const keys = [...product.attributes.keys()];
+    missingAttributes = keys.filter((k) => !selection.get(k));
+  }
+
   return {
     product,
-    productVariation: productVariation,
+    productVariation,
     activeProduct,
     prices,
     availability,
     isVariable: product.type === "variable",
+    selection,
+    missingAttributes,
     ...validationResult,
   };
 };
