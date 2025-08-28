@@ -4,7 +4,10 @@ import React from "react";
 import { H3 } from "tamagui";
 
 import { ThemedXStack, ThemedYStack } from "@/components/ui";
-import { useVariableProductInfo } from "@/domain/pricing";
+import {
+  useVariableProductInfoCtx,
+  VariableProductInfoProvider,
+} from "@/contexts/VariableProductInfoContext";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
 import {
   createVariationSelectionBuilder,
@@ -14,38 +17,6 @@ import {
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 
 import { ProductAttributeOption } from "./ProductAttributeOption";
-
-/* ------------------------- Context (in-file) ------------------------- */
-
-type InfoCtx = ReturnType<typeof useVariableProductInfo>;
-const VariableProductInfoContext = React.createContext<InfoCtx | null>(null);
-
-export function VariableProductInfoProvider({
-  variableProduct,
-  children,
-}: {
-  variableProduct: VariableProduct;
-  children: React.ReactNode;
-}) {
-  const info = useVariableProductInfo(variableProduct);
-  if (info.isLoading) return null; // or a skeleton
-  return (
-    <VariableProductInfoContext.Provider value={info}>
-      {children}
-    </VariableProductInfoContext.Provider>
-  );
-}
-
-export function useVariableProductInfoCtx(): InfoCtx {
-  const ctx = React.useContext(VariableProductInfoContext);
-  if (!ctx)
-    throw new Error(
-      "useVariableProductInfoCtx must be used inside VariableProductInfoProvider"
-    );
-  return ctx;
-}
-
-/* ------------------------- Public component ------------------------- */
 
 export type OnSelectPayload = {
   selection: VariationSelection;

@@ -1,9 +1,3 @@
-import React from "react";
-
-import { VariableProduct } from "@/domain/Product/VariableProduct";
-import { useProductVariations } from "@/hooks/data/Product";
-import { ProductVariation } from "@/types";
-
 /** --- Shared types --- */
 export type CurrencyHeader = {
   currency_code: string;
@@ -140,38 +134,4 @@ export function getProductPriceRange(
   }
 
   return { min, max };
-}
-
-export function useVariableProductInfo(variableProduct: VariableProduct) {
-  const { items: productVariations = [], isLoading } =
-    useProductVariations(variableProduct);
-
-  // Signature only from IDs → avoids rebuilding if objects change shape but IDs stay the same
-  const idsSig = React.useMemo(
-    () => productVariations.map((v) => v.id).join(","),
-    [productVariations]
-  );
-
-  const byId = React.useMemo(() => {
-    const m = new Map<number, ProductVariation>();
-    for (const v of productVariations) m.set(v.id, v);
-    return m;
-  }, [idsSig]); // <-- depends on ids only
-
-  const allIds = React.useMemo(
-    () => productVariations.map((v) => v.id),
-    [idsSig]
-  );
-
-  const priceRangeForIds = React.useCallback(
-    (ids: number[]) => {
-      const prices: ProductPrices[] = ids
-        .map((id) => byId.get(id)?.prices)
-        .filter(Boolean) as ProductPrices[];
-      return prices ? getProductPriceRange(prices) : undefined;
-    },
-    [byId]
-  ); // stable across renders unless the ID set changes
-
-  return { isLoading, byId, allIds, priceRangeForIds };
 }
