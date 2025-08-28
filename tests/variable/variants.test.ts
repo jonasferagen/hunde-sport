@@ -3,8 +3,8 @@
 import fs from "fs";
 import path from "path";
 
-import { mapToProduct } from "@/domain/Product/mapToProduct";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
+import { mapToProduct } from "@/mappers/mapToProduct";
 
 const fixture = path.join(__dirname, "data", "variable.json");
 

@@ -1,51 +1,52 @@
 // ProductCategoriesModal.tsx
 
-import { ChevronRight,X } from '@tamagui/lucide-icons';
-import { FlatList } from 'react-native';
-import { H4 } from 'tamagui';
+import { ChevronRight, X } from "@tamagui/lucide-icons";
+import { FlatList } from "react-native";
+import { H4 } from "tamagui";
 
-import { ThemedButton, ThemedXStack, ThemedYStack } from '@/components/ui';
-import { useCanonicalNavigation } from '@/hooks/useCanonicalNavigation';
-import type { ProductCategory } from '@/types';
+import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
+import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
+import type { ProductCategory } from "@/types";
 
 export function ProductCategoriesModal({
-    productCategories,
-    title,
-    close,
+  productCategories,
+  title,
+  close,
 }: {
-    productCategories: readonly ProductCategory[];
-    title: string;
-    close: () => void;
+  productCategories: readonly ProductCategory[];
+  title: string;
+  close: () => void;
 }) {
-    const { to } = useCanonicalNavigation();
+  const { to } = useCanonicalNavigation();
 
-    return (
-        <ThemedYStack f={1} mih={0} p="$2" gap="$3">
-            {/* Header */}
-            <ThemedXStack split>
-                <H4>{title}</H4>
-                <ThemedButton circular onPress={close}>
-                    <X />
-                </ThemedButton>
-            </ThemedXStack>
+  return (
+    <ThemedYStack f={1} mih={0} p="$2" gap="$3">
+      {/* Header */}
+      <ThemedXStack split>
+        <H4>{title}</H4>
+        <ThemedButton circular onPress={close}>
+          <X />
+        </ThemedButton>
+      </ThemedXStack>
 
-            <FlatList
-                data={productCategories}
-                keyExtractor={(c) => String(c.id)}
-                renderItem={({ item, index }) => (
-                    <ThemedButton
-                        w="100%"
-                        justifyContent="space-between"
-                        size="$5"
-                        mt={index > 0 ? '$2' : undefined}
-                        onPress={() => { to('product-category', item); }}               // ← close the modal when selecting
-                    >
-                        <H4>{item.name}</H4>
-                        <ChevronRight />
-                    </ThemedButton>
-                )}
-            />
-
-        </ThemedYStack>
-    );
+      <FlatList
+        data={productCategories}
+        keyExtractor={(c) => String(c.id)}
+        renderItem={({ item, index }) => (
+          <ThemedButton
+            w="100%"
+            justifyContent="space-between"
+            size="$5"
+            mt={index > 0 ? "$2" : undefined}
+            onPress={() => {
+              to("product-category", item);
+            }} // ← close the modal when selecting
+          >
+            <H4>{item.name}</H4>
+            <ChevronRight />
+          </ThemedButton>
+        )}
+      />
+    </ThemedYStack>
+  );
 }

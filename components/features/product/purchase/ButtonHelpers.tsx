@@ -18,7 +18,7 @@ import {
 } from "@/config/app";
 import { ProductAvailability, ProductPrices } from "@/types";
 
-import { ProductPriceSimple } from "../display";
+import { ProductPrice } from "../display";
 
 export const PriceTag = ({
   productPrices,
@@ -37,7 +37,7 @@ export const PriceTag = ({
       mr={-20}
       minWidth={80}
     >
-      <ProductPriceSimple
+      <ProductPrice
         productPrices={productPrices}
         productAvailability={productAvailability}
       />

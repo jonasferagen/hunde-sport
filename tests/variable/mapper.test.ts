@@ -2,9 +2,8 @@
 import fs from "fs";
 import path from "path";
 
-// eslint-disable-next-line import/no-unresolved
-import { mapToProduct } from "@/domain/Product/mapToProduct";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
+import { mapToProduct } from "@/mappers/mapToProduct";
 
 it("maps Store API variable → VariableProduct", () => {
   const raw = JSON.parse(

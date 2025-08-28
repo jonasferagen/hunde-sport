@@ -3,11 +3,9 @@
 import fs from "fs";
 import path from "path";
 
-import {
-  mapToProductCategory,
-  ProductCategory,
-} from "@/domain/ProductCategory";
+import { ProductCategory } from "@/domain/ProductCategory";
 import { StoreImage } from "@/domain/StoreImage";
+import { mapToProductCategory } from "@/mappers/mapToProductCategory";
 
 const singlePath = path.join(__dirname, "data", "product-category.json");
 const listPath = path.join(__dirname, "data", "product-categories.json");

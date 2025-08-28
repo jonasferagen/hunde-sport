@@ -2,9 +2,8 @@
 import fs from "fs";
 import path from "path";
 
-// eslint-disable-next-line import/no-unresolved
-import { mapToProduct } from "@/domain/Product/mapToProduct";
 import { SimpleProduct } from "@/domain/Product/SimpleProduct";
+import { mapToProduct } from "@/mappers/mapToProduct";
 
 it("maps Store API simple → SimpleProduct", () => {
   const raw = JSON.parse(

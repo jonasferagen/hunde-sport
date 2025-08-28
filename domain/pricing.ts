@@ -1,7 +1,13 @@
 import React from "react";
 
+import product from "@/app/(app)/(shop)/product";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 import { useProductVariations } from "@/hooks/data/Product";
+import {
+  ProductAvailability,
+  ProductVariation,
+  VariationSelection,
+} from "@/types";
 
 /** --- Shared types --- */
 export type CurrencyHeader = {

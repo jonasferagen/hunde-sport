@@ -2,9 +2,8 @@
 import fs from "fs";
 import path from "path";
 
-// eslint-disable-next-line import/no-unresolved
-import { mapToProduct } from "@/domain/Product/mapToProduct";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
+import { mapToProduct } from "@/mappers/mapToProduct";
 
 const singlePath = path.join(__dirname, "data", "variation.json");
 const listPath = path.join(__dirname, "data", "variations.json");
@@ -54,7 +53,7 @@ describe("ProductVariation mapper", () => {
     expect(Array.isArray(rawList)).toBe(true);
     expect(rawList.length).toBeGreaterThan(0);
 
-    rawList.forEach((raw, idx) => {
+    rawList.forEach((raw: any, idx: number) => {
       const product = mapToProduct(raw);
       expectValidVariation(product, idx);
     });

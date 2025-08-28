@@ -5,7 +5,7 @@ import { SpaceTokens, StackProps, View } from "tamagui";
 
 import {
   ProductAvailabilityStatus,
-  ProductPriceSimple,
+  ProductPrice,
 } from "@/components/features/product/display";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import { THEME_PRICE_TAG } from "@/config/app";
@@ -160,7 +160,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                 productAvailability={item.availability}
                 showInStock={false}
               />
-              <ProductPriceSimple
+              <ProductPrice
                 productPrices={item.prices}
                 productAvailability={item.availability}
                 showIcon

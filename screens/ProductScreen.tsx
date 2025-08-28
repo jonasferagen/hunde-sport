@@ -66,7 +66,11 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
         <PageSection theme={THEME_PRODUCT_ITEM_1} padded>
           <ThemedXStack split>
             <ProductTitle product={product} />
-            <ProductPrice product={product} showIcon />
+            <ProductPrice
+              productPrices={product.prices}
+              productAvailability={product.availability}
+              showIcon
+            />
           </ThemedXStack>
           <ThemedXStack split>
             <ProductAvailabilityStatus
@@ -87,7 +91,7 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
           )}
         </PageSection>
         <PageSection padded title="Kategorier" theme={THEME_PRODUCT_ITEM_2}>
-          <ProductCategoryChips productCategories={product.categories} />
+          <ProductCategoryChips categoryRefs={product.categories} />
         </PageSection>
       </PageBody>
       <PageFooter>

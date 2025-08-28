@@ -4,17 +4,17 @@ import { X } from "@tamagui/lucide-icons";
 import React from "react";
 import { ScrollView } from "tamagui";
 
-import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
+import {
+  ThemedButton,
+  ThemedText,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui";
 import { createPurchasable, Purchasable } from "@/domain/Product/Purchasable";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 
-import {
-  ProductImage,
-  ProductPriceSimple,
-  ProductTitle,
-} from "../product/display";
+import { ProductImage, ProductTitle } from "../product/display";
 import { PurchasableButton } from "../product/purchase/PurchasableButton";
-import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 import { ProductVariationStatus } from "./ProductVariationStatus";
 
@@ -23,7 +23,7 @@ type Props = { close: () => void; variableProduct: VariableProduct };
 
 export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
   const [purchasable, setPurchasable] = React.useState<Purchasable>(
-    createPurchasable({ variableProduct: variableProduct })
+    createPurchasable({ variableProduct })
   );
 
   return (
@@ -54,7 +54,7 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
             onSelect={(payload) =>
               setPurchasable(
                 createPurchasable({
-                  variableProduct: variableProduct,
+                  variableProduct,
                   productVariation: payload.selectedVariation,
                   selection: payload.selection,
                 })
@@ -68,6 +68,7 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
       <ThemedYStack>
         {/* Selection summary (very lightweight) */}
         <ProductVariationStatus purchasable={purchasable} />
+        <ThemedText>{purchasable.message}</ThemedText>
         {<PurchasableButton purchasable={purchasable} onSuccess={close} />}
         <ThemedYStack mb="$3" />
       </ThemedYStack>
