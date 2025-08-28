@@ -8,7 +8,7 @@ import type { ProductPrices } from "@/domain/pricing";
 import { getProductPriceRange } from "@/domain/pricing";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
 import {
-  buildVariationSelection,
+  createVariationSelectionBuilder,
   intersect,
   VariationSelection,
 } from "@/domain/Product/Purchasable";
@@ -74,9 +74,13 @@ function VariationSelectLogic({
   ) => ReturnType<typeof getProductPriceRange> | undefined;
   onSelect?: Props["onSelect"];
 }) {
-  // selection state = VariationSelection
+  const selBuilder = React.useMemo(
+    () => createVariationSelectionBuilder(variableProduct),
+    [variableProduct]
+  );
+
   const [selection, setSelection] = React.useState<VariationSelection>(() =>
-    buildVariationSelection(variableProduct, new Map())
+    selBuilder(new Map())
   );
 
   const select = React.useCallback(
@@ -86,10 +90,10 @@ function VariationSelectLogic({
           Array.from(prev.entries()).map(([k, v]) => [k, v.selected])
         );
         current.set(attrKey, termKey);
-        return buildVariationSelection(variableProduct, current);
+        return selBuilder(current);
       });
     },
-    [variableProduct]
+    [selBuilder]
   );
 
   // candidate IDs = intersection of selected terms
@@ -113,12 +117,18 @@ function VariationSelectLogic({
     onSelectRef.current = onSelect;
   }, [onSelect]);
 
+  // notify only when selection/variation actually changes
+  const lastSigRef = React.useRef("");
   React.useEffect(() => {
-    onSelectRef.current?.({
-      selection,
-      selectedVariation,
+    const sig = JSON.stringify({
+      sel: Array.from(selection.entries()).map(([k, v]) => [k, v.selected]),
+      vid: selectedVariation?.id ?? null,
     });
-  }, [selection, selectedVariation, candidateIds]);
+    if (sig !== lastSigRef.current) {
+      lastSigRef.current = sig;
+      onSelectRef.current?.({ selection, selectedVariation });
+    }
+  }, [selection, selectedVariation]);
 
   // View: iterate attributes directly
   return (
@@ -137,11 +147,10 @@ function VariationSelectLogic({
                 ([termKey, variantIds]) => {
                   const termLabel =
                     variableProduct.terms.get(termKey)?.label ?? termKey;
-                  const enabled = variantIds.length > 0;
+                  const disabled = !variantIds.length;
                   const isSelected = state.selected === termKey;
                   const onPress = () =>
                     select(attrKey, isSelected ? null : termKey);
-
                   const price = priceRangeForIds(variantIds) ?? undefined;
 
                   return (
@@ -150,9 +159,9 @@ function VariationSelectLogic({
                       attribute={attrKey}
                       term={termKey}
                       isSelected={isSelected}
-                      enabled={enabled}
                       label={termLabel}
                       onPress={onPress}
+                      disabled={disabled}
                       price={price}
                     />
                   );

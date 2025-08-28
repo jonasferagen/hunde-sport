@@ -88,25 +88,16 @@ function formatListNo(items: string[]): string {
   return `${items.slice(0, -1).join(", ")} og ${items[items.length - 1]}`;
 }
 
-export function buildVariationSelection(
+// --- selection builder that reuses a prebuilt index
+export function buildVariationSelectionWithIndex(
   vp: VariableProduct,
-  current: Map<AttributeKey, TermKey | null>
+  current: Map<string, string | null>,
+  byAttrTerm: Map<string, Map<string, Set<number>>>
 ): VariationSelection {
-  const byAttrTerm = new Map<AttributeKey, Map<TermKey, Set<number>>>();
-  for (const v of vp.variants) {
-    for (const opt of v.options) {
-      const inner =
-        byAttrTerm.get(opt.attribute) ?? new Map<TermKey, Set<number>>();
-      const set = inner.get(opt.term) ?? new Set<number>();
-      set.add(v.key);
-      inner.set(opt.term, set);
-      byAttrTerm.set(opt.attribute, inner);
-    }
-  }
-
   const out: VariationSelection = new Map();
 
   for (const a of vp.attributes.values()) {
+    // candidate = intersection of other selected attrs
     let candidate: Set<number> | null = null;
     for (const [attr, term] of current) {
       if (!term || attr === a.key) continue;
@@ -115,7 +106,7 @@ export function buildVariationSelection(
       if (candidate.size === 0) break;
     }
 
-    const variantsByTerm = new Map<TermKey, number[]>();
+    const variantsByTerm = new Map<string, number[]>();
     for (const t of vp.terms.values()) {
       if (t.attribute !== a.key) continue;
       const base = byAttrTerm.get(a.key)?.get(t.key) ?? new Set<number>();
@@ -123,13 +114,35 @@ export function buildVariationSelection(
       variantsByTerm.set(t.key, [...final]);
     }
 
-    out.set(a.key, {
-      selected: current.get(a.key) ?? null,
-      variantsByTerm,
-    });
+    out.set(a.key, { selected: current.get(a.key) ?? null, variantsByTerm });
   }
 
   return out;
+}
+
+// --- fast index: (attribute, term) -> Set<variantId>
+function buildAttrTermIndex(
+  vp: VariableProduct
+): Map<string, Map<string, Set<number>>> {
+  const byAttrTerm = new Map<string, Map<string, Set<number>>>();
+  for (const v of vp.variants) {
+    for (const opt of v.options) {
+      const inner =
+        byAttrTerm.get(opt.attribute) ?? new Map<string, Set<number>>();
+      const set = inner.get(opt.term) ?? new Set<number>();
+      set.add(v.key);
+      inner.set(opt.term, set);
+      byAttrTerm.set(opt.attribute, inner);
+    }
+  }
+  return byAttrTerm;
+}
+
+// --- tiny factory you use from the component (recommended export)
+export function createVariationSelectionBuilder(vp: VariableProduct) {
+  const index = buildAttrTermIndex(vp);
+  return (current: Map<string, string | null>) =>
+    buildVariationSelectionWithIndex(vp, current, index);
 }
 
 // If you need this elsewhere, export it.
