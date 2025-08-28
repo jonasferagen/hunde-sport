@@ -1,4 +1,5 @@
 // domain/product/ProductVariation.ts
+
 import { BaseProduct, BaseProductData } from "./BaseProduct";
 
 export interface ProductVariationData extends BaseProductData {

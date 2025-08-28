@@ -46,4 +46,8 @@ export class StoreImage implements StoreImageData {
     srcset: "",
     sizes: "",
   });
+
+  bestSrc(): string {
+    return this.srcset && this.srcset.length > 0 ? this.srcset : this.src;
+  }
 }

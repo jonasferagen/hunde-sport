@@ -1,5 +1,5 @@
 // domain/product/BaseProduct.ts
-import { cleanHtml } from "@/lib/format";
+import { capitalize, cleanHtml } from "@/lib/format";
 
 import { ProductPrices } from "../pricing";
 import { StoreImage, StoreImageData } from "../StoreImage";

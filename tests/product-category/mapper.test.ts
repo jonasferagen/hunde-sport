@@ -55,7 +55,7 @@ describe("ProductCategory mapper", () => {
     expect(Array.isArray(rawList)).toBe(true);
     expect(rawList.length).toBeGreaterThan(0);
 
-    rawList.forEach((raw, idx) => {
+    rawList.forEach((raw: any, idx: number) => {
       const cat = mapToProductCategory(raw);
       expectValidCategory(cat, idx);
     });

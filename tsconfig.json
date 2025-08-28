@@ -28,7 +28,7 @@
     ".expo/types/**/*.ts",
     "tests",
     "domain/Product/helpers/ProductVariationCollection.ts",
-    "domain/Product/ProductAttributeHelper.ts",
+    "domain/Product/Old/ProductAttributeHelper.ts",
     "domain/Product/helpers/selectionStore.ts",
     "stores/useProductVariationStore.ts"
   ],

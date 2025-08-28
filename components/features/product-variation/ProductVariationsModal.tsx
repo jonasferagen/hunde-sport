@@ -1,71 +1,38 @@
+// ProductVariationsModal.tsx
+
 import { X } from "@tamagui/lucide-icons";
 import React from "react";
 import { ScrollView } from "tamagui";
 
-import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
-import { useProductVariations } from "@/hooks/data/Product";
-import { useVariableProductStore } from "@/stores/useProductVariationStore";
 import {
-  createPurchasable,
-  Purchasable,
-  PurchasableProduct,
-  VariableProduct,
-} from "@/types";
+  ThemedButton,
+  ThemedText,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui";
+import { ProductVariation } from "@/domain/Product/ProductVariation";
+import { VariableProduct } from "@/domain/Product/VariableProduct";
 
 import {
   ProductImage,
   ProductPriceSimple,
   ProductTitle,
 } from "../product/display";
-import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
 import { ProductVariationSelect } from "./ProductVariationSelect";
-import { ProductVariationStatus } from "./ProductVariationStatus";
-type Props = { close: () => void; variableProduct: VariableProduct };
+
 const IMAGE_H = 200;
+type Props = { close: () => void; variableProduct: VariableProduct };
 
 export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
-  console.log(variableProduct.taxonomies);
-
-  const init = useVariableProductStore((s) => s.init);
-  const setVariations = useVariableProductStore((s) => s.setVariations);
-  // Fallback to store if no explicit selection is passed
-  const storeSelection = useVariableProductStore((s) => s.selection);
-  /*  const productVariation = useVariableProductStore((s) =>
-    s.getSelectedVariation()
-  ); */
-  const productVariation = undefined;
-
-  const reset = useVariableProductStore((s) => s.reset);
-  const { isLoading, items: productVariations } =
-    useProductVariations(variableProduct);
-
-  const _purchasable = createPurchasable({
-    product: variableProduct as PurchasableProduct,
-  });
-
-  const [purchasable, setPurchasable] =
-    React.useState<Purchasable>(_purchasable);
-
-  // Init on product change; hard reset on unmount
-  React.useEffect(() => {
-    init(variableProduct);
-    return () => reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [variableProduct.id, init, reset]);
-
-  // Supply variations when ready
-  React.useEffect(() => {
-    if (!isLoading && productVariations.length)
-      setVariations(productVariations);
-  }, [isLoading, productVariations, setVariations]);
-
-  React.useEffect(() => {
-    const purchasable = createPurchasable({
-      product: variableProduct as PurchasableProduct,
-      productVariation: productVariation,
-    });
-    setPurchasable(purchasable);
-  }, [storeSelection, variableProduct, productVariation, setPurchasable]);
+  // selection + resolution coming back from the selector
+  const [selection, setSelection] = React.useState<Map<string, string | null>>(
+    new Map()
+  );
+  const [candidateIds, setCandidateIds] = React.useState<number[]>([]);
+  const [isComplete, setIsComplete] = React.useState(false);
+  const [selectedVariation, setSelectedVariation] = React.useState<
+    ProductVariation | undefined
+  >(undefined);
 
   return (
     <ThemedYStack f={1} mih={0} gap="$3">
@@ -88,29 +55,75 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
           f={1}
           keyboardShouldPersistTaps="handled"
           removeClippedSubviews={false}
-          // optional polish:
-          //showsVerticalScrollIndicator={false}
-          // alwaysBounceVertical={false}
           contentContainerStyle={{ paddingBottom: 12 }}
         >
-          <ProductVariationSelect />
+          <ProductVariationSelect
+            variableProduct={variableProduct}
+            onSelect={({
+              selection,
+              candidateIds,
+              isComplete,
+              selectedVariation,
+            }) => {
+              setSelection(selection);
+              setCandidateIds(candidateIds);
+              setIsComplete(isComplete);
+              setSelectedVariation(selectedVariation);
+            }}
+          />
         </ScrollView>
       </ThemedYStack>
 
       {/* Footer (natural height) */}
       <ThemedYStack>
+        {/* Selection summary (very lightweight) */}
+        <ThemedXStack gap="$3" ai="center" fw="wrap" mb="$2">
+          {Array.from(selection.entries()).map(([attrKey, termKey]) => {
+            const attrLabel =
+              variableProduct.attributes.get(attrKey)?.label ?? attrKey;
+            const termLabel = termKey
+              ? (variableProduct.terms.get(termKey)?.label ?? termKey)
+              : "må velge";
+            return (
+              <ThemedText key={attrKey}>
+                {attrLabel}: {termKey ? termLabel : "må velge"}
+              </ThemedText>
+            );
+          })}
+          {!isComplete && (
+            <ThemedText opacity={0.7}>
+              {/* Example hint when incomplete */}
+              Velg alle alternativer for å fortsette
+            </ThemedText>
+          )}
+        </ThemedXStack>
+
         <ThemedXStack split>
-          <ProductVariationStatus storeSelection={storeSelection} />
+          {/* If a variation is resolved, show its price & availability; otherwise fall back to parent */}
           <ProductPriceSimple
-            productPrices={variableProduct.prices}
-            productAvailability={variableProduct.availability}
+            productPrices={(selectedVariation ?? variableProduct).prices}
+            productAvailability={
+              (selectedVariation ?? variableProduct).availability
+            }
           />
         </ThemedXStack>
+
+        {/* If you later enable purchase: only enable when complete & resolved */}
+        {/*
         <PurchaseButtonSmart
-          purchasable={purchasable}
+          disabled={!isComplete || !selectedVariation}
+          purchasable={
+            isComplete && selectedVariation
+              ? createPurchasable({
+                  product: variableProduct as PurchasableProduct,
+                  productVariation: selectedVariation,
+                })
+              : undefined
+          }
           onSuccess={close}
           inModal
         />
+        */}
         <ThemedYStack mb="$3" />
       </ThemedYStack>
     </ThemedYStack>
