@@ -1,35 +1,22 @@
-
+// domain/product/ProductVariation.ts
 import { BaseProduct, BaseProductData } from "./BaseProduct";
 
-export class ProductVariation extends BaseProduct<BaseProductData> {
-    readonly type: 'variation' = 'variation';
-    constructor(data: BaseProductData) {
-        if (data.type !== 'variation') {
-            throw new Error('Cannot construct ProductVariation with type other than "variation".');
-        }
-        super(data);
-    }
+export interface ProductVariationData extends BaseProductData {
+  type: "variation";
+  parent: number; // parent VariableProduct id
+  variation?: string; // Store API’s variation summary string
+}
 
-    getParsedVariation(): { name: string; value: string }[] {
-        if (!this.variation) {
-            return [];
-        }
+export class ProductVariation extends BaseProduct {
+  parent: number;
+  variation?: string;
 
-        return this.variation
-            .split(',')
-            .map((pair) => {
-                const [attribute, value] = pair.split(':');
-                if (!attribute || !value) {
-                    return null;
-                }
-                return {
-                    name: attribute.trim(),
-                    value: value.trim(),
-                };
-            })
-            .filter((v): v is { name: string; value: string } => v !== null);
+  constructor(data: ProductVariationData) {
+    if (data.type !== "variation") {
+      throw new Error("Invalid data type for ProductVariation");
     }
-    getLabel(): string {
-        return this.getParsedVariation().map((v) => v.value).join(', ');
-    }
+    super(data);
+    this.parent = data.parent;
+    this.variation = data.variation;
+  }
 }

@@ -112,13 +112,6 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
     total,
   } = useProductCategories({ enabled });
   const count = items.length;
-  console.log(isFetchingNextPage, isFetching, hasNextPage, total, count);
-  console.log(
-    "enabled:" + enabled,
-    "fetchStatus:" + fetchStatus,
-    "status:" + status,
-    error
-  );
 
   React.useEffect(() => {
     if (!enabled) return;
@@ -129,16 +122,6 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
 
     // new page arrived (pages increased) or first success — kick next fetch
     void fetchNextPage();
-
-    console.warn(
-      count,
-      enabled,
-      status,
-      hasNextPage,
-      isFetchingNextPage,
-      fetchNextPage,
-      fetchStatus
-    );
   }, [
     count,
     enabled,

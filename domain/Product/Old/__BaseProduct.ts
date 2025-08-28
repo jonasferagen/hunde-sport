@@ -1,23 +1,11 @@
-// domain/product/BaseProduct.ts
-
 import { cleanHtml } from "@/lib/format";
 
-import { ProductPrices } from "../pricing";
-import { StoreImage } from "../StoreImage";
-
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  link?: string;
-}
-
-export interface ProductAvailability {
-  isInStock: boolean;
-  isPurchasable: boolean;
-  isOnBackOrder: boolean;
-  isOnSale: boolean;
-}
+import { ProductPrices } from "../../pricing";
+import { ProductCategory } from "../../ProductCategory";
+import { StoreImage } from "../../StoreImage";
+import { ProductVariation, ProductVariationData } from "../ProductVariation";
+import { SimpleProduct, SimpleProductData } from "../SimpleProduct";
+import { VariableProduct } from "../VariableProduct";
 
 export interface BaseProductData {
   id: number;
@@ -34,7 +22,7 @@ export interface BaseProductData {
   is_purchasable: boolean;
   is_on_backorder: boolean;
   parent: number;
-  categories: Category[];
+  categories: ProductCategory[];
   type: "simple" | "variable" | "variation";
 }
 
@@ -52,7 +40,7 @@ export class BaseProduct {
   is_in_stock: boolean;
   is_purchasable: boolean;
   is_on_backorder: boolean;
-  categories: Category[];
+  categories: ProductCategory[];
   type: "simple" | "variable" | "variation";
 
   constructor(data: BaseProductData) {
@@ -85,4 +73,55 @@ export class BaseProduct {
       isOnBackOrder: this.is_on_backorder,
     };
   }
+}
+
+/*
+  const productData: BaseProductData = {
+    id: data.id,
+    name: data.name,
+    permalink: data.permalink,
+    slug: data.slug,
+    description: data.description,
+    short_description: data.short_description || "",
+    images: data.images || [],
+    prices: data.prices,
+    on_sale: data.on_sale,
+    featured: data.featured || false,
+    is_in_stock: data.is_in_stock,
+    is_purchasable: data.is_purchasable,
+    is_on_backorder: data.is_on_backorder,
+    parent: data.parent,
+    categories: data.categories || [],
+    rawAttributes: data.attributes || [],
+    rawVariations: data.variations || [],
+    type: data.type,
+  };
+  */
+
+export const mapToProduct = (data: any) => {
+  return new SimpleProduct(data);
+
+  /*
+  const base = new BaseProduct(data);
+  console.error(base.type);
+
+  /*
+  if (data.type === "variable") {
+    return new VariableProduct(data);
+  }
+
+  if (data.type === "variation") {
+    return new ProductVariation(data);
+  }
+
+  // All other types are treated as SimpleProduct
+  return SimpleProduct.create(data); 
+  */
+};
+
+export interface ProductAvailability {
+  isInStock: boolean;
+  isPurchasable: boolean;
+  isOnBackOrder: boolean;
+  isOnSale: boolean;
 }

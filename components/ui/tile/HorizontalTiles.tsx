@@ -127,47 +127,49 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
   }, [loadingState]);
 
   const renderItem = React.useCallback(
-    ({ item, index }: { item: PurchasableProduct; index: number }) => (
-      <RNView
-        style={{
-          marginRight: gapPx,
-          width: estimatedItemSize,
-          height: estimatedItemCrossSize,
-        }}
-      >
-        <TileFixed
-          onPress={() => to("product", item)}
-          title={item.name}
-          image={item.featuredImage}
-          w={estimatedItemSize}
-          h={estimatedItemCrossSize}
-          imagePriority={index < 3 ? "high" : "low"}
-          interactive={vis.set.has(index)}
+    ({ item, index }: { item: PurchasableProduct; index: number }) => {
+      return (
+        <RNView
+          style={{
+            marginRight: gapPx,
+            width: estimatedItemSize,
+            height: estimatedItemCrossSize,
+          }}
         >
-          {!item.availability.isInStock && (
-            <ThemedYStack
-              bg="$background"
-              fullscreen
-              pos="absolute"
-              o={0.4}
-              pointerEvents="none"
-            />
-          )}
+          <TileFixed
+            onPress={() => to("product", item)}
+            title={item.name}
+            image={item.featuredImage}
+            w={estimatedItemSize}
+            h={estimatedItemCrossSize}
+            imagePriority={index < 3 ? "high" : "low"}
+            interactive={vis.set.has(index)}
+          >
+            {!item.availability.isInStock && (
+              <ThemedYStack
+                bg="$background"
+                fullscreen
+                pos="absolute"
+                o={0.4}
+                pointerEvents="none"
+              />
+            )}
 
-          <TileBadge theme={THEME_PRICE_TAG} corner="tr">
-            <ProductAvailabilityStatus
-              productAvailability={item.availability}
-              showInStock={false}
-            />
-            <ProductPriceSimple
-              productPrices={item.prices}
-              productAvailability={item.availability}
-              showIcon
-            />
-          </TileBadge>
-        </TileFixed>
-      </RNView>
-    ),
+            <TileBadge theme={THEME_PRICE_TAG} corner="tr">
+              <ProductAvailabilityStatus
+                productAvailability={item.availability}
+                showInStock={false}
+              />
+              <ProductPriceSimple
+                productPrices={item.prices}
+                productAvailability={item.availability}
+                showIcon
+              />
+            </TileBadge>
+          </TileFixed>
+        </RNView>
+      );
+    },
     [to, vis, estimatedItemSize, estimatedItemCrossSize, gapPx]
   );
 
@@ -216,7 +218,6 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
     </View>
   );
 };
-HorizontalTilesBody.displayName = "HorizontalTilesBody";
 
 const styles = StyleSheet.create({
   container: { position: "relative" },

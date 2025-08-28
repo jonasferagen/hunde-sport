@@ -32,14 +32,10 @@ export function ProductVariationSelect() {
     [options, selection]
   );
 
-  const taxonomies = React.useMemo(
-    () => Array.from((product?.taxonomies ?? new Map()).values()),
-    [product]
-  );
   if (!product) return null;
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
-      {taxonomies.map((tax) => {
+      {Array.from(product.taxonomies.values()).map((tax) => {
         const selected = selection.get(tax.name) ?? null;
         const optionsInTax = flagged.filter(
           (o) => o.term.taxonomy.name === tax.name && o.variationIds.length > 0

@@ -1,7 +1,7 @@
-import { BaseProductData } from "./BaseProduct";
-import { ProductVariation } from "./ProductVariation";
-import { SimpleProduct } from "./SimpleProduct";
-import { VariableProduct } from "./VariableProduct";
+import { BaseProductData } from "../BaseProduct";
+import { ProductVariation, ProductVariationData } from "../ProductVariation";
+import { SimpleProduct } from "../SimpleProduct";
+import { VariableProduct } from "./__VariableProductOld";
 (global as any).navigator = { product: "node" };
 
 export type Product = SimpleProduct | VariableProduct | ProductVariation;
@@ -14,7 +14,8 @@ export type PurchasableProduct = SimpleProduct | VariableProduct;
  * @param data The raw product data from the API.
  * @returns An instance of SimpleProduct, VariableProduct, or ProductVariation.
  */
-export const mapToProduct = (data: any) => {
+export const mapToProduct = (data: BaseProductData | ProductVariationData) => {
+  /*
   const productData: BaseProductData = {
     id: data.id,
     name: data.name,
@@ -31,20 +32,20 @@ export const mapToProduct = (data: any) => {
     is_on_backorder: data.is_on_backorder,
     parent: data.parent,
     categories: data.categories || [],
-    attributes: data.attributes || [],
-    variations: data.variations || [],
-    variation: data.variation || "",
+    rawAttributes: data.attributes || [],
+    rawVariations: data.variations || [],
     type: data.type,
   };
+  */
 
   if (data.type === "variable") {
-    return new VariableProduct(productData);
+    return new VariableProduct(data);
   }
 
   if (data.type === "variation") {
-    return new ProductVariation(productData);
+    return new ProductVariation(data);
   }
 
   // All other types are treated as SimpleProduct
-  return new SimpleProduct(productData);
+  return new SimpleProduct(data);
 };

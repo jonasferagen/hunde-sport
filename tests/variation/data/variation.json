@@ -1,0 +1,66 @@
+{
+  "id": 31180,
+  "name": "Foret Sele",
+  "slug": "foret-sele-31",
+  "parent": 27445,
+  "type": "variation",
+  "variation": "farge: Mocca, St\u00f8rrelse: L\/XL",
+  "permalink": "https:\/\/hunde-sport.no\/produkt\/foret-sele\/?attribute_pa_farge=mocca&attribute_pa_storrelse=lxl",
+  "sku": "",
+  "short_description": "",
+  "description": "",
+  "on_sale": false,
+  "prices": {
+    "price": "39900",
+    "regular_price": "39900",
+    "sale_price": "39900",
+    "price_range": null,
+    "currency_code": "NOK",
+    "currency_symbol": "kr",
+    "currency_minor_unit": 2,
+    "currency_decimal_separator": ",",
+    "currency_thousand_separator": ".",
+    "currency_prefix": "kr ",
+    "currency_suffix": ""
+  },
+  "price_html": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#107;&#114;<\/span>&nbsp;399,00<\/span>",
+  "average_rating": "0",
+  "review_count": 0,
+  "images": [
+    {
+      "id": 31181,
+      "src": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2019\/06\/v02_24D8CF5272B8CA33635970565C243BD3-e1560784152624.jpg?fit=500%2C398&ssl=1",
+      "thumbnail": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2019\/06\/v02_24D8CF5272B8CA33635970565C243BD3-e1560784152624.jpg?resize=400%2C398&ssl=1",
+      "srcset": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2019\/06\/v02_24D8CF5272B8CA33635970565C243BD3-e1560784152624.jpg?w=500&ssl=1 500w, https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2019\/06\/v02_24D8CF5272B8CA33635970565C243BD3-e1560784152624.jpg?resize=64%2C51&ssl=1 64w",
+      "sizes": "(max-width: 500px) 100vw, 500px",
+      "name": "v02_24D8CF5272B8CA33635970565C243BD3",
+      "alt": ""
+    }
+  ],
+  "categories": [],
+  "tags": [],
+  "brands": [],
+  "attributes": [],
+  "variations": [],
+  "grouped_products": [],
+  "has_options": false,
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "is_on_backorder": false,
+  "low_stock_remaining": null,
+  "stock_availability": {
+    "text": "",
+    "class": "in-stock"
+  },
+  "sold_individually": false,
+  "add_to_cart": {
+    "text": "Legg i handlekurv",
+    "description": "Legg i handlekurv: \u00abForet Sele &#8211; Mocca, L\/XL\u00bb",
+    "url": "https:\/\/hunde-sport.no\/produkt\/foret-sele\/?attribute_pa_farge=mocca&#038;attribute_pa_storrelse=lxl&#038;variation_id=31180&#038;add-to-cart=27445",
+    "single_text": "Legg i handlekurv",
+    "minimum": 1,
+    "maximum": 9999,
+    "multiple_of": 1
+  },
+  "extensions": {}
+}
