@@ -5,6 +5,9 @@ import { ProductVariation } from "@/domain/Product/ProductVariation";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 
 import { ProductPrices } from "../pricing";
+import { SimpleProduct } from "./SimpleProduct";
+
+export type PurchasableProduct = VariableProduct | SimpleProduct;
 
 export type VariationSelection = Map<string, string | null>;
 
@@ -14,7 +17,7 @@ export interface ValidationResult {
 }
 
 export interface Purchasable extends ValidationResult {
-  product: VariableProduct;
+  variableProduct: VariableProduct;
   productVariation?: ProductVariation;
   activeProduct: VariableProduct | ProductVariation;
   prices: ProductPrices;
@@ -29,27 +32,27 @@ export interface Purchasable extends ValidationResult {
 }
 
 export const createPurchasable = ({
-  product,
+  variableProduct,
   productVariation,
   selection,
 }: {
-  product: VariableProduct;
+  variableProduct: VariableProduct;
   productVariation?: ProductVariation;
   selection?: VariationSelection;
 }): Purchasable => {
   // guard: only VariableProduct supported here
-  if (product.type !== "variable") {
+  if (variableProduct.type !== "variable") {
     throw new Error("createPurchasable expects a VariableProduct");
   }
 
-  const activeProduct = productVariation ?? product;
+  const activeProduct = productVariation ?? variableProduct;
   const prices = activeProduct.prices;
   const availability = activeProduct.availability;
 
   // derive missing attribute keys from selection (if provided)
   let missingAttributes: string[] | undefined;
   if (selection) {
-    const allKeys = [...product.attributes.keys()];
+    const allKeys = [...variableProduct.attributes.keys()];
     missingAttributes = allKeys.filter((k) => !selection.get(k));
   }
 
@@ -62,7 +65,7 @@ export const createPurchasable = ({
         const missing = missingAttributes ?? [];
         if (missing.length > 0) {
           const labels = missing.map(
-            (k) => product.attributes.get(k)?.label ?? k
+            (k) => variableProduct.attributes.get(k)?.label ?? k
           );
           return `Velg ${formatListNo(labels)}`;
         }
@@ -70,7 +73,7 @@ export const createPurchasable = ({
       })();
 
   return {
-    product,
+    variableProduct,
     productVariation,
     activeProduct,
     prices,

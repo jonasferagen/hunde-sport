@@ -1,7 +1,6 @@
 import React from "react";
 
-import { SimpleProduct } from "@/domain/Product/SimpleProduct";
-import { PurchasableProduct, VariableProduct } from "@/types";
+import { PurchasableProduct, SimpleProduct, VariableProduct } from "@/types";
 
 import { SimplePurchaseButton } from "./SimplePurchaseButton";
 import { VariablePurchaseButton } from "./VariablePurchaseButton";

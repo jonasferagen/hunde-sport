@@ -18,7 +18,7 @@ export const ProductVariationStatus: React.FC<Props> = ({
   showHint = false,
   ...textProps
 }) => {
-  const product = purchasable.product;
+  const product = purchasable.variableProduct;
   const selection = purchasable.selection;
   const isVariable = product instanceof VariableProduct;
 
@@ -54,7 +54,7 @@ export const ProductVariationStatus: React.FC<Props> = ({
 const InlineHint: React.FC<
   React.ComponentProps<typeof ThemedText> & { purchasable: Purchasable }
 > = ({ purchasable, ...textProps }) => {
-  const product = purchasable.product;
+  const product = purchasable.variableProduct;
   const isVariable = product instanceof VariableProduct;
 
   // Build a user-friendly hint for common states

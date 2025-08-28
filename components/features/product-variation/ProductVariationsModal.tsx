@@ -23,7 +23,7 @@ type Props = { close: () => void; variableProduct: VariableProduct };
 
 export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
   const [purchasable, setPurchasable] = React.useState<Purchasable>(
-    createPurchasable({ product: variableProduct })
+    createPurchasable({ variableProduct: variableProduct })
   );
 
   return (
@@ -54,7 +54,7 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
             onSelect={(payload) =>
               setPurchasable(
                 createPurchasable({
-                  product: variableProduct,
+                  variableProduct: variableProduct,
                   productVariation: payload.selectedVariation,
                   selection: payload.selection,
                 })

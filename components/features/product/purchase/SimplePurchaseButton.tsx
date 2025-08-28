@@ -3,7 +3,7 @@ import React from "react";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { SimpleProduct } from "@/domain/Product/SimpleProduct";
-import { useAddToCartSimpleAction } from "@/hooks/useAddToCart";
+import { useAddToCartSimple } from "@/hooks/useAddToCart";
 
 import { ACTIONS, PriceTag, STATUS } from "./ButtonHelpers";
 
@@ -14,8 +14,8 @@ type PurchaseButtonBaseProps = {
 export const SimplePurchaseButton = React.memo(function SimplePurchaseButton({
   simpleProduct,
 }: PurchaseButtonBaseProps) {
-  const { isLoading, onPress } = useAddToCartSimpleAction({
-    simpleProduct,
+  const { isLoading, onPress } = useAddToCartSimple(simpleProduct, {
+    onSuccess: () => close?.(),
   });
 
   const { availability } = simpleProduct;
