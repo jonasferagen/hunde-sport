@@ -3,6 +3,7 @@ import { capitalize, cleanHtml, normalizeAttribute } from "@/lib/format";
 
 import { BaseProduct, BaseProductData } from "./BaseProduct";
 
+/** ---- Raw shapes from Store API ---- */
 type RawAttributeTerm = { id: number; name: string; slug: string };
 export type RawAttribute = {
   id: number;
@@ -24,110 +25,111 @@ export interface VariableProductData extends BaseProductData {
   variations: RawVariationRef[];
 }
 
+/** ---- Normalized domain types ---- */
+export type Attribute = {
+  key: string; // normalized display name, e.g. "farge"
+  label: string; // e.g. "Farge"
+  taxonomy: string; // e.g. "pa_farge"
+  has_variations: boolean;
+};
+
+export type Term = {
+  key: string; // slug, e.g. "karamell"
+  label: string; // e.g. "Karamell"
+  attribute: string; // attribute key (normalized), e.g. "farge"
+};
+
+export type Variant = {
+  key: number; // variation id
+  options: { term: string; attribute: string }[];
+};
+
+/** ---- Class ---- */
 export class VariableProduct extends BaseProduct {
   readonly rawAttributes: RawAttribute[];
   readonly rawVariations: RawVariationRef[];
+
+  /** Precomputed normalized views */
+  readonly attributes: Map<string, Attribute>;
+  readonly terms: Map<string, Term>;
+  readonly variants: Variant[];
 
   constructor(data: VariableProductData) {
     if (data.type !== "variable") {
       throw new Error("Invalid data type for VariableProduct");
     }
     super(data);
+
     this.rawAttributes = data.attributes ?? [];
     this.rawVariations = data.variations ?? [];
-  }
 
-  /**
-   * Map of attributeKey (normalized display name) → Attribute
-   * - key: norm(cleanHtml(name)) e.g. "farge"
-   * - label: capitalize(cleanHtml(name)) e.g. "Farge"
-   * - taxonomy: raw taxonomy code e.g. "pa_farge"
-   */
-  get attributes(): Map<string, Attribute> {
-    return new Map(
-      this.rawAttributes.map((a) => {
-        const display = cleanHtml(a.name);
-        const key = normalizeAttribute(display);
-        return [
-          key,
-          {
-            key,
-            label: capitalize(display),
-            taxonomy: a.taxonomy,
-            has_variations: a.has_variations,
-          },
-        ] as const;
-      })
-    );
-  }
+    // compute once
+    const attributes = buildAttributes(this.rawAttributes);
+    const terms = buildTerms(this.rawAttributes);
+    const variants = buildVariants(this.rawVariations, attributes, terms);
 
-  /**
-   * Map of termSlug → Term
-   * - attribute points to the attribute key (normalized display name)
-   */
-  get terms(): Map<string, Term> {
-    const out: [string, Term][] = [];
-    for (const attr of this.rawAttributes) {
-      const attrKey = normalizeAttribute(cleanHtml(attr.name));
-      for (const t of attr.terms) {
-        out.push([
-          t.slug,
-          {
-            key: t.slug,
-            label: capitalize(cleanHtml(t.name)),
-            attribute: attrKey,
-          },
-        ]);
-      }
-    }
-    return new Map(out);
-  }
-
-  /**
-   * Variants normalized:
-   * - looks up attribute by normalized name from variation refs
-   * - links term by slug
-   */
-  get variants(): Variant[] {
-    const attributes = this.attributes;
-    const terms = this.terms;
-
-    return this.rawVariations.map((v) => ({
-      key: v.id,
-      options: v.attributes.map(({ name, value }) => {
-        const attrKey = normalizeAttribute(cleanHtml(name)); // e.g. "farge", "størrelse"
-        if (!attributes.has(attrKey)) {
-          throw new Error(
-            `Unknown attribute key in variation: ${name} -> ${attrKey}`
-          );
-        }
-        const term = terms.get(value);
-        if (!term) {
-          throw new Error(`Unknown term slug in variation: ${value}`);
-        }
-        return {
-          term: term.key, // slug
-          attribute: attrKey, // normalized attribute key
-        };
-      }),
-    }));
+    this.attributes = attributes;
+    this.terms = terms;
+    this.variants = variants;
   }
 }
 
-type Attribute = {
-  key: string; // normalized display name, e.g. "farge"
-  label: string; // e.g. "Farge"
-  taxonomy: string; // taxonomy code, e.g. "pa_farge"
-  has_variations: boolean;
-};
+/** ---- Pure helpers (used by the constructor) ---- */
+function buildAttributes(raw: RawAttribute[]): Map<string, Attribute> {
+  return new Map(
+    (raw ?? []).map((a) => {
+      const display = cleanHtml(a.name);
+      const key = normalizeAttribute(display);
+      return [
+        key,
+        {
+          key,
+          label: capitalize(display),
+          taxonomy: a.taxonomy,
+          has_variations: a.has_variations,
+        },
+      ] as const;
+    })
+  );
+}
 
-type Term = {
-  key: string; // slug, e.g. "karamell"
-  label: string; // e.g. "Karamell"
-  attribute: string; // attribute key (normalized), e.g. "farge"
-};
+function buildTerms(raw: RawAttribute[]): Map<string, Term> {
+  const out: [string, Term][] = [];
+  for (const attr of raw ?? []) {
+    const attrKey = normalizeAttribute(cleanHtml(attr.name));
+    for (const t of attr.terms ?? []) {
+      out.push([
+        t.slug,
+        {
+          key: t.slug,
+          label: capitalize(cleanHtml(t.name)),
+          attribute: attrKey,
+        },
+      ]);
+    }
+  }
+  return new Map(out);
+}
 
-type Variant = {
-  key: number; // variation id
-  options: { term: string; attribute: string }[];
-};
+function buildVariants(
+  raw: RawVariationRef[],
+  attributes: Map<string, Attribute>,
+  terms: Map<string, Term>
+): Variant[] {
+  return (raw ?? []).map((v) => ({
+    key: v.id,
+    options: (v.attributes ?? []).map(({ name, value }) => {
+      const attrKey = normalizeAttribute(cleanHtml(name)); // "farge", "størrelse"
+      if (!attributes.has(attrKey)) {
+        throw new Error(
+          `Unknown attribute key in variation: ${name} -> ${attrKey}`
+        );
+      }
+      const term = terms.get(value);
+      if (!term) {
+        throw new Error(`Unknown term slug in variation: ${value}`);
+      }
+      return { term: term.key, attribute: attrKey };
+    }),
+  }));
+}

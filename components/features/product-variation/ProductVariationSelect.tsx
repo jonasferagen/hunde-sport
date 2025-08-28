@@ -4,8 +4,7 @@ import React from "react";
 import { H3 } from "tamagui";
 
 import { ThemedXStack, ThemedYStack } from "@/components/ui";
-import type { ProductPrices } from "@/domain/pricing";
-import { getProductPriceRange } from "@/domain/pricing";
+import { useVariableProductInfo } from "@/domain/pricing";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
 import {
   createVariationSelectionBuilder,
@@ -13,9 +12,40 @@ import {
   VariationSelection,
 } from "@/domain/Product/Purchasable";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
-import { useProductVariations } from "@/hooks/data/Product";
 
 import { ProductAttributeOption } from "./ProductAttributeOption";
+
+/* ------------------------- Context (in-file) ------------------------- */
+
+type InfoCtx = ReturnType<typeof useVariableProductInfo>;
+const VariableProductInfoContext = React.createContext<InfoCtx | null>(null);
+
+export function VariableProductInfoProvider({
+  variableProduct,
+  children,
+}: {
+  variableProduct: VariableProduct;
+  children: React.ReactNode;
+}) {
+  const info = useVariableProductInfo(variableProduct);
+  if (info.isLoading) return null; // or a skeleton
+  return (
+    <VariableProductInfoContext.Provider value={info}>
+      {children}
+    </VariableProductInfoContext.Provider>
+  );
+}
+
+export function useVariableProductInfoCtx(): InfoCtx {
+  const ctx = React.useContext(VariableProductInfoContext);
+  if (!ctx)
+    throw new Error(
+      "useVariableProductInfoCtx must be used inside VariableProductInfoProvider"
+    );
+  return ctx;
+}
+
+/* ------------------------- Public component ------------------------- */
 
 export type OnSelectPayload = {
   selection: VariationSelection;
@@ -28,52 +58,27 @@ type Props = {
 };
 
 export function ProductVariationSelect({ variableProduct, onSelect }: Props) {
-  const { isLoading, items: productVariations } =
-    useProductVariations(variableProduct);
-
-  // ID → variation
-  const byId = React.useMemo(() => {
-    const m = new Map<number, ProductVariation>();
-    for (const v of productVariations) m.set(v.id, v);
-    return m;
-  }, [productVariations]);
-
-  const priceRangeForIds = React.useCallback(
-    (ids: number[]) => {
-      const prices: ProductPrices[] = ids
-        .map((id) => byId.get(id)?.prices)
-        .filter(Boolean) as ProductPrices[];
-      if (prices.length === 0) return undefined;
-      return getProductPriceRange(prices);
-    },
-    [byId]
-  );
-
-  if (isLoading) return null;
-
   return (
-    <VariationSelectLogic
-      variableProduct={variableProduct}
-      byId={byId}
-      priceRangeForIds={priceRangeForIds}
-      onSelect={onSelect}
-    />
+    <VariableProductInfoProvider variableProduct={variableProduct}>
+      <VariationSelectLogic
+        variableProduct={variableProduct}
+        onSelect={onSelect}
+      />
+    </VariableProductInfoProvider>
   );
 }
 
+/* ------------------------- Logic ------------------------- */
+
 function VariationSelectLogic({
   variableProduct,
-  byId,
-  priceRangeForIds,
   onSelect,
 }: {
   variableProduct: VariableProduct;
-  byId: Map<number, ProductVariation>;
-  priceRangeForIds: (
-    ids: number[]
-  ) => ReturnType<typeof getProductPriceRange> | undefined;
   onSelect?: Props["onSelect"];
 }) {
+  const { byId } = useVariableProductInfoCtx();
+
   const selBuilder = React.useMemo(
     () => createVariationSelectionBuilder(variableProduct),
     [variableProduct]
@@ -112,12 +117,13 @@ function VariationSelectLogic({
   const selectedVariation =
     candidateIds.length === 1 ? byId.get(candidateIds[0]) : undefined;
 
+  // stable onSelect
   const onSelectRef = React.useRef(onSelect);
   React.useEffect(() => {
     onSelectRef.current = onSelect;
   }, [onSelect]);
 
-  // notify only when selection/variation actually changes
+  // notify only on real change
   const lastSigRef = React.useRef("");
   React.useEffect(() => {
     const sig = JSON.stringify({
@@ -130,7 +136,7 @@ function VariationSelectLogic({
     }
   }, [selection, selectedVariation]);
 
-  // View: iterate attributes directly
+  // View: iterate attributes directly; options will read pricing from context
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
       {Array.from(selection.entries()).map(([attrKey, state]) => {
@@ -147,11 +153,9 @@ function VariationSelectLogic({
                 ([termKey, variantIds]) => {
                   const termLabel =
                     variableProduct.terms.get(termKey)?.label ?? termKey;
-                  const disabled = !variantIds.length;
                   const isSelected = state.selected === termKey;
                   const onPress = () =>
                     select(attrKey, isSelected ? null : termKey);
-                  const price = priceRangeForIds(variantIds) ?? undefined;
 
                   return (
                     <ProductAttributeOption
@@ -161,8 +165,7 @@ function VariationSelectLogic({
                       isSelected={isSelected}
                       label={termLabel}
                       onPress={onPress}
-                      disabled={disabled}
-                      price={price}
+                      variantIds={variantIds} // price range computed inside option via context
                     />
                   );
                 }
@@ -174,3 +177,19 @@ function VariationSelectLogic({
     </ThemedXStack>
   );
 }
+
+/* ------------------------- Note for ProductAttributeOption -------------------------
+
+In ProductAttributeOption.tsx, consume the context to compute price range
+"as late as possible":
+
+import { useVariableProductInfoCtx } from "./ProductVariationSelect";
+
+const { priceRangeForIds } = useVariableProductInfoCtx();
+
+const priceRange = React.useMemo(
+  () => (variantIds.length ? priceRangeForIds(variantIds) : undefined),
+  [variantIds, priceRangeForIds]
+);
+
+--------------------------------------------------------------------------- */

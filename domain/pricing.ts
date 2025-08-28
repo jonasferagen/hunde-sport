@@ -1,13 +1,8 @@
 import React from "react";
 
-import product from "@/app/(app)/(shop)/product";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 import { useProductVariations } from "@/hooks/data/Product";
-import {
-  ProductAvailability,
-  ProductVariation,
-  VariationSelection,
-} from "@/types";
+import { ProductVariation } from "@/types";
 
 /** --- Shared types --- */
 export type CurrencyHeader = {
@@ -147,27 +142,36 @@ export function getProductPriceRange(
   return { min, max };
 }
 
-export type ProductPricing = {
-  isLoading: boolean;
-  isFree: boolean; // true if purchasable range is 0–0
-  priceRange: ProductPriceRange;
-};
-
-export function useProductPricing(product: VariableProduct): ProductPricing {
-  const variable = product as VariableProduct;
+export function useVariableProductInfo(variableProduct: VariableProduct) {
   const { items: productVariations = [], isLoading } =
-    useProductVariations(variable);
+    useProductVariations(variableProduct);
 
-  const priceRange = React.useMemo(() => {
-    const prices = productVariations.map((v) => v.prices);
-    return getProductPriceRange(prices.length ? prices : [product.prices]);
-  }, [productVariations, product.prices]);
+  // Signature only from IDs → avoids rebuilding if objects change shape but IDs stay the same
+  const idsSig = React.useMemo(
+    () => productVariations.map((v) => v.id).join(","),
+    [productVariations]
+  );
 
-  const isFree = priceRange.min.price === "0" && priceRange.max.price === "0";
+  const byId = React.useMemo(() => {
+    const m = new Map<number, ProductVariation>();
+    for (const v of productVariations) m.set(v.id, v);
+    return m;
+  }, [idsSig]); // <-- depends on ids only
 
-  return {
-    isLoading,
-    isFree,
-    priceRange,
-  };
+  const allIds = React.useMemo(
+    () => productVariations.map((v) => v.id),
+    [idsSig]
+  );
+
+  const priceRangeForIds = React.useCallback(
+    (ids: number[]) => {
+      const prices: ProductPrices[] = ids
+        .map((id) => byId.get(id)?.prices)
+        .filter(Boolean) as ProductPrices[];
+      return prices ? getProductPriceRange(prices) : undefined;
+    },
+    [byId]
+  ); // stable across renders unless the ID set changes
+
+  return { isLoading, byId, allIds, priceRangeForIds };
 }

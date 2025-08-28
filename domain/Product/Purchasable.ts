@@ -113,7 +113,7 @@ export function buildVariationSelectionWithIndex(
       const final = candidate ? intersect(base, candidate) : base;
       variantsByTerm.set(t.key, [...final]);
     }
-
+    console.warn(variantsByTerm);
     out.set(a.key, { selected: current.get(a.key) ?? null, variantsByTerm });
   }
 

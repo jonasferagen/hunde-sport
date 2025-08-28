@@ -3,7 +3,8 @@ import React from "react";
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
 
-import { ProductPriceRange } from "../product/display/ProductPrice";
+import { ProductPriceRange } from "../product/display";
+import { useVariableProductInfoCtx } from "./ProductVariationSelect";
 
 export const ProductAttributeOption = React.memo(
   ({
@@ -12,17 +13,27 @@ export const ProductAttributeOption = React.memo(
     isSelected,
     label,
     onPress,
-    disabled,
-    price,
+    variantIds,
   }: {
     attribute: string;
     term: string;
     isSelected: boolean;
     label: string;
-    disabled: boolean;
     onPress?: () => void;
-    price?: any;
+    variantIds: number[];
   }) => {
+    const { priceRangeForIds } = useVariableProductInfoCtx();
+
+    const priceRange = React.useMemo(
+      () => (variantIds.length ? priceRangeForIds(variantIds) : undefined),
+      [variantIds, priceRangeForIds]
+    );
+
+    const disabled = !priceRange;
+    if (!priceRange) {
+      return null;
+    }
+
     return (
       <ThemedXStack
         key={`${attribute}:${term}`}
@@ -42,7 +53,11 @@ export const ProductAttributeOption = React.memo(
             <ThemedXStack gap="$1">
               <ThemedText>{label}</ThemedText>
             </ThemedXStack>
-            {price ? <ProductPriceRange productPriceRange={price} /> : null}
+            <ThemedXStack gap="$1">
+              {priceRange && (
+                <ProductPriceRange productPriceRange={priceRange} />
+              )}
+            </ThemedXStack>
           </ThemedXStack>
         </ThemedButton>
       </ThemedXStack>
