@@ -1,15 +1,14 @@
 // domain/product/BaseProduct.ts
-
 import { cleanHtml } from "@/lib/format";
 
 import { ProductPrices } from "../pricing";
-import { StoreImage } from "../StoreImage";
+import { StoreImage, StoreImageData } from "../StoreImage";
 
-export interface Category {
+export interface CategoryRef {
   id: number;
   name: string;
   slug: string;
-  link?: string;
+  link: string; // now required per your note
 }
 
 export interface ProductAvailability {
@@ -26,7 +25,7 @@ export interface BaseProductData {
   permalink: string;
   description: string;
   short_description: string;
-  images: StoreImage[];
+  images: StoreImageData[]; // raw StoreImageData[]
   prices: ProductPrices;
   on_sale: boolean;
   featured: boolean;
@@ -34,7 +33,7 @@ export interface BaseProductData {
   is_purchasable: boolean;
   is_on_backorder: boolean;
   parent: number;
-  categories: Category[];
+  categories: CategoryRef[]; // already reliable, no sanitization needed
   type: "simple" | "variable" | "variation";
 }
 
@@ -52,7 +51,7 @@ export class BaseProduct {
   is_in_stock: boolean;
   is_purchasable: boolean;
   is_on_backorder: boolean;
-  categories: Category[];
+  categories: CategoryRef[];
   type: "simple" | "variable" | "variation";
 
   constructor(data: BaseProductData) {
@@ -62,18 +61,25 @@ export class BaseProduct {
     this.permalink = data.permalink;
     this.description = cleanHtml(data.description);
     this.short_description = cleanHtml(data.short_description);
-    this.images = data.images;
+
+    // Images: map raw → StoreImage, ensure at least one
+    const imgs = (data.images ?? []).map((img) => new StoreImage(img));
+    this.images = imgs.length > 0 ? imgs : [StoreImage.DEFAULT];
+
     this.prices = data.prices;
     this.on_sale = data.on_sale;
     this.featured = data.featured;
     this.is_in_stock = data.is_in_stock;
     this.is_purchasable = data.is_purchasable;
     this.is_on_backorder = data.is_on_backorder;
+
+    // Categories: already reliable
     this.categories = data.categories;
+
     this.type = data.type;
   }
 
-  get featuredImage(): StoreImage {
+  get featuredImage() {
     return this.images[0];
   }
 
@@ -86,3 +92,6 @@ export class BaseProduct {
     };
   }
 }
+
+// (Optional) re-export here if you really want this path to expose it:
+//export { mapToProduct } from "./mapToProduct";

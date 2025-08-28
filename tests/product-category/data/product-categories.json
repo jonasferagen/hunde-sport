@@ -1,0 +1,95 @@
+[
+  {
+    "id": 575,
+    "name": "Aktivisering",
+    "slug": "aktivisering",
+    "description": "",
+    "parent": 455,
+    "count": 15,
+    "image": null,
+    "review_count": 0,
+    "permalink": "https://hunde-sport.no/produktkategori/hund/hundeleker/aktivisering/"
+  },
+  {
+    "id": 707,
+    "name": "Annet",
+    "slug": "oppbevaring-skaler",
+    "description": "",
+    "parent": 451,
+    "count": 7,
+    "image": null,
+    "review_count": 0,
+    "permalink": "https://hunde-sport.no/produktkategori/hund/matplass/oppbevaring-skaler/"
+  },
+  {
+    "id": 574,
+    "name": "Ball",
+    "slug": "ball",
+    "description": "",
+    "parent": 455,
+    "count": 14,
+    "image": null,
+    "review_count": 0,
+    "permalink": "https://hunde-sport.no/produktkategori/hund/hundeleker/ball/"
+  },
+  {
+    "id": 849,
+    "name": "Balsam",
+    "slug": "balsam",
+    "description": "",
+    "parent": 529,
+    "count": 6,
+    "image": null,
+    "review_count": 0,
+    "permalink": "https://hunde-sport.no/produktkategori/hund/pelspleie-hund/balsam/"
+  },
+  {
+    "id": 2253,
+    "name": "Barfit",
+    "slug": "barfit",
+    "description": "",
+    "parent": 0,
+    "count": 29,
+    "image": {
+      "id": 248088,
+      "src": "https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?fit=2362%2C1195&ssl=1",
+      "thumbnail": "https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=400%2C400&ssl=1",
+      "srcset": "https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?w=2362&ssl=1 2362w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=300%2C152&ssl=1 300w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=1024%2C518&ssl=1 1024w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=768%2C389&ssl=1 768w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=1536%2C777&ssl=1 1536w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=2048%2C1036&ssl=1 2048w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=1080%2C546&ssl=1 1080w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=1280%2C648&ssl=1 1280w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=980%2C496&ssl=1 980w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=480%2C243&ssl=1 480w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=510%2C258&ssl=1 510w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?resize=64%2C32&ssl=1 64w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2025/07/brft_logo.jpg?w=2160 2160w",
+      "sizes": "(max-width: 2362px) 100vw, 2362px",
+      "name": "brft_logo",
+      "alt": ""
+    },
+    "review_count": 5,
+    "permalink": "https://hunde-sport.no/produktkategori/barfit/"
+  },
+  {
+    "id": 2221,
+    "name": "Black Friday",
+    "slug": "black-friday",
+    "description": "#",
+    "parent": 448,
+    "count": 44,
+    "image": null,
+    "review_count": 0,
+    "permalink": "https://hunde-sport.no/produktkategori/hund/black-friday/"
+  },
+  {
+    "id": 588,
+    "name": "Børster/karder/kammer",
+    "slug": "borsterkarder",
+    "description": "",
+    "parent": 529,
+    "count": 26,
+    "image": {
+      "id": 240634,
+      "src": "https://hunde-sport.no/wp-content/uploads/2022/11/ruler-vertical-solid.svg",
+      "thumbnail": "https://hunde-sport.no/wp-content/uploads/2022/11/ruler-vertical-solid.svg",
+      "srcset": "",
+      "sizes": "(min-width: 0px) and (max-width: 0px) 0px, (min-width: 1px) 1px, 100vw",
+      "name": "ruler-vertical-solid",
+      "alt": ""
+    },
+    "review_count": 0,
+    "permalink": "https://hunde-sport.no/produktkategori/hund/pelspleie-hund/borsterkarder/"
+  }
+]
