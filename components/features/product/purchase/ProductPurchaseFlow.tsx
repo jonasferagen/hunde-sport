@@ -1,40 +1,25 @@
 import React from "react";
 
-import { openModal } from "@/stores/ui/modalStore";
-import {
-  createPurchasable,
-  PurchasableProduct,
-  VariableProduct,
-} from "@/types";
+import { SimpleProduct } from "@/domain/Product/SimpleProduct";
+import { PurchasableProduct, VariableProduct } from "@/types";
 
-import { ProductVariationsModal } from "../../product-variation/ProductVariationsModal";
-import { PurchaseButtonSmart } from "./PurchaseButtonSmart";
+import { SimplePurchaseButton } from "./SimplePurchaseButton";
+import { VariablePurchaseButton } from "./VariablePurchaseButton";
 
 export const ProductPurchaseFlow = ({
   product,
 }: {
   product: PurchasableProduct;
 }) => {
-  const purchasable = React.useMemo(
-    () => createPurchasable({ product, productVariation: undefined }),
-    [product]
-  );
+  if (product.isSimple) {
+    return <SimplePurchaseButton simpleProduct={product as SimpleProduct} />;
+  }
 
-  const onRequestVariation = (variableProduct: VariableProduct) =>
-    openModal(
-      (payload, api) => (
-        <ProductVariationsModal
-          variableProduct={variableProduct}
-          close={() => api.close()}
-        />
-      ),
-      product as VariableProduct
+  if (product.isVariable) {
+    return (
+      <VariablePurchaseButton variableProduct={product as VariableProduct} />
     );
+  }
 
-  return (
-    <PurchaseButtonSmart
-      purchasable={purchasable}
-      onRequestVariation={onRequestVariation}
-    />
-  );
+  throw new Error("Invalid product");
 };

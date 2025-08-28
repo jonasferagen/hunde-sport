@@ -14,8 +14,8 @@ type Props = React.ComponentProps<typeof ThemedText> & {
 
 export const ProductVariationStatus: React.FC<Props> = ({
   purchasable,
-  placeholder = "må velge",
-  showHint = true,
+  placeholder = "velg..",
+  showHint = false,
   ...textProps
 }) => {
   const product = purchasable.product;
@@ -28,7 +28,7 @@ export const ProductVariationStatus: React.FC<Props> = ({
     : [];
 
   return (
-    <ThemedXStack gap="$3" ai="center" fw="wrap">
+    <ThemedXStack gap="$3" ai="center" split>
       {isVariable &&
         attrKeys.map((attrKey) => {
           const attr = (product as VariableProduct).attributes.get(attrKey);

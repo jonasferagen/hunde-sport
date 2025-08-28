@@ -1,83 +1,30 @@
 // domain/purchase/purchasable.ts
+
 import { ProductAvailability } from "@/domain/Product/BaseProduct";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
-import { SimpleProduct } from "@/domain/Product/SimpleProduct";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 
 import { ProductPrices } from "../pricing";
 
 export type VariationSelection = Map<string, string | null>;
 
-export type PurchasableProduct = SimpleProduct | VariableProduct;
-
-export type ValidationStatus =
-  | "OK"
-  | "VARIATION_REQUIRED"
-  | "OUT_OF_STOCK"
-  | "INVALID_PRODUCT";
-
 export interface ValidationResult {
   isValid: boolean;
-  status: ValidationStatus;
   message: string;
 }
 
-const validate = ({
-  product,
-  productVariation,
-}: {
-  product: PurchasableProduct;
-  productVariation?: ProductVariation;
-}): ValidationResult => {
-  if (!product) {
-    return {
-      isValid: false,
-      status: "INVALID_PRODUCT",
-      message: "Produkt utilgjengelig",
-    };
-  }
-
-  if (product instanceof SimpleProduct && productVariation) {
-    throw new Error("SimpleProduct cannot have a product variation");
-  }
-
-  const productToCheck = productVariation || product;
-
-  if (!productToCheck.is_in_stock) {
-    return {
-      isValid: false,
-      status: "OUT_OF_STOCK",
-      message: "Utsolgt",
-    };
-  }
-
-  if (product instanceof VariableProduct && !productVariation) {
-    return {
-      isValid: false,
-      status: "VARIATION_REQUIRED",
-      message: "Se varianter",
-    };
-  }
-
-  return {
-    isValid: true,
-    status: "OK",
-    message: "Legg til",
-  };
-};
-
 export interface Purchasable extends ValidationResult {
-  product: SimpleProduct | VariableProduct;
+  product: VariableProduct;
   productVariation?: ProductVariation;
-  activeProduct: PurchasableProduct;
+  activeProduct: VariableProduct | ProductVariation;
   prices: ProductPrices;
   availability: ProductAvailability;
-  isVariable: boolean;
+  isVariable: true;
 
-  /** Optional: current selection (only meaningful for VariableProduct) */
+  /** Current selection (attrKey -> termKey|null) */
   selection?: VariationSelection;
 
-  /** For VariableProduct + missing selection: which attribute keys are still unset */
+  /** For missing selection: which attribute keys are still unset */
   missingAttributes?: string[];
 }
 
@@ -86,22 +33,41 @@ export const createPurchasable = ({
   productVariation,
   selection,
 }: {
-  product: PurchasableProduct;
+  product: VariableProduct;
   productVariation?: ProductVariation;
   selection?: VariationSelection;
 }): Purchasable => {
-  const validationResult = validate({ product, productVariation });
-  const activeProduct = productVariation || product;
+  // guard: only VariableProduct supported here
+  if (product.type !== "variable") {
+    throw new Error("createPurchasable expects a VariableProduct");
+  }
 
+  const activeProduct = productVariation ?? product;
   const prices = activeProduct.prices;
   const availability = activeProduct.availability;
 
-  // Derive missing attribute keys if we have a selection & variable product
-  let missingAttributes: string[] | undefined = undefined;
-  if (selection && product instanceof VariableProduct && !productVariation) {
-    const keys = [...product.attributes.keys()];
-    missingAttributes = keys.filter((k) => !selection.get(k));
+  // derive missing attribute keys from selection (if provided)
+  let missingAttributes: string[] | undefined;
+  if (selection) {
+    const allKeys = [...product.attributes.keys()];
+    missingAttributes = allKeys.filter((k) => !selection.get(k));
   }
+
+  // build message
+  const isValid = !!productVariation;
+  const message = isValid
+    ? "Legg til"
+    : (() => {
+        if (!selection) return "Velg ...(A)";
+        const missing = missingAttributes ?? [];
+        if (missing.length > 0) {
+          const labels = missing.map(
+            (k) => product.attributes.get(k)?.label ?? k
+          );
+          return `Velg ${formatListNo(labels)}`;
+        }
+        return "Velg ...(B)";
+      })();
 
   return {
     product,
@@ -109,9 +75,17 @@ export const createPurchasable = ({
     activeProduct,
     prices,
     availability,
-    isVariable: product.type === "variable",
+    isVariable: true,
     selection,
     missingAttributes,
-    ...validationResult,
+    isValid,
+    message,
   };
 };
+
+// Norwegian-ish list joiner: "farge", "størrelse" → "farge og størrelse"
+function formatListNo(items: string[]): string {
+  if (items.length <= 1) return items[0] ?? "";
+  if (items.length === 2) return `${items[0]} og ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")} og ${items[items.length - 1]}`;
+}

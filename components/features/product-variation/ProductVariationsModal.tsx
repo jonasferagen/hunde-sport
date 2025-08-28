@@ -13,6 +13,7 @@ import {
   ProductPriceSimple,
   ProductTitle,
 } from "../product/display";
+import { PurchasableButton } from "../product/purchase/PurchasableButton";
 import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 import { ProductVariationStatus } from "./ProductVariationStatus";
@@ -50,14 +51,15 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
         >
           <ProductVariationSelect
             variableProduct={variableProduct}
-            onSelect={({ selection, selectedVariation }) => {
-              const purchasable = createPurchasable({
-                product: variableProduct,
-                productVariation: selectedVariation,
-                selection,
-              });
-              setPurchasable(purchasable);
-            }}
+            onSelect={(payload) =>
+              setPurchasable(
+                createPurchasable({
+                  product: variableProduct,
+                  productVariation: payload.selectedVariation,
+                  selection: payload.selection,
+                })
+              )
+            }
           />
         </ScrollView>
       </ThemedYStack>
@@ -66,23 +68,18 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
       <ThemedYStack>
         {/* Selection summary (very lightweight) */}
         <ProductVariationStatus purchasable={purchasable} />
-
-        <ThemedXStack split>
-          {/* If a variation is resolved, show its price & availability; otherwise fall back to parent */}
-          <ProductPriceSimple
-            productPrices={purchasable.activeProduct.prices}
-            productAvailability={purchasable.activeProduct.availability}
-          />
-        </ThemedXStack>
-        {
-          <PurchaseButtonSmart
-            purchasable={purchasable}
-            onSuccess={close}
-            inModal
-          />
-        }
+        {<PurchasableButton purchasable={purchasable} onSuccess={close} />}
         <ThemedYStack mb="$3" />
       </ThemedYStack>
     </ThemedYStack>
   );
 };
+
+/* 
+        <ThemedXStack split>
+          {/* If a variation is resolved, show its price & availability; otherwise fall back to parent 
+          <ProductPriceSimple
+            productPrices={purchasable.activeProduct.prices}
+            productAvailability={purchasable.activeProduct.availability}
+          />
+        </ThemedXStack> */

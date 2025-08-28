@@ -91,4 +91,16 @@ export class BaseProduct {
       isOnBackOrder: this.is_on_backorder,
     };
   }
+
+  get isVariable(): boolean {
+    return this.type === "variable";
+  }
+
+  get isSimple(): boolean {
+    return this.type === "simple";
+  }
+
+  get isVariation(): boolean {
+    return this.type === "variation";
+  }
 }

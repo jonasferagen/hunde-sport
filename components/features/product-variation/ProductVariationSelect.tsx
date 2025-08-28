@@ -133,9 +133,21 @@ function VariationSelectLogic({
   const selectedVariation =
     candidateIds.length === 1 ? byId.get(candidateIds[0]) : undefined;
 
+  const onSelectRef = React.useRef(onSelect);
+  React.useEffect(() => {
+    onSelectRef.current = onSelect;
+  }, [onSelect]);
+  /*
   React.useEffect(() => {
     onSelect?.({ selection, selectedVariation });
   }, [onSelect, selection, selectedVariation]);
+*/
+  React.useEffect(() => {
+    onSelectRef.current?.({
+      selection,
+      selectedVariation,
+    });
+  }, [selection, selectedVariation, candidateIds]);
 
   // View: straight from groups (no “taxonomies/flagged” adapter)
   return (
