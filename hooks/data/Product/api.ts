@@ -1,5 +1,4 @@
 import { ENDPOINTS, PaginationOptions } from "@/config/api";
-// eslint-disable-next-line import/no-unresolved
 import { mapToProduct } from "@/domain/Product/mapToProduct";
 import { SimpleProduct } from "@/domain/Product/SimpleProduct";
 import { apiClient } from "@/lib/apiClient";
@@ -82,29 +81,10 @@ export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.RECENT(pagination)
   );
-
-  const res = responseTransformer(response, mapToProduct);
-  console.error(res);
-  return res;
-};
-
-/**
- * Fetch products by product category.
- *
- * @param product_category_id - The ID of the product category to fetch products for.
- * @param pagination - Optional pagination options.
- * @returns The fetched products.
- */
-export const fetchProductsByProductCategory = async (
-  product_category_id: number,
-  pagination?: PaginationOptions
-) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(product_category_id, pagination)
-  );
   return responseTransformer(response, mapToProduct);
 };
 
+/**
 /**
  * Fetch product variations.
  *
