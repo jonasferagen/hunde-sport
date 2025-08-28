@@ -16,7 +16,10 @@ import {
   ProductTitle,
 } from "../product/display";
 import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
-import { ProductVariationSelect } from "./ProductVariationSelect";
+import {
+  ProductVariationSelect,
+  VariationSelection,
+} from "./ProductVariationSelect";
 import { ProductVariationStatus } from "./ProductVariationStatus";
 
 const IMAGE_H = 200;
@@ -24,7 +27,7 @@ type Props = { close: () => void; variableProduct: VariableProduct };
 
 export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
   // selection + resolution coming back from the selector
-  const [selection, setSelection] = React.useState<Map<string, string | null>>(
+  const [selection, setSelection] = React.useState<VariationSelection>(
     new Map()
   );
   const [isComplete, setIsComplete] = React.useState(false);
