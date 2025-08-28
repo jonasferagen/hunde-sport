@@ -1,69 +1,25 @@
-// VariableProductOptions.ts (leaned)
-
-import {
-  TermOption,
-  TermOptionGroup,
-  TermSelection,
-} from "@/stores/useProductVariationStore";
+// ProductAttributeHelper.ts
+import { TermOption, TermSelection } from "@/stores/useProductVariationStore";
+import type { VariableProduct } from "@/types";
 import {
   ProductAttribute,
   ProductAttributeTaxonomy as Taxonomy,
   ProductAttributeTerm as Term,
 } from "@/types";
 
-import { VariableProduct } from "./VariableProduct";
-
-const norm = (s: string) =>
-  String(s ?? "")
-    .trim()
-    .toLowerCase();
-const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
-
-type VariationAny = {
-  id: number;
-  attributes: { name: string; value?: string; option?: string }[];
-};
+const termKey = (tax: string, slug: string) => `${tax}::${slug}`;
 
 export class ProductAttributeHelper {
+  /** Build flat TermOption[] from product.terms + product.termKeyToVariationIds */
   static create(product: VariableProduct): TermOption[] {
-    const attributes: ProductAttribute[] = product.attributes ?? [];
-    const variations: VariationAny[] = (product.variations ??
-      []) as VariationAny[];
-
-    const nameToTaxonomy: Record<string, string> = {};
-    const taxonomyToAttribute: Record<string, ProductAttribute> = {};
-    const variationByAttr: Record<string, Record<string, number[]>> = {};
-
-    for (const a of attributes) {
-      nameToTaxonomy[norm(a.name)] = a.taxonomy;
-      taxonomyToAttribute[a.taxonomy] = a;
-    }
-
-    for (const v of variations) {
-      for (const attr of v.attributes ?? []) {
-        const taxonomy = nameToTaxonomy[norm(attr.name)] ?? norm(attr.name);
-        const raw = (attr as any).value ?? (attr as any).option ?? "";
-        const slug = norm(raw);
-        if (!taxonomy || !slug) continue;
-
-        variationByAttr[taxonomy] ??= {};
-        (variationByAttr[taxonomy][slug] ??= []).push(v.id);
-      }
-    }
-
     const out: TermOption[] = [];
-    for (const [taxonomyName, attr] of Object.entries(taxonomyToAttribute)) {
-      if (!attr.has_variations) continue;
-
-      const taxonomy: Taxonomy = {
-        name: taxonomyName,
-        label: cap(attr.name),
-      };
-      for (const t of attr.terms ?? []) {
-        const slug = norm(t.slug);
+    for (const [taxName, termList] of product.terms ?? new Map()) {
+      for (const t of termList ?? []) {
+        const key = termKey(t.taxonomy.name, t.slug);
+        const ids = product.termKeyToVariationIds.get(key);
         out.push({
-          term: { taxonomy, slug, label: cap(t.name) },
-          variationIds: variationByAttr[taxonomyName]?.[slug] ?? [],
+          term: t,
+          variationIds: ids ? Array.from(ids) : [],
           enabled: true,
         });
       }
@@ -71,70 +27,49 @@ export class ProductAttributeHelper {
     return out;
   }
 
-  static groupByTaxonomy(options: TermOption[]): TermOptionGroup[] {
-    const map = new Map<string, TermOptionGroup>();
-    for (const o of options) {
-      const key = o.term.taxonomy.name;
-      let g = map.get(key);
-      if (!g) {
-        g = { taxonomy: o.term.taxonomy, options: [] };
-        map.set(key, g);
-      }
-      g.options.push(o);
-    }
-    return [...map.values()];
-  }
-
-  // ----- shared internals -----
-  private static intersectIds(sets: Set<number>[]): Set<number> {
+  // internals
+  private static intersect(sets: Set<number>[]): Set<number> {
     if (!sets.length) return new Set();
     return sets.slice(1).reduce((acc, s) => {
-      const out = new Set<number>();
+      const next = new Set<number>();
       acc.forEach((id) => {
-        if (s.has(id)) out.add(id);
+        if (s.has(id)) next.add(id);
       });
-      return out;
+      return next;
     }, new Set(sets[0]));
   }
 
-  private static selectedSets(
+  private static selectedSetsFromOptions(
     options: TermOption[],
     selection: TermSelection
   ): Set<number>[] {
-    const selected = Array.from(selection.values()).filter(
-      (t): t is Term => t !== null
-    );
-
-    return selected.map((term) => {
+    const terms = Array.from(selection.values()).filter((t): t is Term => !!t);
+    return terms.map((term) => {
       const opt = options.find(
         (o) =>
           o.term.taxonomy.name === term.taxonomy.name &&
           o.term.slug === term.slug
       );
-
       return opt ? new Set(opt.variationIds) : new Set<number>();
     });
   }
 
-  /** Apply enabled flags based on selection rules. */
+  /** Non-throwing: disables all if selection yields no matches */
   static withEnabled(
     options: TermOption[],
     selection: TermSelection
   ): TermOption[] {
-    const sets = this.selectedSets(options, selection);
+    const sets = this.selectedSetsFromOptions(options, selection);
     if (sets.length === 0) {
       return options.map((o) => ({
         ...o,
         enabled: (o.variationIds?.length ?? 0) > 0,
       }));
     }
-
-    const matching = this.intersectIds(sets);
+    const matching = this.intersect(sets);
     if (matching.size === 0) {
-      // up to you: throw or simply disable all. Keeping previous behavior:
-      throw new Error("No options matched the provided selection.");
+      return options.map((o) => ({ ...o, enabled: false }));
     }
-
     if (sets.length === 1) {
       const selectedTax = Array.from(selection.values()).find(Boolean)!.taxonomy
         .name;
@@ -146,26 +81,21 @@ export class ProductAttributeHelper {
             : o.variationIds.some((id) => matching.has(id)),
       }));
     }
-
-    // 2+ terms
     return options.map((o) => ({
       ...o,
       enabled: o.variationIds.some((id) => matching.has(id)),
     }));
   }
 
-  /** Unique variation id implied by selection, or undefined. */
   static resolveSelectedVariationId(
     options: TermOption[],
     selection: TermSelection
   ): number | undefined {
-    const sets = this.selectedSets(options, selection);
-
+    const sets = this.selectedSetsFromOptions(options, selection);
     if (!sets.length || sets.some((s) => s.size === 0)) return undefined;
-
-    const matching = this.intersectIds(sets);
-    if (matching.size !== 1) return undefined;
-
-    return matching.values().next().value as number;
+    const matching = this.intersect(sets);
+    return matching.size === 1
+      ? (matching.values().next().value as number)
+      : undefined;
   }
 }

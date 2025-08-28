@@ -1,27 +1,22 @@
-// stores/useProductVariationStore.ts (leaner state)
-/** Reactive selectors (v5 + useShallow) */
+// useProductVariationStore.ts
 import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 
 import { ProductAttributeHelper } from "@/domain/Product/ProductAttributeHelper";
-import {
-  getProductPriceRange,
+import type {
   ProductAttributeTaxonomy as Taxonomy,
   ProductAttributeTerm as Term,
   ProductPriceRange,
   ProductVariation,
   VariableProduct,
 } from "@/types";
+import { getProductPriceRange } from "@/types";
 
 export type TermSelection = Map<string, Term | null>;
 export type TermOption = {
   variationIds: number[];
   term: Term;
-  enabled?: boolean; // computed; not stored in state
-};
-export type TermOptionGroup = {
-  taxonomy: Taxonomy;
-  options: TermOption[];
+  enabled?: boolean;
 };
 
 type State = {
@@ -36,10 +31,7 @@ type Actions = {
   setVariations(variations: ProductVariation[]): void;
   select(taxonomy: string, term: Term | null): void;
   reset(): void;
-  getVariation(id: number): ProductVariation | undefined;
   priceRangeForIds(ids: number[]): ProductPriceRange | null;
-  getSelectedVariationId(): number | undefined;
-  getSelectedVariation(): ProductVariation | undefined;
 };
 
 const emptySelection = () => new Map<string, Term | null>();
@@ -60,18 +52,14 @@ export const useVariableProductStore = create<State & Actions>()(
 
     init(product) {
       const options = ProductAttributeHelper.create(product);
-      // seed empty selection with all taxonomies from options
-      const selection = emptySelection();
-      ProductAttributeHelper.groupByTaxonomy(options).forEach((g) =>
-        selection.set(g.taxonomy.name, null)
-      );
-      set({
-        ...initialState,
-        product,
-        options,
-        selection,
-        variationById: new Map(),
-      });
+      // seed selection from canonical product.taxonomies (order preserved)
+      const selection = new Map<string, Term | null>();
+      for (const name of (
+        product.taxonomies ?? new Map<string, Taxonomy>()
+      ).keys()) {
+        selection.set(name, null);
+      }
+      set({ product, options, selection, variationById: new Map() });
     },
 
     setVariations(variations) {
@@ -79,14 +67,9 @@ export const useVariableProductStore = create<State & Actions>()(
     },
 
     select(taxonomy, term) {
-      const prev = get().selection;
-      const next = new Map(prev);
+      const next = new Map(get().selection);
       next.set(taxonomy, term);
       set({ selection: next });
-    },
-
-    getVariation(id) {
-      return get().variationById.get(id);
     },
 
     priceRangeForIds(ids) {
@@ -96,41 +79,13 @@ export const useVariableProductStore = create<State & Actions>()(
         .filter((p): p is NonNullable<typeof p> => !!p);
       return prices.length ? getProductPriceRange(prices) : null;
     },
-
-    getSelectedVariationId() {
-      const { options, selection } = get();
-
-      return ProductAttributeHelper.resolveSelectedVariationId(
-        options,
-        selection
-      );
-    },
-
-    getSelectedVariation() {
-      const id = get().getSelectedVariationId();
-      return id ? get().variationById.get(id) : undefined;
-    },
   })
 );
 
-export const useGroups = () =>
+// Optional tiny reactive hook for the variation id
+export const useSelectedVariationId = () =>
   useVariableProductStore(
-    useShallow((s) => {
-      const flagged = ProductAttributeHelper.withEnabled(
-        s.options,
-        s.selection
-      );
-      return ProductAttributeHelper.groupByTaxonomy(flagged);
-    })
-  );
-
-export const useSelectedVariation = () =>
-  useVariableProductStore(
-    useShallow((s) => {
-      const id = ProductAttributeHelper.resolveSelectedVariationId(
-        s.options,
-        s.selection
-      );
-      return id ? s.variationById.get(id) : undefined;
-    })
+    useShallow((s) =>
+      ProductAttributeHelper.resolveSelectedVariationId(s.options, s.selection)
+    )
   );

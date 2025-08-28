@@ -48,7 +48,6 @@ export interface BaseProductData {
   categories: ProductCategory[];
   type: "simple" | "variable" | "variation";
   attributes: ProductAttribute[];
-  _variations: VariationReference[];
   variations: any[];
   variation: string;
 }
@@ -71,7 +70,6 @@ export class BaseProduct<T extends BaseProductData> {
   categories: ProductCategory[];
   type: "simple" | "variable" | "variation";
   attributes: ProductAttribute[];
-  _variations: VariationReference[];
   variations: any[];
   variation: string;
   priceKey: string;
@@ -110,7 +108,8 @@ export class BaseProduct<T extends BaseProductData> {
     this.attributes = (data.attributes || []).map(
       (attr) => new ProductAttribute(attr)
     );
-    this.variations = data._variations || [];
+
+    this.variations = data.variations || [];
     this.variation = cleanHtml(data.variation);
 
     const p = this.prices;

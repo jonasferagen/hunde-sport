@@ -10,22 +10,16 @@ import {
   ThemedYStack,
 } from "@/components/ui/themed-components";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
-import { ProductAttributeTerm as Term } from "@/domain/Product/ProductAttribute";
 import { ProductAttributeHelper } from "@/domain/Product/ProductAttributeHelper";
-import {
-  TermOption,
-  TermOptionGroup,
-  useGroups,
-  useVariableProductStore,
-} from "@/stores/useProductVariationStore";
-import type { ProductAttributeTaxonomy as Taxonomy } from "@/types";
+import { useVariableProductStore } from "@/stores/useProductVariationStore";
 
 import { ProductPriceRange } from "../product/display/ProductPrice";
 
 export function ProductVariationSelect() {
-  const { options, selection, select, priceRangeForIds } =
+  const { product, options, selection, select, priceRangeForIds } =
     useVariableProductStore(
       useShallow((s) => ({
+        product: s.product,
         options: s.options,
         selection: s.selection,
         select: s.select,
@@ -33,41 +27,28 @@ export function ProductVariationSelect() {
       }))
     );
 
-  // add enabled flags based on current selection
   const flagged = React.useMemo(
     () => ProductAttributeHelper.withEnabled(options, selection),
     [options, selection]
   );
 
-  // ordered unique taxonomies (objects with name + label)
-  const taxonomies: Taxonomy[] = React.useMemo(() => {
-    const seen = new Set<string>();
-    const out: Taxonomy[] = [];
-    for (const o of flagged) {
-      const t = o.term.taxonomy;
-      if (!seen.has(t.name)) {
-        seen.add(t.name);
-        out.push(t);
-      }
-    }
-    return out;
-  }, [flagged]);
-
-  if (taxonomies.length === 0) return null;
-
+  const taxonomies = React.useMemo(
+    () => Array.from((product?.taxonomies ?? new Map()).values()),
+    [product]
+  );
+  if (!product) return null;
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
-      {taxonomies.map((taxonomy) => {
-        const selected = selection.get(taxonomy.name) ?? null;
+      {taxonomies.map((tax) => {
+        const selected = selection.get(tax.name) ?? null;
         const optionsInTax = flagged.filter(
-          (o) =>
-            o.term.taxonomy.name === taxonomy.name && o.variationIds.length > 0
+          (o) => o.term.taxonomy.name === tax.name && o.variationIds.length > 0
         );
 
         return (
-          <ThemedYStack key={taxonomy.name} f={1}>
+          <ThemedYStack key={tax.name} f={1}>
             <H3 tt="capitalize" size="$6" mb="$1">
-              {taxonomy.label} {/* <-- real label */}
+              {tax.label}
             </H3>
             <ThemedYStack w="100%" gap="$2">
               {optionsInTax.map((opt) => {
@@ -85,7 +66,7 @@ export function ProductVariationSelect() {
 
                 return (
                   <ThemedXStack
-                    key={`${taxonomy.name}:${term.slug}`}
+                    key={`${tax.name}:${term.slug}`}
                     ai="center"
                     gap="$2"
                     theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}

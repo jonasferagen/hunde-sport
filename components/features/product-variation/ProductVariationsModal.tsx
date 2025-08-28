@@ -24,13 +24,17 @@ type Props = { close: () => void; variableProduct: VariableProduct };
 const IMAGE_H = 200;
 
 export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
+  console.log(variableProduct.taxonomies);
+
   const init = useVariableProductStore((s) => s.init);
   const setVariations = useVariableProductStore((s) => s.setVariations);
   // Fallback to store if no explicit selection is passed
   const storeSelection = useVariableProductStore((s) => s.selection);
-  const productVariation = useVariableProductStore((s) =>
+  /*  const productVariation = useVariableProductStore((s) =>
     s.getSelectedVariation()
-  );
+  ); */
+  const productVariation = undefined;
+
   const reset = useVariableProductStore((s) => s.reset);
   const { isLoading, items: productVariations } =
     useProductVariations(variableProduct);
