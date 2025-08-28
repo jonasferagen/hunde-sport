@@ -1,7 +1,6 @@
 // components/ProductVariationSelect.tsx
 
 import React from "react";
-// components/ProductVariationSelect.tsx (top of file imports)
 import { H3 } from "tamagui";
 
 import {
@@ -13,54 +12,62 @@ import {
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
 import type { ProductPrices } from "@/domain/pricing";
 import { getProductPriceRange } from "@/domain/pricing";
-import { getAllAttributeOptions } from "@/domain/Product/helpers/VariableProductUI";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
 import { useProductVariations } from "@/hooks/data/Product";
 
 import { ProductPriceRange } from "../product/display";
 
-// --- Public component (initializer) ---
-type Props = {
-  variableProduct: VariableProduct;
-  onSelect?: (payload: {
-    selection: Map<string, string | null>; // attrKey -> termKey|null (internal)
-    selectedVariation?: ProductVariation; // resolved variation (if any)
-    candidateIds: number[]; // all matching IDs for current selection
-    isComplete: boolean; // all attributes selected
-  }) => void;
+type AttributeKey = string;
+type TermKey = string;
+
+export type VariationSelection = Map<AttributeKey, TermKey | null>;
+
+type Option = {
+  term: { key: TermKey; label: string; attribute: AttributeKey };
+  enabled: boolean;
+  variationIds: number[];
 };
 
-// ...
+type OptionGroup = {
+  attribute: { key: AttributeKey; label: string };
+  options: Option[];
+};
+
+export type OnSelectPayload = {
+  selection: VariationSelection;
+  selectedVariation?: ProductVariation;
+  isComplete: boolean;
+};
+
+type Props = {
+  variableProduct: VariableProduct;
+  onSelect?: (payload: OnSelectPayload) => void;
+};
 
 export function ProductVariationSelect({ variableProduct, onSelect }: Props) {
   const { isLoading, items: productVariations } =
     useProductVariations(variableProduct);
 
-  // Build a stable ID → variation index
+  // ID → variation
   const byId = React.useMemo(() => {
     const m = new Map<number, ProductVariation>();
     for (const v of productVariations) m.set(v.id, v);
     return m;
   }, [productVariations]);
 
-  // Compute a price range for a set of variation IDs (used by the option rows)
   const priceRangeForIds = React.useCallback(
     (ids: number[]) => {
       const prices: ProductPrices[] = ids
         .map((id) => byId.get(id)?.prices)
         .filter(Boolean) as ProductPrices[];
-
-      // If nothing matched (e.g., disabled option), return undefined so UI hides price
       if (prices.length === 0) return undefined;
-
-      // Use your util (it already ignores zero/empty prices and seeds correctly)
       return getProductPriceRange(prices);
     },
     [byId]
   );
 
-  if (isLoading) return null; // or skeleton
+  if (isLoading) return null;
 
   return (
     <VariationSelectLogic
@@ -72,7 +79,6 @@ export function ProductVariationSelect({ variableProduct, onSelect }: Props) {
   );
 }
 
-// --- Logic subcomponent (compute) ---
 function VariationSelectLogic({
   variableProduct,
   byId,
@@ -81,17 +87,17 @@ function VariationSelectLogic({
 }: {
   variableProduct: VariableProduct;
   byId: Map<number, ProductVariation>;
-  priceRangeForIds: (ids: number[]) => any;
+  priceRangeForIds: (
+    ids: number[]
+  ) => ReturnType<typeof getProductPriceRange> | undefined;
   onSelect?: Props["onSelect"];
 }) {
-  // internal selection: attrKey -> termKey|null
-  const [selection, setSelection] = React.useState<Map<string, string | null>>(
-    () => {
-      const m = new Map<string, string | null>();
-      for (const key of variableProduct.attributes.keys()) m.set(key, null);
-      return m;
-    }
-  );
+  // attrKey -> termKey|null
+  const [selection, setSelection] = React.useState<VariationSelection>(() => {
+    const m = new Map<AttributeKey, TermKey | null>();
+    for (const key of variableProduct.attributes.keys()) m.set(key, null);
+    return m;
+  });
 
   const select = React.useCallback(
     (attrKey: string, termKey: string | null) => {
@@ -104,13 +110,13 @@ function VariationSelectLogic({
     []
   );
 
-  // groups: [{ attribute: {key,label}, options:[{term:{key,label,attribute}, enabled, variationIds}]}]
-  const groups = React.useMemo(
+  // build option groups directly from VariableProduct data
+  const groups = React.useMemo<OptionGroup[]>(
     () => getAllAttributeOptions(variableProduct, selection),
     [variableProduct, selection]
   );
 
-  // candidate IDs = intersection across currently selected terms
+  // candidate IDs = intersection of selected options’ ids
   const candidateIds = React.useMemo(() => {
     let ids: Set<number> | null = null;
     for (const [attr, term] of selection) {
@@ -121,10 +127,7 @@ function VariationSelectLogic({
       ids = ids ? intersect(ids, subset) : subset;
       if (ids.size === 0) break;
     }
-    if (!ids) {
-      // no selection → all variation IDs from variants
-      return variableProduct.variants.map((v) => v.key);
-    }
+    if (!ids) return variableProduct.variants.map((v) => v.key);
     return [...ids];
   }, [groups, selection, variableProduct]);
 
@@ -136,141 +139,58 @@ function VariationSelectLogic({
     return true;
   }, [selection]);
 
-  // Adapt data to your view shape:
-  // - product.taxonomies.values(): array of { name, label }
-  // - flagged: array of { term:{ slug, label, taxonomy:{ name } }, enabled, variationIds }
-  const taxonomies = React.useMemo(
-    () =>
-      Array.from(variableProduct.attributes.values()).map((a) => ({
-        name: a.key,
-        label: a.label,
-      })),
-    [variableProduct]
-  );
-
-  const flagged = React.useMemo(
-    () =>
-      groups.flatMap((g) =>
-        g.options.map((o) => ({
-          term: {
-            slug: o.term.key,
-            label: o.term.label,
-            taxonomy: { name: g.attribute.key },
-          },
-          enabled: o.enabled,
-          variationIds: o.variationIds,
-        }))
-      ),
-    [groups]
-  );
-
-  // view selection map: taxonomy.name -> { slug, taxonomy:{name} } | null (for your existing code)
-  const viewSelection = React.useMemo(() => {
-    const m = new Map<
-      string,
-      { slug: string; taxonomy: { name: string } } | null
-    >();
-    for (const [attrKey, termKey] of selection) {
-      m.set(
-        attrKey,
-        termKey ? { slug: termKey, taxonomy: { name: attrKey } } : null
-      );
-    }
-    return m;
-  }, [selection]);
-
-  // notify parent
   React.useEffect(() => {
-    onSelect?.({ selection, selectedVariation, candidateIds, isComplete });
-  }, [onSelect, selection, selectedVariation, candidateIds, isComplete]);
+    onSelect?.({ selection, selectedVariation, isComplete });
+  }, [onSelect, selection, selectedVariation, isComplete]);
 
-  return (
-    <VariationOptionGroups
-      product={{ taxonomies }} // mimic product.taxonomies.values()
-      flagged={flagged}
-      selection={viewSelection}
-      select={(taxonomyName, termOrNull) => {
-        select(taxonomyName, termOrNull ? termOrNull.slug : null);
-      }}
-      priceRangeForIds={priceRangeForIds}
-    />
-  );
-}
-
-// --- View subcomponent (render; matches your structure) ---
-function VariationOptionGroups({
-  product,
-  flagged,
-  selection,
-  select,
-  priceRangeForIds,
-}: {
-  product: { taxonomies: { name: string; label: string }[] };
-  flagged: {
-    term: { slug: string; label: string; taxonomy: { name: string } };
-    enabled: boolean;
-    variationIds: number[];
-  }[];
-  selection: Map<string, { slug: string; taxonomy: { name: string } } | null>;
-  select: (
-    taxonomyName: string,
-    term: { slug: string; taxonomy: { name: string } } | null
-  ) => void;
-  priceRangeForIds: (ids: number[]) => any;
-}) {
+  // View: straight from groups (no “taxonomies/flagged” adapter)
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
-      {Array.from(product.taxonomies.values()).map((tax) => {
-        const selected = selection.get(tax.name) ?? null;
-        const optionsInTax = flagged.filter(
-          (o) => o.term.taxonomy.name === tax.name && o.variationIds.length > 0
-        );
+      {groups.map(({ attribute, options }) => {
+        const selected = selection.get(attribute.key) ?? null;
 
         return (
-          <ThemedYStack key={tax.name} f={1}>
+          <ThemedYStack key={attribute.key} f={1}>
             <H3 tt="capitalize" size="$6" mb="$1">
-              {tax.label}
+              {attribute.label}
             </H3>
             <ThemedYStack w="100%" gap="$2">
-              {optionsInTax.map((opt) => {
-                const { term, enabled = true } = opt;
-                const isSelected =
-                  !!selected &&
-                  selected.slug === term.slug &&
-                  selected.taxonomy.name === term.taxonomy.name;
+              {options
+                .filter((o) => o.variationIds.length > 0)
+                .map((opt) => {
+                  const { term, enabled } = opt;
+                  const isSelected = selected === term.key;
+                  const onPress = enabled
+                    ? () => select(attribute.key, isSelected ? null : term.key)
+                    : undefined;
+                  const price = priceRangeForIds(opt.variationIds) ?? undefined;
 
-                const onPress = enabled
-                  ? () => select(term.taxonomy.name, isSelected ? null : term)
-                  : undefined;
-
-                const price = priceRangeForIds(opt.variationIds) ?? undefined;
-
-                return (
-                  <ThemedXStack
-                    key={`${tax.name}:${term.slug}`}
-                    ai="center"
-                    gap="$2"
-                    theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}
-                  >
-                    <ThemedButton
-                      size="$4"
-                      bw={2}
-                      aria-label={term.label}
-                      onPress={onPress}
-                      disabled={!enabled}
+                  return (
+                    <ThemedXStack
+                      key={`${attribute.key}:${term.key}`}
+                      ai="center"
+                      gap="$2"
+                      theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}
                     >
-                      <ThemedXStack f={1} split>
-                        <ThemedXStack gap="$1">
-                          <ThemedText>{term.label}</ThemedText>
+                      <ThemedButton
+                        size="$4"
+                        bw={2}
+                        aria-label={term.label}
+                        onPress={onPress}
+                        disabled={!enabled}
+                      >
+                        <ThemedXStack f={1} split>
+                          <ThemedXStack gap="$1">
+                            <ThemedText>{term.label}</ThemedText>
+                          </ThemedXStack>
+                          {price ? (
+                            <ProductPriceRange productPriceRange={price} />
+                          ) : null}
                         </ThemedXStack>
-                        {price ? (
-                          <ProductPriceRange productPriceRange={price} />
-                        ) : null}
-                      </ThemedXStack>
-                    </ThemedButton>
-                  </ThemedXStack>
-                );
-              })}
+                      </ThemedButton>
+                    </ThemedXStack>
+                  );
+                })}
             </ThemedYStack>
           </ThemedYStack>
         );
@@ -279,7 +199,56 @@ function VariationOptionGroups({
   );
 }
 
-// ---- utils ----
+/** ---- minimal pure helpers (formerly scattered across 2–3 files) ---- */
+
+function getAllAttributeOptions(
+  vp: VariableProduct,
+  selection: ReadonlyMap<AttributeKey, TermKey | null>
+): OptionGroup[] {
+  // Pre-index (attribute, term) -> Set<variantIds>
+  const byAttrTerm = new Map<AttributeKey, Map<TermKey, Set<number>>>();
+  for (const v of vp.variants) {
+    for (const opt of v.options) {
+      const inner =
+        byAttrTerm.get(opt.attribute) ?? new Map<TermKey, Set<number>>();
+      const set = inner.get(opt.term) ?? new Set<number>();
+      set.add(v.key);
+      inner.set(opt.term, set);
+      byAttrTerm.set(opt.attribute, inner);
+    }
+  }
+
+  // Build groups
+  const attributes = [...vp.attributes.values()];
+  return attributes.map((a) => {
+    // Candidate set = intersection of other selected attrs
+    let candidate: Set<number> | null = null;
+    for (const [attr, term] of selection) {
+      if (!term || attr === a.key) continue;
+      const inner = byAttrTerm.get(attr);
+      const subset = inner
+        ? (inner.get(term) ?? new Set<number>())
+        : new Set<number>();
+      candidate = candidate ? intersect(candidate, subset) : new Set(subset);
+      if (candidate.size === 0) break;
+    }
+
+    // Terms for this attribute, with availability
+    const terms = [...vp.terms.values()].filter((t) => t.attribute === a.key);
+    const options: Option[] = terms.map((t) => {
+      const base = byAttrTerm.get(a.key)?.get(t.key) ?? new Set<number>();
+      const final = candidate ? intersect(base, candidate) : base;
+      return {
+        term: t,
+        enabled: final.size > 0,
+        variationIds: [...final],
+      };
+    });
+
+    return { attribute: { key: a.key, label: a.label }, options };
+  });
+}
+
 function intersect(a: Set<number>, b: Set<number>): Set<number> {
   const out = new Set<number>();
   const [small, large] = a.size <= b.size ? [a, b] : [b, a];

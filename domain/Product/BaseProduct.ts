@@ -1,8 +1,8 @@
 // domain/product/BaseProduct.ts
-import { capitalize, cleanHtml } from "@/lib/format";
 
-import { ProductPrices } from "../pricing";
-import { StoreImage, StoreImageData } from "../StoreImage";
+import { ProductPrices } from "@/domain/pricing";
+import { StoreImage, StoreImageData } from "@/domain/StoreImage";
+import { cleanHtml } from "@/lib/format";
 
 export interface CategoryRef {
   id: number;
@@ -92,6 +92,3 @@ export class BaseProduct {
     };
   }
 }
-
-// (Optional) re-export here if you really want this path to expose it:
-//export { mapToProduct } from "./mapToProduct";

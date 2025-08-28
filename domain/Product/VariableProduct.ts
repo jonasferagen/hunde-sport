@@ -1,5 +1,5 @@
 // domain/Product/VariableProduct.ts
-import { capitalize, cleanHtml } from "@/lib/format";
+import { capitalize, cleanHtml, normalizeAttribute } from "@/lib/format";
 
 import { BaseProduct, BaseProductData } from "./BaseProduct";
 
@@ -24,30 +24,6 @@ export interface VariableProductData extends BaseProductData {
   variations: RawVariationRef[];
 }
 
-// Internal helpers/types
-const norm = (s?: string) =>
-  String(s ?? "")
-    .trim()
-    .toLowerCase();
-
-type Attribute = {
-  key: string; // normalized display name, e.g. "farge"
-  label: string; // e.g. "Farge"
-  taxonomy: string; // taxonomy code, e.g. "pa_farge"
-  has_variations: boolean;
-};
-
-type Term = {
-  key: string; // slug, e.g. "karamell"
-  label: string; // e.g. "Karamell"
-  attribute: string; // attribute key (normalized), e.g. "farge"
-};
-
-type Variant = {
-  key: number; // variation id
-  options: { term: string; attribute: string }[];
-};
-
 export class VariableProduct extends BaseProduct {
   readonly rawAttributes: RawAttribute[];
   readonly rawVariations: RawVariationRef[];
@@ -71,7 +47,7 @@ export class VariableProduct extends BaseProduct {
     return new Map(
       this.rawAttributes.map((a) => {
         const display = cleanHtml(a.name);
-        const key = norm(display);
+        const key = normalizeAttribute(display);
         return [
           key,
           {
@@ -92,7 +68,7 @@ export class VariableProduct extends BaseProduct {
   get terms(): Map<string, Term> {
     const out: [string, Term][] = [];
     for (const attr of this.rawAttributes) {
-      const attrKey = norm(cleanHtml(attr.name));
+      const attrKey = normalizeAttribute(cleanHtml(attr.name));
       for (const t of attr.terms) {
         out.push([
           t.slug,
@@ -119,7 +95,7 @@ export class VariableProduct extends BaseProduct {
     return this.rawVariations.map((v) => ({
       key: v.id,
       options: v.attributes.map(({ name, value }) => {
-        const attrKey = norm(cleanHtml(name)); // e.g. "farge", "størrelse"
+        const attrKey = normalizeAttribute(cleanHtml(name)); // e.g. "farge", "størrelse"
         if (!attributes.has(attrKey)) {
           throw new Error(
             `Unknown attribute key in variation: ${name} -> ${attrKey}`
@@ -137,3 +113,21 @@ export class VariableProduct extends BaseProduct {
     }));
   }
 }
+
+type Attribute = {
+  key: string; // normalized display name, e.g. "farge"
+  label: string; // e.g. "Farge"
+  taxonomy: string; // taxonomy code, e.g. "pa_farge"
+  has_variations: boolean;
+};
+
+type Term = {
+  key: string; // slug, e.g. "karamell"
+  label: string; // e.g. "Karamell"
+  attribute: string; // attribute key (normalized), e.g. "farge"
+};
+
+type Variant = {
+  key: number; // variation id
+  options: { term: string; attribute: string }[];
+};

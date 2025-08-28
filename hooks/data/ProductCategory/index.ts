@@ -1,13 +1,9 @@
-import {
-  useInfiniteQuery,
-  useQuery,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { ProductCategory } from "@/types";
 
 import { makeQueryOptions, useQueryResult } from "../util";
-import { fetchProductCategories, fetchProductCategory } from "./api";
+import { fetchProductCategories } from "./api";
 
 const queryOptions = makeQueryOptions<ProductCategory>();
 
@@ -22,6 +18,9 @@ export const useProductCategories = (options = { enabled: true }) => {
   return useQueryResult<ProductCategory>(result);
 };
 
+/*
+import { fetchProductCategories, fetchProductCategory } from "./api";
+
 export const useProductCategory = (
   id: number,
   options = { enabled: true }
@@ -33,3 +32,5 @@ export const useProductCategory = (
   });
   return result;
 };
+ 
+*/

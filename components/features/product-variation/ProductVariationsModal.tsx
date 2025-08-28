@@ -4,21 +4,20 @@ import { X } from "@tamagui/lucide-icons";
 import React from "react";
 import { ScrollView } from "tamagui";
 
-import {
-  ThemedButton,
-  ThemedText,
-  ThemedXStack,
-  ThemedYStack,
-} from "@/components/ui";
+import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { ProductVariation } from "@/domain/Product/ProductVariation";
+import { createPurchasable } from "@/domain/Product/Purchasable";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
+import { PurchasableProduct } from "@/types";
 
 import {
   ProductImage,
   ProductPriceSimple,
   ProductTitle,
 } from "../product/display";
+import { PurchaseButtonSmart } from "../product/purchase/PurchaseButtonSmart";
 import { ProductVariationSelect } from "./ProductVariationSelect";
+import { ProductVariationStatus } from "./ProductVariationStatus";
 
 const IMAGE_H = 200;
 type Props = { close: () => void; variableProduct: VariableProduct };
@@ -28,7 +27,6 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
   const [selection, setSelection] = React.useState<Map<string, string | null>>(
     new Map()
   );
-  const [candidateIds, setCandidateIds] = React.useState<number[]>([]);
   const [isComplete, setIsComplete] = React.useState(false);
   const [selectedVariation, setSelectedVariation] = React.useState<
     ProductVariation | undefined
@@ -59,14 +57,8 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
         >
           <ProductVariationSelect
             variableProduct={variableProduct}
-            onSelect={({
-              selection,
-              candidateIds,
-              isComplete,
-              selectedVariation,
-            }) => {
+            onSelect={({ selection, isComplete, selectedVariation }) => {
               setSelection(selection);
-              setCandidateIds(candidateIds);
               setIsComplete(isComplete);
               setSelectedVariation(selectedVariation);
             }}
@@ -77,26 +69,11 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
       {/* Footer (natural height) */}
       <ThemedYStack>
         {/* Selection summary (very lightweight) */}
-        <ThemedXStack gap="$3" ai="center" fw="wrap" mb="$2">
-          {Array.from(selection.entries()).map(([attrKey, termKey]) => {
-            const attrLabel =
-              variableProduct.attributes.get(attrKey)?.label ?? attrKey;
-            const termLabel = termKey
-              ? (variableProduct.terms.get(termKey)?.label ?? termKey)
-              : "må velge";
-            return (
-              <ThemedText key={attrKey}>
-                {attrLabel}: {termKey ? termLabel : "må velge"}
-              </ThemedText>
-            );
-          })}
-          {!isComplete && (
-            <ThemedText opacity={0.7}>
-              {/* Example hint when incomplete */}
-              Velg alle alternativer for å fortsette
-            </ThemedText>
-          )}
-        </ThemedXStack>
+        <ProductVariationStatus
+          variableProduct={variableProduct}
+          selection={selection}
+          isComplete={isComplete}
+        />
 
         <ThemedXStack split>
           {/* If a variation is resolved, show its price & availability; otherwise fall back to parent */}
@@ -107,23 +84,21 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
             }
           />
         </ThemedXStack>
-
-        {/* If you later enable purchase: only enable when complete & resolved */}
-        {/*
-        <PurchaseButtonSmart
-          disabled={!isComplete || !selectedVariation}
-          purchasable={
-            isComplete && selectedVariation
-              ? createPurchasable({
-                  product: variableProduct as PurchasableProduct,
-                  productVariation: selectedVariation,
-                })
-              : undefined
-          }
-          onSuccess={close}
-          inModal
-        />
-        */}
+        {
+          <PurchaseButtonSmart
+            disabled={!isComplete || !selectedVariation}
+            purchasable={
+              isComplete && selectedVariation
+                ? createPurchasable({
+                    product: variableProduct as PurchasableProduct,
+                    productVariation: selectedVariation,
+                  })
+                : undefined
+            }
+            onSuccess={close}
+            inModal
+          />
+        }
         <ThemedYStack mb="$3" />
       </ThemedYStack>
     </ThemedYStack>
