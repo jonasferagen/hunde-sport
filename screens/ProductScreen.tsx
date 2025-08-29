@@ -1,5 +1,6 @@
 import { Redirect, useLocalSearchParams } from "expo-router";
 
+import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
 import {
   ProductAvailabilityStatus,
   ProductDescription,
@@ -8,8 +9,7 @@ import {
   ProductPrice,
   ProductTitle,
 } from "@/components/features/product/display/";
-import { ProductPurchaseFlow } from "@/components/features/product/purchase/ProductPurchaseFlow";
-import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
+import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import {
   PageBody,
   PageFooter,
@@ -95,7 +95,7 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
         </PageSection>
       </PageBody>
       <PageFooter>
-        <ProductPurchaseFlow product={product} />
+        <PurchaseButton product={product} />
       </PageFooter>
     </PageView>
   );

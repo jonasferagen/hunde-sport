@@ -1,6 +1,6 @@
 import {
   Boxes,
-  CircleSlash,
+  CircleAlert,
   ShoppingCart,
   TriangleAlert,
   XCircle,
@@ -79,7 +79,7 @@ export const STATUS: Record<Status, UIConf> = {
     disabled: true,
   },
   outofstock: {
-    icon: <CircleSlash />,
+    icon: <CircleAlert />,
     theme: THEME_CTA_OUTOFSTOCK,
     label: "Utsolgt",
     disabled: true,

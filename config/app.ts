@@ -31,10 +31,10 @@ export const THEME_PAGE_HEADER = "primary";
 export const THEME_PAGE_FOOTER = "secondary_shade";
 
 export const THEME_CTA_BUY = "dark_secondary";
-export const THEME_CTA_UNAVAILABLE = "info2";
-export const THEME_CTA_VIEW = "info2";
-export const THEME_CTA_SELECTION_NEEDED = "warning";
-export const THEME_CTA_OUTOFSTOCK = "danger";
+export const THEME_CTA_UNAVAILABLE = "secondary_tint";
+export const THEME_CTA_VIEW = "dark_tertiary_tint";
+export const THEME_CTA_SELECTION_NEEDED = "secondary_tint";
+export const THEME_CTA_OUTOFSTOCK = "secondary_tint";
 
 export const THEME_PRICE_TAG = "dark_tertiary";
 export const THEME_PRICE_TAG_FREE = "dark_tertiary";
