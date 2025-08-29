@@ -9,7 +9,7 @@ import {
   ProductPrice,
   ProductTitle,
 } from "@/components/features/product/display/";
-import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
+import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
 import {
   PageBody,
   PageFooter,
@@ -95,7 +95,7 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
         </PageSection>
       </PageBody>
       <PageFooter>
-        <PurchaseButton product={product} />
+        <PurchaseFlow product={product} />
       </PageFooter>
     </PageView>
   );

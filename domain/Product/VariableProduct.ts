@@ -1,5 +1,6 @@
 // domain/Product/VariableProduct.ts
 import { capitalize, cleanHtml } from "@/lib/format";
+import { intersectSets } from "@/lib/util";
 
 import { BaseProduct, BaseProductData } from "./BaseProduct";
 
@@ -168,6 +169,15 @@ export class VariableProduct extends BaseProduct {
       if (s) for (const id of s) out.add(id);
     }
     return Object.freeze(out) as ReadonlySet<number>;
+  }
+
+  getVariationId(termSlugs: string[]): number | undefined {
+    if (termSlugs.length !== this.attributeOrder.length) return undefined;
+    const sets = termSlugs.map((slug) => this.getVariationSetForTerm(slug));
+    if (sets.some((s) => s.size === 0)) return undefined;
+    const intersection = intersectSets<number>(...sets);
+    if (intersection.size !== 1) return undefined;
+    return intersection.values().next().value as number;
   }
 }
 

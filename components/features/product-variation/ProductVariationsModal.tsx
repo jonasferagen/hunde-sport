@@ -1,5 +1,4 @@
-// ProductVariationsModal.tsx
-
+// components/features/product-variation/ProductVariationsModal.tsx
 import { X } from "@tamagui/lucide-icons";
 import { ScrollView } from "tamagui";
 
@@ -14,17 +13,21 @@ import {
   useVariationSelection,
   VariationSelectionProvider,
 } from "@/contexts/VariationSelectionContext";
-import { VariableProduct } from "@/domain/Product/VariableProduct";
+import type { Purchasable } from "@/domain/Purchasable";
 import { useProductVariations } from "@/hooks/data/Product";
+import { VariableProduct } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
 import { PurchaseButton } from "../product/purchase/PurchaseButton";
 import { ProductVariationSelect } from "./ProductVariationSelect";
-import { ProductVariationStatus } from "./ProductVariationStatus";
 
-type Props = { close: () => void; variableProduct: VariableProduct };
+type Props = {
+  close: () => void;
+  purchasable: Purchasable; // ← now receives purchasable
+};
 
-export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
+export const ProductVariationsModal = ({ close, purchasable }: Props) => {
+  const variableProduct = purchasable.product as VariableProduct; // modal is only opened for variable products
   const { isLoading, items: productVariations } =
     useProductVariations(variableProduct);
 
@@ -34,7 +37,9 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
       productVariations={productVariations}
       isLoading={isLoading}
     >
-      <VariationSelectionProvider>
+      <VariationSelectionProvider
+        initialSelection={purchasable.variationSelection} // ← seed selection if present
+      >
         <ProductVariationsModalContent close={close} />
       </VariationSelectionProvider>
     </VariableProductProvider>
@@ -47,12 +52,12 @@ export const ProductVariationsModalContent = ({
   close: () => void;
 }) => {
   const { purchasable } = useVariationSelection();
-  const { variableProduct } = purchasable;
+  const variableProduct = purchasable.product; // variable here
 
   const IMAGE_H = 200;
   return (
     <ThemedYStack f={1} mih={0} gap="$3">
-      {/* Header (fixed) */}
+      {/* Header */}
       <ThemedXStack split>
         <ProductTitle product={variableProduct} fs={1} />
         <ThemedText>{variableProduct.id}</ThemedText>
@@ -61,12 +66,12 @@ export const ProductVariationsModalContent = ({
         </ThemedButton>
       </ThemedXStack>
 
-      {/* Image (fixed height) */}
+      {/* Image */}
       <ThemedYStack w="100%" h={IMAGE_H}>
         <ProductImage product={variableProduct} img_height={IMAGE_H} />
       </ThemedYStack>
 
-      {/* Variations (fills remaining space) */}
+      {/* Variations */}
       <ThemedYStack f={1} mih={0}>
         <ScrollView
           f={1}
@@ -78,17 +83,10 @@ export const ProductVariationsModalContent = ({
         </ScrollView>
       </ThemedYStack>
 
-      {/* Footer (natural height) */}
+      {/* Footer */}
       <ThemedYStack>
-        {/* Selection summary (very lightweight) */}
-        <ProductVariationStatus purchasable={purchasable} />
-        <ThemedText>{purchasable.message}</ThemedText>
-        <PurchaseButton
-          product={variableProduct}
-          purchasable={purchasable}
-          onSuccess={close}
-        />
         <ThemedYStack mb="$3" />
+        <PurchaseButton purchasable={purchasable} onSuccess={close} />
       </ThemedYStack>
     </ThemedYStack>
   );

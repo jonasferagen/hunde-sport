@@ -2,35 +2,40 @@ import React from "react";
 
 import { ThemedText, ThemedXStack } from "@/components/ui";
 import type { Purchasable } from "@/domain/Purchasable";
+import { VariableProduct } from "@/types";
 
 type Props = React.ComponentProps<typeof ThemedText> & {
   purchasable: Purchasable;
-  /** Text when a term is not chosen yet */
-  placeholder?: string; // default: "velg.."
 };
 
 export const ProductVariationStatus: React.FC<Props> = ({
   purchasable,
-  placeholder = "",
   ...textProps
 }) => {
-  const { variableProduct, variationSelection: selection } = purchasable;
+  const { product, variationSelection } = purchasable;
+
+  const variableProduct = product as VariableProduct;
+
+  if (!variationSelection) {
+    console.error("no variationSelection");
+    return null;
+  }
+
+  console.log(variableProduct);
 
   // stable attribute order from model
   const attrKeys = variableProduct.attributeOrder;
 
   return (
-    <ThemedXStack gap="$3" ai="center" fw="wrap">
+    <ThemedXStack gap="$3" ai="center">
       {attrKeys.map((attrKey) => {
-        const attr = variableProduct.attributes.get(attrKey);
-        const termKey = selection.get(attrKey) ?? null; // <- selection is Map<string, string|null>
-        const termLabel = termKey
-          ? (variableProduct.terms.get(termKey)?.label ?? termKey)
-          : placeholder;
-
+        const attribute = variableProduct.attributes.get(attrKey)!;
+        const termKey = variationSelection.get(attrKey)!;
+        if (!termKey) return;
+        const termLabel = variableProduct.terms.get(termKey)!.label;
         return (
-          <ThemedText key={attrKey} {...textProps}>
-            {attr?.label ?? attrKey}: {termLabel}
+          <ThemedText tt="capitalize" key={attrKey} {...textProps}>
+            {attribute?.label ?? attrKey}: {termLabel}
           </ThemedText>
         );
       })}

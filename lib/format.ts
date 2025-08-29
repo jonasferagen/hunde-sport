@@ -49,8 +49,3 @@ export const htmlToPlainText = (html: string): string => {
   // Trim leading/trailing whitespace and collapse multiple newlines into a maximum of two
   return result.replace(/\n{3,}/g, "\n\n").trim();
 };
-
-export const normalizeAttribute = (s?: string) =>
-  String(s ?? "")
-    .trim()
-    .toLowerCase();

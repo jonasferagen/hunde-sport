@@ -1,9 +1,9 @@
-// purchasable.test.ts (updated)
+// purchasable.test.ts (updated for Purchasable class)
 
 import type { ProductVariation } from "@/domain/Product/ProductVariation";
 import type { VariableProduct } from "@/domain/Product/VariableProduct";
 import { VariationSelection } from "@/domain/Product/VariationSelection";
-import { createPurchasableFromSelection } from "@/domain/Purchasable";
+import { Purchasable } from "@/domain/Purchasable";
 
 // --- helpers
 
@@ -28,9 +28,9 @@ function makeVP(attrKeysToLabels: Record<string, string>): VariableProduct {
   } as unknown as VariableProduct;
 }
 
-function makeSelection(order: string[], pairs: [string, string | null][]) {
+function makeSelection(vp: VariableProduct, pairs: [string, string | null][]) {
   const init = new Map<string, string | null>(pairs);
-  return new VariationSelection(order, init);
+  return new VariationSelection(vp, init);
 }
 
 function fakeVariation(id = 999): ProductVariation {
@@ -39,19 +39,18 @@ function fakeVariation(id = 999): ProductVariation {
 
 // --- tests
 
-describe("createPurchasableFromSelection", () => {
+describe("Purchasable (class) from selection", () => {
   const vp = makeVP({ farge: "Farge", størrelse: "Størrelse" });
-  const order = vp.attributeOrder ?? ["farge", "størrelse"];
 
   it("empty selection → missing both attributes, with friendly message", () => {
-    const selection = makeSelection(order, [
+    const selection = makeSelection(vp, [
       ["farge", null],
       ["størrelse", null],
     ]);
 
-    const p = createPurchasableFromSelection(vp, selection, undefined);
+    const p = new Purchasable(vp, selection, undefined);
 
-    expect(p.variableProduct).toBe(vp);
+    expect(p.product).toBe(vp);
     expect(p.selectedVariation).toBeUndefined();
     // missing keys (order follows VariationSelection order)
     expect(p.missing).toEqual(["farge", "størrelse"]);
@@ -62,12 +61,12 @@ describe("createPurchasableFromSelection", () => {
   });
 
   it("one attribute selected → other is missing", () => {
-    const selection = makeSelection(order, [
+    const selection = makeSelection(vp, [
       ["farge", "grønn"],
       ["størrelse", null],
     ]);
 
-    const p = createPurchasableFromSelection(vp, selection, undefined);
+    const p = new Purchasable(vp, selection, undefined);
 
     expect(p.selectedVariation).toBeUndefined();
     expect(p.missing).toEqual(["størrelse"]);
@@ -75,12 +74,12 @@ describe("createPurchasableFromSelection", () => {
   });
 
   it("all attributes selected but no unique variation → complete, no message", () => {
-    const selection = makeSelection(order, [
+    const selection = makeSelection(vp, [
       ["farge", "karamell"],
       ["størrelse", "l"],
     ]);
 
-    const p = createPurchasableFromSelection(vp, selection, undefined);
+    const p = new Purchasable(vp, selection, undefined);
 
     // selection is complete but unresolved
     expect(p.selectedVariation).toBeUndefined();
@@ -89,13 +88,13 @@ describe("createPurchasableFromSelection", () => {
   });
 
   it("variation resolved → selectedVariation set, no message", () => {
-    const selection = makeSelection(order, [
+    const selection = makeSelection(vp, [
       ["farge", "karamell"],
       ["størrelse", "l"],
     ]);
     const variation = fakeVariation(42);
 
-    const p = createPurchasableFromSelection(vp, selection, variation);
+    const p = new Purchasable(vp, selection, variation);
 
     expect(p.selectedVariation).toBe(variation);
     expect(p.missing).toEqual([]);

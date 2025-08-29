@@ -1,16 +1,17 @@
 /** Compact selection wrapper used across the purchase flow. */
-
 import { VariableProduct } from "./VariableProduct";
 
 export class VariationSelection implements Iterable<[string, string | null]> {
+  readonly variableProduct: VariableProduct;
   private readonly order: readonly string[];
   private readonly map: Map<string, string | null>;
 
   constructor(
-    order: readonly string[],
+    variableProduct: VariableProduct,
     init?: Map<string, string | null> | Record<string, string | null>
   ) {
-    this.order = order.slice(); // keep a local copy for stability
+    this.variableProduct = variableProduct;
+    this.order = variableProduct.attributeOrder.slice(); // stable copy
     this.map = new Map<string, string | null>();
 
     // initialize all keys to null
@@ -32,10 +33,10 @@ export class VariationSelection implements Iterable<[string, string | null]> {
     return this.map.get(attr) ?? null;
   }
 
-  /** Immutable update producing a new Selection. */
+  /** Immutable update producing a new VariationSelection. */
   with(attr: string, term: string | null): VariationSelection {
     if (!this.map.has(attr)) return this; // ignore unknown keys
-    const next = new VariationSelection(this.order, this.map);
+    const next = new VariationSelection(this.variableProduct, this.map);
     next.map.set(attr, term);
     return next;
   }
@@ -54,10 +55,12 @@ export class VariationSelection implements Iterable<[string, string | null]> {
   }
 
   /** Human message for UI, using product's display labels. Empty string if complete. */
-  message(vp: VariableProduct): string {
+  message(): string {
     const missing = this.missing();
     if (missing.length === 0) return "";
-    const labels = missing.map((k) => vp.attributes.get(k)?.label ?? k);
+    const labels = missing.map(
+      (k) => this.variableProduct.attributes.get(k)?.label ?? k
+    );
     return `Velg ${formatListNo(labels)}`;
   }
 

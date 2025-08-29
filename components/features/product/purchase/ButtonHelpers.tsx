@@ -16,23 +16,11 @@ import {
   THEME_CTA_UNAVAILABLE,
   THEME_CTA_VIEW,
 } from "@/config/app";
-import type {
-  ProductAvailability,
-  ProductPrices,
-  Purchasable,
-  SimpleProduct,
-  VariableProduct,
-} from "@/types";
+import type { Purchasable, SimpleProduct, VariableProduct } from "@/types";
 
 import { ProductPrice } from "../display";
 
-export const PriceTag = ({
-  prices,
-  availability,
-}: {
-  prices: ProductPrices;
-  availability: ProductAvailability;
-}) => (
+export const resolvePriceTag = (product: any) => (
   <ThemedSurface
     theme="shade"
     h="$6"
@@ -42,7 +30,10 @@ export const PriceTag = ({
     mr={-20}
     minWidth={80}
   >
-    <ProductPrice productPrices={prices} productAvailability={availability} />
+    <ProductPrice
+      productPrices={product.prices}
+      productAvailability={product.availability}
+    />
   </ThemedSurface>
 );
 

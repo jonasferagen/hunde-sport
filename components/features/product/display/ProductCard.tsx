@@ -11,7 +11,7 @@ import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { getScaledImageUrl } from "@/lib/helpers";
 import { PurchasableProduct } from "@/types";
 
-import { PurchaseButton } from "../purchase/PurchaseButton";
+import { PurchaseFlow } from "../purchase/PurchaseFlow";
 import { ProductDescription } from "./ProductDescription";
 import { ProductTitle } from "./ProductTitle";
 
@@ -36,7 +36,7 @@ export const ProductCard = React.memo(function ProductCard({
         <ProductCardImage product={product} />
         <ProductCardDescription product={product} />
       </ThemedXStack>
-      <PurchaseButton product={product} />
+      <PurchaseFlow product={product} />
     </ThemedYStack>
   );
 });

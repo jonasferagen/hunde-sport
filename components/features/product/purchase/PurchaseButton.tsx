@@ -1,140 +1,113 @@
+// components/product/purchase/PurchaseButton.tsx
 import React from "react";
 
 import { ProductVariationsModal } from "@/components/features/product-variation/ProductVariationsModal";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
-import {
-  useAddToCartPurchasable,
-  useAddToCartSimple,
-} from "@/hooks/useAddToCart";
+import type { Purchasable } from "@/domain/Purchasable";
+import { useAddToCart } from "@/hooks/useAddToCart";
 import { openModal } from "@/stores/ui/modalStore";
-import type { Purchasable, SimpleProduct, VariableProduct } from "@/types";
 
-import { PriceTag, resolveStatus } from "./ButtonHelpers";
+import { resolvePriceTag, resolveStatus } from "./ButtonHelpers";
 
 type Props = {
-  product: SimpleProduct | VariableProduct;
-  /** Provide when product is variable and user has an active selection */
-  purchasable?: Purchasable;
+  purchasable: Purchasable;
   onSuccess?: () => void;
   onError?: (message?: string) => void;
 };
 
-const isVariable = (p: SimpleProduct | VariableProduct): p is VariableProduct =>
-  (p as any).type === "variable" || (p as any).isVariable === true;
-
-const isSimple = (p: SimpleProduct | VariableProduct): p is SimpleProduct =>
-  (p as any).type === "simple" || !(p as any).isVariable;
-
 export const PurchaseButton = React.memo(function PurchaseButton({
-  product,
   purchasable,
   onSuccess,
   onError,
 }: Props) {
-  if (isSimple(product)) return <SimpleInner product={product} />;
+  const product = purchasable.product;
 
-  if (isVariable(product)) {
-    if (purchasable) {
+  // SIMPLE → add directly
+  if (product.isSimple) {
+    const { isLoading, onPress } = useAddToCart(purchasable, {
+      onSuccess,
+      onError,
+    });
+    const ui = resolveStatus(product);
+    const after = resolvePriceTag(product);
+    return (
+      <CallToActionButton
+        onPress={onPress}
+        before={ui.icon}
+        theme={ui.theme}
+        label={ui.label}
+        after={after}
+        loading={isLoading}
+        disabled={ui.disabled}
+      />
+    );
+  }
+
+  // VARIABLE + NO selection context yet → open modal
+  if (product.isVariable && !purchasable.variationSelection) {
+    const onPress = () =>
+      openModal(
+        (_, api) => (
+          <ProductVariationsModal
+            purchasable={purchasable}
+            close={() => api.close()}
+          />
+        ),
+        purchasable
+      );
+    const ui = resolveStatus(product); // STATUS.list
+    const after = resolvePriceTag(product);
+    return (
+      <CallToActionButton
+        onPress={onPress}
+        before={ui.icon}
+        theme={ui.theme}
+        label={ui.label}
+        after={after}
+        loading={false}
+        disabled={ui.disabled}
+      />
+    );
+  }
+
+  // VARIABLE + selection context exists
+  if (product.isVariable && purchasable.variationSelection) {
+    // If a concrete variation is resolved → add to cart
+    if (purchasable.selectedVariation) {
+      const { isLoading, onPress } = useAddToCart(purchasable, {
+        onSuccess,
+        onError,
+      });
+      const ui = resolveStatus(product, purchasable);
+      const after = resolvePriceTag(product);
       return (
-        <PurchasableInner
-          purchasable={purchasable}
-          onSuccess={onSuccess}
-          onError={onError}
+        <CallToActionButton
+          onPress={onPress}
+          before={ui.icon}
+          theme={ui.theme}
+          label={ui.label}
+          after={after}
+          loading={isLoading}
+          disabled={ui.disabled}
         />
       );
     }
-    return <VariableInner product={product} />;
+
+    // Selection exists but not resolved → guidance (disabled)
+    const ui = resolveStatus(product, purchasable);
+    const after = resolvePriceTag(product);
+    return (
+      <CallToActionButton
+        onPress={() => {}}
+        before={ui.icon}
+        theme={ui.theme}
+        label={ui.label}
+        after={after}
+        loading={false}
+        disabled={ui.disabled}
+      />
+    );
   }
 
-  // Fallback (shouldn't happen if your domain types are correct)
   return null;
-});
-
-/** ---- Internals: keep hooks unconditional ---- */
-
-const SimpleInner = React.memo(function SimpleInner({
-  product,
-}: {
-  product: SimpleProduct;
-}) {
-  const { isLoading, onPress } = useAddToCartSimple(product);
-  const { theme, icon, label, disabled } = resolveStatus(product);
-
-  return (
-    <CallToActionButton
-      onPress={onPress}
-      before={icon}
-      theme={theme}
-      label={label}
-      after={
-        <PriceTag prices={product.prices} availability={product.availability} />
-      }
-      loading={isLoading}
-      disabled={disabled}
-    />
-  );
-});
-
-const VariableInner = React.memo(function VariableInner({
-  product,
-}: {
-  product: VariableProduct;
-}) {
-  const onPress = () =>
-    openModal(
-      (_, api) => (
-        <ProductVariationsModal
-          variableProduct={product}
-          close={() => api.close()}
-        />
-      ),
-      product
-    );
-
-  const { theme, icon, label, disabled } = resolveStatus(product);
-
-  return (
-    <CallToActionButton
-      onPress={onPress}
-      before={icon}
-      theme={theme}
-      label={label}
-      after={
-        <PriceTag prices={product.prices} availability={product.availability} />
-      }
-      loading={false}
-      disabled={false}
-    />
-  );
-});
-
-const PurchasableInner = React.memo(function PurchasableInner({
-  purchasable,
-  onSuccess,
-  onError,
-}: {
-  purchasable: Purchasable;
-  onSuccess?: () => void;
-  onError?: (message?: string) => void;
-}) {
-  const product = purchasable.variableProduct;
-  const { isLoading, onPress } = useAddToCartPurchasable(purchasable, {
-    onSuccess,
-    onError,
-  });
-  const { theme, icon, label, disabled } = resolveStatus(product, purchasable);
-
-  return (
-    <CallToActionButton
-      onPress={onPress}
-      before={icon}
-      theme={theme}
-      label={label}
-      after={
-        <PriceTag prices={product.prices} availability={product.availability} />
-      }
-      loading={isLoading}
-      disabled={disabled}
-    />
-  );
 });
