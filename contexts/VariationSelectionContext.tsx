@@ -63,13 +63,10 @@ function selectionSignature(
 }
 
 export function VariationSelectionProvider({ children }: Props) {
-  const {
-    variableProduct,
-    allVariationIdsSet,
-    variationSetForTerm,
-    byId,
-    termsByAttribute,
-  } = useVariableProduct();
+  const { variableProduct, variationSetForTerm, byId, termsByAttribute } =
+    useVariableProduct();
+
+  const allVariationIdsSet = variableProduct.variationIdSet;
 
   /** Precompute selection signature → variation id */
   const variationIdBySignature = React.useMemo(() => {

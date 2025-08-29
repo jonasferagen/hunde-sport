@@ -15,8 +15,6 @@ export type VariableProductCtx = {
   // Lookups
   byId: (id: number) => ProductVariation | undefined;
 
-  // Set-based access
-  allVariationIdsSet: ReadonlySet<number>;
   variationSetForTerm: (attr: string, term: string) => ReadonlySet<number>;
 
   // Display helpers (accept arrays you create at the edge)
@@ -44,8 +42,6 @@ type Props = {
   children: React.ReactNode;
 };
 
-const EMPTY_SET: ReadonlySet<number> = Object.freeze(new Set<number>());
-
 export function VariableProductProvider({
   variableProduct,
   productVariations,
@@ -59,38 +55,18 @@ export function VariableProductProvider({
     return m;
   }, [productVariations]);
 
-  // attr -> term -> Set<variationId>
-  const attrTermIndex = React.useMemo(() => {
-    const outer = new Map<string, Map<string, Set<number>>>();
-    for (const v of variableProduct.variations) {
-      for (const { attribute, term } of v.options) {
-        if (!outer.has(attribute)) outer.set(attribute, new Map());
-        const inner = outer.get(attribute)!;
-        if (!inner.has(term)) inner.set(term, new Set());
-        inner.get(term)!.add(v.key);
-      }
-    }
-    return outer;
-  }, [variableProduct]);
-
-  // Sets for all ids (immutable view)
-  const allVariationIdsSet = React.useMemo<ReadonlySet<number>>(() => {
-    const s = new Set<number>();
-    for (const v of variableProduct.variations) s.add(v.key);
-    return s;
-  }, [variableProduct]);
-
   // Terms grouped by attribute (store order preserved)
   const termsByAttribute = React.useMemo(() => {
     const grouped = new Map<string, Term[]>();
-    for (const attr of variableProduct.attributeOrder) grouped.set(attr, []);
-
-    for (const [, term] of variableProduct.terms) {
-      if (!grouped.has(term.attribute)) grouped.set(term.attribute, []);
-      grouped.get(term.attribute)!.push(term);
+    for (const attrKey of variableProduct.attributeOrder) {
+      const slugs = variableProduct.getTermOrder(attrKey);
+      grouped.set(
+        attrKey,
+        slugs.map((slug) => variableProduct.getTerm(slug)!).filter(Boolean)
+      );
     }
     return grouped;
-  }, [variableProduct.attributeOrder, variableProduct.terms]);
+  }, [variableProduct]);
 
   // Accessors
   const byId = React.useCallback(
@@ -99,11 +75,12 @@ export function VariableProductProvider({
   );
 
   const variationSetForTerm = React.useCallback(
-    (attr: string, term: string): ReadonlySet<number> =>
-      attrTermIndex.get(attr)?.get(term) ?? EMPTY_SET,
-    [attrTermIndex]
+    (_attr: string, termSlug: string): ReadonlySet<number> => {
+      // attr kept for API compatibility; resolution now lives in the model
+      return variableProduct.getVariationSetForTerm(termSlug);
+    },
+    [variableProduct]
   );
-
   const pricesForIds = React.useCallback(
     (ids: number[]) =>
       ids
@@ -124,7 +101,6 @@ export function VariableProductProvider({
     variableProduct,
     isLoading,
     byId,
-    allVariationIdsSet,
     variationSetForTerm,
     pricesForIds,
     availabilityForIds,

@@ -1,5 +1,5 @@
 // domain/Product/VariableProduct.ts
-import { capitalize, cleanHtml, normalizeAttribute } from "@/lib/format";
+import { capitalize, cleanHtml } from "@/lib/format";
 
 import { BaseProduct, BaseProductData } from "./BaseProduct";
 
@@ -29,14 +29,14 @@ export interface VariableProductData extends BaseProductData {
 export type Attribute = {
   key: string; // normalized display name, e.g. "farge"
   label: string; // e.g. "Farge"
-  taxonomy: string; // e.g. "pa_farge"
+  taxonomy: string;
   has_variations: boolean;
 };
 
 export type Term = {
   key: string; // slug, e.g. "karamell"
   label: string; // e.g. "Karamell"
-  attribute: string; // attribute key (normalized), e.g. "farge"
+  attribute: string; // normalized attribute key, e.g. "farge"
 };
 
 export type Variation = {
@@ -45,104 +45,148 @@ export type Variation = {
 };
 
 /** ---- Class ---- */
+const EMPTY_SET: ReadonlySet<number> = Object.freeze(new Set<number>());
+
 export class VariableProduct extends BaseProduct {
   readonly rawAttributes: RawAttribute[];
   readonly rawVariations: RawVariationRef[];
 
-  /** Precomputed normalized views */
+  /** Precomputed normalized views (no pruning) */
   readonly attributes: Map<string, Attribute>;
   readonly terms: Map<string, Term>;
   readonly variations: Variation[];
 
+  /** Store order helpers */
   readonly attributeOrder: string[]; // normalized attr keys in Store order
-  readonly termOrderByAttribute?: Map<string, string[]>; // per-attr term keys in Store order
-  readonly variationOrder?: number[]; // variation ids in Store order
+  readonly termOrderByAttribute: Map<string, string[]>; // per-attr term slugs in Store order
+  readonly variationOrder: number[]; // variation ids in Store order
+
+  /** Internal indices (not exposed) */
+  private readonly _termToVarSet: Map<string, ReadonlySet<number>>;
+  private readonly _variationIdSet: ReadonlySet<number>;
 
   constructor(data: VariableProductData) {
-    if (data.type !== "variable") {
+    if (data.type !== "variable")
       throw new Error("Invalid data type for VariableProduct");
-    }
     super(data);
 
+    // Keep only attributes that participate in variations
     this.rawAttributes = (data.attributes ?? []).filter(
       (a) => a.has_variations
     );
-
     this.rawVariations = data.variations ?? [];
 
-    // compute once
-    const attributes = buildAttributes(this.rawAttributes);
-    const terms = buildTerms(this.rawAttributes);
-    const variations = buildVariants(this.rawVariations, attributes, terms);
+    // Normalize once
+    this.attributes = buildAttributes(this.rawAttributes);
+    this.terms = buildTerms(this.rawAttributes);
+    this.variations = buildVariations(
+      this.rawVariations,
+      this.attributes,
+      this.terms
+    );
+    this.attributeOrder = this.rawAttributes.map((a) =>
+      attrKeyFromName(a.name)
+    );
+    this.variationOrder = (this.rawVariations ?? []).map((v) => v.id);
 
-    // ---- POST-STEP: prune globally-unused terms & empty attributes ----
+    // per-attribute term order in Woo order (slugs), keyed by our attr key
+    this.termOrderByAttribute = new Map<string, string[]>();
+    for (const ra of this.rawAttributes) {
+      const ak = attrKeyFromName(ra.name);
+      this.termOrderByAttribute.set(
+        ak,
+        (ra.terms ?? []).map((t) => t.slug)
+      );
+    }
 
-    // 1) Collect used term slugs per attribute from the parsed variations
-    const usedTermsByAttr = new Map<string, Set<string>>();
-    for (const v of variations) {
-      for (const { attribute, term } of v.options) {
-        if (!usedTermsByAttr.has(attribute))
-          usedTermsByAttr.set(attribute, new Set());
-        usedTermsByAttr.get(attribute)!.add(term); // term is the term slug
+    // Internal indices
+    const termToVarSet = new Map<string, ReadonlySet<number>>();
+    const allIds = new Set<number>();
+
+    for (const v of this.variations) {
+      allIds.add(v.key);
+      for (const { term } of v.options) {
+        if (!termToVarSet.has(term)) termToVarSet.set(term, new Set<number>());
+        (termToVarSet.get(term) as Set<number>).add(v.key);
       }
     }
-
-    // 2) Filter the flat terms map to only those that appear in at least one variation
-    const filteredTerms = new Map(
-      Array.from(terms.entries()).filter(([slug, term]) => {
-        const used = usedTermsByAttr.get(term.attribute);
-        return used?.has(slug) ?? false;
-      })
-    );
-
-    // 3) Optionally drop attributes that ended up with zero used terms
-    const filteredAttributes = new Map(
-      Array.from(attributes.entries()).filter(([attrKey]) => {
-        return (usedTermsByAttr.get(attrKey)?.size ?? 0) > 0;
-      })
-    );
-
-    // 4) Rebuild attribute order to match the original store order but only keep attrs that survived
-    const filteredAttributeOrder = this.rawAttributes
-      .map((a) => normalizeAttribute(cleanHtml(a.name)))
-      .filter((attrKey) => filteredAttributes.has(attrKey));
-
-    // 5) Build per-attribute term order from the raw order, filtered to used terms
-    const termOrderByAttribute = new Map<string, string[]>();
-    for (const ra of this.rawAttributes) {
-      const attrKey = normalizeAttribute(cleanHtml(ra.name));
-      if (!filteredAttributes.has(attrKey)) continue;
-      const used = usedTermsByAttr.get(attrKey) ?? new Set<string>();
-      const order = (ra.terms ?? [])
-        .map((t) => t.slug)
-        .filter((slug) => used.has(slug));
-      termOrderByAttribute.set(attrKey, order);
+    // Freeze sets so callers can safely treat them as immutable
+    for (const [slug, set] of termToVarSet.entries()) {
+      termToVarSet.set(
+        slug,
+        Object.freeze(new Set<number>(set)) as ReadonlySet<number>
+      );
     }
+    const variationIdSet = Object.freeze(
+      new Set<number>(allIds)
+    ) as ReadonlySet<number>;
 
-    // 6) (Optional) keep raw variation id order for later use
-    const variationOrder = (this.rawVariations ?? []).map((v) => v.id);
+    // Assign
 
-    // 7) Assign the pruned/derived structures
-    this.attributes = filteredAttributes;
-    this.terms = filteredTerms;
-    this.variations = variations;
-    this.attributeOrder = filteredAttributeOrder;
-    this.termOrderByAttribute = termOrderByAttribute;
-    this.variationOrder = variationOrder;
+    this._termToVarSet = termToVarSet;
+    this._variationIdSet = variationIdSet;
+  }
+
+  /** ---- Convenience getters (public) ---- */
+
+  /** All variation IDs in store order. */
+  get variationIds(): number[] {
+    return this.variationOrder;
+  }
+
+  /** All variation IDs as a (frozen) Set. */
+  get variationIdSet(): ReadonlySet<number> {
+    return this._variationIdSet;
+  }
+
+  /** Lookup attribute by normalized key. */
+  getAttribute(key: string): Attribute | undefined {
+    return this.attributes.get(key);
+  }
+
+  /** Lookup term by slug. */
+  getTerm(slug: string): Term | undefined {
+    return this.terms.get(slug);
+  }
+
+  /** Term order (slugs) for an attribute (store order). */
+  getTermOrder(attrKey: string): readonly string[] {
+    return this.termOrderByAttribute.get(attrKey) ?? [];
+  }
+
+  /** Variation Set for a given term slug (empty if none). */
+  getVariationSetForTerm(termSlug: string): ReadonlySet<number> {
+    return this._termToVarSet.get(termSlug) ?? EMPTY_SET;
+  }
+
+  /** Union of variation sets for all terms under an attribute (store order). */
+  getVariationSetForAttribute(attrKey: string): ReadonlySet<number> {
+    const out = new Set<number>();
+    const slugs = this.getTermOrder(attrKey);
+    for (const slug of slugs) {
+      const s = this._termToVarSet.get(slug);
+      if (s) for (const id of s) out.add(id);
+    }
+    return Object.freeze(out) as ReadonlySet<number>;
   }
 }
 
-/** ---- Pure helpers (used by the constructor) ---- */
+// helpers
+function attrKeyFromName(name: string): string {
+  // preserve diacritics, normalize case only
+  return cleanHtml(name).toLocaleLowerCase();
+}
+
 function buildAttributes(raw: RawAttribute[]): Map<string, Attribute> {
   return new Map(
     (raw ?? []).map((a) => {
-      const display = cleanHtml(a.name);
-      const key = normalizeAttribute(display);
+      const key = attrKeyFromName(a.name); // e.g. "størrelse", "farge"
+      const label = key; // normalized label (lowercase; UI can capitalize)
       return [
         key,
         {
           key,
-          label: capitalize(display),
+          label,
           taxonomy: a.taxonomy,
           has_variations: a.has_variations,
         },
@@ -154,14 +198,14 @@ function buildAttributes(raw: RawAttribute[]): Map<string, Attribute> {
 function buildTerms(raw: RawAttribute[]): Map<string, Term> {
   const out: [string, Term][] = [];
   for (const attr of raw ?? []) {
-    const attrKey = normalizeAttribute(cleanHtml(attr.name));
+    const attrKey = attrKeyFromName(attr.name); // link terms to the attr *key*
     for (const t of attr.terms ?? []) {
       out.push([
-        t.slug,
+        t.slug, // identity = slug
         {
           key: t.slug,
-          label: capitalize(cleanHtml(t.name)),
-          attribute: attrKey,
+          label: capitalize(cleanHtml(t.name)), // display label
+          attribute: attrKey, // points to "størrelse"/"farge"
         },
       ]);
     }
@@ -169,7 +213,8 @@ function buildTerms(raw: RawAttribute[]): Map<string, Term> {
   return new Map(out);
 }
 
-function buildVariants(
+// Map variation rows to our attribute key reliably (case-insensitive, diacritics preserved)
+function buildVariations(
   raw: RawVariationRef[],
   attributes: Map<string, Attribute>,
   terms: Map<string, Term>
@@ -177,7 +222,7 @@ function buildVariants(
   return (raw ?? []).map((v) => ({
     key: v.id,
     options: (v.attributes ?? []).map(({ name, value }) => {
-      const attrKey = normalizeAttribute(cleanHtml(name)); // "farge", "størrelse"
+      const attrKey = attrKeyFromName(name); // e.g. "Størrelse" | "størrelse" -> "størrelse"
       if (!attributes.has(attrKey)) {
         throw new Error(
           `Unknown attribute key in variation: ${name} -> ${attrKey}`

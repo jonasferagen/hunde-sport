@@ -1,4 +1,4 @@
-// tests/variable/variants.test.ts
+// tests/variable/variations.test.ts
 
 import fs from "fs";
 import path from "path";
