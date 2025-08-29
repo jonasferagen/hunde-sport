@@ -3,10 +3,10 @@
 import React from "react";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
-import { Purchasable } from "@/domain/Product/Purchasable";
+import { Purchasable } from "@/domain/Purchasable";
 import { useAddToCartPurchasable } from "@/hooks/useAddToCart";
 
-import { ACTIONS, PriceTag, STATUS } from "./ButtonHelpers";
+import { PriceTag, resolveStatus } from "./ButtonHelpers";
 
 type PurchaseButtonBaseProps = {
   purchasable: Purchasable;
@@ -22,13 +22,11 @@ export const PurchasableButton = React.memo(function PurchasableButton({
   const { isLoading, onPress } = useAddToCartPurchasable(purchasable, {
     onSuccess,
   });
-  const { availability } = purchasable;
-  const { isPurchasable } = availability;
-  const disabled = !isPurchasable;
 
-  const { theme, icon, label } = isPurchasable
-    ? ACTIONS.buy
-    : STATUS.unavailable;
+  const { theme, icon, label, disabled } = resolveStatus(
+    purchasable.variableProduct.availability,
+    purchasable
+  );
 
   const after = PriceTag({
     productPrices: purchasable.variableProduct.prices,
@@ -40,7 +38,7 @@ export const PurchasableButton = React.memo(function PurchasableButton({
       onPress={onPress}
       before={icon}
       theme={theme}
-      label={label}
+      label={flabel}
       after={after}
       loading={isLoading}
       disabled={disabled}

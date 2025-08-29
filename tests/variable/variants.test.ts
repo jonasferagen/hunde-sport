@@ -15,7 +15,7 @@ describe("VariableProduct variants", () => {
     expect(product).toBeInstanceOf(VariableProduct);
     if (!(product instanceof VariableProduct)) return;
 
-    const { attributes, terms, variants } = product;
+    const { attributes, terms, variations: variants } = product;
     expect(variants.length).toBeGreaterThan(0);
 
     for (const v of variants) {

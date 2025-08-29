@@ -5,7 +5,7 @@ import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { SimpleProduct } from "@/domain/Product/SimpleProduct";
 import { useAddToCartSimple } from "@/hooks/useAddToCart";
 
-import { ACTIONS, PriceTag, STATUS } from "./ButtonHelpers";
+import { PriceTag, resolveStatus } from "./ButtonHelpers";
 
 type PurchaseButtonBaseProps = {
   simpleProduct: SimpleProduct;
@@ -18,13 +18,9 @@ export const SimplePurchaseButton = React.memo(function SimplePurchaseButton({
     onSuccess: () => close?.(),
   });
 
-  const { availability } = simpleProduct;
-  const { isPurchasable } = availability;
-  const disabled = !isPurchasable;
-
-  const { theme, icon, label } = isPurchasable
-    ? ACTIONS.buy
-    : STATUS.unavailable;
+  const { theme, icon, label, disabled } = resolveStatus(
+    simpleProduct.availability
+  );
 
   const after = PriceTag({
     productPrices: simpleProduct.prices,

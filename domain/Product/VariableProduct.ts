@@ -39,7 +39,7 @@ export type Term = {
   attribute: string; // attribute key (normalized), e.g. "farge"
 };
 
-export type Variant = {
+export type Variation = {
   key: number; // variation id
   options: { term: string; attribute: string }[];
 };
@@ -52,7 +52,11 @@ export class VariableProduct extends BaseProduct {
   /** Precomputed normalized views */
   readonly attributes: Map<string, Attribute>;
   readonly terms: Map<string, Term>;
-  readonly variants: Variant[];
+  readonly variations: Variation[];
+
+  readonly attributeOrder: string[]; // normalized attr keys in Store order
+  readonly termOrderByAttribute?: Map<string, string[]>; // per-attr term keys in Store order
+  readonly variationOrder?: number[]; // variation ids in Store order
 
   constructor(data: VariableProductData) {
     if (data.type !== "variable") {
@@ -66,11 +70,15 @@ export class VariableProduct extends BaseProduct {
     // compute once
     const attributes = buildAttributes(this.rawAttributes);
     const terms = buildTerms(this.rawAttributes);
-    const variants = buildVariants(this.rawVariations, attributes, terms);
+    const variations = buildVariants(this.rawVariations, attributes, terms);
 
     this.attributes = attributes;
     this.terms = terms;
-    this.variants = variants;
+    this.variations = variations;
+
+    this.attributeOrder = this.rawAttributes.map((a) =>
+      normalizeAttribute(cleanHtml(a.name))
+    );
   }
 }
 
@@ -115,7 +123,7 @@ function buildVariants(
   raw: RawVariationRef[],
   attributes: Map<string, Attribute>,
   terms: Map<string, Term>
-): Variant[] {
+): Variation[] {
   return (raw ?? []).map((v) => ({
     key: v.id,
     options: (v.attributes ?? []).map(({ name, value }) => {

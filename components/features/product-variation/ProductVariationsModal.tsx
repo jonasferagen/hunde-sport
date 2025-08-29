@@ -1,7 +1,6 @@
 // ProductVariationsModal.tsx
 
 import { X } from "@tamagui/lucide-icons";
-import React from "react";
 import { ScrollView } from "tamagui";
 
 import {
@@ -10,39 +9,47 @@ import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui";
+import { VariableProductProvider } from "@/contexts/VariableProductContext";
 import {
-  createPurchasable,
-  VariationSelection,
-} from "@/domain/Product/Purchasable";
+  useVariationSelection,
+  VariationSelectionProvider,
+} from "@/contexts/VariationSelectionContext";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
-import { ProductVariation } from "@/types";
+import { useProductVariations } from "@/hooks/data/Product";
 
 import { ProductImage, ProductTitle } from "../product/display";
 import { PurchasableButton } from "../product/purchase/PurchasableButton";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 import { ProductVariationStatus } from "./ProductVariationStatus";
 
-const IMAGE_H = 200;
 type Props = { close: () => void; variableProduct: VariableProduct };
 
 export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
-  const [selection, setSelection] = React.useState<
-    VariationSelection | undefined
-  >(undefined);
-  const [selectedVariation, setSelectedVariation] = React.useState<
-    ProductVariation | undefined
-  >(undefined);
+  const { isLoading, items: productVariations } =
+    useProductVariations(variableProduct);
 
-  const purchasable = React.useMemo(
-    () =>
-      createPurchasable({
-        variableProduct,
-        productVariation: selectedVariation,
-        selection,
-      }),
-    [variableProduct, selectedVariation, selection]
+  return (
+    <VariableProductProvider
+      variableProduct={variableProduct}
+      productVariations={productVariations}
+      isLoading={isLoading}
+    >
+      <VariationSelectionProvider>
+        <ProductVariationsModalContent close={close} />
+      </VariationSelectionProvider>
+    </VariableProductProvider>
   );
+};
 
+export const ProductVariationsModalContent = ({
+  close,
+}: {
+  close: () => void;
+}) => {
+  const { purchasable } = useVariationSelection();
+  const { variableProduct } = purchasable;
+
+  const IMAGE_H = 200;
   return (
     <ThemedYStack f={1} mih={0} gap="$3">
       {/* Header (fixed) */}
@@ -66,13 +73,7 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
           removeClippedSubviews={false}
           contentContainerStyle={{ paddingBottom: 12 }}
         >
-          <ProductVariationSelect
-            variableProduct={variableProduct}
-            onSelect={({ selection, selectedVariation }) => {
-              setSelection(selection);
-              setSelectedVariation(selectedVariation);
-            }}
-          />
+          <ProductVariationSelect />
         </ScrollView>
       </ThemedYStack>
 
@@ -81,7 +82,7 @@ export const ProductVariationsModal = ({ close, variableProduct }: Props) => {
         {/* Selection summary (very lightweight) */}
         <ProductVariationStatus purchasable={purchasable} />
         <ThemedText>{purchasable.message}</ThemedText>
-        {<PurchasableButton purchasable={purchasable} onSuccess={close} />}
+        <PurchasableButton purchasable={purchasable} onSuccess={close} />
         <ThemedYStack mb="$3" />
       </ThemedYStack>
     </ThemedYStack>

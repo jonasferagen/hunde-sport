@@ -30,11 +30,11 @@ export const THEME_PAGE = "light";
 export const THEME_PAGE_HEADER = "primary";
 export const THEME_PAGE_FOOTER = "secondary_shade";
 
-export const THEME_CTA_VIEW = "primary";
-export const THEME_CTA_BUY = "secondary";
-export const THEME_CTA_UNAVAILABLE = "dark_tertiary_tint";
-export const THEME_CTA_SELECTION_NEEDED = "dark_tertiary_tint";
-export const THEME_CTA_OUTOFSTOCK = "dark_tertiary";
+export const THEME_CTA_BUY = "dark_secondary";
+export const THEME_CTA_UNAVAILABLE = "info2";
+export const THEME_CTA_VIEW = "info2";
+export const THEME_CTA_SELECTION_NEEDED = "warning";
+export const THEME_CTA_OUTOFSTOCK = "danger";
 
 export const THEME_PRICE_TAG = "dark_tertiary";
 export const THEME_PRICE_TAG_FREE = "dark_tertiary";
@@ -60,3 +60,9 @@ export const THEME_PRODUCTS_DISCOUNTED_BG = "secondary_tint";
 
 export const THEME_PRODUCTS_FEATURED = "light";
 export const THEME_PRODUCTS_FEATURED_BG = "secondary";
+
+export const THEME_ERROR = "error";
+export const THEME_WARNING = "warning";
+export const THEME_DANGER = "danger";
+export const THEME_SUCCESS = "success";
+export const THEME_INFO = "info";

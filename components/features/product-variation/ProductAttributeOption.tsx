@@ -2,7 +2,7 @@ import React from "react";
 
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
-import { useVariableProductInfoCtx } from "@/contexts/VariableProductInfoContext";
+import { useVariableProduct } from "@/contexts/VariableProductContext";
 import { getProductPriceRange } from "@/domain/pricing";
 
 import {
@@ -17,22 +17,22 @@ export const ProductAttributeOption = React.memo(
     isSelected,
     label,
     onPress,
-    variantIds,
+    variationIds,
   }: {
     attribute: string;
     term: string;
     isSelected: boolean;
     label: string;
     onPress?: () => void;
-    variantIds: number[];
+    variationIds: number[];
   }) => {
-    const { pricesForIds, availabilityForIds } = useVariableProductInfoCtx();
+    const { pricesForIds, availabilityForIds } = useVariableProduct();
 
-    const prices = pricesForIds(variantIds);
-    const availabilities = availabilityForIds(variantIds);
+    const prices = pricesForIds(variationIds);
+    const availabilities = availabilityForIds(variationIds);
 
     const productAvailability = {
-      isInStock: availabilities.some((a) => a.isPurchasable),
+      isInStock: availabilities.some((a) => a.isInStock), // fix
       isOnBackOrder: availabilities.some((a) => a.isOnBackOrder),
       isOnSale: availabilities.some((a) => a.isOnSale),
       isPurchasable: availabilities.some((a) => a.isPurchasable),
@@ -40,8 +40,10 @@ export const ProductAttributeOption = React.memo(
 
     // derive min/max if needed
     const priceRange = prices.length ? getProductPriceRange(prices) : undefined;
-    const disabled = !priceRange;
-
+    const disabled =
+      variationIds.length === 0 ||
+      !productAvailability.isPurchasable ||
+      !priceRange;
     if (!priceRange) {
       return null;
     }

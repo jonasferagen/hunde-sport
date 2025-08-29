@@ -16,7 +16,7 @@ it("visualizes attributes / terms / variants", () => {
 
   const attributes = Object.fromEntries(p.attributes.entries());
   const terms = Object.fromEntries(p.terms.entries());
-  const variants = p.variants;
+  const variants = p.variations;
 
   // prettier print
 
