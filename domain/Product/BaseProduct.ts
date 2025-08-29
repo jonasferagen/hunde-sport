@@ -35,6 +35,10 @@ export interface BaseProductData {
   parent: number;
   categories: CategoryRef[]; // already reliable, no sanitization needed
   type: "simple" | "variable" | "variation";
+  availability: ProductAvailability;
+  isSimple: boolean;
+  isVariable: boolean;
+  isVariation: boolean;
 }
 
 export class BaseProduct {

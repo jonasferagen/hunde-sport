@@ -18,7 +18,7 @@ import { VariableProduct } from "@/domain/Product/VariableProduct";
 import { useProductVariations } from "@/hooks/data/Product";
 
 import { ProductImage, ProductTitle } from "../product/display";
-import { PurchasableButton } from "../product/purchase/PurchasableButton";
+import { PurchaseButton } from "../product/purchase/PurchaseButton";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 import { ProductVariationStatus } from "./ProductVariationStatus";
 
@@ -82,7 +82,11 @@ export const ProductVariationsModalContent = ({
         {/* Selection summary (very lightweight) */}
         <ProductVariationStatus purchasable={purchasable} />
         <ThemedText>{purchasable.message}</ThemedText>
-        <PurchasableButton purchasable={purchasable} onSuccess={close} />
+        <PurchaseButton
+          product={variableProduct}
+          purchasable={purchasable}
+          onSuccess={close}
+        />
         <ThemedYStack mb="$3" />
       </ThemedYStack>
     </ThemedYStack>

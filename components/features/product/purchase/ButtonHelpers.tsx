@@ -5,8 +5,8 @@ import {
   TriangleAlert,
   XCircle,
 } from "@tamagui/lucide-icons";
-import { JSX } from "react";
-import { Theme, ThemeName } from "tamagui";
+import type { JSX } from "react";
+import type { ThemeName } from "tamagui";
 
 import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
 import {
@@ -16,33 +16,34 @@ import {
   THEME_CTA_UNAVAILABLE,
   THEME_CTA_VIEW,
 } from "@/config/app";
-import { ProductAvailability, ProductPrices, Purchasable } from "@/types";
+import type {
+  ProductAvailability,
+  ProductPrices,
+  Purchasable,
+  SimpleProduct,
+  VariableProduct,
+} from "@/types";
 
 import { ProductPrice } from "../display";
 
 export const PriceTag = ({
-  productPrices,
-  productAvailability,
+  prices,
+  availability,
 }: {
-  productPrices: ProductPrices;
-  productAvailability: ProductAvailability;
+  prices: ProductPrices;
+  availability: ProductAvailability;
 }) => (
-  <Theme inverse>
-    <ThemedSurface
-      theme="shade"
-      h="$6"
-      ai="center"
-      jc="center"
-      px="none"
-      mr={-20}
-      minWidth={80}
-    >
-      <ProductPrice
-        productPrices={productPrices}
-        productAvailability={productAvailability}
-      />
-    </ThemedSurface>
-  </Theme>
+  <ThemedSurface
+    theme="shade"
+    h="$6"
+    ai="center"
+    jc="center"
+    px="none"
+    mr={-20}
+    minWidth={80}
+  >
+    <ProductPrice productPrices={prices} productAvailability={availability} />
+  </ThemedSurface>
 );
 
 export type Status =
@@ -51,7 +52,6 @@ export type Status =
   | "selection_needed"
   | "outofstock"
   | "unavailable";
-
 export type UIConf = {
   icon: JSX.Element;
   theme: ThemeName;
@@ -59,35 +59,6 @@ export type UIConf = {
   disabled: boolean;
 };
 
-export const resolveStatus = ({
-  availability,
-  purchasable,
-}: {
-  availability: ProductAvailability;
-  purchasable?: Purchasable;
-}) => {
-  if (!availability.isInStock) {
-    return STATUS.outofstock;
-  }
-  if (!availability.isPurchasable) {
-    return STATUS.unavailable;
-  }
-
-  if (purchasable) {
-    const { status, message } = purchasable;
-    if (status === "selection_needed") {
-      const res = STATUS.selection_needed;
-      res.label = message;
-      return res;
-    }
-  }
-
-  return STATUS.buy;
-};
-
-// actions
-
-// statuses
 export const STATUS: Record<Status, UIConf> = {
   buy: {
     icon: <ShoppingCart />,
@@ -119,4 +90,25 @@ export const STATUS: Record<Status, UIConf> = {
     label: "Ikke tilgjengelig",
     disabled: true,
   },
+};
+
+export const resolveStatus = (
+  product: SimpleProduct | VariableProduct,
+  purchasable?: Purchasable
+): UIConf => {
+  const { availability } = product;
+
+  if (!availability.isInStock) return STATUS.outofstock;
+  if (!availability.isPurchasable) return STATUS.unavailable;
+
+  if ((product as any).isVariable && !purchasable) return STATUS.list;
+
+  if (purchasable) {
+    if (purchasable.isValid) return STATUS.buy;
+    const res = { ...STATUS.selection_needed };
+    res.label = purchasable.message || res.label;
+    return res;
+  }
+
+  return STATUS.buy;
 };
