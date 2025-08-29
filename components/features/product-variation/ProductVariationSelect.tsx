@@ -30,6 +30,12 @@ export function ProductVariationSelect() {
             <ThemedYStack w="100%" gap="$2">
               {Array.from(state.variationSetByTerm.entries()).map(
                 ([termKey, variationSet]) => {
+                  // hide only globally-unused terms (keep contextually-empty ones visible/disabled)
+                  const isGloballyUnused =
+                    variableProduct.getVariationSetForTerm(termKey).size === 0;
+
+                  if (isGloballyUnused) return null;
+
                   const termLabel =
                     variableProduct.terms.get(termKey)?.label ?? termKey;
                   const isSelected = state.selected === termKey;

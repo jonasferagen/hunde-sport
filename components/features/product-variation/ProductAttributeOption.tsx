@@ -6,10 +6,7 @@ import { useVariableProduct } from "@/contexts/VariableProductContext";
 import { useVariationSelection } from "@/contexts/VariationSelectionContext";
 import { getProductPriceRange } from "@/domain/pricing";
 
-import {
-  ProductAvailabilityStatus,
-  ProductPriceRange,
-} from "../product/display";
+import { ProductPriceRange } from "../product/display";
 
 export const ProductAttributeOption = React.memo(
   ({
@@ -27,17 +24,12 @@ export const ProductAttributeOption = React.memo(
     onPress?: () => void;
     variationSet: ReadonlySet<number>;
   }) => {
-    const { variationSetForTerm, pricesForIds, availabilityForIds } =
-      useVariableProduct();
-    const { selectedVariation } = useVariationSelection();
-
-    const globalSetForTerm = React.useMemo(
-      () => variationSetForTerm(attribute, term),
-      [variationSetForTerm, attribute, term]
-    );
-
     const isImpossible = variationSet.size === 0;
     const disabled = isImpossible;
+
+    const { variableProduct, pricesForIds } = useVariableProduct();
+    const { selectedVariation } = useVariationSelection();
+    const globalSetForTerm = variableProduct.getVariationSetForTerm(term);
 
     const effectiveIds =
       variationSet.size > 0
@@ -47,19 +39,6 @@ export const ProductAttributeOption = React.memo(
           : Array.from(globalSetForTerm);
 
     const prices = pricesForIds(effectiveIds);
-    const availabilities = availabilityForIds(effectiveIds);
-
-    const productAvailability = {
-      isInStock: availabilities.every((a) => a.isInStock),
-      isOnBackOrder: availabilities.some((a) => a.isOnBackOrder),
-      isOnSale: availabilities.some((a) => a.isOnSale),
-      isPurchasable: availabilities.some((a) => a.isPurchasable),
-    };
-    console.log(
-      `${attribute}:${term}`,
-      effectiveIds.length,
-      productAvailability.isInStock
-    );
     const priceRange = prices.length ? getProductPriceRange(prices) : undefined;
 
     return (
@@ -79,10 +58,6 @@ export const ProductAttributeOption = React.memo(
         >
           <ThemedXStack f={1} split>
             <ThemedXStack gap="$1">
-              <ProductAvailabilityStatus
-                productAvailability={productAvailability}
-                short
-              />
               <ThemedText>{label}</ThemedText>
             </ThemedXStack>
             <ThemedXStack gap="$1">

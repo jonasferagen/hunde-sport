@@ -104,7 +104,7 @@ export const resolveStatus = (
   if ((product as any).isVariable && !purchasable) return STATUS.list;
 
   if (purchasable) {
-    if (purchasable.isValid) return STATUS.buy;
+    if (purchasable.selectedVariation) return STATUS.buy;
     const res = { ...STATUS.selection_needed };
     res.label = purchasable.message || res.label;
     return res;

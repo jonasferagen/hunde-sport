@@ -15,8 +15,6 @@ export type VariableProductCtx = {
   // Lookups
   byId: (id: number) => ProductVariation | undefined;
 
-  variationSetForTerm: (attr: string, term: string) => ReadonlySet<number>;
-
   // Display helpers (accept arrays you create at the edge)
   pricesForIds: (ids: number[]) => ProductPrices[];
   availabilityForIds: (ids: number[]) => ProductAvailability[];
@@ -74,13 +72,6 @@ export function VariableProductProvider({
     [variationById]
   );
 
-  const variationSetForTerm = React.useCallback(
-    (_attr: string, termSlug: string): ReadonlySet<number> => {
-      // attr kept for API compatibility; resolution now lives in the model
-      return variableProduct.getVariationSetForTerm(termSlug);
-    },
-    [variableProduct]
-  );
   const pricesForIds = React.useCallback(
     (ids: number[]) =>
       ids
@@ -101,7 +92,6 @@ export function VariableProductProvider({
     variableProduct,
     isLoading,
     byId,
-    variationSetForTerm,
     pricesForIds,
     availabilityForIds,
     termsByAttribute,

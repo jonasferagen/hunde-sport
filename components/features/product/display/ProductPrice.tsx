@@ -10,8 +10,8 @@ import {
 import { formatPrice } from "@/domain/pricing";
 import {
   ProductAvailability,
-  ProductPriceRange as TProductPriceRange,
   ProductPrices,
+  ProductPriceRange as TProductPriceRange,
 } from "@/types";
 
 const PriceLine = ({
@@ -45,7 +45,7 @@ export const ProductPrice = React.memo(function ProductPrice({
     return isOnSale && saleVal > 0 && regVal > 0 && saleVal < regVal;
   }, [productPrices, isOnSale]);
 
-  const isFree = productPrices?.price === "0";
+  const isFree = isInStock && productPrices?.price === "0";
   const subtle = !isInStock || !isPurchasable || textProps.subtle;
 
   if (saleValid) {

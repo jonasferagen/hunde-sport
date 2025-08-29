@@ -15,9 +15,7 @@ export type SelectionViewForAttr = {
 };
 
 export type VariationSelectionCtx = {
-  variationSelection: VariationSelection;
   selectionView: Map<string, SelectionViewForAttr>;
-  candidateVariationSet: ReadonlySet<number>;
   selectedVariation?: ProductVariation;
   purchasable: Purchasable;
   select: (attr: string, term: string | null) => void;
@@ -50,21 +48,8 @@ const intersectSets = (
   return out;
 };
 
-/** Canonical signature for a complete selection */
-function selectionSignature(
-  sel: VariationSelection,
-  order: string[]
-): string | null {
-  for (const a of order) {
-    const t = sel.get(a);
-    if (!t) return null;
-  }
-  return order.map((a) => `${a}=${sel.get(a)}`).join("|");
-}
-
 export function VariationSelectionProvider({ children }: Props) {
-  const { variableProduct, variationSetForTerm, byId, termsByAttribute } =
-    useVariableProduct();
+  const { variableProduct, byId, termsByAttribute } = useVariableProduct();
 
   const allVariationIdsSet = variableProduct.variationIdSet;
 
@@ -105,37 +90,13 @@ export function VariationSelectionProvider({ children }: Props) {
     [makeInitialSelection]
   );
 
-  /** Candidates via intersection of all selected attrs (as Sets) */
-  const candidateVariationSet = React.useMemo<ReadonlySet<number>>(() => {
-    const filters: [string, string][] = [];
-    for (const [a, t] of variationSelection) if (t) filters.push([a, t]);
-    if (filters.length === 0) return allVariationIdsSet;
-
-    // smallest-first intersection
-    const sets = filters
-      .map(([a, t]) => variationSetForTerm(a, t))
-      .sort((s1, s2) => s1.size - s2.size);
-
-    let pool: ReadonlySet<number> | null = null;
-    for (const s of sets) pool = pool ? intersectSets(pool, s) : s;
-    return pool ?? EMPTY_SET;
-  }, [variationSelection, allVariationIdsSet, variationSetForTerm]);
-
   /** Resolve selectedVariation ONLY when selection is complete (signature-based) */
   const selectedVariation = React.useMemo(() => {
-    const sig = selectionSignature(
-      variationSelection,
-      variableProduct.attributeOrder
-    );
+    const sig = variationSelection.toSignature();
     if (!sig) return undefined;
     const id = variationIdBySignature.get(sig);
     return id ? byId(id) : undefined;
-  }, [
-    variationSelection,
-    variableProduct.attributeOrder,
-    variationIdBySignature,
-    byId,
-  ]);
+  }, [variationSelection, variationIdBySignature, byId]);
 
   /** Build selectionView: for each attribute, exclude that attribute from filters */
   const selectionView = React.useMemo(() => {
@@ -155,7 +116,7 @@ export function VariationSelectionProvider({ children }: Props) {
         basePool = allVariationIdsSet;
       } else {
         const sets = otherFilters
-          .map(([a, t]) => variationSetForTerm(a, t))
+          .map(([a, t]) => variableProduct.getVariationSetForTerm(t))
           .sort((s1, s2) => s1.size - s2.size);
         let acc: ReadonlySet<number> | null = null;
         for (const s of sets) acc = acc ? intersectSets(acc, s) : s;
@@ -164,7 +125,7 @@ export function VariationSelectionProvider({ children }: Props) {
 
       const vbt = new Map<string, ReadonlySet<number>>();
       for (const t of terms) {
-        const sForTerm = variationSetForTerm(attr, t.key);
+        const sForTerm = variableProduct.getVariationSetForTerm(t.key);
         vbt.set(t.key, intersectSets(basePool, sForTerm));
       }
 
@@ -173,11 +134,10 @@ export function VariationSelectionProvider({ children }: Props) {
 
     return view;
   }, [
+    variableProduct,
     variationSelection,
-    variableProduct.attributeOrder,
     termsByAttribute,
     allVariationIdsSet,
-    variationSetForTerm,
   ]);
 
   /** Purchasable derived */
@@ -192,9 +152,7 @@ export function VariationSelectionProvider({ children }: Props) {
   );
 
   const value: VariationSelectionCtx = {
-    variationSelection,
     selectionView,
-    candidateVariationSet,
     selectedVariation,
     purchasable,
     select,
