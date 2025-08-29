@@ -18,6 +18,7 @@ export const ProductAttributeOption = React.memo(
     label,
     onPress,
     variationIds,
+    fallbackVariationId,
   }: {
     attribute: string;
     term: string;
@@ -25,11 +26,19 @@ export const ProductAttributeOption = React.memo(
     label: string;
     onPress?: () => void;
     variationIds: number[];
+    fallbackVariationId: number;
   }) => {
+    const effectiveIds =
+      variationIds.length > 0
+        ? variationIds
+        : fallbackVariationId
+          ? [fallbackVariationId]
+          : [];
+
     const { pricesForIds, availabilityForIds } = useVariableProduct();
 
-    const prices = pricesForIds(variationIds);
-    const availabilities = availabilityForIds(variationIds);
+    const prices = pricesForIds(effectiveIds);
+    const availabilities = availabilityForIds(effectiveIds);
 
     const productAvailability = {
       isInStock: availabilities.some((a) => a.isInStock), // fix
@@ -40,13 +49,9 @@ export const ProductAttributeOption = React.memo(
 
     // derive min/max if needed
     const priceRange = prices.length ? getProductPriceRange(prices) : undefined;
-    const disabled =
-      variationIds.length === 0 ||
-      !productAvailability.isPurchasable ||
-      !priceRange;
-    if (!priceRange) {
-      return null;
-    }
+    const disabled = variationIds.length === 0; // ||
+    //  !productAvailability.isPurchasable ||
+    //  !priceRange;
 
     return (
       <ThemedXStack

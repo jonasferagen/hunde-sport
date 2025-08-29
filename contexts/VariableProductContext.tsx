@@ -1,6 +1,5 @@
 import React from "react";
 
-import { MinimalSelection } from "@/domain/Purchasable";
 import type {
   ProductAvailability,
   ProductPrices,
@@ -12,19 +11,12 @@ import type {
 export type VariableProductCtx = {
   variableProduct: VariableProduct;
   isLoading: boolean;
-
-  // Lookups
   byId: (id: number) => ProductVariation | undefined;
   allVariationIds: number[];
   pricesForIds: (ids: number[]) => ProductPrices[];
   availabilityForIds: (ids: number[]) => ProductAvailability[];
   variationIdsForTerm: (attr: string, term: string) => number[];
-
-  // For UI (terms grouped per attribute, in store order)
   termsByAttribute: Map<string, Term[]>;
-
-  // Helper
-  buildSelection: () => MinimalSelection;
 };
 
 const Ctx = React.createContext<VariableProductCtx | null>(null);
@@ -138,9 +130,8 @@ export function VariableProductProvider({
       allVariationIds,
       pricesForIds,
       availabilityForIds,
-      variationIdsForTerm: variationIdsForTerm,
+      variationIdsForTerm,
       termsByAttribute,
-      buildSelection,
     }),
     [
       variableProduct,
@@ -151,7 +142,6 @@ export function VariableProductProvider({
       availabilityForIds,
       variationIdsForTerm,
       termsByAttribute,
-      buildSelection,
     ]
   );
 

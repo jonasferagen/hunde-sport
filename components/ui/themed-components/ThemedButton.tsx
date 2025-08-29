@@ -28,7 +28,7 @@ const SIZES: Record<
   $6: { h: 64, px: 20, gap: 14, fs: 20, icon: 24, lh: 26 },
 };
 
-const DISABLED_STYLE = { opacity: 0.7 } as const;
+const DISABLED_STYLE = { opacity: 0.5 } as const;
 const HOVER_STYLE = {
   backgroundColor: "$backgroundHover",
   borderColor: "$borderColor",

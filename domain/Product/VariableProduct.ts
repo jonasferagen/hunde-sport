@@ -64,7 +64,10 @@ export class VariableProduct extends BaseProduct {
     }
     super(data);
 
-    this.rawAttributes = data.attributes ?? [];
+    this.rawAttributes = (data.attributes ?? []).filter(
+      (a) => a.has_variations
+    );
+
     this.rawVariations = data.variations ?? [];
 
     // compute once
@@ -72,13 +75,60 @@ export class VariableProduct extends BaseProduct {
     const terms = buildTerms(this.rawAttributes);
     const variations = buildVariants(this.rawVariations, attributes, terms);
 
-    this.attributes = attributes;
-    this.terms = terms;
-    this.variations = variations;
+    // ---- POST-STEP: prune globally-unused terms & empty attributes ----
 
-    this.attributeOrder = this.rawAttributes.map((a) =>
-      normalizeAttribute(cleanHtml(a.name))
+    // 1) Collect used term slugs per attribute from the parsed variations
+    const usedTermsByAttr = new Map<string, Set<string>>();
+    for (const v of variations) {
+      for (const { attribute, term } of v.options) {
+        if (!usedTermsByAttr.has(attribute))
+          usedTermsByAttr.set(attribute, new Set());
+        usedTermsByAttr.get(attribute)!.add(term); // term is the term slug
+      }
+    }
+
+    // 2) Filter the flat terms map to only those that appear in at least one variation
+    const filteredTerms = new Map(
+      Array.from(terms.entries()).filter(([slug, term]) => {
+        const used = usedTermsByAttr.get(term.attribute);
+        return used?.has(slug) ?? false;
+      })
     );
+
+    // 3) Optionally drop attributes that ended up with zero used terms
+    const filteredAttributes = new Map(
+      Array.from(attributes.entries()).filter(([attrKey]) => {
+        return (usedTermsByAttr.get(attrKey)?.size ?? 0) > 0;
+      })
+    );
+
+    // 4) Rebuild attribute order to match the original store order but only keep attrs that survived
+    const filteredAttributeOrder = this.rawAttributes
+      .map((a) => normalizeAttribute(cleanHtml(a.name)))
+      .filter((attrKey) => filteredAttributes.has(attrKey));
+
+    // 5) Build per-attribute term order from the raw order, filtered to used terms
+    const termOrderByAttribute = new Map<string, string[]>();
+    for (const ra of this.rawAttributes) {
+      const attrKey = normalizeAttribute(cleanHtml(ra.name));
+      if (!filteredAttributes.has(attrKey)) continue;
+      const used = usedTermsByAttr.get(attrKey) ?? new Set<string>();
+      const order = (ra.terms ?? [])
+        .map((t) => t.slug)
+        .filter((slug) => used.has(slug));
+      termOrderByAttribute.set(attrKey, order);
+    }
+
+    // 6) (Optional) keep raw variation id order for later use
+    const variationOrder = (this.rawVariations ?? []).map((v) => v.id);
+
+    // 7) Assign the pruned/derived structures
+    this.attributes = filteredAttributes;
+    this.terms = filteredTerms;
+    this.variations = variations;
+    this.attributeOrder = filteredAttributeOrder;
+    this.termOrderByAttribute = termOrderByAttribute;
+    this.variationOrder = variationOrder;
   }
 }
 

@@ -49,6 +49,12 @@ export const ProductVariationsModalContent = ({
   const { purchasable } = useVariationSelection();
   const { variableProduct } = purchasable;
 
+  console.warn(
+    purchasable.selectedVariation?.id,
+    purchasable.isValid,
+    purchasable.missing
+  );
+
   const IMAGE_H = 200;
   return (
     <ThemedYStack f={1} mih={0} gap="$3">

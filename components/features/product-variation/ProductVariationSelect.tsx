@@ -6,18 +6,20 @@ import { ThemedXStack, ThemedYStack } from "@/components/ui";
 import { useVariableProduct } from "@/contexts/VariableProductContext";
 import { useVariationSelection } from "@/contexts/VariationSelectionContext";
 
+// ProductVariationSelect.tsx
 import { ProductAttributeOption } from "./ProductAttributeOption";
 
 export function ProductVariationSelect() {
   const { variableProduct } = useVariableProduct();
-  const { selectionView, select } = useVariationSelection();
+  const { selectionView, select, selectedVariation } = useVariationSelection(); // <- add
+
+  const fallbackVariationId = selectedVariation?.id ?? null;
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
       {variableProduct.attributeOrder.map((attrKey) => {
         const attr = variableProduct.attributes.get(attrKey);
         const label = attr?.label ?? attrKey;
-
         const state = selectionView.get(attrKey);
         if (!state) return null;
 
@@ -27,7 +29,7 @@ export function ProductVariationSelect() {
               {label}
             </H3>
             <ThemedYStack w="100%" gap="$2">
-              {Array.from(state.variationIdsByTerm.entries()).map(
+              {Array.from(state.variationsByTerm.entries()).map(
                 ([termKey, variationIds]) => {
                   const termLabel =
                     variableProduct.terms.get(termKey)?.label ?? termKey;
@@ -43,7 +45,8 @@ export function ProductVariationSelect() {
                       isSelected={isSelected}
                       label={termLabel}
                       onPress={onPress}
-                      variationIds={variationIds} // selection-filtered ids
+                      variationIds={variationIds} // contextual intersection (excludes this attr)
+                      fallbackVariationId={fallbackVariationId} // <- NEW
                     />
                   );
                 }
