@@ -3,6 +3,7 @@ import React from "react";
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
 import { useVariableProduct } from "@/contexts/VariableProductContext";
+import { useVariationSelection } from "@/contexts/VariationSelectionContext";
 import { getProductPriceRange } from "@/domain/pricing";
 
 import {
@@ -17,41 +18,45 @@ export const ProductAttributeOption = React.memo(
     isSelected,
     label,
     onPress,
-    variationIds,
-    fallbackVariationId,
+    variationSet,
   }: {
     attribute: string;
     term: string;
     isSelected: boolean;
     label: string;
     onPress?: () => void;
-    variationIds: number[];
-    fallbackVariationId: number;
+    variationSet: ReadonlySet<number>;
   }) => {
-    const effectiveIds =
-      variationIds.length > 0
-        ? variationIds
-        : fallbackVariationId
-          ? [fallbackVariationId]
-          : [];
+    const { variationSetForTerm, pricesForIds, availabilityForIds } =
+      useVariableProduct();
+    const { selectedVariation } = useVariationSelection();
 
-    const { pricesForIds, availabilityForIds } = useVariableProduct();
+    const globalSetForTerm = React.useMemo(
+      () => variationSetForTerm(attribute, term),
+      [variationSetForTerm, attribute, term]
+    );
+
+    const isImpossible = variationSet.size === 0;
+    const disabled = isImpossible;
+
+    const effectiveIds =
+      variationSet.size > 0
+        ? Array.from(variationSet)
+        : selectedVariation
+          ? [selectedVariation.id]
+          : Array.from(globalSetForTerm);
 
     const prices = pricesForIds(effectiveIds);
     const availabilities = availabilityForIds(effectiveIds);
 
     const productAvailability = {
-      isInStock: availabilities.some((a) => a.isInStock), // fix
+      isInStock: availabilities.some((a) => a.isInStock),
       isOnBackOrder: availabilities.some((a) => a.isOnBackOrder),
       isOnSale: availabilities.some((a) => a.isOnSale),
       isPurchasable: availabilities.some((a) => a.isPurchasable),
     };
 
-    // derive min/max if needed
     const priceRange = prices.length ? getProductPriceRange(prices) : undefined;
-    const disabled = variationIds.length === 0; // ||
-    //  !productAvailability.isPurchasable ||
-    //  !priceRange;
 
     return (
       <ThemedXStack

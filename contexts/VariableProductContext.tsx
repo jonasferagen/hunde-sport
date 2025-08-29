@@ -6,21 +6,28 @@ import type {
   ProductVariation,
   Term,
   VariableProduct,
-} from "@/types"; // your consolidated types module
+} from "@/types";
 
 export type VariableProductCtx = {
   variableProduct: VariableProduct;
   isLoading: boolean;
+
+  // Lookups
   byId: (id: number) => ProductVariation | undefined;
-  allVariationIds: number[];
+
+  // Set-based access
+  allVariationIdsSet: ReadonlySet<number>;
+  variationSetForTerm: (attr: string, term: string) => ReadonlySet<number>;
+
+  // Display helpers (accept arrays you create at the edge)
   pricesForIds: (ids: number[]) => ProductPrices[];
   availabilityForIds: (ids: number[]) => ProductAvailability[];
-  variationIdsForTerm: (attr: string, term: string) => number[];
+
+  // UI grouping
   termsByAttribute: Map<string, Term[]>;
 };
 
 const Ctx = React.createContext<VariableProductCtx | null>(null);
-
 export const useVariableProduct = () => {
   const ctx = React.useContext(Ctx);
   if (!ctx)
@@ -32,11 +39,12 @@ export const useVariableProduct = () => {
 
 type Props = {
   variableProduct: VariableProduct;
-  /** The fully-hydrated variations from your API: includes prices, availability, etc. */
-  productVariations: ProductVariation[];
+  productVariations: ProductVariation[]; // hydrated; includes prices/availability
   isLoading?: boolean;
   children: React.ReactNode;
 };
+
+const EMPTY_SET: ReadonlySet<number> = Object.freeze(new Set<number>());
 
 export function VariableProductProvider({
   variableProduct,
@@ -44,32 +52,12 @@ export function VariableProductProvider({
   isLoading = false,
   children,
 }: Props) {
-  // Map variationId -> ProductVariation (hydrated)
+  // id -> variation
   const variationById = React.useMemo(() => {
     const m = new Map<number, ProductVariation>();
     for (const v of productVariations) m.set(v.id, v);
     return m;
   }, [productVariations]);
-
-  // All variation ids (prefer the normalized model order if present, else from the fetched list)
-  const allVariationIds = React.useMemo(() => {
-    if (variableProduct.variations?.length) {
-      return variableProduct.variations.map((v) => v.key);
-    }
-    return productVariations.map((v) => v.id);
-  }, [variableProduct.variations, productVariations]);
-
-  // termsByAttribute: group the flat terms map by term.attribute, preserving store order via attributeOrder
-  const termsByAttribute = React.useMemo(() => {
-    const grouped = new Map<string, Term[]>();
-    // initialize keys in store order so iteration is stable
-    for (const attr of variableProduct.attributeOrder) grouped.set(attr, []);
-    for (const [, term] of variableProduct.terms) {
-      if (!grouped.has(term.attribute)) grouped.set(term.attribute, []);
-      grouped.get(term.attribute)!.push(term);
-    }
-    return grouped;
-  }, [variableProduct.attributeOrder, variableProduct.terms]);
 
   // attr -> term -> Set<variationId>
   const attrTermIndex = React.useMemo(() => {
@@ -83,15 +71,40 @@ export function VariableProductProvider({
       }
     }
     return outer;
-  }, [variableProduct.variations]);
+  }, [variableProduct]);
 
+  // Sets for all ids (immutable view)
+  const allVariationIdsSet = React.useMemo<ReadonlySet<number>>(() => {
+    const s = new Set<number>();
+    for (const v of variableProduct.variations) s.add(v.key);
+    return s;
+  }, [variableProduct]);
+
+  // Terms grouped by attribute (store order preserved)
+  const termsByAttribute = React.useMemo(() => {
+    const grouped = new Map<string, Term[]>();
+    for (const attr of variableProduct.attributeOrder) grouped.set(attr, []);
+    for (const [, term] of variableProduct.terms) {
+      if (!grouped.has(term.attribute)) grouped.set(term.attribute, []);
+      grouped.get(term.attribute)!.push(term);
+    }
+    return grouped;
+  }, [variableProduct.attributeOrder, variableProduct.terms]);
+
+  // Accessors
   const byId = React.useCallback(
     (id: number) => variationById.get(id),
     [variationById]
   );
 
+  const variationSetForTerm = React.useCallback(
+    (attr: string, term: string): ReadonlySet<number> =>
+      attrTermIndex.get(attr)?.get(term) ?? EMPTY_SET,
+    [attrTermIndex]
+  );
+
   const pricesForIds = React.useCallback(
-    (ids: number[]): ProductPrices[] =>
+    (ids: number[]) =>
       ids
         .map((id) => variationById.get(id)?.prices)
         .filter(Boolean) as ProductPrices[],
@@ -99,51 +112,23 @@ export function VariableProductProvider({
   );
 
   const availabilityForIds = React.useCallback(
-    (ids: number[]): ProductAvailability[] =>
+    (ids: number[]) =>
       ids
         .map((id) => variationById.get(id)?.availability)
         .filter(Boolean) as ProductAvailability[],
     [variationById]
   );
 
-  const variationIdsForTerm = React.useCallback(
-    (attr: string, term: string): number[] => {
-      const inner = attrTermIndex.get(attr);
-      if (!inner) return [];
-      const set = inner.get(term);
-      return set ? Array.from(set) : [];
-    },
-    [attrTermIndex]
-  );
-
-  const buildSelection = React.useCallback(() => {
-    const m = new Map<string, string | null>();
-    for (const attr of variableProduct.attributeOrder) m.set(attr, null);
-    return m;
-  }, [variableProduct.attributeOrder]);
-
-  const value = React.useMemo<VariableProductCtx>(
-    () => ({
-      variableProduct,
-      isLoading,
-      byId,
-      allVariationIds,
-      pricesForIds,
-      availabilityForIds,
-      variationIdsForTerm,
-      termsByAttribute,
-    }),
-    [
-      variableProduct,
-      isLoading,
-      byId,
-      allVariationIds,
-      pricesForIds,
-      availabilityForIds,
-      variationIdsForTerm,
-      termsByAttribute,
-    ]
-  );
+  const value: VariableProductCtx = {
+    variableProduct,
+    isLoading,
+    byId,
+    allVariationIdsSet,
+    variationSetForTerm,
+    pricesForIds,
+    availabilityForIds,
+    termsByAttribute,
+  };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

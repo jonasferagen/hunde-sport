@@ -9,13 +9,14 @@ import type { ProductVariation } from "@/types";
 
 export type SelectionViewForAttr = {
   selected: string | null;
-  variationsByTerm: Map<string, number[]>; // termSlug -> filtered variation ids
+  // termSlug -> contextual set of variation ids (excluding this attribute from filters)
+  variationSetByTerm: Map<string, ReadonlySet<number>>;
 };
 
 export type VariationSelectionCtx = {
   selection: Map<string, string | null>;
   selectionView: Map<string, SelectionViewForAttr>;
-  candidateVariationIds: number[];
+  candidateVariationSet: ReadonlySet<number>;
   selectedVariation?: ProductVariation;
   purchasable: Purchasable;
   select: (attr: string, term: string | null) => void;
@@ -23,43 +24,53 @@ export type VariationSelectionCtx = {
 };
 
 const Ctx = React.createContext<VariationSelectionCtx | null>(null);
-
 export const useVariationSelection = () => {
   const ctx = React.useContext(Ctx);
-  if (!ctx) {
+  if (!ctx)
     throw new Error(
       "useVariationSelection must be used within VariationSelectionProvider"
     );
-  }
   return ctx;
 };
 
 type Props = { children: React.ReactNode };
 
-/** Helper: build a canonical signature from a complete selection */
-function makeSelectionSignature(
-  selection: Map<string, string | null>,
-  attributeOrder: string[]
+const EMPTY_SET: ReadonlySet<number> = Object.freeze(new Set<number>());
+
+// small util
+const intersectSets = (
+  a: ReadonlySet<number>,
+  b: ReadonlySet<number>
+): ReadonlySet<number> => {
+  if (a.size === 0 || b.size === 0) return EMPTY_SET;
+  const [small, large] = a.size <= b.size ? [a, b] : [b, a];
+  const out = new Set<number>();
+  for (const id of small) if (large.has(id)) out.add(id);
+  return out;
+};
+
+/** Canonical signature for a complete selection */
+function selectionSignature(
+  sel: Map<string, string | null>,
+  order: string[]
 ): string | null {
-  for (const attr of attributeOrder) {
-    const term = selection.get(attr);
-    if (!term) return null; // incomplete
+  for (const a of order) {
+    const t = sel.get(a);
+    if (!t) return null;
   }
-  return attributeOrder
-    .map((attr) => `${attr}=${selection.get(attr)}`)
-    .join("|");
+  return order.map((a) => `${a}=${sel.get(a)}`).join("|");
 }
 
 export function VariationSelectionProvider({ children }: Props) {
   const {
     variableProduct,
-    allVariationIds,
+    allVariationIdsSet,
+    variationSetForTerm,
     byId,
-    variationIdsForTerm,
     termsByAttribute,
   } = useVariableProduct();
 
-  /** Precompute variationIdBySignature once per product */
+  /** Precompute selection signature → variation id */
   const variationIdBySignature = React.useMemo(() => {
     const map = new Map<string, number>();
     for (const v of variableProduct.variations) {
@@ -74,19 +85,15 @@ export function VariationSelectionProvider({ children }: Props) {
     return map;
   }, [variableProduct]);
 
-  /** Build initial empty selection */
+  /** Initial empty selection */
   const makeInitialSelection = React.useCallback(() => {
     const m = new Map<string, string | null>();
-    for (const attr of variableProduct.attributeOrder) {
-      m.set(attr, null);
-    }
+    for (const attr of variableProduct.attributeOrder) m.set(attr, null);
     return m;
   }, [variableProduct.attributeOrder]);
 
-  /** Selection state */
   const [selection, setSelection] = React.useState(makeInitialSelection);
 
-  /** Auto-reset when product changes */
   React.useEffect(() => {
     setSelection(makeInitialSelection());
   }, [makeInitialSelection]);
@@ -99,102 +106,67 @@ export function VariationSelectionProvider({ children }: Props) {
     });
   }, []);
 
-  const reset = React.useCallback(() => {
-    setSelection(makeInitialSelection());
-  }, [makeInitialSelection]);
+  const reset = React.useCallback(
+    () => setSelection(makeInitialSelection()),
+    [makeInitialSelection]
+  );
 
-  /** Candidates via intersection (unchanged) */
-  const candidateVariationIds = React.useMemo(() => {
+  /** Candidates via intersection of all selected attrs (as Sets) */
+  const candidateVariationSet = React.useMemo<ReadonlySet<number>>(() => {
     const filters: [string, string][] = [];
-    for (const [attr, term] of selection) {
-      if (term) filters.push([attr, term]);
-    }
+    for (const [a, t] of selection) if (t) filters.push([a, t]);
+    if (filters.length === 0) return allVariationIdsSet;
 
-    if (filters.length === 0) return allVariationIds;
+    // smallest-first intersection
+    const sets = filters
+      .map(([a, t]) => variationSetForTerm(a, t))
+      .sort((s1, s2) => s1.size - s2.size);
 
-    const lists = filters
-      .map(([a, t]) => variationIdsForTerm(a, t))
-      .filter((l) => l.length > 0)
-      .sort((a, b) => a.length - b.length);
+    let pool: ReadonlySet<number> | null = null;
+    for (const s of sets) pool = pool ? intersectSets(pool, s) : s;
+    return pool ?? EMPTY_SET;
+  }, [selection, allVariationIdsSet, variationSetForTerm]);
 
-    if (lists.length === 0) return [];
-
-    let acc = new Set<number>(lists[0]);
-    for (let i = 1; i < lists.length; i++) {
-      const next = new Set<number>();
-      for (const id of lists[i]) if (acc.has(id)) next.add(id);
-      acc = next;
-      if (acc.size === 0) break;
-    }
-    return Array.from(acc);
-  }, [selection, allVariationIds, variationIdsForTerm]);
-
-  /** Selected variation: only resolve if selection is complete */
+  /** Resolve selectedVariation ONLY when selection is complete (signature-based) */
   const selectedVariation = React.useMemo(() => {
-    const sig = makeSelectionSignature(
-      selection,
-      variableProduct.attributeOrder
-    );
-    if (!sig) return undefined; // incomplete
+    const sig = selectionSignature(selection, variableProduct.attributeOrder);
+    if (!sig) return undefined;
     const id = variationIdBySignature.get(sig);
     return id ? byId(id) : undefined;
   }, [selection, variableProduct.attributeOrder, variationIdBySignature, byId]);
 
-  /** Build selectionView */
+  /** Build selectionView: for each attribute, exclude that attribute from filters */
   const selectionView = React.useMemo(() => {
-    // tiny helper
-    const intersectMany = (lists: number[][]): Set<number> => {
-      if (lists.length === 0) return new Set<number>();
-      // start with smallest list for speed
-      lists.sort((a, b) => a.length - b.length);
-      let acc = new Set<number>(lists[0]);
-      for (let i = 1; i < lists.length; i++) {
-        const next = new Set<number>();
-        for (const id of lists[i]) if (acc.has(id)) next.add(id);
-        acc = next;
-        if (acc.size === 0) break;
-      }
-      return acc;
-    };
-
     const view = new Map<string, SelectionViewForAttr>();
 
     for (const attr of variableProduct.attributeOrder) {
       const sel = selection.get(attr) ?? null;
       const terms = termsByAttribute.get(attr) ?? [];
-      const vbt = new Map<string, number[]>();
 
-      // 1) Build base pool from all *other* selected attributes
-      const filtersExceptThis: [string, string][] = [];
-      for (const [a, term] of selection) {
-        if (a !== attr && term) filtersExceptThis.push([a, term]);
-      }
+      // base pool from other selected attrs
+      const otherFilters: [string, string][] = [];
+      for (const [a, t] of selection)
+        if (a !== attr && t) otherFilters.push([a, t]);
 
-      let basePoolSet: Set<number>;
-      if (filtersExceptThis.length === 0) {
-        basePoolSet = new Set<number>(allVariationIds);
+      let basePool: ReadonlySet<number>;
+      if (otherFilters.length === 0) {
+        basePool = allVariationIdsSet;
       } else {
-        const lists = filtersExceptThis
-          .map(([a, t]) => variationIdsForTerm(a, t))
-          .filter((l) => l.length > 0);
-        basePoolSet = lists.length ? intersectMany(lists) : new Set<number>();
+        const sets = otherFilters
+          .map(([a, t]) => variationSetForTerm(a, t))
+          .sort((s1, s2) => s1.size - s2.size);
+        let acc: ReadonlySet<number> | null = null;
+        for (const s of sets) acc = acc ? intersectSets(acc, s) : s;
+        basePool = acc ?? EMPTY_SET;
       }
 
-      // 2) For each term in this attribute, intersect with base pool
+      const vbt = new Map<string, ReadonlySet<number>>();
       for (const t of terms) {
-        const idsForTerm = variationIdsForTerm(attr, t.key);
-        if (idsForTerm.length === 0) {
-          // globally-unused term should already be pruned by your VariableProduct post-step,
-          // but keep this guard anyway
-          vbt.set(t.key, []);
-          continue;
-        }
-        const inter = new Set<number>();
-        for (const id of idsForTerm) if (basePoolSet.has(id)) inter.add(id);
-        vbt.set(t.key, Array.from(inter));
+        const sForTerm = variationSetForTerm(attr, t.key);
+        vbt.set(t.key, intersectSets(basePool, sForTerm));
       }
 
-      view.set(attr, { selected: sel, variationsByTerm: vbt });
+      view.set(attr, { selected: sel, variationSetByTerm: vbt });
     }
 
     return view;
@@ -202,8 +174,8 @@ export function VariationSelectionProvider({ children }: Props) {
     selection,
     variableProduct.attributeOrder,
     termsByAttribute,
-    allVariationIds,
-    variationIdsForTerm,
+    allVariationIdsSet,
+    variationSetForTerm,
   ]);
 
   /** Purchasable derived */
@@ -220,7 +192,7 @@ export function VariationSelectionProvider({ children }: Props) {
   const value: VariationSelectionCtx = {
     selection,
     selectionView,
-    candidateVariationIds,
+    candidateVariationSet,
     selectedVariation,
     purchasable,
     select,
