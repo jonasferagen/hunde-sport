@@ -50,12 +50,16 @@ export const ProductAttributeOption = React.memo(
     const availabilities = availabilityForIds(effectiveIds);
 
     const productAvailability = {
-      isInStock: availabilities.some((a) => a.isInStock),
+      isInStock: availabilities.every((a) => a.isInStock),
       isOnBackOrder: availabilities.some((a) => a.isOnBackOrder),
       isOnSale: availabilities.some((a) => a.isOnSale),
       isPurchasable: availabilities.some((a) => a.isPurchasable),
     };
-
+    console.log(
+      `${attribute}:${term}`,
+      effectiveIds.length,
+      productAvailability.isInStock
+    );
     const priceRange = prices.length ? getProductPriceRange(prices) : undefined;
 
     return (

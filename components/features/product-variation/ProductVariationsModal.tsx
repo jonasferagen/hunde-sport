@@ -61,6 +61,7 @@ export const ProductVariationsModalContent = ({
       {/* Header (fixed) */}
       <ThemedXStack split>
         <ProductTitle product={variableProduct} fs={1} />
+        <ThemedText>{variableProduct.id}</ThemedText>
         <ThemedButton circular onPress={close}>
           <X />
         </ThemedButton>

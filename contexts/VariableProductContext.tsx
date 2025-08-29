@@ -84,6 +84,7 @@ export function VariableProductProvider({
   const termsByAttribute = React.useMemo(() => {
     const grouped = new Map<string, Term[]>();
     for (const attr of variableProduct.attributeOrder) grouped.set(attr, []);
+
     for (const [, term] of variableProduct.terms) {
       if (!grouped.has(term.attribute)) grouped.set(term.attribute, []);
       grouped.get(term.attribute)!.push(term);

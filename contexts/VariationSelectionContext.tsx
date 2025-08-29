@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useVariableProduct } from "@/contexts/VariableProductContext";
+import { VariationSelection } from "@/domain/Product/VariationSelection";
 import {
   createPurchasableFromSelection,
   Purchasable,
@@ -14,7 +15,7 @@ export type SelectionViewForAttr = {
 };
 
 export type VariationSelectionCtx = {
-  selection: Map<string, string | null>;
+  variationSelection: VariationSelection;
   selectionView: Map<string, SelectionViewForAttr>;
   candidateVariationSet: ReadonlySet<number>;
   selectedVariation?: ProductVariation;
@@ -51,7 +52,7 @@ const intersectSets = (
 
 /** Canonical signature for a complete selection */
 function selectionSignature(
-  sel: Map<string, string | null>,
+  sel: VariationSelection,
   order: string[]
 ): string | null {
   for (const a of order) {
@@ -86,35 +87,31 @@ export function VariationSelectionProvider({ children }: Props) {
   }, [variableProduct]);
 
   /** Initial empty selection */
-  const makeInitialSelection = React.useCallback(() => {
-    const m = new Map<string, string | null>();
-    for (const attr of variableProduct.attributeOrder) m.set(attr, null);
-    return m;
-  }, [variableProduct.attributeOrder]);
+  const makeInitialSelection = React.useCallback(
+    () => new VariationSelection(variableProduct.attributeOrder),
+    [variableProduct.attributeOrder]
+  );
 
-  const [selection, setSelection] = React.useState(makeInitialSelection);
+  const [variationSelection, setVariationSelection] =
+    React.useState<VariationSelection>(makeInitialSelection);
 
   React.useEffect(() => {
-    setSelection(makeInitialSelection());
+    setVariationSelection(makeInitialSelection());
   }, [makeInitialSelection]);
 
   const select = React.useCallback((attr: string, term: string | null) => {
-    setSelection((prev) => {
-      const next = new Map(prev);
-      next.set(attr, term);
-      return next;
-    });
+    setVariationSelection((prev) => prev.with(attr, term));
   }, []);
 
   const reset = React.useCallback(
-    () => setSelection(makeInitialSelection()),
+    () => setVariationSelection(makeInitialSelection()),
     [makeInitialSelection]
   );
 
   /** Candidates via intersection of all selected attrs (as Sets) */
   const candidateVariationSet = React.useMemo<ReadonlySet<number>>(() => {
     const filters: [string, string][] = [];
-    for (const [a, t] of selection) if (t) filters.push([a, t]);
+    for (const [a, t] of variationSelection) if (t) filters.push([a, t]);
     if (filters.length === 0) return allVariationIdsSet;
 
     // smallest-first intersection
@@ -125,27 +122,35 @@ export function VariationSelectionProvider({ children }: Props) {
     let pool: ReadonlySet<number> | null = null;
     for (const s of sets) pool = pool ? intersectSets(pool, s) : s;
     return pool ?? EMPTY_SET;
-  }, [selection, allVariationIdsSet, variationSetForTerm]);
+  }, [variationSelection, allVariationIdsSet, variationSetForTerm]);
 
   /** Resolve selectedVariation ONLY when selection is complete (signature-based) */
   const selectedVariation = React.useMemo(() => {
-    const sig = selectionSignature(selection, variableProduct.attributeOrder);
+    const sig = selectionSignature(
+      variationSelection,
+      variableProduct.attributeOrder
+    );
     if (!sig) return undefined;
     const id = variationIdBySignature.get(sig);
     return id ? byId(id) : undefined;
-  }, [selection, variableProduct.attributeOrder, variationIdBySignature, byId]);
+  }, [
+    variationSelection,
+    variableProduct.attributeOrder,
+    variationIdBySignature,
+    byId,
+  ]);
 
   /** Build selectionView: for each attribute, exclude that attribute from filters */
   const selectionView = React.useMemo(() => {
     const view = new Map<string, SelectionViewForAttr>();
 
     for (const attr of variableProduct.attributeOrder) {
-      const sel = selection.get(attr) ?? null;
+      const sel = variationSelection.get(attr) ?? null;
       const terms = termsByAttribute.get(attr) ?? [];
 
       // base pool from other selected attrs
       const otherFilters: [string, string][] = [];
-      for (const [a, t] of selection)
+      for (const [a, t] of variationSelection)
         if (a !== attr && t) otherFilters.push([a, t]);
 
       let basePool: ReadonlySet<number>;
@@ -171,7 +176,7 @@ export function VariationSelectionProvider({ children }: Props) {
 
     return view;
   }, [
-    selection,
+    variationSelection,
     variableProduct.attributeOrder,
     termsByAttribute,
     allVariationIdsSet,
@@ -183,14 +188,14 @@ export function VariationSelectionProvider({ children }: Props) {
     () =>
       createPurchasableFromSelection(
         variableProduct,
-        selection,
+        variationSelection,
         selectedVariation
       ),
-    [variableProduct, selection, selectedVariation]
+    [variableProduct, variationSelection, selectedVariation]
   );
 
   const value: VariationSelectionCtx = {
-    selection,
+    variationSelection,
     selectionView,
     candidateVariationSet,
     selectedVariation,

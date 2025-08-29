@@ -14,7 +14,7 @@ export const ProductVariationStatus: React.FC<Props> = ({
   placeholder = "",
   ...textProps
 }) => {
-  const { variableProduct, selection } = purchasable;
+  const { variableProduct, variationSelection: selection } = purchasable;
 
   // stable attribute order from model
   const attrKeys = variableProduct.attributeOrder;

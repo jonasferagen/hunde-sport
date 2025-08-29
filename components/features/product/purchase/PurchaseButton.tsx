@@ -103,7 +103,7 @@ const VariableInner = React.memo(function VariableInner({
         <PriceTag prices={product.prices} availability={product.availability} />
       }
       loading={false}
-      disabled={disabled}
+      disabled={false}
     />
   );
 });

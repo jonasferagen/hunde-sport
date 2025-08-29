@@ -1,49 +1,29 @@
 // domain/purchase/purchasable.ts
-import { ProductVariation, VariableProduct } from "@/types";
+import { VariableProduct } from "@/domain/Product/VariableProduct";
 
-export type MinimalSelection = Map<string, string | null>;
+import { ProductVariation } from "./Product/ProductVariation";
+import { VariationSelection } from "./Product/VariationSelection";
 
 export type Purchasable = {
   variableProduct: VariableProduct;
-  selection: MinimalSelection;
-  isValid: boolean;
-  selectedVariation?: ProductVariation; // unified name
+  variationSelection: VariationSelection;
+  selectedVariation?: ProductVariation;
   message: string;
-  missing: string[]; // unified name
-  status: "selection_needed" | "valid";
+  missing: string[];
 };
 
 export function createPurchasableFromSelection(
   variableProduct: VariableProduct,
-  selection: MinimalSelection,
+  variationSelection: VariationSelection,
   variation?: ProductVariation
 ): Purchasable {
-  const isValid = !!variation;
-
-  const missing = [...variableProduct.attributes.keys()].filter(
-    (k) => (selection.get(k) ?? null) == null
-  );
-
-  const message =
-    missing.length > 0
-      ? `Velg ${formatListNo(
-          missing.map((k) => variableProduct.attributes.get(k)?.label ?? k)
-        )}`
-      : "";
-
+  const missing = variationSelection.missing();
+  const message = variationSelection.message(variableProduct);
   return {
     variableProduct,
-    selection,
-    isValid,
-    selectedVariation: variation, // unified name
+    variationSelection: variationSelection,
+    selectedVariation: variation,
     message,
-    missing, // unified name
-    status: isValid ? "valid" : "selection_needed",
+    missing,
   };
-}
-
-function formatListNo(items: string[]): string {
-  if (items.length <= 1) return items[0] ?? "";
-  if (items.length === 2) return `${items[0]} og ${items[1]}`;
-  return `${items.slice(0, -1).join(", ")} og ${items[items.length - 1]}`;
 }
