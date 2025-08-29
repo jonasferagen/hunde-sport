@@ -1,8 +1,28 @@
-import { ProductVariation } from "@/domain/Product/ProductVariation";
+// domain/Purchasable.ts
 import type { AddItemOptions } from "@/stores/cartStore";
-import { PurchasableProduct } from "@/types";
+import type { ProductVariation, PurchasableProduct } from "@/types";
 
 import { VariationSelection } from "./Product/VariationSelection";
+
+export type PurchaseStatus =
+  | "ready" // can buy now
+  | "select" // variable product; open selector
+  | "select_incomplete" // selection started but missing terms
+  | "sold_out" // product out of stock
+  | "unavailable"; // not purchasable
+
+export type StatusDescriptor = {
+  key: PurchaseStatus;
+  label: string;
+};
+
+export const DEFAULT_STATUS_LABEL: Record<PurchaseStatus, string> = {
+  ready: "Kjøp",
+  select: "Se varianter",
+  select_incomplete: "Velg ...",
+  sold_out: "Utsolgt",
+  unavailable: "Ikke tilgjengelig",
+};
 
 export class Purchasable {
   readonly product: PurchasableProduct;
@@ -19,24 +39,40 @@ export class Purchasable {
     this.selectedVariation = selectedVariation;
   }
 
-  /** Which attributes are still missing a term (only relevant for variable products) */
-  get missing(): string[] {
-    if (!this.variationSelection) return [];
-    return this.variationSelection.missing();
+  /** Internal: compute status key from current state */
+  private resolveStatusKey(): PurchaseStatus {
+    const { availability } = this.product;
+
+    if (!availability.isInStock) return "sold_out";
+    if (!availability.isPurchasable) return "unavailable";
+
+    if (this.product.isVariable) {
+      if (!this.variationSelection) return "select";
+      if (!this.selectedVariation) return "select_incomplete";
+    }
+
+    return "ready";
   }
 
-  /** UX message for current selection (variable products only). Empty string otherwise. */
-  get message(): string {
-    if (!this.variationSelection) return "";
-    return this.variationSelection.message();
+  /**
+   * Public status descriptor:
+   *  - key drives icon/theme/press behavior
+   *  - label is the default per key, with optional selection guidance
+   */
+  get status(): StatusDescriptor {
+    const key = this.resolveStatusKey();
+    let label = DEFAULT_STATUS_LABEL[key];
+
+    // Allow VariationSelection to provide guidance text (if it implements message())
+    if (key === "select_incomplete" && this.variationSelection) {
+      const maybeMsg = this.variationSelection.message();
+      if (maybeMsg) label = maybeMsg;
+    }
+
+    return { key, label };
   }
 
-  /** True if a concrete variation is chosen */
-  get isResolved(): boolean {
-    return !!this.selectedVariation;
-  }
-
-  /** Convert this purchasable into AddItemOptions for cartStore */
+  /** Convert to Woo cart payload */
   toAddItemOptions(quantity = 1): AddItemOptions {
     if (this.product.isSimple) {
       return { id: this.product.id, quantity };
@@ -44,17 +80,21 @@ export class Purchasable {
 
     if (this.product.isVariable) {
       if (!this.selectedVariation) {
-        throw new Error(this.message || "Velg variant");
+        // use the status label if it's selection-related, else a generic fallback
+        const msg =
+          this.status.key === "select_incomplete"
+            ? this.status.label
+            : "Velg variant";
+        throw new Error(msg);
       }
       const variation = this.variationSelection
         ? Array.from(this.variationSelection)
             .filter(([, termKey]) => termKey != null)
-            .map(([attrKey, termKey]) => ({
-              attribute: attrKey,
-              value: termKey as string,
+            .map(([attribute, value]) => ({
+              attribute,
+              value: value as string,
             }))
         : [];
-
       return { id: this.product.id, quantity, variation };
     }
 
