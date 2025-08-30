@@ -1,19 +1,25 @@
-import React from 'react';
-import { StackProps, YStack } from 'tamagui';
+import React from "react";
 
-import { ThemedText } from '@/components/ui/themed-components/ThemedText';
+import {
+  ThemedYStack,
+  ThemedYStackProps,
+} from "@/components/ui/themed-components/ThemedStacks";
+import { ThemedText } from "@/components/ui/themed-components/ThemedText";
 
 interface DefaultTextContentProps {
-    children: React.ReactNode;
-    stackProps?: StackProps;
+  children: React.ReactNode;
+  stackProps?: ThemedYStackProps;
 }
 
-export const DefaultTextContent = ({ stackProps, children }: DefaultTextContentProps) => {
-    return (
-        <YStack f={1} ai="center" jc="center" {...stackProps}>
-            <ThemedText size="$5" ta="center">
-                {children}
-            </ThemedText>
-        </YStack>
-    );
+export const DefaultTextContent = ({
+  stackProps,
+  children,
+}: DefaultTextContentProps) => {
+  return (
+    <ThemedYStack f={1} jc="center" ai="center" {...stackProps}>
+      <ThemedText size="$5" ta="center">
+        {children}
+      </ThemedText>
+    </ThemedYStack>
+  );
 };

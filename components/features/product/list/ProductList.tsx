@@ -3,6 +3,7 @@ import React from "react";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { ThemedXStack } from "@/components/ui";
+import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
 import { Loader } from "@/components/ui/Loader";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { useVisibleItems } from "@/hooks/ui/useVisibleItems";
@@ -94,6 +95,10 @@ export const ProductList = React.memo(function ProductList({
           ListFooterComponent={
             isLoadingMore ? <Loader w="100%" h={ITEM_HEIGHT} /> : null
           }
+          ListEmptyComponent={
+            <DefaultTextContent>Ingen produkter funnet</DefaultTextContent>
+          }
+          contentContainerStyle={{ flexGrow: 1 }}
           drawDistance={800}
           getItemType={() => "product"}
           removeClippedSubviews={false}
