@@ -1,8 +1,10 @@
-// domain/Purchasable.ts
-import { AddItemOptions } from "@/stores/cartStore";
-import type { ProductVariation, PurchasableProduct } from "@/types";
+// domain/purchasable/Purchasable.ts
 
-import { VariationSelection } from "./Product/VariationSelection";
+import { AddItemOptions } from "@/stores/cartStore";
+
+import { Product } from "../product/Product";
+import { ProductVariation } from "../product/ProductVariation";
+import { VariationSelection } from "../product/VariationSelection";
 
 export type PurchaseStatus =
   | "ready"
@@ -22,12 +24,12 @@ export const DEFAULT_STATUS_LABEL: Record<PurchaseStatus, string> = {
 };
 
 export class Purchasable {
-  readonly product: PurchasableProduct;
+  readonly product: Product;
   readonly variationSelection?: VariationSelection;
   readonly selectedVariation?: ProductVariation;
 
   constructor(
-    product: PurchasableProduct,
+    product: Product,
     variationSelection?: VariationSelection,
     selectedVariation?: ProductVariation
   ) {

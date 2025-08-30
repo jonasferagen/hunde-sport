@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import { ENDPOINTS } from "@/config/api";
-import { Cart } from "@/domain/Cart/Cart";
+import { Cart } from "@/domain/cart/Cart";
 import { createCartRestoreToken } from "@/hooks/checkout/api";
 import {
   addItem as apiAddItem,

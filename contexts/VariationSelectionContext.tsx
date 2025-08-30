@@ -2,7 +2,7 @@
 import React from "react";
 
 import { useVariableProduct } from "@/contexts/VariableProductContext";
-import { VariationSelection } from "@/domain/Product/VariationSelection";
+import { VariationSelection } from "@/domain/product/VariationSelection";
 import { Purchasable } from "@/domain/Purchasable";
 import { intersectSets } from "@/lib/util"; // variadic
 import type { ProductVariation, Term } from "@/types";

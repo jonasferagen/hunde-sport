@@ -1,5 +1,5 @@
 // domain/ProductCategory.ts
-import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
+import { StoreImage, type StoreImageData } from "../store-image/StoreImage";
 
 export type RawStoreCategory = {
   id: number;

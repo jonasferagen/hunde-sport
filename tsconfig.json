@@ -27,9 +27,9 @@
     "expo-env.d.ts",
     ".expo/types/**/*.ts",
     "tests",
-    "domain/Product/helpers/ProductVariationCollection.ts",
-    "domain/Product/Old/ProductAttributeHelper.ts",
-    "domain/Product/helpers/selectionStore.ts",
+    "domain/product/helpers/ProductVariationCollection.ts",
+    "domain/product/Old/ProductAttributeHelper.ts",
+    "domain/product/helpers/selectionStore.ts",
     "stores/useProductVariationStore.ts"
   ],
   "exclude": [

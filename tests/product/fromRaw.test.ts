@@ -2,10 +2,10 @@
 import fs from "fs";
 import path from "path";
 
-import { Product, type RawBaseProduct } from "@/domain/Product/Product";
-import { ProductVariation } from "@/domain/Product/ProductVariation";
-import { SimpleProduct } from "@/domain/Product/SimpleProduct";
-import { VariableProduct } from "@/domain/Product/VariableProduct";
+import { Product, type RawBaseProduct } from "@/domain/product/Product";
+import { ProductVariation } from "@/domain/product/ProductVariation";
+import { SimpleProduct } from "@/domain/product/SimpleProduct";
+import { VariableProduct } from "@/domain/product/VariableProduct";
 
 // helpers to validate each subtype
 

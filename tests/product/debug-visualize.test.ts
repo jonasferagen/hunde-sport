@@ -3,8 +3,8 @@
 import fs from "fs";
 import path from "path";
 
-import { Product } from "@/domain/Product/Product";
-import { VariableProduct } from "@/domain/Product/VariableProduct";
+import { Product } from "@/domain/product/Product";
+import { VariableProduct } from "@/domain/product/VariableProduct";
 
 it("visualizes attributes / terms / variants", () => {
   const file = path.join(__dirname, "data", "variable.json");

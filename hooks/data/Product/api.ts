@@ -1,5 +1,5 @@
 import { ENDPOINTS, PaginationOptions } from "@/config/api";
-import { productFromRaw } from "@/domain/Product/ProductFactory";
+import { productFromRaw } from "@/domain/product/ProductFactory";
 import { apiClient } from "@/lib/apiClient";
 import { Product, ProductCategory } from "@/types";
 

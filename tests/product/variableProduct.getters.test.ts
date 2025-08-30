@@ -1,8 +1,8 @@
-import { Product } from "@/domain/Product/Product";
+import { VariableProduct } from "@/domain/product/VariableProduct";
 
 import data from "./data/variable.json";
 describe("VariableProduct getters (set-based)", () => {
-  const vp = Product.fromRaw(data as any);
+  const vp = VariableProduct.fromRaw(data as any);
 
   test("attributeOrder is normalized (lowercased, diacritics preserved) and preserves store order", () => {
     expect(vp.attributeOrder).toEqual(["farge", "størrelse"]);

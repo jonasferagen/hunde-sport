@@ -1,5 +1,8 @@
 import { ProductPrices } from "@/domain/pricing";
-import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
+import {
+  StoreImage,
+  type StoreImageData,
+} from "@/domain/store-image/StoreImage";
 import { cleanHtml } from "@/lib/format";
 
 export interface CategoryRef {

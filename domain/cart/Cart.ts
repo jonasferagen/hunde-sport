@@ -1,9 +1,5 @@
 // domain/Cart/models.ts
-import type {
-  WcItemPrices,
-  WcItemTotals,
-  WcTotals,
-} from "@/domain/Cart/pricing";
+import type { WcItemPrices, WcItemTotals, WcTotals } from "./pricing";
 
 /** Raw variation pair in the cart item payload */
 

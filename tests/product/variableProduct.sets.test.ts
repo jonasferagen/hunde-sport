@@ -1,8 +1,8 @@
-import { Product } from "@/domain/Product/Product";
+import { VariableProduct } from "@/domain/product/VariableProduct";
 
 import data from "./data/variable.json";
 describe("VariableProduct set-based lookups", () => {
-  const vp = Product.fromRaw(data as any);
+  const vp = VariableProduct.fromRaw(data as any);
 
   test("variationIdSet matches source variations", () => {
     const sourceIds = new Set((data as any).variations.map((v: any) => v.id));

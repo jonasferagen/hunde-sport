@@ -3,14 +3,13 @@
 import fs from "fs";
 import path from "path";
 
-import { Product } from "@/domain/Product/Product";
 import { VariableProduct } from "@/types";
 const fixture = path.join(__dirname, "data", "variable.json");
 
 describe("VariableProduct variants", () => {
   it("builds variants using normalized attribute keys and term slugs", () => {
     const raw = JSON.parse(fs.readFileSync(fixture, "utf8"));
-    const product = Product.fromRaw(raw);
+    const product = VariableProduct.fromRaw(raw);
     expect(product).toBeInstanceOf(VariableProduct);
     if (!(product instanceof VariableProduct)) return;
 

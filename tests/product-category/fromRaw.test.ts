@@ -6,8 +6,8 @@ import path from "path";
 import {
   ProductCategory,
   type RawStoreCategory,
-} from "@/domain/ProductCategory";
-import { StoreImage } from "@/domain/StoreImage";
+} from "@/domain/product-category/ProductCategory";
+import { StoreImage } from "@/domain/store-image/StoreImage";
 
 const singlePath = path.join(__dirname, "data", "product-category.json");
 const listPath = path.join(__dirname, "data", "product-categories.json");
