@@ -1,6 +1,7 @@
-import { FlashList, FlashListRef } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
+import { View } from "tamagui";
 
 import { ThemedXStack } from "@/components/ui";
 import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
@@ -11,6 +12,7 @@ import { PurchasableProduct } from "@/types";
 
 import { ProductCard } from "../display/ProductCard";
 import { BottomMoreHint, BottomMoreHintHandle } from "./BottomMoreHint";
+// inside ProductList:
 
 interface ProductListProps {
   products: PurchasableProduct[];
@@ -22,6 +24,8 @@ interface ProductListProps {
   totalProducts: number;
 }
 
+const ITEM_HEIGHT = 170;
+
 export const ProductList = React.memo(function ProductList({
   products,
   loadMore,
@@ -30,12 +34,16 @@ export const ProductList = React.memo(function ProductList({
   transitionKey,
   totalProducts,
 }: ProductListProps) {
-  const ITEM_HEIGHT = 170;
-
   const keyExtractor = React.useCallback(
     (p: PurchasableProduct) => String(p.id),
     []
   );
+
+  const animatedIdsRef = React.useRef<Set<number>>(new Set());
+  React.useEffect(() => {
+    // new search/category -> allow items to animate once
+    animatedIdsRef.current.clear();
+  }, [transitionKey]);
 
   const onEndReached = React.useCallback(() => {
     if (hasMore && !isLoadingMore) loadMore();
@@ -53,40 +61,34 @@ export const ProductList = React.memo(function ProductList({
   const onScroll = React.useCallback(() => {
     hintRef.current?.kick();
   }, []);
-
   const renderItem = React.useCallback(
     ({ item: product, index }: { item: PurchasableProduct; index: number }) => {
-      console.log(product.id);
+      const firstTime = !animatedIdsRef.current.has(product.id);
+      if (firstTime) animatedIdsRef.current.add(product.id);
+
+      const delay = (index % 8) * 20;
+
       return (
-        <ProductCard
-          key={String(product.id)}
-          product={product}
-          theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
-        />
+        <Animated.View
+          // FlashList owns keys via keyExtractor — don’t add a key here
+          entering={firstTime ? FadeIn.delay(delay) : undefined}
+        >
+          <ProductCard
+            product={product}
+            theme={
+              index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2
+            }
+          />
+        </Animated.View>
       );
     },
     []
   );
 
-  const listRef = React.useRef<FlashListRef<PurchasableProduct>>(null);
-
-  // whenever the screen/category changes (i.e., before the fade)
-  React.useEffect(() => {
-    listRef.current?.prepareForLayoutAnimationRender();
-  }, [transitionKey]);
-  console.log(totalProducts);
-
   return (
-    <Animated.View
-      key={transitionKey}
-      collapsable={false}
-      entering={FadeIn.duration(300)}
-      exiting={FadeOut.duration(300)}
-      style={{ flex: 1 }}
-    >
+    <View f={1}>
       <ThemedXStack f={1} mih={0}>
         <FlashList
-          ref={listRef}
           data={products as PurchasableProduct[]}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
@@ -115,6 +117,6 @@ export const ProductList = React.memo(function ProductList({
           total={totalProducts}
         />
       </ThemedXStack>
-    </Animated.View>
+    </View>
   );
 });
