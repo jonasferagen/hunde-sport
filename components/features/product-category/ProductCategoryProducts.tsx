@@ -22,6 +22,8 @@ export const ProductCategoryProducts = ({ productCategory }: Props) => {
     total,
   } = useProductsByProductCategory(productCategory);
 
+  console.log(products.length);
+
   return (
     <ThemedYStack f={1} mih={0}>
       {isLoading ? (

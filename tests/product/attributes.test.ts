@@ -1,15 +1,14 @@
 import fs from "fs";
 import path from "path";
 
+import { Product } from "@/domain/Product/Product";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
-import { mapToProduct } from "@/mappers/mapToProduct";
-
 const fixture = path.join(__dirname, "data", "variable.json");
 
 describe("VariableProduct.attributes", () => {
   it("normalizes attribute keys and exposes taxonomy + label", () => {
     const raw = JSON.parse(fs.readFileSync(fixture, "utf8"));
-    const product = mapToProduct(raw);
+    const product = Product.fromRaw(raw);
 
     expect(product).toBeInstanceOf(VariableProduct);
     if (!(product instanceof VariableProduct)) return;

@@ -1,9 +1,8 @@
-import { VariableProduct } from "@/domain/Product/VariableProduct";
+import { Product } from "@/domain/Product/Product";
 
 import data from "./data/variable.json";
-
 describe("VariableProduct simple lookups", () => {
-  const vp = new VariableProduct(data as any);
+  const vp = Product.fromRaw(data as any);
 
   test("getAttribute/getTerm return normalized entries", () => {
     const colorAttr = vp.getAttribute("farge");

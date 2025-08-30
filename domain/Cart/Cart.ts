@@ -6,12 +6,17 @@ import type {
 } from "@/domain/Cart/pricing";
 
 /** Raw variation pair in the cart item payload */
-export type CartItemVariation = {
-  raw_attribute?: string; // e.g. "attribute_pa_farge"
-  attribute: string; // e.g. "farge" or "Størrelse"
-  value: string; // e.g. "Mint", "XXS/XS"
-};
 
+type CartInit = {
+  items: CartItem[];
+  token: string;
+  itemsCount: number;
+  itemsWeight: number;
+  totals: WcTotals;
+  hasCalculatedShipping: boolean;
+  shippingRates: any;
+  lastUpdated: number;
+};
 type RawCartItem = {
   key: string;
   id: number; // line item product/variation id
@@ -24,6 +29,11 @@ type RawCartItem = {
   permalink?: string;
   images?: { id: number; src: string; thumbnail?: string }[];
   // plus any other fields we don't model now
+};
+export type CartItemVariation = {
+  raw_attribute?: string; // e.g. "attribute_pa_farge"
+  attribute: string; // e.g. "farge" or "Størrelse"
+  value: string; // e.g. "Mint", "XXS/XS"
 };
 
 export class CartItem {
@@ -104,7 +114,7 @@ export class CartItem {
   }
 }
 
-type RawCart = {
+export type RawCart = {
   items: RawCartItem[];
   token: string;
   items_count: number; // count of distinct lines
@@ -115,16 +125,16 @@ type RawCart = {
 };
 
 export class Cart {
-  readonly items: readonly CartItem[];
-  readonly token: string;
-  readonly itemsCount: number; // distinct lines
-  readonly itemsWeight: number;
-  readonly totals: WcTotals;
-  readonly hasCalculatedShipping: boolean;
-  readonly shippingRates: any;
-  readonly lastUpdated: number;
+  items: CartItem[];
+  token: string;
+  itemsCount: number; // distinct lines
+  itemsWeight: number;
+  totals: WcTotals;
+  hasCalculatedShipping: boolean;
+  shippingRates: any;
+  lastUpdated: number;
 
-  private constructor(
+  constructor(
     items: CartItem[],
     token: string,
     itemsCount: number,
@@ -163,9 +173,40 @@ export class Cart {
       Date.now()
     );
   }
-}
 
-/** Legacy adapter if you want to keep your old function name */
-export function mapToCart(rawData: any, token: string): Cart {
-  return Cart.fromRaw(rawData as RawCart, token);
+  static rebuild(base: Cart, patch: Partial<CartInit>): Cart {
+    return new Cart(
+      patch.items ?? [...base.items],
+      base.token,
+      patch.itemsCount ?? base.itemsCount,
+      patch.itemsWeight ?? base.itemsWeight,
+      patch.totals ?? base.totals,
+      patch.hasCalculatedShipping ?? base.hasCalculatedShipping,
+      patch.shippingRates ?? base.shippingRates,
+      patch.lastUpdated ?? base.lastUpdated
+    );
+  }
+
+  /** Return a new Cart with the given items (adjusts itemsCount + lastUpdated) */
+  withItems(items: CartItem[]): Cart {
+    return Cart.rebuild(this, {
+      items,
+      itemsCount: items.length,
+      lastUpdated: Date.now(),
+    });
+  }
+
+  /** Return a new Cart with a single line’s quantity updated */
+  withUpdatedQuantity(key: string, quantity: number): Cart {
+    const items = this.items.map((it) =>
+      it.key === key ? new CartItem({ ...(it as any), quantity }) : it
+    );
+    return this.withItems(items);
+  }
+
+  /** Return a new Cart without the given line key */
+  withoutItem(key: string): Cart {
+    const items = this.items.filter((it) => it.key !== key);
+    return this.withItems(items);
+  }
 }

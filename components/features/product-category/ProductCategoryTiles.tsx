@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StackProps, XStack, YStack } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui";

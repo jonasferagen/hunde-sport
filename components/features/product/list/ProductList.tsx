@@ -55,8 +55,10 @@ export const ProductList = React.memo(function ProductList({
 
   const renderItem = React.useCallback(
     ({ item: product, index }: { item: PurchasableProduct; index: number }) => {
+      console.log(product.id);
       return (
         <ProductCard
+          key={String(product.id)}
           product={product}
           theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
         />
@@ -71,6 +73,7 @@ export const ProductList = React.memo(function ProductList({
   React.useEffect(() => {
     listRef.current?.prepareForLayoutAnimationRender();
   }, [transitionKey]);
+  console.log(totalProducts);
 
   return (
     <Animated.View
@@ -80,7 +83,7 @@ export const ProductList = React.memo(function ProductList({
       exiting={FadeOut.duration(300)}
       style={{ flex: 1 }}
     >
-      <ThemedXStack f={1} mih={0} pos="relative">
+      <ThemedXStack f={1} mih={0}>
         <FlashList
           ref={listRef}
           data={products as PurchasableProduct[]}

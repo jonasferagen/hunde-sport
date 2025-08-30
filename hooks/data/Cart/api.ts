@@ -1,26 +1,35 @@
-import { ApiResponse } from "apisauce";
+import type { ApiResponse } from "apisauce";
 
 import { ENDPOINTS } from "@/config/api";
-import { Cart, mapToCart } from "@/domain/Cart/Cart";
+import { Cart, RawCart } from "@/domain/Cart/Cart";
 import { apiClient } from "@/lib/apiClient";
 
-const handleResponse = (response: ApiResponse<any>, context: string): Cart => {
+export function handleResponse(
+  response: ApiResponse<RawCart>,
+  context: string
+): Cart {
+  // transport-level issues (network, timeout, 4xx/5xx etc.)
   if (response.problem) {
-    throw new Error(response.problem);
+    throw new Error(`${context}: ${response.problem}`);
   }
 
-  if (!response.data) {
-    throw new Error(`No data returned from ${context}`);
+  const data = response.data;
+  if (!data) {
+    throw new Error(`${context}: No data returned`);
   }
 
-  const token = response.headers?.["cart-token"] as string | undefined;
+  // apisauce normalizes header names to lower-case
+  const token =
+    (response.headers?.["cart-token"] as string | undefined) ??
+    (response.headers?.["x-wc-store-api-cart-token"] as string | undefined); // fallback, just in case
 
   if (!token) {
-    throw new Error("Cart token not found in response headers");
+    throw new Error(`${context}: Cart token not found in response headers`);
   }
 
-  return mapToCart(response.data, token);
-};
+  // IMPORTANT: returns a Cart *instance* (not a plain object)
+  return Cart.fromRaw(data, token);
+}
 
 /**
  * Fetches the cart from the API.

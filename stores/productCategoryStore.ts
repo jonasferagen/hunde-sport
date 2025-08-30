@@ -98,7 +98,7 @@ export const useBreadcrumbTrail = (
 
     while (cur) {
       trail.unshift(cur); // include current
-      if (cur.parent === -1) break; // stop after adding root
+      if (cur.isSyntheticRoot) break; // stop after adding root
       cur = map.get(cur.parent);
     }
     return trail;

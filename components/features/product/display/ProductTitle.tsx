@@ -1,19 +1,20 @@
-import React from 'react';
-import { Heading, SizableTextProps } from 'tamagui';
+import { Heading, SizableTextProps } from "tamagui";
 
-import { Product } from '@/types';
+import { BaseProduct } from "@/types";
 
-interface ProductTitleProps extends SizableTextProps { product: Product }
+interface ProductTitleProps extends SizableTextProps {
+  product: BaseProduct;
+}
 
-export const ProductTitle = ({ product, children, ...props }: ProductTitleProps) => {
-
-    return <Heading
-        fow="bold"
-        {...props}
-    >
-        {product.name}
-        {children}
-    </Heading>;
+export const ProductTitle = ({
+  product,
+  children,
+  ...props
+}: ProductTitleProps) => {
+  return (
+    <Heading fow="bold" {...props}>
+      {product.name}
+      {children}
+    </Heading>
+  );
 };
-
-

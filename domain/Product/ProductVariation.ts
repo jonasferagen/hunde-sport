@@ -1,23 +1,32 @@
-// domain/product/ProductVariation.ts
+import { Product, type RawBaseProduct } from "./Product";
 
-import { BaseProduct, BaseProductData } from "./BaseProduct";
+export class ProductVariation extends Product {
+  readonly parent: number;
+  readonly variation?: string;
 
-export interface ProductVariationData extends BaseProductData {
-  type: "variation";
-  parent: number; // parent VariableProduct id
-  variation?: string; // Store API’s variation summary string
-}
-
-export class ProductVariation extends BaseProduct {
-  parent: number;
-  variation?: string;
-
-  constructor(data: ProductVariationData) {
-    if (data.type !== "variation") {
-      throw new Error("Invalid data type for ProductVariation");
+  private constructor(
+    data: ReturnType<typeof Product.mapBase> & {
+      parent: number;
+      variation?: string;
     }
+  ) {
+    if (data.type !== "variation")
+      throw new Error("Invalid data type for ProductVariation");
     super(data);
     this.parent = data.parent;
     this.variation = data.variation;
+  }
+
+  static fromRaw(
+    raw: RawBaseProduct & { variation?: string }
+  ): ProductVariation {
+    if (raw.type !== "variation")
+      throw new Error("fromRaw(variation) received non-variation");
+    const base = Product.mapBase(raw, "variation");
+    return new ProductVariation({
+      ...base,
+      parent: raw.parent,
+      variation: raw.variation,
+    });
   }
 }

@@ -3,13 +3,13 @@
 import fs from "fs";
 import path from "path";
 
+import { Product } from "@/domain/Product/Product";
 import { VariableProduct } from "@/domain/Product/VariableProduct";
-import { mapToProduct } from "@/mappers/mapToProduct";
 
 it("visualizes attributes / terms / variants", () => {
   const file = path.join(__dirname, "data", "variable.json");
   const raw = JSON.parse(fs.readFileSync(file, "utf8"));
-  const p = mapToProduct(raw);
+  const p = Product.fromRaw(raw);
 
   expect(p).toBeInstanceOf(VariableProduct);
   if (!(p instanceof VariableProduct)) return;

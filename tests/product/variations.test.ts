@@ -3,15 +3,14 @@
 import fs from "fs";
 import path from "path";
 
-import { VariableProduct } from "@/domain/Product/VariableProduct";
-import { mapToProduct } from "@/mappers/mapToProduct";
-
+import { Product } from "@/domain/Product/Product";
+import { VariableProduct } from "@/types";
 const fixture = path.join(__dirname, "data", "variable.json");
 
 describe("VariableProduct variants", () => {
   it("builds variants using normalized attribute keys and term slugs", () => {
     const raw = JSON.parse(fs.readFileSync(fixture, "utf8"));
-    const product = mapToProduct(raw);
+    const product = Product.fromRaw(raw);
     expect(product).toBeInstanceOf(VariableProduct);
     if (!(product instanceof VariableProduct)) return;
 

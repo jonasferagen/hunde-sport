@@ -32,22 +32,32 @@ export class StoreImage implements StoreImageData {
     this.thumbnail = data.thumbnail;
     this.srcset = data.srcset ?? "";
     this.sizes = data.sizes ?? "";
-    this.name = data.name;
-    this.alt = data.alt;
+    this.name = data.name ?? "";
+    this.alt = data.alt ?? "";
   }
-
-  /** Shared default/placeholder instance */
-  static readonly DEFAULT = new StoreImage({
-    id: 0,
-    src: "",
-    thumbnail: "",
-    name: "",
-    alt: "",
-    srcset: "",
-    sizes: "",
-  });
-
   bestSrc(): string {
     return this.srcset && this.srcset.length > 0 ? this.srcset : this.src;
   }
+
+  bestThumb(): string {
+    return this.thumbnail && this.thumbnail.length > 0
+      ? this.thumbnail
+      : this.src;
+  }
+
+  static fromMaybe(data?: StoreImageData | null): StoreImage {
+    return data ? new StoreImage(data) : StoreImage.DEFAULT;
+  }
+
+  static readonly DEFAULT = Object.freeze(
+    new StoreImage({
+      id: 0,
+      src: "",
+      thumbnail: "",
+      name: "",
+      alt: "",
+      srcset: "",
+      sizes: "",
+    })
+  ) as StoreImage;
 }
