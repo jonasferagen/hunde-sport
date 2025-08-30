@@ -1,0 +1,110 @@
+{
+  "id": 26995,
+  "name": "Allprodline Fris\u00f8rsaks",
+  "slug": "allprodline-frisorsaks",
+  "parent": 0,
+  "type": "variable",
+  "variation": "",
+  "permalink": "https:\/\/hunde-sport.no\/produkt\/allprodline-frisorsaks\/",
+  "sku": "",
+  "short_description": "<p>Profesjonell saks i japansk st\u00e5l av h\u00f8yeste kvalitet til en god pris. Passer b\u00e5de til hundefris\u00f8rer og til hjemmebruk. Ligger godt i h\u00e5nden.<\/p>",
+  "description": "<p>Profesjonell saks i japansk st\u00e5l av h\u00f8yeste kvalitet. Passer til alle pelstyper. God komfort, ligger godt i h\u00e5nden m\/fingerhviler. Kan strammes inn. Meget god saks til b\u00e5de fris\u00f8rer og hundefris\u00f8rer. Litt bredere egg.<br \/>\nLeveres med skinnetui.<\/p>",
+  "on_sale": false,
+  "prices": {
+    "price": "69800",
+    "regular_price": "69800",
+    "sale_price": "69800",
+    "price_range": null,
+    "currency_code": "NOK",
+    "currency_symbol": "kr",
+    "currency_minor_unit": 2,
+    "currency_decimal_separator": ",",
+    "currency_thousand_separator": ".",
+    "currency_prefix": "kr ",
+    "currency_suffix": ""
+  },
+  "price_html": "From: <span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#107;&#114;<\/span>&nbsp;698,00<\/span>",
+  "average_rating": "0",
+  "review_count": 0,
+  "images": [
+    {
+      "id": 26996,
+      "src": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141358.jpg?fit=375%2C500&ssl=1",
+      "thumbnail": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141358.jpg?resize=375%2C400&ssl=1",
+      "srcset": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141358.jpg?w=375&ssl=1 375w, https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141358.jpg?resize=64%2C85&ssl=1 64w",
+      "sizes": "(max-width: 375px) 100vw, 375px",
+      "name": "20140827_141358",
+      "alt": ""
+    },
+    {
+      "id": 26997,
+      "src": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141504.jpg?fit=375%2C500&ssl=1",
+      "thumbnail": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141504.jpg?resize=375%2C400&ssl=1",
+      "srcset": "https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141504.jpg?w=375&ssl=1 375w, https:\/\/i0.wp.com\/hunde-sport.no\/wp-content\/uploads\/2017\/06\/20140827_141504.jpg?resize=64%2C85&ssl=1 64w",
+      "sizes": "(max-width: 375px) 100vw, 375px",
+      "name": "20140827_141504",
+      "alt": ""
+    }
+  ],
+  "categories": [
+    {
+      "id": 591,
+      "name": "Sakser",
+      "slug": "sakser",
+      "link": "https:\/\/hunde-sport.no\/produktkategori\/hund\/pelspleie-hund\/sakser\/"
+    }
+  ],
+  "tags": [
+    {
+      "id": 586,
+      "name": "pelsverkt\u00f8y",
+      "slug": "pelsverktoy",
+      "link": "https:\/\/hunde-sport.no\/produktstikkord\/pelsverktoy\/"
+    },
+    {
+      "id": 660,
+      "name": "saks",
+      "slug": "saks",
+      "link": "https:\/\/hunde-sport.no\/produktstikkord\/saks\/"
+    }
+  ],
+  "brands": [],
+  "attributes": [
+    {
+      "id": 5,
+      "name": "tommer",
+      "taxonomy": "pa_tommer",
+      "has_variations": true,
+      "terms": [
+        { "id": 661, "name": "4,5\"", "slug": "45" },
+        { "id": 663, "name": "5,5\"", "slug": "55" },
+        { "id": 662, "name": "5\"", "slug": "5" },
+        { "id": 665, "name": "6,5\"", "slug": "65" },
+        { "id": 664, "name": "6\"", "slug": "6" }
+      ]
+    }
+  ],
+  "variations": [
+    { "id": 26998, "attributes": [{ "name": "tommer", "value": "45" }] },
+    { "id": 27002, "attributes": [{ "name": "tommer", "value": "65" }] },
+    { "id": 26999, "attributes": [{ "name": "tommer", "value": "5" }] }
+  ],
+  "grouped_products": [],
+  "has_options": true,
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "is_on_backorder": false,
+  "low_stock_remaining": null,
+  "stock_availability": { "text": "", "class": "in-stock" },
+  "sold_individually": false,
+  "add_to_cart": {
+    "text": "Velg alternativ",
+    "description": "Velg innstillinger for \u00abAllprodline Fris\u00f8rsaks\u00bb",
+    "url": "https:\/\/hunde-sport.no\/produkt\/allprodline-frisorsaks\/",
+    "single_text": "Legg i handlekurv",
+    "minimum": 1,
+    "maximum": 9999,
+    "multiple_of": 1
+  },
+  "extensions": { "app_fpf": { "fields": [] } }
+}

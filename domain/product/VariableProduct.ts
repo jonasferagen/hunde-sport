@@ -205,6 +205,7 @@ function buildVariations(
   terms: Map<string, Term>
 ): Variation[] {
   const out: Variation[] = [];
+  const seen = new Set<string>(); // signature -> already added
 
   for (const v of raw ?? []) {
     const opts: { term: string; attribute: string }[] = [];
@@ -214,19 +215,32 @@ function buildVariations(
       const attrKey = attrKeyFromName(name);
       if (!attributes.has(attrKey)) {
         valid = false;
-        break; // skip this variation
+        break;
       }
       const term = terms.get(value);
       if (!term) {
         valid = false;
-        break; // skip this variation
+        break;
       }
       opts.push({ term: term.key, attribute: attrKey });
     }
 
-    if (valid && opts.length > 0) {
-      out.push({ key: v.id, options: opts });
+    if (!valid || opts.length === 0) continue;
+
+    // build a stable, order-independent signature of the combo
+    // sort by attribute key to avoid order-induced duplicates
+    const sig = opts
+      .slice()
+      .sort((a, b) => a.attribute.localeCompare(b.attribute))
+      .map(({ attribute, term }) => `${attribute}=${term}`)
+      .join("|");
+
+    if (seen.has(sig)) {
+      // duplicate combo -> skip this variation id
+      continue;
     }
+    seen.add(sig);
+    out.push({ key: v.id, options: opts });
   }
 
   return out;
