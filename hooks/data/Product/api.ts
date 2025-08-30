@@ -1,7 +1,7 @@
 import { ENDPOINTS, PaginationOptions } from "@/config/api";
-import { productFromRaw } from "@/domain/product/ProductFactory";
+import { Product } from "@/domain/product/Product";
 import { apiClient } from "@/lib/apiClient";
-import { Product, ProductCategory } from "@/types";
+import { ProductCategory } from "@/types";
 
 import { responseTransformer } from "../util";
 
@@ -22,7 +22,7 @@ export async function fetchProduct(id: number): Promise<Product> {
     throw new Error(response.problem);
   }
   // Note: This is a single product fetch, so we don't use the responseTransformer here.
-  return productFromRaw(response.data);
+  return Product.fromRaw(response.data);
 }
 
 /**
@@ -39,7 +39,7 @@ export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
     ENDPOINTS.PRODUCTS.FEATURED(pagination)
   );
 
-  return responseTransformer(response, productFromRaw);
+  return responseTransformer(response, Product.fromRaw);
 };
 
 /**
@@ -59,7 +59,7 @@ export const fetchProductsByIds = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.BY_IDS(ids, pagination)
   );
-  return responseTransformer(response, productFromRaw);
+  return responseTransformer(response, Product.fromRaw);
 };
 
 /**
@@ -79,7 +79,10 @@ export const fetchProductsBySearch = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.SEARCH(query, pagination)
   );
-  return responseTransformer(response, productFromRaw);
+
+  console.warn(ENDPOINTS.PRODUCTS.SEARCH(query, pagination));
+
+  return responseTransformer(response, Product.fromRaw);
 };
 
 /**
@@ -99,7 +102,12 @@ export const fetchProductsByProductCategory = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(productCategory.id, pagination)
   );
-  return responseTransformer(response, productFromRaw);
+
+  console.log(
+    ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(productCategory.id, pagination)
+  );
+
+  return responseTransformer(response, Product.fromRaw);
 };
 
 /**
@@ -115,7 +123,7 @@ export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.RECENT(pagination)
   );
-  return responseTransformer(response, productFromRaw);
+  return responseTransformer(response, Product.fromRaw);
 };
 
 /**
@@ -133,7 +141,7 @@ export const fetchDiscountedProducts = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.DISCOUNTED(pagination)
   );
-  return responseTransformer(response, productFromRaw);
+  return responseTransformer(response, Product.fromRaw);
 };
 
 /**
@@ -153,5 +161,5 @@ export const fetchProductVariations = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCT_VARIATIONS.LIST(id, pagination)
   );
-  return responseTransformer(response, productFromRaw);
+  return responseTransformer(response, Product.fromRaw);
 };
