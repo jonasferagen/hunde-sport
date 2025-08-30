@@ -1,8 +1,7 @@
 import { ENDPOINTS, PaginationOptions } from "@/config/api";
 import { apiClient } from "@/lib/apiClient";
+import { responseTransformer } from "@/lib/query/responseTransformer";
 import { ProductCategory } from "@/types";
-
-import { responseTransformer } from "../util";
 
 export async function fetchProductCategories(pagination?: PaginationOptions) {
   const response = await apiClient.get<any[]>(

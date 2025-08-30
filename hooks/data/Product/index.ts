@@ -5,13 +5,17 @@ import {
 } from "@tanstack/react-query";
 
 import {
+  makeQueryOptions,
+  QueryResult,
+  useQueryResult,
+} from "@/lib/query/query";
+import {
   ProductCategory,
   ProductVariation,
   PurchasableProduct,
   VariableProduct,
 } from "@/types";
 
-import { makeQueryOptions, QueryResult, useQueryResult } from "../util";
 import {
   fetchDiscountedProducts,
   fetchFeaturedProducts,

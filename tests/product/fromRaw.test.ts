@@ -57,6 +57,14 @@ describe("Product.fromRaw", () => {
     expectValidSimple(product);
   });
 
+  test("41944.json → SimpleProduct", () => {
+    const raw = JSON.parse(
+      fs.readFileSync(path.join(fixturesDir, "41944.json"), "utf8")
+    ) as RawBaseProduct;
+    const product = Product.fromRaw(raw);
+    expectValidVariable(product);
+  });
+
   test("variable.json → VariableProduct", () => {
     const raw = JSON.parse(
       fs.readFileSync(path.join(fixturesDir, "variable.json"), "utf8")

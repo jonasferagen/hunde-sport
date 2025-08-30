@@ -1,9 +1,8 @@
 import { ENDPOINTS, PaginationOptions } from "@/config/api";
 import { Product } from "@/domain/product/Product";
 import { apiClient } from "@/lib/apiClient";
+import { responseTransformer } from "@/lib/query/responseTransformer";
 import { ProductCategory } from "@/types";
-
-import { responseTransformer } from "../util";
 
 /**
  * Fetch a single product by WooCommerce Store API ID.
@@ -80,8 +79,6 @@ export const fetchProductsBySearch = async (
     ENDPOINTS.PRODUCTS.SEARCH(query, pagination)
   );
 
-  console.warn(ENDPOINTS.PRODUCTS.SEARCH(query, pagination));
-
   return responseTransformer(response, Product.fromRaw);
 };
 
@@ -102,11 +99,6 @@ export const fetchProductsByProductCategory = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(productCategory.id, pagination)
   );
-
-  console.log(
-    ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(productCategory.id, pagination)
-  );
-
   return responseTransformer(response, Product.fromRaw);
 };
 
