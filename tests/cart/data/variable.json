@@ -1,0 +1,81 @@
+[
+  {
+    "key": "e7b7583357486a66d1b053d7bd917f79",
+    "id": 34621,
+    "type": "variation",
+    "quantity": 2,
+    "quantity_limits": {
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1,
+      "editable": true
+    },
+    "name": "Foret Sele",
+    "short_description": "",
+    "description": "",
+    "sku": "",
+    "low_stock_remaining": null,
+    "backorders_allowed": false,
+    "show_backorder_badge": false,
+    "sold_individually": false,
+    "permalink": "https://hunde-sport.no/produkt/foret-sele/?attribute_pa_farge=mint&attribute_pa_storrelse=xxs-xs",
+    "images": [
+      {
+        "id": 30424,
+        "src": "https://i0.wp.com/hunde-sport.no/wp-content/uploads/2018/10/v02_8075B86FFC28AC9DA03E350E2DE23944-e1540462744634.jpg?fit=500%2C411&ssl=1",
+        "thumbnail": "https://i0.wp.com/hunde-sport.no/wp-content/uploads/2018/10/v02_8075B86FFC28AC9DA03E350E2DE23944-e1540462744634.jpg?resize=400%2C400&ssl=1",
+        "srcset": "https://i0.wp.com/hunde-sport.no/wp-content/uploads/2018/10/v02_8075B86FFC28AC9DA03E350E2DE23944-e1540462744634.jpg?w=500&ssl=1 500w, https://i0.wp.com/hunde-sport.no/wp-content/uploads/2018/10/v02_8075B86FFC28AC9DA03E350E2DE23944-e1540462744634.jpg?resize=64%2C53&ssl=1 64w",
+        "sizes": "(max-width: 500px) 100vw, 500px",
+        "name": "v02_8075B86FFC28AC9DA03E350E2DE23944",
+        "alt": ""
+      }
+    ],
+    "variation": [
+      {
+        "raw_attribute": "attribute_pa_farge",
+        "attribute": "farge",
+        "value": "Mint"
+      },
+      {
+        "raw_attribute": "attribute_pa_storrelse",
+        "attribute": "Størrelse",
+        "value": "XXS/XS"
+      }
+    ],
+    "item_data": [],
+    "prices": {
+      "price": "15900",
+      "regular_price": "15900",
+      "sale_price": "15900",
+      "price_range": null,
+      "currency_code": "NOK",
+      "currency_symbol": "kr",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": ".",
+      "currency_prefix": "kr ",
+      "currency_suffix": "",
+      "raw_prices": {
+        "precision": 6,
+        "price": "159000000",
+        "regular_price": "159000000",
+        "sale_price": "159000000"
+      }
+    },
+    "totals": {
+      "line_subtotal": "25440",
+      "line_subtotal_tax": "6360",
+      "line_total": "25440",
+      "line_total_tax": "6360",
+      "currency_code": "NOK",
+      "currency_symbol": "kr",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": ".",
+      "currency_prefix": "kr ",
+      "currency_suffix": ""
+    },
+    "catalog_visibility": "visible",
+    "extensions": {}
+  }
+]
