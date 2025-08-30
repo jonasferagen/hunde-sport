@@ -68,7 +68,14 @@ export class VariableProduct extends Product {
     this.attributeOrder = this.rawAttributes.map((a) =>
       attrKeyFromName(a.name)
     );
-    this.variationOrder = (this.rawVariations ?? []).map((v) => v.id);
+
+    this.variations = buildVariations(
+      this.rawVariations,
+      this.attributes,
+      this.terms
+    );
+
+    this.variationOrder = this.variations.map((v) => v.key);
 
     this.termOrderByAttribute = new Map<string, string[]>();
     for (const ra of this.rawAttributes) {
@@ -189,22 +196,38 @@ function buildTerms(raw: RawAttribute[]): Map<string, Term> {
   }
   return new Map(out);
 }
+
+// VariableProduct.ts
+
 function buildVariations(
   raw: RawVariationRef[],
   attributes: Map<string, Attribute>,
   terms: Map<string, Term>
 ): Variation[] {
-  return (raw ?? []).map((v) => ({
-    key: v.id,
-    options: (v.attributes ?? []).map(({ name, value }) => {
+  const out: Variation[] = [];
+
+  for (const v of raw ?? []) {
+    const opts: { term: string; attribute: string }[] = [];
+    let valid = true;
+
+    for (const { name, value } of v.attributes ?? []) {
       const attrKey = attrKeyFromName(name);
-      if (!attributes.has(attrKey))
-        throw new Error(
-          `Unknown attribute key in variation: ${name} -> ${attrKey}`
-        );
+      if (!attributes.has(attrKey)) {
+        valid = false;
+        break; // skip this variation
+      }
       const term = terms.get(value);
-      if (!term) throw new Error(`Unknown term slug in variation: ${value}`);
-      return { term: term.key, attribute: attrKey };
-    }),
-  }));
+      if (!term) {
+        valid = false;
+        break; // skip this variation
+      }
+      opts.push({ term: term.key, attribute: attrKey });
+    }
+
+    if (valid && opts.length > 0) {
+      out.push({ key: v.id, options: opts });
+    }
+  }
+
+  return out;
 }

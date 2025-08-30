@@ -1,6 +1,6 @@
 // @/lib/query/responseTransformer.ts
 import * as Sentry from "@sentry/react-native";
-import { ApiResponse } from "apisauce";
+import type { ApiResponse } from "apisauce";
 
 export type Page<T> = {
   data: T[];
@@ -18,24 +18,37 @@ export const responseTransformer = <T>(
   const src = Array.isArray(response.data) ? response.data : [];
   const data: T[] = [];
 
+  // Pull minimal request context (if present)
+  const { baseURL, url, method, params } = response.config ?? {};
+  const endpoint = baseURL ? `${baseURL}${url ?? ""}` : url;
+
   for (let i = 0; i < src.length; i++) {
     const raw = src[i];
     try {
       data.push(mapper(raw));
     } catch (e: any) {
       if (__DEV__) {
-        console.warn(raw);
-        throw e.message;
+        // Keep it terse but useful for repro
+
+        console.warn(
+          `[map fail] #${i} id=${raw?.id} type=${raw?.type} -> ${e?.message ?? e}`
+        );
+
+        throw e; // preserve original stack/type
       }
-      const req = response.config ?? {};
-      // Send the same context to Sentry (optional, but recommended)
+
+      // Prod: capture, skip item
       Sentry.captureException(e, (scope) => {
         scope.setTag("component", "responseTransformer");
-        scope.setExtra("request", req);
+        if (method) scope.setTag("method", String(method).toUpperCase());
+        if (endpoint) scope.setTag("endpoint", endpoint);
+        if (params) scope.setExtra("params", params);
         scope.setExtra("index", i);
         scope.setExtra("raw", raw);
         return scope;
       });
+
+      // continue; (skip the bad item)
     }
   }
 
