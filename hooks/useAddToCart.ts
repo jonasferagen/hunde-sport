@@ -4,7 +4,7 @@ import React from "react";
 
 import { Purchasable } from "@/domain/Purchasable";
 import { haptic } from "@/lib/haptics";
-import { type AddItemOptions, useCartStore } from "@/stores/cartStore";
+import { useCartStore } from "@/stores/cartStore";
 
 export type ActionStatus = "idle" | "loading" | "success" | "error";
 
@@ -40,11 +40,9 @@ export function useAddToCart(
     setError(undefined);
 
     try {
-      const options: AddItemOptions = purchasable.toAddItemOptions(quantity);
-
+      const options = purchasable.toCartItem(quantity);
       await addItem(options);
 
-      // SUCCESS UX
       haptic.success();
       toast.show("Lagt til i handlekurv", {
         message: purchasable.product.name,
@@ -52,7 +50,6 @@ export function useAddToCart(
       setStatus("success");
       onSuccess?.();
     } catch (e: any) {
-      // ERROR UX
       const msg = e?.message ?? "Kunne ikke legge til";
       haptic.error();
       toast.show("Feil", { message: msg });

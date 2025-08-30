@@ -1,20 +1,17 @@
 // domain/Purchasable.ts
-import type { AddItemOptions } from "@/stores/cartStore";
+import { AddItemOptions } from "@/stores/cartStore";
 import type { ProductVariation, PurchasableProduct } from "@/types";
 
 import { VariationSelection } from "./Product/VariationSelection";
 
 export type PurchaseStatus =
-  | "ready" // can buy now
-  | "select" // variable product; open selector
-  | "select_incomplete" // selection started but missing terms
-  | "sold_out" // product out of stock
-  | "unavailable"; // not purchasable
+  | "ready"
+  | "select"
+  | "select_incomplete"
+  | "sold_out"
+  | "unavailable";
 
-export type StatusDescriptor = {
-  key: PurchaseStatus;
-  label: string;
-};
+export type StatusDescriptor = { key: PurchaseStatus; label: string };
 
 export const DEFAULT_STATUS_LABEL: Record<PurchaseStatus, string> = {
   ready: "Kjøp",
@@ -50,54 +47,46 @@ export class Purchasable {
       if (!this.variationSelection) return "select";
       if (!this.selectedVariation) return "select_incomplete";
     }
-
     return "ready";
   }
 
-  /**
-   * Public status descriptor:
-   *  - key drives icon/theme/press behavior
-   *  - label is the default per key, with optional selection guidance
-   */
+  /** Public status descriptor (key + display label) */
   get status(): StatusDescriptor {
     const key = this.resolveStatusKey();
     let label = DEFAULT_STATUS_LABEL[key];
-
-    // Allow VariationSelection to provide guidance text (if it implements message())
     if (key === "select_incomplete" && this.variationSelection) {
-      const maybeMsg = this.variationSelection.message();
-      if (maybeMsg) label = maybeMsg;
+      const msg = this.variationSelection.message();
+      if (msg) label = msg;
     }
-
     return { key, label };
   }
 
-  /** Convert to Woo cart payload */
-  toAddItemOptions(quantity = 1): AddItemOptions {
+  validate(): void {
+    const { product, status } = this;
+
+    if (product.isSimple || product.isVariable) {
+      if (status.key === "ready") return; // OK
+    }
+    throw new Error(
+      `Invalid state for add-to-cart: ${status.key} (id=${product.id}, name=${product.name}, type=${product.type})`
+    );
+  }
+  /** Testable helper: build Woo AddItemOptions from a Purchasable */
+  /** Build Woo cart payload (data-only; easy to unit test) */
+  toCartItem(quantity = 1): AddItemOptions {
+    this.validate(); // ensure 'ready'
+
     if (this.product.isSimple) {
       return { id: this.product.id, quantity };
     }
 
-    if (this.product.isVariable) {
-      if (!this.selectedVariation) {
-        // use the status label if it's selection-related, else a generic fallback
-        const msg =
-          this.status.key === "select_incomplete"
-            ? this.status.label
-            : "Velg variant";
-        throw new Error(msg);
-      }
-      const variation = this.variationSelection
-        ? Array.from(this.variationSelection)
-            .filter(([, termKey]) => termKey != null)
-            .map(([attribute, value]) => ({
-              attribute,
-              value: value as string,
-            }))
-        : [];
-      return { id: this.product.id, quantity, variation };
-    }
+    // variable: selection must be resolved if validate passed
+    const variation = this.variationSelection
+      ? [...this.variationSelection]
+          .filter(([, term]) => term != null)
+          .map(([attribute, value]) => ({ attribute, value: value as string }))
+      : [];
 
-    throw new Error("Unsupported product type");
+    return { id: this.product.id, quantity, variation };
   }
 }
