@@ -102,7 +102,7 @@ export const ProductCategoryBranch = memo(function ProductCategoryBranch({
   return (
     <Animated.View layout={LinearTransition.duration(150)} collapsable={false}>
       <ThemedYStack>
-        {!node.isSyntheticRoot && (
+        {node.id > 0 && (
           <ThemedXStack>
             <ProductCategoryTreeItem
               productCategory={node}

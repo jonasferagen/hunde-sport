@@ -4,7 +4,7 @@ import React from "react";
 import { PixelRatio } from "react-native";
 import type { YStackProps } from "tamagui";
 
-import type { StoreImage } from "@/domain/StoreImage";
+import type { StoreImage } from "@/domain/store-image/StoreImage";
 import { getScaledImageUrl } from "@/lib/helpers";
 
 import {
