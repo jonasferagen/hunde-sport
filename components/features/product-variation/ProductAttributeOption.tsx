@@ -5,6 +5,7 @@ import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
 import { useVariableProduct } from "@/contexts/VariableProductContext";
 import { useVariationSelection } from "@/contexts/VariationSelectionContext";
 import { getProductPriceRange } from "@/domain/pricing";
+import { VariableProduct } from "@/types";
 
 import { ProductPriceRange } from "../product/display";
 
@@ -27,8 +28,12 @@ export const ProductAttributeOption = React.memo(
     const isImpossible = variationSet.size === 0;
     const disabled = isImpossible;
 
-    const { variableProduct, pricesForIds } = useVariableProduct();
-    const { selectedVariation } = useVariationSelection();
+    const { pricesForIds } = useVariableProduct();
+    const { purchasable } = useVariationSelection();
+
+    // variable product + selected variation come from purchasable
+    const variableProduct = purchasable.product as VariableProduct; // modal context guarantees variable here
+    const selectedVariation = purchasable.selectedVariation;
     const globalSetForTerm = variableProduct.getVariationSetForTerm(term);
 
     const effectiveIds =
