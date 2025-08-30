@@ -4,13 +4,13 @@ import { YStackProps } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui";
 import { ThemedImage } from "@/components/ui/themed-components/ThemedImage";
+import { Product } from "@/domain/product/Product";
 import { getScaledImageUrl } from "@/lib/helpers";
-import { BaseProduct } from "@/types";
 
 const IMAGE_HEIGHT = 300;
 
 interface ProductImageProps {
-  product: BaseProduct;
+  product: Product;
   img_height?: number;
   stackProps?: YStackProps;
 }

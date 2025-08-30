@@ -17,20 +17,3 @@ export const useProductCategories = (options = { enabled: true }) => {
   });
   return useQueryResult<ProductCategory>(result);
 };
-
-/*
-import { fetchProductCategories, fetchProductCategory } from "./api";
-
-export const useProductCategory = (
-  id: number,
-  options = { enabled: true }
-): UseQueryResult<ProductCategory> => {
-  const result = useQuery({
-    queryKey: ["product-category", id],
-    queryFn: () => fetchProductCategory(id),
-    ...options,
-  });
-  return result;
-};
- 
-*/

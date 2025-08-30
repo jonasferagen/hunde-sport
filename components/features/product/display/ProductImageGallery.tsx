@@ -4,11 +4,11 @@ import { Dimensions } from "react-native";
 import { ScrollView, XStack, YStack, YStackProps } from "tamagui";
 
 import { ThemedImage } from "@/components/ui/themed-components/ThemedImage";
+import { Product } from "@/domain/product/Product";
 import { getScaledImageUrl, spacePx } from "@/lib/helpers";
-import { BaseProduct } from "@/types";
 
 interface ProductImageGalleryProps extends YStackProps {
-  product: BaseProduct;
+  product: Product;
   numColumns?: number;
 }
 export const ProductImageGallery = ({

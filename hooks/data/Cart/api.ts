@@ -1,7 +1,7 @@
 import type { ApiResponse } from "apisauce";
 
 import { ENDPOINTS } from "@/config/api";
-import { Cart, RawCart } from "@/domain/Cart/Cart";
+import { Cart, RawCart } from "@/domain/cart/Cart";
 import { apiClient } from "@/lib/apiClient";
 
 export function handleResponse(

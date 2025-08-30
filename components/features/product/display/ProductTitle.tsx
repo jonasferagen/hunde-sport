@@ -1,9 +1,9 @@
 import { Heading, SizableTextProps } from "tamagui";
 
-import { BaseProduct } from "@/types";
+import { Product } from "@/domain/product/Product";
 
 interface ProductTitleProps extends SizableTextProps {
-  product: BaseProduct;
+  product: Product;
 }
 
 export const ProductTitle = ({

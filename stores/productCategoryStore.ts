@@ -2,7 +2,7 @@
 import React from "react";
 import { create } from "zustand";
 
-import { ProductCategory } from "@/domain/ProductCategory";
+import { ProductCategory } from "@/domain/product-category/ProductCategory";
 
 type Id = number;
 
@@ -97,10 +97,16 @@ export const useBreadcrumbTrail = (
     let cur = map.get(productCategoryId);
 
     while (cur) {
-      trail.unshift(cur); // include current
-      if (cur.isSyntheticRoot) break; // stop after adding root
+      trail.unshift(cur);
+      if (cur.isTopLevel) break;
       cur = map.get(cur.parent);
     }
+
+    // ensure synthetic root at the very start
+    if (trail.length === 0 || trail[0].id !== ProductCategory.ROOT.id) {
+      trail.unshift(ProductCategory.ROOT);
+    }
+
     return trail;
   }, [map, productCategoryId]);
 };
