@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ThemedText, ThemedXStack } from "@/components/ui";
-import type { Purchasable } from "@/domain/Purchasable";
+import { Purchasable } from "@/domain/purchasable/Purchasable";
 import { VariableProduct } from "@/types";
 
 type Props = React.ComponentProps<typeof ThemedText> & {

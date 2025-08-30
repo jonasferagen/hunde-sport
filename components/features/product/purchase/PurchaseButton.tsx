@@ -20,7 +20,7 @@ import {
   THEME_CTA_UNAVAILABLE,
   THEME_CTA_VIEW,
 } from "@/config/app";
-import type { Purchasable, PurchaseStatus } from "@/domain/Purchasable";
+import { Purchasable, PurchaseStatus } from "@/domain/purchasable/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { openModal } from "@/stores/ui/modalStore";
 import type { SimpleProduct, VariableProduct } from "@/types";

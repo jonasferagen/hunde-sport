@@ -1,6 +1,6 @@
 // components/product/purchase/PurchaseFlow.tsx
 
-import { Purchasable } from "@/domain/Purchasable";
+import { Purchasable } from "@/domain/purchasable/Purchasable";
 import type { PurchasableProduct } from "@/types";
 
 import { PurchaseButton } from "./PurchaseButton";

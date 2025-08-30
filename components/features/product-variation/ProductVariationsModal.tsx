@@ -13,9 +13,8 @@ import {
   useVariationSelection,
   VariationSelectionProvider,
 } from "@/contexts/VariationSelectionContext";
-import type { Purchasable } from "@/domain/Purchasable";
 import { useProductVariations } from "@/hooks/data/Product";
-import { VariableProduct } from "@/types";
+import { Purchasable, VariableProduct } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
 import { PurchaseButton } from "../product/purchase/PurchaseButton";

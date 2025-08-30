@@ -9,15 +9,15 @@ import {
 } from "@/components/ui";
 import { ThemedButton } from "@/components/ui/themed-components/ThemedButton";
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from "@/config/app";
-import { CartItemData } from "@/domain/Cart/Cart";
+import { CartItem } from "@/domain/cart/Cart";
 import {
   formatItemLineTotal,
   formatItemUnitPrice,
-} from "@/domain/Cart/pricing";
+} from "@/domain/cart/pricing";
 import { useCartStore } from "@/stores/cartStore";
 
 interface CartListItemProps {
-  item: CartItemData;
+  item: CartItem;
   index: number;
 }
 
