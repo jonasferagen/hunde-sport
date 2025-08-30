@@ -78,7 +78,6 @@ export const fetchProductsBySearch = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.SEARCH(query, pagination)
   );
-
   return responseTransformer(response, Product.fromRaw);
 };
 
