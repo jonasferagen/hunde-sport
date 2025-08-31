@@ -9,6 +9,7 @@ import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui";
+import { CustomField } from "@/domain/extensions/CustomField";
 import { Purchasable } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
@@ -49,15 +50,20 @@ export const ProductCustomizationModalContent = ({
   close: () => void;
   purchasable: Purchasable;
 }) => {
-  const variableProduct = purchasable.product; // variable here
+  const product = purchasable.product; // variable here
+  const [fields, setFields] = React.useState<CustomField[]>(
+    product.customFields ?? []
+  );
+
+  // onDone -> pass `fields` upward; later use CustomField.toCartExtensionsFromFields(fields)
 
   const IMAGE_H = 200;
   return (
     <ThemedYStack f={1} mih={0} gap="$3">
       {/* Header */}
       <ThemedXStack split>
-        <ProductTitle product={variableProduct} fs={1} />
-        <ThemedText>{variableProduct.id}</ThemedText>
+        <ProductTitle product={product} fs={1} />
+        <ThemedText>{product.id}</ThemedText>
         <ThemedButton circular onPress={close}>
           <X />
         </ThemedButton>
@@ -65,7 +71,7 @@ export const ProductCustomizationModalContent = ({
 
       {/* Image */}
       <ThemedYStack w="100%" h={IMAGE_H}>
-        <ProductImage product={variableProduct} img_height={IMAGE_H} />
+        <ProductImage product={product} img_height={IMAGE_H} />
       </ThemedYStack>
 
       {/* Variations */}
@@ -76,7 +82,7 @@ export const ProductCustomizationModalContent = ({
           removeClippedSubviews={false}
           contentContainerStyle={{ paddingBottom: 12 }}
         >
-          <ProductCustomizationForm />
+          <ProductCustomizationForm fields={fields} onChange={setFields} />
         </ScrollView>
       </ThemedYStack>
 
