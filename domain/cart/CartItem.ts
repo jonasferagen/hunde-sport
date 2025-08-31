@@ -32,6 +32,8 @@ export class CartItem {
   readonly images?: readonly { id: number; src: string; thumbnail?: string }[];
 
   constructor(raw: CartItemData) {
+    console.log(JSON.stringify(raw, null, 2));
+
     this.key = raw.key;
     this.id = raw.id;
     this.type = raw.type;

@@ -2,51 +2,39 @@
 /**
  * Plugin Name: App – Store API: Flexible Product Fields
  * Description: Expose FPF fields to Store API products and accept values on add-to-cart.
- * Version: 0.1.0
+ * Version: 0.1.3
  * Author: Hunde-sport.no
  */
 
- use Automattic\WooCommerce\StoreApi\Schemas\V1\ProductSchema;
- use Automattic\WooCommerce\StoreApi\Schemas\V1\CartItemSchema; // ⬅️ add this
+use Automattic\WooCommerce\StoreApi\Schemas\V1\ProductSchema;
+use Automattic\WooCommerce\StoreApi\Schemas\V1\CartItemSchema;
 
-/** Post type and meta keys used by FPF */
-const APP_FPF_POST_TYPE      = 'fpf_fields';   // confirmed by your note
-const APP_FPF_FIELDS_META    = '_fields';      // confirmed by your note
-// Assignment keys differ across versions; we'll search all meta values.
+const APP_FPF_POST_TYPE   = 'fpf_fields';
+const APP_FPF_FIELDS_META = '_fields';
 
 add_action('plugins_loaded', function () {
 
-  /**
-   * Does this FPF group target the given product?
-   * Scans all meta values for the product ID, handling arrays and serialized strings.
-   */
+  /* -------------------- Helpers -------------------- */
+
+  /** Does FPF group target the product? */
   function app_fpf_group_targets_product( int $group_id, int $product_id ): bool {
-    $all = get_post_meta( $group_id ); // array: meta_key => [values...]
+    $all = get_post_meta( $group_id ); // meta_key => [values...]
     if ( empty($all) ) return false;
 
-    foreach ( $all as $key => $values ) {
+    foreach ( $all as $values ) {
       foreach ( (array) $values as $val ) {
-        // exact array match?
-        if ( is_array($val) && in_array( $product_id, array_map('intval', $val), true ) ) {
-          return true;
-        }
-        // serialized / string match?
+        if ( is_array($val) && in_array( $product_id, array_map('intval', $val), true ) ) return true;
         if ( is_string($val) ) {
-          // look for “123” with quotes to avoid 12 matching 123
-          if ( strpos( $val, '"' . $product_id . '"' ) !== false ) return true;
-          // sometimes stored as i:123; or plain "123"
-          if ( strpos( $val, 'i:' . $product_id ) !== false ) return true;
-          if ( $val === (string) $product_id ) return true;
+          if ( strpos( $val, '"' . $product_id . '"' ) !== false ) return true; // "...123..."
+          if ( strpos( $val, 'i:' . $product_id ) !== false ) return true;      // i:123;
+          if ( $val === (string) $product_id ) return true;                      // "123"
         }
       }
     }
     return false;
   }
 
-  /**
-   * Collect all FPF groups that target the product.
-   * We fetch all groups once and filter in PHP — simpler and reliable across key variants.
-   */
+  /** All FPF groups that target a product */
   function app_fpf_groups_for_product( int $product_id ): array {
     $groups = get_posts([
       'post_type'      => APP_FPF_POST_TYPE,
@@ -58,10 +46,7 @@ add_action('plugins_loaded', function () {
     return array_values( array_filter( $groups, fn($gid) => app_fpf_group_targets_product( (int)$gid, $product_id ) ) );
   }
 
-  /**
-   * Map one group's _fields meta → extension shape.
-   * FPF stores an array; we’re defensive with defaults.
-   */
+  /** Map one group's _fields meta to normalized items */
   function app_fpf_map_fields_from_group( int $group_id ): array {
     $raw = get_post_meta( $group_id, APP_FPF_FIELDS_META, true );
     if ( !is_array($raw) ) return [];
@@ -70,13 +55,12 @@ add_action('plugins_loaded', function () {
     $i = 0;
     foreach ( $raw as $f ) {
       $i++;
-      $key      = isset($f['name'])        ? sanitize_key($f['name'])
-                : (isset($f['key'])        ? sanitize_key($f['key'])
-                :                            'line_'.$i);
-      $label    = isset($f['label'])       ? wp_strip_all_tags($f['label']) : ('Linje '.$i);
+      $key      = isset($f['name']) ? sanitize_key($f['name'])
+                : (isset($f['key']) ? sanitize_key($f['key']) : 'line_'.$i);
+      $label    = isset($f['label']) ? wp_strip_all_tags($f['label']) : ('Linje '.$i);
       $required = !empty($f['required']);
-      $maxlen   = isset($f['max_length'])  ? (int)$f['max_length'] : 40;
-      $lines    = isset($f['lines'])       ? (int)$f['lines'] : 1;
+      $maxlen   = isset($f['max_length']) ? (int)$f['max_length'] : 40;
+      $lines    = isset($f['lines']) ? (int)$f['lines'] : 1;
 
       $out[] = [
         'key'      => $key,
@@ -89,14 +73,10 @@ add_action('plugins_loaded', function () {
     return $out;
   }
 
-  /**
-   * Gather fields from all matching groups and merge.
-   * If multiple groups target the same product, concatenate (you can dedupe by key if needed).
-   */
+  /** Merge fields from all matching groups */
   function app_fpf_get_fields_for_product( int $product_id ): array {
     $groups = app_fpf_groups_for_product( $product_id );
     if ( empty($groups) ) return [];
-
     $fields = [];
     foreach ( $groups as $gid ) {
       $fields = array_merge( $fields, app_fpf_map_fields_from_group( (int)$gid ) );
@@ -104,10 +84,10 @@ add_action('plugins_loaded', function () {
     return $fields;
   }
 
-  // --- Store API extension: product GET ---
+  /* -------------------- 1) PRODUCT extension (available fields) -------------------- */
 
   woocommerce_store_api_register_endpoint_data([
-    'endpoint'        => CartItemSchema::IDENTIFIER, // ⬅️ was 'cart'
+    'endpoint'        => ProductSchema::IDENTIFIER,  // product-level
     'namespace'       => 'app_fpf',
     'schema_callback' => function () {
       return [
@@ -127,81 +107,56 @@ add_action('plugins_loaded', function () {
         ],
       ];
     },
-   'data_callback'   => function( $cart_item ) {
-        $values = isset( $cart_item['app_fpf'] ) && is_array( $cart_item['app_fpf'] )
-            ? $cart_item['app_fpf']
-            : [];
-
-        // Store API prefers an object over [] when empty.
-        return [
-            'values' => ! empty( $values ) ? $values : new \stdClass(),
-        ];
+    'data_callback'   => function( $product ) {
+      $product_id = is_object($product) ? $product->get_id() : (int) $product;
+      return [ 'fields' => app_fpf_get_fields_for_product( $product_id ) ];
     },
   ]);
 
-// --- Store API extension: cart add-item (values passthrough) ---
-add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data, $request ) {
-  // 1) Read raw JSON safely
-  $json = is_callable( [ $request, 'get_json_params' ] )
+  /* -------------------- 2) ADD-ITEM hook (attach values to cart item) -------------------- */
+
+  add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data, $request ) {
+    $json = is_callable([ $request, 'get_json_params' ])
       ? (array) $request->get_json_params()
       : (array) $request->get_params();
 
-  // 2) Optional: log the raw body to Woo logs (WooCommerce → Status → Logs → source: app_fpf)
-  if ( function_exists( 'wc_get_logger' ) ) {
-      wc_get_logger()->info(
-          '[ADD-ITEM raw] ' . wp_json_encode( $json ),
-          [ 'source' => 'app_fpf' ]
-      );
-  }
+    if ( function_exists('wc_get_logger') ) {
+      wc_get_logger()->info('[ADD-ITEM raw] ' . wp_json_encode($json), [ 'source' => 'app_fpf' ]);
+    }
 
-  // 3) Extract values from the JSON payload your app sends
-  $ext = $json['extensions']['app_fpf']['values'] ?? null;
+    $ext = $json['extensions']['app_fpf']['values'] ?? null;
 
-  // 4) Clean and attach onto cart item
-  if ( is_array( $ext ) ) {
+    if ( is_array($ext) ) {
       $clean = [];
       foreach ( $ext as $k => $v ) {
-          $k = sanitize_text_field( (string) $k );
-          $v = trim( (string) $v );
-          if ( $v !== '' ) {
-              $clean[ $k ] = $v;
-          }
+        $k = sanitize_text_field((string) $k);
+        $v = trim((string) $v);
+        if ( $v !== '' ) $clean[$k] = $v;
       }
-      if ( ! empty( $clean ) ) {
-          $cart_item_data['app_fpf'] = $clean;
+      if ( ! empty($clean) ) {
+        $cart_item_data['app_fpf'] = $clean;
 
-          // Log what we actually attached (for verification)
-          if ( function_exists( 'wc_get_logger' ) ) {
-              wc_get_logger()->info(
-                  '[ADD-ITEM attached app_fpf] ' . wp_json_encode( $clean ),
-                  [ 'source' => 'app_fpf' ]
-              );
-          }
+        if ( function_exists('wc_get_logger') ) {
+          wc_get_logger()->info('[ADD-ITEM attached app_fpf] ' . wp_json_encode($clean), [ 'source' => 'app_fpf' ]);
+        }
       }
-  }
+    }
 
-  return $cart_item_data;
-}, 10, 2 );
+    return $cart_item_data;
+  }, 10, 2 );
 
-
-
-
+  // Persist through session restore
   add_filter( 'woocommerce_get_cart_item_from_session', function( $cart_item, $values ) {
-    if ( isset( $values['app_fpf'] ) && is_array( $values['app_fpf'] ) ) {
+    if ( isset($values['app_fpf']) && is_array($values['app_fpf']) ) {
       $cart_item['app_fpf'] = $values['app_fpf'];
     }
     return $cart_item;
   }, 10, 2 );
 
-  /**
-   * Expose values on the Store API /cart response as:
-   * line_items[].extensions.app_fpf.values
-   *
-   * Using the helper woocommerce_store_api_register_endpoint_data so we don’t need
-   * to reach for the ExtendSchema singleton directly.
-   */
+  /* -------------------- 3) CART-ITEM extension (expose entered values) -------------------- */
+
   woocommerce_store_api_register_endpoint_data([
-    'endpoint'        => 'cart',          // applies to cart line items
+    'endpoint'        => CartItemSchema::IDENTIFIER, // per line item
     'namespace'       => 'app_fpf',
     'schema_callback' => function () {
       return [
@@ -214,54 +169,14 @@ add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data,
       ];
     },
     'data_callback'   => function( $cart_item ) {
-      $values = isset( $cart_item['app_fpf'] ) && is_array( $cart_item['app_fpf'] )
+      $values = ( isset($cart_item['app_fpf']) && is_array($cart_item['app_fpf']) )
         ? $cart_item['app_fpf']
         : [];
 
-      // Store API prefers an object over [] when empty
       return [
-        'values' => ! empty( $values ) ? $values : new \stdClass(),
+        'values' => ! empty($values) ? $values : new \stdClass(),
       ];
     },
   ]);
+
 });
-
-
-add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data, $request ) {
-  if ( defined('WP_DEBUG') && WP_DEBUG ) {
-    error_log( '[ADD-ITEM] raw: ' . json_encode( $request->get_json_params() ) );
-  }
-  // ... then same code as above to extract and set $cart_item_data['app_fpf']
-  // (don’t duplicate the extraction here; this is just for debugging)
-  return $cart_item_data;
-}, 10, 2 );
-
-// Log raw body once per add-item
-add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data, $request ) {
-  if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-    $raw = is_callable( [ $request, 'get_json_params' ] ) ? $request->get_json_params() : $request->get_params();
-    error_log( '[ADD-ITEM raw] ' . wp_json_encode( $raw ) );
-  }
-  return $cart_item_data;
-}, 9, 2 ); // run just before the main 10-priority filter above
-
-// After Woo adds the line, confirm our data sits on the cart item
-add_action( 'woocommerce_add_to_cart', function( $cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data ) {
-  if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-    $has = isset( $cart_item_data['app_fpf'] ) ? $cart_item_data['app_fpf'] : null;
-    error_log( '[ADD-ITEM attached app_fpf] ' . wp_json_encode( $has ) );
-  }
-}, 10, 6 );
-
-// Right before the Store API renders the cart, dump each cart item app_fpf
-add_filter( 'woocommerce_get_cart_item_from_session', function( $cart_item, $values ) {
-  if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-    error_log( '[SESSION app_fpf before expose] ' . wp_json_encode( $cart_item['app_fpf'] ?? null ) );
-  }
-  return $cart_item;
-}, 10, 2 );
-
-if ( function_exists( 'wc_get_logger' ) ) {
-  $logger = wc_get_logger();
-  $logger->info( '[FPF] ' . wp_json_encode( $some_data ), [ 'source' => 'app_fpf' ] );
-}

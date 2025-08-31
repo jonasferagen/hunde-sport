@@ -62,8 +62,6 @@ export class Cart {
 
   /** build domain Cart from raw API payload */
   static create(raw: CartData, token: string): Cart {
-    console.log(raw);
-
     const items = (raw.items ?? []).map((i) => new CartItem(i));
     return new Cart(
       items,

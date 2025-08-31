@@ -13,9 +13,6 @@ export function handleResponse(
   if (response.problem) {
     throw new Error(`${context}: ${response.problem}`);
   }
-
-  console.log(response);
-
   const data = response.data;
 
   if (!data) {
@@ -56,11 +53,6 @@ export async function addItem(
     ENDPOINTS.CART.ADD_ITEM(),
     options
   );
-
-  // Optional: dev log to confirm the server echoes extensions back
-  if (__DEV__) {
-    console.log("[addItem][posted]", JSON.stringify(options, null, 2));
-  }
 
   return handleResponse(response, "addItem");
 }
