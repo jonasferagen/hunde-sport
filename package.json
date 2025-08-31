@@ -69,7 +69,6 @@
     "expo-web-browser": "~14.2.0",
     "he": "^1.2.0",
     "htmlparser2": "^10.0.0",
-    "jest-expo": "~53.0.10",
     "polished": "^4.3.1",
     "react": "19.1",
     "react-dom": "19.1",
