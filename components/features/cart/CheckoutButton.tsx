@@ -1,4 +1,4 @@
-import { ExternalLink } from "@tamagui/lucide-icons";
+import { ArrowBigRight } from "@tamagui/lucide-icons";
 import React, { useCallback, useMemo } from "react";
 import { Linking } from "react-native";
 
@@ -30,22 +30,24 @@ export const CheckoutButton = () => {
 
   const disabled = itemsCount === 0;
   const waiting = isUpdating || isRedirecting;
-  const label = useMemo(
+
+  const label2 = useMemo(
     () =>
       `${itemsCount} ${itemsCount === 1 ? "vare" : "varer"}, ${formattedTotal}`,
     [itemsCount, formattedTotal]
   );
 
-  // Stable icon elements (avoid re-creating each render)
-  const iconAfter = useMemo(() => <ExternalLink />, []);
+  const iconAfter = useMemo(() => <ArrowBigRight scale={1.5} />, []);
+  const label = "Til kassen";
 
   return (
     <CallToActionButton
       onPress={onPress}
       disabled={disabled || waiting}
       theme={THEME_CTA_CHECKOUT}
+      label_l={label}
+      label={label2}
       after={iconAfter}
-      label={label}
       loading={waiting}
     />
   );
