@@ -77,8 +77,6 @@ export const PurchaseButton = React.memo(function PurchaseButton({
     }
   };
 
-  console.log(theme);
-
   return (
     <CallToActionButton
       onPress={handlePress}

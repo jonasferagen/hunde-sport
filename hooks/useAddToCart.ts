@@ -41,9 +41,7 @@ export function useAddToCart(
 
     try {
       const options = purchasable.toCartItem(quantity);
-
       console.log("[AddToCart] payload", JSON.stringify(options, null, 2));
-
       await addItem(options);
 
       haptic.success();

@@ -3,6 +3,7 @@ import type { ApiResponse } from "apisauce";
 import { ENDPOINTS } from "@/config/api";
 import { Cart, CartData } from "@/domain/cart/Cart";
 import { apiClient } from "@/lib/apiClient";
+import type { AddItemOptions } from "@/stores/cartStore";
 
 export function handleResponse(
   response: ApiResponse<CartData>,
@@ -13,7 +14,10 @@ export function handleResponse(
     throw new Error(`${context}: ${response.problem}`);
   }
 
+  console.log(response);
+
   const data = response.data;
+
   if (!data) {
     throw new Error(`${context}: No data returned`);
   }
@@ -28,7 +32,7 @@ export function handleResponse(
   }
 
   // IMPORTANT: returns a Cart *instance* (not a plain object)
-  return Cart.fromRaw(data, token);
+  return Cart.create(data, token);
 }
 
 /**
@@ -40,37 +44,26 @@ export async function fetchCart(): Promise<Cart> {
   return handleResponse(response, "fetchCart");
 }
 
-/**
- * Adds an item to the cart.
- * @param {string} cartToken - The cart token for the current session.
- * @param {number} id - The product ID to add.
- * @param {number} quantity - The quantity of the product to add.
- * @param {object[]} variation - The product variation attributes.
- * @returns {Promise<Cart>} An object containing the updated cart data.
- */
 export async function addItem(
   cartToken: string,
-  {
-    id,
-    quantity,
-    variation,
-  }: {
-    id: number;
-    quantity: number;
-    variation: { attribute: string; value: string }[];
-  }
+  options: AddItemOptions
 ): Promise<Cart> {
+  // Keep the token
   apiClient.headers["cart-token"] = cartToken;
 
-  const payload = { id, quantity, variation };
+  // ✅ Send EXACTLY what Purchasable.toCartItem() produced (including extensions)
   const response = await apiClient.post<any>(
     ENDPOINTS.CART.ADD_ITEM(),
-    payload
+    options
   );
+
+  // Optional: dev log to confirm the server echoes extensions back
+  if (__DEV__) {
+    console.log("[addItem][posted]", JSON.stringify(options, null, 2));
+  }
 
   return handleResponse(response, "addItem");
 }
-
 /**
  * Updates an item's quantity in the cart.
  * @param {string} cartToken - The cart token for the current session.

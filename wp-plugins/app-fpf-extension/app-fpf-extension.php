@@ -2,11 +2,12 @@
 /**
  * Plugin Name: App – Store API: Flexible Product Fields
  * Description: Expose FPF fields to Store API products and accept values on add-to-cart.
- * Version: 0.1.1
+ * Version: 0.1.0
  * Author: Hunde-sport.no
  */
 
-use Automattic\WooCommerce\StoreApi\Schemas\V1\ProductSchema;
+ use Automattic\WooCommerce\StoreApi\Schemas\V1\ProductSchema;
+ use Automattic\WooCommerce\StoreApi\Schemas\V1\CartItemSchema; // ⬅️ add this
 
 /** Post type and meta keys used by FPF */
 const APP_FPF_POST_TYPE      = 'fpf_fields';   // confirmed by your note
@@ -106,7 +107,7 @@ add_action('plugins_loaded', function () {
   // --- Store API extension: product GET ---
 
   woocommerce_store_api_register_endpoint_data([
-    'endpoint'        => ProductSchema::IDENTIFIER,
+    'endpoint'        => CartItemSchema::IDENTIFIER, // ⬅️ was 'cart'
     'namespace'       => 'app_fpf',
     'schema_callback' => function () {
       return [
@@ -126,26 +127,141 @@ add_action('plugins_loaded', function () {
         ],
       ];
     },
-    'data_callback'   => function( $product ) {
-      $product_id = is_object($product) ? $product->get_id() : (int)$product;
-      return [ 'fields' => app_fpf_get_fields_for_product( $product_id ) ];
+   'data_callback'   => function( $cart_item ) {
+        $values = isset( $cart_item['app_fpf'] ) && is_array( $cart_item['app_fpf'] )
+            ? $cart_item['app_fpf']
+            : [];
+
+        // Store API prefers an object over [] when empty.
+        return [
+            'values' => ! empty( $values ) ? $values : new \stdClass(),
+        ];
     },
   ]);
 
-  // --- Store API extension: cart add-item (values passthrough) ---
+// --- Store API extension: cart add-item (values passthrough) ---
+add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data, $request ) {
+  // 1) Read raw JSON safely
+  $json = is_callable( [ $request, 'get_json_params' ] )
+      ? (array) $request->get_json_params()
+      : (array) $request->get_params();
 
-  woocommerce_store_api_register_update_callback([
-    'namespace' => 'app_fpf',
-    'callback'  => function( $data ) {
-      add_filter('woocommerce_add_cart_item_data', function( $cart_item_data ) use ( $data ) {
-        if ( isset($data['values']) ) {
-          $vals = wc_clean( $data['values'] ); // recursive clean; accepts arrays
-          if ( is_array($vals) ) {
-            $cart_item_data['app_fpf'] = $vals;
+  // 2) Optional: log the raw body to Woo logs (WooCommerce → Status → Logs → source: app_fpf)
+  if ( function_exists( 'wc_get_logger' ) ) {
+      wc_get_logger()->info(
+          '[ADD-ITEM raw] ' . wp_json_encode( $json ),
+          [ 'source' => 'app_fpf' ]
+      );
+  }
+
+  // 3) Extract values from the JSON payload your app sends
+  $ext = $json['extensions']['app_fpf']['values'] ?? null;
+
+  // 4) Clean and attach onto cart item
+  if ( is_array( $ext ) ) {
+      $clean = [];
+      foreach ( $ext as $k => $v ) {
+          $k = sanitize_text_field( (string) $k );
+          $v = trim( (string) $v );
+          if ( $v !== '' ) {
+              $clean[ $k ] = $v;
           }
-        }
-        return $cart_item_data;
-      }, 10, 1);
+      }
+      if ( ! empty( $clean ) ) {
+          $cart_item_data['app_fpf'] = $clean;
+
+          // Log what we actually attached (for verification)
+          if ( function_exists( 'wc_get_logger' ) ) {
+              wc_get_logger()->info(
+                  '[ADD-ITEM attached app_fpf] ' . wp_json_encode( $clean ),
+                  [ 'source' => 'app_fpf' ]
+              );
+          }
+      }
+  }
+
+  return $cart_item_data;
+}, 10, 2 );
+
+
+
+
+  add_filter( 'woocommerce_get_cart_item_from_session', function( $cart_item, $values ) {
+    if ( isset( $values['app_fpf'] ) && is_array( $values['app_fpf'] ) ) {
+      $cart_item['app_fpf'] = $values['app_fpf'];
+    }
+    return $cart_item;
+  }, 10, 2 );
+
+  /**
+   * Expose values on the Store API /cart response as:
+   * line_items[].extensions.app_fpf.values
+   *
+   * Using the helper woocommerce_store_api_register_endpoint_data so we don’t need
+   * to reach for the ExtendSchema singleton directly.
+   */
+  woocommerce_store_api_register_endpoint_data([
+    'endpoint'        => 'cart',          // applies to cart line items
+    'namespace'       => 'app_fpf',
+    'schema_callback' => function () {
+      return [
+        'values' => [
+          'description' => 'Flexible Product Fields values attached to this cart item',
+          'type'        => 'object',
+          'context'     => [ 'view', 'edit' ],
+          'readonly'    => true,
+        ],
+      ];
+    },
+    'data_callback'   => function( $cart_item ) {
+      $values = isset( $cart_item['app_fpf'] ) && is_array( $cart_item['app_fpf'] )
+        ? $cart_item['app_fpf']
+        : [];
+
+      // Store API prefers an object over [] when empty
+      return [
+        'values' => ! empty( $values ) ? $values : new \stdClass(),
+      ];
     },
   ]);
 });
+
+
+add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data, $request ) {
+  if ( defined('WP_DEBUG') && WP_DEBUG ) {
+    error_log( '[ADD-ITEM] raw: ' . json_encode( $request->get_json_params() ) );
+  }
+  // ... then same code as above to extract and set $cart_item_data['app_fpf']
+  // (don’t duplicate the extraction here; this is just for debugging)
+  return $cart_item_data;
+}, 10, 2 );
+
+// Log raw body once per add-item
+add_filter( 'woocommerce_store_api_add_to_cart_data', function( $cart_item_data, $request ) {
+  if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+    $raw = is_callable( [ $request, 'get_json_params' ] ) ? $request->get_json_params() : $request->get_params();
+    error_log( '[ADD-ITEM raw] ' . wp_json_encode( $raw ) );
+  }
+  return $cart_item_data;
+}, 9, 2 ); // run just before the main 10-priority filter above
+
+// After Woo adds the line, confirm our data sits on the cart item
+add_action( 'woocommerce_add_to_cart', function( $cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data ) {
+  if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+    $has = isset( $cart_item_data['app_fpf'] ) ? $cart_item_data['app_fpf'] : null;
+    error_log( '[ADD-ITEM attached app_fpf] ' . wp_json_encode( $has ) );
+  }
+}, 10, 6 );
+
+// Right before the Store API renders the cart, dump each cart item app_fpf
+add_filter( 'woocommerce_get_cart_item_from_session', function( $cart_item, $values ) {
+  if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+    error_log( '[SESSION app_fpf before expose] ' . wp_json_encode( $cart_item['app_fpf'] ?? null ) );
+  }
+  return $cart_item;
+}, 10, 2 );
+
+if ( function_exists( 'wc_get_logger' ) ) {
+  $logger = wc_get_logger();
+  $logger->info( '[FPF] ' . wp_json_encode( $some_data ), [ 'source' => 'app_fpf' ] );
+}

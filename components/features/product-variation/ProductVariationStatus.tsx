@@ -20,9 +20,6 @@ export const ProductVariationStatus: React.FC<Props> = ({
     console.error("no variationSelection");
     return null;
   }
-
-  console.log(variableProduct);
-
   // stable attribute order from model
   const attrKeys = variableProduct.attributeOrder;
 
