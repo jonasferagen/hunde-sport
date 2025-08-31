@@ -1,90 +1,76 @@
-import { ThemeName } from "tamagui";
+// domain/purchasable/decidePurchasable.ts
+import type { ThemeName } from "tamagui";
 
-export type PurchasableStatus =
-  | "ready"
-  | "select"
-  | "select_incomplete"
-  | "customize"
-  | "customize_incomplete"
-  | "sold_out"
-  | "unavailable";
+import type { Purchasable, PurchasableStatus } from "./Purchasable";
 
-export type Decision =
-  | {
-      next: "addToCart";
-      label: string;
-      disabled: boolean;
-      iconKey: string;
-      theme: ThemeName;
-    }
-  | {
-      next: "openVariations";
-      label: string;
-      disabled: boolean;
-      iconKey: string;
-      theme: ThemeName;
-    }
-  | {
-      next: "openCustomize";
-      label: string;
-      disabled: boolean;
-      iconKey: string;
-      theme: ThemeName;
-    }
-  | {
-      next: "noop";
-      label: string;
-      disabled: boolean;
-      iconKey: string;
-      theme: ThemeName;
-    };
+export type DecisionNext =
+  | "addToCart"
+  | "openVariations"
+  | "openCustomize"
+  | "noop";
 
-// Keep UI config here but as *names*, not JSX
-export type UIConf = { iconKey: string; theme: ThemeName };
-export type UIByStatus = Record<PurchasableStatus, UIConf>;
+export type Decision = {
+  next: DecisionNext;
+  disabled: boolean;
+  iconKey: string;
+  theme: ThemeName;
+  label: string;
+};
 
-export function decidePurchasable(
-  statusKey: PurchasableStatus,
-  labelFromStatus: string,
-  ui: UIByStatus
-): Decision {
-  const { iconKey, theme } = ui[statusKey];
+type ConfigEntry = {
+  iconKey: string;
+  theme: ThemeName;
+  next?: DecisionNext; // defaults to "noop"
+  disabled?: boolean; // defaults to false
+};
 
-  switch (statusKey) {
-    case "ready":
-      return {
-        next: "addToCart",
-        label: labelFromStatus,
-        disabled: false,
-        iconKey,
-        theme,
-      };
-    case "select":
-      return {
-        next: "openVariations",
-        label: labelFromStatus,
-        disabled: false,
-        iconKey,
-        theme,
-      };
-    case "customize":
-      return {
-        next: "openCustomize",
-        label: labelFromStatus,
-        disabled: false,
-        iconKey,
-        theme,
-      };
-    case "select_incomplete":
-    case "customize_incomplete":
-    case "sold_out":
-    case "unavailable":
-      return {
-        next: "noop",
-        label: labelFromStatus,
-        disabled: true,
-        iconKey,
-        theme,
-      };
-  }
+// Strongly-typed config (no runtime undefined)
+const CONFIG: Record<PurchasableStatus, ConfigEntry> = {
+  ready: {
+    iconKey: "ShoppingCart",
+    theme: "cta.buy" as ThemeName,
+    next: "addToCart",
+  },
+  select: {
+    iconKey: "Boxes",
+    theme: "cta.view" as ThemeName,
+    next: "openVariations",
+  },
+  select_incomplete: {
+    iconKey: "TriangleAlert",
+    theme: "cta.select" as ThemeName,
+    disabled: true,
+  },
+  customize: {
+    iconKey: "Brush",
+    theme: "cta.view" as ThemeName,
+    next: "openCustomize",
+  },
+  customize_incomplete: {
+    iconKey: "TriangleAlert",
+    theme: "cta.select" as ThemeName,
+    disabled: true,
+  },
+  sold_out: {
+    iconKey: "CircleAlert",
+    theme: "cta.oos" as ThemeName,
+    disabled: true,
+  },
+  unavailable: {
+    iconKey: "XCircle",
+    theme: "cta.unavailable" as ThemeName,
+    disabled: true,
+  },
+};
+
+export function decidePurchasable(purchasable: Purchasable): Decision {
+  const { key, label } = purchasable.status;
+  const entry = CONFIG[key]; // key is PurchasableStatus → always present
+  return {
+    next: entry.next ?? "noop",
+    disabled: entry.disabled ?? false,
+    iconKey: entry.iconKey,
+    theme: entry.theme,
+    label,
+  };
 }

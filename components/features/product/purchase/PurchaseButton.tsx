@@ -10,24 +10,12 @@ import {
 import React, { JSX } from "react";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
-import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
-import {
-  THEME_CTA_BUY,
-  THEME_CTA_OUTOFSTOCK,
-  THEME_CTA_SELECTION_NEEDED,
-  THEME_CTA_UNAVAILABLE,
-  THEME_CTA_VIEW,
-} from "@/config/app";
-import {
-  decidePurchasable,
-  type UIByStatus,
-} from "@/domain/purchasable/decidePurchasable";
+import { decidePurchasable } from "@/domain/purchasable/decidePurchasable";
 import { Purchasable } from "@/domain/purchasable/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { openModal } from "@/stores/ui/modalStore";
-import type { SimpleProduct, VariableProduct } from "@/types";
 
-import { ProductPrice } from "../display";
+import { PurchaseButtonPriceTag } from "./PurchaseButtonPriceTag";
 
 const ICONS: Record<string, JSX.Element> = {
   ShoppingCart: <ShoppingCart />,
@@ -38,41 +26,6 @@ const ICONS: Record<string, JSX.Element> = {
   XCircle: <XCircle />,
 };
 
-const UI_BY_STATUS: UIByStatus = {
-  ready: { iconKey: "ShoppingCart", theme: THEME_CTA_BUY },
-  select: { iconKey: "Boxes", theme: THEME_CTA_VIEW },
-  select_incomplete: {
-    iconKey: "TriangleAlert",
-    theme: THEME_CTA_SELECTION_NEEDED,
-  },
-  customize: { iconKey: "Brush", theme: THEME_CTA_VIEW },
-  customize_incomplete: {
-    iconKey: "TriangleAlert",
-    theme: THEME_CTA_SELECTION_NEEDED,
-  },
-  sold_out: { iconKey: "CircleAlert", theme: THEME_CTA_OUTOFSTOCK },
-  unavailable: { iconKey: "XCircle", theme: THEME_CTA_UNAVAILABLE },
-};
-
-function PriceTag({ product }: { product: SimpleProduct | VariableProduct }) {
-  return (
-    <ThemedSurface
-      theme="shade"
-      h="$6"
-      ai="center"
-      jc="center"
-      px="none"
-      mr={-20}
-      minWidth={80}
-    >
-      <ProductPrice
-        productPrices={product.prices}
-        productAvailability={product.availability}
-      />
-    </ThemedSurface>
-  );
-}
-
 type Props = {
   purchasable: Purchasable;
   onSuccess?: () => void;
@@ -81,20 +34,13 @@ type Props = {
 
 export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
   const { purchasable, onSuccess, onError } = props;
+  const { product } = purchasable;
+  const decision = decidePurchasable(purchasable);
 
   const { isLoading, onPress } = useAddToCart(purchasable, {
     onSuccess,
     onError,
   });
-
-  const decision = decidePurchasable(
-    purchasable.status.key,
-    purchasable.status.label,
-    UI_BY_STATUS
-  );
-
-  const { theme, label, iconKey } = decision;
-  const icon = ICONS[iconKey] ?? null;
 
   const handlePress = React.useCallback(() => {
     if (decision.disabled) return;
@@ -113,17 +59,16 @@ export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
     }
   }, [decision, purchasable, onPress]);
 
+  const { theme, iconKey, label } = decision;
+  const icon = ICONS[iconKey];
+
   return (
     <CallToActionButton
       onPress={handlePress}
       before={icon}
       theme={theme}
       label={label}
-      after={
-        <PriceTag
-          product={purchasable.product as SimpleProduct | VariableProduct}
-        />
-      }
+      after={<PurchaseButtonPriceTag product={product} />}
       loading={isLoading}
       disabled={decision.disabled}
     />

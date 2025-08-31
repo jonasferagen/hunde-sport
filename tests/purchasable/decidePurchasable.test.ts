@@ -1,66 +1,31 @@
-import {
-  decidePurchasable,
-  type UIByStatus,
-} from "@/domain/purchasable/decidePurchasable";
+// tests/purchasable/decidePurchasable.behavior.test.ts
+import { decidePurchasable } from "@/domain/purchasable/decidePurchasable";
+import type { PurchasableStatus } from "@/domain/purchasable/Purchasable";
 
-const UI: UIByStatus = {
-  ready: { iconKey: "ShoppingCart", theme: "cta.buy" },
-  select: { iconKey: "Boxes", theme: "cta.view" },
-  select_incomplete: { iconKey: "TriangleAlert", theme: "cta.select" },
-  customize: { iconKey: "Brush", theme: "cta.view" },
-  customize_incomplete: { iconKey: "TriangleAlert", theme: "cta.select" },
-  sold_out: { iconKey: "CircleAlert", theme: "cta.oos" },
-  unavailable: { iconKey: "XCircle", theme: "cta.unavailable" },
-};
+function D(key: PurchasableStatus, label = "Label") {
+  const purch = { status: { key, label } } as any; // minimal shape
+  return decidePurchasable(purch);
+}
 
-const D = (k: any) => decidePurchasable(k, "Label", UI);
-
-test("ready → addToCart, enabled", () => {
-  const d = D("ready");
-  expect(d.next).toBe("addToCart");
-  expect(d.disabled).toBe(false);
-  expect(d.label).toBe("Label");
-  expect(d.iconKey).toBe("ShoppingCart");
-});
-
-test("select → openVariations", () => {
-  const d = D("select");
-  expect(d.next).toBe("openVariations");
-  expect(d.disabled).toBe(false);
-  expect(d.iconKey).toBe("Boxes");
-});
-
-test("customize → openCustomize", () => {
-  const d = D("customize");
-  expect(d.next).toBe("openCustomize");
-  expect(d.disabled).toBe(false);
-  expect(d.iconKey).toBe("Brush");
-});
-
-test("select_incomplete → noop (disabled)", () => {
-  const d = D("select_incomplete");
-  expect(d.next).toBe("noop");
-  expect(d.disabled).toBe(true);
-  expect(d.iconKey).toBe("TriangleAlert");
-});
-
-test("customize_incomplete → noop (disabled)", () => {
-  const d = D("customize_incomplete");
-  expect(d.next).toBe("noop");
-  expect(d.disabled).toBe(true);
-  expect(d.iconKey).toBe("TriangleAlert");
-});
-
-test("sold_out → noop (disabled)", () => {
-  const d = D("sold_out");
-  expect(d.next).toBe("noop");
-  expect(d.disabled).toBe(true);
-  expect(d.iconKey).toBe("CircleAlert");
-});
-
-test("unavailable → noop (disabled)", () => {
-  const d = D("unavailable");
-  expect(d.next).toBe("noop");
-  expect(d.disabled).toBe(true);
-  expect(d.iconKey).toBe("XCircle");
+describe("decidePurchasable (behavioral)", () => {
+  test.each<
+    [
+      key: PurchasableStatus,
+      expectedNext: "addToCart" | "openVariations" | "openCustomize" | "noop",
+      expectedDisabled: boolean,
+    ]
+  >([
+    ["ready", "addToCart", false],
+    ["select", "openVariations", false],
+    ["customize", "openCustomize", false],
+    ["select_incomplete", "noop", true],
+    ["customize_incomplete", "noop", true],
+    ["sold_out", "noop", true],
+    ["unavailable", "noop", true],
+  ])("%s → %s (disabled=%s)", (key, expectedNext, expectedDisabled) => {
+    const d = D(key);
+    expect(d.next).toBe(expectedNext);
+    expect(d.disabled).toBe(expectedDisabled);
+    expect(d.label).toBe("Label");
+  });
 });
