@@ -18,7 +18,7 @@ import { useProductVariations } from "@/hooks/data/Product";
 import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
-import { PurchaseButton } from "../product/purchase/PurchaseButton";
+import { PurchaseFlow } from "../product/purchase/PurchaseFlow";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 type Props = {
@@ -87,7 +87,8 @@ export const ProductVariationsModalContent = ({
       {/* Footer */}
       <ThemedYStack>
         <ThemedYStack mb="$3" />
-        <PurchaseButton purchasable={purchasable} onSuccess={close} />
+        <ThemedText>{purchasable.status.key}</ThemedText>
+        <PurchaseFlow {...purchasable} />
       </ThemedYStack>
     </ThemedYStack>
   );

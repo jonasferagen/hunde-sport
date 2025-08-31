@@ -3,34 +3,40 @@ import React from "react";
 
 import { ProductVariationsModal } from "@/components/features/product-variation/ProductVariationsModal";
 import { ProductCustomizationModal } from "@/components/features/purchasable/ProductCustomizationModal";
+import { CustomField } from "@/domain/extensions/CustomField";
 import type { ProductVariation } from "@/domain/product/ProductVariation";
 import type { VariationSelection } from "@/domain/product/VariationSelection";
-import { Purchasable } from "@/domain/purchasable/Purchasable";
+import { Purchasable, PurchasableData } from "@/domain/purchasable/Purchasable";
 import { openModal } from "@/stores/ui/modalStore";
-import type { PurchasableProduct } from "@/types";
 
 import { PurchaseButton } from "./PurchaseButton";
 
-type Props = {
-  product: PurchasableProduct;
+type Props = PurchasableData & {
+  onChange?: (next: Purchasable) => void; // optional observer
 };
 
-export function PurchaseFlow({ product }: Props) {
+export function PurchaseFlow({
+  product,
+  variationSelection: initialSelection,
+  selectedVariation: initialSelectedVar,
+  customFields: initialCustomFields,
+  onChange,
+}: Props) {
   // UI-driven state (not domain):
   const [selection, setSelection] = React.useState<
     VariationSelection | undefined
-  >(undefined);
+  >(initialSelection);
   const [selectedVar, setSelectedVar] = React.useState<
     ProductVariation | undefined
-  >(undefined);
-  const [customValues, setCustomValues] = React.useState<
-    Record<string, string>
-  >({});
+  >(initialSelectedVar);
+  const [customFields, setCustomFields] = React.useState<
+    CustomField[] | undefined
+  >(initialCustomFields);
 
   // Always construct the domain object from current UI state
   const purchasable = React.useMemo(
-    () => new Purchasable(product, selection, selectedVar, customValues),
-    [product, selection, selectedVar, customValues]
+    () => new Purchasable(product, selection, selectedVar, customFields),
+    [product, selection, selectedVar, customFields]
   );
 
   const onOpenVariations = React.useCallback(() => {
@@ -55,16 +61,16 @@ export function PurchaseFlow({ product }: Props) {
     openModal((_, api) => (
       <ProductCustomizationModal
         purchasable={purchasable}
-        initialValues={customValues}
+        customFields={customFields}
         close={() => api.close()}
         // NEW: let the modal return the updated custom values
-        onDone={(values: Record<string, string>) => {
-          setCustomValues(values);
+        onDone={(customFields: CustomField[]) => {
+          setCustomFields(customFields);
           api.close();
         }}
       />
     ));
-  }, [purchasable, customValues]);
+  }, [purchasable, customFields]);
 
   return (
     <PurchaseButton

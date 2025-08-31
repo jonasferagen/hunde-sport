@@ -1,7 +1,8 @@
 // Purchasable.ts
-import { CustomField } from "@/domain/extensions/CustomField";
 import { AddItemOptions } from "@/stores/cartStore";
+import { PurchasableProduct } from "@/types";
 
+import { CustomField } from "../extensions/CustomField";
 import { Product } from "../product/Product";
 import { ProductVariation } from "../product/ProductVariation";
 import { VariationSelection } from "../product/VariationSelection";
@@ -27,37 +28,32 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
   unavailable: "Ikke tilgjengelig",
 };
 
-type CustomValues = Record<string, string>;
+export type PurchasableData = {
+  product: PurchasableProduct;
+  variationSelection?: VariationSelection;
+  selectedVariation?: ProductVariation;
+  customFields?: CustomField[];
+};
 
 export class Purchasable {
   readonly product: Product;
   readonly variationSelection?: VariationSelection;
   readonly selectedVariation?: ProductVariation;
-
-  /** Current values keyed by CustomField.key */
-  readonly customValues: CustomValues;
+  readonly customFields?: CustomField[];
 
   constructor(
     product: Product,
     variationSelection?: VariationSelection,
     selectedVariation?: ProductVariation,
-    customValues: CustomValues = {}
+    customFields?: CustomField[]
   ) {
     this.product = product;
     this.variationSelection = variationSelection;
     this.selectedVariation = selectedVariation;
-    this.customValues = customValues;
+    this.customFields = customFields;
   }
 
   /** Immutable updater for UI convenience */
-  withCustomValue(key: string, value: string): Purchasable {
-    return new Purchasable(
-      this.product,
-      this.variationSelection,
-      this.selectedVariation,
-      { ...this.customValues, [key]: value }
-    );
-  }
 
   get hasCustomFields(): boolean {
     return this.product.hasCustomFields;
@@ -65,9 +61,6 @@ export class Purchasable {
 
   /** Has the user entered any custom values yet? (non-empty strings) */
   get hasAnyCustomValues(): boolean {
-    for (const v of Object.values(this.customValues ?? {})) {
-      if (typeof v === "string" && v.trim().length > 0) return true;
-    }
     return false;
   }
 
@@ -132,13 +125,13 @@ export class Purchasable {
           .map(([attribute, value]) => ({ attribute, value: value as string }))
       : [];
 
-    const ext = CustomField.toCartExtensions(this.customValues); // may be undefined
+    //    const ext = CustomField.toCartExtensions(this.customValues); // may be undefined
 
     if (this.product.isSimple) {
       return {
         id: this.product.id,
         quantity,
-        ...(ext ? { extensions: ext.extensions } : {}),
+        //  ...(ext ? { extensions: ext.extensions } : {}),
       };
     }
 
@@ -146,7 +139,7 @@ export class Purchasable {
       id: this.product.id,
       quantity,
       variation,
-      ...(ext ? { extensions: ext.extensions } : {}),
+      //    ...(ext ? { extensions: ext.extensions } : {}),
     };
   }
 }

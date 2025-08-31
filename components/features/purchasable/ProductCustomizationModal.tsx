@@ -19,8 +19,8 @@ import { ProductCustomizationForm } from "./ProductCustomizationForm";
 type Props = {
   purchasable: Purchasable;
   close: () => void;
-  initialValues?: Record<string, string>;
-  onDone?: (values: Record<string, string>) => void;
+  initialValues?: CustomField[];
+  onDone?: (customFields: CustomField[]) => void;
 };
 
 export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
