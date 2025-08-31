@@ -1,11 +1,11 @@
 // domain/Product/ProductFactory.ts
-import type { RawBaseProduct } from "./Product";
+import type { RawProduct } from "./Product";
 import { Product } from "./Product";
 import { ProductVariation } from "./ProductVariation";
 import { SimpleProduct } from "./SimpleProduct";
 import { VariableProduct } from "./VariableProduct";
 
-export function productFromRaw(raw: RawBaseProduct): Product {
+export function productFromRaw(raw: RawProduct): Product {
   switch (raw.type) {
     case "simple":
       return SimpleProduct.fromRaw(raw);

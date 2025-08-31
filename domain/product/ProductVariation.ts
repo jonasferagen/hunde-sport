@@ -1,4 +1,4 @@
-import { Product, type RawBaseProduct } from "./Product";
+import { Product, type RawProduct } from "./Product";
 
 export class ProductVariation extends Product {
   readonly parent: number;
@@ -17,9 +17,7 @@ export class ProductVariation extends Product {
     this.variation = data.variation;
   }
 
-  static fromRaw(
-    raw: RawBaseProduct & { variation?: string }
-  ): ProductVariation {
+  static fromRaw(raw: RawProduct & { variation?: string }): ProductVariation {
     if (raw.type !== "variation")
       throw new Error("fromRaw(variation) received non-variation");
     const base = Product.mapBase(raw, "variation");

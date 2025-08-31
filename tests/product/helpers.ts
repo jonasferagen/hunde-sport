@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { Product, type RawBaseProduct } from "@/domain/product/Product";
+import { Product, type RawProduct } from "@/domain/product/Product";
 import { ProductVariation } from "@/domain/product/ProductVariation";
 import { SimpleProduct } from "@/domain/product/SimpleProduct";
 import { VariableProduct } from "@/domain/product/VariableProduct";
@@ -14,7 +14,7 @@ export function readFixture<T = unknown>(name: string): T {
 }
 
 export function loadProduct(name: string) {
-  const raw = readFixture<RawBaseProduct>(name);
+  const raw = readFixture<RawProduct>(name);
   return Product.fromRaw(raw);
 }
 

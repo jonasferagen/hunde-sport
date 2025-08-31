@@ -1,17 +1,30 @@
-// domain/ProductCategory.ts
-import { StoreImage, type StoreImageData } from "../store-image/StoreImage";
+// domain/product/ProductCategory.ts
+import {
+  type RawStoreImage,
+  StoreImage,
+} from "@/domain/store-image/StoreImage";
 
-export type RawStoreCategory = {
+export interface RawStoreCategory {
+  id?: number;
+  name?: string;
+  parent?: number;
+  image?: RawStoreImage | null;
+  description?: string | null;
+  slug?: string;
+  count?: number;
+}
+
+export interface ProductCategoryData {
   id: number;
   name: string;
   parent: number;
-  image?: StoreImageData | null;
-  description?: string | null;
+  image: StoreImage;
+  description: string;
   slug: string;
   count: number;
-};
+}
 
-export class ProductCategory {
+export class ProductCategory implements ProductCategoryData {
   readonly id: number;
   readonly name: string;
   readonly parent: number;
@@ -20,15 +33,7 @@ export class ProductCategory {
   readonly slug: string;
   readonly count: number;
 
-  private constructor(data: {
-    id: number;
-    name: string;
-    parent: number;
-    image: StoreImage;
-    description: string;
-    slug: string;
-    count: number;
-  }) {
+  private constructor(data: ProductCategoryData) {
     this.id = data.id;
     this.name = data.name;
     this.parent = data.parent;
@@ -38,33 +43,28 @@ export class ProductCategory {
     this.count = data.count;
   }
 
-  /** Woo: top-level categories have parent === 0 */
   get isTopLevel(): boolean {
     return this.parent === 0;
   }
-
-  /** Your existing sentinel rule */
   shouldDisplay(): boolean {
     return this.description !== "#";
   }
-
   toString(): string {
     return `Category ${this.id}: ${this.name}`;
   }
 
   static fromRaw(raw: RawStoreCategory): ProductCategory {
     return new ProductCategory({
-      id: raw.id,
-      name: raw.name,
-      parent: raw.parent,
+      id: raw.id ?? 0,
+      name: raw.name ?? "",
+      parent: raw.parent ?? 0,
       image: StoreImage.fromMaybe(raw.image),
       description: raw.description ?? "",
-      slug: raw.slug,
-      count: raw.count,
+      slug: raw.slug ?? "",
+      count: raw.count ?? 0,
     });
   }
 
-  /** Optional synthetic root for UI (breadcrumbs etc.) */
   static readonly ROOT = new ProductCategory({
     id: 0,
     name: "Hjem",

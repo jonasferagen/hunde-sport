@@ -1,7 +1,7 @@
 import { capitalize, cleanHtml } from "@/lib/format";
 import { intersectSets } from "@/lib/util";
 
-import { Product, type RawBaseProduct } from "./Product";
+import { Product, type RawProduct } from "./Product";
 
 export type RawAttributeTerm = { id: number; name: string; slug: string };
 export type RawAttribute = {
@@ -108,7 +108,7 @@ export class VariableProduct extends Product {
   }
 
   static fromRaw(
-    raw: RawBaseProduct & {
+    raw: RawProduct & {
       attributes?: RawAttribute[];
       variations?: RawVariationRef[];
     }
