@@ -34,7 +34,7 @@ export type ProductData = {
   is_purchasable: boolean;
   is_on_backorder: boolean;
   parent: number;
-  type: IProduct["type"];
+  type: NormalizedProduct["type"];
   extensions: {
     app_fpf?: {
       fields?: CustomFieldData[];
@@ -42,7 +42,7 @@ export type ProductData = {
   };
 };
 
-interface IProduct {
+type NormalizedProduct = {
   id: number;
   name: string;
   slug: string;
@@ -62,9 +62,9 @@ interface IProduct {
   extensions: {
     customFields?: CustomField[];
   };
-}
+};
 
-export abstract class Product implements IProduct {
+export abstract class Product implements NormalizedProduct {
   readonly id: number;
   readonly name: string;
   readonly slug: string;
@@ -86,7 +86,7 @@ export abstract class Product implements IProduct {
     customFields?: CustomField[];
   };
 
-  protected constructor(data: IProduct) {
+  protected constructor(data: NormalizedProduct) {
     this.id = data.id;
     this.name = cleanHtml(data.name);
     this.slug = data.slug;
@@ -133,7 +133,10 @@ export abstract class Product implements IProduct {
     return this.customFields.length > 0;
   }
 
-  static mapBase(raw: ProductData, forceType: ProductData["type"]): IProduct {
+  static mapBase(
+    raw: ProductData,
+    forceType: ProductData["type"]
+  ): NormalizedProduct {
     return {
       id: raw.id,
       name: raw.name,

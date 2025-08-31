@@ -1,6 +1,6 @@
 import type { WcItemPrices, WcItemTotals } from "./pricing";
 
-export type RawCartItem = {
+export type CartItemData = {
   key: string;
   id: number; // line item product/variation id
   type: string; // "simple" | "variation"
@@ -31,7 +31,7 @@ export class CartItem {
   readonly permalink?: string;
   readonly images?: readonly { id: number; src: string; thumbnail?: string }[];
 
-  constructor(raw: RawCartItem) {
+  constructor(raw: CartItemData) {
     this.key = raw.key;
     this.id = raw.id;
     this.type = raw.type;

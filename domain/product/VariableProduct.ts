@@ -17,7 +17,7 @@ export class VariableProduct extends Product {
   readonly rawVariations: VariationData[];
   readonly attributes: Map<string, Attribute>;
   readonly terms: Map<string, Term>;
-  readonly variations: Variation[];
+  readonly variations: Variation[]; // Duplicate variations per term are filtered
   readonly attributeOrder: string[];
   readonly termOrderByAttribute: Map<string, string[]>;
   readonly variationOrder: number[];

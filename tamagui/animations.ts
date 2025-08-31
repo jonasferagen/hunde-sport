@@ -6,8 +6,16 @@ export const animations = createAnimations({
   spring: { damping: 25, mass: 0.8, stiffness: 300 },
 
   // a timing-based fade you can reuse if needed
-  fade: {
+  fast: {
+    type: "timing",
+    duration: 150,
+  },
+  medium: {
     type: "timing",
     duration: 300,
+  },
+  slow: {
+    type: "timing",
+    duration: 600,
   },
 });

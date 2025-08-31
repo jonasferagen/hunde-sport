@@ -1,5 +1,5 @@
 // domain/Cart/models.ts
-import { CartItem, RawCartItem } from "./CartItem";
+import { CartItem, CartItemData } from "./CartItem";
 import type { WcTotals } from "./pricing";
 
 /** Raw variation pair in the cart item payload */
@@ -15,8 +15,8 @@ type CartInit = {
   lastUpdated: number;
 };
 
-export type RawCart = {
-  items: RawCartItem[];
+export type CartData = {
+  items: CartItemData[];
   token: string;
   items_count: number; // count of distinct lines
   items_weight: number;
@@ -61,7 +61,7 @@ export class Cart {
   }
 
   /** build domain Cart from raw API payload */
-  static fromRaw(raw: RawCart, token: string): Cart {
+  static fromRaw(raw: CartData, token: string): Cart {
     const items = (raw.items ?? []).map((i) => new CartItem(i));
     return new Cart(
       items,

@@ -11,7 +11,7 @@ type ProductCategoryData = {
   count: number;
 };
 
-interface IProductCategory {
+type NormalizedProductCategory = {
   id: number;
   name: string;
   parent: number;
@@ -19,9 +19,9 @@ interface IProductCategory {
   description: string;
   slug: string;
   count: number;
-}
+};
 
-export class ProductCategory implements IProductCategory {
+export class ProductCategory implements NormalizedProductCategory {
   readonly id: number;
   readonly name: string;
   readonly parent: number;
@@ -29,7 +29,7 @@ export class ProductCategory implements IProductCategory {
   readonly description: string;
   readonly slug: string;
   readonly count: number;
-  private constructor(data: IProductCategory) {
+  private constructor(data: NormalizedProductCategory) {
     this.id = data.id;
     this.name = data.name;
     this.parent = data.parent;

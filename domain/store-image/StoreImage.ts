@@ -10,7 +10,7 @@ export type StoreImageData = {
   alt: string;
 } | null;
 
-interface IStoreImage {
+interface NormalizedStoreImage {
   id: number;
   src: string;
   thumbnail: string;
@@ -20,7 +20,7 @@ interface IStoreImage {
   alt: string;
 }
 
-export class StoreImage implements IStoreImage {
+export class StoreImage implements NormalizedStoreImage {
   readonly id: number;
   readonly src: string;
   readonly thumbnail: string;
@@ -29,7 +29,7 @@ export class StoreImage implements IStoreImage {
   readonly name: string;
   readonly alt: string;
 
-  private constructor(data: IStoreImage) {
+  private constructor(data: NormalizedStoreImage) {
     this.id = data.id;
     this.src = data.src;
     this.thumbnail = data.thumbnail;

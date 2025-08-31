@@ -43,6 +43,11 @@ export interface AddItemOptions {
   id: number;
   quantity: number;
   variation?: { attribute: string; value: string }[];
+  extensions?: {
+    app_fpf?: {
+      values: Record<string, string>;
+    };
+  };
 }
 
 interface CartActions {

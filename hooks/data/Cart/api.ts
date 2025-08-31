@@ -1,11 +1,11 @@
 import type { ApiResponse } from "apisauce";
 
 import { ENDPOINTS } from "@/config/api";
-import { Cart, RawCart } from "@/domain/cart/Cart";
+import { Cart, CartData } from "@/domain/cart/Cart";
 import { apiClient } from "@/lib/apiClient";
 
 export function handleResponse(
-  response: ApiResponse<RawCart>,
+  response: ApiResponse<CartData>,
   context: string
 ): Cart {
   // transport-level issues (network, timeout, 4xx/5xx etc.)

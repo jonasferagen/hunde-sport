@@ -1,5 +1,5 @@
 // tests/product/variableProduct.test.ts
-import { Product, type RawProduct } from "@/domain/product/Product";
+import { Product, type ProductData } from "@/domain/product/Product";
 import { VariableProduct } from "@/domain/product/VariableProduct";
 
 import {
@@ -20,7 +20,7 @@ describe("Product.fromRaw (simple/variation)", () => {
   });
 
   test("variations.json list → ProductVariation[]", () => {
-    const list = readFixture<RawProduct[]>("variations.json");
+    const list = readFixture<ProductData[]>("variations.json");
     expect(Array.isArray(list)).toBe(true);
     expect(list.length).toBeGreaterThan(0);
 
@@ -49,7 +49,7 @@ describe("VariableProduct (attributes/terms/variations)", () => {
   });
 
   test("missingterm.json → skips invalid variations", () => {
-    const raw = readFixture<RawProduct>("missingterm.json");
+    const raw = readFixture<ProductData>("missingterm.json");
     const vp = Product.create(raw) as VariableProduct;
     expectValidVariable(vp);
     // Some raw variations may be dropped due to unknown term/attr

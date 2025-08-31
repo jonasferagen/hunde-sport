@@ -1,5 +1,6 @@
 // components/features/product-variation/ProductVariationsModal.tsx
 import { X } from "@tamagui/lucide-icons";
+import React from "react";
 import { ScrollView } from "tamagui";
 
 import {
@@ -8,49 +9,44 @@ import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui";
-import { VariableProductProvider } from "@/contexts/VariableProductContext";
-import {
-  useVariationSelection,
-  VariationSelectionProvider,
-} from "@/contexts/VariationSelectionContext";
-import { useProductVariations } from "@/hooks/data/Product";
-import { Purchasable, VariableProduct } from "@/types";
+import { Purchasable } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
 import { PurchaseButton } from "../product/purchase/PurchaseButton";
-import { ProductVariationSelect } from "./ProductVariationSelect";
+import { ProductCustomizationForm } from "./ProductCustomizationForm";
 
 type Props = {
   close: () => void;
   purchasable: Purchasable; // ← now receives purchasable
 };
 
-export const ProductVariationsModal = ({ close, purchasable }: Props) => {
-  const variableProduct = purchasable.product as VariableProduct; // modal is only opened for variable products
-  const { isLoading, items: productVariations } =
-    useProductVariations(variableProduct);
+export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
+  const _purchasable = React.useMemo(
+    () =>
+      new Purchasable(
+        purchasable.product,
+        purchasable.variationSelection,
+        purchasable.selectedVariation,
+        { a: "b" }
+      ),
+    [purchasable]
+  );
 
   return (
-    <VariableProductProvider
-      variableProduct={variableProduct}
-      productVariations={productVariations}
-      isLoading={isLoading}
-    >
-      <VariationSelectionProvider
-        initialSelection={purchasable.variationSelection} // ← seed selection if present
-      >
-        <ProductVariationsModalContent close={close} />
-      </VariationSelectionProvider>
-    </VariableProductProvider>
+    <ProductCustomizationModalContent
+      close={close}
+      purchasable={_purchasable}
+    />
   );
 };
 
-export const ProductVariationsModalContent = ({
+export const ProductCustomizationModalContent = ({
   close,
+  purchasable,
 }: {
   close: () => void;
+  purchasable: Purchasable;
 }) => {
-  const { purchasable } = useVariationSelection();
   const variableProduct = purchasable.product; // variable here
 
   const IMAGE_H = 200;
@@ -78,7 +74,7 @@ export const ProductVariationsModalContent = ({
           removeClippedSubviews={false}
           contentContainerStyle={{ paddingBottom: 12 }}
         >
-          <ProductVariationSelect />
+          <ProductCustomizationForm />
         </ScrollView>
       </ThemedYStack>
 

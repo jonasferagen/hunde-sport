@@ -1,13 +1,13 @@
-// domain/custom-fields/CustomField.ts
+// domain/extensions/CustomField.ts
 import { cleanHtml } from "@/lib/format";
 
-interface ICustomField {
+type NormalizedCustomField = {
   key: string;
   label: string;
   required: boolean;
   maxlen: number;
   lines: number;
-}
+};
 
 export type CustomFieldData = {
   key?: string;
@@ -17,14 +17,14 @@ export type CustomFieldData = {
   lines?: number;
 };
 
-export class CustomField implements ICustomField {
+export class CustomField implements NormalizedCustomField {
   readonly key: string;
   readonly label: string;
   readonly required: boolean;
   readonly maxlen: number;
   readonly lines: number;
 
-  private constructor(data: ICustomField) {
+  private constructor(data: NormalizedCustomField) {
     this.key = data.key;
     this.label = cleanHtml(data.label || data.key);
     this.required = data.required;
@@ -42,15 +42,19 @@ export class CustomField implements ICustomField {
     });
   }
 
-  get isSingleLine(): boolean {
-    return this.lines <= 1;
-  }
+  static toCartExtensions(values?: Record<string, string>) {
+    if (!values) return undefined;
 
-  validate(value: unknown): string | null {
-    const s = typeof value === "string" ? value : "";
-    if (this.required && s.trim().length === 0) return "Påkrevd";
-    if (this.maxlen > 0 && s.length > this.maxlen)
-      return `Maks ${this.maxlen} tegn`;
-    return null;
+    const cleaned: Record<string, string> = {};
+    for (const [k, v] of Object.entries(values)) {
+      if (typeof v === "string") {
+        const t = v.trim();
+        if (t.length > 0) cleaned[k] = t;
+      }
+    }
+
+    if (Object.keys(cleaned).length === 0) return undefined;
+
+    return { extensions: { app_fpf: { values: cleaned } } };
   }
 }

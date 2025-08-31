@@ -1,6 +1,7 @@
 // components/product/purchase/PurchaseButton.tsx
 import {
   Boxes,
+  Brush,
   CircleAlert,
   ShoppingCart,
   TriangleAlert,
@@ -11,6 +12,7 @@ import React from "react";
 import type { ThemeName } from "tamagui";
 
 import { ProductVariationsModal } from "@/components/features/product-variation/ProductVariationsModal";
+import { ProductCustomizationModal } from "@/components/features/purchasable/ProductCustomizationModal";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
 import {
@@ -20,7 +22,10 @@ import {
   THEME_CTA_UNAVAILABLE,
   THEME_CTA_VIEW,
 } from "@/config/app";
-import { Purchasable, PurchaseStatus } from "@/domain/purchasable/Purchasable";
+import {
+  Purchasable,
+  PurchasableStatus,
+} from "@/domain/purchasable/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { openModal } from "@/stores/ui/modalStore";
 import type { SimpleProduct, VariableProduct } from "@/types";
@@ -34,11 +39,16 @@ type UIConf = {
   theme: ThemeName;
 };
 
-const UI_BY_STATUS_KEY: Record<PurchaseStatus, UIConf> = {
+const UI_BY_STATUS_KEY: Record<PurchasableStatus, UIConf> = {
   ready: { icon: <ShoppingCart />, theme: THEME_CTA_BUY },
   select: { icon: <Boxes />, theme: THEME_CTA_VIEW },
   select_incomplete: {
     icon: <TriangleAlert />,
+    theme: THEME_CTA_SELECTION_NEEDED,
+  },
+  customize: { icon: <Brush />, theme: THEME_CTA_SELECTION_NEEDED },
+  customize_incomplete: {
+    icon: <Brush />,
     theme: THEME_CTA_SELECTION_NEEDED,
   },
   sold_out: { icon: <CircleAlert />, theme: THEME_CTA_OUTOFSTOCK },
@@ -91,30 +101,16 @@ export const PurchaseButton = React.memo(function PurchaseButton({
 
   // Default: simple or variable+resolved → add-to-cart
   let pressHandler: () => void = onPress;
-  let loading = isLoading;
   // You wanted the button to own disabled: !(ready || select)
-  let disabled = !(key === "ready" || key === "select");
-
-  if (key === "select") {
+  const enabled = key === "ready" || key === "select" || key === "customize";
+  const disabled = !enabled;
+  if (key === "select" || key === "customize") {
     // No selection context yet → open modal
     pressHandler = () =>
-      openModal(
-        (_, api) => (
-          <ProductVariationsModal
-            purchasable={purchasable}
-            close={() => api.close()}
-          />
-        ),
-        purchasable
-      );
-    loading = false;
-    disabled = false;
-  } else if (key === "select_incomplete") {
+      openModal((_, api) => getModal(purchasable, api.close), purchasable);
+  } else if (key === "select_incomplete" || "customize_incomplete") {
     // Selection exists but unresolved → guidance only
     pressHandler = () => {};
-    loading = false;
-    disabled = true;
-    // finalLabel already includes guidance from purchasable.status.label
   }
 
   return (
@@ -124,8 +120,18 @@ export const PurchaseButton = React.memo(function PurchaseButton({
       theme={ui.theme}
       label={label}
       after={<PriceTag product={product} />}
-      loading={loading}
-      disabled={disabled}
+      loading={isLoading}
+      disabled={!disabled}
     />
   );
 });
+
+function getModal(purchasable: Purchasable, close: () => void) {
+  if (purchasable.status.key === "select")
+    return <ProductVariationsModal purchasable={purchasable} close={close} />;
+  if (purchasable.status.key === "customize")
+    return (
+      <ProductCustomizationModal purchasable={purchasable} close={close} />
+    );
+  throw "invalid status";
+}
