@@ -1,7 +1,7 @@
 // jest.config.js
 module.exports = {
   preset: "jest-expo",
-  testEnvironment: "node",
+  testEnvironment: "jsdom", // ← was "node"
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },

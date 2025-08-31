@@ -13,16 +13,18 @@ import {
   useVariationSelection,
   VariationSelectionProvider,
 } from "@/contexts/VariationSelectionContext";
+import { VariationSelection } from "@/domain/product/VariationSelection";
 import { useProductVariations } from "@/hooks/data/Product";
-import { Purchasable, VariableProduct } from "@/types";
+import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
 import { PurchaseButton } from "../product/purchase/PurchaseButton";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 type Props = {
+  purchasable: Purchasable;
   close: () => void;
-  purchasable: Purchasable; // ← now receives purchasable
+  onDone?: (selection: VariationSelection, resolved?: ProductVariation) => void;
 };
 
 export const ProductVariationsModal = ({ close, purchasable }: Props) => {

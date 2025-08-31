@@ -16,8 +16,10 @@ import { PurchaseButton } from "../product/purchase/PurchaseButton";
 import { ProductCustomizationForm } from "./ProductCustomizationForm";
 
 type Props = {
+  purchasable: Purchasable;
   close: () => void;
-  purchasable: Purchasable; // ← now receives purchasable
+  initialValues?: Record<string, string>;
+  onDone?: (values: Record<string, string>) => void;
 };
 
 export const ProductCustomizationModal = ({ close, purchasable }: Props) => {

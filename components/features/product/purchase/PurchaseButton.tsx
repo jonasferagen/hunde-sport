@@ -7,12 +7,9 @@ import {
   TriangleAlert,
   XCircle,
 } from "@tamagui/lucide-icons";
-import type { JSX } from "react";
-import React from "react";
+import React, { JSX } from "react";
 import type { ThemeName } from "tamagui";
 
-import { ProductVariationsModal } from "@/components/features/product-variation/ProductVariationsModal";
-import { ProductCustomizationModal } from "@/components/features/purchasable/ProductCustomizationModal";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
 import {
@@ -23,39 +20,39 @@ import {
   THEME_CTA_VIEW,
 } from "@/config/app";
 import {
-  Purchasable,
-  PurchasableStatus,
-} from "@/domain/purchasable/Purchasable";
+  decidePurchasable,
+  type UIByStatus,
+} from "@/domain/purchasable/decidePurchasable";
+import { Purchasable } from "@/domain/purchasable/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
-import { openModal } from "@/stores/ui/modalStore";
 import type { SimpleProduct, VariableProduct } from "@/types";
 
 import { ProductPrice } from "../display";
 
-/* -------------------------------- UI config -------------------------------- */
-
-type UIConf = {
-  icon: JSX.Element;
-  theme: ThemeName;
+const ICONS: Record<string, JSX.Element> = {
+  ShoppingCart: <ShoppingCart />,
+  Boxes: <Boxes />,
+  TriangleAlert: <TriangleAlert />,
+  Brush: <Brush />,
+  CircleAlert: <CircleAlert />,
+  XCircle: <XCircle />,
 };
 
-const UI_BY_STATUS_KEY: Record<PurchasableStatus, UIConf> = {
-  ready: { icon: <ShoppingCart />, theme: THEME_CTA_BUY },
-  select: { icon: <Boxes />, theme: THEME_CTA_VIEW },
+const UI_BY_STATUS: UIByStatus = {
+  ready: { iconKey: "ShoppingCart", theme: THEME_CTA_BUY },
+  select: { iconKey: "Boxes", theme: THEME_CTA_VIEW },
   select_incomplete: {
-    icon: <TriangleAlert />,
+    iconKey: "TriangleAlert",
     theme: THEME_CTA_SELECTION_NEEDED,
   },
-  customize: { icon: <Brush />, theme: THEME_CTA_SELECTION_NEEDED },
+  customize: { iconKey: "Brush", theme: THEME_CTA_VIEW },
   customize_incomplete: {
-    icon: <Brush />,
+    iconKey: "TriangleAlert",
     theme: THEME_CTA_SELECTION_NEEDED,
   },
-  sold_out: { icon: <CircleAlert />, theme: THEME_CTA_OUTOFSTOCK },
-  unavailable: { icon: <XCircle />, theme: THEME_CTA_UNAVAILABLE },
+  sold_out: { iconKey: "CircleAlert", theme: THEME_CTA_OUTOFSTOCK },
+  unavailable: { iconKey: "XCircle", theme: THEME_CTA_UNAVAILABLE },
 };
-
-/* --------------------------- Price tag (inline) ---------------------------- */
 
 function PriceTag({ product }: { product: SimpleProduct | VariableProduct }) {
   return (
@@ -76,62 +73,61 @@ function PriceTag({ product }: { product: SimpleProduct | VariableProduct }) {
   );
 }
 
-/* ------------------------------- Main button ------------------------------- */
-
 type Props = {
   purchasable: Purchasable;
+  onOpenVariations?: () => void;
+  onOpenCustomize?: () => void;
   onSuccess?: () => void;
   onError?: (message?: string) => void;
 };
 
-export const PurchaseButton = React.memo(function PurchaseButton({
-  purchasable,
-  onSuccess,
-  onError,
-}: Props) {
-  const product = purchasable.product;
-  const { key, label } = purchasable.status;
-  const ui = UI_BY_STATUS_KEY[key];
+export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
+  const { purchasable, onOpenVariations, onOpenCustomize, onSuccess, onError } =
+    props;
 
-  // Always call the hook (avoid conditional hooks)
   const { isLoading, onPress } = useAddToCart(purchasable, {
     onSuccess,
     onError,
   });
 
-  // Default: simple or variable+resolved → add-to-cart
-  let pressHandler: () => void = onPress;
-  // You wanted the button to own disabled: !(ready || select)
-  const enabled = key === "ready" || key === "select" || key === "customize";
-  const disabled = !enabled;
-  if (key === "select" || key === "customize") {
-    // No selection context yet → open modal
-    pressHandler = () =>
-      openModal((_, api) => getModal(purchasable, api.close), purchasable);
-  } else if (key === "select_incomplete" || "customize_incomplete") {
-    // Selection exists but unresolved → guidance only
-    pressHandler = () => {};
-  }
+  const decision = decidePurchasable(
+    purchasable.status.key,
+    purchasable.status.label,
+    UI_BY_STATUS
+  );
+  const icon = ICONS[decision.iconKey] ?? null;
+  const theme = decision.theme as ThemeName;
+
+  const handlePress = React.useCallback(() => {
+    if (decision.disabled) return;
+    switch (decision.next) {
+      case "addToCart":
+        onPress();
+        break;
+      case "openVariations":
+        onOpenVariations?.();
+        break;
+      case "openCustomize":
+        onOpenCustomize?.();
+        break;
+      case "noop":
+        break;
+    }
+  }, [decision, onOpenVariations, onOpenCustomize, onPress]);
 
   return (
     <CallToActionButton
-      onPress={pressHandler}
-      before={ui.icon}
-      theme={ui.theme}
-      label={label}
-      after={<PriceTag product={product} />}
+      onPress={handlePress}
+      before={icon}
+      theme={theme}
+      label={decision.label}
+      after={
+        <PriceTag
+          product={purchasable.product as SimpleProduct | VariableProduct}
+        />
+      }
       loading={isLoading}
-      disabled={!disabled}
+      disabled={decision.disabled}
     />
   );
 });
-
-function getModal(purchasable: Purchasable, close: () => void) {
-  if (purchasable.status.key === "select")
-    return <ProductVariationsModal purchasable={purchasable} close={close} />;
-  if (purchasable.status.key === "customize")
-    return (
-      <ProductCustomizationModal purchasable={purchasable} close={close} />
-    );
-  throw "invalid status";
-}
