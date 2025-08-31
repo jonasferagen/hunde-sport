@@ -15,7 +15,7 @@ export function readFixture<T = unknown>(name: string): T {
 
 export function loadProduct(name: string) {
   const raw = readFixture<RawProduct>(name);
-  return Product.fromRaw(raw);
+  return Product.create(raw);
 }
 
 /** Assertions */

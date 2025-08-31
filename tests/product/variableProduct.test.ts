@@ -26,7 +26,7 @@ describe("Product.fromRaw (simple/variation)", () => {
 
     list.forEach((raw, idx) => {
       try {
-        expectValidVariation(Product.fromRaw(raw));
+        expectValidVariation(Product.create(raw));
       } catch (e) {
         throw new Error(
           `Variation item ${idx} failed: ${(e as Error).message}`
@@ -50,7 +50,7 @@ describe("VariableProduct (attributes/terms/variations)", () => {
 
   test("missingterm.json → skips invalid variations", () => {
     const raw = readFixture<RawProduct>("missingterm.json");
-    const vp = Product.fromRaw(raw) as VariableProduct;
+    const vp = Product.create(raw) as VariableProduct;
     expectValidVariable(vp);
     // Some raw variations may be dropped due to unknown term/attr
     expect(vp.rawVariations.length).toBeGreaterThanOrEqual(

@@ -1,15 +1,16 @@
 // domain/store-image/StoreImage.ts
-export interface RawStoreImage {
+
+export type StoreImageData = {
   id: number;
   src: string;
   thumbnail: string;
   srcset?: string;
   sizes?: string;
-  name?: string;
-  alt?: string;
-}
+  name: string;
+  alt: string;
+} | null;
 
-export interface StoreImageData {
+interface IStoreImage {
   id: number;
   src: string;
   thumbnail: string;
@@ -19,7 +20,7 @@ export interface StoreImageData {
   alt: string;
 }
 
-export class StoreImage implements StoreImageData {
+export class StoreImage implements IStoreImage {
   readonly id: number;
   readonly src: string;
   readonly thumbnail: string;
@@ -28,7 +29,7 @@ export class StoreImage implements StoreImageData {
   readonly name: string;
   readonly alt: string;
 
-  private constructor(data: StoreImageData) {
+  private constructor(data: IStoreImage) {
     this.id = data.id;
     this.src = data.src;
     this.thumbnail = data.thumbnail;
@@ -47,22 +48,22 @@ export class StoreImage implements StoreImageData {
       : this.src;
   }
 
-  static fromMaybe(raw?: RawStoreImage | null): StoreImage {
+  static create(raw: StoreImageData): StoreImage {
     if (!raw) return StoreImage.DEFAULT;
     // normalize with safe defaults
     return new StoreImage({
       id: typeof raw.id === "number" ? raw.id : 0,
-      src: raw.src ?? "",
+      src: raw.src,
       thumbnail: raw.thumbnail ?? raw.src ?? "",
       srcset: raw.srcset ?? "",
       sizes: raw.sizes ?? "",
-      name: raw.name ?? "",
-      alt: raw.alt ?? "",
+      name: raw.name,
+      alt: raw.alt,
     });
   }
 
   static readonly DEFAULT = Object.freeze(
-    new StoreImage({
+    StoreImage.create({
       id: 0,
       src: "",
       thumbnail: "",

@@ -1,13 +1,10 @@
 // domain/product/Product.ts
 import {
   CustomField,
-  type RawCustomField,
+  type CustomFieldData,
 } from "@/domain/custom-fields/CustomField";
 import { ProductPrices } from "@/domain/pricing";
-import {
-  type RawStoreImage,
-  StoreImage,
-} from "@/domain/store-image/StoreImage";
+import { StoreImage, StoreImageData } from "@/domain/store-image/StoreImage";
 import { cleanHtml } from "@/lib/format";
 
 export interface CategoryRef {
@@ -17,36 +14,14 @@ export interface CategoryRef {
   link: string;
 }
 
-export interface RawProduct {
-  id: number;
-  name: string;
-  slug: string;
-  permalink: string;
-  short_description?: string;
-  description?: string;
-  on_sale?: boolean;
-  prices: ProductPrices;
-  images?: RawStoreImage[] | null;
-  categories: CategoryRef[];
-  is_purchasable?: boolean;
-  is_in_stock?: boolean;
-  is_on_backorder?: boolean;
-  featured?: boolean;
-  parent: number;
-  type: "simple" | "variable" | "variation";
-  extensions?: {
-    app_fpf?: { fields?: RawCustomField[] };
-  };
-}
-
-type ProductBaseData = {
+export type ProductData = {
   id: number;
   name: string;
   slug: string;
   permalink: string;
   description: string;
   short_description: string;
-  images: StoreImage[];
+  images: StoreImageData[];
   categories: CategoryRef[];
   prices: ProductPrices;
   on_sale: boolean;
@@ -55,11 +30,35 @@ type ProductBaseData = {
   is_purchasable: boolean;
   is_on_backorder: boolean;
   parent: number;
-  type: RawProduct["type"];
-  customFields: CustomField[];
+  type: IProduct["type"];
+  extensions?: {
+    app_fpf?: {
+      fields?: CustomFieldData[];
+    };
+  };
 };
 
-export abstract class Product {
+interface IProduct {
+  id: number;
+  name: string;
+  slug: string;
+  permalink: string;
+  short_description: string;
+  description: string;
+  on_sale: boolean;
+  prices: ProductPrices;
+  images: StoreImage[];
+  categories: CategoryRef[];
+  is_purchasable: boolean;
+  is_in_stock: boolean;
+  is_on_backorder: boolean;
+  featured: boolean;
+  parent: number;
+  type: "simple" | "variable" | "variation";
+  customFields: CustomField[];
+}
+
+export abstract class Product implements IProduct {
   readonly id: number;
   readonly name: string;
   readonly slug: string;
@@ -75,16 +74,18 @@ export abstract class Product {
   readonly is_on_backorder: boolean;
   readonly categories: CategoryRef[];
   readonly type: "simple" | "variable" | "variation";
-  private readonly _customFields: CustomField[];
+  readonly parent: number;
 
-  protected constructor(data: ProductBaseData) {
+  readonly _customFields: CustomField[];
+
+  protected constructor(data: IProduct) {
     this.id = data.id;
     this.name = cleanHtml(data.name);
     this.slug = data.slug;
     this.permalink = data.permalink;
     this.description = cleanHtml(data.description);
     this.short_description = cleanHtml(data.short_description);
-    this.images = (data.images ?? []).map(StoreImage.fromMaybe); // already normalized
+    this.images = data.images;
     this.prices = data.prices;
     this.on_sale = data.on_sale;
     this.featured = data.featured;
@@ -93,11 +94,12 @@ export abstract class Product {
     this.is_on_backorder = data.is_on_backorder;
     this.categories = data.categories;
     this.type = data.type;
-    this._customFields = data.customFields ?? [];
+    this.parent = data.parent;
+    this._customFields = data.customFields;
   }
 
   get featuredImage(): StoreImage {
-    return this.images[0] ?? StoreImage.DEFAULT;
+    return this.images[0];
   }
   get availability() {
     return {
@@ -116,21 +118,14 @@ export abstract class Product {
   get isVariation(): boolean {
     return this.type === "variation";
   }
-  get customFields(): readonly CustomField[] {
+  get customFields(): CustomField[] {
     return this._customFields;
   }
   get hasCustomFields(): boolean {
     return this._customFields.length > 0;
   }
 
-  static mapBase(
-    json: RawProduct,
-    forceType: RawProduct["type"]
-  ): ProductBaseData {
-    const images = (json.images ?? []).map(StoreImage.fromMaybe);
-    const customFields = CustomField.fromRawList(
-      json.extensions?.app_fpf?.fields ?? []
-    );
+  static mapBase(json: ProductData, forceType: ProductData["type"]): IProduct {
     return {
       id: json.id,
       name: json.name,
@@ -138,7 +133,7 @@ export abstract class Product {
       permalink: json.permalink,
       description: json.description ?? "",
       short_description: json.short_description ?? "",
-      images,
+      images: (json.images ?? [StoreImage.DEFAULT]).map(StoreImage.create),
       categories: json.categories,
       prices: json.prices,
       on_sale: json.on_sale ?? false,
@@ -148,11 +143,13 @@ export abstract class Product {
       is_on_backorder: json.is_on_backorder ?? false,
       parent: json.parent,
       type: forceType,
-      customFields,
+      customFields: CustomField.listFromRaw(
+        json.extensions?.app_fpf?.fields ?? []
+      ),
     };
   }
 
-  static fromRaw(raw: RawProduct) {
+  static create(raw: ProductData) {
     /* eslint-disable @typescript-eslint/no-require-imports */
     const { productFromRaw } =
       require("./ProductFactory") as typeof import("./ProductFactory");

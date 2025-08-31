@@ -21,7 +21,7 @@ export async function fetchProduct(id: number): Promise<Product> {
     throw new Error(response.problem);
   }
   // Note: This is a single product fetch, so we don't use the responseTransformer here.
-  return Product.fromRaw(response.data);
+  return Product.create(response.data);
 }
 
 /**
@@ -38,7 +38,7 @@ export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
     ENDPOINTS.PRODUCTS.FEATURED(pagination)
   );
 
-  return responseTransformer(response, Product.fromRaw);
+  return responseTransformer(response, Product.create);
 };
 
 /**
@@ -58,7 +58,7 @@ export const fetchProductsByIds = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.BY_IDS(ids, pagination)
   );
-  return responseTransformer(response, Product.fromRaw);
+  return responseTransformer(response, Product.create);
 };
 
 /**
@@ -78,7 +78,7 @@ export const fetchProductsBySearch = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.SEARCH(query, pagination)
   );
-  return responseTransformer(response, Product.fromRaw);
+  return responseTransformer(response, Product.create);
 };
 
 /**
@@ -98,7 +98,7 @@ export const fetchProductsByProductCategory = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(productCategory.id, pagination)
   );
-  return responseTransformer(response, Product.fromRaw);
+  return responseTransformer(response, Product.create);
 };
 
 /**
@@ -114,7 +114,7 @@ export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.RECENT(pagination)
   );
-  return responseTransformer(response, Product.fromRaw);
+  return responseTransformer(response, Product.create);
 };
 
 /**
@@ -132,7 +132,7 @@ export const fetchDiscountedProducts = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCTS.DISCOUNTED(pagination)
   );
-  return responseTransformer(response, Product.fromRaw);
+  return responseTransformer(response, Product.create);
 };
 
 /**
@@ -152,5 +152,5 @@ export const fetchProductVariations = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCT_VARIATIONS.LIST(id, pagination)
   );
-  return responseTransformer(response, Product.fromRaw);
+  return responseTransformer(response, Product.create);
 };

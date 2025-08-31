@@ -1,17 +1,17 @@
 import { capitalize, cleanHtml } from "@/lib/format";
 import { intersectSets } from "@/lib/util";
 
-import { Product, type RawProduct } from "./Product";
+import { Product, type ProductData } from "./Product";
 
-export type RawAttributeTerm = { id: number; name: string; slug: string };
-export type RawAttribute = {
+export type AttributeTermData = { id: number; name: string; slug: string };
+export type AttributeData = {
   id: number;
   name: string;
   taxonomy: string;
   has_variations: boolean;
-  terms: RawAttributeTerm[];
+  terms: AttributeTermData[];
 };
-export type RawVariationRef = {
+export type VariationRefData = {
   id: number;
   attributes: { name: string; value: string }[];
 };
@@ -31,8 +31,8 @@ export type Variation = {
 const EMPTY_SET: ReadonlySet<number> = Object.freeze(new Set<number>());
 
 export class VariableProduct extends Product {
-  readonly rawAttributes: RawAttribute[];
-  readonly rawVariations: RawVariationRef[];
+  readonly rawAttributes: AttributeData[];
+  readonly rawVariations: VariationRefData[];
   readonly attributes: Map<string, Attribute>;
   readonly terms: Map<string, Term>;
   readonly variations: Variation[];
@@ -44,8 +44,8 @@ export class VariableProduct extends Product {
 
   private constructor(
     base: ReturnType<typeof Product.mapBase> & {
-      attributes: RawAttribute[];
-      variations: RawVariationRef[];
+      attributes: AttributeData[];
+      variations: VariationRefData[];
     }
   ) {
     if (base.type !== "variable")
@@ -108,9 +108,9 @@ export class VariableProduct extends Product {
   }
 
   static fromRaw(
-    raw: RawProduct & {
-      attributes?: RawAttribute[];
-      variations?: RawVariationRef[];
+    raw: ProductData & {
+      attributes?: AttributeData[];
+      variations?: VariationRefData[];
     }
   ): VariableProduct {
     if (raw.type !== "variable")
@@ -163,7 +163,7 @@ export class VariableProduct extends Product {
 function attrKeyFromName(name: string): string {
   return cleanHtml(name).toLocaleLowerCase();
 }
-function buildAttributes(raw: RawAttribute[]): Map<string, Attribute> {
+function buildAttributes(raw: AttributeData[]): Map<string, Attribute> {
   return new Map(
     (raw ?? []).map((a) => {
       const key = attrKeyFromName(a.name);
@@ -179,7 +179,7 @@ function buildAttributes(raw: RawAttribute[]): Map<string, Attribute> {
     })
   );
 }
-function buildTerms(raw: RawAttribute[]): Map<string, Term> {
+function buildTerms(raw: AttributeData[]): Map<string, Term> {
   const out: [string, Term][] = [];
   for (const attr of raw ?? []) {
     const attrKey = attrKeyFromName(attr.name);
@@ -200,7 +200,7 @@ function buildTerms(raw: RawAttribute[]): Map<string, Term> {
 // VariableProduct.ts
 
 function buildVariations(
-  raw: RawVariationRef[],
+  raw: VariationRefData[],
   attributes: Map<string, Attribute>,
   terms: Map<string, Term>
 ): Variation[] {

@@ -50,7 +50,7 @@ describe("ProductCategory.fromRaw", () => {
     const raw = JSON.parse(
       fs.readFileSync(singlePath, "utf8")
     ) as RawStoreCategory;
-    const cat = ProductCategory.fromRaw(raw);
+    const cat = ProductCategory.create(raw);
     expectValidCategory(cat);
   });
 
@@ -62,7 +62,7 @@ describe("ProductCategory.fromRaw", () => {
     expect(rawList.length).toBeGreaterThan(0);
 
     rawList.forEach((raw, idx) => {
-      const cat = ProductCategory.fromRaw(raw);
+      const cat = ProductCategory.create(raw);
       expectValidCategory(cat, idx);
     });
   });
@@ -77,7 +77,7 @@ describe("ProductCategory.fromRaw", () => {
       image: null,
       count: 0,
     };
-    const cat = ProductCategory.fromRaw(sampleWithNull);
+    const cat = ProductCategory.create(sampleWithNull);
     expect(cat.image).toBeInstanceOf(StoreImage);
     // We don’t rely on referential equality with DEFAULT;
     // instead assert the known defaults:
@@ -92,7 +92,7 @@ describe("ProductCategory.fromRaw", () => {
     ) as RawStoreCategory[];
     const blackFriday = rawList.find((c) => c.slug === "black-friday");
     expect(blackFriday).toBeTruthy();
-    const cat = ProductCategory.fromRaw(blackFriday!);
+    const cat = ProductCategory.create(blackFriday!);
     expect(cat.description).toBe("#");
     expect(cat.shouldDisplay()).toBe(false);
   });

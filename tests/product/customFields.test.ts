@@ -4,7 +4,7 @@ import { Product, RawProduct } from "@/domain/product/Product";
 
 test("customFields are normalized from extensions.app_fpf.fields", () => {
   const raw = readFixture<RawProduct>("fpf_extended.json");
-  const p = Product.fromRaw(raw);
+  const p = Product.create(raw);
 
   expect(p.hasCustomFields).toBe(true);
   expect(p.customFields.length).toBeGreaterThan(0);

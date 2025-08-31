@@ -1,20 +1,17 @@
-// domain/product/ProductCategory.ts
-import {
-  type RawStoreImage,
-  StoreImage,
-} from "@/domain/store-image/StoreImage";
+// domain/ProductCategory.ts
+import { StoreImage, type StoreImageData } from "../store-image/StoreImage";
 
-export interface RawStoreCategory {
-  id?: number;
-  name?: string;
-  parent?: number;
-  image?: RawStoreImage | null;
+type ProductCategoryData = {
+  id: number;
+  name: string;
+  parent: number;
+  image: StoreImageData;
   description?: string | null;
-  slug?: string;
-  count?: number;
-}
+  slug: string;
+  count: number;
+};
 
-export interface ProductCategoryData {
+interface IProductCategory {
   id: number;
   name: string;
   parent: number;
@@ -24,7 +21,7 @@ export interface ProductCategoryData {
   count: number;
 }
 
-export class ProductCategory implements ProductCategoryData {
+export class ProductCategory {
   readonly id: number;
   readonly name: string;
   readonly parent: number;
@@ -32,8 +29,7 @@ export class ProductCategory implements ProductCategoryData {
   readonly description: string;
   readonly slug: string;
   readonly count: number;
-
-  private constructor(data: ProductCategoryData) {
+  private constructor(data: IProductCategory) {
     this.id = data.id;
     this.name = data.name;
     this.parent = data.parent;
@@ -41,37 +37,36 @@ export class ProductCategory implements ProductCategoryData {
     this.description = data.description;
     this.slug = data.slug;
     this.count = data.count;
-  }
-
+  } /** Woo: top-level categories have parent === 0 */
   get isTopLevel(): boolean {
     return this.parent === 0;
-  }
+  } /** Your existing sentinel rule */
   shouldDisplay(): boolean {
     return this.description !== "#";
   }
   toString(): string {
     return `Category ${this.id}: ${this.name}`;
   }
-
-  static fromRaw(raw: RawStoreCategory): ProductCategory {
+  static create(raw: ProductCategoryData): ProductCategory {
     return new ProductCategory({
-      id: raw.id ?? 0,
-      name: raw.name ?? "",
-      parent: raw.parent ?? 0,
-      image: StoreImage.fromMaybe(raw.image),
+      id: raw.id,
+      name: raw.name,
+      parent: raw.parent,
+      image: StoreImage.create(raw.image),
       description: raw.description ?? "",
-      slug: raw.slug ?? "",
-      count: raw.count ?? 0,
+      slug: raw.slug,
+      count: raw.count,
     });
-  }
-
-  static readonly ROOT = new ProductCategory({
-    id: 0,
-    name: "Hjem",
-    parent: -1,
-    image: StoreImage.DEFAULT,
-    description: "",
-    slug: "",
-    count: 0,
-  });
+  } /** Optional synthetic root for UI (breadcrumbs etc.) */
+  static readonly ROOT = Object.freeze(
+    ProductCategory.create({
+      id: 0,
+      name: "Hjem",
+      parent: -1,
+      image: null,
+      description: "",
+      slug: "",
+      count: 0,
+    }) as ProductCategory
+  );
 }
