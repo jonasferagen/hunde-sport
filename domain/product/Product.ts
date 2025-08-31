@@ -162,11 +162,26 @@ export abstract class Product implements NormalizedProduct {
     };
   }
 
-  static create(raw: ProductData) {
+  static create(data: ProductData) {
     /* eslint-disable @typescript-eslint/no-require-imports */
-    const { productFromRaw } =
-      require("./ProductFactory") as typeof import("./ProductFactory");
-    return productFromRaw(raw);
+
+    switch (data.type) {
+      case "simple":
+        const { SimpleProduct } =
+          require("./SimpleProduct") as typeof import("./SimpleProduct");
+        return SimpleProduct.create(data);
+
+      case "variable":
+        const { VariableProduct } =
+          require("./VariableProduct") as typeof import("./VariableProduct");
+        return VariableProduct.create(data);
+
+      case "variation":
+        const { ProductVariation } =
+          require("./ProductVariation") as typeof import("./ProductVariation");
+        return ProductVariation.create(data);
+    }
+
     /* eslint-enable @typescript-eslint/no-require-imports */
   }
 }

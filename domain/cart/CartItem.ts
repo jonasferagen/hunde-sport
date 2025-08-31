@@ -1,4 +1,4 @@
-import type { WcItemPrices, WcItemTotals } from "./pricing";
+import type { CartItemVariation, WcItemPrices, WcItemTotals } from "./misc";
 
 export type CartItemData = {
   key: string;
@@ -11,12 +11,6 @@ export type CartItemData = {
   quantity: number;
   permalink?: string;
   images?: { id: number; src: string; thumbnail?: string }[];
-  // plus any other fields we don't model now
-};
-export type CartItemVariation = {
-  raw_attribute?: string; // e.g. "attribute_pa_farge"
-  attribute: string; // e.g. "farge" or "Størrelse"
-  value: string; // e.g. "Mint", "XXS/XS"
 };
 
 export class CartItem {
@@ -31,19 +25,17 @@ export class CartItem {
   readonly permalink?: string;
   readonly images?: readonly { id: number; src: string; thumbnail?: string }[];
 
-  constructor(raw: CartItemData) {
-    console.log(JSON.stringify(raw, null, 2));
-
-    this.key = raw.key;
-    this.id = raw.id;
-    this.type = raw.type;
-    this.name = raw.name;
-    this.variations = raw.variations ?? [];
-    this.prices = raw.prices;
-    this.totals = raw.totals;
-    this.quantity = raw.quantity;
-    this.permalink = raw.permalink;
-    this.images = raw.images;
+  constructor(data: CartItemData) {
+    this.key = data.key;
+    this.id = data.id;
+    this.type = data.type;
+    this.name = data.name;
+    this.variations = data.variations ?? [];
+    this.prices = data.prices;
+    this.totals = data.totals;
+    this.quantity = data.quantity;
+    this.permalink = data.permalink;
+    this.images = data.images;
   }
 
   /** true when the line is a variation product (most variable parents) */

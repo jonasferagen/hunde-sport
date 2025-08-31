@@ -4,7 +4,7 @@ import { Linking } from "react-native";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { THEME_CTA_CHECKOUT } from "@/config/app";
-import { formatCartItemsTotal } from "@/domain/cart/pricing";
+import { formatCartItemsTotal } from "@/domain/cart/misc";
 import { useCartStore } from "@/stores/cartStore";
 
 export const CheckoutButton = () => {

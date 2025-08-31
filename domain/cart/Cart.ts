@@ -1,6 +1,6 @@
 // domain/Cart/models.ts
 import { CartItem, CartItemData } from "./CartItem";
-import type { WcTotals } from "./pricing";
+import type { WcTotals } from "./misc";
 
 /** Raw variation pair in the cart item payload */
 

@@ -1,5 +1,10 @@
 import { CurrencyHeader, formatPrice } from "../pricing";
 
+export type CartItemVariation = {
+  raw_attribute?: string; // e.g. "attribute_pa_farge"
+  attribute: string; // e.g. "farge" or "Størrelse"
+  value: string; // e.g. "Mint", "XXS/XS"
+};
 // types from your message
 export type WcTotals = CurrencyHeader & {
   total_price: string;
