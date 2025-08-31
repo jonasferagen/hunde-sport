@@ -17,14 +17,14 @@ export class ProductVariation extends Product {
     this.variation = data.variation;
   }
 
-  static fromRaw(raw: ProductData & { variation?: string }): ProductVariation {
-    if (raw.type !== "variation")
-      throw new Error("fromRaw(variation) received non-variation");
-    const base = Product.mapBase(raw, "variation");
+  static create(data: ProductData & { variation?: string }): ProductVariation {
+    if (data.type !== "variation")
+      throw new Error("fromData(variation) received non-variation");
+    const base = Product.mapBase(data, "variation");
     return new ProductVariation({
       ...base,
-      parent: raw.parent,
-      variation: raw.variation,
+      parent: data.parent,
+      variation: data.variation,
     });
   }
 }

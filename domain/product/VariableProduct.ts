@@ -89,19 +89,19 @@ export class VariableProduct extends Product {
     ) as ReadonlySet<number>;
   }
 
-  static fromRaw(
-    raw: ProductData & {
+  static create(
+    data: ProductData & {
       attributes?: AttributeData[];
       variations?: VariationData[];
     }
   ): VariableProduct {
-    if (raw.type !== "variable")
-      throw new Error("fromRaw(variable) received non-variable");
-    const base = Product.mapBase(raw, "variable");
+    if (data.type !== "variable")
+      throw new Error("fromData(variable) received non-variable");
+    const base = Product.mapBase(data, "variable");
     return new VariableProduct({
       ...base,
-      attributes: raw.attributes ?? [],
-      variations: raw.variations ?? [],
+      attributes: data.attributes ?? [],
+      variations: data.variations ?? [],
     });
   }
 
@@ -145,9 +145,9 @@ export class VariableProduct extends Product {
 function attrKeyFromName(name: string): string {
   return cleanHtml(name).toLocaleLowerCase();
 }
-function buildAttributes(raw: AttributeData[]): Map<string, Attribute> {
+function buildAttributes(data: AttributeData[]): Map<string, Attribute> {
   return new Map(
-    (raw ?? []).map((a) => {
+    (data ?? []).map((a) => {
       const key = attrKeyFromName(a.name);
       return [
         key,
@@ -161,9 +161,9 @@ function buildAttributes(raw: AttributeData[]): Map<string, Attribute> {
     })
   );
 }
-function buildTerms(raw: AttributeData[]): Map<string, Term> {
+function buildTerms(data: AttributeData[]): Map<string, Term> {
   const out: [string, Term][] = [];
-  for (const attr of raw ?? []) {
+  for (const attr of data ?? []) {
     const attrKey = attrKeyFromName(attr.name);
     for (const t of attr.terms ?? []) {
       out.push([

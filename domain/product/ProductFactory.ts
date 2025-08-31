@@ -5,15 +5,15 @@ import { ProductVariation } from "./ProductVariation";
 import { SimpleProduct } from "./SimpleProduct";
 import { VariableProduct } from "./VariableProduct";
 
-export function productFromRaw(raw: ProductData): Product {
-  switch (raw.type) {
+export function productFromRaw(data: ProductData): Product {
+  switch (data.type) {
     case "simple":
-      return SimpleProduct.fromRaw(raw);
+      return SimpleProduct.create(data);
     case "variable":
-      return VariableProduct.fromRaw(raw as any);
+      return VariableProduct.create(data as any);
     case "variation":
-      return ProductVariation.fromRaw(raw as any);
+      return ProductVariation.create(data as any);
     default:
-      throw new Error(`Unsupported product type: ${(raw as any).type}`);
+      throw new Error(`Unsupported product type: ${(data as any).type}`);
   }
 }
