@@ -29,7 +29,8 @@ export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
         purchasable.product,
         purchasable.variationSelection,
         purchasable.selectedVariation,
-        { a: "b" }
+        purchasable.customFields, // current CustomField[] with .value set
+        true
       ),
     [purchasable]
   );
@@ -54,7 +55,22 @@ export const ProductCustomizationModalContent = ({
     product.customFields ?? []
   );
 
-  // onDone -> pass `fields` upward; later use CustomField.toCartExtensionsFromFields(fields)
+  const effectivePurchasable = React.useMemo(
+    () =>
+      new Purchasable(
+        purchasable.product,
+        purchasable.variationSelection,
+        purchasable.selectedVariation,
+        fields,
+        true // mark customizing inside modal if you use that flag
+      ),
+    [
+      purchasable.product,
+      purchasable.variationSelection,
+      purchasable.selectedVariation,
+      fields,
+    ]
+  );
 
   const IMAGE_H = 200;
   return (
@@ -88,7 +104,7 @@ export const ProductCustomizationModalContent = ({
       {/* Footer */}
       <ThemedYStack>
         <ThemedYStack mb="$3" />
-        <PurchaseButton purchasable={purchasable} onSuccess={close} />
+        <PurchaseButton purchasable={effectivePurchasable} onSuccess={close} />
       </ThemedYStack>
     </ThemedYStack>
   );

@@ -12,5 +12,4 @@ export * from "@/domain/product/SimpleProduct";
 export * from "@/domain/product/VariableProduct";
 export * from "@/domain/purchasable/Purchasable";
 
-export type PurchasableProduct = VariableProduct | SimpleProduct;
-export type Product = PurchasableProduct | ProductVariation;
+export type Product = SimpleProduct | VariableProduct | ProductVariation;

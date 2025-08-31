@@ -86,7 +86,6 @@ export const ProductVariationsModalContent = ({
       {/* Footer */}
       <ThemedYStack>
         <ThemedYStack mb="$3" />
-        <ThemedText>{purchasable.status.key}</ThemedText>
         <PurchaseButton purchasable={purchasable} onSuccess={close} />
       </ThemedYStack>
     </ThemedYStack>

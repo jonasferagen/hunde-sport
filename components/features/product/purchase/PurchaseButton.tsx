@@ -8,6 +8,7 @@ import {
   XCircle,
 } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
+import type { ThemeName } from "tamagui";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { decidePurchasable } from "@/domain/purchasable/decidePurchasable";
@@ -32,74 +33,85 @@ type Props = {
   onError?: (message?: string) => void;
 };
 
-export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
-  const { purchasable, onSuccess, onError } = props;
-  const { product } = purchasable;
+export const PurchaseButton = React.memo(function PurchaseButton({
+  purchasable,
+  onSuccess,
+  onError,
+}: Props) {
   const decision = decidePurchasable(purchasable);
+  const { theme, iconKey, label } = decision;
+  const icon = ICONS[iconKey] ?? null;
 
   const { isLoading, onPress } = useAddToCart(purchasable, {
     onSuccess,
     onError,
   });
 
-  const handlePress = React.useCallback(() => {
-    if (decision.disabled) return;
-    switch (decision.next) {
-      case "addToCart":
-        onPress();
-        break;
-      case "openVariations":
-        openVariationsNow(purchasable);
-        break;
-      case "openCustomize":
-        openCustomizationNow(purchasable);
-        break;
-      case "noop":
-        break;
-    }
-  }, [decision, purchasable, onPress]);
+  // only show spinner when we're actually adding to cart
+  const loadingForButton = decision.next === "addToCart" ? isLoading : false;
 
-  const { theme, iconKey, label } = decision;
-  const icon = ICONS[iconKey];
+  const handlePress = async () => {
+    if (decision.disabled) return;
+
+    try {
+      switch (decision.next) {
+        case "addToCart":
+          onPress();
+          break;
+        case "openVariations":
+          await openVariationsNow(purchasable);
+          break;
+        case "openCustomize":
+          await openCustomizationNow(purchasable);
+          break;
+        case "noop":
+        default:
+          // do nothing
+          break;
+      }
+    } catch (e) {
+      // bubble any lazy-import/open errors to the UI if provided
+      onError?.(
+        e instanceof Error ? e.message : "Kunne ikke åpne dialogen. Prøv igjen."
+      );
+    }
+  };
+
+  console.log(theme);
 
   return (
     <CallToActionButton
       onPress={handlePress}
       before={icon}
-      theme={theme}
+      theme={theme as ThemeName}
       label={label}
-      after={<PurchaseButtonPriceTag product={product} />}
-      loading={isLoading}
+      after={<PurchaseButtonPriceTag product={purchasable.product as any} />}
+      loading={loadingForButton}
       disabled={decision.disabled}
     />
   );
 });
 
-function openCustomizationNow(purchasable: Purchasable) {
-  // fire-and-forget dynamic import
-  (async () => {
-    const { ProductCustomizationModal } = await import(
-      "@/components/features/purchasable/ProductCustomizationModal"
-    );
-    openModal((_, api) => (
-      <ProductCustomizationModal
-        purchasable={purchasable}
-        close={() => api.close()}
-      />
-    ));
-  })();
+async function openCustomizationNow(purchasable: Purchasable) {
+  const { ProductCustomizationModal } = await import(
+    "@/components/features/purchasable/ProductCustomizationModal"
+  );
+  openModal((_, api) => (
+    <ProductCustomizationModal
+      purchasable={purchasable}
+      close={() => api.close()}
+    />
+  ));
 }
 
-function openVariationsNow(purchasable: Purchasable) {
-  (async () => {
-    const { ProductVariationsModal } = await import(
-      "@/components/features/product-variation/ProductVariationsModal"
-    );
-    openModal((_, api) => (
-      <ProductVariationsModal
-        purchasable={purchasable}
-        close={() => api.close()}
-      />
-    ));
-  })();
+async function openVariationsNow(purchasable: Purchasable) {
+  const { ProductVariationsModal } = await import(
+    "@/components/features/product-variation/ProductVariationsModal"
+  );
+  openModal((_, api) => (
+    <ProductVariationsModal
+      purchasable={purchasable}
+      close={() => api.close()}
+    />
+  ));
 }

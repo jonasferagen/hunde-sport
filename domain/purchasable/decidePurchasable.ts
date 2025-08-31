@@ -1,7 +1,16 @@
 // domain/purchasable/decidePurchasable.ts
 import type { ThemeName } from "tamagui";
 
-import type { Purchasable, PurchasableStatus } from "./Purchasable";
+// pull themes from your existing config
+import {
+  THEME_CTA_BUY,
+  THEME_CTA_OUTOFSTOCK,
+  THEME_CTA_SELECTION_NEEDED,
+  THEME_CTA_UNAVAILABLE,
+  THEME_CTA_VIEW,
+} from "@/config/app";
+
+import type { PurchasableStatus, StatusDescriptor } from "./Purchasable";
 
 export type DecisionNext =
   | "addToCart"
@@ -19,53 +28,55 @@ export type Decision = {
 
 type ConfigEntry = {
   iconKey: string;
-  theme: ThemeName;
-  next?: DecisionNext; // defaults to "noop"
-  disabled?: boolean; // defaults to false
+  theme: ThemeName; // <- use ThemeName; your constants are strings and compatible
+  next?: DecisionNext; // default "noop"
+  disabled?: boolean; // default false
 };
 
-// Strongly-typed config (no runtime undefined)
+// Single source of truth, now driven by config/app constants
 const CONFIG: Record<PurchasableStatus, ConfigEntry> = {
   ready: {
     iconKey: "ShoppingCart",
-    theme: "cta.buy" as ThemeName,
+    theme: THEME_CTA_BUY,
     next: "addToCart",
   },
   select: {
     iconKey: "Boxes",
-    theme: "cta.view" as ThemeName,
+    theme: THEME_CTA_VIEW,
     next: "openVariations",
   },
   select_incomplete: {
     iconKey: "TriangleAlert",
-    theme: "cta.select" as ThemeName,
+    theme: THEME_CTA_SELECTION_NEEDED,
     disabled: true,
   },
   customize: {
     iconKey: "Brush",
-    theme: "cta.view" as ThemeName,
+    theme: THEME_CTA_VIEW,
     next: "openCustomize",
   },
   customize_incomplete: {
     iconKey: "TriangleAlert",
-    theme: "cta.select" as ThemeName,
+    theme: THEME_CTA_SELECTION_NEEDED,
     disabled: true,
   },
   sold_out: {
     iconKey: "CircleAlert",
-    theme: "cta.oos" as ThemeName,
+    theme: THEME_CTA_OUTOFSTOCK,
     disabled: true,
   },
   unavailable: {
     iconKey: "XCircle",
-    theme: "cta.unavailable" as ThemeName,
+    theme: THEME_CTA_UNAVAILABLE,
     disabled: true,
   },
 };
 
-export function decidePurchasable(purchasable: Purchasable): Decision {
+export function decidePurchasable(purchasable: {
+  status: StatusDescriptor;
+}): Decision {
   const { key, label } = purchasable.status;
-  const entry = CONFIG[key]; // key is PurchasableStatus → always present
+  const entry = CONFIG[key];
   return {
     next: entry.next ?? "noop",
     disabled: entry.disabled ?? false,

@@ -1,6 +1,6 @@
-// Purchasable.ts
+// domain/purchasable/Purchasable.ts
 import { AddItemOptions } from "@/stores/cartStore";
-import { PurchasableProduct } from "@/types";
+import { SimpleProduct, VariableProduct } from "@/types";
 
 import { CustomField } from "../extensions/CustomField";
 import { Product } from "../product/Product";
@@ -8,6 +8,7 @@ import { ProductVariation } from "../product/ProductVariation";
 import { VariationSelection } from "../product/VariationSelection";
 
 export type StatusDescriptor = { key: PurchasableStatus; label: string };
+export type PurchasableProduct = SimpleProduct | VariableProduct;
 
 export type PurchasableStatus =
   | "ready"
@@ -33,6 +34,8 @@ export type PurchasableData = {
   variationSelection?: VariationSelection;
   selectedVariation?: ProductVariation;
   customFields?: CustomField[];
+  /** UI hint: inside customization UI, treat customization as satisfied */
+  customizationSatisfiedHint?: boolean;
 };
 
 export class Purchasable {
@@ -40,77 +43,85 @@ export class Purchasable {
   readonly variationSelection?: VariationSelection;
   readonly selectedVariation?: ProductVariation;
   readonly customFields?: CustomField[];
+  readonly customizationSatisfiedHint: boolean;
 
   constructor(
     product: Product,
     variationSelection?: VariationSelection,
     selectedVariation?: ProductVariation,
-    customFields?: CustomField[]
+    customFields?: CustomField[],
+    customizationSatisfiedHint: boolean = false
   ) {
     this.product = product;
     this.variationSelection = variationSelection;
     this.selectedVariation = selectedVariation;
     this.customFields = customFields;
+    this.customizationSatisfiedHint = customizationSatisfiedHint;
   }
 
-  /** Immutable updater for UI convenience */
+  /** Optional convenience when building for the customization modal */
+  withCustomizationSatisfied(): Purchasable {
+    return new Purchasable(
+      this.product,
+      this.variationSelection,
+      this.selectedVariation,
+      this.customFields,
+      true
+    );
+  }
 
   get hasCustomFields(): boolean {
     return this.product.hasCustomFields;
   }
 
-  /** Has the user entered any custom values yet? (non-empty strings) */
+  /** Any non-empty custom values entered? */
   get hasAnyCustomValues(): boolean {
+    const arr = this.customFields ?? [];
+    for (const f of arr) {
+      if (typeof f?.value === "string" && f.value.trim().length > 0)
+        return true;
+    }
     return false;
   }
 
-  /** Should the UI *offer* a customization step before add-to-cart? */
+  /** Offer customization before add-to-cart? */
   get needsCustomization(): boolean {
-    // You can tighten this later (e.g., gate if any required fields exist)
-    return this.hasCustomFields && !this.hasAnyCustomValues;
+    return (
+      this.hasCustomFields &&
+      !this.hasAnyCustomValues &&
+      !this.customizationSatisfiedHint
+    );
   }
 
-  /** Internal: compute status key from current state */
   private resolveStatusKey(): PurchasableStatus {
     const { availability } = this.product;
 
     if (!availability.isInStock) return "sold_out";
     if (!availability.isPurchasable) return "unavailable";
 
-    // 1) Variations first (must be resolvable)
     if (this.product.isVariable) {
       if (!this.variationSelection) return "select";
       if (!this.selectedVariation) return "select_incomplete";
     }
 
-    // 2) Then custom fields (if any)
-    if (this.needsCustomization) {
-      return "customize";
-    }
+    if (this.needsCustomization) return "customize";
 
     return "ready";
   }
 
-  /** Public status descriptor (key + display label) */
   get status(): StatusDescriptor {
     const key = this.resolveStatusKey();
     let label = DEFAULT_STATUS_LABEL[key];
-
-    // Preserve your “select_incomplete” message override
     if (key === "select_incomplete" && this.variationSelection) {
-      const msg = this.variationSelection.message();
+      const msg = this.variationSelection.message?.();
       if (msg) label = msg;
     }
-
     return { key, label };
   }
 
   validate(): void {
+    if (this.status.key === "ready") return;
     const { product, status } = this;
-
-    // Only allow READY through
-    if (status.key === "ready") return;
-
     throw new Error(
       `Invalid state for add-to-cart: ${status.key} (id=${product.id}, name=${product.name}, type=${product.type})`
     );
@@ -125,13 +136,13 @@ export class Purchasable {
           .map(([attribute, value]) => ({ attribute, value: value as string }))
       : [];
 
-    //    const ext = CustomField.toCartExtensions(this.customValues); // may be undefined
+    const ext = CustomField.toCartExtensions(this.customFields);
 
     if (this.product.isSimple) {
       return {
         id: this.product.id,
         quantity,
-        //  ...(ext ? { extensions: ext.extensions } : {}),
+        ...(ext ? { extensions: ext.extensions } : {}),
       };
     }
 
@@ -139,7 +150,7 @@ export class Purchasable {
       id: this.product.id,
       quantity,
       variation,
-      //    ...(ext ? { extensions: ext.extensions } : {}),
+      ...(ext ? { extensions: ext.extensions } : {}),
     };
   }
 }

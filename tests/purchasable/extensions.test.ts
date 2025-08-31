@@ -1,8 +1,9 @@
 // tests/purchasable/extensions.test.ts
+import { CustomField } from "@/domain/extensions/CustomField";
 import { Product } from "@/domain/product/Product";
 import { Purchasable } from "@/domain/purchasable/Purchasable";
 
-// helper to make a simple product with customFields present
+// helper to make a simple product that has one custom field
 function simpleWithCustomFields(): Product {
   return Product.create({
     id: 123,
@@ -28,26 +29,45 @@ function simpleWithCustomFields(): Product {
     is_in_stock: true,
     is_purchasable: true,
     images: [],
+    // Important: product advertises custom fields
     extensions: { app_fpf: { fields: [{ key: "line_1", label: "Linje 1" }] } },
   } as any);
 }
 
 describe("Purchasable.toCartItem() with extensions", () => {
   const product = simpleWithCustomFields();
-  test("omits extensions when no custom values", () => {
-    const purchasable = new Purchasable(product, undefined, undefined, {});
-    expect(purchasable.status.key).toBe("ready");
-    const item = purchasable.toCartItem(1);
-    expect(item.extensions).toBeUndefined();
+
+  test("without values → status is 'customize'; toCartItem requires hint or values", () => {
+    const purch = new Purchasable(product, undefined, undefined, []); // no values
+    expect(purch.status.key).toBe("customize");
   });
 
-  test("toCartItem includes extensions when custom values provided", () => {
-    const withVals = new Purchasable(product, undefined, undefined, {
-      line_1: "BELLA",
-    });
-    expect(withVals.status.key).toBe("ready");
-    const item = withVals.toCartItem(1);
+  test("omits extensions when no custom values (using modal hint to allow checkout)", () => {
+    // in the customization modal we set the hint=true so the CTA is ready even if fields are optional/empty
+    const purchInModal = new Purchasable(
+      product,
+      undefined,
+      undefined,
+      [],
+      true
+    );
+    expect(purchInModal.status.key).toBe("ready");
 
+    const item = purchInModal.toCartItem(1);
+    expect(item).toMatchObject({ id: 123, quantity: 1 });
+    expect((item as any).extensions).toBeUndefined();
+  });
+
+  test("includes extensions when custom values provided", () => {
+    const fields = [
+      CustomField.create({ key: "line_1", label: "Linje 1" }).setValue("BELLA"),
+    ];
+
+    const purch = new Purchasable(product, undefined, undefined, fields);
+    // now we have a non-empty value → ready
+    expect(purch.status.key).toBe("ready");
+
+    const item = purch.toCartItem(1);
     expect(item.extensions?.app_fpf?.values).toEqual({ line_1: "BELLA" });
   });
 });
