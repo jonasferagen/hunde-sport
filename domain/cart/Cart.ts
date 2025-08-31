@@ -61,7 +61,7 @@ export class Cart {
   }
 
   /** build domain Cart from raw API payload */
-  static fromRaw(raw: CartData, token: string): Cart {
+  static create(raw: CartData, token: string): Cart {
     const items = (raw.items ?? []).map((i) => new CartItem(i));
     return new Cart(
       items,
@@ -110,4 +110,16 @@ export class Cart {
     const items = this.items.filter((it) => it.key !== key);
     return this.withItems(items);
   }
+}
+
+// domain/cart/cartExtensions.ts
+export type FpfValues = Record<string, string>;
+
+export function getFpfValuesFromLineItem(lineItem: any): FpfValues | undefined {
+  return lineItem?.extensions?.app_fpf?.values;
+}
+
+export function hasAnyFpfValues(lineItem: any): boolean {
+  const vals = getFpfValuesFromLineItem(lineItem);
+  return !!vals && Object.keys(vals).length > 0;
 }
