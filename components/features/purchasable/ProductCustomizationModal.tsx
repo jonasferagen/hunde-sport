@@ -3,6 +3,7 @@ import { X } from "@tamagui/lucide-icons";
 import React from "react";
 import { ScrollView } from "tamagui";
 
+import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import {
   ThemedButton,
   ThemedText,
@@ -13,9 +14,7 @@ import { CustomField } from "@/domain/extensions/CustomField";
 import { Purchasable } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
-import { PurchaseButton } from "../product/purchase/PurchaseButton";
 import { ProductCustomizationForm } from "./ProductCustomizationForm";
-
 type Props = {
   purchasable: Purchasable;
   close: () => void;

@@ -1,18 +1,15 @@
 // components/product/purchase/PurchaseFlow.tsx
 import React from "react";
 
-import { ProductVariationsModal } from "@/components/features/product-variation/ProductVariationsModal";
-import { ProductCustomizationModal } from "@/components/features/purchasable/ProductCustomizationModal";
 import { CustomField } from "@/domain/extensions/CustomField";
 import type { ProductVariation } from "@/domain/product/ProductVariation";
 import type { VariationSelection } from "@/domain/product/VariationSelection";
 import { Purchasable, PurchasableData } from "@/domain/purchasable/Purchasable";
-import { openModal } from "@/stores/ui/modalStore";
 
 import { PurchaseButton } from "./PurchaseButton";
 
 type Props = PurchasableData & {
-  onChange?: (next: Purchasable) => void; // optional observer
+  onSuccess?: () => void; // optional observer
 };
 
 export function PurchaseFlow({
@@ -20,7 +17,7 @@ export function PurchaseFlow({
   variationSelection: initialSelection,
   selectedVariation: initialSelectedVar,
   customFields: initialCustomFields,
-  onChange,
+  onSuccess,
 }: Props) {
   // UI-driven state (not domain):
   const [selection, setSelection] = React.useState<
@@ -39,44 +36,5 @@ export function PurchaseFlow({
     [product, selection, selectedVar, customFields]
   );
 
-  const onOpenVariations = React.useCallback(() => {
-    openModal((_, api) => (
-      <ProductVariationsModal
-        purchasable={purchasable}
-        close={() => api.close()}
-        // NEW: let the modal return the new selection + resolved variation
-        onDone={(
-          nextSelection: VariationSelection,
-          resolved?: ProductVariation
-        ) => {
-          setSelection(nextSelection);
-          setSelectedVar(resolved);
-          api.close();
-        }}
-      />
-    ));
-  }, [purchasable]);
-
-  const onOpenCustomize = React.useCallback(() => {
-    openModal((_, api) => (
-      <ProductCustomizationModal
-        purchasable={purchasable}
-        customFields={customFields}
-        close={() => api.close()}
-        // NEW: let the modal return the updated custom values
-        onDone={(customFields: CustomField[]) => {
-          setCustomFields(customFields);
-          api.close();
-        }}
-      />
-    ));
-  }, [purchasable, customFields]);
-
-  return (
-    <PurchaseButton
-      purchasable={purchasable}
-      onOpenVariations={onOpenVariations}
-      onOpenCustomize={onOpenCustomize}
-    />
-  );
+  return <PurchaseButton purchasable={purchasable} onSuccess={onSuccess} />;
 }

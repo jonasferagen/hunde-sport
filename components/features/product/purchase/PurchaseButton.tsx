@@ -8,7 +8,6 @@ import {
   XCircle,
 } from "@tamagui/lucide-icons";
 import React, { JSX } from "react";
-import type { ThemeName } from "tamagui";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
@@ -25,6 +24,7 @@ import {
 } from "@/domain/purchasable/decidePurchasable";
 import { Purchasable } from "@/domain/purchasable/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { openModal } from "@/stores/ui/modalStore";
 import type { SimpleProduct, VariableProduct } from "@/types";
 
 import { ProductPrice } from "../display";
@@ -75,15 +75,12 @@ function PriceTag({ product }: { product: SimpleProduct | VariableProduct }) {
 
 type Props = {
   purchasable: Purchasable;
-  onOpenVariations?: () => void;
-  onOpenCustomize?: () => void;
   onSuccess?: () => void;
   onError?: (message?: string) => void;
 };
 
 export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
-  const { purchasable, onOpenVariations, onOpenCustomize, onSuccess, onError } =
-    props;
+  const { purchasable, onSuccess, onError } = props;
 
   const { isLoading, onPress } = useAddToCart(purchasable, {
     onSuccess,
@@ -95,8 +92,9 @@ export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
     purchasable.status.label,
     UI_BY_STATUS
   );
-  const icon = ICONS[decision.iconKey] ?? null;
-  const theme = decision.theme as ThemeName;
+
+  const { theme, label, iconKey } = decision;
+  const icon = ICONS[iconKey] ?? null;
 
   const handlePress = React.useCallback(() => {
     if (decision.disabled) return;
@@ -105,22 +103,22 @@ export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
         onPress();
         break;
       case "openVariations":
-        onOpenVariations?.();
+        openVariationsNow(purchasable);
         break;
       case "openCustomize":
-        onOpenCustomize?.();
+        openCustomizationNow(purchasable);
         break;
       case "noop":
         break;
     }
-  }, [decision, onOpenVariations, onOpenCustomize, onPress]);
+  }, [decision, purchasable, onPress]);
 
   return (
     <CallToActionButton
       onPress={handlePress}
       before={icon}
       theme={theme}
-      label={decision.label}
+      label={label}
       after={
         <PriceTag
           product={purchasable.product as SimpleProduct | VariableProduct}
@@ -131,3 +129,32 @@ export const PurchaseButton = React.memo(function PurchaseButton(props: Props) {
     />
   );
 });
+
+function openCustomizationNow(purchasable: Purchasable) {
+  // fire-and-forget dynamic import
+  (async () => {
+    const { ProductCustomizationModal } = await import(
+      "@/components/features/purchasable/ProductCustomizationModal"
+    );
+    openModal((_, api) => (
+      <ProductCustomizationModal
+        purchasable={purchasable}
+        close={() => api.close()}
+      />
+    ));
+  })();
+}
+
+function openVariationsNow(purchasable: Purchasable) {
+  (async () => {
+    const { ProductVariationsModal } = await import(
+      "@/components/features/product-variation/ProductVariationsModal"
+    );
+    openModal((_, api) => (
+      <ProductVariationsModal
+        purchasable={purchasable}
+        close={() => api.close()}
+      />
+    ));
+  })();
+}

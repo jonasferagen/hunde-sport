@@ -2,6 +2,7 @@
 import { X } from "@tamagui/lucide-icons";
 import { ScrollView } from "tamagui";
 
+import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import {
   ThemedButton,
   ThemedText,
@@ -18,9 +19,7 @@ import { useProductVariations } from "@/hooks/data/Product";
 import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
-import { PurchaseFlow } from "../product/purchase/PurchaseFlow";
 import { ProductVariationSelect } from "./ProductVariationSelect";
-
 type Props = {
   purchasable: Purchasable;
   close: () => void;
@@ -88,7 +87,7 @@ export const ProductVariationsModalContent = ({
       <ThemedYStack>
         <ThemedYStack mb="$3" />
         <ThemedText>{purchasable.status.key}</ThemedText>
-        <PurchaseFlow {...purchasable} />
+        <PurchaseButton purchasable={purchasable} onSuccess={close} />
       </ThemedYStack>
     </ThemedYStack>
   );

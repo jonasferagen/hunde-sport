@@ -1,3 +1,5 @@
+import { ThemeName } from "tamagui";
+
 export type PurchasableStatus =
   | "ready"
   | "select"
@@ -13,32 +15,32 @@ export type Decision =
       label: string;
       disabled: boolean;
       iconKey: string;
-      theme: string;
+      theme: ThemeName;
     }
   | {
       next: "openVariations";
       label: string;
       disabled: boolean;
       iconKey: string;
-      theme: string;
+      theme: ThemeName;
     }
   | {
       next: "openCustomize";
       label: string;
       disabled: boolean;
       iconKey: string;
-      theme: string;
+      theme: ThemeName;
     }
   | {
       next: "noop";
       label: string;
       disabled: boolean;
       iconKey: string;
-      theme: string;
+      theme: ThemeName;
     };
 
 // Keep UI config here but as *names*, not JSX
-export type UIConf = { iconKey: string; theme: string };
+export type UIConf = { iconKey: string; theme: ThemeName };
 export type UIByStatus = Record<PurchasableStatus, UIConf>;
 
 export function decidePurchasable(
