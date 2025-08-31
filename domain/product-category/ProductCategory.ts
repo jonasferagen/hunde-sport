@@ -21,7 +21,7 @@ interface IProductCategory {
   count: number;
 }
 
-export class ProductCategory {
+export class ProductCategory implements IProductCategory {
   readonly id: number;
   readonly name: string;
   readonly parent: number;

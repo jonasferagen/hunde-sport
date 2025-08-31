@@ -2,37 +2,19 @@ import { capitalize, cleanHtml } from "@/lib/format";
 import { intersectSets } from "@/lib/util";
 
 import { Product, type ProductData } from "./Product";
-
-export type AttributeTermData = { id: number; name: string; slug: string };
-export type AttributeData = {
-  id: number;
-  name: string;
-  taxonomy: string;
-  has_variations: boolean;
-  terms: AttributeTermData[];
-};
-export type VariationRefData = {
-  id: number;
-  attributes: { name: string; value: string }[];
-};
-
-export type Attribute = {
-  key: string;
-  label: string;
-  taxonomy: string;
-  has_variations: boolean;
-};
-export type Term = { key: string; label: string; attribute: string };
-export type Variation = {
-  key: number;
-  options: { term: string; attribute: string }[];
-};
+import {
+  Attribute,
+  AttributeData,
+  Term,
+  Variation,
+  VariationData,
+} from "./ProductAttributes";
 
 const EMPTY_SET: ReadonlySet<number> = Object.freeze(new Set<number>());
 
 export class VariableProduct extends Product {
   readonly rawAttributes: AttributeData[];
-  readonly rawVariations: VariationRefData[];
+  readonly rawVariations: VariationData[];
   readonly attributes: Map<string, Attribute>;
   readonly terms: Map<string, Term>;
   readonly variations: Variation[];
@@ -45,7 +27,7 @@ export class VariableProduct extends Product {
   private constructor(
     base: ReturnType<typeof Product.mapBase> & {
       attributes: AttributeData[];
-      variations: VariationRefData[];
+      variations: VariationData[];
     }
   ) {
     if (base.type !== "variable")
@@ -110,7 +92,7 @@ export class VariableProduct extends Product {
   static fromRaw(
     raw: ProductData & {
       attributes?: AttributeData[];
-      variations?: VariationRefData[];
+      variations?: VariationData[];
     }
   ): VariableProduct {
     if (raw.type !== "variable")
@@ -200,7 +182,7 @@ function buildTerms(raw: AttributeData[]): Map<string, Term> {
 // VariableProduct.ts
 
 function buildVariations(
-  raw: VariationRefData[],
+  raw: VariationData[],
   attributes: Map<string, Attribute>,
   terms: Map<string, Term>
 ): Variation[] {

@@ -1,17 +1,21 @@
 // domain/product/Product.ts
-import {
-  CustomField,
-  type CustomFieldData,
-} from "@/domain/custom-fields/CustomField";
+import { CustomField, CustomFieldData } from "@/domain/extensions/CustomField";
 import { ProductPrices } from "@/domain/pricing";
 import { StoreImage, StoreImageData } from "@/domain/store-image/StoreImage";
 import { cleanHtml } from "@/lib/format";
 
-export interface CategoryRef {
+export interface CategoryRefData {
   id: number;
   name: string;
   slug: string;
   link: string;
+}
+
+export interface ProductAvailability {
+  isInStock: boolean;
+  isPurchasable: boolean;
+  isOnSale: boolean;
+  isOnBackOrder: boolean;
 }
 
 export type ProductData = {
@@ -22,7 +26,7 @@ export type ProductData = {
   description: string;
   short_description: string;
   images: StoreImageData[];
-  categories: CategoryRef[];
+  categories: CategoryRefData[];
   prices: ProductPrices;
   on_sale: boolean;
   featured: boolean;
@@ -31,7 +35,7 @@ export type ProductData = {
   is_on_backorder: boolean;
   parent: number;
   type: IProduct["type"];
-  extensions?: {
+  extensions: {
     app_fpf?: {
       fields?: CustomFieldData[];
     };
@@ -48,14 +52,16 @@ interface IProduct {
   on_sale: boolean;
   prices: ProductPrices;
   images: StoreImage[];
-  categories: CategoryRef[];
+  categories: CategoryRefData[];
   is_purchasable: boolean;
   is_in_stock: boolean;
   is_on_backorder: boolean;
   featured: boolean;
   parent: number;
   type: "simple" | "variable" | "variation";
-  customFields: CustomField[];
+  extensions: {
+    customFields?: CustomField[];
+  };
 }
 
 export abstract class Product implements IProduct {
@@ -72,11 +78,13 @@ export abstract class Product implements IProduct {
   readonly is_in_stock: boolean;
   readonly is_purchasable: boolean;
   readonly is_on_backorder: boolean;
-  readonly categories: CategoryRef[];
+  readonly categories: CategoryRefData[];
   readonly type: "simple" | "variable" | "variation";
   readonly parent: number;
 
-  readonly _customFields: CustomField[];
+  readonly extensions: {
+    customFields?: CustomField[];
+  };
 
   protected constructor(data: IProduct) {
     this.id = data.id;
@@ -95,13 +103,13 @@ export abstract class Product implements IProduct {
     this.categories = data.categories;
     this.type = data.type;
     this.parent = data.parent;
-    this._customFields = data.customFields;
+    this.extensions = data.extensions;
   }
 
   get featuredImage(): StoreImage {
     return this.images[0];
   }
-  get availability() {
+  get availability(): ProductAvailability {
     return {
       isInStock: this.is_in_stock,
       isPurchasable: this.is_purchasable,
@@ -119,33 +127,35 @@ export abstract class Product implements IProduct {
     return this.type === "variation";
   }
   get customFields(): CustomField[] {
-    return this._customFields;
+    return this.extensions?.customFields ?? [];
   }
   get hasCustomFields(): boolean {
-    return this._customFields.length > 0;
+    return this.customFields.length > 0;
   }
 
-  static mapBase(json: ProductData, forceType: ProductData["type"]): IProduct {
+  static mapBase(raw: ProductData, forceType: ProductData["type"]): IProduct {
     return {
-      id: json.id,
-      name: json.name,
-      slug: json.slug,
-      permalink: json.permalink,
-      description: json.description ?? "",
-      short_description: json.short_description ?? "",
-      images: (json.images ?? [StoreImage.DEFAULT]).map(StoreImage.create),
-      categories: json.categories,
-      prices: json.prices,
-      on_sale: json.on_sale ?? false,
-      featured: json.featured ?? false,
-      is_in_stock: json.is_in_stock ?? false,
-      is_purchasable: json.is_purchasable ?? false,
-      is_on_backorder: json.is_on_backorder ?? false,
-      parent: json.parent,
+      id: raw.id,
+      name: raw.name,
+      slug: raw.slug,
+      permalink: raw.permalink,
+      description: raw.description ?? "",
+      short_description: raw.short_description ?? "",
+      images: (raw.images ?? [StoreImage.DEFAULT]).map(StoreImage.create),
+      categories: raw.categories,
+      prices: raw.prices,
+      on_sale: raw.on_sale ?? false,
+      featured: raw.featured ?? false,
+      is_in_stock: raw.is_in_stock ?? false,
+      is_purchasable: raw.is_purchasable ?? false,
+      is_on_backorder: raw.is_on_backorder ?? false,
+      parent: raw.parent,
       type: forceType,
-      customFields: CustomField.listFromRaw(
-        json.extensions?.app_fpf?.fields ?? []
-      ),
+      extensions: {
+        customFields: (raw.extensions?.app_fpf?.fields ?? [])
+          .map(CustomField.create)
+          .filter((f) => !!f),
+      },
     };
   }
 

@@ -30,6 +30,8 @@ export const ProductVariationsModal = ({ close, purchasable }: Props) => {
   const { isLoading, items: productVariations } =
     useProductVariations(variableProduct);
 
+  console.log(variableProduct.extensions);
+
   return (
     <VariableProductProvider
       variableProduct={variableProduct}

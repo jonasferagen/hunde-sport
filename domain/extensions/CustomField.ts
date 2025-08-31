@@ -1,14 +1,6 @@
 // domain/custom-fields/CustomField.ts
 import { cleanHtml } from "@/lib/format";
 
-export type CustomFieldData = {
-  key?: string;
-  label?: string;
-  required?: boolean;
-  maxlen?: number;
-  lines?: number;
-};
-
 interface ICustomField {
   key: string;
   label: string;
@@ -16,6 +8,14 @@ interface ICustomField {
   maxlen: number;
   lines: number;
 }
+
+export type CustomFieldData = {
+  key?: string;
+  label?: string;
+  required?: boolean;
+  maxlen?: number;
+  lines?: number;
+};
 
 export class CustomField implements ICustomField {
   readonly key: string;
@@ -32,8 +32,7 @@ export class CustomField implements ICustomField {
     this.lines = data.lines;
   }
 
-  static create(raw: CustomFieldData): CustomField | null {
-    if (!raw?.key) return null;
+  static create(raw: CustomFieldData): CustomField {
     return new CustomField({
       key: String(raw.key),
       label: typeof raw.label === "string" ? raw.label : String(raw.key),
@@ -41,16 +40,6 @@ export class CustomField implements ICustomField {
       maxlen: typeof raw.maxlen === "number" ? raw.maxlen : 40,
       lines: typeof raw.lines === "number" ? raw.lines : 1,
     });
-  }
-
-  static listFromRaw(rawList?: CustomFieldData[] | null): CustomField[] {
-    if (!Array.isArray(rawList)) return [];
-    const out: CustomField[] = [];
-    for (const r of rawList) {
-      const f = CustomField.create(r);
-      if (f) out.push(f);
-    }
-    return out;
   }
 
   get isSingleLine(): boolean {
