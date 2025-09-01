@@ -63,20 +63,16 @@ add_action('wp', function () {
                 $variation    = is_array( $item['variation'] ?? null ) ? $item['variation'] : [];
             
                 $cart_item_data = [];
-            
-                // Safely carry extension values (e.g., Flexible Product Fields)
-                if (
-                    isset($item['extensions']) && is_array($item['extensions']) &&
-                    isset($item['extensions']['app_fpf']) && is_array($item['extensions']['app_fpf']) &&
-                    isset($item['extensions']['app_fpf']['values'])
-                ) {
-                    $values = $item['extensions']['app_fpf']['values'];
-                    // wc_clean() is recursive; no need for array_map
-                    $values = wc_clean( $values );
-                    if ( is_array($values) ) {
-                        $cart_item_data['app_fpf'] = $values;
+
+                // Carry ALL extension values generically
+                if ( isset($item['extensions']) && is_array($item['extensions']) ) {
+                    foreach ( $item['extensions'] as $ns => $payload ) {
+                        if ( is_array($payload) && isset($payload['values']) && is_array($payload['values']) ) {
+                            $cart_item_data[ $ns ] = wc_clean( $payload['values'] ); // recursive clean
+                        }
                     }
                 }
+                
             
                 // Add to cart; if fails, skip rather than fatally breaking checkout
                 $added = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation, $cart_item_data );
