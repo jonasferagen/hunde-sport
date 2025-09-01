@@ -28,7 +28,6 @@
     "types",
     "index.ts",
     "index.tsx",
-    "App.tsx",
     "expo-env.d.ts",
     ".expo/types/**/*.ts",
     "tests"

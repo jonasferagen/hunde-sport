@@ -1,11 +1,11 @@
-import { SimpleProduct, VariableProduct } from "@/types";
+// @domain/purchasable/Purchasable.ts
+import { CustomField } from "@/domain/CustomField";
+import { Product } from "@/domain/product/Product";
+import { ProductVariation } from "@/domain/product/ProductVariation";
+import { VariationSelection } from "@/domain/product/VariationSelection";
+import type { AddItemOptions } from "@/hooks/data/Cart/api";
+import type { SimpleProduct, VariableProduct } from "@/types";
 
-import { CustomField } from "./CustomField";
-import { Product } from "./product/Product";
-import { ProductVariation } from "./product/ProductVariation";
-import { VariationSelection } from "./product/VariationSelection";
-
-export type StatusDescriptor = { key: PurchasableStatus; label: string };
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 
 export type PurchasableStatus =
@@ -17,6 +17,8 @@ export type PurchasableStatus =
   | "sold_out"
   | "unavailable";
 
+export type StatusDescriptor = { key: PurchasableStatus; label: string };
+
 export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
   ready: "Kjøp",
   select: "Se varianter",
@@ -25,22 +27,14 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
   customize_incomplete: "Fyll inn påkrevde felt",
   sold_out: "Utsolgt",
   unavailable: "Ikke tilgjengelig",
-};
-
-export type PurchasableData = {
-  product: PurchasableProduct;
-  variationSelection?: VariationSelection;
-  selectedVariation?: ProductVariation;
-  customFields?: CustomField[];
-  /** UI hint: inside customization UI, treat customization as satisfied */
-  customizationSatisfiedHint?: boolean;
-};
+} as const;
 
 export class Purchasable {
   readonly product: Product;
   readonly variationSelection?: VariationSelection;
   readonly selectedVariation?: ProductVariation;
   readonly customFields?: CustomField[];
+  /** UI hint: inside customization UI, treat customization as satisfied */
   readonly customizationSatisfiedHint: boolean;
 
   constructor(
@@ -48,7 +42,7 @@ export class Purchasable {
     variationSelection?: VariationSelection,
     selectedVariation?: ProductVariation,
     customFields?: CustomField[],
-    customizationSatisfiedHint: boolean = false
+    customizationSatisfiedHint = false
   ) {
     this.product = product;
     this.variationSelection = variationSelection;
@@ -57,7 +51,6 @@ export class Purchasable {
     this.customizationSatisfiedHint = customizationSatisfiedHint;
   }
 
-  /** Optional convenience when building for the customization modal */
   withCustomizationSatisfied(): Purchasable {
     return new Purchasable(
       this.product,
@@ -76,8 +69,9 @@ export class Purchasable {
   get hasAnyCustomValues(): boolean {
     const arr = this.customFields ?? [];
     for (const f of arr) {
-      if (typeof f?.value === "string" && f.value.trim().length > 0)
-        return true;
+      const v = f?.value;
+      if (typeof v === "string" && v.trim().length > 0) return true;
+      if (typeof v === "number" && Number.isFinite(v)) return true;
     }
     return false;
   }
@@ -128,6 +122,7 @@ export class Purchasable {
   toCartItem(quantity = 1): AddItemOptions {
     this.validate();
 
+    // Ensure stable, non-null variation attributes
     const variation = this.variationSelection
       ? [...this.variationSelection]
           .filter(([, term]) => term != null)
@@ -151,91 +146,4 @@ export class Purchasable {
       ...(ext ? { extensions: ext.extensions } : {}),
     };
   }
-}
-
-// domain/purchasable/decidePurchasable.ts
-import type { ThemeName } from "tamagui";
-
-// pull themes from your existing config
-import {
-  THEME_CTA_BUY,
-  THEME_CTA_OUTOFSTOCK,
-  THEME_CTA_SELECTION_NEEDED,
-  THEME_CTA_UNAVAILABLE,
-  THEME_CTA_VIEW,
-} from "@/config/app";
-import { AddItemOptions } from "@/hooks/data/Cart/api";
-
-export type DecisionNext =
-  | "addToCart"
-  | "openVariations"
-  | "openCustomize"
-  | "noop";
-
-export type Decision = {
-  next: DecisionNext;
-  disabled: boolean;
-  iconKey: string;
-  theme: ThemeName;
-  label: string;
-};
-
-type ConfigEntry = {
-  iconKey: string;
-  theme: ThemeName; // <- use ThemeName; your constants are strings and compatible
-  next?: DecisionNext; // default "noop"
-  disabled?: boolean; // default false
-};
-
-// Single source of truth, now driven by config/app constants
-const CONFIG: Record<PurchasableStatus, ConfigEntry> = {
-  ready: {
-    iconKey: "ShoppingCart",
-    theme: THEME_CTA_BUY,
-    next: "addToCart",
-  },
-  select: {
-    iconKey: "Boxes",
-    theme: THEME_CTA_VIEW,
-    next: "openVariations",
-  },
-  select_incomplete: {
-    iconKey: "TriangleAlert",
-    theme: THEME_CTA_SELECTION_NEEDED,
-    disabled: true,
-  },
-  customize: {
-    iconKey: "Brush",
-    theme: THEME_CTA_VIEW,
-    next: "openCustomize",
-  },
-  customize_incomplete: {
-    iconKey: "TriangleAlert",
-    theme: THEME_CTA_SELECTION_NEEDED,
-    disabled: true,
-  },
-  sold_out: {
-    iconKey: "CircleAlert",
-    theme: THEME_CTA_OUTOFSTOCK,
-    disabled: true,
-  },
-  unavailable: {
-    iconKey: "XCircle",
-    theme: THEME_CTA_UNAVAILABLE,
-    disabled: true,
-  },
-};
-
-export function decidePurchasable(purchasable: {
-  status: StatusDescriptor;
-}): Decision {
-  const { key, label } = purchasable.status;
-  const entry = CONFIG[key];
-  return {
-    next: entry.next ?? "noop",
-    disabled: entry.disabled ?? false,
-    iconKey: entry.iconKey,
-    theme: entry.theme,
-    label,
-  };
 }

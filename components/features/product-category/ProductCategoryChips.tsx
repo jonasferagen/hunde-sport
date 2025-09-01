@@ -3,7 +3,7 @@ import React from "react";
 import { Chip } from "@/components/ui/chips/Chip";
 import { ThemedXStack } from "@/components/ui/themed-components";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { CategoryRefData, ProductCategory } from "@/types";
+import { type CategoryRefData, ProductCategory } from "@/types";
 
 export const ProductCategoryChips = React.memo(function ProductCategoryChips({
   categoryRefs,

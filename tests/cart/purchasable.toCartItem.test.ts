@@ -104,6 +104,7 @@ describe("Purchasable.toCartItem()", () => {
     expect(() => p.toCartItem(1)).toThrow();
     try {
       p.toCartItem(1);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e: any) {}
   });
 });

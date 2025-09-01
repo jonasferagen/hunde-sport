@@ -1,13 +1,10 @@
 // tests/purchasable/decidePurchasable.behavior.test.ts
 
-import {
-  decidePurchasable,
-  type PurchasableStatus,
-} from "@/domain/Purchasable";
+import { decidePurchasable } from "@/components/features/product/purchase/ctaDecision";
+import type { PurchasableStatus } from "@/domain/Purchasable";
 
 function D(key: PurchasableStatus, label = "Label") {
-  const purch = { status: { key, label } } as any; // minimal shape
-  return decidePurchasable(purch);
+  return decidePurchasable({ key, label }); // <-- pass StatusDescriptor directly
 }
 
 describe("decidePurchasable (behavioral)", () => {

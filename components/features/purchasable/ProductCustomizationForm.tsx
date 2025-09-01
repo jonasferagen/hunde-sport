@@ -7,7 +7,7 @@ import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui/themed-components";
-import type { CustomField } from "@/domain/extensions/CustomField";
+import type { CustomField } from "@/domain/CustomField";
 
 type Props = {
   fields: CustomField[]; // initial fields (from Purchasable.product.customFields)

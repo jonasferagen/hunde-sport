@@ -64,10 +64,61 @@ describe("Purchasable.toCartItem() with extensions", () => {
     ];
 
     const purch = new Purchasable(product, undefined, undefined, fields);
+
     // now we have a non-empty value → ready
     expect(purch.status.key).toBe("ready");
 
     const item = purch.toCartItem(1);
     expect(item.extensions?.app_fpf?.values).toEqual({ line_1: "BELLA" });
+  });
+
+  test("Customization hint allows add-to-cart but omits extensions", () => {
+    const fields: any[] = []; // no values
+    const purch = new Purchasable(product, undefined, undefined, fields, true);
+    expect(purch.status.key).toBe("ready");
+    expect(purch.toCartItem(1)).toEqual({ id: 123, quantity: 1 });
+  });
+
+  test("Numeric custom field values count as “has value”", () => {
+    const fields = [
+      CustomField.create({ key: "num", label: "Num" }).setValue("7"),
+    ];
+    const purch = new Purchasable(product, undefined, undefined, fields);
+    expect(purch.status.key).toBe("ready");
+  });
+
+  test("Sold out/unavailable short-circuits", () => {
+    const soldOut = Product.create({
+      id: 123,
+      name: "Test",
+      slug: "test",
+      permalink: "#",
+      description: "",
+      prices: {
+        price: "10000",
+        regular_price: "10000",
+        sale_price: "10000",
+        currency_code: "NOK",
+        currency_symbol: "kr",
+        currency_minor_unit: 2,
+        currency_decimal_separator: ",",
+        currency_thousand_separator: ".",
+        currency_prefix: "kr ",
+        currency_suffix: "",
+      },
+      categories: [],
+      parent: 0,
+      type: "simple",
+      is_in_stock: false, // ← set here, not by mutating availability
+      is_purchasable: true,
+      images: [],
+      extensions: {
+        app_fpf: { fields: [{ key: "line_1", label: "Linje 1" }] },
+      },
+    } as any);
+
+    const p = new Purchasable(soldOut);
+    expect(p.status.key).toBe("sold_out");
+    expect(() => p.toCartItem(1)).toThrow("sold_out");
   });
 });

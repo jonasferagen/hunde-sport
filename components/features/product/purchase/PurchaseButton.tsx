@@ -7,15 +7,16 @@ import {
   TriangleAlert,
   XCircle,
 } from "@tamagui/lucide-icons";
-import React, { JSX } from "react";
+import React, { type JSX } from "react";
 import type { ThemeName } from "tamagui";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
-import { decidePurchasable } from "@/domain/purchasable/decidePurchasable";
-import { Purchasable } from "@/domain/purchasable/Purchasable";
+
+import { Purchasable } from "@/domain/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { openModal } from "@/stores/ui/modalStore";
 
+import { decidePurchasable } from "@/components/features/product/purchase/ctaDecision";
 import { PurchaseButtonPriceTag } from "./PurchaseButtonPriceTag";
 
 const ICONS: Record<string, JSX.Element> = {
@@ -38,7 +39,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
   onSuccess,
   onError,
 }: Props) {
-  const decision = decidePurchasable(purchasable);
+  const decision = decidePurchasable(purchasable.status);
   const { theme, iconKey, label } = decision;
   const icon = ICONS[iconKey] ?? null;
 

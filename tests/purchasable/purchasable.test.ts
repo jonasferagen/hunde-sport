@@ -2,6 +2,9 @@
 import { VariationSelection } from "@/domain/product/VariationSelection";
 import { Purchasable } from "@/domain/Purchasable";
 import type { ProductVariation, SimpleProduct, VariableProduct } from "@/types";
+test("alias resolves", () => {
+  expect(typeof Purchasable).toBe("function");
+});
 
 function makeSimple(id = 1, name = "S"): SimpleProduct {
   return {
@@ -101,7 +104,10 @@ describe("Purchasable.toCartItem()", () => {
     const sel = new VariationSelection(vp, init);
     const p = new Purchasable(vp, sel, undefined);
 
-    expect(() => p.toCartItem(1)).toThrow();
+    expect(() => p.toCartItem(1)).toThrow(
+      "Invalid state for add-to-cart: select_incomplete"
+    );
+
     try {
       p.toCartItem(1);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

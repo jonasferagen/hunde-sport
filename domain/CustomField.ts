@@ -67,3 +67,22 @@ export class CustomField implements NormalizedCustomField {
     return { extensions: { app_fpf: { values: cleaned } } };
   }
 }
+
+// ------- WC shapes (adapter-only types)
+export type FpfValues = Record<string, string>;
+type LineItemLike = {
+  extensions?: {
+    app_fpf?: { values?: FpfValues | Record<string, never> } | null;
+  } | null;
+};
+
+export const getFpfValuesFromLineItem = (
+  lineItem: LineItemLike | null | undefined
+): FpfValues | undefined => {
+  const vals = lineItem?.extensions?.app_fpf?.values;
+  return vals && Object.keys(vals).length > 0 ? (vals as FpfValues) : undefined;
+};
+
+export const hasAnyFpfValues = (
+  lineItem: LineItemLike | null | undefined
+): boolean => !!getFpfValuesFromLineItem(lineItem);

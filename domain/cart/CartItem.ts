@@ -2,7 +2,7 @@ import type {
   CartItemVariation,
   WcItemPrices,
   WcItemTotals,
-} from "./CartUtils";
+} from "../../adapters/woocommerce/cartPricing";
 
 /** Incoming shape from the Store API (or your transport layer) */
 export type CartItemData = {
