@@ -38,14 +38,14 @@ function CustomFieldRow({
         <Label htmlFor={field.key} size="$3">
           {field.label}
         </Label>
+        <ThemedInput
+          id={field.key}
+          value={field.value ?? ""}
+          onChangeText={handleChange}
+          maxLength={field.maxlen}
+          multiline={false}
+        />
       </ThemedXStack>
-      <ThemedInput
-        id={field.key}
-        value={field.value ?? ""}
-        onChangeText={handleChange}
-        numberOfLines={1}
-        multiline={false}
-      />
     </ThemedYStack>
   );
 }

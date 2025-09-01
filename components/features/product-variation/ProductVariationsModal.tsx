@@ -9,7 +9,7 @@ import {
 import { useProductVariations } from "@/hooks/data/Product";
 import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
-import { ProductImage, ProductTitle } from "../product/display";
+import { ProductImage } from "../product/display";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 type Props = {
@@ -49,7 +49,7 @@ export const ProductVariationsModalContent = ({
 
   return (
     <ModalLayout
-      title={<ProductTitle product={variableProduct} fs={1} />}
+      title={variableProduct.name}
       onClose={close}
       footer={
         <ThemedYStack>

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Paragraph } from "tamagui";
 
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import { ThemedYStack } from "@/components/ui";
@@ -6,7 +7,6 @@ import { ModalLayout } from "@/components/ui/ModalLayout";
 import { CustomField } from "@/domain/extensions/CustomField";
 import { Purchasable } from "@/types";
 
-import { ProductImage, ProductTitle } from "../product/display";
 import { ProductCustomizationForm } from "./ProductCustomizationForm";
 
 type Props = {
@@ -62,11 +62,9 @@ export const ProductCustomizationModalContent = ({
     ]
   );
 
-  const IMAGE_H = 200;
-
   return (
     <ModalLayout
-      title={<ProductTitle product={product} fs={1} />}
+      title={product.name}
       onClose={close}
       footer={
         <ThemedYStack>
@@ -78,11 +76,10 @@ export const ProductCustomizationModalContent = ({
         </ThemedYStack>
       }
     >
-      <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
-        <ProductImage product={product} img_height={IMAGE_H} />
+      <ThemedYStack gap="$3">
+        <Paragraph>{product.short_description}</Paragraph>
+        <ProductCustomizationForm fields={fields} onChange={setFields} />
       </ThemedYStack>
-
-      <ProductCustomizationForm fields={fields} onChange={setFields} />
     </ModalLayout>
   );
 };
