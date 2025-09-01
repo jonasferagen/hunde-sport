@@ -5,7 +5,6 @@ import type { WcTotals } from "./misc";
 /** Raw Store API cart payload shape */
 export type CartData = {
   items?: CartItemData[];
-  items_count?: number; // distinct lines
   items_weight?: number;
   totals: WcTotals;
   has_calculated_shipping?: boolean;
@@ -16,7 +15,6 @@ export type CartData = {
 type NormalizedCart = {
   items: readonly CartItem[];
   token: string;
-  itemsCount: number;
   itemsWeight: number;
   totals: WcTotals;
   hasCalculatedShipping: boolean;
@@ -29,7 +27,6 @@ type CartInitPatch = Partial<Omit<NormalizedCart, "token">>;
 export class Cart implements NormalizedCart {
   readonly items: readonly CartItem[];
   readonly token: string;
-  readonly itemsCount: number;
   readonly itemsWeight: number;
   readonly totals: WcTotals;
   readonly hasCalculatedShipping: boolean;
@@ -40,18 +37,11 @@ export class Cart implements NormalizedCart {
   private constructor(data: NormalizedCart) {
     this.items = data.items;
     this.token = data.token;
-    this.itemsCount = data.itemsCount;
     this.itemsWeight = data.itemsWeight;
     this.totals = data.totals;
     this.hasCalculatedShipping = data.hasCalculatedShipping;
     this.shippingRates = data.shippingRates;
     this.lastUpdated = data.lastUpdated;
-  }
-
-  /** Sum of line quantities */
-  get totalQuantity(): number {
-    return this.items.reduce((sum, it) => sum + (it.quantity ?? 0), 0);
-    // quantity is required on CartItem, but the fallback keeps this resilient
   }
 
   /** Build domain Cart from raw payload + token header */
@@ -62,7 +52,6 @@ export class Cart implements NormalizedCart {
     return new Cart({
       items,
       token,
-      itemsCount: data.items_count ?? items.length,
       itemsWeight: data.items_weight ?? 0,
       totals: data.totals,
       hasCalculatedShipping: !!data.has_calculated_shipping,
@@ -76,7 +65,6 @@ export class Cart implements NormalizedCart {
     return new Cart({
       items: (patch.items as readonly CartItem[]) ?? base.items,
       token: base.token, // token is preserved
-      itemsCount: patch.itemsCount ?? base.itemsCount,
       itemsWeight: patch.itemsWeight ?? base.itemsWeight,
       totals: patch.totals ?? base.totals,
       hasCalculatedShipping:
@@ -90,7 +78,6 @@ export class Cart implements NormalizedCart {
     Cart.create(
       {
         items: [],
-        items_count: 0,
         items_weight: 0,
         totals: {
           currency_code: "NOK",
@@ -112,13 +99,17 @@ export class Cart implements NormalizedCart {
       "token"
     ) as Cart
   );
+  /** Sum of line quantities */
+  get totalQuantity(): number {
+    return this.items.reduce((sum, it) => sum + (it.quantity ?? 0), 0);
+    // quantity is required on CartItem, but the fallback keeps this resilient
+  }
 
   /** Return a new Cart with the given items (adjusts itemsCount + lastUpdated) */
   withItems(items: readonly CartItem[]): Cart {
     const frozen = Object.freeze(items.slice());
     return Cart.rebuild(this, {
       items: frozen,
-      itemsCount: frozen.length,
       lastUpdated: Date.now(),
     });
   }

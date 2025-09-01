@@ -8,11 +8,11 @@ import { formatCartItemsTotal } from "@/domain/cart/misc";
 import { useCartStore } from "@/stores/useCartStore";
 
 export const CheckoutButton = () => {
-  const itemsCount = useCartStore((s) => s.cart?.itemsCount ?? 0);
+  const cart = useCartStore((s) => s.cart);
+  const totalQuantity = cart.totalQuantity;
+  const formattedTotal = formatCartItemsTotal(cart.totals);
+
   const isUpdating = useCartStore((s) => s.isUpdating);
-  const formattedTotal = useCartStore((s) =>
-    s.cart?.totals ? formatCartItemsTotal(s.cart.totals) : ""
-  );
   // Actions are stable in Zustand; read via getState to avoid subscribing
   const checkout = useCartStore.getState().checkout;
 
@@ -28,25 +28,24 @@ export const CheckoutButton = () => {
     }
   }, [checkout]);
 
-  const disabled = itemsCount === 0;
+  const disabled = cart.items.length === 0;
   const waiting = isUpdating || isRedirecting;
 
-  const label2 = useMemo(
-    () =>
-      `${itemsCount} ${itemsCount === 1 ? "vare" : "varer"}, ${formattedTotal}`,
-    [itemsCount, formattedTotal]
-  );
-
-  const iconAfter = useMemo(() => <ArrowBigRight scale={1.5} />, []);
   const label = "Til kassen";
+  const label_r = useMemo(
+    () =>
+      `${totalQuantity} ${totalQuantity === 1 ? "vare" : "varer"}, ${formattedTotal}`,
+    [totalQuantity, formattedTotal]
+  );
+  const iconAfter = useMemo(() => <ArrowBigRight scale={1.5} />, []);
 
   return (
     <CallToActionButton
       onPress={onPress}
-      disabled={disabled || waiting}
+      disabled={disabled}
       theme={THEME_CTA_CHECKOUT}
-      label_l={label}
-      label={label2}
+      label={label}
+      label_r={label_r}
       after={iconAfter}
       loading={waiting}
     />

@@ -7,7 +7,7 @@ import { useCartStore } from "@/stores/useCartStore";
 import { CartListItem } from "./CartListItem";
 
 export const CartList = () => {
-  const items = useCartStore((s) => s.cart?.items ?? []);
+  const items = useCartStore((s) => s.cart.items ?? []);
 
   if (!items.length) {
     return <DefaultTextContent>Handlekurven er tom</DefaultTextContent>;
