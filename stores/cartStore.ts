@@ -1,5 +1,6 @@
 // stores/cartStore.ts
 import { Cart } from "@/domain/cart/Cart";
+import { AddItemOptions } from "@/hooks/data/Cart/api";
 import { log } from "@/lib/logger";
 
 export interface CartState {
@@ -7,17 +8,6 @@ export interface CartState {
   cartToken: string;
   isUpdating: boolean;
   error: string | null;
-}
-
-export interface AddItemOptions {
-  id: number;
-  quantity: number;
-  variation?: { attribute: string; value: string }[];
-  extensions?: {
-    app_fpf?: {
-      values: Record<string, string>;
-    };
-  };
 }
 
 export interface CartActions {

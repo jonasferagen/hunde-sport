@@ -3,7 +3,17 @@ import type { ApiResponse } from "apisauce";
 import { ENDPOINTS } from "@/config/api";
 import { Cart, CartData } from "@/domain/cart/Cart";
 import { apiClient } from "@/lib/apiClient";
-import type { AddItemOptions } from "@/stores/cartStore";
+
+export interface AddItemOptions {
+  id: number;
+  quantity: number;
+  variation?: { attribute: string; value: string }[];
+  extensions?: {
+    app_fpf?: {
+      values: Record<string, string>;
+    };
+  };
+}
 
 export function handleResponse(
   response: ApiResponse<CartData>,
