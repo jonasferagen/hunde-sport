@@ -1,6 +1,9 @@
 // tests/purchasable/decidePurchasable.behavior.test.ts
-import { decidePurchasable } from "@/domain/purchasable/decidePurchasable";
-import type { PurchasableStatus } from "@/domain/purchasable/Purchasable";
+
+import {
+  decidePurchasable,
+  type PurchasableStatus,
+} from "@/domain/Purchasable";
 
 function D(key: PurchasableStatus, label = "Label") {
   const purch = { status: { key, label } } as any; // minimal shape

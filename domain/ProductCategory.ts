@@ -1,7 +1,7 @@
 // domain/ProductCategory.ts
-import { StoreImage, type StoreImageData } from "../store-image/StoreImage";
+import { StoreImage, type StoreImageData } from "./StoreImage";
 
-type ProductCategoryData = {
+export type ProductCategoryData = {
   id: number;
   name: string;
   parent: number;

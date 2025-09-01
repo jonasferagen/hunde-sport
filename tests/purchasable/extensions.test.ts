@@ -1,7 +1,7 @@
 // tests/purchasable/extensions.test.ts
-import { CustomField } from "@/domain/extensions/CustomField";
+import { CustomField } from "@/domain/CustomField";
 import { Product } from "@/domain/product/Product";
-import { Purchasable } from "@/domain/purchasable/Purchasable";
+import { Purchasable } from "@/domain/Purchasable";
 
 // helper to make a simple product that has one custom field
 function simpleWithCustomFields(): Product {

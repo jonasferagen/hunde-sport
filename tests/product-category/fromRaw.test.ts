@@ -3,11 +3,8 @@
 import fs from "fs";
 import path from "path";
 
-import {
-  ProductCategory,
-  type RawStoreCategory,
-} from "@/domain/product-category/ProductCategory";
-import { StoreImage } from "@/domain/store-image/StoreImage";
+import { ProductCategory, ProductCategoryData } from "@/domain/ProductCategory";
+import { StoreImage } from "@/domain/StoreImage";
 
 const singlePath = path.join(__dirname, "data", "product-category.json");
 const listPath = path.join(__dirname, "data", "product-categories.json");
@@ -49,7 +46,7 @@ describe("ProductCategory.fromRaw", () => {
   it("maps single product-category.json → ProductCategory", () => {
     const raw = JSON.parse(
       fs.readFileSync(singlePath, "utf8")
-    ) as RawStoreCategory;
+    ) as ProductCategoryData;
     const cat = ProductCategory.create(raw);
     expectValidCategory(cat);
   });
@@ -57,7 +54,7 @@ describe("ProductCategory.fromRaw", () => {
   it("maps each item in product-categories.json → ProductCategory", () => {
     const rawList = JSON.parse(
       fs.readFileSync(listPath, "utf8")
-    ) as RawStoreCategory[];
+    ) as ProductCategoryData[];
     expect(Array.isArray(rawList)).toBe(true);
     expect(rawList.length).toBeGreaterThan(0);
 
@@ -68,7 +65,7 @@ describe("ProductCategory.fromRaw", () => {
   });
 
   it("uses StoreImage.DEFAULT when image is null", () => {
-    const sampleWithNull: RawStoreCategory = {
+    const sampleWithNull: ProductCategoryData = {
       id: 123,
       name: "No Image Cat",
       slug: "no-image",
@@ -89,7 +86,7 @@ describe("ProductCategory.fromRaw", () => {
   it("Black Friday item from list has shouldDisplay() === false", () => {
     const rawList = JSON.parse(
       fs.readFileSync(listPath, "utf8")
-    ) as RawStoreCategory[];
+    ) as ProductCategoryData[];
     const blackFriday = rawList.find((c) => c.slug === "black-friday");
     expect(blackFriday).toBeTruthy();
     const cat = ProductCategory.create(blackFriday!);

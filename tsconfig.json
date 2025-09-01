@@ -6,9 +6,14 @@
     "moduleResolution": "Bundler",
     "target": "ES2020",
     "jsx": "react-jsx",
+    "verbatimModuleSyntax": true, // keeps imports clean & tree-shakeable
+    "noUncheckedIndexedAccess": true, // catches many subtle runtime errors
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@domain/*": ["domain/*"],
+      "@cart/*": ["domain/cart/*"],
+      "@product/*": ["domain/product/*"]
     },
     "types": ["react", "react-native", "expo", "jest"]
   },
@@ -26,11 +31,7 @@
     "App.tsx",
     "expo-env.d.ts",
     ".expo/types/**/*.ts",
-    "tests",
-    "domain/product/helpers/ProductVariationCollection.ts",
-    "domain/product/Old/ProductAttributeHelper.ts",
-    "domain/product/helpers/selectionStore.ts",
-    "stores/useProductVariationStore.ts"
+    "tests"
   ],
   "exclude": [
     "node_modules",

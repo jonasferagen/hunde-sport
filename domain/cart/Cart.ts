@@ -1,6 +1,6 @@
 // domain/Cart/models.ts
 import { CartItem, CartItemData } from "./CartItem";
-import type { WcTotals } from "./misc";
+import type { WcTotals } from "./CartUtils";
 
 export type CartData = {
   items?: CartItemData[];

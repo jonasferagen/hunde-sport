@@ -1,4 +1,8 @@
-import type { CartItemVariation, WcItemPrices, WcItemTotals } from "./misc";
+import type {
+  CartItemVariation,
+  WcItemPrices,
+  WcItemTotals,
+} from "./CartUtils";
 
 /** Incoming shape from the Store API (or your transport layer) */
 export type CartItemData = {

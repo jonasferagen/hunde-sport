@@ -36,6 +36,7 @@ module.exports = defineConfig([
           project: "./tsconfig.json",
           alwaysTryTypes: true,
         },
+        node: { extensions: [".js", ".jsx", ".ts", ".tsx"] }, // helps JS files too
       },
     },
 
@@ -44,13 +45,11 @@ module.exports = defineConfig([
       "import/no-unresolved": "error",
       "import/no-duplicates": "warn",
       "import/no-cycle": ["warn", { maxDepth: 1 }],
-
-      // ✅ Keep imports tidy
+      //"import/no-relative-parent-imports": "warn", // <- optional guard
       "simple-import-sort/imports": "warn",
       "simple-import-sort/exports": "warn",
-
       // TS handles extensions/resolution
-      "import/extensions": "off",
+      //"import/extensions": "off",
     },
   },
 

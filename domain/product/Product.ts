@@ -1,7 +1,7 @@
 // domain/product/Product.ts
-import { CustomField, CustomFieldData } from "@/domain/extensions/CustomField";
+import { CustomField, CustomFieldData } from "@/domain/CustomField";
 import { ProductPrices } from "@/domain/pricing";
-import { StoreImage, StoreImageData } from "@/domain/store-image/StoreImage";
+import { StoreImage, StoreImageData } from "@/domain/StoreImage";
 import { cleanHtml } from "@/lib/format";
 
 export interface CategoryRefData {
