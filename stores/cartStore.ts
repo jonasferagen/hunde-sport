@@ -1,38 +1,8 @@
 // stores/cartStore.ts
-import { Storage } from "expo-storage";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-
-import { ENDPOINTS } from "@/config/api";
 import { Cart } from "@/domain/cart/Cart";
-import { createCartRestoreToken } from "@/hooks/checkout/api";
-import {
-  addItem as apiAddItem,
-  removeItem as apiRemoveItem,
-  updateItem as apiUpdateItem,
-} from "@/hooks/data/Cart/api";
 import { log } from "@/lib/logger";
 
-// unchanged smartExpoStorage...
-let lastPersistedValue: string | null = null;
-const smartExpoStorage = {
-  getItem: async (name: string) => {
-    const v = await Storage.getItem({ key: name });
-    lastPersistedValue = v;
-    return v;
-  },
-  setItem: async (name: string, value: string) => {
-    if (value === lastPersistedValue) return;
-    lastPersistedValue = value;
-    await Storage.setItem({ key: name, value });
-  },
-  removeItem: async (name: string) => {
-    lastPersistedValue = null;
-    await Storage.removeItem({ key: name });
-  },
-};
-
-interface CartState {
+export interface CartState {
   cart: Cart | null;
   cartToken: string;
   isUpdating: boolean;
@@ -50,7 +20,7 @@ export interface AddItemOptions {
   };
 }
 
-interface CartActions {
+export interface CartActions {
   // removed initializeCart
   setCart: (cart: Cart | null) => void;
   reset: () => void;
@@ -60,7 +30,7 @@ interface CartActions {
   checkout: () => Promise<URL>;
 }
 
-const initialState: CartState = {
+export const initialState: CartState = {
   cart: null,
   cartToken: "",
   isUpdating: false,
@@ -69,7 +39,7 @@ const initialState: CartState = {
 
 // optimistic helper (unchanged, just moved below)
 let cartActionVersion = 0;
-const handleCartAction = async (
+export const handleCartAction = async (
   actionName: keyof Pick<CartActions, "addItem" | "updateItem" | "removeItem">,
   get: () => CartState,
   set: (partial: Partial<CartState>) => void,
@@ -109,83 +79,3 @@ const handleCartAction = async (
     set({ isUpdating: false });
   }
 };
-
-export const useCartStore = create<CartState & CartActions>()(
-  persist(
-    (set, get) => ({
-      ...initialState,
-
-      // NEW: dumb setters
-      setCart: (cart) =>
-        set({
-          cart,
-          cartToken: cart?.token ?? "",
-        }),
-
-      reset: () => set({ ...initialState }),
-
-      // optimistic actions (unchanged)
-      addItem: async (options) => {
-        const { cart } = get();
-        await handleCartAction(
-          "addItem",
-          get,
-          set,
-          (token) =>
-            apiAddItem(token, {
-              ...options,
-              variation: options.variation || [],
-            }),
-          cart
-        );
-      },
-
-      updateItem: async (key, quantity) => {
-        const { cart } = get();
-        await handleCartAction(
-          "updateItem",
-          get,
-          set,
-          (token) => apiUpdateItem(token, { key, quantity }),
-          cart ? cart.withUpdatedQuantity(key, quantity) : null
-        );
-      },
-
-      removeItem: async (key) => {
-        const { cart } = get();
-        await handleCartAction(
-          "removeItem",
-          get,
-          set,
-          (token) => apiRemoveItem(token, { key }),
-          cart ? cart.withoutItem(key) : null
-        );
-      },
-
-      checkout: async () => {
-        log.info("CartStore: checkout invoked.");
-        const { cartToken } = get();
-        try {
-          const restoreToken = await createCartRestoreToken(cartToken);
-          log.info(
-            "CartStore: restore token created",
-            restoreToken.substring(0, 10) + "..."
-          );
-          const checkoutUrl = new URL(
-            ENDPOINTS.CHECKOUT.CHECKOUT(restoreToken)
-          );
-          log.info("CartStore: checkout URL created");
-          return checkoutUrl;
-        } catch (error) {
-          log.error("CartStore: checkout failed.", error);
-          throw error;
-        }
-      },
-    }),
-    {
-      name: "cart-storage",
-      storage: createJSONStorage(() => smartExpoStorage),
-      partialize: (state) => ({ cartToken: state.cartToken }), // keep only token
-    }
-  )
-);

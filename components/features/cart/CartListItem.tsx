@@ -11,7 +11,7 @@ import { ThemedButton } from "@/components/ui/themed-components/ThemedButton";
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from "@/config/app";
 import { CartItem } from "@/domain/cart/CartItem";
 import { formatItemLineTotal, formatItemUnitPrice } from "@/domain/cart/misc";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore } from "@/stores/useCartStore";
 
 interface CartListItemProps {
   item: CartItem;

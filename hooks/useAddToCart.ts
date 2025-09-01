@@ -4,7 +4,7 @@ import React from "react";
 
 import { Purchasable } from "@/domain/purchasable/Purchasable";
 import { haptic } from "@/lib/haptics";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore } from "@/stores/useCartStore";
 
 export type ActionStatus = "idle" | "loading" | "success" | "error";
 

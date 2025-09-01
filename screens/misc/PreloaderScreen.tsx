@@ -11,8 +11,8 @@ import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { useCart } from "@/hooks/data/Cart";
 import { useProductCategories } from "@/hooks/data/ProductCategory";
 import { queryClient } from "@/lib/queryClient";
-import { useCartStore } from "@/stores/cartStore";
 import { useProductCategoryStore } from "@/stores/productCategoryStore";
+import { useCartStore } from "@/stores/useCartStore";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 

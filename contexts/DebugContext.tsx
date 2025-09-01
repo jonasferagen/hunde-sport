@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore } from "@/stores/useCartStore";
 import { PurchasableProduct } from "@/types";
 
 interface DebugContextType {
