@@ -2,7 +2,7 @@
 /**
  * Plugin Name: App – Store API: Flexible Product Fields
  * Description: Expose FPF fields to Store API products and accept values on add-to-cart.
- * Version: 0.1.4
+ * Version: 0.1.5
  * Author: Hunde-sport.no
  */
 
@@ -20,3 +20,4 @@ require __DIR__ . '/includes/RegisterProductExtension.php';
 require __DIR__ . '/includes/CaptureCartValues.php';
 require __DIR__ . '/includes/RegisterCartItemExtension.php';
 require __DIR__ . '/includes/OrderMeta.php';
+require __DIR__ . '/includes/CartRestore.php';
