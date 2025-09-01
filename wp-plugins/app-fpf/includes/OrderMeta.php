@@ -2,83 +2,87 @@
 if ( ! defined('ABSPATH') ) { exit; }
 
 /**
- * Copy app_fpf values from cart line -> order line meta at checkout,
- * using the FPF field LABELS as meta keys (e.g. "Linje 1"), just like the webshop flow.
+ * Persist app_fpf values from the cart line to the order line item,
+ * writing one meta row per field using the FPF field *labels* (e.g. "Linje 1").
+ * FPF groups live on the *parent* product, so we resolve labels from the parent
+ * when the line item is a variation.
  *
- * Also saves a single JSON blob under meta key "app_fpf" for debugging/audits.
+ * Optional: define('APP_FPF_SAVE_JSON', true) in wp-config.php to also save a JSON blob.
+ * Optional: define('APP_FPF_JSON_META_KEY', '_app_fpf_debug') to change the JSON meta key
+ * (leading underscore hides it in some UIs).
  */
+
+if ( ! defined('APP_FPF_JSON_META_KEY') ) {
+  define('APP_FPF_JSON_META_KEY', 'app_fpf'); // set to '_app_fpf_debug' to hide
+}
+
 add_action('woocommerce_checkout_create_order_line_item', function( $item, $cart_item_key, $values, $order ) {
 
-	// 1) Ensure we have values from the cart line.
-	if ( empty( $values['app_fpf'] ) || ! is_array( $values['app_fpf'] ) ) {
-		return; // nothing to do
-	}
-	$app_values = $values['app_fpf'];
+  // 1) Ensure we have our values from the cart line
+  if ( empty( $values[ APP_FPF_NS ] ) || ! is_array( $values[ APP_FPF_NS ] ) ) {
+    return;
+  }
+  $app_values = $values[ APP_FPF_NS ];
 
-	// 2) Resolve product/variation id for field lookup.
-	$product_id = (int) $item->get_variation_id();
-	if ( ! $product_id ) {
-		$product_id = (int) $item->get_product_id();
-	}
+  // 2) Resolve the correct product to read FPF fields from
+  $product = $item->get_product();
+  $product_id_for_fields = 0;
+  if ( $product && $product->is_type('variation') ) {
+    $product_id_for_fields = (int) $product->get_parent_id();  // 🔑 FPF groups live on parent
+  } elseif ( $product ) {
+    $product_id_for_fields = (int) $product->get_id();
+  }
+  if ( ! $product_id_for_fields ) {
+    if ( defined('APP_FPF_SAVE_JSON') && APP_FPF_SAVE_JSON ) {
+      $item->add_meta_data( APP_FPF_JSON_META_KEY, wp_json_encode( $app_values ), true );
+    }
+    return;
+  }
 
-	// 3) Load field config (so we can translate key -> label).
-	if ( ! function_exists( 'app_fpf_get_fields_for_product' ) ) {
-		// If helpers aren't loaded for some reason, at least store the JSON.
-		$item->add_meta_data( 'app_fpf', wp_json_encode( $app_values ), true );
-		return;
-	}
-	$fields = app_fpf_get_fields_for_product( $product_id ); // array of ['key','label','required','maxlen','lines']
+  // 3) Load field config (key→label mapping)
+  if ( ! function_exists( 'app_fpf_get_fields_for_product' ) ) {
+    if ( defined('APP_FPF_SAVE_JSON') && APP_FPF_SAVE_JSON ) {
+      $item->add_meta_data( APP_FPF_JSON_META_KEY, wp_json_encode( $app_values ), true );
+    }
+    return;
+  }
+  $fields = app_fpf_get_fields_for_product( $product_id_for_fields ); // ['key','label','required','maxlen','lines']
 
-	// 4) Build key->label map.
-	$key_to_label = [];
-	if ( is_array($fields) ) {
-		foreach ( $fields as $f ) {
-			$k = isset($f['key']) ? (string) $f['key'] : '';
-			if ( $k === '' ) continue;
-			$label = isset($f['label']) ? wp_strip_all_tags( (string) $f['label'] ) : '';
-			$key_to_label[ $k ] = $label !== '' ? $label : ucfirst( str_replace('_',' ', $k) );
-		}
-	}
+  if ( empty($fields) ) {
+    if ( defined('APP_FPF_SAVE_JSON') && APP_FPF_SAVE_JSON ) {
+      $item->add_meta_data( APP_FPF_JSON_META_KEY, wp_json_encode( $app_values ), true );
+    }
+    return;
+  }
 
-	// 5) Write individual meta rows using the LABELS (exactly like FPF does).
-	foreach ( $app_values as $k => $val ) {
-		// Only write known keys (present in product config), to mirror FPF behavior.
-		if ( ! isset( $key_to_label[ $k ] ) ) {
-			continue;
-		}
-		$label = $key_to_label[ $k ];
+  $key_to_label = [];
+  $key_to_maxlen = [];
+  foreach ( $fields as $f ) {
+    $k = isset($f['key']) ? (string) $f['key'] : '';
+    if ( $k === '' ) continue;
+    $label = isset($f['label']) ? wp_strip_all_tags( (string) $f['label'] ) : ucfirst( str_replace('_',' ', $k) );
+    $key_to_label[ $k ] = $label;
+    if ( isset($f['maxlen']) && is_numeric($f['maxlen']) ) {
+      $key_to_maxlen[ $k ] = (int) $f['maxlen'];
+    }
+  }
 
-		$clean = wc_clean( is_scalar($val) ? (string) $val : wp_json_encode( $val ) );
+  // 4) Write label-based meta rows exactly like the webshop flow
+  foreach ( $app_values as $k => $val ) {
+    if ( ! isset( $key_to_label[ $k ] ) ) continue; // ignore unknown keys
+    $label = $key_to_label[ $k ];
 
-		// If product config defines maxlen for this key, trim to it.
-		if ( is_array($fields) ) {
-			foreach ( $fields as $f ) {
-				if ( isset($f['key']) && $f['key'] === $k && isset($f['maxlen']) && is_numeric($f['maxlen']) ) {
-					$clean = mb_substr( $clean, 0, (int) $f['maxlen'] );
-					break;
-				}
-			}
-		}
+    $clean = wc_clean( is_scalar($val) ? (string) $val : wp_json_encode( $val ) );
+    if ( isset($key_to_maxlen[$k]) ) {
+      $clean = mb_substr( $clean, 0, $key_to_maxlen[$k] );
+    }
 
-		$item->add_meta_data( $label, $clean, true );
-	}
+    $item->add_meta_data( $label, $clean, true );
+  }
 
-	// 6) Also store a machine-readable blob for verification/audits.
-	$item->add_meta_data( 'app_fpf', wp_json_encode( $app_values ), true );
+  // 5) Optional machine-readable blob for debugging/audits
+  if ( defined('APP_FPF_SAVE_JSON') && APP_FPF_SAVE_JSON ) {
+    $item->add_meta_data( APP_FPF_JSON_META_KEY, wp_json_encode( $app_values ), true );
+  }
 
-	// 7) Optional: log what we wrote (enable once while testing, then remove/disable).
-	if ( defined('WP_DEBUG') && WP_DEBUG ) {
-		$logger = wc_get_logger();
-		$logger->info(
-			sprintf(
-				'Order %d item %d: wrote FPF meta for product %d. keys=%s',
-				$order->get_id(),
-				$item->get_id(),
-				$product_id,
-				implode(',', array_keys($app_values))
-			),
-			['source' => 'app-fpf']
-		);
-	}
-
-}, 999, 4);
+}, 20, 4);

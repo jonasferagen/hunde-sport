@@ -64,10 +64,6 @@ export async function addItem(
     options
   );
 
-  console.log(ENDPOINTS.CART.ADD_ITEM());
-  console.log(options);
-  console.log(cartToken);
-
   return handleResponse(response, "addItem");
 }
 /**
@@ -86,6 +82,9 @@ export async function updateItem(
     key,
     quantity,
   });
+
+  console.log(cartToken);
+
   return handleResponse(response, "updateItem");
 }
 

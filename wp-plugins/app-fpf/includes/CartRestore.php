@@ -87,20 +87,25 @@ add_action('wp', function () {
 
 		$cart_item_data = [];
 
-		// Carry ALL extension values generically (keeps this file decoupled from app_fpf)
-		if ( ! empty($item['extensions']) && is_array($item['extensions']) ) {
-			foreach ( $item['extensions'] as $ns => $payload ) {
-				if ( is_array($payload) && isset($payload['values']) && is_array($payload['values']) ) {
-					$cart_item_data[ $ns ] = wc_clean( $payload['values'] ); // recursive
+		if ( ! empty($item['extensions']) ) {
+			$exts = (array) $item['extensions']; // cast object → array
+			foreach ( $exts as $ns => $payload ) {
+				if ( is_object($payload) ) {
+					$payload = (array) $payload;
+				}
+				if ( isset($payload['values']) && is_array($payload['values']) ) {
+					$cart_item_data[ $ns ] = wc_clean( $payload['values'] );
 				}
 			}
 		}
-
 		// Add to cart; continue on failure (don't kill checkout)
-		$added_key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation, $cart_item_data );
+	
+		$added_key = WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variation, $cart_item_data);
+
 		if ( ! $added_key ) {
 			continue;
 		}
+		
 	}
 
 	// One-time use
