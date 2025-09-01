@@ -4,7 +4,7 @@ import { AddItemOptions } from "@/hooks/data/Cart/api";
 import { log } from "@/lib/logger";
 
 export interface CartState {
-  cart: Cart | null;
+  cart: Cart;
   cartToken: string;
   isUpdating: boolean;
   error: string | null;
@@ -12,7 +12,7 @@ export interface CartState {
 
 export interface CartActions {
   // removed initializeCart
-  setCart: (cart: Cart | null) => void;
+  setCart: (cart: Cart) => void;
   reset: () => void;
   addItem: (options: AddItemOptions) => Promise<void>;
   updateItem: (key: string, quantity: number) => Promise<void>;
@@ -21,7 +21,7 @@ export interface CartActions {
 }
 
 export const initialState: CartState = {
-  cart: null,
+  cart: Cart.DEFAULT,
   cartToken: "",
   isUpdating: false,
   error: null,
@@ -29,43 +29,71 @@ export const initialState: CartState = {
 
 // optimistic helper (unchanged, just moved below)
 let cartActionVersion = 0;
-export const handleCartAction = async (
+
+type GetState = () => CartState;
+type SetState = (partial: Partial<CartState>) => void;
+type ApiCall = (cartToken: string) => Promise<Cart>;
+
+export async function handleCartAction(
   actionName: keyof Pick<CartActions, "addItem" | "updateItem" | "removeItem">,
-  get: () => CartState,
-  set: (partial: Partial<CartState>) => void,
-  apiCall: (cartToken: string) => Promise<Cart>,
+  get: GetState,
+  set: SetState,
+  apiCall: ApiCall,
   optimisticCart: Cart | null
-) => {
+) {
   log.info(`CartStore: ${actionName} invoked.`);
-  const { cartToken, cart: originalCart } = get();
-  if (!cartToken || !originalCart)
+
+  const { cartToken, cart: currentCart } = get();
+  if (!cartToken || !currentCart) {
     throw new Error(`CartStore: ${actionName} failed — no cart loaded.`);
+  }
 
-  const actionVersion = ++cartActionVersion;
+  const previousCart = currentCart;
+  const thisVersion = ++cartActionVersion;
+  const now = Date.now();
 
-  set({
-    cart: optimisticCart
-      ? Cart.rebuild(optimisticCart, { lastUpdated: Date.now() })
-      : null,
-    isUpdating: true,
-  });
+  // Apply optimistic state (if provided)
+  if (optimisticCart) {
+    set({
+      cart: Cart.rebuild(optimisticCart, { lastUpdated: now }),
+      isUpdating: true,
+      error: null,
+    });
+  } else {
+    set({ isUpdating: true, error: null });
+  }
 
   try {
-    const result = await apiCall(cartToken);
-    if (actionVersion < cartActionVersion) {
+    const serverCart = await apiCall(cartToken);
+
+    // Ignore stale responses from older inflight actions
+    if (thisVersion !== cartActionVersion) {
       log.info(`CartStore: ${actionName} response ignored (stale version).`);
       return;
     }
-    const apiCart = Cart.rebuild(result, { lastUpdated: Date.now() });
-    set({ cart: apiCart, cartToken: apiCart.token });
+
+    const next = Cart.rebuild(serverCart, { lastUpdated: Date.now() });
+    set({ cart: next, cartToken: next.token });
     log.info(`CartStore: ${actionName} success.`);
-  } catch (error) {
+  } catch (err) {
     log.error(
       `CartStore: ${actionName} failed.`,
-      error instanceof Error ? error.message : error
+      err instanceof Error ? err.message : err
     );
-    set({ cart: originalCart });
+
+    // Only roll back if this action is still the latest
+    if (thisVersion === cartActionVersion) {
+      set({
+        cart: previousCart,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+    // Re-throw if you want callers to handle/display errors upstream
+    // throw err;
   } finally {
-    set({ isUpdating: false });
+    // Only clear updating flag if this action is still the latest
+    if (thisVersion === cartActionVersion) {
+      set({ isUpdating: false });
+    }
   }
-};
+}

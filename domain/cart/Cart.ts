@@ -5,7 +5,6 @@ import type { WcTotals } from "./misc";
 /** Raw Store API cart payload shape */
 export type CartData = {
   items?: CartItemData[];
-  token?: string; // NOTE: you pass token separately via headers; keep optional here
   items_count?: number; // distinct lines
   items_weight?: number;
   totals: WcTotals;
@@ -56,19 +55,18 @@ export class Cart implements NormalizedCart {
   }
 
   /** Build domain Cart from raw payload + token header */
-  static create(raw: CartData, token: string): Cart {
+  static create(data: CartData, token: string): Cart {
     const items = Object.freeze(
-      (raw.items ?? []).map((i) => CartItem.create(i))
+      (data.items ?? []).map((i) => CartItem.create(i))
     );
-
     return new Cart({
       items,
       token,
-      itemsCount: raw.items_count ?? items.length,
-      itemsWeight: raw.items_weight ?? 0,
-      totals: raw.totals,
-      hasCalculatedShipping: !!raw.has_calculated_shipping,
-      shippingRates: raw.shipping_rates ?? null,
+      itemsCount: data.items_count ?? items.length,
+      itemsWeight: data.items_weight ?? 0,
+      totals: data.totals,
+      hasCalculatedShipping: !!data.has_calculated_shipping,
+      shippingRates: data.shipping_rates ?? null,
       lastUpdated: Date.now(),
     });
   }
@@ -87,6 +85,33 @@ export class Cart implements NormalizedCart {
       lastUpdated: patch.lastUpdated ?? base.lastUpdated,
     });
   }
+
+  static readonly DEFAULT = Object.freeze(
+    Cart.create(
+      {
+        items: [],
+        items_count: 0,
+        items_weight: 0,
+        totals: {
+          currency_code: "NOK",
+          currency_minor_unit: 2,
+          currency_prefix: "kr",
+          currency_suffix: "",
+          currency_thousand_separator: ".",
+          currency_decimal_separator: ",",
+          total_price: "0",
+          total_tax: "0",
+          total_items: "0",
+          total_items_tax: "0",
+          total_shipping: "0",
+          total_shipping_tax: "0",
+          total_discount: "0",
+          total_discount_tax: "0",
+        },
+      },
+      "token"
+    ) as Cart
+  );
 
   /** Return a new Cart with the given items (adjusts itemsCount + lastUpdated) */
   withItems(items: readonly CartItem[]): Cart {
