@@ -1,53 +1,61 @@
+// CheckoutButton.tsx
 import { ArrowBigRight } from "@tamagui/lucide-icons";
-import React, { useCallback, useMemo } from "react";
+import * as React from "react";
 import { Linking } from "react-native";
+import { useShallow } from "zustand/react/shallow";
 
+import { ThemedText, ThemedXStack } from "@/components/ui";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
 import { THEME_CTA_CHECKOUT } from "@/config/app";
 import { formatCartItemsTotal } from "@/domain/cart/misc";
-import { useCartStore } from "@/stores/useCartStore";
+import { useCartIsLoading, useCartStore } from "@/stores/useCartStore";
 
 export const CheckoutButton = () => {
-  const cart = useCartStore((s) => s.cart);
-  const totalQuantity = cart.totalQuantity;
-  const formattedTotal = formatCartItemsTotal(cart.totals);
-
-  const isUpdating = useCartStore((s) => s.isUpdating);
-  // Actions are stable in Zustand; read via getState to avoid subscribing
-  const checkout = useCartStore.getState().checkout;
-
-  const [isRedirecting, setIsRedirecting] = React.useState(false);
-
-  const onPress = useCallback(async () => {
-    setIsRedirecting(true);
-    try {
-      const checkoutUrl = await checkout();
-      await Linking.openURL(checkoutUrl.toString());
-    } finally {
-      setIsRedirecting(false);
-    }
-  }, [checkout]);
-
-  const disabled = cart.items.length === 0;
-  const waiting = isUpdating || isRedirecting;
-
-  const label = "Til kassen";
-  const label_r = useMemo(
-    () =>
-      `${totalQuantity} ${totalQuantity === 1 ? "vare" : "varer"}, ${formattedTotal}`,
-    [totalQuantity, formattedTotal]
+  const { qty, hasItems, totals } = useCartStore(
+    useShallow((s) => ({
+      qty: s.cart.totalQuantity,
+      hasItems: s.cart.itemKeys.length > 0,
+      totals: s.cart.totals,
+    }))
   );
-  const iconAfter = useMemo(() => <ArrowBigRight scale={1.5} />, []);
+  const isLoading = useCartIsLoading();
+  const [redirecting, setRedirecting] = React.useState(false);
+
+  const onPress = React.useCallback(async () => {
+    if (redirecting) return;
+    setRedirecting(true);
+    try {
+      const checkoutUrl = await useCartStore.getState().checkout();
+      const url = checkoutUrl.toString();
+      if (!(await Linking.canOpenURL(url)))
+        throw new Error("Cannot open checkout URL");
+      await Linking.openURL(url);
+    } finally {
+      setRedirecting(false);
+    }
+  }, [redirecting]);
+
+  const trailing = (
+    <ThemedXStack ai="center" gap="$2">
+      <ThemedText tabular>
+        {qty} {qty === 1 ? "vare" : "varer"},
+      </ThemedText>
+      <InlineSpinnerSwap loading={isLoading}>
+        {formatCartItemsTotal(totals)}
+      </InlineSpinnerSwap>
+    </ThemedXStack>
+  );
 
   return (
     <CallToActionButton
       onPress={onPress}
-      disabled={disabled}
+      disabled={!hasItems}
       theme={THEME_CTA_CHECKOUT}
-      label={label}
-      label_r={label_r}
-      after={iconAfter}
-      loading={waiting}
+      label="Til kassen"
+      trailing={trailing}
+      after={<ArrowBigRight scale={1.5} />}
+      loading={redirecting}
     />
   );
 };

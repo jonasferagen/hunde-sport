@@ -1,17 +1,8 @@
 // stores/cartStore.ts
 import { Cart } from "@/domain/cart/Cart";
 import { AddItemOptions } from "@/hooks/data/Cart/api";
-import { log } from "@/lib/logger";
-
-export interface CartState {
-  cart: Cart;
-  cartToken: string;
-  isUpdating: boolean;
-  error: string | null;
-}
 
 export interface CartActions {
-  // removed initializeCart
   setCart: (cart: Cart) => void;
   reset: () => void;
   addItem: (options: AddItemOptions) => Promise<void>;
@@ -20,29 +11,42 @@ export interface CartActions {
   checkout: () => Promise<URL>;
 }
 
+export interface CartState {
+  cart: Cart;
+  cartToken: string;
+  isUpdating: boolean; // whole-cart ops only
+  updatingKeys: Record<string, true>; // presence-only map ✅
+  error: string | null;
+}
+
 export const initialState: CartState = {
   cart: Cart.DEFAULT,
   cartToken: "",
   isUpdating: false,
+  updatingKeys: {}, // ✅
   error: null,
 };
 
 // optimistic helper (unchanged, just moved below)
 let cartActionVersion = 0;
-
+// stores/cartStore.ts
 type GetState = () => CartState;
-type SetState = (partial: Partial<CartState>) => void;
+// allow functional set for precise updates
+type SetState = (
+  partial: Partial<CartState> | ((s: CartState) => Partial<CartState>)
+) => void;
 type ApiCall = (cartToken: string) => Promise<Cart>;
+type HandleOpts = { itemKey?: string };
 
 export async function handleCartAction(
   actionName: keyof Pick<CartActions, "addItem" | "updateItem" | "removeItem">,
   get: GetState,
   set: SetState,
   apiCall: ApiCall,
-  optimisticCart: Cart | null
+  optimisticCart: Cart | null,
+  opts: HandleOpts = {}
 ) {
-  log.info(`CartStore: ${actionName} invoked.`);
-
+  const { itemKey } = opts;
   const { cartToken, cart: currentCart } = get();
   if (!cartToken || !currentCart) {
     throw new Error(`CartStore: ${actionName} failed — no cart loaded.`);
@@ -52,46 +56,46 @@ export async function handleCartAction(
   const thisVersion = ++cartActionVersion;
   const now = Date.now();
 
-  // Apply optimistic state (if provided)
-  if (optimisticCart) {
-    set({
-      cart: Cart.rebuild(optimisticCart, { lastUpdated: now }),
-      isUpdating: true,
-      error: null,
-    });
-  } else {
-    set({ isUpdating: true, error: null });
-  }
+  // start: apply optimistic + mark busy (global or per-item)
+  set((s) => ({
+    cart: optimisticCart
+      ? Cart.rebuild(optimisticCart, { lastUpdated: now })
+      : s.cart,
+    isUpdating: !itemKey || s.isUpdating, // only flip global when no itemKey
+    updatingKeys: itemKey
+      ? { ...s.updatingKeys, [itemKey]: true }
+      : s.updatingKeys,
+    error: null,
+  }));
 
   try {
     const serverCart = await apiCall(cartToken);
-
-    // Ignore stale responses from older inflight actions
-    if (thisVersion !== cartActionVersion) {
-      log.info(`CartStore: ${actionName} response ignored (stale version).`);
-      return;
-    }
+    if (thisVersion !== cartActionVersion) return; // ignore stale cart writes
 
     const next = Cart.rebuild(serverCart, { lastUpdated: Date.now() });
-    set({ cart: next, cartToken: next.token });
-    log.info(`CartStore: ${actionName} success.`);
+    set((s) => ({
+      cart: next,
+      cartToken: next.token,
+      // don't touch updatingKeys here; we clear it in finally
+      isUpdating: itemKey ? s.isUpdating : false,
+    }));
   } catch (err) {
-    log.error(
-      `CartStore: ${actionName} failed.`,
-      err instanceof Error ? err.message : err
-    );
-
-    // Only roll back if this action is still the latest
     if (thisVersion === cartActionVersion) {
-      set({
+      set((s) => ({
         cart: previousCart,
         error: err instanceof Error ? err.message : String(err),
+        isUpdating: itemKey ? s.isUpdating : false,
+      }));
+    }
+  } finally {
+    // per-item: always clear presence (keeps things simple & robust)
+    if (itemKey) {
+      set((s) => {
+        const { [itemKey]: _omit, ...rest } = s.updatingKeys;
+        return { updatingKeys: rest };
       });
     }
-    // Re-throw if you want callers to handle/display errors upstream
-    // throw err;
-  } finally {
-    // Only clear updating flag if this action is still the latest
+    // global flag only cleared by the latest action
     if (thisVersion === cartActionVersion) {
       set({ isUpdating: false });
     }

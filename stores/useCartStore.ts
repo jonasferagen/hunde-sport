@@ -55,7 +55,8 @@ export const useCartStore = create<CartState & CartActions>()(
           get,
           set,
           (token) => apiUpdateItem(token, { key, quantity }),
-          cart ? cart.withUpdatedQuantity(key, quantity) : null
+          cart ? cart.withUpdatedQuantity(key, quantity) : null,
+          { itemKey: key } // ✅ per-item presence flag
         );
       },
 
@@ -66,7 +67,8 @@ export const useCartStore = create<CartState & CartActions>()(
           get,
           set,
           (token) => apiRemoveItem(token, { key }),
-          cart ? cart.withoutItem(key) : null
+          cart ? cart.withoutItem(key) : null,
+          { itemKey: key } // ✅
         );
       },
 
@@ -97,3 +99,9 @@ export const useCartStore = create<CartState & CartActions>()(
     }
   )
 );
+
+export const useCartIsLoading = () =>
+  useCartStore((s) => s.isUpdating || Object.keys(s.updatingKeys).length > 0);
+
+export const useItemIsUpdating = (key: string) =>
+  useCartStore((s) => !!s.updatingKeys[key]);

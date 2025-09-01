@@ -4,20 +4,18 @@ import React from "react";
 import { GestureResponderEvent } from "react-native";
 import { Theme, ThemeName } from "tamagui";
 
-import { ThemedSpinner } from "@/components/ui"; // assuming this re-exports a spinner
-import { ThemedButton, ThemedText } from "@/components/ui/themed-components";
+import { ThemedSpinner, ThemedText, ThemedXStack } from "@/components/ui";
+import { ThemedButton } from "@/components/ui/themed-components";
 
 type CallToActionButtonProps = React.ComponentProps<typeof ThemedButton> & {
-  label_l?: string;
-  label_r?: string;
   label?: string;
-  theme?: ThemeName;
   before?: React.ReactNode;
   after?: React.ReactNode;
-  loading?: boolean; // NEW: replaces the label with a spinner/alt label
-  loadingLabel?: string | null; // optional text instead of spinner
-  spinner?: React.ReactNode; // optional custom spinner
-  disableHapticsWhileLoading?: boolean;
+  theme?: ThemeName;
+  /** NEW: custom right-side content (renamed to avoid Tamagui 'right' prop) */
+  trailing?: React.ReactNode;
+  /** Left label loading (e.g. redirect) */
+  loading?: boolean;
 };
 
 export const CallToActionButton = React.forwardRef<
@@ -30,26 +28,19 @@ export const CallToActionButton = React.forwardRef<
     theme,
     before,
     after,
-    label_l,
     label,
-    label_r,
+    trailing,
     loading = false,
-    loadingLabel = null,
-    spinner,
-    disableHapticsWhileLoading = true,
     ...props
   },
   ref
 ) {
   const isDisabled = disabled || loading;
 
-  const handlePress = (event: GestureResponderEvent) => {
+  const handlePress = (e: GestureResponderEvent) => {
     if (isDisabled) return;
-    // Optional: skip haptics while loading/disabled
-    if (!(disableHapticsWhileLoading && loading)) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
-    onPress?.(event);
+    if (loading) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onPress?.(e);
   };
 
   return (
@@ -65,27 +56,22 @@ export const CallToActionButton = React.forwardRef<
         {...props}
       >
         <ThemedButton.Before>{before}</ThemedButton.Before>
-        {label_l && (
-          <ThemedButton.Text ta="left" f={1}>
-            <ThemedText size="$5">{label_l}</ThemedText>
-          </ThemedButton.Text>
-        )}
+
+        {/* Left label */}
         <ThemedButton.Text>
           {loading ? (
-            loadingLabel !== null ? (
-              <ThemedText>{loadingLabel}</ThemedText>
-            ) : (
-              (spinner ?? <ThemedSpinner />)
-            )
+            <ThemedSpinner />
           ) : label ? (
             <ThemedText tabular>{label}</ThemedText>
           ) : null}
         </ThemedButton.Text>
-        {label_r && (
-          <ThemedButton.Text ta="right" f={1}>
-            <ThemedText tabular>{label_r}</ThemedText>
-          </ThemedButton.Text>
-        )}
+
+        {/* Flexible middle/right area that pushes the arrow to the edge */}
+        <ThemedXStack f={1} jc="flex-end" ai="center">
+          {trailing}
+        </ThemedXStack>
+
+        {/* Arrow or whatever */}
         <ThemedButton.After>{after}</ThemedButton.After>
       </ThemedButton>
     </Theme>

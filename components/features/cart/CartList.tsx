@@ -7,19 +7,17 @@ import { useCartStore } from "@/stores/useCartStore";
 import { CartListItem } from "./CartListItem";
 
 export const CartList = () => {
-  const items = useCartStore((s) => s.cart.items ?? []);
+  const keys = useCartStore((s) => s.cart.itemKeys);
 
-  if (!items.length) {
+  if (!keys.length) {
     return <DefaultTextContent>Handlekurven er tom</DefaultTextContent>;
   }
   return (
     <ThemedYStack f={1} mih={0}>
       <FlashList
-        data={items}
-        keyExtractor={(i) => i.key}
-        renderItem={({ item, index }) => (
-          <CartListItem item={item} index={index} />
-        )}
+        data={keys}
+        keyExtractor={(k) => k}
+        renderItem={({ item: key }) => <CartListItem itemKey={key} />}
         contentContainerStyle={{ paddingBottom: 20 }}
         removeClippedSubviews={false} // safer with item animations; or just omit
       />
