@@ -2,124 +2,113 @@
 import { CartItem, CartItemData } from "./CartItem";
 import type { WcTotals } from "./misc";
 
-/** Raw variation pair in the cart item payload */
+/** Raw Store API cart payload shape */
+export type CartData = {
+  items?: CartItemData[];
+  token?: string; // NOTE: you pass token separately via headers; keep optional here
+  items_count?: number; // distinct lines
+  items_weight?: number;
+  totals: WcTotals;
+  has_calculated_shipping?: boolean;
+  shipping_rates?: unknown;
+};
 
-type CartInit = {
-  items: CartItem[];
+/** Internal normalized shape */
+type NormalizedCart = {
+  items: readonly CartItem[];
   token: string;
   itemsCount: number;
   itemsWeight: number;
   totals: WcTotals;
   hasCalculatedShipping: boolean;
-  shippingRates: any;
+  shippingRates: unknown;
   lastUpdated: number;
 };
 
-export type CartData = {
-  items: CartItemData[];
-  token: string;
-  items_count: number; // count of distinct lines
-  items_weight: number;
-  totals: WcTotals;
-  has_calculated_shipping: boolean;
-  shipping_rates: any;
-};
+type CartInitPatch = Partial<Omit<NormalizedCart, "token">>;
 
-export class Cart {
-  items: CartItem[];
-  token: string;
-  itemsCount: number; // distinct lines
-  itemsWeight: number;
-  totals: WcTotals;
-  hasCalculatedShipping: boolean;
-  shippingRates: any;
-  lastUpdated: number;
+export class Cart implements NormalizedCart {
+  readonly items: readonly CartItem[];
+  readonly token: string;
+  readonly itemsCount: number;
+  readonly itemsWeight: number;
+  readonly totals: WcTotals;
+  readonly hasCalculatedShipping: boolean;
+  readonly shippingRates: unknown;
+  readonly lastUpdated: number;
 
-  constructor(
-    items: CartItem[],
-    token: string,
-    itemsCount: number,
-    itemsWeight: number,
-    totals: WcTotals,
-    hasCalculatedShipping: boolean,
-    shippingRates: any,
-    lastUpdated: number
-  ) {
-    this.items = items;
-    this.token = token;
-    this.itemsCount = itemsCount;
-    this.itemsWeight = itemsWeight;
-    this.totals = totals;
-    this.hasCalculatedShipping = hasCalculatedShipping;
-    this.shippingRates = shippingRates;
-    this.lastUpdated = lastUpdated;
+  /** Always use create/rebuild */
+  private constructor(data: NormalizedCart) {
+    this.items = data.items;
+    this.token = data.token;
+    this.itemsCount = data.itemsCount;
+    this.itemsWeight = data.itemsWeight;
+    this.totals = data.totals;
+    this.hasCalculatedShipping = data.hasCalculatedShipping;
+    this.shippingRates = data.shippingRates;
+    this.lastUpdated = data.lastUpdated;
   }
 
-  /** total quantity across lines (sum of line quantities) */
+  /** Sum of line quantities */
   get totalQuantity(): number {
     return this.items.reduce((sum, it) => sum + (it.quantity ?? 0), 0);
+    // quantity is required on CartItem, but the fallback keeps this resilient
   }
 
-  /** build domain Cart from raw API payload */
+  /** Build domain Cart from raw payload + token header */
   static create(raw: CartData, token: string): Cart {
-    const items = (raw.items ?? []).map((i) => new CartItem(i));
-    return new Cart(
+    const items = Object.freeze(
+      (raw.items ?? []).map((i) => CartItem.create(i))
+    );
+
+    return new Cart({
       items,
       token,
-      raw.items_count ?? items.length,
-      raw.items_weight ?? 0,
-      raw.totals,
-      raw.has_calculated_shipping ?? false,
-      raw.shipping_rates,
-      Date.now()
-    );
-  }
-
-  static rebuild(base: Cart, patch: Partial<CartInit>): Cart {
-    return new Cart(
-      patch.items ?? [...base.items],
-      base.token,
-      patch.itemsCount ?? base.itemsCount,
-      patch.itemsWeight ?? base.itemsWeight,
-      patch.totals ?? base.totals,
-      patch.hasCalculatedShipping ?? base.hasCalculatedShipping,
-      patch.shippingRates ?? base.shippingRates,
-      patch.lastUpdated ?? base.lastUpdated
-    );
-  }
-
-  /** Return a new Cart with the given items (adjusts itemsCount + lastUpdated) */
-  withItems(items: CartItem[]): Cart {
-    return Cart.rebuild(this, {
-      items,
-      itemsCount: items.length,
+      itemsCount: raw.items_count ?? items.length,
+      itemsWeight: raw.items_weight ?? 0,
+      totals: raw.totals,
+      hasCalculatedShipping: !!raw.has_calculated_shipping,
+      shippingRates: raw.shipping_rates ?? null,
       lastUpdated: Date.now(),
     });
   }
 
-  /** Return a new Cart with a single line’s quantity updated */
+  /** Rebuild a Cart from an existing one with a partial patch (immutable) */
+  static rebuild(base: Cart, patch: CartInitPatch): Cart {
+    return new Cart({
+      items: (patch.items as readonly CartItem[]) ?? base.items,
+      token: base.token, // token is preserved
+      itemsCount: patch.itemsCount ?? base.itemsCount,
+      itemsWeight: patch.itemsWeight ?? base.itemsWeight,
+      totals: patch.totals ?? base.totals,
+      hasCalculatedShipping:
+        patch.hasCalculatedShipping ?? base.hasCalculatedShipping,
+      shippingRates: patch.shippingRates ?? base.shippingRates,
+      lastUpdated: patch.lastUpdated ?? base.lastUpdated,
+    });
+  }
+
+  /** Return a new Cart with the given items (adjusts itemsCount + lastUpdated) */
+  withItems(items: readonly CartItem[]): Cart {
+    const frozen = Object.freeze(items.slice());
+    return Cart.rebuild(this, {
+      items: frozen,
+      itemsCount: frozen.length,
+      lastUpdated: Date.now(),
+    });
+  }
+
+  /** Return a new Cart with a single line’s quantity updated (immutable) */
   withUpdatedQuantity(key: string, quantity: number): Cart {
-    const items = this.items.map((it) =>
-      it.key === key ? new CartItem({ ...(it as any), quantity }) : it
+    const next = this.items.map((it) =>
+      it.key === key ? it.withQuantity(quantity) : it
     );
-    return this.withItems(items);
+    return this.withItems(next);
   }
 
   /** Return a new Cart without the given line key */
   withoutItem(key: string): Cart {
-    const items = this.items.filter((it) => it.key !== key);
-    return this.withItems(items);
+    const next = this.items.filter((it) => it.key !== key);
+    return this.withItems(next);
   }
-}
-
-// domain/cart/cartExtensions.ts
-export type FpfValues = Record<string, string>;
-
-export function getFpfValuesFromLineItem(lineItem: any): FpfValues | undefined {
-  return lineItem?.extensions?.app_fpf?.values;
-}
-
-export function hasAnyFpfValues(lineItem: any): boolean {
-  const vals = getFpfValuesFromLineItem(lineItem);
-  return !!vals && Object.keys(vals).length > 0;
 }

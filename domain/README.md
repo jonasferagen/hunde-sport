@@ -67,15 +67,15 @@ export class ProductCategory {
     this.count = data.count;
   }
 
-  static create(raw: ProductCategoryData): ProductCategory {
+  static create(data: ProductCategoryData): ProductCategory {
     return new ProductCategory({
-      id: raw.id,
-      name: raw.name,
-      parent: raw.parent,
-      image: StoreImage.fromMaybe(raw.image),
-      description: raw.description ?? "",
-      slug: raw.slug,
-      count: raw.count,
+      id: data.id,
+      name: data.name,
+      parent: data.parent,
+      image: StoreImage.create(data.image),
+      description: data.description ?? "",
+      slug: data.slug,
+      count: data.count,
     });
   }
 }
@@ -85,7 +85,7 @@ export class ProductCategory {
 
 ## 4. Factories
 
-- Each class must implement a static `create(raw: XData): X`.
+- Each class must implement a static `create(data: XData): X`.
 - `create` is responsible for **normalization** (safe defaults, cleaning HTML, handling nulls).
 
 ---

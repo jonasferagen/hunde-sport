@@ -47,15 +47,15 @@ export class ProductCategory implements NormalizedProductCategory {
   toString(): string {
     return `Category ${this.id}: ${this.name}`;
   }
-  static create(raw: ProductCategoryData): ProductCategory {
+  static create(data: ProductCategoryData): ProductCategory {
     return new ProductCategory({
-      id: raw.id,
-      name: raw.name,
-      parent: raw.parent,
-      image: StoreImage.create(raw.image),
-      description: raw.description ?? "",
-      slug: raw.slug,
-      count: raw.count,
+      id: data.id,
+      name: data.name,
+      parent: data.parent,
+      image: StoreImage.create(data.image),
+      description: data.description ?? "",
+      slug: data.slug,
+      count: data.count,
     });
   } /** Optional synthetic root for UI (breadcrumbs etc.) */
   static readonly ROOT = Object.freeze(
