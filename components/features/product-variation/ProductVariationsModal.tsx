@@ -1,33 +1,25 @@
-// components/features/product-variation/ProductVariationsModal.tsx
-import { X } from "@tamagui/lucide-icons";
-import { ScrollView } from "tamagui";
-
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
-import {
-  ThemedButton,
-  ThemedText,
-  ThemedXStack,
-  ThemedYStack,
-} from "@/components/ui";
+import { ThemedYStack } from "@/components/ui";
+import { ModalLayout } from "@/components/ui/ModalLayout";
 import { VariableProductProvider } from "@/contexts/VariableProductContext";
 import {
   useVariationSelection,
   VariationSelectionProvider,
 } from "@/contexts/VariationSelectionContext";
-import { VariationSelection } from "@/domain/product/VariationSelection";
 import { useProductVariations } from "@/hooks/data/Product";
 import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
 import { ProductImage, ProductTitle } from "../product/display";
 import { ProductVariationSelect } from "./ProductVariationSelect";
+
 type Props = {
   purchasable: Purchasable;
   close: () => void;
-  onDone?: (selection: VariationSelection, resolved?: ProductVariation) => void;
+  onDone?: (selection: any, resolved?: ProductVariation) => void; // unchanged
 };
 
 export const ProductVariationsModal = ({ close, purchasable }: Props) => {
-  const variableProduct = purchasable.product as VariableProduct; // modal is only opened for variable products
+  const variableProduct = purchasable.product as VariableProduct;
   const { isLoading, items: productVariations } =
     useProductVariations(variableProduct);
 
@@ -38,7 +30,7 @@ export const ProductVariationsModal = ({ close, purchasable }: Props) => {
       isLoading={isLoading}
     >
       <VariationSelectionProvider
-        initialSelection={purchasable.variationSelection} // ← seed selection if present
+        initialSelection={purchasable.variationSelection}
       >
         <ProductVariationsModalContent close={close} />
       </VariationSelectionProvider>
@@ -52,42 +44,25 @@ export const ProductVariationsModalContent = ({
   close: () => void;
 }) => {
   const { purchasable } = useVariationSelection();
-  const variableProduct = purchasable.product; // variable here
-
+  const variableProduct = purchasable.product;
   const IMAGE_H = 200;
-  return (
-    <ThemedYStack f={1} mih={0} gap="$3">
-      {/* Header */}
-      <ThemedXStack split>
-        <ProductTitle product={variableProduct} fs={1} />
-        <ThemedText>{variableProduct.id}</ThemedText>
-        <ThemedButton circular onPress={close}>
-          <X />
-        </ThemedButton>
-      </ThemedXStack>
 
-      {/* Image */}
-      <ThemedYStack w="100%" h={IMAGE_H}>
+  return (
+    <ModalLayout
+      title={<ProductTitle product={variableProduct} fs={1} />}
+      onClose={close}
+      footer={
+        <ThemedYStack>
+          <ThemedYStack mb="$3" />
+          <PurchaseButton purchasable={purchasable} onSuccess={close} />
+        </ThemedYStack>
+      }
+    >
+      <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
         <ProductImage product={variableProduct} img_height={IMAGE_H} />
       </ThemedYStack>
 
-      {/* Variations */}
-      <ThemedYStack f={1} mih={0}>
-        <ScrollView
-          f={1}
-          keyboardShouldPersistTaps="handled"
-          removeClippedSubviews={false}
-          contentContainerStyle={{ paddingBottom: 12 }}
-        >
-          <ProductVariationSelect />
-        </ScrollView>
-      </ThemedYStack>
-
-      {/* Footer */}
-      <ThemedYStack>
-        <ThemedYStack mb="$3" />
-        <PurchaseButton purchasable={purchasable} onSuccess={close} />
-      </ThemedYStack>
-    </ThemedYStack>
+      <ProductVariationSelect />
+    </ModalLayout>
   );
 };

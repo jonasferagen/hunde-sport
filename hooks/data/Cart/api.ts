@@ -83,8 +83,6 @@ export async function updateItem(
     quantity,
   });
 
-  console.log(cartToken);
-
   return handleResponse(response, "updateItem");
 }
 

@@ -1,10 +1,9 @@
-// ProductCategoriesModal.tsx
-
-import { ChevronRight, X } from "@tamagui/lucide-icons";
+import { ChevronRight } from "@tamagui/lucide-icons";
 import { FlatList } from "react-native";
 import { H4 } from "tamagui";
 
-import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
+import { ThemedButton } from "@/components/ui";
+import { ModalLayout } from "@/components/ui/ModalLayout";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import type { ProductCategory } from "@/types";
 
@@ -20,15 +19,11 @@ export function ProductCategoriesModal({
   const { to } = useCanonicalNavigation();
 
   return (
-    <ThemedYStack f={1} mih={0} p="$2" gap="$3">
-      {/* Header */}
-      <ThemedXStack split>
-        <H4>{title}</H4>
-        <ThemedButton circular onPress={close}>
-          <X />
-        </ThemedButton>
-      </ThemedXStack>
-
+    <ModalLayout
+      title={title}
+      onClose={close}
+      scroll={false} // Body is a FlatList (its own scroller)
+    >
       <FlatList
         data={productCategories}
         keyExtractor={(c) => String(c.id)}
@@ -40,13 +35,14 @@ export function ProductCategoriesModal({
             mt={index > 0 ? "$2" : undefined}
             onPress={() => {
               to("product-category", item);
-            }} // ← close the modal when selecting
+              close(); // close on select
+            }}
           >
             <H4>{item.name}</H4>
             <ChevronRight />
           </ThemedButton>
         )}
       />
-    </ThemedYStack>
+    </ModalLayout>
   );
 }
