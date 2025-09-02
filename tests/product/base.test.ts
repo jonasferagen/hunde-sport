@@ -1,8 +1,5 @@
 import { Product, type ProductData } from "@/domain/product/Product";
-import {
-  loadProduct,
-  readFixture,
-} from "@/tests/product/variableProduct2.test";
+import { loadProduct, readFixture } from "@/tests/product/variableProduct.test";
 import type { SimpleProduct, VariableProduct } from "@/types";
 
 test("createProduct throws on unsupported type", () => {

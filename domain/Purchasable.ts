@@ -1,8 +1,8 @@
 // @domain/purchasable/Purchasable.ts
 import { CustomField } from "@/domain/CustomField";
+import type { Term } from "@/domain/product/helpers/types";
 import { Product } from "@/domain/product/Product";
 import { ProductVariation } from "@/domain/product/ProductVariation";
-import { VariationSelection } from "@/domain/product/VariationSelection";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
 import type { SimpleProduct, VariableProduct } from "@/types";
 
@@ -31,21 +31,21 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
 
 export class Purchasable {
   readonly product: Product;
-  readonly variationSelection?: VariationSelection;
-  readonly selectedVariation?: ProductVariation;
+  selectedTerms: Term[];
+  selectedVariation?: ProductVariation;
   readonly customFields?: CustomField[];
   /** UI hint: inside customization UI, treat customization as satisfied */
   readonly customizationSatisfiedHint: boolean;
 
   constructor(
     product: Product,
-    variationSelection?: VariationSelection,
+    selectedTerms: Term[],
     selectedVariation?: ProductVariation,
     customFields?: CustomField[],
     customizationSatisfiedHint = false
   ) {
     this.product = product;
-    this.variationSelection = variationSelection;
+    this.selectedTerms = selectedTerms;
     this.selectedVariation = selectedVariation;
     this.customFields = customFields;
     this.customizationSatisfiedHint = customizationSatisfiedHint;
@@ -54,7 +54,7 @@ export class Purchasable {
   withCustomizationSatisfied(): Purchasable {
     return new Purchasable(
       this.product,
-      this.variationSelection,
+      this.selectedTerms,
       this.selectedVariation,
       this.customFields,
       true
@@ -92,7 +92,7 @@ export class Purchasable {
     if (!availability.isPurchasable) return "unavailable";
 
     if (this.product.isVariable) {
-      if (!this.variationSelection) return "select";
+      if (!this.selectedTerms) return "select";
       if (!this.selectedVariation) return "select_incomplete";
     }
 
@@ -104,8 +104,8 @@ export class Purchasable {
   get status(): StatusDescriptor {
     const key = this.resolveStatusKey();
     let label = DEFAULT_STATUS_LABEL[key];
-    if (key === "select_incomplete" && this.variationSelection) {
-      const msg = this.variationSelection.message?.();
+    if (key === "select_incomplete" && this.selectedTerms) {
+      const msg = "koko";
       if (msg) label = msg;
     }
     return { key, label };
@@ -121,13 +121,7 @@ export class Purchasable {
 
   toCartItem(quantity = 1): AddItemOptions {
     this.validate();
-
-    // Ensure stable, non-null variation attributes
-    const variation = this.variationSelection
-      ? [...this.variationSelection]
-          .filter(([, term]) => term != null)
-          .map(([attribute, value]) => ({ attribute, value: value as string }))
-      : [];
+    const variation = undefined;
 
     const ext = CustomField.toCartExtensions(this.customFields);
 

@@ -1,101 +1,110 @@
 // domain/product/VariableProduct.ts
-import { freezeMap } from "@/lib/util";
 
-import type { Attribute, Term, Variation } from "./helpers/types";
-import {
-  buildSetsByAttr,
-  makeComboKey,
-  normalizeAndDedupeVariations,
-  normalizeAttributesAndTerms,
-  normalizeRawVariations,
-} from "./helpers/variableProduct.normalizers";
+import type { AttributeData, TermData, VariationData } from "./helpers/types";
+import { Attribute, Term, Variation } from "./helpers/types";
 import { Product, type ProductData } from "./Product";
 
+type Mapped = {
+  attributeHasTerms: Map<string, Set<string>>;
+  attributeHasVariations: Map<string, Set<string>>;
+  termHasAttributes: Map<string, Set<string>>;
+  termHasVariations: Map<string, Set<string>>;
+  variationHasTerms: Map<string, Set<string>>;
+  variationHasAttributes: Map<string, Set<string>>;
+};
+
 export class VariableProduct extends Product {
-  // public API your tests use:
-  readonly attributeOrder: readonly string[];
-  readonly attributes: ReadonlyMap<string, Attribute>;
-  readonly terms: ReadonlyMap<string, Term>;
-  readonly rawVariations: readonly Variation[];
-  readonly variations: readonly Variation[]; // after normalize+dedupe
-  readonly variationIds: readonly number[];
-  readonly variationIdSet: ReadonlySet<number>;
+  attributes: Map<string, Attribute>;
+  types: Map<string, Term>;
+  variations: Map<string, Variation>;
 
-  // helpers
-  private readonly comboToId: ReadonlyMap<string, number>;
-  private readonly setsByAttr: ReadonlyMap<string, ReadonlySet<string>>;
+  mapped: Mapped;
 
-  private constructor(
-    base: ReturnType<typeof Product.mapBase>,
-    extras: {
-      attributeOrder: readonly string[];
-      attributes: ReadonlyMap<string, Attribute>;
-      terms: ReadonlyMap<string, Term>;
-      rawVariations: readonly Variation[];
-      variations: readonly Variation[];
-      comboToId: ReadonlyMap<string, number>;
-      setsByAttr: ReadonlyMap<string, ReadonlySet<string>>;
-    }
-  ) {
-    if (base.type !== "variable")
-      throw new Error("Invalid type for VariableProduct");
+  private constructor(data: ProductData) {
+    const base = Product.mapBase(data, "variable");
+    const maps = parse(data);
     super(base);
-    this.attributeOrder = extras.attributeOrder;
-    this.attributes = extras.attributes;
-    this.terms = extras.terms;
-    this.rawVariations = extras.rawVariations;
-    this.variations = extras.variations;
-    this.variationIds = Object.freeze(extras.variations.map((v) => v.key));
-    this.variationIdSet = new Set(this.variationIds);
-    this.comboToId = extras.comboToId;
-    this.setsByAttr = extras.setsByAttr;
+
+    this.attributes = maps.amap;
+    this.types = maps.tmap;
+    this.variations = maps.vmap;
+    this.mapped = this.createMaps();
   }
 
   static create(data: ProductData): VariableProduct {
-    if (data.type !== "variable")
+    if (data.type !== "variable") {
       throw new Error("fromData(variable) received non-variable");
+    }
 
-    const base = Product.mapBase(data, "variable");
-
-    const { attributeOrder, attributes, terms } =
-      normalizeAttributesAndTerms(data);
-    const rawVariations = Object.freeze(normalizeRawVariations(data));
-
-    const { variations, comboToId } = normalizeAndDedupeVariations(
-      attributeOrder,
-      attributes,
-      terms,
-      rawVariations
-    );
-    const setsByAttr = buildSetsByAttr(attributeOrder, variations);
-    return new VariableProduct(base, {
-      attributeOrder,
-      attributes: freezeMap(attributes),
-      terms: freezeMap(terms),
-      rawVariations,
-      variations,
-      comboToId,
-      setsByAttr,
-    });
+    return new VariableProduct(data);
   }
 
-  // === Public API used by tests ===
+  private createMaps(): Mapped {
+    const maps: Mapped = {
+      attributeHasTerms: new Map<string, Set<string>>(),
+      attributeHasVariations: new Map<string, Set<string>>(),
+      termHasAttributes: new Map<string, Set<string>>(),
+      termHasVariations: new Map<string, Set<string>>(),
+      variationHasAttributes: new Map<string, Set<string>>(),
+      variationHasTerms: new Map<string, Set<string>>(),
+    };
 
-  getVariationSetForAttribute(attrKey: string): ReadonlySet<string> {
-    return this.setsByAttr.get(attrKey) ?? new Set();
-  }
+    // Build term ↔ attribute mappings
+    for (const t of [...this.types.values()]) {
+      const { key: tKey, attrKey: aKey } = t;
+      addToSetMap(maps.termHasAttributes, tKey, aKey);
+      addToSetMap(maps.attributeHasTerms, aKey, tKey);
+    }
+    // Build variation ↔ term and variation ↔ attribute mappings
+    for (const v of [...this.variations.values()]) {
+      const { key: vKey, termKeys, attrKeys } = v;
 
-  getAttribute(attrKey: string): Attribute | undefined {
-    return this.attributes.get(attrKey);
-  }
+      for (const tKey of termKeys) {
+        addToSetMap(maps.variationHasTerms, vKey, tKey);
+        addToSetMap(maps.termHasVariations, tKey, vKey);
+      }
 
-  getTerm(termKey: string): Term | undefined {
-    return this.terms.get(termKey);
+      for (const aKey of attrKeys) {
+        addToSetMap(maps.variationHasAttributes, vKey, aKey);
+        addToSetMap(maps.attributeHasVariations, aKey, vKey);
+      }
+    }
+    return maps;
   }
+}
 
-  /** Strict resolver: returns id if combo matches exactly (all attributes), otherwise undefined */
-  getVariationId(combo: readonly string[]): number | undefined {
-    if (combo.length !== this.attributeOrder.length) return undefined;
-    return this.comboToId.get(makeComboKey(this.attributeOrder, combo));
+function parse(data: any) {
+  const amap = new Map<string, Attribute>();
+  const tmap = new Map<string, Term>();
+  const vmap = new Map<string, Variation>();
+
+  for (const a of data.attributes ?? []) {
+    const attribute = Attribute.create(a as AttributeData);
+    if (!attribute.has_variations) {
+      continue;
+    }
+
+    for (let t of a.terms ?? []) {
+      t.attrKey = attribute.key;
+      const term = Term.create(t as TermData);
+      tmap.set(term.key, term);
+    }
+    amap.set(attribute.key, attribute);
   }
+  for (const v of data.variations ?? []) {
+    const variation = Variation.create(v as VariationData);
+    vmap.set(variation.key, variation);
+  }
+  return { amap, tmap, vmap };
+}
+
+function addToSetMap(
+  map: Map<string, Set<string>>,
+  key: string,
+  value: string
+) {
+  if (!map.has(key)) {
+    map.set(key, new Set());
+  }
+  map.get(key)!.add(value);
 }

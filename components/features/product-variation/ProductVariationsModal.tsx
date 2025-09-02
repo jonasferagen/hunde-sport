@@ -1,15 +1,11 @@
+import { ProductImage } from "@/components/features/product/display/ProductImage";
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { VariableProductProvider } from "@/contexts/VariableProductContext";
-import {
-  useVariationSelection,
-  VariationSelectionProvider,
-} from "@/contexts/VariationSelectionContext";
 import { useProductVariations } from "@/hooks/data/Product";
 import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
-import { ProductImage } from "@/components/features/product/display/ProductImage";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 type Props = {
@@ -29,21 +25,18 @@ export const ProductVariationsModal = ({ close, purchasable }: Props) => {
       productVariations={productVariations}
       isLoading={isLoading}
     >
-      <VariationSelectionProvider
-        initialSelection={purchasable.variationSelection}
-      >
-        <ProductVariationsModalContent close={close} />
-      </VariationSelectionProvider>
+      <ProductVariationsModalContent purchasable={purchasable} close={close} />
     </VariableProductProvider>
   );
 };
 
 export const ProductVariationsModalContent = ({
   close,
+  purchasable,
 }: {
   close: () => void;
+  purchasable: Purchasable;
 }) => {
-  const { purchasable } = useVariationSelection();
   const variableProduct = purchasable.product;
   const IMAGE_H = 200;
 

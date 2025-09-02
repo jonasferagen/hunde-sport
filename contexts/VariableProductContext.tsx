@@ -1,6 +1,5 @@
 import React from "react";
 
-import type { Term } from "@/domain/product/ProductAttributes";
 import type {
   ProductAvailability,
   ProductPrices,
@@ -18,9 +17,6 @@ export type VariableProductCtx = {
   // Display helpers (accept arrays you create at the edge)
   pricesForIds: (ids: number[]) => ProductPrices[];
   availabilityForIds: (ids: number[]) => ProductAvailability[];
-
-  // UI grouping
-  termsByAttribute: Map<string, Term[]>;
 };
 
 const Ctx = React.createContext<VariableProductCtx | null>(null);
@@ -53,19 +49,6 @@ export function VariableProductProvider({
     return m;
   }, [productVariations]);
 
-  // Terms grouped by attribute (store order preserved)
-  const termsByAttribute = React.useMemo(() => {
-    const grouped = new Map<string, Term[]>();
-    for (const attrKey of variableProduct.attributeOrder) {
-      const slugs = variableProduct.getTermOrder(attrKey);
-      grouped.set(
-        attrKey,
-        slugs.map((slug) => variableProduct.getTerm(slug)!).filter(Boolean)
-      );
-    }
-    return grouped;
-  }, [variableProduct]);
-
   // Accessors
   const byId = React.useCallback(
     (id: number) => variationById.get(id),
@@ -94,7 +77,6 @@ export function VariableProductProvider({
     byId,
     pricesForIds,
     availabilityForIds,
-    termsByAttribute,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

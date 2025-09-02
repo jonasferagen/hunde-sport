@@ -15,7 +15,8 @@
       "@/*": ["./*"],
       "@domain/*": ["domain/*"],
       "@cart/*": ["domain/cart/*"],
-      "@product/*": ["domain/product/*"]
+      "@product/*": ["domain/product/*"],
+      "@tests/*": ["tests/*"]
     },
     "types": ["react", "react-native", "expo", "jest"]
   },

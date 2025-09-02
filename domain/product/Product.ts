@@ -1,9 +1,13 @@
 // domain/product/Product.ts
 import { CustomField, type CustomFieldData } from "@/domain/CustomField";
 import type { ProductPrices } from "@/domain/pricing/types";
-import type { CategoryRefData } from "@/domain/product/helpers/types";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 import { cleanHtml } from "@/lib/formatters";
+
+type CategoryRefData = {
+  id: number;
+  name: string;
+};
 
 export interface ProductAvailability {
   isInStock: boolean;
@@ -34,6 +38,8 @@ export type ProductData = {
       fields?: CustomFieldData[];
     };
   };
+  attributes: any[];
+  variations: any[];
 };
 
 type NormalizedProduct = {

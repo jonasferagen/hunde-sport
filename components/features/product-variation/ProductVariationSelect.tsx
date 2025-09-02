@@ -4,21 +4,49 @@ import { H3 } from "tamagui";
 
 import { ThemedXStack, ThemedYStack } from "@/components/ui";
 import { useVariableProduct } from "@/contexts/VariableProductContext";
-import { useVariationSelection } from "@/contexts/VariationSelectionContext";
 
 // ProductVariationSelect.tsx
-import { ProductAttributeOption } from "./ProductAttributeOption";
 
 export function ProductVariationSelect() {
   const { variableProduct } = useVariableProduct();
-  const { selectionView, select } = useVariationSelection();
+  const { attributes, mapped } = variableProduct;
+
+  // const variations = mapped.variationsByTerm;
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
-      {variableProduct.attributeOrder.map((attrKey) => {
-        const attr = variableProduct.attributes.get(attrKey);
-        const label = attr?.label ?? attrKey;
+      {Array.from(attributes).map(([attrKey, attribute]) => {
+        console.log(attrKey);
+        console.log("aaa");
+        console.log(mapped.termsByAttribute);
+        console.log(mapped.termsByVariation);
+        console.log(mapped.variationHasTerms);
+        const terms = mapped.termsByAttribute.get(attrKey);
 
+        // console.log(mapped.termsByAttribute);
+
+        return (
+          <>
+            <ThemedYStack key={attrKey} f={1}>
+              <H3 tt="capitalize" size="$6" mb="$1">
+                {attribute}
+              </H3>
+            </ThemedYStack>
+
+            <ThemedYStack w="100%" gap="$2"></ThemedYStack>
+          </>
+        );
+      })}
+    </ThemedXStack>
+  );
+}
+/*
+      {Array.from(entries).map(([key, attribute]) => {
+        console.log(attribute);
+        return <ThemedText key={key}>{attribute.label}</ThemedText>;
+      })}
+   
+  /*
         const state = selectionView.get(attrKey);
         if (!state) return null;
 
@@ -60,5 +88,17 @@ export function ProductVariationSelect() {
         );
       })}
     </ThemedXStack>
-  );
-}
+  ); */
+
+/* 
+
+             <ProductAttributeOption
+                key={`${attrKey}:${termKey}`}
+                attribute={attrKey}
+                term={termKey}
+                isSelected={isSelected}
+                label={termLabel}
+                onPress={onPress}
+                variationSet={variationSet}
+              />
+ */
