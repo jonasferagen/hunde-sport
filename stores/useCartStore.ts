@@ -12,8 +12,8 @@ import { log } from "@/lib/logger";
 import { createSmartExpoStorage } from "@/lib/storage";
 
 import {
-  CartActions,
-  CartState,
+  type CartActions,
+  type CartState,
   handleCartAction,
   initialState,
 } from "./cartStore";

@@ -1,11 +1,13 @@
+// jest.config.js
 module.exports = {
-  preset: "jest-expo",
-  testEnvironment: "jsdom",
+  testEnvironment: "node",
+  transform: {
+    "^.+\\.(t|j)sx?$": ["babel-jest", { configFile: "./babel.config.js" }],
+  },
+  transformIgnorePatterns: ["/node_modules/"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
-    "^@domain/(.*)$": "<rootDir>/domain/$1",
-    "^@cart/(.*)$": "<rootDir>/domain/cart/$1",
-    "^@product/(.*)$": "<rootDir>/domain/product/$1",
+    "^tests/(.*)$": "<rootDir>/tests/$1",
   },
   testMatch: [
     "<rootDir>/**/__tests__/**/*.(test|spec).(ts|tsx|js)",

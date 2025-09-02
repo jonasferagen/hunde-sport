@@ -6,6 +6,8 @@
     "moduleResolution": "Bundler",
     "target": "ES2020",
     "jsx": "react-jsx",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "verbatimModuleSyntax": true, // keeps imports clean & tree-shakeable
     "noUncheckedIndexedAccess": true, // catches many subtle runtime errors
     "baseUrl": ".",

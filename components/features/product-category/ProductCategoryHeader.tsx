@@ -15,8 +15,6 @@ export const ProductCategoryHeader: React.FC<{
 }> = ({ productCategories, productCategory }) => {
   const count = productCategories.length;
 
-  const label = `${count}`;
-
   const openAll = React.useCallback(() => {
     openModal(
       (payload, api) => (

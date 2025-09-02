@@ -15,6 +15,12 @@ import Animated, {
 import { getTokenValue } from "tamagui";
 import { create } from "zustand";
 
+import {
+  ThemedButton,
+  ThemedText,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
@@ -23,10 +29,6 @@ import {
   useProductCategory,
 } from "@/stores/productCategoryStore";
 import type { ProductCategory } from "@/types";
-
-import { ThemedXStack, ThemedYStack } from "../ui";
-import { ThemedButton } from "../ui/themed-components/ThemedButton";
-import { ThemedText } from "../ui/themed-components/ThemedText";
 
 // Instance type for Animated.ScrollView
 type AnimatedScrollViewRef = ComponentRef<typeof Animated.ScrollView>;
@@ -223,7 +225,7 @@ type UI = {
   setExpanded: (id: number, value: boolean) => void;
 };
 
-const useCategoryTreeStore = create<UI>((set, get) => ({
+const useCategoryTreeStore = create<UI>((set, _get) => ({
   // default: root expanded
   expanded: { 0: true },
   toggle: (id) =>

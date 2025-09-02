@@ -1,3 +1,2 @@
-import { CartScreen } from '@/screens/CartScreen';
-
+import { CartScreen } from "@/screens/CartScreen";
 export default () => <CartScreen />;

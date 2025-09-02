@@ -1,7 +1,7 @@
 // ProductCategoryProvider.tsx
 import React, { createContext, useContext, useMemo } from "react";
 
-import { ProductCategory } from "@/domain/product-category/ProductCategory";
+import { ProductCategory } from "@/domain/ProductCategory";
 import {
   useProductCategories,
   useProductCategory,

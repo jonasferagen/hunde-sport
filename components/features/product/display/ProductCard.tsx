@@ -1,5 +1,5 @@
 import React from "react";
-import { StackProps } from "tamagui";
+import type { StackProps } from "tamagui";
 
 import { ThemedImage, ThemedText } from "@/components/ui";
 import { ThemedLinearGradient } from "@/components/ui/themed-components/ThemedLinearGradient";
@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/themed-components/ThemedStacks";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { getScaledImageUrl } from "@/lib/helpers";
-import { PurchasableProduct } from "@/types";
+import type { PurchasableProduct } from "@/types";
 
-import { PurchaseFlow } from "../purchase/PurchaseFlow";
+import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
 import { ProductDescription } from "./ProductDescription";
 import { ProductTitle } from "./ProductTitle";
 

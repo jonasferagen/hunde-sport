@@ -9,7 +9,7 @@ import {
 import { useProductVariations } from "@/hooks/data/Product";
 import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
-import { ProductImage } from "../product/display";
+import { ProductImage } from "@/components/features/product/display/ProductImage";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 type Props = {

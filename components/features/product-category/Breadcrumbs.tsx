@@ -3,7 +3,11 @@ import { ChevronRight } from "@tamagui/lucide-icons";
 import React from "react";
 import { ScrollView } from "tamagui";
 
-import { ThemedText, ThemedXStack, ThemedXStackProps } from "@/components/ui";
+import {
+  ThemedText,
+  ThemedXStack,
+  type ThemedXStackProps,
+} from "@/components/ui";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";

@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { StackProps } from "tamagui";
+import type { StackProps } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui";
 import { ThemedSpinner } from "@/components/ui/themed-components/ThemedSpinner";

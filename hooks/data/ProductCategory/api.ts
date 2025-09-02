@@ -1,4 +1,4 @@
-import { ENDPOINTS, PaginationOptions } from "@/config/api";
+import { ENDPOINTS, type PaginationOptions } from "@/config/api";
 import { apiClient } from "@/lib/apiClient";
 import { responseTransformer } from "@/lib/query/responseTransformer";
 import { ProductCategory } from "@/types";

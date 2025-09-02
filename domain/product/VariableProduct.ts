@@ -1,229 +1,101 @@
-import { capitalize, cleanHtml } from "@/lib/format";
-import { intersectSets } from "@/lib/util";
+// domain/product/VariableProduct.ts
+import { freezeMap } from "@/lib/util";
 
-import { Product, type ProductData } from "./Product";
+import type { Attribute, Term, Variation } from "./helpers/types";
 import {
-  Attribute,
-  AttributeData,
-  Term,
-  Variation,
-  VariationData,
-} from "./ProductAttributes";
-
-const EMPTY_SET: ReadonlySet<number> = Object.freeze(new Set<number>());
+  buildSetsByAttr,
+  makeComboKey,
+  normalizeAndDedupeVariations,
+  normalizeAttributesAndTerms,
+  normalizeRawVariations,
+} from "./helpers/variableProduct.normalizers";
+import { Product, type ProductData } from "./Product";
 
 export class VariableProduct extends Product {
-  readonly rawAttributes: AttributeData[];
-  readonly rawVariations: VariationData[];
-  readonly attributes: Map<string, Attribute>;
-  readonly terms: Map<string, Term>;
-  readonly variations: Variation[]; // Duplicate variations per term are filtered
-  readonly attributeOrder: string[];
-  readonly termOrderByAttribute: Map<string, string[]>;
-  readonly variationOrder: number[];
-  private readonly _termToVarSet: Map<string, ReadonlySet<number>>;
-  private readonly _variationIdSet: ReadonlySet<number>;
+  // public API your tests use:
+  readonly attributeOrder: readonly string[];
+  readonly attributes: ReadonlyMap<string, Attribute>;
+  readonly terms: ReadonlyMap<string, Term>;
+  readonly rawVariations: readonly Variation[];
+  readonly variations: readonly Variation[]; // after normalize+dedupe
+  readonly variationIds: readonly number[];
+  readonly variationIdSet: ReadonlySet<number>;
+
+  // helpers
+  private readonly comboToId: ReadonlyMap<string, number>;
+  private readonly setsByAttr: ReadonlyMap<string, ReadonlySet<string>>;
 
   private constructor(
-    base: ReturnType<typeof Product.mapBase> & {
-      attributes: AttributeData[];
-      variations: VariationData[];
+    base: ReturnType<typeof Product.mapBase>,
+    extras: {
+      attributeOrder: readonly string[];
+      attributes: ReadonlyMap<string, Attribute>;
+      terms: ReadonlyMap<string, Term>;
+      rawVariations: readonly Variation[];
+      variations: readonly Variation[];
+      comboToId: ReadonlyMap<string, number>;
+      setsByAttr: ReadonlyMap<string, ReadonlySet<string>>;
     }
   ) {
     if (base.type !== "variable")
-      throw new Error("Invalid data type for VariableProduct");
+      throw new Error("Invalid type for VariableProduct");
     super(base);
-
-    this.rawAttributes = (base.attributes ?? []).filter(
-      (a) => a.has_variations
-    );
-    this.rawVariations = base.variations ?? [];
-
-    this.attributes = buildAttributes(this.rawAttributes);
-    this.terms = buildTerms(this.rawAttributes);
-    this.variations = buildVariations(
-      this.rawVariations,
-      this.attributes,
-      this.terms
-    );
-
-    this.attributeOrder = this.rawAttributes.map((a) =>
-      attrKeyFromName(a.name)
-    );
-
-    this.variations = buildVariations(
-      this.rawVariations,
-      this.attributes,
-      this.terms
-    );
-
-    this.variationOrder = this.variations.map((v) => v.key);
-
-    this.termOrderByAttribute = new Map<string, string[]>();
-    for (const ra of this.rawAttributes) {
-      const ak = attrKeyFromName(ra.name);
-      this.termOrderByAttribute.set(
-        ak,
-        (ra.terms ?? []).map((t) => t.slug)
-      );
-    }
-
-    const termToVarSet = new Map<string, ReadonlySet<number>>();
-    const allIds = new Set<number>();
-    for (const v of this.variations) {
-      allIds.add(v.key);
-      for (const { term } of v.options) {
-        if (!termToVarSet.has(term)) termToVarSet.set(term, new Set<number>());
-        (termToVarSet.get(term) as Set<number>).add(v.key);
-      }
-    }
-    for (const [slug, set] of termToVarSet.entries()) {
-      termToVarSet.set(
-        slug,
-        Object.freeze(new Set<number>(set)) as ReadonlySet<number>
-      );
-    }
-    this._termToVarSet = termToVarSet;
-    this._variationIdSet = Object.freeze(
-      new Set<number>(allIds)
-    ) as ReadonlySet<number>;
+    this.attributeOrder = extras.attributeOrder;
+    this.attributes = extras.attributes;
+    this.terms = extras.terms;
+    this.rawVariations = extras.rawVariations;
+    this.variations = extras.variations;
+    this.variationIds = Object.freeze(extras.variations.map((v) => v.key));
+    this.variationIdSet = new Set(this.variationIds);
+    this.comboToId = extras.comboToId;
+    this.setsByAttr = extras.setsByAttr;
   }
 
-  static create(
-    data: ProductData & {
-      attributes?: AttributeData[];
-      variations?: VariationData[];
-    }
-  ): VariableProduct {
+  static create(data: ProductData): VariableProduct {
     if (data.type !== "variable")
       throw new Error("fromData(variable) received non-variable");
+
     const base = Product.mapBase(data, "variable");
-    return new VariableProduct({
-      ...base,
-      attributes: data.attributes ?? [],
-      variations: data.variations ?? [],
+
+    const { attributeOrder, attributes, terms } =
+      normalizeAttributesAndTerms(data);
+    const rawVariations = Object.freeze(normalizeRawVariations(data));
+
+    const { variations, comboToId } = normalizeAndDedupeVariations(
+      attributeOrder,
+      attributes,
+      terms,
+      rawVariations
+    );
+    const setsByAttr = buildSetsByAttr(attributeOrder, variations);
+    return new VariableProduct(base, {
+      attributeOrder,
+      attributes: freezeMap(attributes),
+      terms: freezeMap(terms),
+      rawVariations,
+      variations,
+      comboToId,
+      setsByAttr,
     });
   }
 
-  // getters unchanged …
-  get variationIds(): number[] {
-    return this.variationOrder;
-  }
-  get variationIdSet(): ReadonlySet<number> {
-    return this._variationIdSet;
-  }
-  getAttribute(key: string) {
-    return this.attributes.get(key);
-  }
-  getTerm(slug: string) {
-    return this.terms.get(slug);
-  }
-  getTermOrder(attrKey: string): readonly string[] {
-    return this.termOrderByAttribute.get(attrKey) ?? [];
-  }
-  getVariationSetForTerm(termSlug: string): ReadonlySet<number> {
-    return this._termToVarSet.get(termSlug) ?? EMPTY_SET;
-  }
-  getVariationSetForAttribute(attrKey: string): ReadonlySet<number> {
-    const out = new Set<number>();
-    for (const slug of this.getTermOrder(attrKey)) {
-      const s = this._termToVarSet.get(slug);
-      if (s) for (const id of s) out.add(id);
-    }
-    return Object.freeze(out) as ReadonlySet<number>;
-  }
-  getVariationId(termSlugs: string[]): number | undefined {
-    if (termSlugs.length !== this.attributeOrder.length) return undefined;
-    const sets = termSlugs.map((slug) => this.getVariationSetForTerm(slug));
-    if (sets.some((s) => s.size === 0)) return undefined;
-    const intersection = intersectSets<number>(...sets);
-    if (intersection.size !== 1) return undefined;
-    return intersection.values().next().value as number;
-  }
-}
+  // === Public API used by tests ===
 
-function attrKeyFromName(name: string): string {
-  return cleanHtml(name).toLocaleLowerCase();
-}
-function buildAttributes(data: AttributeData[]): Map<string, Attribute> {
-  return new Map(
-    (data ?? []).map((a) => {
-      const key = attrKeyFromName(a.name);
-      return [
-        key,
-        {
-          key,
-          label: key,
-          taxonomy: a.taxonomy,
-          has_variations: a.has_variations,
-        } as const,
-      ];
-    })
-  );
-}
-function buildTerms(data: AttributeData[]): Map<string, Term> {
-  const out: [string, Term][] = [];
-  for (const attr of data ?? []) {
-    const attrKey = attrKeyFromName(attr.name);
-    for (const t of attr.terms ?? []) {
-      out.push([
-        t.slug,
-        {
-          key: t.slug,
-          label: capitalize(cleanHtml(t.name)),
-          attribute: attrKey,
-        },
-      ]);
-    }
-  }
-  return new Map(out);
-}
-
-// VariableProduct.ts
-
-function buildVariations(
-  raw: VariationData[],
-  attributes: Map<string, Attribute>,
-  terms: Map<string, Term>
-): Variation[] {
-  const out: Variation[] = [];
-  const seen = new Set<string>(); // signature -> already added
-
-  for (const v of raw ?? []) {
-    const opts: { term: string; attribute: string }[] = [];
-    let valid = true;
-
-    for (const { name, value } of v.attributes ?? []) {
-      const attrKey = attrKeyFromName(name);
-      if (!attributes.has(attrKey)) {
-        valid = false;
-        break;
-      }
-      const term = terms.get(value);
-      if (!term) {
-        valid = false;
-        break;
-      }
-      opts.push({ term: term.key, attribute: attrKey });
-    }
-
-    if (!valid || opts.length === 0) continue;
-
-    // build a stable, order-independent signature of the combo
-    // sort by attribute key to avoid order-induced duplicates
-    const sig = opts
-      .slice()
-      .sort((a, b) => a.attribute.localeCompare(b.attribute))
-      .map(({ attribute, term }) => `${attribute}=${term}`)
-      .join("|");
-
-    if (seen.has(sig)) {
-      // duplicate combo -> skip this variation id
-      continue;
-    }
-    seen.add(sig);
-    out.push({ key: v.id, options: opts });
+  getVariationSetForAttribute(attrKey: string): ReadonlySet<string> {
+    return this.setsByAttr.get(attrKey) ?? new Set();
   }
 
-  return out;
+  getAttribute(attrKey: string): Attribute | undefined {
+    return this.attributes.get(attrKey);
+  }
+
+  getTerm(termKey: string): Term | undefined {
+    return this.terms.get(termKey);
+  }
+
+  /** Strict resolver: returns id if combo matches exactly (all attributes), otherwise undefined */
+  getVariationId(combo: readonly string[]): number | undefined {
+    if (combo.length !== this.attributeOrder.length) return undefined;
+    return this.comboToId.get(makeComboKey(this.attributeOrder, combo));
+  }
 }

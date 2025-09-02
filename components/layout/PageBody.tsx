@@ -1,44 +1,35 @@
 // PageBody.tsx
-import React from 'react';
-import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { YStackProps } from 'tamagui';
+import React from "react";
+import { ScrollView as GHScrollView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import type { YStackProps } from "tamagui";
 
-import { ThemedYStack } from '../ui';
+import { ThemedYStack } from "@/components/ui/themed-components";
 
-
-type SpaceToken = '$1' | '$2' | '$3' | '$4' | '$5' | 'none';
+type SpaceToken = "$1" | "$2" | "$3" | "$4" | "$5" | "none";
 
 interface PageBodyProps extends YStackProps {
   children: React.ReactNode;
-  mode?: 'scroll' | 'static';
-  pad?: SpaceToken;                 // NEW: horizontal padding
+  mode?: "scroll" | "static";
+  pad?: SpaceToken; // NEW: horizontal padding
 }
 
 export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
-  ({ children, mode = 'static', ...props }, ref) => {
-
+  function PageBody({ children, mode = "static", ...props }, ref) {
     const insets = useSafeAreaInsets();
     const bottomInset = insets.bottom;
     const content = (
-      <ThemedYStack
-        box
-        f={1}
-        mih={0}
-        p="none"
-        gap="none"
-        {...props}
-      >
+      <ThemedYStack box f={1} mih={0} p="none" gap="none" {...props}>
         {children}
       </ThemedYStack>
     );
 
-    return mode === 'scroll' ? (
+    return mode === "scroll" ? (
       <GHScrollView
         ref={ref}
         style={{ flex: 1 }}
         contentContainerStyle={{
-          paddingHorizontal: 0,   // padding only here in scroll mode
+          paddingHorizontal: 0, // padding only here in scroll mode
           paddingBottom: bottomInset, // keep content above the bottom bar
         }}
         keyboardShouldPersistTaps="handled"
@@ -53,5 +44,8 @@ export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
       >
         {content}
       </GHScrollView>
-    ) : content;
-  });
+    ) : (
+      content
+    );
+  }
+);

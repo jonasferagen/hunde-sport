@@ -12,13 +12,12 @@ import {
 } from "@/components/layout";
 import { ThemedXStack, ThemedYStack } from "@/components/ui";
 import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
+import { Loader } from "@/components/ui/Loader";
 import { SearchBar } from "@/components/ui/search-bar/SearchBar";
 import { ThemedSpinner } from "@/components/ui/themed-components/ThemedSpinner";
 import { useProductsBySearch } from "@/hooks/data/Product";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue"; // simple 200–300ms debounce hook
-
-import { Loader } from "../components/ui/Loader";
 
 export const SearchScreen = () => {
   const ready = useScreenReady();

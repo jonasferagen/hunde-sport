@@ -1,6 +1,6 @@
 import { X } from "@tamagui/lucide-icons";
 import * as React from "react";
-import { H4, ScrollView, ScrollViewProps } from "tamagui";
+import { H4, ScrollView, type ScrollViewProps } from "tamagui";
 
 import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
 
@@ -78,11 +78,4 @@ export function ModalLayout({
       {footer ? <ThemedYStack>{footer}</ThemedYStack> : null}
     </ThemedYStack>
   );
-}
-
-/** Tiny shim so we don't import H4 if you don't want to. Replace with your H4 if preferred. */
-function H4Shim({ children }: { children: React.ReactNode }) {
-  // If you already use `H4` from tamagui, swap this with: `import { H4 } from "tamagui";`
-  // and render <H4>{children}</H4>
-  return <>{children}</>;
 }

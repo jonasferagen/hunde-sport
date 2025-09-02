@@ -2,15 +2,14 @@
 import { Menu } from "@tamagui/lucide-icons";
 import { H3, Theme } from "tamagui";
 
-import { THEME_HEADER } from "@/config/app";
-import { useHeaderTitle } from "@/config/routes";
-import { useDrawerStore } from "@/stores/ui/drawerStore";
-
 import {
   ThemedButton,
   ThemedLinearGradient,
   ThemedXStack,
-} from "../ui/themed-components";
+} from "@/components/ui/themed-components";
+import { THEME_HEADER } from "@/config/app";
+import { useHeaderTitle } from "@/config/routes";
+import { useDrawerStore } from "@/stores/ui/drawerStore";
 
 export const CustomHeader = () => {
   const openDrawer = useDrawerStore((s) => s.openDrawer);

@@ -1,5 +1,5 @@
 // domain/extensions/CustomField.ts
-import { cleanHtml } from "@/lib/format";
+import { cleanHtml } from "@/lib/formatters";
 
 type NormalizedCustomField = {
   key: string;

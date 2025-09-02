@@ -22,9 +22,9 @@ import { ProductCategoryProvider } from "@/contexts/ProductCategoryContext";
 import { useProduct } from "@/hooks/data/Product";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
-import { PurchasableProduct } from "@/types";
+import { type PurchasableProduct } from "@/types";
 
-import { Loader } from "../components/ui/Loader";
+import { Loader } from "@/components/ui/Loader";
 
 export const ProductScreen = () => {
   useRenderGuard("ProductScreen");
@@ -49,7 +49,9 @@ export const ProductScreen = () => {
 
   return (
     <ProductCategoryProvider
-      productCategoryId={productCategoryId || product.categories[0].id}
+      productCategoryId={
+        productCategoryId || product.categories[0]?.id || 0
+      } /** @TODO at least one category should be guaranteed*/
     >
       <ProductScreenContent product={product as PurchasableProduct} />
     </ProductCategoryProvider>

@@ -1,5 +1,5 @@
 /** Compact selection wrapper used across the purchase flow. */
-import { VariableProduct } from "./VariableProduct";
+import { VariableProduct } from "../VariableProduct";
 
 export class VariationSelection implements Iterable<[string, string | null]> {
   readonly variableProduct: VariableProduct;

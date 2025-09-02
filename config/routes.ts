@@ -1,9 +1,13 @@
 // config/routes.ts
 import { Home, Search, ShoppingCart } from "@tamagui/lucide-icons";
-import { HrefObject, useGlobalSearchParams, usePathname } from "expo-router";
+import {
+  type HrefObject,
+  useGlobalSearchParams,
+  usePathname,
+} from "expo-router";
 import React from "react";
 
-import { ProductCategory } from "@/domain/product-category/ProductCategory";
+import { ProductCategory } from "@/domain/ProductCategory";
 import { SimpleProduct, VariableProduct } from "@/types";
 export type NavPolicy = "switch" | "push"; // | 'replace';
 

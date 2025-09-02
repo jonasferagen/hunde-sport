@@ -9,11 +9,14 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styled, Tabs } from "tamagui";
 
+import {
+  ThemedLinearGradient,
+  ThemedText,
+  ThemedYStack,
+} from "@/components/ui";
 import { BOTTOM_BAR_HEIGHT, THEME_BOTTOM_BAR } from "@/config/app";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { useDrawerStore } from "@/stores/ui/drawerStore";
-
-import { ThemedLinearGradient, ThemedText, ThemedYStack } from "../ui";
 
 const StyledTab = styled(Tabs.Tab, {
   pos: "relative",

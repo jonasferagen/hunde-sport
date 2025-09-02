@@ -1,0 +1,17 @@
+{
+  "name": "project-scripts",
+  "private": true,
+  "scripts": {
+    "android:prebuild": "bash android/prebuild.sh",
+    "android:logs:dev": "bash android/logs-dev.sh",
+    "android:logs:prod": "bash android/logs-prod.sh",
+    "android:install-last": "bash android/install-last.sh",
+    "android:build": "bash android/build.sh",
+    "android:build-apk": "bash android/build-apk.sh",
+    "android:package": "bash android/package.sh",
+    "android:open": "bash android/open.sh",
+    "android:stop": "bash android/stop.sh",
+    "android:clear": "bash android/clear.sh",
+    "android:which": "bash android/which.sh"
+  }
+}

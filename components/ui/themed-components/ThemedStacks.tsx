@@ -1,17 +1,10 @@
 // ThemedStacks.tsx
+
 import { rgba } from "polished";
-import { ComponentProps, ComponentRef, forwardRef, ReactNode } from "react";
-import {
-  getVariableValue,
-  SizeTokens,
-  Stack,
-  StackProps,
-  styled,
-  XStack,
-  XStackProps,
-  YStack,
-  YStackProps,
-} from "tamagui";
+import type { ComponentProps, ComponentRef, ReactNode } from "react";
+import React from "react";
+import type { SizeTokens, StackProps, XStackProps, YStackProps } from "tamagui";
+import { getVariableValue, Stack, styled, XStack, YStack } from "tamagui";
 
 const DEFAULT_SIZE = "$3";
 
@@ -53,7 +46,7 @@ type WithChildren<P> = Omit<P, "children"> & { children?: ReactNode };
 type ThemedStackProps = WithChildren<
   ComponentProps<typeof ThemedStackBase> & StackProps & Props
 >;
-export const _ThemedStack = forwardRef<
+export const _ThemedStack = React.forwardRef<
   ComponentRef<typeof ThemedStackBase>,
   ThemedStackProps
 >(function _ThemedStack(props, ref) {
@@ -64,7 +57,7 @@ export const _ThemedStack = forwardRef<
 export type ThemedYStackProps = WithChildren<
   ComponentProps<typeof ThemedYStackBase> & YStackProps & Props
 >;
-export const ThemedYStack = forwardRef<
+export const ThemedYStack = React.forwardRef<
   ComponentRef<typeof ThemedYStackBase>,
   ThemedYStackProps
 >(function ThemedYStack(props, ref) {
@@ -83,7 +76,7 @@ export const ThemedYStack = forwardRef<
 export type ThemedXStackProps = WithChildren<
   ComponentProps<typeof ThemedXStackBase> & XStackProps & Props
 >;
-export const ThemedXStack = forwardRef<
+export const ThemedXStack = React.forwardRef<
   ComponentRef<typeof ThemedXStackBase>,
   ThemedXStackProps
 >(function ThemedXStack(props, ref) {

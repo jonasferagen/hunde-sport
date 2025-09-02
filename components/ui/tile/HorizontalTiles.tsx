@@ -1,7 +1,7 @@
-import { FlashList, FlashListRef } from "@shopify/flash-list";
-import React, { JSX } from "react";
-import { StyleSheet, View as RNView } from "react-native";
-import { SpaceTokens, StackProps, View } from "tamagui";
+import { FlashList, type FlashListRef } from "@shopify/flash-list";
+import React, { type JSX } from "react";
+import { View as RNView, StyleSheet } from "react-native";
+import type { SpaceTokens, StackProps } from "tamagui";
 
 import {
   ProductAvailabilityStatus,
@@ -9,14 +9,15 @@ import {
 } from "@/components/features/product/display";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import { THEME_PRICE_TAG } from "@/config/app";
-import type { QueryResult } from "@/hooks/data/util";
+
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useVisibleItems } from "@/hooks/ui/useVisibleItems";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { spacePx } from "@/lib/helpers";
 import type { PurchasableProduct } from "@/types";
 
-import { ThemedYStack } from "../themed-components";
+import { ThemedYStack } from "@/components/ui/themed-components";
+import type { QueryResult } from "@/lib/query/query";
 import { TileBadge } from "./TileBadge";
 import { TileFixed } from "./TileFixed";
 
@@ -176,7 +177,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
   const listRef = React.useRef<FlashListRef<PurchasableProduct>>(null);
 
   return (
-    <View
+    <ThemedYStack
       style={[styles.container, { height: estimatedItemCrossSize }]}
       onLayout={edges.onLayout}
       mih={estimatedItemCrossSize}
@@ -215,7 +216,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
         widthToken={indicatorWidthToken}
         bg="$background"
       />
-    </View>
+    </ThemedYStack>
   );
 };
 

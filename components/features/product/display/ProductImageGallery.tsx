@@ -1,7 +1,8 @@
 import { Galeria } from "@nandorojo/galeria";
 import { useMemo, useState } from "react";
 import { Dimensions } from "react-native";
-import { ScrollView, XStack, YStack, YStackProps } from "tamagui";
+import type { YStackProps } from "tamagui";
+import { ScrollView, XStack, YStack } from "tamagui";
 
 import { ThemedImage } from "@/components/ui/themed-components/ThemedImage";
 import { Product } from "@/domain/product/Product";
@@ -19,7 +20,10 @@ export const ProductImageGallery = ({
   const { width: screenWidth } = Dimensions.get("window");
   const images = product.images;
 
-  const [gallery, setGallery] = useState({ visible: false, initialIndex: 0 });
+  const [gallery, setGallery] = useState({
+    visible: false,
+    initialIndex: 0,
+  }); /** @TODO: needed for imagegallery (i think) */
   const openGallery = (index: number) =>
     setGallery({ visible: true, initialIndex: index });
 
@@ -53,7 +57,7 @@ export const ProductImageGallery = ({
             m={-half} // equal outer trim on all sides
             onLayout={(e) => setContainerW(e.nativeEvent.layout.width)}
           >
-            {images.map((image, index) => (
+            {images.map((_image, index) => (
               <YStack key={index} w={colPct} p={half}>
                 {/* Inner square: borders/radius here so padding doesn't affect math */}
                 <YStack
@@ -65,7 +69,7 @@ export const ProductImageGallery = ({
                 >
                   <Galeria.Image index={index}>
                     <ThemedImage
-                      uri={galleryUrls[index]}
+                      uri={galleryUrls[index]!} /** @TODO type check / safety */
                       title={product.name}
                       aspectRatio={1}
                       objectFit="cover"

@@ -2,7 +2,7 @@ import React from "react";
 
 import {
   ThemedYStack,
-  ThemedYStackProps,
+  type ThemedYStackProps,
 } from "@/components/ui/themed-components/ThemedStacks";
 import { ThemedText } from "@/components/ui/themed-components/ThemedText";
 

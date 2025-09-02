@@ -2,7 +2,7 @@
 import { useToastController } from "@tamagui/toast";
 import React from "react";
 
-import { Purchasable } from "@/domain/purchasable/Purchasable";
+import type { Purchasable } from "@/domain/Purchasable";
 import { haptic } from "@/lib/haptics";
 import { useCartStore } from "@/stores/useCartStore";
 

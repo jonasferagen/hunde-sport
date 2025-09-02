@@ -3,7 +3,10 @@
 import fs from "fs";
 import path from "path";
 
-import { ProductCategory, ProductCategoryData } from "@/domain/ProductCategory";
+import {
+  ProductCategory,
+  type ProductCategoryData,
+} from "@/domain/ProductCategory";
 import { StoreImage } from "@/domain/StoreImage";
 
 const singlePath = path.join(__dirname, "data", "product-category.json");

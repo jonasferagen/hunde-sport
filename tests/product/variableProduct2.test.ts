@@ -6,7 +6,7 @@ import { ProductVariation } from "@/domain/product/ProductVariation";
 import { SimpleProduct } from "@/domain/product/SimpleProduct";
 import { VariableProduct } from "@/domain/product/VariableProduct";
 
-const FIXTURES = path.join(__dirname, "__fixtures__");
+const FIXTURES = path.resolve(__dirname, "__fixtures__");
 
 export function readFixture<T = unknown>(name: string): T {
   const p = path.join(FIXTURES, name);
@@ -15,7 +15,7 @@ export function readFixture<T = unknown>(name: string): T {
 
 export function loadProduct(name: string) {
   const raw = readFixture<ProductData>(name);
-  return Product.create(raw);
+  return Product.create(raw); // returns Product | SimpleProduct | VariableProduct | ProductVariation
 }
 
 /** Assertions */
@@ -46,8 +46,8 @@ export function expectValidVariable(p: unknown) {
   const vp = p as VariableProduct;
 
   expect(vp.type).toBe("variable");
-  expect(vp.rawAttributes.length).toBeGreaterThan(0);
-  expect(vp.rawVariations.length).toBeGreaterThan(0);
+  expect(vp.attributes.size).toBeGreaterThan(0);
+  expect(vp.variations.length).toBeGreaterThan(0);
   expect(vp.prices.price).toBeDefined();
 
   // must have at least one surviving variation (after skip-invalid)
@@ -71,10 +71,4 @@ export function expectValidVariable(p: unknown) {
       expect(term!.attribute).toBe(opt.attribute);
     }
   }
-}
-
-/** Small set matcher */
-export function expectSetEqual<T>(a: ReadonlySet<T>, b: ReadonlySet<T>) {
-  expect(a.size).toBe(b.size);
-  for (const x of a) expect(b.has(x)).toBe(true);
 }

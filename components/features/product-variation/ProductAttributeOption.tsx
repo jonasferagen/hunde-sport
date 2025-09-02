@@ -1,13 +1,11 @@
 import React from "react";
 
+import { ProductPriceRange } from "@/components/features/product/display/ProductPrice";
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
 import { useVariableProduct } from "@/contexts/VariableProductContext";
 import { useVariationSelection } from "@/contexts/VariationSelectionContext";
-import { getProductPriceRange } from "@/domain/pricing";
-import { VariableProduct } from "@/types";
-
-import { ProductPriceRange } from "../product/display";
+import { getProductPriceRange, VariableProduct } from "@/types";
 
 export const ProductAttributeOption = React.memo(
   ({

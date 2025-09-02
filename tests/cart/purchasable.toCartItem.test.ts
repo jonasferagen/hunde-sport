@@ -1,7 +1,9 @@
 // tests/cart/purchasable.toCartItem.test.ts
-import { VariationSelection } from "@/domain/product/VariationSelection";
+import { VariationSelection } from "@/domain/product/helpers/VariationSelection";
+import type { ProductVariation } from "@/domain/product/ProductVariation";
+import type { SimpleProduct } from "@/domain/product/SimpleProduct";
+import type { VariableProduct } from "@/domain/product/VariableProduct";
 import { Purchasable } from "@/domain/Purchasable";
-import type { ProductVariation, SimpleProduct, VariableProduct } from "@/types";
 
 function makeSimple(id = 1, name = "S"): SimpleProduct {
   return {

@@ -2,10 +2,11 @@
 import React from "react";
 
 import { useVariableProduct } from "@/contexts/VariableProductContext";
+import type { Term } from "@/domain/product/ProductAttributes";
 import { VariationSelection } from "@/domain/product/VariationSelection";
-import { Purchasable } from "@/domain/purchasable/Purchasable";
+import { Purchasable } from "@/domain/Purchasable";
 import { intersectSets } from "@/lib/util"; // variadic
-import type { ProductVariation, Term } from "@/types";
+import type { ProductVariation } from "@/types";
 
 export type SelectionViewForAttr = {
   selected: string | null;

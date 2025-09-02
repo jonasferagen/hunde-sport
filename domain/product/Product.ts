@@ -1,15 +1,9 @@
 // domain/product/Product.ts
-import { CustomField, CustomFieldData } from "@/domain/CustomField";
-import { ProductPrices } from "@/domain/pricing";
-import { StoreImage, StoreImageData } from "@/domain/StoreImage";
-import { cleanHtml } from "@/lib/format";
-
-export interface CategoryRefData {
-  id: number;
-  name: string;
-  slug: string;
-  link: string;
-}
+import { CustomField, type CustomFieldData } from "@/domain/CustomField";
+import type { ProductPrices } from "@/domain/pricing/types";
+import type { CategoryRefData } from "@/domain/product/helpers/types";
+import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
+import { cleanHtml } from "@/lib/formatters";
 
 export interface ProductAvailability {
   isInStock: boolean;
@@ -63,7 +57,6 @@ type NormalizedProduct = {
     customFields?: CustomField[];
   };
 };
-
 export abstract class Product implements NormalizedProduct {
   readonly id: number;
   readonly name: string;
@@ -78,7 +71,7 @@ export abstract class Product implements NormalizedProduct {
   readonly is_in_stock: boolean;
   readonly is_purchasable: boolean;
   readonly is_on_backorder: boolean;
-  readonly categories: CategoryRefData[];
+  readonly categories: CategoryRefData[]; /* @TODO* : always ensure a categoryRef - we can use 0 if nothing is set in the data */
   readonly type: "simple" | "variable" | "variation";
   readonly parent: number;
 
@@ -107,7 +100,7 @@ export abstract class Product implements NormalizedProduct {
   }
 
   get featuredImage(): StoreImage {
-    return this.images[0];
+    return this.images[0]!; /* @TODO* : This should be guaranteed to be here */
   }
   get availability(): ProductAvailability {
     return {
@@ -134,54 +127,39 @@ export abstract class Product implements NormalizedProduct {
   }
 
   static mapBase(
-    raw: ProductData,
+    data: ProductData,
     forceType: ProductData["type"]
   ): NormalizedProduct {
     return {
-      id: raw.id,
-      name: raw.name,
-      slug: raw.slug,
-      permalink: raw.permalink,
-      description: raw.description ?? "",
-      short_description: raw.short_description ?? "",
-      images: (raw.images ?? [StoreImage.DEFAULT]).map(StoreImage.create),
-      categories: raw.categories,
-      prices: raw.prices,
-      on_sale: raw.on_sale ?? false,
-      featured: raw.featured ?? false,
-      is_in_stock: raw.is_in_stock ?? false,
-      is_purchasable: raw.is_purchasable ?? false,
-      is_on_backorder: raw.is_on_backorder ?? false,
-      parent: raw.parent,
+      id: data.id,
+      name: data.name,
+      slug: data.slug,
+      permalink: data.permalink,
+      description: data.description ?? "",
+      short_description: data.short_description ?? "",
+      images: (data.images ?? [StoreImage.DEFAULT]).map(StoreImage.create),
+      categories: data.categories,
+      prices: data.prices,
+      on_sale: data.on_sale ?? false,
+      featured: data.featured ?? false,
+      is_in_stock: data.is_in_stock ?? false,
+      is_purchasable: data.is_purchasable ?? false,
+      is_on_backorder: data.is_on_backorder ?? false,
+      parent: data.parent,
       type: forceType,
       extensions: {
-        customFields: (raw.extensions?.app_fpf?.fields ?? [])
+        customFields: (data.extensions?.app_fpf?.fields ?? [])
           .map(CustomField.create)
           .filter((f) => !!f),
       },
     };
   }
-
   static create(data: ProductData) {
-    /* eslint-disable @typescript-eslint/no-require-imports */
-
-    switch (data.type) {
-      case "simple":
-        const { SimpleProduct } =
-          require("./SimpleProduct") as typeof import("./SimpleProduct");
-        return SimpleProduct.create(data);
-
-      case "variable":
-        const { VariableProduct } =
-          require("./VariableProduct") as typeof import("./VariableProduct");
-        return VariableProduct.create(data);
-
-      case "variation":
-        const { ProductVariation } =
-          require("./ProductVariation") as typeof import("./ProductVariation");
-        return ProductVariation.create(data);
-    }
-
-    /* eslint-enable @typescript-eslint/no-require-imports */
+    // Lazy import to avoid Product ↔ createProduct ↔ subclass ↔ Product cycle
+    const {
+      createProduct,
+    } = // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require("./helpers/createProduct") as typeof import("./helpers/createProduct");
+    return createProduct(data);
   }
 }

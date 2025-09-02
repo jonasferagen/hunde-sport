@@ -4,15 +4,13 @@ import React from "react";
 
 import {
   ThemedText,
-  ThemedTextProps,
+  type ThemedTextProps,
   ThemedXStack,
 } from "@/components/ui/themed-components";
-import { formatPrice } from "@/domain/pricing";
-import {
-  ProductAvailability,
-  ProductPrices,
-  ProductPriceRange as TProductPriceRange,
-} from "@/types";
+
+import { formatPrice } from "@/domain/pricing/format";
+import type { ProductPrices } from "@/domain/pricing/types";
+import type { ProductAvailability } from "@/types";
 
 const PriceLine = ({
   showIcon,
@@ -23,6 +21,8 @@ const PriceLine = ({
     <ThemedText>{children}</ThemedText>
   </ThemedXStack>
 );
+
+import type { ProductPriceRange as TProductPriceRange } from "@/domain/pricing/types";
 
 // ----- Simple price renderer (no data fetching) -----
 type ProductPriceSimpleProps = {

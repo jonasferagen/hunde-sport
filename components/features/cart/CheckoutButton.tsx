@@ -4,11 +4,11 @@ import * as React from "react";
 import { Linking } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
+import { formatCartItemsTotal } from "@/adapters/woocommerce/cartPricing";
 import { ThemedText, ThemedXStack } from "@/components/ui";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
 import { THEME_CTA_CHECKOUT } from "@/config/app";
-import { formatCartItemsTotal } from "@/domain/cart/misc";
 import { useCartIsLoading, useCartStore } from "@/stores/useCartStore";
 
 export const CheckoutButton = () => {

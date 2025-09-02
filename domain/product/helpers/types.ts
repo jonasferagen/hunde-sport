@@ -1,4 +1,12 @@
 /** ---- Normalized domain types ---- */
+
+export interface CategoryRefData {
+  id: number;
+  name: string;
+  slug: string;
+  link: string;
+}
+
 export interface Attribute {
   key: string; // normalized display name, e.g. "farge"
   label: string; // e.g. "Farge"
@@ -29,4 +37,11 @@ export type TermData = { id: number; name: string; slug: string };
 export type VariationData = {
   id: number;
   attributes: { name: string; value: string }[];
+};
+
+export type AttrKey = string;
+export type TermKey = string;
+export type VariationOptionData = {
+  attribute: AttrKey;
+  term: TermKey;
 };

@@ -1,11 +1,15 @@
 import { Minus, Plus, X } from "@tamagui/lucide-icons";
 import { useShallow } from "zustand/react/shallow";
 
+import {
+  formatItemLineTotal,
+  formatItemUnitPrice,
+} from "@/adapters/woocommerce/cartPricing";
 import { ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
 import { ThemedButton } from "@/components/ui/themed-components/ThemedButton";
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from "@/config/app";
-import { formatItemLineTotal, formatItemUnitPrice } from "@/domain/cart/misc"; // ⬅️ add this
+// ⬅️ add this
 import { useCartStore } from "@/stores/useCartStore";
 
 const QtyStepper = ({

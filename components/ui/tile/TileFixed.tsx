@@ -1,19 +1,18 @@
 // TileFixed.tsx (refined)
-import { ImageProps } from "expo-image";
+import type { ImageProps } from "expo-image";
 import React from "react";
 import { PixelRatio } from "react-native";
 import type { YStackProps } from "tamagui";
 
-import type { StoreImage } from "@/domain/store-image/StoreImage";
-import { getScaledImageUrl } from "@/lib/helpers";
-
 import {
+  ThemedImage,
   ThemedLinearGradient,
   ThemedText,
   ThemedYStack,
-} from "../themed-components";
-import { ThemedImage } from "../themed-components/ThemedImage";
-import { ThemedSurface } from "../themed-components/ThemedSurface";
+} from "@/components/ui/themed-components";
+import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
+import type { StoreImage } from "@/domain/StoreImage";
+import { getScaledImageUrl } from "@/lib/helpers";
 
 type TileFixedProps = YStackProps & {
   title: string;

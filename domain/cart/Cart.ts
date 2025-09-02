@@ -1,5 +1,6 @@
 // domain/Cart/models.ts
-import type { WcTotals } from "../../adapters/woocommerce/cartPricing";
+import type { WcTotals } from "@/adapters/woocommerce/cartPricing";
+
 import { CartItem, type CartItemData } from "./CartItem";
 
 export type CartData = {

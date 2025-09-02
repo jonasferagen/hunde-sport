@@ -1,4 +1,4 @@
-import { Heading, SizableTextProps } from "tamagui";
+import { Heading, type SizableTextProps } from "tamagui";
 
 import { Product } from "@/domain/product/Product";
 

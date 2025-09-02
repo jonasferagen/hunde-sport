@@ -1,9 +1,9 @@
 // ThemedButton.ts
 import React, { cloneElement, isValidElement, memo } from "react";
+import type { SizeTokens } from "tamagui";
 import {
   createStyledContext,
   getVariableValue,
-  SizeTokens,
   styled,
   Text,
   useTheme,

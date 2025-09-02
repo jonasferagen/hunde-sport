@@ -20,7 +20,7 @@ export const htmlToPlainText = (html: string): string => {
 
   const walk = (nodes: any[]): string => {
     let text = "";
-    nodes.forEach((node, index) => {
+    nodes.forEach((node, _index) => {
       if (node.type === "text") {
         if (!isAllWhitespace(node.data)) {
           text += node.data;
@@ -49,3 +49,11 @@ export const htmlToPlainText = (html: string): string => {
   // Trim leading/trailing whitespace and collapse multiple newlines into a maximum of two
   return result.replace(/\n{3,}/g, "\n\n").trim();
 };
+
+export const slugKey = (s: unknown) =>
+  String(s ?? "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFKD") // split accents
+    .replace(/\p{Diacritic}/gu, "") // remove accents (ø -> o, å -> a)
+    .replace(/\s+/g, "-"); // optional; keeps consistency with term slugs

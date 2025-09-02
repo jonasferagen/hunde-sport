@@ -1,7 +1,7 @@
 import type { ApiResponse } from "apisauce";
 
 import { ENDPOINTS } from "@/config/api";
-import { Cart, CartData } from "@/domain/cart/Cart";
+import { Cart, type CartData } from "@/domain/cart/Cart";
 import { apiClient } from "@/lib/apiClient";
 
 export interface AddItemOptions {

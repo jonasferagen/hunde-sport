@@ -1,4 +1,4 @@
-import { Product, ProductData } from "./Product";
+import { Product, type ProductData } from "./Product";
 
 export class ProductVariation extends Product {
   readonly parent: number;

@@ -1,8 +1,8 @@
 // components/ui/CallToActionButton.tsx
 import * as Haptics from "expo-haptics";
 import React from "react";
-import { GestureResponderEvent } from "react-native";
-import { Theme, ThemeName } from "tamagui";
+import type { GestureResponderEvent } from "react-native";
+import { Theme, type ThemeName } from "tamagui";
 
 import { ThemedSpinner, ThemedText, ThemedXStack } from "@/components/ui";
 import { ThemedButton } from "@/components/ui/themed-components";

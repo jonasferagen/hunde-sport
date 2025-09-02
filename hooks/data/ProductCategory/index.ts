@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 import {
   makeQueryOptions,
-  QueryResult,
+  type QueryResult,
   useQueryResult,
 } from "@/lib/query/query";
 import { ProductCategory } from "@/types";

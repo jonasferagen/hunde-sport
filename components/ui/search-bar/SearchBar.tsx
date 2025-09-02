@@ -1,9 +1,8 @@
 // components/ui/search-bar/SearchBar.tsx
 import React from "react";
-import { TextInput as RNTextInput } from "react-native";
 import { XStack } from "tamagui";
 
-import { ThemedInput } from "../themed-components";
+import { ThemedInput } from "@/components/ui/themed-components";
 
 export interface SearchBarProps {
   placeholder?: string;

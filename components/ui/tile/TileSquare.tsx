@@ -1,15 +1,18 @@
 // TileSquare.tsx
 import React, { useMemo } from "react";
 import { PixelRatio } from "react-native";
-import { YStackProps } from "tamagui";
+import type { YStackProps } from "tamagui";
 
-import type { StoreImage } from "@/domain/store-image/StoreImage";
+import {
+  ThemedImage,
+  ThemedLinearGradient,
+  ThemedText,
+  ThemedYStack,
+} from "@/components/ui/themed-components";
+import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
+import type { StoreImage } from "@/domain/StoreImage";
 import { getScaledImageUrl } from "@/lib/helpers";
 
-import { ThemedText, ThemedYStack } from "../themed-components";
-import { ThemedImage } from "../themed-components/ThemedImage";
-import { ThemedLinearGradient } from "../themed-components/ThemedLinearGradient";
-import { ThemedSurface } from "../themed-components/ThemedSurface";
 type TileSquareProps = YStackProps & {
   title: string;
   image: StoreImage;

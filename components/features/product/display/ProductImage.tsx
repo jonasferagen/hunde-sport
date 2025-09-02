@@ -1,6 +1,6 @@
 import { Galeria } from "@nandorojo/galeria";
 import { Dimensions } from "react-native";
-import { YStackProps } from "tamagui";
+import type { YStackProps } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui";
 import { ThemedImage } from "@/components/ui/themed-components/ThemedImage";

@@ -1,5 +1,5 @@
 import React from "react";
-import { StackProps, XStack, YStack } from "tamagui";
+import { type StackProps, XStack, YStack } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui";
 import { TileSquare } from "@/components/ui/tile/TileSquare";
@@ -23,7 +23,7 @@ export const ProductCategoryTiles = React.memo(function ProductCategoryTiles(
   return (
     <ThemedYStack {...props} mx={gapPx}>
       <XStack fw="wrap" m={-half}>
-        {productCategories.map((cat, index) => (
+        {productCategories.map((cat, _index) => (
           <YStack key={cat.id} w={colPct} p={half}>
             {/* Square here; remove aspectRatio on Tile */}
             <YStack w="100%" aspectRatio={1} br="$2">

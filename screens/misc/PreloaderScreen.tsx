@@ -45,7 +45,7 @@ export const PreloaderScreen = () => {
 
   return (
     <PreloaderView
-      label={allReady ? null : labels[activeIndex]}
+      label={allReady ? "" : labels[activeIndex]}
       progress={active?.progress}
       error={active?.error}
       onRetry={active?.retry}
@@ -105,7 +105,6 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
     error,
     hasNextPage,
     fetchNextPage,
-    isFetching,
     isFetchingNextPage,
     fetchStatus,
     refetch,
@@ -157,7 +156,7 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
 
 /** -------------------- View -------------------- **/
 type PreloaderViewProps = {
-  label: string | null;
+  label?: string;
   progress?: string;
   error?: Error | null;
   onRetry?: () => void;

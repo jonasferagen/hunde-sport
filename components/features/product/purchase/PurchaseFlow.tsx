@@ -1,8 +1,8 @@
 // components/product/purchase/PurchaseFlow.tsx
 import React from "react";
 
-import { Purchasable } from "@/domain/purchasable/Purchasable";
-import { PurchasableProduct } from "@/types";
+import { Purchasable } from "@/domain/Purchasable";
+import { type PurchasableProduct } from "@/types";
 
 import { PurchaseButton } from "./PurchaseButton";
 

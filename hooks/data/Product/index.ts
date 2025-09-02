@@ -1,18 +1,18 @@
 import {
   useInfiniteQuery,
   useQuery,
-  UseQueryResult,
+  type UseQueryResult,
 } from "@tanstack/react-query";
 
 import {
   makeQueryOptions,
-  QueryResult,
+  type QueryResult,
   useQueryResult,
 } from "@/lib/query/query";
 import {
   ProductCategory,
   ProductVariation,
-  PurchasableProduct,
+  type PurchasableProduct,
   VariableProduct,
 } from "@/types";
 

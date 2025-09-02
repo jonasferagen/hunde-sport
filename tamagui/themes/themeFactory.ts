@@ -151,9 +151,10 @@ export function buildThemes<C extends PaletteConfig>(config: C) {
   const themes = {} as Record<ThemeNames<C>, ThemeTemplate>;
 
   for (const key of Object.keys(config) as Extract<keyof C, string>[]) {
-    const { light, dark } = config[key];
-    const lightSet = makeVariantSet(light);
-    const darkSet = makeVariantSet(dark);
+    const palette = config[key];
+    if (!palette) continue; // satisfy noUncheckedIndexedAccess
+    const lightSet = makeVariantSet(palette.light);
+    const darkSet = makeVariantSet(palette.dark);
 
     (["", "_tint", "_shade"] as const).forEach((v) => {
       const L = lightSet[v];

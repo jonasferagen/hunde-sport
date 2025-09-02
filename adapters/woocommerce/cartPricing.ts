@@ -1,6 +1,6 @@
 // adapters/woocommerce/cartPricing.ts
 import { formatPrice } from "@/domain/pricing/format";
-import type { CurrencyHeader } from "@/domain/pricing/types"; // or "@/domain/pricing"
+import type { CurrencyHeader } from "@/domain/pricing/types";
 
 export type CartItemVariation = {
   raw_attribute?: string;

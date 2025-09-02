@@ -1,9 +1,8 @@
 // components/product/purchase/PurchaseButtonPriceTag.tsx
 
+import { ProductPrice } from "@/components/features/product/display/ProductPrice";
 import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
-import { PurchasableProduct } from "@/types";
-
-import { ProductPrice } from "../display";
+import { type PurchasableProduct } from "@/types";
 
 type Props = {
   product: PurchasableProduct;

@@ -1,10 +1,9 @@
+import { ProductList } from "@/components/features/product/list/ProductList";
 import { ThemedYStack } from "@/components/ui";
 import { Loader } from "@/components/ui/Loader";
 import { useProductsByProductCategory } from "@/hooks/data/Product";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
 import { ProductCategory } from "@/types";
-
-import { ProductList } from "../product/list/ProductList";
 
 type Props = {
   productCategory: ProductCategory;

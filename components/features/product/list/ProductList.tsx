@@ -8,10 +8,10 @@ import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
 import { Loader } from "@/components/ui/Loader";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { useVisibleItems } from "@/hooks/ui/useVisibleItems";
-import { PurchasableProduct } from "@/types";
+import type { PurchasableProduct } from "@/types";
 
-import { ProductCard } from "../display/ProductCard";
-import { BottomMoreHint, BottomMoreHintHandle } from "./BottomMoreHint";
+import { ProductCard } from "@/components/features/product/display/ProductCard";
+import { BottomMoreHint, type BottomMoreHintHandle } from "./BottomMoreHint";
 // inside ProductList:
 
 interface ProductListProps {

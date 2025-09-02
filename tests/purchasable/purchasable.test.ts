@@ -1,5 +1,5 @@
 // tests/cart/purchasable.toCartItem.test.ts
-import { VariationSelection } from "@/domain/product/VariationSelection";
+import { VariationSelection } from "@/domain/product/helpers/VariationSelection";
 import { Purchasable } from "@/domain/Purchasable";
 import type { ProductVariation, SimpleProduct, VariableProduct } from "@/types";
 test("alias resolves", () => {

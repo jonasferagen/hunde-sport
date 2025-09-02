@@ -1,5 +1,5 @@
 import { tokens } from "@tamagui/config/v4";
-import { DimensionValue } from "react-native";
+import type { DimensionValue } from "react-native";
 import { getVariableValue } from "tamagui";
 
 import appConfig from "@/tamagui/tamagui.config";

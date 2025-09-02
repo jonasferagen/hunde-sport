@@ -1,3 +1,3 @@
-import { ProductScreen } from '@/screens/ProductScreen';
+import { ProductScreen } from "@/screens/ProductScreen";
 
 export default () => <ProductScreen />;

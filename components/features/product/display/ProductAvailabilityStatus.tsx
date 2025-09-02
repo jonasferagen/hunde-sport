@@ -1,5 +1,5 @@
 import { ThemedText, ThemedXStack } from "@/components/ui";
-import { ProductAvailability } from "@/types";
+import type { ProductAvailability } from "@/types";
 
 interface Props {
   productAvailability: ProductAvailability;

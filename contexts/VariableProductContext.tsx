@@ -1,10 +1,10 @@
 import React from "react";
 
+import type { Term } from "@/domain/product/ProductAttributes";
 import type {
   ProductAvailability,
   ProductPrices,
   ProductVariation,
-  Term,
   VariableProduct,
 } from "@/types";
 

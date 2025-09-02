@@ -10,7 +10,7 @@ export const Prof: React.FC<{
   return (
     <React.Profiler
       id={id}
-      onRender={(id, phase, actual, base, start, commit) => {
+      onRender={(id, phase, actual) => {
         console.log(
           `[RENDER] ${id}  ${phase} duration=${actual.toFixed(1)}ms `
         );
