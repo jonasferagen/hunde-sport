@@ -1,110 +1,183 @@
-// domain/product/VariableProduct.ts
-
 import type { AttributeData, TermData, VariationData } from "./helpers/types";
 import { Attribute, Term, Variation } from "./helpers/types";
 import { Product, type ProductData } from "./Product";
 
-type Mapped = {
-  attributeHasTerms: Map<string, Set<string>>;
-  attributeHasVariations: Map<string, Set<string>>;
-  termHasAttributes: Map<string, Set<string>>;
-  termHasVariations: Map<string, Set<string>>;
-  variationHasTerms: Map<string, Set<string>>;
-  variationHasAttributes: Map<string, Set<string>>;
+type RelationshipMaps = {
+  attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
+  attributeHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
+  termHasAttributes: ReadonlyMap<string, ReadonlySet<string>>;
+  termHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
+  variationHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
+  variationHasAttributes: ReadonlyMap<string, ReadonlySet<string>>;
 };
 
 export class VariableProduct extends Product {
-  attributes: Map<string, Attribute>;
-  types: Map<string, Term>;
-  variations: Map<string, Variation>;
+  // Core collections (public, readonly views)
+  public readonly attributes: ReadonlyMap<string, Attribute>;
+  public readonly terms: ReadonlyMap<string, Term>;
+  public readonly variations: ReadonlyMap<string, Variation>;
 
-  mapped: Mapped;
+  // Relationship maps (public, readonly views)
+  public readonly attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
+  public readonly attributeHasVariations: ReadonlyMap<
+    string,
+    ReadonlySet<string>
+  >;
+  public readonly termHasAttributes: ReadonlyMap<string, ReadonlySet<string>>;
+  public readonly termHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
+  public readonly variationHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
+  public readonly variationHasAttributes: ReadonlyMap<
+    string,
+    ReadonlySet<string>
+  >;
 
   private constructor(data: ProductData) {
     const base = Product.mapBase(data, "variable");
-    const maps = parse(data);
     super(base);
 
-    this.attributes = maps.amap;
-    this.types = maps.tmap;
-    this.variations = maps.vmap;
-    this.mapped = this.createMaps();
+    const { attributes, terms, variations } = VariableProduct.parse(data);
+
+    this.attributes = attributes;
+    this.terms = terms;
+    this.variations = variations;
+
+    const rel = VariableProduct.buildRelationships(
+      attributes,
+      terms,
+      variations
+    );
+    this.attributeHasTerms = rel.attributeHasTerms;
+    this.attributeHasVariations = rel.attributeHasVariations;
+    this.termHasAttributes = rel.termHasAttributes;
+    this.termHasVariations = rel.termHasVariations;
+    this.variationHasTerms = rel.variationHasTerms;
+    this.variationHasAttributes = rel.variationHasAttributes;
   }
 
   static create(data: ProductData): VariableProduct {
     if (data.type !== "variable") {
       throw new Error("fromData(variable) received non-variable");
     }
-
     return new VariableProduct(data);
   }
 
-  private createMaps(): Mapped {
-    const maps: Mapped = {
-      attributeHasTerms: new Map<string, Set<string>>(),
-      attributeHasVariations: new Map<string, Set<string>>(),
-      termHasAttributes: new Map<string, Set<string>>(),
-      termHasVariations: new Map<string, Set<string>>(),
-      variationHasAttributes: new Map<string, Set<string>>(),
-      variationHasTerms: new Map<string, Set<string>>(),
+  // ---------- PURE STATICS ----------
+
+  static parse(data: ProductData): {
+    attributes: ReadonlyMap<string, Attribute>;
+    terms: ReadonlyMap<string, Term>;
+    variations: ReadonlyMap<string, Variation>;
+  } {
+    const attributes = new Map<string, Attribute>();
+    const terms = new Map<string, Term>();
+    const variations = new Map<string, Variation>();
+
+    for (const a of data.attributes ?? []) {
+      const attr = Attribute.create(a as AttributeData);
+      if (!attr.has_variations) continue;
+
+      // terms under this attribute
+      for (const t of a.terms ?? []) {
+        const term = Term.create(attr, t as TermData); // composite key here
+        terms.set(term.key, term);
+      }
+      attributes.set(attr.key, attr);
+    }
+
+    for (const v of data.variations ?? []) {
+      const variation = Variation.create(v as VariationData); // composite term keys inside
+      variations.set(variation.key, variation);
+    }
+
+    return { attributes, terms, variations };
+  }
+
+  static buildRelationships(
+    attributes: ReadonlyMap<string, Attribute>,
+    terms: ReadonlyMap<string, Term>,
+    variations: ReadonlyMap<string, Variation>
+  ): RelationshipMaps {
+    // writable locals during build
+    const attributeHasTerms = new Map<string, Set<string>>();
+    const attributeHasVariations = new Map<string, Set<string>>();
+    const termHasAttributes = new Map<string, Set<string>>();
+    const termHasVariations = new Map<string, Set<string>>();
+    const variationHasTerms = new Map<string, Set<string>>();
+    const variationHasAttributes = new Map<string, Set<string>>();
+
+    // pre-seed all valid keys
+    for (const aKey of attributes.keys()) {
+      attributeHasTerms.set(aKey, new Set());
+      attributeHasVariations.set(aKey, new Set());
+    }
+    for (const tKey of terms.keys()) {
+      termHasAttributes.set(tKey, new Set());
+      termHasVariations.set(tKey, new Set());
+    }
+    for (const vKey of variations.keys()) {
+      variationHasTerms.set(vKey, new Set());
+      variationHasAttributes.set(vKey, new Set());
+    }
+
+    // populate relations
+    for (const t of terms.values()) {
+      termHasAttributes.get(t.key)!.add(t.attrKey);
+      attributeHasTerms.get(t.attrKey)!.add(t.key);
+    }
+    for (const v of variations.values()) {
+      for (const tKey of v.termKeys) {
+        variationHasTerms.get(v.key)!.add(tKey);
+        termHasVariations.get(tKey)!.add(v.key);
+      }
+      for (const aKey of v.attrKeys) {
+        variationHasAttributes.get(v.key)!.add(aKey);
+        attributeHasVariations.get(aKey)!.add(v.key);
+      }
+    }
+
+    // readonly views via typing
+    return {
+      attributeHasTerms,
+      attributeHasVariations,
+      termHasAttributes,
+      termHasVariations,
+      variationHasTerms,
+      variationHasAttributes,
     };
+  }
 
-    // Build term ↔ attribute mappings
-    for (const t of [...this.types.values()]) {
-      const { key: tKey, attrKey: aKey } = t;
-      addToSetMap(maps.termHasAttributes, tKey, aKey);
-      addToSetMap(maps.attributeHasTerms, aKey, tKey);
-    }
-    // Build variation ↔ term and variation ↔ attribute mappings
-    for (const v of [...this.variations.values()]) {
-      const { key: vKey, termKeys, attrKeys } = v;
+  // ---------- SAFE GETTERS (throw on unknown; else always present) ----------
 
-      for (const tKey of termKeys) {
-        addToSetMap(maps.variationHasTerms, vKey, tKey);
-        addToSetMap(maps.termHasVariations, tKey, vKey);
-      }
-
-      for (const aKey of attrKeys) {
-        addToSetMap(maps.variationHasAttributes, vKey, aKey);
-        addToSetMap(maps.attributeHasVariations, aKey, vKey);
-      }
-    }
-    return maps;
+  getTermsByAttribute(attrKey: string): ReadonlySet<string> {
+    assertKnown(this.attributes, attrKey, "attribute");
+    return this.attributeHasTerms.get(attrKey)!;
+  }
+  getVariationsByAttribute(attrKey: string): ReadonlySet<string> {
+    assertKnown(this.attributes, attrKey, "attribute");
+    return this.attributeHasVariations.get(attrKey)!;
+  }
+  getAttributesByTerm(termKey: string): ReadonlySet<string> {
+    assertKnown(this.terms, termKey, "term");
+    return this.termHasAttributes.get(termKey)!;
+  }
+  getVariationsByTerm(termKey: string): ReadonlySet<string> {
+    assertKnown(this.terms, termKey, "term");
+    return this.termHasVariations.get(termKey)!;
+  }
+  getTermsByVariation(variationKey: string): ReadonlySet<string> {
+    assertKnown(this.variations, variationKey, "variation");
+    return this.variationHasTerms.get(variationKey)!;
+  }
+  getAttributesByVariation(variationKey: string): ReadonlySet<string> {
+    assertKnown(this.variations, variationKey, "variation");
+    return this.variationHasAttributes.get(variationKey)!;
   }
 }
 
-function parse(data: any) {
-  const amap = new Map<string, Attribute>();
-  const tmap = new Map<string, Term>();
-  const vmap = new Map<string, Variation>();
-
-  for (const a of data.attributes ?? []) {
-    const attribute = Attribute.create(a as AttributeData);
-    if (!attribute.has_variations) {
-      continue;
-    }
-
-    for (let t of a.terms ?? []) {
-      t.attrKey = attribute.key;
-      const term = Term.create(t as TermData);
-      tmap.set(term.key, term);
-    }
-    amap.set(attribute.key, attribute);
-  }
-  for (const v of data.variations ?? []) {
-    const variation = Variation.create(v as VariationData);
-    vmap.set(variation.key, variation);
-  }
-  return { amap, tmap, vmap };
-}
-
-function addToSetMap(
-  map: Map<string, Set<string>>,
+function assertKnown<T>(
+  m: ReadonlyMap<string, T>,
   key: string,
-  value: string
-) {
-  if (!map.has(key)) {
-    map.set(key, new Set());
-  }
-  map.get(key)!.add(value);
+  kind: "attribute" | "term" | "variation"
+): void {
+  if (!m.has(key)) throw new Error(`Unknown ${kind} key: "${key}"`);
 }

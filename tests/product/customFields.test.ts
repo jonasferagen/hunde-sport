@@ -1,8 +1,9 @@
-import { Product, type ProductData } from "@/domain/product/Product";
-import { readFixture } from "@/tests/product/variableProduct.test";
+import { Product } from "@/domain/product/Product";
+
+import { loadFixture } from "./helpers";
 
 test("customFields are normalized from extensions.app_fpf.fields", () => {
-  const raw = readFixture<ProductData>("fpf_extended.json");
+  const raw = loadFixture("customtext.json");
   const p = Product.create(raw);
 
   expect(p.hasCustomFields).toBe(true);

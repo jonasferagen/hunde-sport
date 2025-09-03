@@ -4,36 +4,68 @@ import { H3 } from "tamagui";
 
 import { ThemedXStack, ThemedYStack } from "@/components/ui";
 import { useVariableProduct } from "@/contexts/VariableProductContext";
-
-// ProductVariationSelect.tsx
+import { ProductAttributeOption } from "@/components/features/product-variation/ProductAttributeOption";
 
 export function ProductVariationSelect() {
   const { variableProduct } = useVariableProduct();
-  const { attributes, mapped } = variableProduct;
-
-  // const variations = mapped.variationsByTerm;
-
+  const { attributes } = variableProduct;
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
       {Array.from(attributes).map(([attrKey, attribute]) => {
-        console.log(attrKey);
-        console.log("aaa");
-        console.log(mapped.termsByAttribute);
-        console.log(mapped.termsByVariation);
-        console.log(mapped.variationHasTerms);
-        const terms = mapped.termsByAttribute.get(attrKey);
-
         // console.log(mapped.termsByAttribute);
 
         return (
           <>
             <ThemedYStack key={attrKey} f={1}>
               <H3 tt="capitalize" size="$6" mb="$1">
-                {attribute}
+                {attribute.label}
               </H3>
             </ThemedYStack>
 
-            <ThemedYStack w="100%" gap="$2"></ThemedYStack>
+            <ThemedYStack w="100%" gap="$2">
+              {Array.from(variableProduct.attributeHasTerms.get(attrKey)!.values()).map(
+                (termKey) => {
+                  // hide only globally unused terms
+                  const isGloballyUnused =
+                    variableProduct.getVariationsByTerm(termKey).size === 0;
+                  if (isGloballyUnused) return null;
+
+                  // check compatibility with *other* selections
+                  const vsetForThisTerm = variableProduct.getVariationsByTerm(termKey);
+
+                  // If this attribute is currently selected with another term,
+                  // build a hypothetical selection: replace with this term.
+                  const hypothetical = new Map(selections);
+                  hypothetical.set(attrKey, termKey);
+
+                  const isEnabled =
+                    intersectSets(
+                      variableProduct.getCompatibleVariations(hypothetical),
+                      vsetForThisTerm
+                    ).size > 0;
+
+                  const isSelected = selectedTerm === termKey;
+                  const termLabel = types.get(termKey)?.label ?? termKey;
+
+                  const onPress = () =>
+                    select(attrKey, isSelected ? null : termKey);
+
+                  return (
+                    <ProductAttributeOption
+                      key={`${attrKey}:${termKey}`}
+                      attribute={attrKey}
+                      term={termKey}
+                      isSelected={!!isSelected}
+                      disabled={!isEnabled}
+                      label={termLabel}
+                      variationSet={vsetForThisTerm}
+                      onPress={onPress}
+                    />
+                  );
+                }
+              )}
+            </ThemedYStack>
+          </ThemedYStack>
           </>
         );
       })}
