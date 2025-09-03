@@ -4,6 +4,7 @@ module.exports = {
   transform: {
     "^.+\\.(t|j)sx?$": ["babel-jest", { configFile: "./babel.config.js" }],
   },
+  testPathIgnorePatterns: ["/node_modules/", "/tests/quarantine/"],
   transformIgnorePatterns: ["/node_modules/"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",

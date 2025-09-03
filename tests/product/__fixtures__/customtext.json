@@ -140,5 +140,25 @@
     "maximum": 9999,
     "multiple_of": 1
   },
-  "extensions": {}
+
+  "extensions": {
+    "app_fpf": {
+      "fields": [
+        {
+          "key": "line1",
+          "label": "Linje 1",
+          "required": true,
+          "maxlen": 12,
+          "lines": 1
+        },
+        {
+          "key": "line2",
+          "label": "Linje 2",
+          "required": false,
+          "maxlen": 12,
+          "lines": 1
+        }
+      ]
+    }
+  }
 }

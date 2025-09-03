@@ -1,8 +1,10 @@
-import { consoleTransport, logger } from 'react-native-logs';
+// lib/logger.ts
+
+import { consoleTransport, logger } from "react-native-logs";
 
 const config = {
-    severity: 'debug',
-    transport: consoleTransport,
+  severity: "debug",
+  transport: consoleTransport,
 };
 
 export const log = logger.createLogger(config);

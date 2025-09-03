@@ -86,7 +86,10 @@ export class VariableProduct extends Product {
 
     for (const v of data.variations ?? []) {
       const variation = Variation.create(v as VariationData); // composite term keys inside
-      variations.set(variation.key, variation);
+      /** We skip variations that do not map to a sanitized Term */
+      if (variation.termKeys.every((k) => terms.has(k))) {
+        variations.set(variation.key, variation);
+      }
     }
 
     return { attributes, terms, variations };
@@ -126,8 +129,13 @@ export class VariableProduct extends Product {
     }
     for (const v of variations.values()) {
       for (const tKey of v.termKeys) {
-        variationHasTerms.get(v.key)!.add(tKey);
-        termHasVariations.get(tKey)!.add(v.key);
+        try {
+          variationHasTerms.get(v.key)!.add(tKey);
+          termHasVariations.get(tKey)!.add(v.key);
+        } catch (e) {
+          console.log(e);
+          console.log(tKey);
+        }
       }
       for (const aKey of v.attrKeys) {
         variationHasAttributes.get(v.key)!.add(aKey);

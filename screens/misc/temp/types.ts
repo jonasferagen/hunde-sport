@@ -17,12 +17,7 @@ export type TermData = {
 
 export type VariationData = {
   id: number;
-  attributes: [
-    {
-      name: string;
-      value: string;
-    },
-  ];
+  attributes: { name: string; value: string }[];
 };
 
 export class Attribute {
