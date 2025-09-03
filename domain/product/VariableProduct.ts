@@ -3,12 +3,12 @@ import { Attribute, Term, Variation } from "./helpers/types";
 import { Product, type ProductData } from "./Product";
 
 type RelationshipMaps = {
-  attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
-  attributeHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
-  termHasAttributes: ReadonlyMap<string, ReadonlySet<string>>;
-  termHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
-  variationHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
-  variationHasAttributes: ReadonlyMap<string, ReadonlySet<string>>;
+  attributeHasTerms: ReadonlyMap<string, ReadonlySet<Term>>;
+  attributeHasVariations: ReadonlyMap<string, ReadonlySet<Variation>>;
+  termHasAttributes: ReadonlyMap<string, ReadonlySet<Attribute>>;
+  termHasVariations: ReadonlyMap<string, ReadonlySet<Variation>>;
+  variationHasTerms: ReadonlyMap<string, ReadonlySet<Term>>;
+  variationHasAttributes: ReadonlyMap<string, ReadonlySet<Attribute>>;
 };
 
 export class VariableProduct extends Product {
@@ -17,18 +17,23 @@ export class VariableProduct extends Product {
   public readonly terms: ReadonlyMap<string, Term>;
   public readonly variations: ReadonlyMap<string, Variation>;
 
-  // Relationship maps (public, readonly views)
-  public readonly attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
-  public readonly attributeHasVariations: ReadonlyMap<
+  private readonly attributeHasTerms: ReadonlyMap<string, ReadonlySet<Term>>;
+  private readonly attributeHasVariations: ReadonlyMap<
     string,
-    ReadonlySet<string>
+    ReadonlySet<Variation>
   >;
-  public readonly termHasAttributes: ReadonlyMap<string, ReadonlySet<string>>;
-  public readonly termHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
-  public readonly variationHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
-  public readonly variationHasAttributes: ReadonlyMap<
+  private readonly termHasAttributes: ReadonlyMap<
     string,
-    ReadonlySet<string>
+    ReadonlySet<Attribute>
+  >;
+  private readonly termHasVariations: ReadonlyMap<
+    string,
+    ReadonlySet<Variation>
+  >;
+  private readonly variationHasTerms: ReadonlyMap<string, ReadonlySet<Term>>;
+  private readonly variationHasAttributes: ReadonlyMap<
+    string,
+    ReadonlySet<Attribute>
   >;
 
   private constructor(data: ProductData) {
@@ -94,21 +99,20 @@ export class VariableProduct extends Product {
 
     return { attributes, terms, variations };
   }
-
   static buildRelationships(
     attributes: ReadonlyMap<string, Attribute>,
     terms: ReadonlyMap<string, Term>,
     variations: ReadonlyMap<string, Variation>
   ): RelationshipMaps {
-    // writable locals during build
-    const attributeHasTerms = new Map<string, Set<string>>();
-    const attributeHasVariations = new Map<string, Set<string>>();
-    const termHasAttributes = new Map<string, Set<string>>();
-    const termHasVariations = new Map<string, Set<string>>();
-    const variationHasTerms = new Map<string, Set<string>>();
-    const variationHasAttributes = new Map<string, Set<string>>();
+    // object-based sets
+    const attributeHasTerms = new Map<string, Set<Term>>();
+    const attributeHasVariations = new Map<string, Set<Variation>>();
+    const termHasAttributes = new Map<string, Set<Attribute>>();
+    const termHasVariations = new Map<string, Set<Variation>>();
+    const variationHasTerms = new Map<string, Set<Term>>();
+    const variationHasAttributes = new Map<string, Set<Attribute>>();
 
-    // pre-seed all valid keys
+    // pre-seed keys
     for (const aKey of attributes.keys()) {
       attributeHasTerms.set(aKey, new Set());
       attributeHasVariations.set(aKey, new Set());
@@ -122,28 +126,26 @@ export class VariableProduct extends Product {
       variationHasAttributes.set(vKey, new Set());
     }
 
-    // populate relations
+    // attributes ↔ terms
     for (const t of terms.values()) {
-      termHasAttributes.get(t.key)!.add(t.attrKey);
-      attributeHasTerms.get(t.attrKey)!.add(t.key);
+      termHasAttributes.get(t.key)!.add(attributes.get(t.attrKey)!);
+      attributeHasTerms.get(t.attrKey)!.add(t);
     }
+
+    // variations ↔ terms / attributes
     for (const v of variations.values()) {
       for (const tKey of v.termKeys) {
-        try {
-          variationHasTerms.get(v.key)!.add(tKey);
-          termHasVariations.get(tKey)!.add(v.key);
-        } catch (e) {
-          console.log(e);
-          console.log(tKey);
-        }
+        const term = terms.get(tKey)!;
+        variationHasTerms.get(v.key)!.add(term);
+        termHasVariations.get(tKey)!.add(v);
       }
       for (const aKey of v.attrKeys) {
-        variationHasAttributes.get(v.key)!.add(aKey);
-        attributeHasVariations.get(aKey)!.add(v.key);
+        const attr = attributes.get(aKey)!;
+        variationHasAttributes.get(v.key)!.add(attr);
+        attributeHasVariations.get(aKey)!.add(v);
       }
     }
 
-    // readonly views via typing
     return {
       attributeHasTerms,
       attributeHasVariations,
@@ -156,29 +158,46 @@ export class VariableProduct extends Product {
 
   // ---------- SAFE GETTERS (throw on unknown; else always present) ----------
 
-  getTermsByAttribute(attrKey: string): ReadonlySet<string> {
+  // Attribute → Terms
+  getTermsByAttribute(attrKey: string): readonly Term[] {
     assertKnown(this.attributes, attrKey, "attribute");
-    return this.attributeHasTerms.get(attrKey)!;
+    const terms = this.attributeHasTerms.get(attrKey)!; // Set<Term>
+    return Array.from(terms.values());
   }
-  getVariationsByAttribute(attrKey: string): ReadonlySet<string> {
+
+  // Attribute → Variations
+  getVariationsByAttribute(attrKey: string): readonly Variation[] {
     assertKnown(this.attributes, attrKey, "attribute");
-    return this.attributeHasVariations.get(attrKey)!;
+    const vars = this.attributeHasVariations.get(attrKey)!; // Set<Variation>
+    return Array.from(vars.values());
   }
-  getAttributesByTerm(termKey: string): ReadonlySet<string> {
+
+  // Term → Attributes
+  getAttributesByTerm(termKey: string): readonly Attribute[] {
     assertKnown(this.terms, termKey, "term");
-    return this.termHasAttributes.get(termKey)!;
+    const attrs = this.termHasAttributes.get(termKey)!; // Set<Attribute>
+    return Array.from(attrs.values());
   }
-  getVariationsByTerm(termKey: string): ReadonlySet<string> {
+
+  // Term → Variations
+  getVariationsByTerm(termKey: string): readonly Variation[] {
     assertKnown(this.terms, termKey, "term");
-    return this.termHasVariations.get(termKey)!;
+    const vars = this.termHasVariations.get(termKey)!; // Set<Variation>
+    return Array.from(vars.values());
   }
-  getTermsByVariation(variationKey: string): ReadonlySet<string> {
+
+  // Variation → Terms
+  getTermsByVariation(variationKey: string): readonly Term[] {
     assertKnown(this.variations, variationKey, "variation");
-    return this.variationHasTerms.get(variationKey)!;
+    const terms = this.variationHasTerms.get(variationKey)!; // Set<Term>
+    return Array.from(terms.values());
   }
-  getAttributesByVariation(variationKey: string): ReadonlySet<string> {
+
+  // Variation → Attributes
+  getAttributesByVariation(variationKey: string): readonly Attribute[] {
     assertKnown(this.variations, variationKey, "variation");
-    return this.variationHasAttributes.get(variationKey)!;
+    const attrs = this.variationHasAttributes.get(variationKey)!; // Set<Attribute>
+    return Array.from(attrs.values());
   }
 }
 
