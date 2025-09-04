@@ -91,7 +91,7 @@ type SelectionInfo = {
 };
 
 export class AttributeSelection {
-  private readonly selected: AttributeRecord;
+  public readonly selected: AttributeRecord;
 
   private constructor(selected: AttributeRecord) {
     this.selected = selected;
@@ -121,5 +121,15 @@ export class AttributeSelection {
     const record = { ...this.selected, [attrKey]: term };
 
     return new AttributeSelection(record);
+  }
+
+  isComplete(): boolean {
+    const keys = Object.keys(this.selected);
+    const terms = this.getTerms().filter((t) => t !== undefined);
+    return keys.length === terms.length;
+  }
+
+  getTerms(): (Term | undefined)[] {
+    return Object.values(this.selected);
   }
 }

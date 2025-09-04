@@ -15,7 +15,7 @@ export function PurchaseFlow({ product }: Props) {
 
   // Always construct the domain object from current UI state
   const purchasable = React.useMemo(
-    () => new Purchasable({ product }),
+    () => Purchasable.create({ product }),
     [product]
   );
 

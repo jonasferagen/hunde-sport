@@ -40,6 +40,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
 }: Props) {
   const decision = decidePurchasable(purchasable.status);
   const { theme, iconKey, label } = decision;
+
   const icon = ICONS[iconKey] ?? null;
 
   const { isLoading, onPress } = useAddToCart(purchasable, {

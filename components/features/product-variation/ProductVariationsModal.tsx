@@ -4,10 +4,7 @@ import { ProductImage } from "@/components/features/product/display/ProductImage
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
-import {
-  useVariableProduct,
-  VariableProductProvider,
-} from "@/contexts/VariableProductContext";
+import { VariableProductProvider } from "@/contexts/VariableProductContext";
 import { AttributeSelection, Term } from "@/domain/product/helpers/types";
 import { useProductVariations } from "@/hooks/data/Product";
 import { Purchasable, VariableProductVariant } from "@/types";
@@ -34,55 +31,52 @@ export const ProductVariationsModal = ({ close, purchasable }: Props) => {
       productVariations={productVariations}
       isLoading={isLoading}
     >
-      <ProductVariationsModalContent close={close} />
+      <ProductVariationsModalContent close={close} purchasable={purchasable} />
     </VariableProductProvider>
   );
 };
 
 export const ProductVariationsModalContent = ({
   close,
+  purchasable,
 }: {
   close: () => void;
+  purchasable: Purchasable;
 }) => {
-  const { variableProduct, productVariations } = useVariableProduct();
+  const { product } = purchasable;
 
-  const { attributes } = variableProduct;
-  const initialAttributeSelection = AttributeSelection.create(attributes);
+  const initialAttributeSelection = AttributeSelection.create(
+    purchasable.variableProduct.attributes
+  );
+
   const [attributeSelection, setAttributeSelection] =
-    React.useState<AttributeSelection>(initialAttributeSelection);
-
-  const map = new Map<string, VariableProductVariant>();
-  const pvMap = productVariations.forEach((pv) => {
-    const id = String(pv.id);
-    map.set(id, pv);
-  });
+    React.useState<AttributeSelection>(initialAttributeSelection!);
 
   const onSelect = (attrKey: string, term: Term | undefined) => {
     const newSelection = attributeSelection.with(attrKey, term);
-
     setAttributeSelection(newSelection);
   };
 
-  const purchasable = React.useMemo(() => {
-    return new Purchasable({
-      product: variableProduct,
+  const newPurchasable = React.useMemo(() => {
+    return Purchasable.create({
+      product,
       attributeSelection,
     });
-  }, [variableProduct, attributeSelection]);
+  }, [product, attributeSelection]);
 
   return (
     <ModalLayout
-      title={variableProduct.name}
+      title={product.name}
       onClose={close}
       footer={
         <ThemedYStack>
           <ThemedYStack mb="$3" />
-          <PurchaseButton purchasable={purchasable} onSuccess={close} />
+          <PurchaseButton purchasable={newPurchasable} onSuccess={close} />
         </ThemedYStack>
       }
     >
       <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
-        <ProductImage product={variableProduct} img_height={IMAGE_H} />
+        <ProductImage product={product} img_height={IMAGE_H} />
       </ThemedYStack>
       <ProductVariationSelect
         attributeSelection={attributeSelection}

@@ -1,11 +1,14 @@
 // @domain/purchasable/Purchasable.ts
 import { CustomField } from "@/domain/CustomField";
-import type { AttributeSelection, Term } from "@/domain/product/helpers/types";
+import type {
+  AttributeSelection as AttributeSelectionType,
+  Term,
+  Variation,
+} from "@/domain/product/helpers/types";
 import { Product } from "@/domain/product/Product";
-import { VariableProductVariant } from "@/domain/product/ProductVariation";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
+import { intersectSets } from "@/lib/util";
 import type { SimpleProduct, VariableProduct } from "@/types";
-
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 
 export type PurchasableStatus =
@@ -31,27 +34,59 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
 
 type Props = {
   product: Product;
-  productVariation?: VariableProductVariant;
-  attributeSelection?: AttributeSelection;
+  //variableProductVariant?: VariableProductVariant;
+  attributeSelection?: AttributeSelectionType;
 };
 
 export class Purchasable {
   readonly product: Product;
-  productVariation?: VariableProductVariant;
-  attributeSelection?: AttributeSelection;
-  selectedTerms?: readonly Term[];
+  //variableProductVariant?: VariableProductVariant;
+  //readonly attributeSelection?: AttributeSelectionType;
+  readonly selectedTerms: readonly (Term | undefined)[] = [];
+  readonly productVariation?: Variation;
 
-  readonly customFields?: CustomField[];
+  readonly customFields: CustomField[] = [];
   readonly customizationSatisfiedHint: boolean = false;
 
-  constructor({ product, productVariation, attributeSelection }: Props) {
+  private isInSelection: boolean = false;
+
+  private constructor({ product, attributeSelection }: Props) {
     this.product = product;
-    this.productVariation = productVariation;
-    this.attributeSelection = attributeSelection;
+    if (this.product.type === "simple") {
+      return;
+    }
+    if (!attributeSelection) {
+      return;
+    }
+
+    const variableProduct = this.variableProduct;
+    const selectedTerms = attributeSelection.getTerms();
+
+    this.isInSelection = true;
+    this.selectedTerms = selectedTerms;
+
+    if (!attributeSelection?.isComplete()) {
+      return;
+    }
+
+    const sets = [];
+    for (const term of selectedTerms) {
+      const v = variableProduct.getVariationsByTerm(term!.key);
+      sets.push(v);
+    }
+    const I = intersectSets(...sets);
+
+    if (I.size === 1) {
+      const v = Array.from(I)[0];
+      this.productVariation = v;
+    }
     //this.customFields = customFields;
+
     // this.customizationSatisfiedHint = customizationSatisfiedHint;
   }
-  //static create({ product, attributeSelection }: Props) {}
+  static create(props: Props) {
+    return new Purchasable(props);
+  }
 
   get variableProduct(): VariableProduct {
     if (!this.product.isVariable) {
@@ -84,6 +119,10 @@ export class Purchasable {
     );
   }
 
+  private get needsSelection(): boolean {
+    return !this.isInSelection;
+  }
+
   private resolveStatusKey(): PurchasableStatus {
     const { availability } = this.product;
 
@@ -91,7 +130,7 @@ export class Purchasable {
     if (!availability.isPurchasable) return "unavailable";
 
     if (this.product.isVariable) {
-      if (!this.selectedTerms) return "select";
+      if (this.needsSelection) return "select";
       if (!this.productVariation) return "select_incomplete";
     }
 
@@ -105,7 +144,7 @@ export class Purchasable {
     let label = DEFAULT_STATUS_LABEL[key];
     if (key === "select_incomplete" && this.selectedTerms) {
       console.log(this.selectedTerms);
-      const msg = "koko";
+      const msg = this.selectedTerms.map((t) => t?.label).join(":");
       if (msg) label = msg;
     }
     return { key, label };
