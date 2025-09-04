@@ -1,6 +1,6 @@
 // Re-export models
 
-import type { ProductVariation } from "@/domain/product/ProductVariation";
+import type { VariableProductVariant } from "@/domain/product/ProductVariation";
 import type { SimpleProduct } from "@/domain/product/SimpleProduct";
 import type { VariableProduct } from "@/domain/product/VariableProduct";
 
@@ -12,4 +12,4 @@ export * from "@/domain/product/VariableProduct";
 export * from "@/domain/ProductCategory";
 export * from "@/domain/Purchasable";
 
-export type Product = SimpleProduct | VariableProduct | ProductVariation;
+export type Product = SimpleProduct | VariableProduct | VariableProductVariant;

@@ -7,7 +7,7 @@ import { useVariableProduct } from "@/contexts/VariableProductContext";
 import type { AttributeSelection, Term } from "@/domain/product/helpers/types";
 
 type Props = {
-  onSelect: (term: Term, enable: boolean) => void;
+  onSelect: (attrKey: string, term: Term | undefined) => void;
   attributeSelection: AttributeSelection;
 };
 
@@ -44,7 +44,6 @@ export function ProductVariationSelect({
                 const otherTermVariations = variableProduct.getVariationsByTerm(
                   otherSelectedTerm.key
                 );
-
                 // Find intersection: variations that contain both terms
                 const hasSharedVariations = Array.from(termVariations).some(
                   (variation) => otherTermVariations.has(variation)
@@ -59,7 +58,9 @@ export function ProductVariationSelect({
                   label={term.label}
                   isSelected={isSelected}
                   disabled={disabled}
-                  onPress={() => onSelect(term, !isSelected)}
+                  onPress={() =>
+                    onSelect(attrKey, isSelected ? undefined : term)
+                  } // Toggle active term
                 />
               ) : null;
             })}

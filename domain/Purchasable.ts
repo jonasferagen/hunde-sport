@@ -2,7 +2,7 @@
 import { CustomField } from "@/domain/CustomField";
 import type { AttributeSelection, Term } from "@/domain/product/helpers/types";
 import { Product } from "@/domain/product/Product";
-import { ProductVariation } from "@/domain/product/ProductVariation";
+import { VariableProductVariant } from "@/domain/product/ProductVariation";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
 import type { SimpleProduct, VariableProduct } from "@/types";
 
@@ -31,13 +31,13 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
 
 type Props = {
   product: Product;
-  productVariation?: ProductVariation;
+  productVariation?: VariableProductVariant;
   attributeSelection?: AttributeSelection;
 };
 
 export class Purchasable {
   readonly product: Product;
-  productVariation?: ProductVariation;
+  productVariation?: VariableProductVariant;
   attributeSelection?: AttributeSelection;
   selectedTerms?: readonly Term[];
 
@@ -53,9 +53,11 @@ export class Purchasable {
   }
   //static create({ product, attributeSelection }: Props) {}
 
-  withCustomizationSatisfied(): Purchasable {
-    return new Purchasable({ product: this.product });
-    // this.selectedTerms,
+  get variableProduct(): VariableProduct {
+    if (!this.product.isVariable) {
+      throw "Not a variable product";
+    }
+    return this.product as VariableProduct;
   }
 
   get hasCustomFields(): boolean {

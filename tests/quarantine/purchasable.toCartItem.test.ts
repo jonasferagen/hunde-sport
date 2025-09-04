@@ -1,6 +1,6 @@
 // tests/cart/purchasable.toCartItem.test.ts
 import { VariationSelection } from "@/domain/product/helpers/VariationSelection";
-import type { ProductVariation } from "@/domain/product/ProductVariation";
+import type { VariableProductVariant } from "@/domain/product/ProductVariation";
 import type { SimpleProduct } from "@/domain/product/SimpleProduct";
 import type { VariableProduct } from "@/domain/product/VariableProduct";
 import { Purchasable } from "@/domain/Purchasable";
@@ -56,8 +56,8 @@ function makeVariable(
   } as unknown as VariableProduct;
 }
 
-function fakeVariation(id = 42): ProductVariation {
-  return { id } as unknown as ProductVariation;
+function fakeVariation(id = 42): VariableProductVariant {
+  return { id } as unknown as VariableProductVariant;
 }
 
 describe("Purchasable.toCartItem()", () => {

@@ -11,9 +11,9 @@ import {
 } from "@/lib/query/query";
 import {
   ProductCategory,
-  ProductVariation,
   type PurchasableProduct,
   VariableProduct,
+  VariableProductVariant,
 } from "@/types";
 
 import {
@@ -123,7 +123,7 @@ export const useRecentProducts = (
 export const useProductVariations = (
   variableProduct: VariableProduct,
   options = { perPage: 100 }
-): QueryResult<ProductVariation> => {
+): QueryResult<VariableProductVariant> => {
   const result = useInfiniteQuery({
     queryKey: ["product-variations", variableProduct.id],
     queryFn: ({ pageParam }) =>
@@ -134,5 +134,5 @@ export const useProductVariations = (
     enabled: variableProduct.type === "variable",
     ...queryOptions,
   });
-  return useQueryResult<ProductVariation>(result);
+  return useQueryResult<VariableProductVariant>(result);
 };

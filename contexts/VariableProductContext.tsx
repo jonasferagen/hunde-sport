@@ -3,16 +3,16 @@ import React from "react";
 import type {
   ProductAvailability,
   ProductPrices,
-  ProductVariation,
   VariableProduct,
+  VariableProductVariant,
 } from "@/types";
 
 export type VariableProductCtx = {
   variableProduct: VariableProduct;
   isLoading: boolean;
-
+  productVariations: VariableProductVariant[];
   // Lookups
-  byId: (id: number) => ProductVariation | undefined;
+  byId: (id: number) => VariableProductVariant | undefined;
 
   // Display helpers (accept arrays you create at the edge)
   pricesForIds: (ids: number[]) => ProductPrices[];
@@ -31,7 +31,7 @@ export const useVariableProduct = () => {
 
 type Props = {
   variableProduct: VariableProduct;
-  productVariations: ProductVariation[]; // hydrated; includes prices/availability
+  productVariations: VariableProductVariant[]; // hydrated; includes prices/availability
   isLoading?: boolean;
   children: React.ReactNode;
 };
@@ -44,7 +44,7 @@ export function VariableProductProvider({
 }: Props) {
   // id -> variation
   const variationById = React.useMemo(() => {
-    const m = new Map<number, ProductVariation>();
+    const m = new Map<number, VariableProductVariant>();
     for (const v of productVariations) m.set(v.id, v);
     return m;
   }, [productVariations]);
@@ -77,6 +77,7 @@ export function VariableProductProvider({
     byId,
     pricesForIds,
     availabilityForIds,
+    productVariations,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
