@@ -22,7 +22,7 @@ export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
       new Purchasable(
         purchasable.product,
         purchasable.variationSelection,
-        purchasable.selectedVariation,
+        purchasable.productVariation,
         purchasable.customFields,
         true
       ),
@@ -50,14 +50,14 @@ export const ProductCustomizationModalContent = ({
       new Purchasable(
         purchasable.product,
         purchasable.variationSelection,
-        purchasable.selectedVariation,
+        purchasable.productVariation,
         fields,
         true
       ),
     [
       purchasable.product,
       purchasable.variationSelection,
-      purchasable.selectedVariation,
+      purchasable.productVariation,
       fields,
     ]
   );

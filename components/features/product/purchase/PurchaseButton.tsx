@@ -10,13 +10,12 @@ import {
 import React, { type JSX } from "react";
 import type { ThemeName } from "tamagui";
 
+import { decidePurchasable } from "@/components/features/product/purchase/ctaDecision";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
-
 import { Purchasable } from "@/domain/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { openModal } from "@/stores/ui/modalStore";
 
-import { decidePurchasable } from "@/components/features/product/purchase/ctaDecision";
 import { PurchaseButtonPriceTag } from "./PurchaseButtonPriceTag";
 
 const ICONS: Record<string, JSX.Element> = {

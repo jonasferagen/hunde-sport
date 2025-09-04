@@ -1,6 +1,6 @@
 // @domain/purchasable/Purchasable.ts
 import { CustomField } from "@/domain/CustomField";
-import type { Term } from "@/domain/product/helpers/types";
+import type { AttributeSelection, Term } from "@/domain/product/helpers/types";
 import { Product } from "@/domain/product/Product";
 import { ProductVariation } from "@/domain/product/ProductVariation";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
@@ -29,36 +29,33 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
   unavailable: "Ikke tilgjengelig",
 } as const;
 
+type Props = {
+  product: Product;
+  productVariation?: ProductVariation;
+  attributeSelection?: AttributeSelection;
+};
+
 export class Purchasable {
   readonly product: Product;
-  selectedTerms: Term[];
-  selectedVariation?: ProductVariation;
-  readonly customFields?: CustomField[];
-  /** UI hint: inside customization UI, treat customization as satisfied */
-  readonly customizationSatisfiedHint: boolean;
+  productVariation?: ProductVariation;
+  attributeSelection?: AttributeSelection;
+  selectedTerms?: readonly Term[];
 
-  constructor(
-    product: Product,
-    selectedTerms: Term[],
-    selectedVariation?: ProductVariation,
-    customFields?: CustomField[],
-    customizationSatisfiedHint = false
-  ) {
+  readonly customFields?: CustomField[];
+  readonly customizationSatisfiedHint: boolean = false;
+
+  constructor({ product, productVariation, attributeSelection }: Props) {
     this.product = product;
-    this.selectedTerms = selectedTerms;
-    this.selectedVariation = selectedVariation;
-    this.customFields = customFields;
-    this.customizationSatisfiedHint = customizationSatisfiedHint;
+    this.productVariation = productVariation;
+    this.attributeSelection = attributeSelection;
+    //this.customFields = customFields;
+    // this.customizationSatisfiedHint = customizationSatisfiedHint;
   }
+  //static create({ product, attributeSelection }: Props) {}
 
   withCustomizationSatisfied(): Purchasable {
-    return new Purchasable(
-      this.product,
-      this.selectedTerms,
-      this.selectedVariation,
-      this.customFields,
-      true
-    );
+    return new Purchasable({ product: this.product });
+    // this.selectedTerms,
   }
 
   get hasCustomFields(): boolean {
@@ -93,7 +90,7 @@ export class Purchasable {
 
     if (this.product.isVariable) {
       if (!this.selectedTerms) return "select";
-      if (!this.selectedVariation) return "select_incomplete";
+      if (!this.productVariation) return "select_incomplete";
     }
 
     if (this.needsCustomization) return "customize";
@@ -105,6 +102,7 @@ export class Purchasable {
     const key = this.resolveStatusKey();
     let label = DEFAULT_STATUS_LABEL[key];
     if (key === "select_incomplete" && this.selectedTerms) {
+      console.log(this.selectedTerms);
       const msg = "koko";
       if (msg) label = msg;
     }

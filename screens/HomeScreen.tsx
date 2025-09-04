@@ -47,6 +47,9 @@ export const HomeScreen = () => {
         <SearchBar onSubmit={handleSearch} />
       </PageHeader>
       <PageBody mode="scroll">
+        <PageSection title="Debug">
+          <DebugProducts key="debug" />
+        </PageSection>
         <PageSection title="Nyheter" theme={THEME_PRODUCTS_RECENT_BG}>
           <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} />
         </PageSection>
@@ -61,9 +64,6 @@ export const HomeScreen = () => {
           theme={THEME_PRODUCTS_FEATURED_BG}
         >
           <FeaturedProducts key="featured" theme={THEME_PRODUCTS_FEATURED} />
-        </PageSection>
-        <PageSection title="Debug">
-          <DebugProducts key="debug" />
         </PageSection>
       </PageBody>
     </PageView>

@@ -1,26 +1,22 @@
+// components/features/product-variation/ProductAttributeOption.tsx
 import React from "react";
 
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
-import type { Variation } from "@/domain/product/helpers/types";
+import type { Term } from "@/domain/product/helpers/types";
 
 type Props = {
-  attribute: string;
-  term: string;
-  isSelected: boolean;
+  term: Term;
   label: string;
+  isSelected: boolean;
+  disabled?: boolean;
   onPress?: () => void;
-  variations: Variation[];
 };
 
 export const ProductAttributeOption = React.memo(
-  ({ attribute, term, isSelected, label, onPress, variations }: Props) => {
-    const isImpossible = variations.length === 0;
-    const disabled = isImpossible;
-
+  ({ isSelected, label, disabled = false, onPress }: Props) => {
     return (
       <ThemedXStack
-        key={`${attribute}:${term}`}
         ai="center"
         gap="$2"
         theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}
@@ -30,16 +26,12 @@ export const ProductAttributeOption = React.memo(
           bw={2}
           aria-label={label}
           aria-pressed={isSelected}
-          onPress={onPress}
+          aria-disabled={disabled}
           disabled={disabled}
+          onPress={onPress}
         >
-          <ThemedXStack f={1} split>
-            <ThemedXStack gap="$1">
-              <ThemedText>{label}</ThemedText>
-            </ThemedXStack>
-            <ThemedXStack gap="$1">
-              <ThemedText>{label}</ThemedText>
-            </ThemedXStack>
+          <ThemedXStack f={1} jc="space-between" gap="$2">
+            <ThemedText>{label}</ThemedText>
           </ThemedXStack>
         </ThemedButton>
       </ThemedXStack>
