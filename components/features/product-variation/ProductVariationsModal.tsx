@@ -9,7 +9,7 @@ import type { AttrKey } from "@/domain/product/Attribute";
 import { AttributeSelection } from "@/domain/product/AttributeSelection";
 import type { Term } from "@/domain/product/Term";
 import { intersectSets } from "@/lib/util";
-import { ProductVariation, Purchasable } from "@/types";
+import { Purchasable } from "@/types";
 
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
@@ -18,7 +18,6 @@ const IMAGE_H = 200;
 type Props = {
   purchasable: Purchasable;
   close: () => void;
-  onDone?: (selection: any, resolved?: ProductVariation) => void; // unchanged
 };
 
 export const ProductVariationsModal = ({ close, purchasable }: Props) => {
@@ -39,7 +38,6 @@ export const ProductVariationsModalContent = ({
   const { productVariations } = useProductContext();
 
   const variableProduct = purchasable.variableProduct;
-  const initialProductVariation = purchasable.productVariation;
 
   const initialAttributeSelection = AttributeSelection.create(
     purchasable.variableProduct.attributes
@@ -47,31 +45,33 @@ export const ProductVariationsModalContent = ({
   const [attributeSelection, setAttributeSelection] =
     React.useState<AttributeSelection>(initialAttributeSelection!);
 
-  const [productVariation, setProductVariation] = React.useState<
-    ProductVariation | undefined
-  >(initialProductVariation);
+  const resolveProductVariation = React.useMemo(
+    () => (attributeSelection: AttributeSelection) => {
+      if (!attributeSelection.isComplete()) {
+        return undefined;
+      }
+
+      const sets = [];
+      for (const term of attributeSelection.getTerms()) {
+        const v = variableProduct.getVariationsByTerm(term!.key);
+        sets.push(v);
+      }
+      const I = intersectSets(...sets);
+
+      if (I.size === 0) {
+        console.error("No matching variation found for terms");
+        return;
+      }
+      const variation = Array.from(I)[0]; // Always set to first
+
+      return productVariations.get(variation!.key);
+    },
+    [variableProduct, productVariations]
+  );
 
   const onSelect = (attrKey: AttrKey, term: Term | undefined) => {
     const newSelection = attributeSelection.with(attrKey, term);
     setAttributeSelection(newSelection);
-
-    if (attributeSelection.isComplete()) {
-      setProductVariation(undefined);
-    }
-    const sets = [];
-    for (const term of attributeSelection.getTerms()) {
-      const v = variableProduct.getVariationsByTerm(term!.key);
-      sets.push(v);
-    }
-    const I = intersectSets(...sets);
-
-    if (I.size === 0) {
-      console.error("No matching variation found for terms");
-      return;
-    }
-    const variation = Array.from(I)[0]; // Always set to first
-    const productVariation = productVariations.get(variation!.key);
-    setProductVariation(productVariation);
   };
 
   const newPurchasable = React.useMemo(
@@ -79,9 +79,9 @@ export const ProductVariationsModalContent = ({
       Purchasable.create({
         product: variableProduct,
         attributeSelection,
-        productVariation,
+        productVariation: resolveProductVariation(attributeSelection),
       }),
-    [variableProduct, attributeSelection, productVariation]
+    [variableProduct, attributeSelection, resolveProductVariation]
   );
 
   return (

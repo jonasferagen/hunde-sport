@@ -59,6 +59,8 @@ export class Purchasable {
       return;
     }
 
+    console.log(productVariation?.id, attributeSelection);
+
     this.productVariation = productVariation;
     this.attributeSelection = attributeSelection;
 

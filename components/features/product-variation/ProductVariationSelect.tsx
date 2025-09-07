@@ -54,6 +54,7 @@ export function ProductVariationSelect({
                 const otherTermVariations = variableProduct.getVariationsByTerm(
                   otherSelectedTerm.key
                 );
+
                 // Find intersection: variations that contain both terms
                 const sharedVariations = new Set(
                   Array.from(termVariations).filter((variation) =>
@@ -97,13 +98,9 @@ const findPriceRangeForVariations = (
   productVariations: ReadonlyMap<string, ProductVariation>,
   variations: ReadonlySet<Variation>
 ) => {
-  console.log(productVariations.size);
-
   const prices = Array.from(variations)
-    .map((variation) => productVariations.get(variation.key)?.prices)
+    .map((variation) => productVariations.get(variation?.key)?.prices)
     .filter(Boolean) as ProductPrices[];
-
-  console.log(prices);
 
   return prices.length ? getProductPriceRange(prices) : null;
 };

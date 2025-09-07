@@ -4,15 +4,17 @@ import React from "react";
 
 import type { Page } from "./responseTransformer";
 
-export const makeQueryOptions = <T>() => ({
-  initialPageParam: 1 as const,
-  getNextPageParam: (lastPage: Page<T>) => {
-    const { page, totalPages } = lastPage ?? {};
-    if (!page || !totalPages) return undefined; // bail if metadata missing
-    return page < totalPages ? page + 1 : undefined;
-  },
-});
-
+export const makeQueryOptions = <T>() => {
+  return {
+    initialPageParam: 1,
+    getNextPageParam: (lastPage: Page<T>, allPages: Page<T>[]) => {
+      const nextPage = allPages.length + 1;
+      const totalPages = lastPage?.totalPages;
+      const out = totalPages && nextPage <= totalPages ? nextPage : undefined;
+      return out;
+    },
+  };
+};
 export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, "data"> & {
   total: number;
   totalPages: number;
@@ -90,7 +92,6 @@ export function useAutoPaginateQueryResult<T>(
     if (!hasNextPage) return; // done
     if (fetchStatus === "paused") return; // offline, etc.
     if (isFetchingNextPage) return; // already fetching
-
     void fetchNextPage();
   }, [
     enabled,

@@ -10,10 +10,10 @@ import {
   useQueryResult,
 } from "@/lib/query/query";
 import {
+  type Product,
   ProductCategory,
   ProductVariation,
   type PurchasableProduct,
-  VariableProduct,
 } from "@/types";
 
 import {
@@ -121,17 +121,17 @@ export const useRecentProducts = (
 };
 
 export const useProductVariations = (
-  variableProduct: VariableProduct,
-  options = { perPage: 10 }
+  product: Product,
+  options = { enabled: true, perPage: 10 }
 ): QueryResult<ProductVariation> => {
   const result = useInfiniteQuery({
-    queryKey: ["product-variations", variableProduct.id],
+    queryKey: ["product-variations", product.id],
     queryFn: ({ pageParam }) =>
-      fetchProductVariations(variableProduct.id, {
+      fetchProductVariations(product.id, {
         page: pageParam,
         per_page: options.perPage,
       }),
-    enabled: variableProduct.type === "variable",
+    enabled: product.isVariable,
     ...queryOptions,
   });
   return useQueryResult<ProductVariation>(result);

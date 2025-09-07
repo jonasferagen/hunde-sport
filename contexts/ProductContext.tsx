@@ -4,7 +4,7 @@ import React, { createContext, useContext, useMemo } from "react";
 import type { ProductPrices } from "@/domain/pricing/types";
 import { useProductVariations } from "@/hooks/data/Product";
 import { useAutoPaginateQueryResult } from "@/lib/query/query";
-import { type Product, ProductVariation, VariableProduct } from "@/types";
+import { type Product, ProductVariation } from "@/types";
 
 interface ProductContextType {
   product: Product;
@@ -31,10 +31,8 @@ export const ProductProvider = React.memo(function ProductProvider({
   children: React.ReactNode;
 }) {
   // Fetch product variations
-  const result = useProductVariations(product as VariableProduct);
-
-  useAutoPaginateQueryResult(result, { enabled: true }); // default enabled
-
+  const result = useProductVariations(product);
+  useAutoPaginateQueryResult(result); // default enabled
   const { isLoading, items: _productVariations } = result;
 
   // Convert to a stable ReadonlyMap
