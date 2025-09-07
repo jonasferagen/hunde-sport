@@ -67,7 +67,7 @@ export const ENDPOINTS = {
 
   PRODUCT_VARIATIONS: {
     LIST: (product_id: number, pagination?: PaginationOptions) =>
-      `${PRODUCT_VARIATIONS_LIST(product_id, pagination)}`,
+      `${PRODUCT_VARIATIONS_LIST(product_id, pagination)}&orderby=price&order=asc`,
     MIN: (product_id: number) =>
       `${PRODUCT_VARIATIONS_LIST(product_id, { per_page: 1 })}&orderby=price&order=asc`,
     MAX: (product_id: number) =>

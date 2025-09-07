@@ -1,6 +1,6 @@
 import { Product, type ProductData } from "./Product";
 
-export class VariableProductVariant extends Product {
+export class ProductVariation extends Product {
   readonly parent: number;
   readonly variation?: string;
 
@@ -11,19 +11,17 @@ export class VariableProductVariant extends Product {
     }
   ) {
     if (data.type !== "variation")
-      throw new Error("Invalid data type for VariableProductVariant");
+      throw new Error("Invalid data type for ProductVariation");
     super(data);
     this.parent = data.parent;
     this.variation = data.variation;
   }
 
-  static create(
-    data: ProductData & { variation?: string }
-  ): VariableProductVariant {
+  static create(data: ProductData & { variation?: string }): ProductVariation {
     if (data.type !== "variation")
       throw new Error("fromData(variation) received non-variation");
     const base = Product.mapBase(data, "variation");
-    return new VariableProductVariant({
+    return new ProductVariation({
       ...base,
       parent: data.parent,
       variation: data.variation,

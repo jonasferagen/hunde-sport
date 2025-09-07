@@ -11,6 +11,10 @@ export type ProductPrices = CurrencyHeader & {
   price: string;
   regular_price: string;
   sale_price: string;
+  price_range?: {
+    min_amount?: string;
+    max_amount?: string;
+  };
 };
 
 export type ProductPriceRange = {

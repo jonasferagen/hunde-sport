@@ -1,6 +1,10 @@
 // @domain/purchasable/Purchasable.ts
 import { CustomField } from "@/domain/CustomField";
-import type { AttributeSelection, Variation } from "@/domain/product";
+import type {
+  AttributeSelection,
+  ProductVariation,
+  Variation,
+} from "@/domain/product";
 import { Product } from "@/domain/product/Product";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
 import { intersectSets } from "@/lib/util";
@@ -31,20 +35,28 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
 type Props = {
   product: Product;
   attributeSelection?: AttributeSelection;
+  resolveProductVariation?: (
+    variation: Variation
+  ) => ProductVariation | undefined;
 };
 
 export class Purchasable {
   readonly product: Product;
 
   readonly attributeSelection?: AttributeSelection;
-  readonly productVariation?: Variation;
+  readonly variation?: Variation;
+  readonly productVariation: ProductVariation | undefined;
 
   readonly customFields: CustomField[] = [];
   readonly customizationSatisfiedHint: boolean = false;
 
   private isInSelection: boolean = false;
 
-  private constructor({ product, attributeSelection }: Props) {
+  private constructor({
+    product,
+    attributeSelection,
+    resolveProductVariation,
+  }: Props) {
     this.product = product;
     if (this.product.type === "simple") {
       return;
@@ -75,7 +87,8 @@ export class Purchasable {
       return;
     }
     const v = Array.from(I)[0]; // Always set to first
-    this.productVariation = v;
+    this.variation = v!;
+    this.productVariation = resolveProductVariation!(this.variation);
 
     //this.customFields = customFields;
 
@@ -83,6 +96,10 @@ export class Purchasable {
   }
   static create(props: Props) {
     return new Purchasable(props);
+  }
+
+  get displayProduct(): SimpleProduct | VariableProduct | ProductVariation {
+    return this.productVariation ? this.productVariation : this.product;
   }
 
   get variableProduct(): VariableProduct {
@@ -128,7 +145,7 @@ export class Purchasable {
 
     if (this.product.isVariable) {
       if (this.needsSelection) return "select";
-      if (!this.productVariation) return "select_incomplete";
+      if (!this.variation) return "select_incomplete";
     }
 
     if (this.needsCustomization) return "customize";
@@ -175,7 +192,7 @@ export class Purchasable {
         ...(ext ? { extensions: ext.extensions } : {}),
       };
     }
-    const options = this.productVariation!.options;
+    const options = this.variation!.options;
     const variation = { variation: options };
 
     return {

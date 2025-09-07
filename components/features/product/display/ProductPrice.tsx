@@ -3,14 +3,14 @@ import { StarFull } from "@tamagui/lucide-icons";
 import React from "react";
 
 import {
+  ThemedSpinner,
   ThemedText,
   type ThemedTextProps,
   ThemedXStack,
 } from "@/components/ui/themed-components";
-
+import { useProductContext } from "@/contexts/ProductContext";
 import { formatPrice } from "@/domain/pricing/format";
-import type { ProductPrices } from "@/domain/pricing/types";
-import type { ProductAvailability } from "@/types";
+import type { ProductPriceRange as TProductPriceRange } from "@/domain/pricing/types";
 
 const PriceLine = ({
   showIcon,
@@ -22,48 +22,53 @@ const PriceLine = ({
   </ThemedXStack>
 );
 
-import type { ProductPriceRange as TProductPriceRange } from "@/domain/pricing/types";
-
 // ----- Simple price renderer (no data fetching) -----
 type ProductPriceSimpleProps = {
-  productPrices: ProductPrices;
-  productAvailability: ProductAvailability;
   showIcon?: boolean;
 } & ThemedTextProps;
 
 export const ProductPrice = React.memo(function ProductPrice({
-  productPrices,
-  productAvailability,
   showIcon = false,
   ...textProps
 }: ProductPriceSimpleProps) {
-  const { isInStock, isPurchasable, isOnSale } = productAvailability;
+  const { product, productVariationPrices, isLoading } = useProductContext();
+  const { prices, availability } = product;
+  const { isInStock, isPurchasable, isOnSale } = availability;
 
   const saleValid = React.useMemo(() => {
-    const saleVal = parseInt(productPrices?.sale_price ?? "0", 10);
-    const regVal = parseInt(productPrices?.regular_price ?? "0", 10);
+    const saleVal = parseInt(prices?.sale_price ?? "0", 10);
+    const regVal = parseInt(prices?.regular_price ?? "0", 10);
     return isOnSale && saleVal > 0 && regVal > 0 && saleVal < regVal;
-  }, [productPrices, isOnSale]);
+  }, [prices, isOnSale]);
 
-  const isFree = isInStock && productPrices?.price === "0";
+  const isFree = isInStock && prices?.price === "0";
   const subtle = !isInStock || !isPurchasable || textProps.subtle;
+
+  if (product.isVariable) {
+    if (isLoading) {
+      return <ThemedSpinner />;
+    }
+    const range = {
+      min: productVariationPrices[0]!,
+      max: productVariationPrices[productVariationPrices.length - 1]!,
+    };
+    return <ProductPriceRange productPriceRange={range} {...textProps} />;
+  }
 
   if (saleValid) {
     return (
       <PriceLine showIcon={showIcon}>
         <ThemedText disabled subtle {...textProps}>
-          {formatPrice(productPrices, { field: "regular_price" })}
+          {formatPrice(prices, { field: "regular_price" })}
         </ThemedText>
         <ThemedText {...textProps} subtle={subtle}>
-          {formatPrice(productPrices, { field: "sale_price" })}
+          {formatPrice(prices, { field: "sale_price" })}
         </ThemedText>
       </PriceLine>
     );
   }
 
-  const label = isFree
-    ? "Gratis!"
-    : formatPrice(productPrices, { field: "price" });
+  const label = isFree ? "Gratis!" : formatPrice(prices, { field: "price" });
   return (
     <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
       <ThemedText {...textProps} subtle={subtle}>

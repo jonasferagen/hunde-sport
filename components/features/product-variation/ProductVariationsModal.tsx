@@ -4,12 +4,12 @@ import { ProductImage } from "@/components/features/product/display/ProductImage
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
-import { VariableProductProvider } from "@/contexts/VariableProductContext";
+import { ProductProvider, useProductContext } from "@/contexts/ProductContext";
+import type { Variation } from "@/domain/product";
 import type { AttrKey } from "@/domain/product/Attribute";
 import { AttributeSelection } from "@/domain/product/AttributeSelection";
 import type { Term } from "@/domain/product/Term";
-import { useProductVariations } from "@/hooks/data/Product";
-import { Purchasable, VariableProductVariant } from "@/types";
+import { ProductVariation, Purchasable, VariableProduct } from "@/types";
 
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
@@ -18,23 +18,14 @@ const IMAGE_H = 200;
 type Props = {
   purchasable: Purchasable;
   close: () => void;
-  onDone?: (selection: any, resolved?: VariableProductVariant) => void; // unchanged
+  onDone?: (selection: any, resolved?: ProductVariation) => void; // unchanged
 };
 
 export const ProductVariationsModal = ({ close, purchasable }: Props) => {
-  const variableProduct = purchasable.variableProduct;
-
-  const { isLoading, items: productVariations } =
-    useProductVariations(variableProduct);
-
   return (
-    <VariableProductProvider
-      variableProduct={variableProduct}
-      productVariations={productVariations}
-      isLoading={isLoading}
-    >
+    <ProductProvider product={purchasable.product}>
       <ProductVariationsModalContent close={close} purchasable={purchasable} />
-    </VariableProductProvider>
+    </ProductProvider>
   );
 };
 
@@ -45,7 +36,9 @@ export const ProductVariationsModalContent = ({
   close: () => void;
   purchasable: Purchasable;
 }) => {
-  const { product } = purchasable;
+  const { product, productVariations } = useProductContext();
+
+  const variableProduct = product as VariableProduct;
 
   const initialAttributeSelection = AttributeSelection.create(
     purchasable.variableProduct.attributes
@@ -59,16 +52,26 @@ export const ProductVariationsModalContent = ({
     setAttributeSelection(newSelection);
   };
 
-  const newPurchasable = React.useMemo(() => {
-    return Purchasable.create({
-      product,
-      attributeSelection,
-    });
-  }, [product, attributeSelection]);
+  const resolveProductVariation = React.useMemo(
+    () => (variation: Variation) => {
+      return productVariations.get(variation.key);
+    },
+    [productVariations]
+  );
+
+  const newPurchasable = React.useMemo(
+    () =>
+      Purchasable.create({
+        product: variableProduct,
+        attributeSelection,
+        resolveProductVariation,
+      }),
+    [variableProduct, attributeSelection, resolveProductVariation]
+  );
 
   return (
     <ModalLayout
-      title={product.name}
+      title={variableProduct.name}
       onClose={close}
       footer={
         <ThemedYStack>
@@ -78,7 +81,7 @@ export const ProductVariationsModalContent = ({
       }
     >
       <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
-        <ProductImage product={product} img_height={IMAGE_H} />
+        <ProductImage product={variableProduct} img_height={IMAGE_H} />
       </ThemedYStack>
       <ProductVariationSelect
         attributeSelection={attributeSelection}

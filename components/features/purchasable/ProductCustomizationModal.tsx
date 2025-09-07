@@ -4,7 +4,9 @@ import { Paragraph } from "tamagui";
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
+import { ProductProvider } from "@/contexts";
 import { CustomField } from "@/domain/CustomField";
+import type { Variation } from "@/domain/product";
 import { Purchasable } from "@/types";
 
 import { ProductCustomizationForm } from "./ProductCustomizationForm";
@@ -17,19 +19,13 @@ type Props = {
 };
 
 export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
-  const derived = React.useMemo(
-    () =>
-      new Purchasable(
-        purchasable.product,
-        purchasable.variationSelection,
-        purchasable.variableProductVariant,
-        purchasable.customFields,
-        true
-      ),
-    [purchasable]
-  );
   return (
-    <ProductCustomizationModalContent close={close} purchasable={derived} />
+    <ProductProvider product={purchasable.product}>
+      <ProductCustomizationModalContent
+        close={close}
+        purchasable={purchasable}
+      />
+    </ProductProvider>
   );
 };
 
@@ -40,26 +36,20 @@ export const ProductCustomizationModalContent = ({
   close: () => void;
   purchasable: Purchasable;
 }) => {
-  const product = purchasable.product;
+  const { product, attributeSelection, productVariation } = purchasable;
+
   const [fields, setFields] = React.useState<CustomField[]>(
     product.customFields ?? []
   );
 
-  const effectivePurchasable = React.useMemo(
+  const newPurchasable = React.useMemo(
     () =>
-      new Purchasable(
-        purchasable.product,
-        purchasable.variationSelection,
-        purchasable.variableProductVariant,
-        fields,
-        true
-      ),
-    [
-      purchasable.product,
-      purchasable.variationSelection,
-      purchasable.variableProductVariant,
-      fields,
-    ]
+      Purchasable.create({
+        product,
+        attributeSelection,
+        resolveProductVariation: (_variation: Variation) => productVariation,
+      }),
+    [product, attributeSelection, productVariation]
   );
 
   return (
@@ -69,10 +59,7 @@ export const ProductCustomizationModalContent = ({
       footer={
         <ThemedYStack>
           <ThemedYStack mb="$3" />
-          <PurchaseButton
-            purchasable={effectivePurchasable}
-            onSuccess={close}
-          />
+          <PurchaseButton purchasable={newPurchasable} onSuccess={close} />
         </ThemedYStack>
       }
     >

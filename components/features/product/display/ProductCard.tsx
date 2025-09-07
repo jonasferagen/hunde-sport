@@ -1,17 +1,18 @@
 import React from "react";
 import type { StackProps } from "tamagui";
 
+import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
 import { ThemedImage, ThemedText } from "@/components/ui";
 import { ThemedLinearGradient } from "@/components/ui/themed-components/ThemedLinearGradient";
 import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui/themed-components/ThemedStacks";
+import { ProductProvider } from "@/contexts";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { getScaledImageUrl } from "@/lib/helpers";
 import type { PurchasableProduct } from "@/types";
 
-import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
 import { ProductDescription } from "./ProductDescription";
 import { ProductTitle } from "./ProductTitle";
 
@@ -26,18 +27,20 @@ export const ProductCard = React.memo(function ProductCard({
 }: ProductCardProps) {
   const { to } = useCanonicalNavigation();
   return (
-    <ThemedYStack container box {...props}>
-      <ThemedLinearGradient />
-      <ThemedXStack
-        onPress={() => {
-          to("product", product);
-        }}
-      >
-        <ProductCardImage product={product} />
-        <ProductCardDescription product={product} />
-      </ThemedXStack>
-      <PurchaseFlow product={product} />
-    </ThemedYStack>
+    <ProductProvider product={product}>
+      <ThemedYStack container box {...props}>
+        <ThemedLinearGradient />
+        <ThemedXStack
+          onPress={() => {
+            to("product", product);
+          }}
+        >
+          <ProductCardImage product={product} />
+          <ProductCardDescription product={product} />
+        </ThemedXStack>
+        <PurchaseFlow product={product} />
+      </ThemedYStack>
+    </ProductProvider>
   );
 });
 

@@ -8,16 +8,16 @@ import {
   ProductPrice,
 } from "@/components/features/product/display";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
+import { ThemedYStack } from "@/components/ui/themed-components";
 import { THEME_PRICE_TAG } from "@/config/app";
-
+import { ProductProvider } from "@/contexts/ProductContext";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useVisibleItems } from "@/hooks/ui/useVisibleItems";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { spacePx } from "@/lib/helpers";
+import type { QueryResult } from "@/lib/query/query";
 import type { PurchasableProduct } from "@/types";
 
-import { ThemedYStack } from "@/components/ui/themed-components";
-import type { QueryResult } from "@/lib/query/query";
 import { TileBadge } from "./TileBadge";
 import { TileFixed } from "./TileFixed";
 
@@ -103,7 +103,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
   const gapPx = spacePx(gapToken as string);
 
   const edges = useEdgeFades("horizontal");
-  const { to } = useCanonicalNavigation();
+
   const {
     state: vis,
     onViewableItemsChanged,
@@ -128,52 +128,29 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
   }, [loadingState]);
 
   const renderItem = React.useCallback(
-    ({ item, index }: { item: PurchasableProduct; index: number }) => {
-      return (
-        <RNView
-          style={{
-            marginRight: gapPx,
-            width: estimatedItemSize,
-            height: estimatedItemCrossSize,
-          }}
-        >
-          <TileFixed
-            onPress={() => to("product", item)}
-            title={item.name}
-            image={item.featuredImage}
-            w={estimatedItemSize}
-            h={estimatedItemCrossSize}
-            imagePriority={index < 3 ? "high" : "low"}
-            interactive={vis.set.has(index)}
-          >
-            {!item.availability.isInStock && (
-              <ThemedYStack
-                bg="$background"
-                fullscreen
-                pos="absolute"
-                o={0.4}
-                pointerEvents="none"
-              />
-            )}
-
-            <TileBadge theme={THEME_PRICE_TAG} corner="tr">
-              <ProductAvailabilityStatus
-                productAvailability={item.availability}
-                showInStock={false}
-              />
-              <ProductPrice
-                productPrices={item.prices}
-                productAvailability={item.availability}
-                showIcon
-              />
-            </TileBadge>
-          </TileFixed>
-        </RNView>
-      );
-    },
-    [to, vis, estimatedItemSize, estimatedItemCrossSize, gapPx]
+    ({ item, index }: { item: PurchasableProduct; index: number }) => (
+      <RNView
+        style={{
+          marginRight: gapPx,
+          width: estimatedItemSize,
+          height: estimatedItemCrossSize,
+        }}
+      >
+        <ProductProvider product={item}>
+          <VariableTileInner
+            item={item}
+            index={index}
+            estimatedItemSize={estimatedItemSize}
+            estimatedItemCrossSize={estimatedItemCrossSize}
+            visInteractive={vis.set.has(index)}
+          />
+        </ProductProvider>
+      </RNView>
+    ),
+    [gapPx, estimatedItemSize, estimatedItemCrossSize, vis.set]
   );
 
+  //  { const { variableProduct, prices } = useVariableProductContext(); }
   const listRef = React.useRef<FlashListRef<PurchasableProduct>>(null);
 
   return (
@@ -222,4 +199,55 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
 
 const styles = StyleSheet.create({
   container: { position: "relative" },
+});
+// somewhere top-level in the file
+const VariableTileInner = React.memo(function VariableTileInner({
+  item,
+  index,
+  estimatedItemSize,
+  estimatedItemCrossSize,
+  visInteractive,
+}: {
+  item: PurchasableProduct;
+  index: number;
+  estimatedItemSize: number;
+  estimatedItemCrossSize: number;
+  visInteractive: boolean;
+}) {
+  // read from provider
+
+  const { to } = useCanonicalNavigation();
+
+  return (
+    <TileFixed
+      onPress={
+        () =>
+          to("product", item) /* or keep your existing to("product", item) */
+      }
+      title={item.name}
+      image={item.featuredImage}
+      w={estimatedItemSize}
+      h={estimatedItemCrossSize}
+      imagePriority={index < 3 ? "high" : "low"}
+      interactive={visInteractive /* or something derived from vp */}
+    >
+      {!item.availability.isInStock && (
+        <ThemedYStack
+          bg="$background"
+          fullscreen
+          pos="absolute"
+          o={0.4}
+          pointerEvents="none"
+        />
+      )}
+
+      <TileBadge theme={THEME_PRICE_TAG} corner="tr">
+        <ProductAvailabilityStatus
+          productAvailability={item.availability}
+          showInStock={false}
+        />
+        <ProductPrice showIcon />
+      </TileBadge>
+    </TileFixed>
+  );
 });

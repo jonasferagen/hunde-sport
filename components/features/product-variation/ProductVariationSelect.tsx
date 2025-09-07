@@ -3,9 +3,16 @@ import { H3 } from "tamagui";
 
 import { ProductAttributeOption } from "@/components/features/product-variation/ProductAttributeOption";
 import { ThemedXStack, ThemedYStack } from "@/components/ui";
-import { useVariableProduct } from "@/contexts/VariableProductContext";
-import type { AttributeSelection, Term } from "@/domain/product/helpers/types";
-
+import { useProductContext } from "@/contexts/ProductContext";
+import { getProductPriceRange } from "@/domain/pricing/format";
+import { type ProductPrices } from "@/domain/pricing/types";
+import type {
+  AttributeSelection,
+  ProductVariation,
+  Term,
+  Variation,
+} from "@/domain/product/";
+import type { VariableProduct } from "@/types";
 type Props = {
   onSelect: (attrKey: string, term: Term | undefined) => void;
   attributeSelection: AttributeSelection;
@@ -15,8 +22,8 @@ export function ProductVariationSelect({
   onSelect,
   attributeSelection,
 }: Props) {
-  const { variableProduct } = useVariableProduct();
-
+  const { product, productVariations } = useProductContext();
+  const variableProduct = product as VariableProduct;
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
       {[...variableProduct.attributes].map(([attrKey, attribute]) => {
@@ -35,21 +42,37 @@ export function ProductVariationSelect({
                 term.key
               );
 
-              const disabled = (() => {
+              const { disabled, availableVariations } = (() => {
                 // If no other attribute is selected, term is enabled if it has any variations
                 if (!otherSelectedTerm) {
-                  return termVariations.size === 0;
+                  return {
+                    disabled: termVariations.size === 0,
+                    availableVariations: termVariations,
+                  };
                 }
                 // If other attribute is selected, check if there's intersection between variations
                 const otherTermVariations = variableProduct.getVariationsByTerm(
                   otherSelectedTerm.key
                 );
                 // Find intersection: variations that contain both terms
-                const hasSharedVariations = Array.from(termVariations).some(
-                  (variation) => otherTermVariations.has(variation)
+                const sharedVariations = new Set(
+                  Array.from(termVariations).filter((variation) =>
+                    otherTermVariations.has(variation)
+                  )
                 );
-                return !hasSharedVariations;
+
+                return {
+                  disabled: sharedVariations.size === 0,
+                  availableVariations: sharedVariations,
+                };
               })();
+
+              console.log(availableVariations);
+
+              const productPriceRange = findPriceRangeForVariations(
+                productVariations,
+                availableVariations
+              );
 
               return termVariations.size ? (
                 <ProductAttributeOption
@@ -58,6 +81,7 @@ export function ProductVariationSelect({
                   label={term.label}
                   isSelected={isSelected}
                   disabled={disabled}
+                  productPriceRange={productPriceRange}
                   onPress={() =>
                     onSelect(attrKey, isSelected ? undefined : term)
                   } // Toggle active term
@@ -70,3 +94,14 @@ export function ProductVariationSelect({
     </ThemedXStack>
   );
 }
+
+const findPriceRangeForVariations = (
+  productVariations: ReadonlyMap<string, ProductVariation>,
+  variations: ReadonlySet<Variation>
+) => {
+  const prices = Array.from(variations)
+    .map((variation) => productVariations.get(variation.key)?.prices)
+    .filter(Boolean) as ProductPrices[];
+
+  return prices.length ? getProductPriceRange(prices) : null;
+};

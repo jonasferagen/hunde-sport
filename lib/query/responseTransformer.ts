@@ -2,11 +2,8 @@
 import * as Sentry from "@sentry/react-native";
 import type { ApiResponse } from "apisauce";
 
-export type Page<T> = {
-  data: T[];
-  totalPages: number;
-  total: number;
-};
+type PageMeta = { page: number; totalPages: number; total?: number };
+export type Page<T> = { data: T[] } & PageMeta;
 
 export const responseTransformer = <T>(
   response: ApiResponse<any, any>,

@@ -1,25 +1,22 @@
 // @/lib/query/query.ts
-import { UseInfiniteQueryResult } from "@tanstack/react-query";
+import type { UseInfiniteQueryResult } from "@tanstack/react-query";
 import React from "react";
 
 import type { Page } from "./responseTransformer";
 
-export const makeQueryOptions = <T>() => {
-  return {
-    //  placeHolderData: (prev: QueryResult<T>) => prev,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage: Page<T>, allPages: Page<T>[]) => {
-      const nextPage = allPages.length + 1;
-      const totalPages = lastPage?.totalPages;
-      const out = totalPages && nextPage <= totalPages ? nextPage : undefined;
-      return out;
-    },
-  };
-};
+export const makeQueryOptions = <T>() => ({
+  initialPageParam: 1 as const,
+  getNextPageParam: (lastPage: Page<T>) => {
+    const { page, totalPages } = lastPage ?? {};
+    if (!page || !totalPages) return undefined; // bail if metadata missing
+    return page < totalPages ? page + 1 : undefined;
+  },
+});
 
 export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, "data"> & {
   total: number;
   totalPages: number;
+  pageCount: number; // The current page when loading results
   items: T[];
 };
 
@@ -50,12 +47,60 @@ export const useQueryResult = <T extends { id: number }>(
       }
     }
 
+    const pageCount = pages.length;
     const last = pages.length ? pages[pages.length - 1] : null;
     const total = last?.total ?? 0;
     const totalPages = last?.totalPages ?? 0;
 
-    return { items, total, totalPages };
+    return { items, total, totalPages, pageCount };
   }, [dataResult?.pages]);
 
   return { ...rest, ...computed };
 };
+
+type AutoPaginateOpts = {
+  enabled?: boolean;
+  // if you want "push through offline pauses", set ignorePaused: true
+  ignorePaused?: boolean;
+};
+
+export function useAutoPaginateQueryResult<T>(
+  q: QueryResult<T>,
+  opts: AutoPaginateOpts = {}
+) {
+  const {
+    status,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    fetchStatus,
+    pageCount,
+  } = q as unknown as {
+    status: "pending" | "error" | "success";
+    hasNextPage?: boolean;
+    isFetchingNextPage: boolean;
+    fetchNextPage: () => Promise<unknown>;
+    fetchStatus: "fetching" | "paused" | "idle";
+    pageCount: number;
+  };
+
+  const { enabled = true } = opts;
+
+  React.useEffect(() => {
+    if (!enabled) return;
+    if (status !== "success") return; // wait for first page
+    if (!hasNextPage) return; // done
+    if (fetchStatus === "paused") return; // offline, etc.
+    if (isFetchingNextPage) return; // already fetching
+
+    void fetchNextPage();
+  }, [
+    enabled,
+    status,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    fetchStatus,
+    pageCount, // 👈 pulse when a new page lands
+  ]);
+}

@@ -84,7 +84,9 @@ export const PurchaseButton = React.memo(function PurchaseButton({
       before={icon}
       theme={theme as ThemeName}
       label={label}
-      after={<PurchaseButtonPriceTag product={purchasable.product as any} />}
+      after={
+        <PurchaseButtonPriceTag product={purchasable.displayProduct as any} />
+      }
       loading={loadingForButton}
       disabled={decision.disabled}
     />

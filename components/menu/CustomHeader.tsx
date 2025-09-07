@@ -19,8 +19,13 @@ export const CustomHeader = () => {
     <Theme name={THEME_HEADER}>
       <ThemedXStack container split box>
         <ThemedLinearGradient />
-        <H3>{title}</H3>
-        <ThemedButton circular disabled={!openDrawer} onPress={openDrawer}>
+        <H3 f={1}>{title}</H3>
+        <ThemedButton
+          f={0}
+          circular
+          disabled={!openDrawer}
+          onPress={openDrawer}
+        >
           <Menu />
         </ThemedButton>
       </ThemedXStack>
