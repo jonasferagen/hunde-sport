@@ -6,7 +6,6 @@ import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { ProductProvider } from "@/contexts";
 import { CustomField } from "@/domain/CustomField";
-import type { Variation } from "@/domain/product";
 import { Purchasable } from "@/types";
 
 import { ProductCustomizationForm } from "./ProductCustomizationForm";
@@ -47,7 +46,7 @@ export const ProductCustomizationModalContent = ({
       Purchasable.create({
         product,
         attributeSelection,
-        resolveProductVariation: (_variation: Variation) => productVariation,
+        productVariation,
       }),
     [product, attributeSelection, productVariation]
   );

@@ -33,7 +33,7 @@ export const ProductProvider = React.memo(function ProductProvider({
   // Fetch product variations
   const result = useProductVariations(product as VariableProduct);
 
-  useAutoPaginateQueryResult(result); // default enabled
+  useAutoPaginateQueryResult(result, { enabled: true }); // default enabled
 
   const { isLoading, items: _productVariations } = result;
 
@@ -52,6 +52,8 @@ export const ProductProvider = React.memo(function ProductProvider({
     () => _productVariations.map((p) => p.prices),
     [_productVariations]
   );
+
+  console.log(productVariations.size);
 
   const value = useMemo(
     () => ({ product, productVariations, productVariationPrices, isLoading }),

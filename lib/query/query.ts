@@ -60,8 +60,6 @@ export const useQueryResult = <T extends { id: number }>(
 
 type AutoPaginateOpts = {
   enabled?: boolean;
-  // if you want "push through offline pauses", set ignorePaused: true
-  ignorePaused?: boolean;
 };
 
 export function useAutoPaginateQueryResult<T>(

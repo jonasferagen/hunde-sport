@@ -7,7 +7,6 @@ import type {
 } from "@/domain/product";
 import { Product } from "@/domain/product/Product";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
-import { intersectSets } from "@/lib/util";
 import type { SimpleProduct, VariableProduct } from "@/types";
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 
@@ -35,9 +34,7 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
 type Props = {
   product: Product;
   attributeSelection?: AttributeSelection;
-  resolveProductVariation?: (
-    variation: Variation
-  ) => ProductVariation | undefined;
+  productVariation?: ProductVariation;
 };
 
 export class Purchasable {
@@ -45,7 +42,7 @@ export class Purchasable {
 
   readonly attributeSelection?: AttributeSelection;
   readonly variation?: Variation;
-  readonly productVariation: ProductVariation | undefined;
+  readonly productVariation?: ProductVariation;
 
   readonly customFields: CustomField[] = [];
   readonly customizationSatisfiedHint: boolean = false;
@@ -55,40 +52,19 @@ export class Purchasable {
   private constructor({
     product,
     attributeSelection,
-    resolveProductVariation,
+    productVariation,
   }: Props) {
     this.product = product;
     if (this.product.type === "simple") {
       return;
     }
-    if (!attributeSelection) {
-      return;
-    }
 
-    const variableProduct = this.variableProduct;
-    const selectedTerms = attributeSelection.getTerms();
-
-    this.isInSelection = true;
+    this.productVariation = productVariation;
     this.attributeSelection = attributeSelection;
 
-    if (!attributeSelection?.isComplete()) {
-      return;
+    if (this.attributeSelection) {
+      this.isInSelection = true;
     }
-
-    const sets = [];
-    for (const term of selectedTerms) {
-      const v = variableProduct.getVariationsByTerm(term!.key);
-      sets.push(v);
-    }
-    const I = intersectSets(...sets);
-
-    if (I.size === 0) {
-      console.error("No matching variation found for terms");
-      return;
-    }
-    const v = Array.from(I)[0]; // Always set to first
-    this.variation = v!;
-    this.productVariation = resolveProductVariation!(this.variation);
 
     //this.customFields = customFields;
 
@@ -147,7 +123,6 @@ export class Purchasable {
       if (this.needsSelection) return "select";
       if (!this.variation) return "select_incomplete";
     }
-
     if (this.needsCustomization) return "customize";
 
     return "ready";

@@ -5,11 +5,11 @@ import { PurchaseButton } from "@/components/features/product/purchase/PurchaseB
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { ProductProvider, useProductContext } from "@/contexts/ProductContext";
-import type { Variation } from "@/domain/product";
 import type { AttrKey } from "@/domain/product/Attribute";
 import { AttributeSelection } from "@/domain/product/AttributeSelection";
 import type { Term } from "@/domain/product/Term";
-import { ProductVariation, Purchasable, VariableProduct } from "@/types";
+import { intersectSets } from "@/lib/util";
+import { ProductVariation, Purchasable } from "@/types";
 
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
@@ -36,37 +36,52 @@ export const ProductVariationsModalContent = ({
   close: () => void;
   purchasable: Purchasable;
 }) => {
-  const { product, productVariations } = useProductContext();
+  const { productVariations } = useProductContext();
 
-  const variableProduct = product as VariableProduct;
+  const variableProduct = purchasable.variableProduct;
+  const initialProductVariation = purchasable.productVariation;
 
   const initialAttributeSelection = AttributeSelection.create(
     purchasable.variableProduct.attributes
   );
-
   const [attributeSelection, setAttributeSelection] =
     React.useState<AttributeSelection>(initialAttributeSelection!);
+
+  const [productVariation, setProductVariation] = React.useState<
+    ProductVariation | undefined
+  >(initialProductVariation);
 
   const onSelect = (attrKey: AttrKey, term: Term | undefined) => {
     const newSelection = attributeSelection.with(attrKey, term);
     setAttributeSelection(newSelection);
-  };
 
-  const resolveProductVariation = React.useMemo(
-    () => (variation: Variation) => {
-      return productVariations.get(variation.key);
-    },
-    [productVariations]
-  );
+    if (attributeSelection.isComplete()) {
+      setProductVariation(undefined);
+    }
+    const sets = [];
+    for (const term of attributeSelection.getTerms()) {
+      const v = variableProduct.getVariationsByTerm(term!.key);
+      sets.push(v);
+    }
+    const I = intersectSets(...sets);
+
+    if (I.size === 0) {
+      console.error("No matching variation found for terms");
+      return;
+    }
+    const variation = Array.from(I)[0]; // Always set to first
+    const productVariation = productVariations.get(variation!.key);
+    setProductVariation(productVariation);
+  };
 
   const newPurchasable = React.useMemo(
     () =>
       Purchasable.create({
         product: variableProduct,
         attributeSelection,
-        resolveProductVariation,
+        productVariation,
       }),
-    [variableProduct, attributeSelection, resolveProductVariation]
+    [variableProduct, attributeSelection, productVariation]
   );
 
   return (

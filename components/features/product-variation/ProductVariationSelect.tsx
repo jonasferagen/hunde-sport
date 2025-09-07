@@ -67,8 +67,6 @@ export function ProductVariationSelect({
                 };
               })();
 
-              console.log(availableVariations);
-
               const productPriceRange = findPriceRangeForVariations(
                 productVariations,
                 availableVariations
@@ -99,9 +97,13 @@ const findPriceRangeForVariations = (
   productVariations: ReadonlyMap<string, ProductVariation>,
   variations: ReadonlySet<Variation>
 ) => {
+  console.log(productVariations.size);
+
   const prices = Array.from(variations)
     .map((variation) => productVariations.get(variation.key)?.prices)
     .filter(Boolean) as ProductPrices[];
+
+  console.log(prices);
 
   return prices.length ? getProductPriceRange(prices) : null;
 };
