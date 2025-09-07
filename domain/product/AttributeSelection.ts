@@ -38,7 +38,6 @@ export class AttributeSelection {
 
   with(attrKey: AttrKey, term: Term | undefined) {
     const record = { ...this.selected, [attrKey]: term };
-
     return new AttributeSelection(record);
   }
 

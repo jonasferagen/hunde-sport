@@ -190,6 +190,7 @@ export class VariableProduct extends Product {
   // Variations for a term
   getVariationsByTerm(termKey: string): ReadonlySet<Variation> {
     assertKnown(this.terms, termKey, "term");
+
     return new Set(
       Array.from(
         this.termHasVariations.get(termKey)!,

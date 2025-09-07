@@ -1,10 +1,6 @@
 // @domain/purchasable/Purchasable.ts
 import { CustomField } from "@/domain/CustomField";
-import type {
-  AttributeSelection as AttributeSelectionType,
-  Term,
-  Variation,
-} from "@/domain/product";
+import type { AttributeSelection, Variation } from "@/domain/product";
 import { Product } from "@/domain/product/Product";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
 import { intersectSets } from "@/lib/util";
@@ -34,15 +30,13 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
 
 type Props = {
   product: Product;
-  //variableProductVariant?: VariableProductVariant;
-  attributeSelection?: AttributeSelectionType;
+  attributeSelection?: AttributeSelection;
 };
 
 export class Purchasable {
   readonly product: Product;
-  //variableProductVariant?: VariableProductVariant;
-  //readonly attributeSelection?: AttributeSelectionType;
-  readonly selectedTerms: readonly (Term | undefined)[] = [];
+
+  readonly attributeSelection?: AttributeSelection;
   readonly productVariation?: Variation;
 
   readonly customFields: CustomField[] = [];
@@ -63,7 +57,7 @@ export class Purchasable {
     const selectedTerms = attributeSelection.getTerms();
 
     this.isInSelection = true;
-    this.selectedTerms = selectedTerms;
+    this.attributeSelection = attributeSelection;
 
     if (!attributeSelection?.isComplete()) {
       return;
@@ -76,10 +70,13 @@ export class Purchasable {
     }
     const I = intersectSets(...sets);
 
-    if (I.size === 1) {
-      const v = Array.from(I)[0];
-      this.productVariation = v;
+    if (I.size === 0) {
+      console.error("No matching variation found for terms");
+      return;
     }
+    const v = Array.from(I)[0]; // Always set to first
+    this.productVariation = v;
+
     //this.customFields = customFields;
 
     // this.customizationSatisfiedHint = customizationSatisfiedHint;
@@ -142,9 +139,18 @@ export class Purchasable {
   get status(): StatusDescriptor {
     const key = this.resolveStatusKey();
     let label = DEFAULT_STATUS_LABEL[key];
-    if (key === "select_incomplete" && this.selectedTerms) {
-      const msg = this.selectedTerms.map((t) => t?.label).join(":");
-      if (msg) label = msg;
+    if (key === "select_incomplete" && this.attributeSelection) {
+      const selected = this.attributeSelection.selected;
+
+      label =
+        "Velg " +
+        Object.keys(selected)
+          .map((attrKey) => {
+            const attribute = this.variableProduct.attributes.get(attrKey)!;
+            return attribute.label;
+          })
+          .join(" og ")
+          .toLowerCase();
     }
     return { key, label };
   }

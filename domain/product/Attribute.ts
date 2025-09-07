@@ -19,7 +19,7 @@ export class Attribute {
 
   private constructor(data: AttributeData) {
     this.key = slugKey(data.name);
-    this.label = data.name;
+    this.label = data.name.toLowerCase();
     this.taxonomy = data.taxonomy;
     this.has_variations = data.has_variations;
   }
