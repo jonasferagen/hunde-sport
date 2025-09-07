@@ -1,6 +1,8 @@
-import type { AttributeData, TermData, VariationData } from "./helpers/types";
-import { Attribute, Term, Variation } from "./helpers/types";
+import { Term, type TermData } from "@/domain/product/Term";
+
+import { Attribute, type AttributeData } from "./Attribute";
 import { Product, type ProductData } from "./Product";
+import { Variation, type VariationData } from "./Variation";
 
 type RelationshipMaps = {
   attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
@@ -217,31 +219,6 @@ export class VariableProduct extends Product {
       )
     );
   }
-
-  // Returns all matching variations for the *currently selected* term keys.
-  // Unselected attributes (undefined) are ignored.
-  /*
-  findVariations(
-    attributeSelection: AttributeSelection
-  ): ReadonlySet<Variation> {
-    let candidates = [...this.variations.values()];
-    for (const termKey of Object.values(attributeSelection)) {
-      if (!termKey) continue;
-      candidates = candidates.filter((v) => v.termKeys.includes(termKey));
-      if (candidates.length === 0) break;
-    }
-    return new Set(candidates);
-  }
-
-  findTerms(attributeSelection: AttributeSelection): ReadonlySet<Term> {
-    const terms: Term[] = [];
-    for (const termKey of Object.values(attributeSelection)) {
-      if (!termKey) continue; // ignore not-yet-selected
-      const term = this.terms.get(termKey);
-      if (term) terms.push(term);
-    }
-    return new Set(terms);
-  } */
 }
 
 function assertKnown<T>(

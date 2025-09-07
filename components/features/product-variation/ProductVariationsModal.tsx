@@ -5,7 +5,9 @@ import { PurchaseButton } from "@/components/features/product/purchase/PurchaseB
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { VariableProductProvider } from "@/contexts/VariableProductContext";
-import { AttributeSelection, Term } from "@/domain/product/helpers/types";
+import type { AttrKey } from "@/domain/product/Attribute";
+import { AttributeSelection } from "@/domain/product/AttributeSelection";
+import type { Term } from "@/domain/product/Term";
 import { useProductVariations } from "@/hooks/data/Product";
 import { Purchasable, VariableProductVariant } from "@/types";
 
@@ -52,7 +54,7 @@ export const ProductVariationsModalContent = ({
   const [attributeSelection, setAttributeSelection] =
     React.useState<AttributeSelection>(initialAttributeSelection!);
 
-  const onSelect = (attrKey: string, term: Term | undefined) => {
+  const onSelect = (attrKey: AttrKey, term: Term | undefined) => {
     const newSelection = attributeSelection.with(attrKey, term);
     setAttributeSelection(newSelection);
   };

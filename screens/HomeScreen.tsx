@@ -47,9 +47,11 @@ export const HomeScreen = () => {
         <SearchBar onSubmit={handleSearch} />
       </PageHeader>
       <PageBody mode="scroll">
-        <PageSection title="Debug">
-          <DebugProducts key="debug" />
-        </PageSection>
+        {__DEV__ && (
+          <PageSection title="Debug">
+            <DebugProducts key="debug" />
+          </PageSection>
+        )}
         <PageSection title="Nyheter" theme={THEME_PRODUCTS_RECENT_BG}>
           <RecentProducts key="recent" theme={THEME_PRODUCTS_RECENT} />
         </PageSection>

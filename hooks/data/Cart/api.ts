@@ -7,7 +7,7 @@ import { apiClient } from "@/lib/apiClient";
 export interface AddItemOptions {
   id: number;
   quantity: number;
-  variation?: { attribute: string; value: string }[];
+  variation?: Record<string, string>[];
   extensions?: {
     app_fpf?: {
       values: Record<string, string>;

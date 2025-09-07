@@ -4,7 +4,7 @@ import type {
   AttributeSelection as AttributeSelectionType,
   Term,
   Variation,
-} from "@/domain/product/helpers/types";
+} from "@/domain/product";
 import { Product } from "@/domain/product/Product";
 import type { AddItemOptions } from "@/hooks/data/Cart/api";
 import { intersectSets } from "@/lib/util";
@@ -143,7 +143,6 @@ export class Purchasable {
     const key = this.resolveStatusKey();
     let label = DEFAULT_STATUS_LABEL[key];
     if (key === "select_incomplete" && this.selectedTerms) {
-      console.log(this.selectedTerms);
       const msg = this.selectedTerms.map((t) => t?.label).join(":");
       if (msg) label = msg;
     }
@@ -160,7 +159,6 @@ export class Purchasable {
 
   toCartItem(quantity = 1): AddItemOptions {
     this.validate();
-    const variation = undefined;
 
     const ext = CustomField.toCartExtensions(this.customFields);
 
@@ -171,11 +169,13 @@ export class Purchasable {
         ...(ext ? { extensions: ext.extensions } : {}),
       };
     }
+    const options = this.productVariation!.options;
+    const variation = { variation: options };
 
     return {
       id: this.product.id,
       quantity,
-      variation,
+      ...variation,
       ...(ext ? { extensions: ext.extensions } : {}),
     };
   }
