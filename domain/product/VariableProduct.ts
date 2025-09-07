@@ -1,4 +1,9 @@
+import { getProductPriceRange } from "@/domain/pricing/format";
+import type { ProductPrices } from "@/domain/pricing/types";
+import type { AttributeSelection } from "@/domain/product/AttributeSelection";
 import { Term, type TermData } from "@/domain/product/Term";
+import { intersectSets } from "@/lib/util";
+import type { ProductVariation } from "@/types";
 
 import { Attribute, type AttributeData } from "./Attribute";
 import { Product, type ProductData } from "./Product";
@@ -220,6 +225,34 @@ export class VariableProduct extends Product {
       )
     );
   }
+
+  findVariation(attributeSelection: AttributeSelection): Variation | undefined {
+    if (!attributeSelection.isComplete()) {
+      return undefined;
+    }
+    const sets = [];
+    for (const term of attributeSelection.getTerms()) {
+      const v = this.getVariationsByTerm(term!.key);
+      sets.push(v);
+    }
+    const I = intersectSets(...sets);
+    if (I.size === 0) {
+      console.error("No matching variation found for terms");
+      return;
+    }
+    return Array.from(I)[0]; // Always set to first
+  }
+
+  static findPriceRangeForVariations = (
+    productVariations: ReadonlyMap<string, ProductVariation>,
+    variations: ReadonlySet<Variation>
+  ) => {
+    const prices = Array.from(variations)
+      .map((variation) => productVariations.get(variation?.key)?.prices)
+      .filter(Boolean) as ProductPrices[];
+
+    return prices.length ? getProductPriceRange(prices) : null;
+  };
 }
 
 function assertKnown<T>(

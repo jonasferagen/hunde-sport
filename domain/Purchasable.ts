@@ -35,6 +35,7 @@ type Props = {
   product: Product;
   attributeSelection?: AttributeSelection;
   productVariation?: ProductVariation;
+  customFields?: CustomField[];
 };
 
 export class Purchasable {
@@ -44,33 +45,35 @@ export class Purchasable {
   readonly variation?: Variation;
   readonly productVariation?: ProductVariation;
 
-  readonly customFields: CustomField[] = [];
-  readonly customizationSatisfiedHint: boolean = false;
-
+  readonly customFields?: CustomField[];
   private isInSelection: boolean = false;
+  private isInCustomization: boolean = false;
 
   private constructor({
     product,
     attributeSelection,
     productVariation,
+    customFields,
   }: Props) {
     this.product = product;
     if (this.product.type === "simple") {
       return;
     }
 
-    console.log(productVariation?.id, attributeSelection);
-
     this.productVariation = productVariation;
     this.attributeSelection = attributeSelection;
 
     if (this.attributeSelection) {
       this.isInSelection = true;
+      this.variation = (product as VariableProduct).findVariation(
+        this.attributeSelection
+      );
     }
 
-    //this.customFields = customFields;
-
-    // this.customizationSatisfiedHint = customizationSatisfiedHint;
+    if (customFields) {
+      this.isInCustomization = true;
+      this.customFields = customFields;
+    }
   }
   static create(props: Props) {
     return new Purchasable(props);
@@ -102,13 +105,8 @@ export class Purchasable {
     return false;
   }
 
-  /** Offer customization before add-to-cart? */
-  get needsCustomization(): boolean {
-    return (
-      this.hasCustomFields &&
-      !this.hasAnyCustomValues &&
-      !this.customizationSatisfiedHint
-    );
+  private get needsCustomization(): boolean {
+    return this.hasCustomFields && !this.isInCustomization;
   }
 
   private get needsSelection(): boolean {
@@ -123,7 +121,7 @@ export class Purchasable {
 
     if (this.product.isVariable) {
       if (this.needsSelection) return "select";
-      if (!this.variation) return "select_incomplete";
+      if (!this.productVariation) return "select_incomplete";
     }
     if (this.needsCustomization) return "customize";
 
@@ -169,6 +167,7 @@ export class Purchasable {
         ...(ext ? { extensions: ext.extensions } : {}),
       };
     }
+
     const options = this.variation!.options;
     const variation = { variation: options };
 

@@ -13,8 +13,6 @@ import { ProductCustomizationForm } from "./ProductCustomizationForm";
 type Props = {
   purchasable: Purchasable;
   close: () => void;
-  initialValues?: CustomField[];
-  onDone?: (customFields: CustomField[]) => void;
 };
 
 export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
@@ -35,20 +33,26 @@ export const ProductCustomizationModalContent = ({
   close: () => void;
   purchasable: Purchasable;
 }) => {
-  const { product, attributeSelection, productVariation } = purchasable;
+  const {
+    product,
+    attributeSelection,
+    productVariation,
+    customFields: initialCustomFields,
+  } = purchasable;
 
-  const [fields, setFields] = React.useState<CustomField[]>(
-    product.customFields ?? []
+  const [customFields, setCustomFields] = React.useState<CustomField[]>(
+    initialCustomFields ?? product.customFields ?? []
   );
 
   const newPurchasable = React.useMemo(
     () =>
       Purchasable.create({
+        customFields,
         product,
         attributeSelection,
         productVariation,
       }),
-    [product, attributeSelection, productVariation]
+    [product, attributeSelection, productVariation, customFields]
   );
 
   return (
@@ -64,7 +68,10 @@ export const ProductCustomizationModalContent = ({
     >
       <ThemedYStack gap="$3">
         <Paragraph>{product.short_description}</Paragraph>
-        <ProductCustomizationForm fields={fields} onChange={setFields} />
+        <ProductCustomizationForm
+          fields={customFields}
+          onChange={setCustomFields}
+        />
       </ThemedYStack>
     </ModalLayout>
   );

@@ -8,7 +8,6 @@ import { ProductProvider, useProductContext } from "@/contexts/ProductContext";
 import type { AttrKey } from "@/domain/product/Attribute";
 import { AttributeSelection } from "@/domain/product/AttributeSelection";
 import type { Term } from "@/domain/product/Term";
-import { intersectSets } from "@/lib/util";
 import { Purchasable } from "@/types";
 
 import { ProductVariationSelect } from "./ProductVariationSelect";
@@ -50,20 +49,7 @@ export const ProductVariationsModalContent = ({
       if (!attributeSelection.isComplete()) {
         return undefined;
       }
-
-      const sets = [];
-      for (const term of attributeSelection.getTerms()) {
-        const v = variableProduct.getVariationsByTerm(term!.key);
-        sets.push(v);
-      }
-      const I = intersectSets(...sets);
-
-      if (I.size === 0) {
-        console.error("No matching variation found for terms");
-        return;
-      }
-      const variation = Array.from(I)[0]; // Always set to first
-
+      const variation = variableProduct.findVariation(attributeSelection);
       return productVariations.get(variation!.key);
     },
     [variableProduct, productVariations]
