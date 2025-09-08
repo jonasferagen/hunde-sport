@@ -1,9 +1,10 @@
 // @domain/cart/CartItem.ts
-import { CartItemTotals } from "@/domain/cart/CartItemTotals";
-import { Currency } from "@/domain/pricing/Currency";
-import { Money } from "@/domain/pricing/Money";
-import type { CartItemTotalsData, ProductPrices } from "@/domain/pricing/types";
-import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
+import { CartItemTotals } from "@domain/cart/CartItemTotals";
+import { Currency } from "@domain/pricing/Currency";
+import { Money } from "@domain/pricing/Money";
+import type { CartItemTotalsData, ProductPrices } from "@domain/pricing/types";
+import { StoreImage, type StoreImageData } from "@domain/StoreImage";
+
 import { cleanHtml, slugKey } from "@/lib/formatters";
 
 type CartItemVariationData = {
@@ -112,13 +113,13 @@ export class CartItem implements NormalizedCartItem {
 
   get variationLabel(): string {
     if (!this.variation.length) return "";
-    return this.variation.map((v) => v.value).join(", ");
+    return this.variation.map((v) => v.value).join(",");
   }
 
   /** "Foret Sele – Mint / XXS/XS" */
   get title(): string {
     const suffix = this.variationLabel;
-    return suffix ? `${this.name} – ${suffix}` : this.name;
+    return suffix ? `${this.name}, ${suffix}` : this.name;
   }
   // Optional: immutable quantity update for your Cart methods
   withQuantity(quantity: number): CartItem {

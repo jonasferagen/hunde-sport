@@ -30,16 +30,26 @@ module.exports = defineConfig([
     },
 
     settings: {
-      // Make import/no-unresolved understand tsconfig paths like "@/..."
       "import/resolver": {
         typescript: {
+          // point to your tsconfig that contains "paths"
           project: "./tsconfig.json",
-          alwaysTryTypes: true,
         },
-        node: { extensions: [".js", ".jsx", ".ts", ".tsx"] }, // helps JS files too
+        "babel-module": {
+          // requires eslint-import-resolver-babel-module
+          extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+          alias: {
+            "@": "./",
+            "@domain": "./domain",
+            "@cart": "./domain/cart",
+            "@product": "./domain/product",
+          },
+        },
+        node: {
+          extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+        },
       },
     },
-
     rules: {
       // ✅ Safety (provided by eslint-plugin-import that Expo already enables)
       "import/no-unresolved": "error",
