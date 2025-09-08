@@ -11,13 +11,13 @@ import { TileBadge } from "@/components/ui/Badge";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import { ThemedYStack } from "@/components/ui/themed-components";
 import { THEME_PRICE_TAG } from "@/config/app";
-import { ProductProvider } from "@/contexts/ProductContext";
+
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useVisibleItems } from "@/hooks/ui/useVisibleItems";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { spacePx } from "@/lib/helpers";
 import type { QueryResult } from "@/lib/query/query";
-import type { PurchasableProduct } from "@/types";
+import { Purchasable, type PurchasableProduct } from "@/types";
 
 import { TileFixed } from "./TileFixed";
 
@@ -130,15 +130,17 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
   const { to } = useCanonicalNavigation();
 
   const renderItem = React.useCallback(
-    ({ item, index }: { item: PurchasableProduct; index: number }) => (
-      <RNView
-        style={{
-          marginRight: gapPx,
-          width: estimatedItemSize,
-          height: estimatedItemCrossSize,
-        }}
-      >
-        <ProductProvider product={item}>
+    ({ item, index }: { item: PurchasableProduct; index: number }) => {
+      const purchasable = Purchasable.create({ product: item });
+
+      return (
+        <RNView
+          style={{
+            marginRight: gapPx,
+            width: estimatedItemSize,
+            height: estimatedItemCrossSize,
+          }}
+        >
           <TileFixed
             onPress={() => to("product", item)}
             title={item.name}
@@ -163,16 +165,15 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
                 productAvailability={item.availability}
                 showInStock={false}
               />
-              <ProductPrice showIcon />
+              <ProductPrice purchasable={purchasable} showIcon />
             </TileBadge>
           </TileFixed>
-        </ProductProvider>
-      </RNView>
-    ),
+        </RNView>
+      );
+    },
     [gapPx, estimatedItemSize, estimatedItemCrossSize, vis.set, to]
   );
 
-  //  { const { variableProduct, prices } = useVariableProductContext(); }
   const listRef = React.useRef<FlashListRef<PurchasableProduct>>(null);
 
   return (

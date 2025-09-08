@@ -14,8 +14,7 @@ export function ProductVariationSelect({
   onSelect,
   attributeSelection,
 }: Props) {
-  const { variableProduct, productVariations, findByVariations } =
-    useVariableProductContext();
+  const { variableProduct, findByVariations } = useVariableProductContext();
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">

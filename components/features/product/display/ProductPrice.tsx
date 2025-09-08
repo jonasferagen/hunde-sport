@@ -1,4 +1,5 @@
 // components/product/ProductPrice.tsx
+import { PriceBook } from "@domain/pricing/PriceBook";
 import { StarFull } from "@tamagui/lucide-icons";
 import React from "react";
 
@@ -8,8 +9,10 @@ import {
   type ThemedTextProps,
   ThemedXStack,
 } from "@/components/ui/themed-components";
-import { useProductContext } from "@/contexts/ProductContext";
-import { PriceBook } from "@domain/pricing/PriceBook";
+import type { ProductPriceRange as ProductPriceRangeType } from "@/domain/pricing/types";
+import { useProductPriceRange } from "@/hooks/useProductPriceRange";
+import type { Purchasable, VariableProduct } from "@/types";
+
 const PriceLine = ({
   showIcon,
   children,
@@ -20,53 +23,50 @@ const PriceLine = ({
   </ThemedXStack>
 );
 
-type ProductPriceSimpleProps = { showIcon?: boolean } & ThemedTextProps;
+type ProductPriceSimpleProps = {
+  purchasable: Purchasable;
+  showIcon?: boolean;
+} & ThemedTextProps;
 
 export const ProductPrice = React.memo(function ProductPrice({
   showIcon = false,
+  purchasable,
   ...textProps
 }: ProductPriceSimpleProps) {
-  const { product, productPriceRange } = useProductContext();
-  const { prices, availability } = product;
+  const effectiveProduct = purchasable.effectiveProduct;
+  const { availability } = effectiveProduct;
   const { isInStock, isPurchasable, isOnSale } = availability;
+  const priceBook: PriceBook = effectiveProduct.priceBook;
 
-  const book = React.useMemo(() => PriceBook.from(prices), [prices]);
-
-  // Variable products: prefer externally computed range if present
-  if (product.isVariable) {
-    if (productPriceRange) {
-      return (
-        <ProductPriceRange
-          productPriceRange={productPriceRange}
-          {...textProps}
-        />
-      );
-    }
+  // Variable products: render dedicated subcomponent that uses the hook internally
+  if (effectiveProduct.isVariable) {
     return (
-      <PriceLine>
-        <ThemedSpinner scale={0.7} />
-      </PriceLine>
+      <ProductPriceVariable
+        variableProduct={effectiveProduct as VariableProduct}
+        {...textProps}
+      />
     );
   }
 
-  const saleValid = book.isSaleValid(isOnSale);
-  const isFree = isInStock && book.price.minor === 0;
-  const subtle = !isInStock || !isPurchasable || textProps.subtle;
+  // Simple product pricing
+  const saleValid = isOnSale; // authoritative from WC Store API
+  const isFree = isInStock && priceBook.price.minor === 0;
+  const subtle = Boolean(!isInStock || !isPurchasable || textProps.subtle);
 
   if (saleValid) {
     return (
       <PriceLine showIcon={showIcon}>
         <ThemedText disabled subtle {...textProps}>
-          {book.fmtRegular()}
+          {priceBook.fmtRegular()}
         </ThemedText>
         <ThemedText {...textProps} subtle={subtle}>
-          {book.fmtSale()}
+          {priceBook.fmtSale()}
         </ThemedText>
       </PriceLine>
     );
   }
 
-  const label = isFree ? "Gratis!" : book.fmtPrice();
+  const label = isFree ? "Gratis!" : priceBook.fmtPrice();
   return (
     <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
       <ThemedText {...textProps} subtle={subtle}>
@@ -76,11 +76,8 @@ export const ProductPrice = React.memo(function ProductPrice({
   );
 });
 
-// Keep your server-driven range renderer (best for variable products)
-import type { ProductPriceRange as TProductPriceRange } from "@/domain/pricing/types";
-
 type ProductPriceRangeProps = {
-  productPriceRange: TProductPriceRange;
+  productPriceRange: ProductPriceRangeType;
   showIcon?: boolean;
   short?: boolean;
 } & ThemedTextProps;
@@ -92,7 +89,19 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
   ...textProps
 }: ProductPriceRangeProps) {
   const { min, max } = productPriceRange;
-  const same = (min?.price ?? "0") === (max?.price ?? "0");
+
+  if (!min || !max) {
+    return (
+      <PriceLine>
+        <ThemedSpinner scale={0.7} />
+      </PriceLine>
+    );
+  }
+
+  const same =
+    min.currency_code === max.currency_code &&
+    Number(min.price) === Number(max.price);
+
   const minLabel = PriceBook.from(min).fmtPrice();
   const label = same
     ? minLabel
@@ -106,3 +115,24 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
     </PriceLine>
   );
 });
+
+/** Subcomponent that safely calls the hook (no conditional hook calls) */
+function ProductPriceVariable({
+  variableProduct,
+  ...textProps
+}: { variableProduct: VariableProduct } & ThemedTextProps) {
+  const { productPriceRange, isLoading } =
+    useProductPriceRange(variableProduct);
+
+  if (isLoading || !productPriceRange) {
+    return (
+      <PriceLine>
+        <ThemedSpinner scale={0.7} />
+      </PriceLine>
+    );
+  }
+
+  return (
+    <ProductPriceRange productPriceRange={productPriceRange} {...textProps} />
+  );
+}

@@ -79,7 +79,7 @@ export class Purchasable {
     return new Purchasable(props);
   }
 
-  get displayProduct(): SimpleProduct | VariableProduct | ProductVariation {
+  get effectiveProduct(): SimpleProduct | VariableProduct | ProductVariation {
     return this.productVariation ? this.productVariation : this.product;
   }
 

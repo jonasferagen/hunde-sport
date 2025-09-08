@@ -1,5 +1,6 @@
 // domain/product/Product.ts
 import { CustomField, type CustomFieldData } from "@/domain/CustomField";
+import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductPrices } from "@/domain/pricing/types";
 import type { AttributeData } from "@/domain/product/Attribute";
 import type { VariationData } from "@/domain/product/Variation";
@@ -109,6 +110,10 @@ export abstract class Product implements NormalizedProduct {
     if (data.images.length === 0) {
       throw new Error("Product must have at least one image");
     }
+  }
+
+  get priceBook() {
+    return PriceBook.from(this.prices);
   }
 
   get featuredImage(): StoreImage {

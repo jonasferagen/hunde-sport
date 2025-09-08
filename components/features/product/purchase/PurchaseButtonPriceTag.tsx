@@ -2,13 +2,13 @@
 
 import { ProductPrice } from "@/components/features/product/display/ProductPrice";
 import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
-import { type PurchasableProduct } from "@/types";
+import type { Purchasable } from "@/types";
 
-type Props = {
-  product: PurchasableProduct;
-};
-
-export function PurchaseButtonPriceTag({ product }: Props) {
+export function PurchaseButtonPriceTag({
+  purchasable,
+}: {
+  purchasable: Purchasable;
+}) {
   return (
     <ThemedSurface
       theme="shade"
@@ -19,14 +19,11 @@ export function PurchaseButtonPriceTag({ product }: Props) {
       mr={-20}
       minWidth={80}
     >
-      <ProductPrice
-        productPrices={product.prices}
-        productAvailability={product.availability}
-      />
+      <ProductPrice purchasable={purchasable} />
     </ThemedSurface>
   );
 }
-
+/*
 export function PurchaseButtonRight({ children }: any) {
   return (
     <ThemedSurface
@@ -42,3 +39,4 @@ export function PurchaseButtonRight({ children }: any) {
     </ThemedSurface>
   );
 }
+*/

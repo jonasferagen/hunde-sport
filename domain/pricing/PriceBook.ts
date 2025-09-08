@@ -1,7 +1,7 @@
 // @domain/pricing/PriceBook.ts
 import { Currency } from "./Currency";
 import { Money } from "./Money";
-import type { ProductPriceRange, ProductPrices } from "./types";
+import type { ProductPrices } from "./types";
 
 export class PriceBook {
   readonly currency: Currency;
@@ -77,38 +77,4 @@ export class PriceBook {
       ? `Fra ${this.rangeMin.format()}`
       : `${this.rangeMin.format()} – ${this.rangeMax!.format()}`;
   }
-}
-
-export function getProductPriceRange(
-  prices: ProductPrices[]
-): ProductPriceRange {
-  if (prices.length === 0) {
-    throw new Error("No prices provided");
-  }
-
-  // Keep only valid, non-zero prices
-  const valid = prices.filter((p) => {
-    const n = Number(p.price);
-    return Number.isFinite(n) && n !== 0;
-  });
-
-  // If no valid prices, fall back to the first element
-  const list = valid.length > 0 ? valid : [prices[0]];
-
-  // Seed min/max with the first item to avoid nulls
-  let min = list[0];
-  let max = list[0];
-
-  for (let i = 1; i < list.length; i++) {
-    const p = list[i];
-    const n = Number(p.price);
-    if (n < Number(min.price)) {
-      min = p;
-    }
-    if (n > Number(max.price)) {
-      max = p;
-    }
-  }
-
-  return { min, max };
 }

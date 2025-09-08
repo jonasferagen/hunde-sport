@@ -5,12 +5,11 @@ import { PurchaseButton } from "@/components/features/product/purchase/PurchaseB
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { useVariableProductContext, VariableProductProvider } from "@/contexts";
-import { ProductProvider } from "@/contexts/ProductContext";
+
 import type { AttrKey } from "@/domain/product/Attribute";
 import { AttributeSelection } from "@/domain/product/AttributeSelection";
 import type { Term } from "@/domain/product/Term";
 import { Purchasable } from "@/types";
-
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 const IMAGE_H = 200;
@@ -22,14 +21,9 @@ type Props = {
 
 export const ProductVariationsModal = ({ close, purchasable }: Props) => {
   return (
-    <ProductProvider product={purchasable.product}>
-      <VariableProductProvider variableProduct={purchasable.variableProduct}>
-        <ProductVariationsModalContent
-          close={close}
-          purchasable={purchasable}
-        />
-      </VariableProductProvider>
-    </ProductProvider>
+    <VariableProductProvider variableProduct={purchasable.variableProduct}>
+      <ProductVariationsModalContent close={close} purchasable={purchasable} />
+    </VariableProductProvider>
   );
 };
 

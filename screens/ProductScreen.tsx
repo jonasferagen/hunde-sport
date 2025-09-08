@@ -20,11 +20,10 @@ import { ThemedXStack } from "@/components/ui";
 import { Loader } from "@/components/ui/Loader";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { ProductCategoryProvider } from "@/contexts/ProductCategoryContext";
-import { ProductProvider } from "@/contexts/ProductContext";
 import { useProduct } from "@/hooks/data/Product";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
-import { type PurchasableProduct } from "@/types";
+import { Purchasable, type PurchasableProduct } from "@/types";
 
 export const ProductScreen = () => {
   useRenderGuard("ProductScreen");
@@ -53,14 +52,13 @@ export const ProductScreen = () => {
         productCategoryId || product.categories[0]?.id || 0
       } /** @TODO at least one category should be guaranteed*/
     >
-      <ProductProvider product={product}>
-        <ProductScreenContent product={product as PurchasableProduct} />
-      </ProductProvider>
+      <ProductScreenContent product={product as PurchasableProduct} />
     </ProductCategoryProvider>
   );
 };
 
 const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
+  const purchasable = Purchasable.create({ product });
   return (
     <PageView theme="secondary">
       <PageBody mode="scroll">
@@ -70,7 +68,7 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
         <PageSection theme={THEME_PRODUCT_ITEM_1} padded>
           <ThemedXStack split>
             <ProductTitle f={1} product={product} />
-            <ProductPrice fos="$6" />
+            <ProductPrice fos="$6" purchasable={purchasable} />
           </ThemedXStack>
           <ThemedXStack split>
             <ProductAvailabilityStatus
