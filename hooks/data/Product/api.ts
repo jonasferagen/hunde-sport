@@ -152,5 +152,6 @@ export const fetchProductVariations = async (
   const response = await apiClient.get<any[]>(
     ENDPOINTS.PRODUCT_VARIATIONS.LIST(id, pagination)
   );
+
   return responseTransformer(response, Product.create);
 };

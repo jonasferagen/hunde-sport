@@ -3,16 +3,8 @@ import { H3 } from "tamagui";
 
 import { ProductAttributeOption } from "@/components/features/product-variation/ProductAttributeOption";
 import { ThemedXStack, ThemedYStack } from "@/components/ui";
-import { useProductContext } from "@/contexts/ProductContext";
-import { getProductPriceRange } from "@/domain/pricing/format";
-import { type ProductPrices } from "@/domain/pricing/types";
-import type {
-  AttributeSelection,
-  ProductVariation,
-  Term,
-  Variation,
-} from "@/domain/product/";
-import type { VariableProduct } from "@/types";
+import { useVariableProductContext } from "@/contexts";
+import type { AttributeSelection, Term } from "@/domain/product/";
 type Props = {
   onSelect: (attrKey: string, term: Term | undefined) => void;
   attributeSelection: AttributeSelection;
@@ -22,8 +14,8 @@ export function ProductVariationSelect({
   onSelect,
   attributeSelection,
 }: Props) {
-  const { product, productVariations } = useProductContext();
-  const variableProduct = product as VariableProduct;
+  const { variableProduct, findByVariations } = useVariableProductContext();
+
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
       {[...variableProduct.attributes].map(([attrKey, attribute]) => {
@@ -68,10 +60,7 @@ export function ProductVariationSelect({
                 };
               })();
 
-              const productPriceRange = findPriceRangeForVariations(
-                productVariations,
-                availableVariations
-              );
+              const productVariations = findByVariations(availableVariations);
 
               return termVariations.size ? (
                 <ProductAttributeOption
@@ -80,7 +69,7 @@ export function ProductVariationSelect({
                   label={term.label}
                   isSelected={isSelected}
                   disabled={disabled}
-                  productPriceRange={productPriceRange}
+                  productVariations={productVariations}
                   onPress={() =>
                     onSelect(attrKey, isSelected ? undefined : term)
                   } // Toggle active term
@@ -93,14 +82,3 @@ export function ProductVariationSelect({
     </ThemedXStack>
   );
 }
-
-const findPriceRangeForVariations = (
-  productVariations: ReadonlyMap<string, ProductVariation>,
-  variations: ReadonlySet<Variation>
-) => {
-  const prices = Array.from(variations)
-    .map((variation) => productVariations.get(variation?.key)?.prices)
-    .filter(Boolean) as ProductPrices[];
-
-  return prices.length ? getProductPriceRange(prices) : null;
-};

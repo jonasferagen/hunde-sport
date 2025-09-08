@@ -4,7 +4,8 @@ import { ProductImage } from "@/components/features/product/display/ProductImage
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
-import { ProductProvider, useProductContext } from "@/contexts/ProductContext";
+import { useVariableProductContext, VariableProductProvider } from "@/contexts";
+import { ProductProvider } from "@/contexts/ProductContext";
 import type { AttrKey } from "@/domain/product/Attribute";
 import { AttributeSelection } from "@/domain/product/AttributeSelection";
 import type { Term } from "@/domain/product/Term";
@@ -22,7 +23,12 @@ type Props = {
 export const ProductVariationsModal = ({ close, purchasable }: Props) => {
   return (
     <ProductProvider product={purchasable.product}>
-      <ProductVariationsModalContent close={close} purchasable={purchasable} />
+      <VariableProductProvider variableProduct={purchasable.variableProduct}>
+        <ProductVariationsModalContent
+          close={close}
+          purchasable={purchasable}
+        />
+      </VariableProductProvider>
     </ProductProvider>
   );
 };
@@ -34,8 +40,7 @@ export const ProductVariationsModalContent = ({
   close: () => void;
   purchasable: Purchasable;
 }) => {
-  const { productVariations } = useProductContext();
-
+  const { productVariations } = useVariableProductContext();
   const variableProduct = purchasable.variableProduct;
 
   const initialAttributeSelection = AttributeSelection.create(

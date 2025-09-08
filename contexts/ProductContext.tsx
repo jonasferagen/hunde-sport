@@ -1,16 +1,25 @@
 // VariableProductProvider.tsx
 import React, { createContext, useContext, useMemo } from "react";
 
-import type { ProductPrices } from "@/domain/pricing/types";
-import { useProductVariations } from "@/hooks/data/Product";
+import { getProductPriceRange } from "@/domain/pricing/format";
+import type { ProductPriceRange, ProductPrices } from "@/domain/pricing/types";
+import type { Variation } from "@/domain/product";
+import {
+  useProductVariation,
+  useProductVariations,
+} from "@/hooks/data/Product";
 import { useAutoPaginateQueryResult } from "@/lib/query/query";
 import { type Product, ProductVariation } from "@/types";
 
 interface ProductContextType {
   product: Product;
   productVariations: ReadonlyMap<string, ProductVariation>;
-  productVariationPrices: ProductPrices[];
+  productPriceRange: ProductPriceRange | null;
+  findPriceRange: (
+    variations: ReadonlySet<Variation>
+  ) => ProductPriceRange | null;
   isLoading: boolean;
+  isPriceRangeLoading: boolean;
 }
 
 const ProductCtx = createContext<ProductContextType | undefined>(undefined);
@@ -46,16 +55,50 @@ export const ProductProvider = React.memo(function ProductProvider({
     return m as ReadonlyMap<string, ProductVariation>;
   }, [_productVariations]);
 
-  const productVariationPrices = useMemo(
-    () => _productVariations.map((p) => p.prices),
-    [_productVariations]
+  const { data: min, isLoading: isLoadingMin } = useProductVariation(product, {
+    order: "asc",
+  });
+  const { data: max, isLoading: isLoadingMax } = useProductVariation(product, {
+    order: "desc",
+  });
+
+  const isPriceRangeLoading = isLoadingMin || isLoadingMax;
+
+  const productPriceRange = useMemo(() => {
+    if (min && max) {
+      return getProductPriceRange([min.prices, max.prices]);
+    }
+    return null;
+  }, [min, max]);
+
+  const findPriceRange = useMemo(
+    () => (variations: ReadonlySet<Variation>) => {
+      const prices = Array.from(variations)
+        .map((variation) => productVariations.get(variation.key)!.prices)
+        .filter(Boolean) as ProductPrices[];
+
+      return prices.length ? getProductPriceRange(prices) : null;
+    },
+    [productVariations]
   );
 
-  console.log(productVariations.size);
-
   const value = useMemo(
-    () => ({ product, productVariations, productVariationPrices, isLoading }),
-    [product, productVariations, productVariationPrices, isLoading]
+    () => ({
+      product,
+      productVariations,
+      isPriceRangeLoading,
+      productPriceRange,
+      findPriceRange,
+      isLoading,
+    }),
+    [
+      product,
+      isPriceRangeLoading,
+      productVariations,
+      productPriceRange,
+      findPriceRange,
+      isLoading,
+    ]
   );
 
   return <ProductCtx.Provider value={value}>{children}</ProductCtx.Provider>;

@@ -10,6 +10,7 @@ import { ThemedText, ThemedYStack } from "@/components/ui";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { useCart } from "@/hooks/data/Cart";
 import { useProductCategories } from "@/hooks/data/ProductCategory";
+import { useAutoPaginateQueryResult } from "@/lib/query/query";
 import { queryClient } from "@/lib/queryClient";
 import { useProductCategoryStore } from "@/stores/productCategoryStore";
 import { useCartStore } from "@/stores/useCartStore";
@@ -99,44 +100,18 @@ function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
     (s) => s.setProductCategories
   );
 
-  const {
-    items,
-    status,
-    error,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    fetchStatus,
-    refetch,
-    total,
-  } = useProductCategories({ enabled });
-  const count = items.length;
+  const result = useProductCategories({ enabled });
+  useAutoPaginateQueryResult(result);
 
-  React.useEffect(() => {
-    if (!enabled) return;
-    if (status !== "success") return; // wait for first page
-    if (!hasNextPage) return;
-    if (fetchStatus === "paused") return;
-    if (isFetchingNextPage) return;
-
-    // new page arrived (pages increased) or first success — kick next fetch
-    void fetchNextPage();
-  }, [
-    count,
-    enabled,
-    status,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    fetchStatus,
-  ]);
+  const { isFetching, items, total, error, refetch } = result;
 
   // push into store
   React.useEffect(() => {
     if (enabled) setProductCategories(items);
   }, [enabled, items, setProductCategories]);
 
-  const ready = status === "success" && !hasNextPage && !isFetchingNextPage;
+  const count = items.length;
+  const ready = !isFetching && count >= total;
 
   const progress = !ready
     ? total && total > 0

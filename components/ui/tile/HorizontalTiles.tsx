@@ -1,6 +1,6 @@
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import React, { type JSX } from "react";
-import { View as RNView, StyleSheet } from "react-native";
+import { View as RNView } from "react-native";
 import type { SpaceTokens, StackProps } from "tamagui";
 
 import {
@@ -127,6 +127,8 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
     if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage();
   }, [loadingState]);
 
+  const { to } = useCanonicalNavigation();
+
   const renderItem = React.useCallback(
     ({ item, index }: { item: PurchasableProduct; index: number }) => (
       <RNView
@@ -137,17 +139,37 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
         }}
       >
         <ProductProvider product={item}>
-          <VariableTileInner
-            item={item}
-            index={index}
-            estimatedItemSize={estimatedItemSize}
-            estimatedItemCrossSize={estimatedItemCrossSize}
-            visInteractive={vis.set.has(index)}
-          />
+          <TileFixed
+            onPress={() => to("product", item)}
+            title={item.name}
+            image={item.featuredImage}
+            w={estimatedItemSize}
+            h={estimatedItemCrossSize}
+            imagePriority={index < 3 ? "high" : "low"}
+            interactive={vis.set.has(index) /* or something derived from vp */}
+          >
+            {!item.availability.isInStock && (
+              <ThemedYStack
+                bg="$background"
+                fullscreen
+                pos="absolute"
+                o={0.4}
+                pointerEvents="none"
+              />
+            )}
+
+            <TileBadge theme={THEME_PRICE_TAG} corner="tr">
+              <ProductAvailabilityStatus
+                productAvailability={item.availability}
+                showInStock={false}
+              />
+              <ProductPrice showIcon />
+            </TileBadge>
+          </TileFixed>
         </ProductProvider>
       </RNView>
     ),
-    [gapPx, estimatedItemSize, estimatedItemCrossSize, vis.set]
+    [gapPx, estimatedItemSize, estimatedItemCrossSize, vis.set, to]
   );
 
   //  { const { variableProduct, prices } = useVariableProductContext(); }
@@ -155,7 +177,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
 
   return (
     <ThemedYStack
-      style={[styles.container, { height: estimatedItemCrossSize }]}
+      style={[{ position: "relative", height: estimatedItemCrossSize }]}
       onLayout={edges.onLayout}
       mih={estimatedItemCrossSize}
       h={estimatedItemCrossSize}
@@ -196,58 +218,3 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
     </ThemedYStack>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { position: "relative" },
-});
-// somewhere top-level in the file
-const VariableTileInner = React.memo(function VariableTileInner({
-  item,
-  index,
-  estimatedItemSize,
-  estimatedItemCrossSize,
-  visInteractive,
-}: {
-  item: PurchasableProduct;
-  index: number;
-  estimatedItemSize: number;
-  estimatedItemCrossSize: number;
-  visInteractive: boolean;
-}) {
-  // read from provider
-
-  const { to } = useCanonicalNavigation();
-
-  return (
-    <TileFixed
-      onPress={
-        () =>
-          to("product", item) /* or keep your existing to("product", item) */
-      }
-      title={item.name}
-      image={item.featuredImage}
-      w={estimatedItemSize}
-      h={estimatedItemCrossSize}
-      imagePriority={index < 3 ? "high" : "low"}
-      interactive={visInteractive /* or something derived from vp */}
-    >
-      {!item.availability.isInStock && (
-        <ThemedYStack
-          bg="$background"
-          fullscreen
-          pos="absolute"
-          o={0.4}
-          pointerEvents="none"
-        />
-      )}
-
-      <TileBadge theme={THEME_PRICE_TAG} corner="tr">
-        <ProductAvailabilityStatus
-          productAvailability={item.availability}
-          showInStock={false}
-        />
-        <ProductPrice showIcon />
-      </TileBadge>
-    </TileFixed>
-  );
-});

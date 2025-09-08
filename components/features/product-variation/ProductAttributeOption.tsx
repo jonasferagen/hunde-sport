@@ -4,25 +4,30 @@ import React from "react";
 import { ProductPriceRange } from "@/components/features/product/display/ProductPrice";
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
-import type { ProductPriceRange as ProductPriceRangeT } from "@/domain/pricing/types";
-import type { Term } from "@/domain/product";
+import { getProductPriceRange } from "@/domain/pricing/format";
+import type { ProductVariation, Term } from "@/domain/product";
+
 type Props = {
   term: Term;
   label: string;
   isSelected: boolean;
   disabled?: boolean;
-  productPriceRange: ProductPriceRangeT | null;
+  productVariations: ProductVariation[];
   onPress?: () => void;
 };
 
 export const ProductAttributeOption = React.memo(
   ({
     isSelected,
-    productPriceRange,
+    productVariations,
     label,
     disabled = false,
     onPress,
   }: Props) => {
+    const productPriceRange = productVariations.length
+      ? getProductPriceRange(productVariations.map((p) => p.prices))
+      : null;
+
     return (
       <ThemedXStack
         ai="center"

@@ -1,9 +1,6 @@
-import { getProductPriceRange } from "@/domain/pricing/format";
-import type { ProductPrices } from "@/domain/pricing/types";
 import type { AttributeSelection } from "@/domain/product/AttributeSelection";
 import { Term, type TermData } from "@/domain/product/Term";
 import { intersectSets } from "@/lib/util";
-import type { ProductVariation } from "@/types";
 
 import { Attribute, type AttributeData } from "./Attribute";
 import { Product, type ProductData } from "./Product";
@@ -242,17 +239,6 @@ export class VariableProduct extends Product {
     }
     return Array.from(I)[0]; // Always set to first
   }
-
-  static findPriceRangeForVariations = (
-    productVariations: ReadonlyMap<string, ProductVariation>,
-    variations: ReadonlySet<Variation>
-  ) => {
-    const prices = Array.from(variations)
-      .map((variation) => productVariations.get(variation?.key)?.prices)
-      .filter(Boolean) as ProductPrices[];
-
-    return prices.length ? getProductPriceRange(prices) : null;
-  };
 }
 
 function assertKnown<T>(

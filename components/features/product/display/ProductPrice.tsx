@@ -31,7 +31,7 @@ export const ProductPrice = React.memo(function ProductPrice({
   showIcon = false,
   ...textProps
 }: ProductPriceSimpleProps) {
-  const { product, productVariationPrices, isLoading } = useProductContext();
+  const { product, productPriceRange } = useProductContext();
   const { prices, availability } = product;
   const { isInStock, isPurchasable, isOnSale } = availability;
 
@@ -45,14 +45,15 @@ export const ProductPrice = React.memo(function ProductPrice({
   const subtle = !isInStock || !isPurchasable || textProps.subtle;
 
   if (product.isVariable) {
-    if (isLoading) {
-      return <ThemedSpinner />;
+    if (productPriceRange) {
+      return (
+        <ProductPriceRange
+          productPriceRange={productPriceRange}
+          {...textProps}
+        />
+      );
     }
-    const range = {
-      min: productVariationPrices[0]!,
-      max: productVariationPrices[productVariationPrices.length - 1]!,
-    };
-    return <ProductPriceRange productPriceRange={range} {...textProps} />;
+    return <ThemedSpinner />;
   }
 
   if (saleValid) {

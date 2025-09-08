@@ -3,11 +3,12 @@
 export type PaginationOptions = {
   page?: number;
   per_page?: number;
+  order?: string;
 };
 
 const paginate = (paginationOptions: PaginationOptions = {}) => {
-  const { page = 1, per_page = 10 } = paginationOptions;
-  return `&page=${page}&per_page=${per_page}`;
+  const { page = 1, per_page = 10, order = "asc" } = paginationOptions;
+  return `&page=${page}&per_page=${per_page}&order=${order}`;
 };
 
 const DOMAIN = "hunde-sport.no";
@@ -26,7 +27,7 @@ const ALL_STOCK_STATUSES = "stock_status=instock,onbackorder,outofstock";
 const PRODUCTS_FILTER = `${ALL_STATUSES}&${ALL_STOCK_STATUSES}`;
 
 const PRODUCTS_LIST = (pagination: PaginationOptions = {}) => {
-  return `${PRODUCTS_URL}?${PRODUCTS_FILTER}${paginate(pagination)}&orderby=title&order=asc`;
+  return `${PRODUCTS_URL}?${PRODUCTS_FILTER}${paginate(pagination)}&orderby=title`;
 };
 
 const PRODUCT_VARIATIONS_LIST = (
@@ -67,11 +68,7 @@ export const ENDPOINTS = {
 
   PRODUCT_VARIATIONS: {
     LIST: (product_id: number, pagination?: PaginationOptions) =>
-      `${PRODUCT_VARIATIONS_LIST(product_id, pagination)}&orderby=price&order=asc`,
-    MIN: (product_id: number) =>
-      `${PRODUCT_VARIATIONS_LIST(product_id, { per_page: 1 })}&orderby=price&order=asc`,
-    MAX: (product_id: number) =>
-      `${PRODUCT_VARIATIONS_LIST(product_id, { per_page: 1 })}&orderby=price&order=desc`,
+      `${PRODUCT_VARIATIONS_LIST(product_id, pagination)}&orderby=price`,
   },
 
   CART: {

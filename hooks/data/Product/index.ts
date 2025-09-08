@@ -122,7 +122,7 @@ export const useRecentProducts = (
 
 export const useProductVariations = (
   product: Product,
-  options = { enabled: true, perPage: 10 }
+  options = { enabled: true, perPage: 10, order: "asc" }
 ): QueryResult<ProductVariation> => {
   const result = useInfiniteQuery({
     queryKey: ["product-variations", product.id],
@@ -130,9 +130,29 @@ export const useProductVariations = (
       fetchProductVariations(product.id, {
         page: pageParam,
         per_page: options.perPage,
+        order: options.order,
       }),
     enabled: product.isVariable,
     ...queryOptions,
   });
   return useQueryResult<ProductVariation>(result);
 };
+
+export function useProductVariation(
+  product: Product,
+  options = { order: "asc" as "asc" | "desc" }
+) {
+  return useQuery({
+    queryKey: ["product-variation", product.id, options.order],
+    enabled: product.isVariable,
+    queryFn: async () => {
+      const page = await fetchProductVariations(product.id, {
+        page: 1,
+        per_page: 1,
+        order: options.order,
+      });
+      return page.data[0] ?? null;
+    },
+    ...queryOptions,
+  });
+}

@@ -16,8 +16,7 @@ export const useProductCategories = (
 ): QueryResult<ProductCategory> => {
   const result = useInfiniteQuery({
     queryKey: ["product-categories"],
-    queryFn: ({ pageParam }) =>
-      fetchProductCategories({ page: pageParam, per_page: 50 }),
+    queryFn: ({ pageParam }) => fetchProductCategories({ page: pageParam }),
     ...queryOptions,
     ...options,
   });
