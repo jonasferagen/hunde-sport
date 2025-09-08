@@ -22,7 +22,7 @@ import {
 } from "@/config/app";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { useDrawerStore } from "@/stores/ui/drawerStore";
-import { useCart } from "@/stores/useCartStore";
+import { useCartTotalQuantity } from "@/stores/useCartStore";
 
 const StyledTab = styled(Tabs.Tab, {
   pos: "relative",
@@ -102,8 +102,7 @@ export const CustomBottomBarContents = () => {
     [currentTab, to]
   );
 
-  const cart = useCart();
-  const cartQty = cart.totalQuantity;
+  const cartQty = useCartTotalQuantity();
   return (
     <ThemedYStack
       theme={THEME_BOTTOM_BAR}
@@ -130,11 +129,13 @@ export const CustomBottomBarContents = () => {
           </StyledTab>
           <StyledTab value="cart">
             <ThemedYStack pos="relative">
-              <IconBadge theme={THEME_PRICE_TAG}>
-                <ThemedText mt="$-1.5" fow="bold">
-                  {cartQty}
-                </ThemedText>
-              </IconBadge>
+              {cartQty > 0 && (
+                <IconBadge theme={THEME_PRICE_TAG}>
+                  <ThemedText mt="$-1.5" fow="bold">
+                    {cartQty}
+                  </ThemedText>
+                </IconBadge>
+              )}
               <ShoppingCart />
             </ThemedYStack>
             <ThemedText tabular>Handlekurv</ThemedText>

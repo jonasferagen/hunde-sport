@@ -117,4 +117,5 @@ export const useItemIsUpdating = (key: string) =>
 export const useCartToken = () => useCartStore((s) => s.cartToken);
 export const useCartHasHydrated = () => useCartStore((s) => s._hasHydrated);
 
-export const useCart = () => useCartStore((s) => s.cart);
+export const useCartTotalQuantity = () =>
+  useCartStore((s) => s.cart.totalQuantity);

@@ -1,7 +1,8 @@
-import type {
-  WcItemPrices,
-  WcItemTotals,
-} from "@/adapters/woocommerce/cartPricing";
+// @domain/cart/CartItem.ts
+import { CartItemTotals } from "@/domain/cart/CartItemTotals";
+import { Currency } from "@/domain/pricing/Currency";
+import { Money } from "@/domain/pricing/Money";
+import type { CartItemTotalsData, ProductPrices } from "@/domain/pricing/types";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 import { cleanHtml, slugKey } from "@/lib/formatters";
 
@@ -10,7 +11,6 @@ type CartItemVariationData = {
   attribute: string;
   value: string;
 };
-
 type CartItemVariation = {
   attribute: string;
   value: string;
@@ -18,28 +18,26 @@ type CartItemVariation = {
   term_key: string;
 };
 
-/** Incoming shape from the Store API (or your transport layer) */
 export type CartItemData = {
   key: string;
-  id: number; // line item product/variation id
+  id: number;
   type: string; // "simple" | "variation"
-  name: string; // parent product name
+  name: string;
   variation?: CartItemVariationData[];
-  prices: WcItemPrices;
-  totals: WcItemTotals;
+  prices: ProductPrices; // API passthrough
+  totals: CartItemTotalsData; // ⬅️ line-item totals API shape
   quantity: number;
   images: StoreImageData[];
 };
 
-/** Normalized, internal representation used by the domain model */
 type NormalizedCartItem = {
   key: string;
   id: number;
   type: "simple" | "variation" | string;
   name: string;
   variation: CartItemVariation[];
-  prices: WcItemPrices;
-  totals: WcItemTotals;
+  prices: ProductPrices; // keep API shape; we compute Money on demand
+  totals: CartItemTotals; // normalized value object
   quantity: number;
   images: StoreImage[];
 };
@@ -50,36 +48,31 @@ export class CartItem implements NormalizedCartItem {
   readonly type: "simple" | "variation" | string;
   readonly name: string;
   readonly variation: CartItemVariation[];
-  readonly prices: WcItemPrices;
-  readonly totals: WcItemTotals;
+  readonly prices: ProductPrices;
+  readonly totals: CartItemTotals;
   readonly quantity: number;
   readonly images: StoreImage[];
 
-  /** Use `create()` — constructor is private to guarantee normalized inputs */
-  private constructor(data: NormalizedCartItem) {
-    this.key = data.key;
-    this.id = data.id;
-    this.type = data.type;
-    this.name = data.name;
-    this.variation = data.variation;
-    this.prices = data.prices;
-    this.totals = data.totals;
-    this.quantity = data.quantity;
-    this.images = data.images;
+  private constructor(n: NormalizedCartItem) {
+    this.key = n.key;
+    this.id = n.id;
+    this.type = n.type;
+    this.name = n.name;
+    this.variation = n.variation;
+    this.prices = n.prices;
+    this.totals = n.totals;
+    this.quantity = n.quantity;
+    this.images = n.images;
+    Object.freeze(this);
   }
 
-  /** Factory: normalize nullable/optional fields and enforce safe defaults */
   static create(raw: CartItemData): CartItem {
-    const variation = raw.variation
-      ? (raw.variation ?? []).map((v) => {
-          return {
-            attribute: cleanHtml(v.attribute),
-            value: cleanHtml(v.value),
-            attribute_key: slugKey(v.attribute),
-            term_key: slugKey(v.value),
-          };
-        })
-      : [];
+    const variation: CartItemVariation[] = (raw.variation ?? []).map((v) => ({
+      attribute: cleanHtml(v.attribute),
+      value: cleanHtml(v.value),
+      attribute_key: slugKey(v.attribute),
+      term_key: slugKey(v.value),
+    }));
 
     const images = (
       raw.images && raw.images.length > 0 ? raw.images : [StoreImage.DEFAULT]
@@ -92,23 +85,31 @@ export class CartItem implements NormalizedCartItem {
       name: raw.name,
       variation,
       prices: raw.prices,
-      totals: raw.totals,
+      totals: CartItemTotals.create(raw.totals), // ⬅️ normalize
       quantity: raw.quantity,
       images,
     });
   }
 
-  /** true when the line is a variation product (most variable parents) */
-  get isVariation(): boolean {
-    return this.type === "variation";
+  // ---------- Money/format helpers (replaces old free functions) ----------
+
+  /** Unit price as Money (from `prices.price`, tax-exclusive in most APIs). */
+  unitPrice(): Money {
+    const currency = Currency.create(this.prices);
+    const minor = Number.parseInt(this.prices.price ?? "0", 10) || 0;
+    return Money.fromMinor(minor, currency);
   }
 
-  /** map attribute -> value for convenient lookups */
-  get attributesMap(): ReadonlyMap<string, string> {
-    return new Map(this.variation.map((v) => [v.attribute, v.value]));
+  /** Unit price formatted (full, with prefix). */
+  formatUnitPrice(): string {
+    return this.unitPrice().format({ style: "full", omitPrefix: false });
   }
 
-  /** "Mint / XXS/XS" */
+  /** Line total formatted (full, with prefix). */
+  formatLineTotal(discounted = true): string {
+    return this.totals.format(discounted);
+  }
+
   get variationLabel(): string {
     if (!this.variation.length) return "";
     return this.variation.map((v) => v.value).join(", ");
@@ -119,46 +120,8 @@ export class CartItem implements NormalizedCartItem {
     const suffix = this.variationLabel;
     return suffix ? `${this.name} – ${suffix}` : this.name;
   }
-
-  /** Unit price in minor units (e.g. øre) */
-  get unitMinor(): number {
-    const v = this.prices.price ?? "0";
-    const n = parseInt(v, 10);
-    return Number.isFinite(n) ? n : 0;
-  }
-
-  /** Unit price in major units (e.g. NOK) */
-  get unitMajor(): number {
-    const mu = this.prices.currency_minor_unit ?? 2;
-    return this.unitMinor / Math.pow(10, mu);
-  }
-
-  /** Line total in minor units */
-  get lineTotalMinor(): number {
-    const v = this.totals.line_total ?? "0";
-    const n = parseInt(v, 10);
-    return Number.isFinite(n) ? n : 0;
-  }
-
-  /** Line total in major units */
-  get lineTotalMajor(): number {
-    const mu =
-      this.totals.currency_minor_unit ?? this.prices.currency_minor_unit ?? 2;
-    return this.lineTotalMinor / Math.pow(10, mu);
-  }
-
-  /** Optional helper: return a new item with a different quantity (immutable) */
-  withQuantity(next: number): CartItem {
-    return new CartItem({
-      key: this.key,
-      id: this.id,
-      type: this.type,
-      name: this.name,
-      variation: this.variation,
-      prices: this.prices,
-      totals: this.totals,
-      quantity: next,
-      images: this.images,
-    });
+  // Optional: immutable quantity update for your Cart methods
+  withQuantity(quantity: number): CartItem {
+    return new CartItem({ ...this, quantity } as NormalizedCartItem);
   }
 }

@@ -1,12 +1,12 @@
 // domain/Cart/models.ts
-import type { WcTotals } from "@/adapters/woocommerce/cartPricing";
+import { Totals, type TotalsData } from "@/domain/pricing/Totals";
 
 import { CartItem, type CartItemData } from "./CartItem";
 
 export type CartData = {
   items?: CartItemData[];
   items_weight?: number;
-  totals: WcTotals;
+  totals: TotalsData | Totals; // ⬅️ accepts raw or normalized
   has_calculated_shipping?: boolean;
   shipping_rates?: unknown;
 };
@@ -15,7 +15,7 @@ type NormalizedCart = {
   items: readonly CartItem[];
   token: string;
   itemsWeight: number;
-  totals: WcTotals;
+  totals: Totals;
   hasCalculatedShipping: boolean;
   shippingRates: unknown;
   lastUpdated: number;
@@ -23,7 +23,6 @@ type NormalizedCart = {
 
 type CartInitPatch = Partial<Omit<NormalizedCart, "token">>;
 
-/** Small helper so we can reuse derived structures if items didn't change */
 type Derived = {
   itemKeys: readonly string[];
   itemsByKey: ReadonlyMap<string, CartItem>;
@@ -33,12 +32,12 @@ export class Cart implements NormalizedCart {
   readonly items: readonly CartItem[];
   readonly token: string;
   readonly itemsWeight: number;
-  readonly totals: WcTotals;
+  readonly totals: Totals;
   readonly hasCalculatedShipping: boolean;
   readonly shippingRates: unknown;
   readonly lastUpdated: number;
 
-  // NEW: cached, referentially stable derived data
+  // cached derived data
   readonly _itemKeys: readonly string[];
   readonly _itemsByKey: ReadonlyMap<string, CartItem>;
 
@@ -60,7 +59,7 @@ export class Cart implements NormalizedCart {
     }
   }
 
-  // ---- public readonly getters for UI/selectors ----
+  // ---- readonly getters for UI/selectors ----
   get itemKeys(): readonly string[] {
     return this._itemKeys;
   }
@@ -72,11 +71,15 @@ export class Cart implements NormalizedCart {
     const items = Object.freeze(
       (data.items ?? []).map((i) => CartItem.create(i))
     );
+
+    const totals =
+      data.totals instanceof Totals ? data.totals : Totals.create(data.totals);
+
     return new Cart({
       items,
       token,
       itemsWeight: data.items_weight ?? 0,
-      totals: data.totals,
+      totals,
       hasCalculatedShipping: !!data.has_calculated_shipping,
       shippingRates: data.shipping_rates ?? null,
       lastUpdated: Date.now(),
@@ -86,7 +89,6 @@ export class Cart implements NormalizedCart {
   static rebuild(base: Cart, patch: CartInitPatch): Cart {
     const items = (patch.items as readonly CartItem[]) ?? base.items;
 
-    // if items array identity is unchanged, reuse derived references
     if (items === base.items) {
       return new Cart(
         {
@@ -103,7 +105,6 @@ export class Cart implements NormalizedCart {
       );
     }
 
-    // items changed → recompute derived
     const derived: Derived = {
       itemKeys: Object.freeze(items.map((i) => i.key)),
       itemsByKey: new Map(items.map((i) => [i.key, i] as const)),
@@ -124,27 +125,15 @@ export class Cart implements NormalizedCart {
     );
   }
 
+  // ✅ DEFAULT uses create() with complete, explicit values
   static readonly DEFAULT = Object.freeze(
     Cart.create(
       {
         items: [],
         items_weight: 0,
-        totals: {
-          currency_code: "NOK",
-          currency_minor_unit: 2,
-          currency_prefix: "kr",
-          currency_suffix: "",
-          currency_thousand_separator: ".",
-          currency_decimal_separator: ",",
-          total_price: "0",
-          total_tax: "0",
-          total_items: "0",
-          total_items_tax: "0",
-          total_shipping: "0",
-          total_shipping_tax: "0",
-          total_discount: "0",
-          total_discount_tax: "0",
-        },
+        totals: Totals.DEFAULT, // works via the soft-landing in create()
+        has_calculated_shipping: false,
+        shipping_rates: null,
       },
       "token"
     ) as Cart
@@ -156,7 +145,6 @@ export class Cart implements NormalizedCart {
 
   withItems(items: readonly CartItem[]): Cart {
     const frozen = Object.freeze(items.slice());
-    // recompute derived only when items truly changed
     const derived: Derived = {
       itemKeys: Object.freeze(frozen.map((i) => i.key)),
       itemsByKey: new Map(frozen.map((i) => [i.key, i] as const)),
@@ -172,7 +160,6 @@ export class Cart implements NormalizedCart {
   }
 
   withUpdatedQuantity(key: string, quantity: number): Cart {
-    // preserves object identity for all non-target lines
     const next = this.items.map((it) =>
       it.key === key ? it.withQuantity(quantity) : it
     );

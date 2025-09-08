@@ -4,7 +4,6 @@ import * as React from "react";
 import { Linking } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
-import { formatCartItemsTotal } from "@/adapters/woocommerce/cartPricing";
 import { ThemedText, ThemedXStack } from "@/components/ui";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
@@ -12,13 +11,13 @@ import { THEME_CTA_CHECKOUT } from "@/config/app";
 import { useCartIsLoading, useCartStore } from "@/stores/useCartStore";
 
 export const CheckoutButton = () => {
-  const { qty, hasItems, totals } = useCartStore(
+  const { qty, totals } = useCartStore(
     useShallow((s) => ({
       qty: s.cart.totalQuantity,
-      hasItems: s.cart.itemKeys.length > 0,
       totals: s.cart.totals,
     }))
   );
+
   const isLoading = useCartIsLoading();
   const [redirecting, setRedirecting] = React.useState(false);
 
@@ -39,10 +38,10 @@ export const CheckoutButton = () => {
   const trailing = (
     <ThemedXStack ai="center" gap="$2">
       <ThemedText tabular>
-        {qty} {qty === 1 ? "vare" : "varer"},
+        {qty} {qty === 1 ? "vare" : "varer"}
       </ThemedText>
       <InlineSpinnerSwap loading={isLoading}>
-        {formatCartItemsTotal(totals)}
+        {totals.formatItemsTotal()}
       </InlineSpinnerSwap>
     </ThemedXStack>
   );
@@ -50,7 +49,7 @@ export const CheckoutButton = () => {
   return (
     <CallToActionButton
       onPress={onPress}
-      disabled={!hasItems}
+      disabled={qty === 0}
       theme={THEME_CTA_CHECKOUT}
       label="Til kassen"
       trailing={trailing}

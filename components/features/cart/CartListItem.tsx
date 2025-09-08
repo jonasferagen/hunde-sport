@@ -1,10 +1,6 @@
 import { Minus, Plus, X } from "@tamagui/lucide-icons";
 import { useShallow } from "zustand/react/shallow";
 
-import {
-  formatItemLineTotal,
-  formatItemUnitPrice,
-} from "@/adapters/woocommerce/cartPricing";
 import { ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
 import { ThemedButton } from "@/components/ui/themed-components/ThemedButton";
@@ -83,10 +79,10 @@ export const CartListItem = ({ itemKey }: { itemKey: string }) => {
                 loading={isUpdating}
                 textProps={{ size: "$6" }}
               >
-                {formatItemLineTotal(item.totals)}
+                {item.formatLineTotal()}
               </InlineSpinnerSwap>
               <ThemedText size="$2" o={0.7}>
-                {formatItemUnitPrice(item.prices)} pr stk
+                {item.formatUnitPrice()} pr stk
               </ThemedText>
             </ThemedYStack>
           </ThemedXStack>

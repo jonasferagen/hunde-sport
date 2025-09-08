@@ -1,2 +1,4 @@
 import { HomeScreen } from "@/screens/HomeScreen";
-export default () => <HomeScreen />;
+export default function index() {
+  return <HomeScreen />;
+}

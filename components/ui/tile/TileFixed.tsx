@@ -45,6 +45,7 @@ export const TileFixed = React.memo(function TileFixed({
       getScaledImageUrl(image.src, Math.round(w * dpr), Math.round(h * dpr)),
     [image.src, w, h, dpr]
   );
+
   return (
     <ThemedSurface
       w={w}

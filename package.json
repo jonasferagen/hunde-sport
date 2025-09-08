@@ -17,7 +17,8 @@
     "lint": "eslint .",
     "prune": "ts-prune -g",
     "test": "jest",
-    "verify": "npm run typecheck && npm run lint && npm run prune && npm test"
+    "verify": "npm run typecheck && npm run lint && npm run prune && npm test",
+    "ios": "expo run:ios"
   },
   "engines": {
     "node": "22.18.0",
