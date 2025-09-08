@@ -1,7 +1,7 @@
 // VariableProductProvider.tsx
 import React, { createContext, useContext, useMemo } from "react";
 
-import { getProductPriceRange } from "@/domain/pricing/format";
+import { getProductPriceRange } from "@/domain/pricing/PriceBook";
 import type { ProductPriceRange, ProductPrices } from "@/domain/pricing/types";
 import type { Variation } from "@/domain/product";
 import {

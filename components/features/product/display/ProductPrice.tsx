@@ -9,9 +9,7 @@ import {
   ThemedXStack,
 } from "@/components/ui/themed-components";
 import { useProductContext } from "@/contexts/ProductContext";
-import { formatPrice } from "@/domain/pricing/format";
-import type { ProductPriceRange as TProductPriceRange } from "@/domain/pricing/types";
-
+import { PriceBook } from "@domain/pricing/PriceBook";
 const PriceLine = ({
   showIcon,
   children,
@@ -22,10 +20,7 @@ const PriceLine = ({
   </ThemedXStack>
 );
 
-// ----- Simple price renderer (no data fetching) -----
-type ProductPriceSimpleProps = {
-  showIcon?: boolean;
-} & ThemedTextProps;
+type ProductPriceSimpleProps = { showIcon?: boolean } & ThemedTextProps;
 
 export const ProductPrice = React.memo(function ProductPrice({
   showIcon = false,
@@ -35,15 +30,9 @@ export const ProductPrice = React.memo(function ProductPrice({
   const { prices, availability } = product;
   const { isInStock, isPurchasable, isOnSale } = availability;
 
-  const saleValid = React.useMemo(() => {
-    const saleVal = parseInt(prices?.sale_price ?? "0", 10);
-    const regVal = parseInt(prices?.regular_price ?? "0", 10);
-    return isOnSale && saleVal > 0 && regVal > 0 && saleVal < regVal;
-  }, [prices, isOnSale]);
+  const book = React.useMemo(() => PriceBook.from(prices), [prices]);
 
-  const isFree = isInStock && prices?.price === "0";
-  const subtle = !isInStock || !isPurchasable || textProps.subtle;
-
+  // Variable products: prefer externally computed range if present
   if (product.isVariable) {
     if (productPriceRange) {
       return (
@@ -60,20 +49,24 @@ export const ProductPrice = React.memo(function ProductPrice({
     );
   }
 
+  const saleValid = book.isSaleValid(isOnSale);
+  const isFree = isInStock && book.price.minor === 0;
+  const subtle = !isInStock || !isPurchasable || textProps.subtle;
+
   if (saleValid) {
     return (
       <PriceLine showIcon={showIcon}>
         <ThemedText disabled subtle {...textProps}>
-          {formatPrice(prices, { field: "regular_price" })}
+          {book.fmtRegular()}
         </ThemedText>
         <ThemedText {...textProps} subtle={subtle}>
-          {formatPrice(prices, { field: "sale_price" })}
+          {book.fmtSale()}
         </ThemedText>
       </PriceLine>
     );
   }
 
-  const label = isFree ? "Gratis!" : formatPrice(prices, { field: "price" });
+  const label = isFree ? "Gratis!" : book.fmtPrice();
   return (
     <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
       <ThemedText {...textProps} subtle={subtle}>
@@ -83,7 +76,9 @@ export const ProductPrice = React.memo(function ProductPrice({
   );
 });
 
-// ----- Price range renderer (min–max only, no sale logic) -----
+// Keep your server-driven range renderer (best for variable products)
+import type { ProductPriceRange as TProductPriceRange } from "@/domain/pricing/types";
+
 type ProductPriceRangeProps = {
   productPriceRange: TProductPriceRange;
   showIcon?: boolean;
@@ -97,14 +92,13 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
   ...textProps
 }: ProductPriceRangeProps) {
   const { min, max } = productPriceRange;
-  const minVal = parseInt(min?.price ?? "0", 10);
-  const maxVal = parseInt(max?.price ?? "0", 10);
-  const label =
-    minVal === maxVal
-      ? formatPrice(min, { field: "price" })
-      : short
-        ? `Fra ${formatPrice(min, { field: "price" })}`
-        : `${formatPrice(min, { field: "price" })} – ${formatPrice(max, { field: "price" })}`;
+  const same = (min?.price ?? "0") === (max?.price ?? "0");
+  const minLabel = PriceBook.from(min).fmtPrice();
+  const label = same
+    ? minLabel
+    : short
+      ? `Fra ${minLabel}`
+      : `${minLabel} – ${PriceBook.from(max).fmtPrice()}`;
 
   return (
     <PriceLine showIcon={showIcon}>
