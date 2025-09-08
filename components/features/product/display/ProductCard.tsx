@@ -2,7 +2,7 @@ import React from "react";
 import type { StackProps } from "tamagui";
 
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
-import { ThemedImage, ThemedText } from "@/components/ui";
+import { ThemedImage } from "@/components/ui";
 import { ThemedLinearGradient } from "@/components/ui/themed-components/ThemedLinearGradient";
 import {
   ThemedXStack,
@@ -77,7 +77,6 @@ const ProductCardDescription = ({
     <ThemedYStack f={1} jc="flex-start" gap="$2" {...stackProps}>
       <ThemedXStack gap="$2" ai="flex-start" jc="space-between">
         <ProductTitle size="$5" fs={1} product={product} />
-        <ThemedText>{product.id}</ThemedText>
       </ThemedXStack>
       <ProductDescription product={product} numberOfLines={2} fow="normal" />
     </ThemedYStack>

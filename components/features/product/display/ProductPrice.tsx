@@ -53,7 +53,11 @@ export const ProductPrice = React.memo(function ProductPrice({
         />
       );
     }
-    return <ThemedSpinner />;
+    return (
+      <PriceLine>
+        <ThemedSpinner scale={0.7} />
+      </PriceLine>
+    );
   }
 
   if (saleValid) {

@@ -116,13 +116,14 @@ export class Purchasable {
   private resolveStatusKey(): PurchasableStatus {
     const { availability } = this.product;
 
-    if (!availability.isInStock) return "sold_out";
-    if (!availability.isPurchasable) return "unavailable";
-
     if (this.product.isVariable) {
       if (this.needsSelection) return "select";
       if (!this.productVariation) return "select_incomplete";
     }
+
+    if (!availability.isInStock) return "sold_out";
+    if (!availability.isPurchasable) return "unavailable";
+
     if (this.needsCustomization) return "customize";
 
     return "ready";

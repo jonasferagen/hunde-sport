@@ -14,8 +14,10 @@ export function ProductVariationSelect({
   onSelect,
   attributeSelection,
 }: Props) {
-  const { variableProduct, findByVariations } = useVariableProductContext();
+  const { variableProduct, productVariations, findByVariations } =
+    useVariableProductContext();
 
+  console.log(productVariations);
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
       {[...variableProduct.attributes].map(([attrKey, attribute]) => {
