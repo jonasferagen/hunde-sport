@@ -1,7 +1,7 @@
 // @domain/pricing/PriceBook.ts
 import { Currency } from "./Currency";
 import { Money } from "./Money";
-import type { ProductPrices } from "./types";
+import type { ProductPriceRange, ProductPrices } from "./types";
 
 export class PriceBook {
   readonly currency: Currency;
@@ -46,14 +46,38 @@ export class PriceBook {
     });
   }
 
-  /** Business rule from your component: on-sale flag + sensible numbers */
-  isSaleValid(isOnSale: boolean): boolean {
+  // --- equality / compare ---
+  static isEqual(a: PriceBook, b: PriceBook): boolean {
     return (
-      isOnSale &&
-      this.sale.minor > 0 &&
-      this.regular.minor > 0 &&
-      this.sale.minor < this.regular.minor
+      Currency.isEqual(a.currency, b.currency) &&
+      a.price === b.price &&
+      a.regular === b.regular &&
+      a.sale === b.sale
     );
+  }
+
+  // --- min/max range finder ---
+  static getProductPriceRange(
+    priceBooks: readonly PriceBook[]
+  ): ProductPriceRange {
+    if (priceBooks.length === 0) {
+      throw new Error("No PriceBooks provided");
+    }
+
+    const valid = priceBooks.filter((pb) => Number(pb.price.minor) > 0);
+    const list = valid.length > 0 ? valid : [priceBooks[0]];
+
+    // TS: we know list has at least 1 element here
+    let min: PriceBook = list[0]!;
+    let max: PriceBook = list[0]!;
+
+    for (let i = 1; i < list.length; i++) {
+      const pb: PriceBook = list[i]!;
+      if (pb.price.minor < min.price.minor) min = pb;
+      if (pb.price.minor > max.price.minor) max = pb;
+    }
+
+    return { min, max };
   }
 
   /** Convenience formatters (full style, with prefix) */

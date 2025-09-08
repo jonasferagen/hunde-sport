@@ -1,10 +1,10 @@
 // domain/pricing/useProductPriceRange.ts
 import { useMemo } from "react";
 
+import { PriceBook } from "@/domain/pricing/PriceBook";
 import type {
   ProductPriceRange,
   ProductPriceRange as ProductPriceRangeType,
-  ProductPrices,
 } from "@/domain/pricing/types";
 import { useProductVariation } from "@/hooks/data/Product"; // adjust path
 import { VariableProduct } from "@/types";
@@ -19,58 +19,25 @@ export function useProductPriceRange(
   variableProduct: VariableProduct
 ): UseProductPriceRangeResult {
   const {
-    data: minVariation,
-    isLoading: isLoadingMin,
-    error: errorMin,
+    data: minV,
+    isLoading: l1,
+    error: e1,
   } = useProductVariation(variableProduct, { order: "asc" });
-
   const {
-    data: maxVariation,
-    isLoading: isLoadingMax,
-    error: errorMax,
+    data: maxV,
+    isLoading: l2,
+    error: e2,
   } = useProductVariation(variableProduct, { order: "desc" });
 
-  const isLoading: boolean = isLoadingMin || isLoadingMax;
-  const error: unknown = errorMin ?? errorMax ?? undefined;
+  const isLoading = l1 || l2;
+  const error = e1 ?? e2 ?? undefined;
 
-  const productPriceRange: ProductPriceRangeType | null = useMemo(() => {
-    if (!minVariation?.prices || !maxVariation?.prices) return null;
-    return getProductPriceRange([minVariation.prices, maxVariation.prices]);
-  }, [minVariation, maxVariation]);
+  const productPriceRange = useMemo<ProductPriceRange | null>(() => {
+    if (!minV?.prices || !maxV?.prices) return null;
+    const minPB = PriceBook.from(minV.prices);
+    const maxPB = PriceBook.from(maxV.prices);
+    return PriceBook.getProductPriceRange([minPB, maxPB]);
+  }, [minV, maxV]);
 
   return { productPriceRange, isLoading, error };
-}
-
-export function getProductPriceRange(
-  prices: ProductPrices[]
-): ProductPriceRange {
-  if (prices.length === 0) {
-    throw new Error("No prices provided");
-  }
-
-  // Keep only valid, non-zero prices
-  const valid = prices.filter((p) => {
-    const n = Number(p.price);
-    return Number.isFinite(n) && n !== 0;
-  });
-
-  // If no valid prices, fall back to the first element
-  const list = valid.length > 0 ? valid : [prices[0]];
-
-  // Seed min/max with the first item to avoid nulls
-  let min = list[0];
-  let max = list[0];
-
-  for (let i = 1; i < list.length; i++) {
-    const p = list[i];
-    const n = Number(p.price);
-    if (n < Number(min.price)) {
-      min = p;
-    }
-    if (n > Number(max.price)) {
-      max = p;
-    }
-  }
-
-  return { min, max };
 }

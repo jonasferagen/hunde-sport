@@ -82,17 +82,17 @@ export class Totals {
     discountTax: Money.zero(Currency.NOK),
   });
 
-  equals(other: Totals): boolean {
+  static isEqual(a: Totals, b: Totals): boolean {
     return (
-      this.currency.equals(other.currency) &&
-      this.total.minor === other.total.minor &&
-      this.tax.minor === other.tax.minor &&
-      this.items.minor === other.items.minor &&
-      this.itemsTax.minor === other.itemsTax.minor &&
-      this.shipping.minor === other.shipping.minor &&
-      this.shippingTax.minor === other.shippingTax.minor &&
-      this.discount.minor === other.discount.minor &&
-      this.discountTax.minor === other.discountTax.minor
+      Currency.isEqual(a.currency, b.currency) &&
+      a.total.minor === b.total.minor &&
+      a.tax.minor === b.tax.minor &&
+      a.items.minor === b.items.minor &&
+      a.itemsTax.minor === b.itemsTax.minor &&
+      a.shipping.minor === b.shipping.minor &&
+      a.shippingTax.minor === b.shippingTax.minor &&
+      a.discount.minor === b.discount.minor &&
+      a.discountTax.minor === b.discountTax.minor
     );
   }
 

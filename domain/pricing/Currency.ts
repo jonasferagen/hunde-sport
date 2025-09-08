@@ -34,15 +34,15 @@ export class Currency {
     currency_thousand_separator: ".",
   });
 
-  equals(other: Currency): boolean {
+  static isEqual(a: Currency, b: Currency): boolean {
     return (
-      this === other ||
-      (this.code === other.code &&
-        this.minorUnit === other.minorUnit &&
-        this.prefix === other.prefix &&
-        this.suffix === other.suffix &&
-        this.decimalSeparator === other.decimalSeparator &&
-        this.thousandSeparator === other.thousandSeparator)
+      a === b ||
+      (a.code === b.code &&
+        a.minorUnit === b.minorUnit &&
+        a.prefix === b.prefix &&
+        a.suffix === b.suffix &&
+        a.decimalSeparator === b.decimalSeparator &&
+        a.thousandSeparator === b.thousandSeparator)
     );
   }
 

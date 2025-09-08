@@ -25,15 +25,11 @@ export class Money {
   }
 
   add(other: Money): Money {
-    if (!this.currency.equals(other.currency)) {
+    if (!Currency.isEqual(this.currency, other.currency)) {
       throw new Error("Money.add: currency mismatch");
     }
     return new Money(this.minor + other.minor, this.currency);
   }
-
-  // Optional helpers if you want them later:
-  // sub(other: Money): Money { ... }
-  // isZero(): boolean { return this.minor === 0; }
 
   format(opts?: MoneyFormatOptions): string {
     const style = opts?.style ?? "short";

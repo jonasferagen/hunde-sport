@@ -90,24 +90,14 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
 }: ProductPriceRangeProps) {
   const { min, max } = productPriceRange;
 
-  if (!min || !max) {
-    return (
-      <PriceLine>
-        <ThemedSpinner scale={0.7} />
-      </PriceLine>
-    );
-  }
+  const same = PriceBook.isEqual(min, max);
 
-  const same =
-    min.currency_code === max.currency_code &&
-    Number(min.price) === Number(max.price);
-
-  const minLabel = PriceBook.from(min).fmtPrice();
+  const minLabel = min.fmtPrice();
   const label = same
     ? minLabel
     : short
       ? `Fra ${minLabel}`
-      : `${minLabel} – ${PriceBook.from(max).fmtPrice()}`;
+      : `${minLabel} – ${max.fmtPrice()}`;
 
   return (
     <PriceLine showIcon={showIcon}>

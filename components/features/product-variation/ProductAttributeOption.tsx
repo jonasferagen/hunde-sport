@@ -4,8 +4,8 @@ import React from "react";
 import { ProductPriceRange } from "@/components/features/product/display/ProductPrice";
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
+import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductVariation, Term } from "@/domain/product";
-import { getProductPriceRange } from "@/hooks/useProductPriceRange";
 
 type Props = {
   term: Term;
@@ -24,9 +24,12 @@ export const ProductAttributeOption = React.memo(
     disabled = false,
     onPress,
   }: Props) => {
-    const productPriceRange = productVariations.length
-      ? getProductPriceRange(productVariations.map((p) => p.prices))
-      : null;
+    const productPriceRange =
+      productVariations.length > 0
+        ? PriceBook.getProductPriceRange(
+            productVariations.map((v) => v.priceBook)
+          )
+        : null;
 
     return (
       <ThemedXStack

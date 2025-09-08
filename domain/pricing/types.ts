@@ -1,3 +1,5 @@
+import type { PriceBook } from "@/domain/pricing/PriceBook";
+
 export type CurrencyHeader = {
   currency_code: string;
   currency_minor_unit: number;
@@ -17,15 +19,15 @@ export type ProductPrices = CurrencyHeader & {
   };
 };
 
-export type ProductPriceRange = {
-  min: ProductPrices;
-  max: ProductPrices;
-};
-
 // @domain/pricing/types.ts (or cart/types)
 export type CartItemTotalsData = CurrencyHeader & {
   line_total: string; // discounted base excl. tax
   line_total_tax: string; // tax for discounted base
   line_subtotal: string; // undiscounted base excl. tax
   line_subtotal_tax: string; // tax for undiscounted base
+};
+
+export type ProductPriceRange = {
+  min: PriceBook;
+  max: PriceBook;
 };
