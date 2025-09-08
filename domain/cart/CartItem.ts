@@ -1,8 +1,22 @@
 import type {
-  CartItemVariation,
   WcItemPrices,
   WcItemTotals,
 } from "@/adapters/woocommerce/cartPricing";
+import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
+import { cleanHtml, slugKey } from "@/lib/formatters";
+
+type CartItemVariationData = {
+  raw_attribute?: string;
+  attribute: string;
+  value: string;
+};
+
+type CartItemVariation = {
+  attribute: string;
+  value: string;
+  attribute_key: string;
+  term_key: string;
+};
 
 /** Incoming shape from the Store API (or your transport layer) */
 export type CartItemData = {
@@ -10,12 +24,11 @@ export type CartItemData = {
   id: number; // line item product/variation id
   type: string; // "simple" | "variation"
   name: string; // parent product name
-  variations?: CartItemVariation[];
+  variation?: CartItemVariationData[];
   prices: WcItemPrices;
   totals: WcItemTotals;
   quantity: number;
-  permalink?: string | null;
-  images?: { id: number; src: string; thumbnail?: string | null }[] | null;
+  images: StoreImageData[];
 };
 
 /** Normalized, internal representation used by the domain model */
@@ -24,12 +37,11 @@ type NormalizedCartItem = {
   id: number;
   type: "simple" | "variation" | string;
   name: string;
-  variations: readonly CartItemVariation[];
+  variation: CartItemVariation[];
   prices: WcItemPrices;
   totals: WcItemTotals;
   quantity: number;
-  permalink?: string;
-  images: readonly { id: number; src: string; thumbnail: string }[];
+  images: StoreImage[];
 };
 
 export class CartItem implements NormalizedCartItem {
@@ -37,12 +49,11 @@ export class CartItem implements NormalizedCartItem {
   readonly id: number;
   readonly type: "simple" | "variation" | string;
   readonly name: string;
-  readonly variations: readonly CartItemVariation[];
+  readonly variation: CartItemVariation[];
   readonly prices: WcItemPrices;
   readonly totals: WcItemTotals;
   readonly quantity: number;
-  readonly permalink?: string;
-  readonly images: readonly { id: number; src: string; thumbnail: string }[];
+  readonly images: StoreImage[];
 
   /** Use `create()` — constructor is private to guarantee normalized inputs */
   private constructor(data: NormalizedCartItem) {
@@ -50,46 +61,39 @@ export class CartItem implements NormalizedCartItem {
     this.id = data.id;
     this.type = data.type;
     this.name = data.name;
-    this.variations = data.variations;
+    this.variation = data.variation;
     this.prices = data.prices;
     this.totals = data.totals;
     this.quantity = data.quantity;
-    this.permalink = data.permalink;
     this.images = data.images;
   }
 
   /** Factory: normalize nullable/optional fields and enforce safe defaults */
   static create(raw: CartItemData): CartItem {
-    const variations: readonly CartItemVariation[] = Object.freeze(
-      Array.isArray(raw.variations) ? raw.variations.slice() : []
-    );
+    const variation = raw.variation
+      ? (raw.variation ?? []).map((v) => {
+          return {
+            attribute: cleanHtml(v.attribute),
+            value: cleanHtml(v.value),
+            attribute_key: slugKey(v.attribute),
+            term_key: slugKey(v.value),
+          };
+        })
+      : [];
 
-    const images: readonly { id: number; src: string; thumbnail: string }[] =
-      Object.freeze(
-        Array.isArray(raw.images)
-          ? raw.images.map((img) => ({
-              id: typeof img.id === "number" ? img.id : 0,
-              src: img.src ?? "",
-              thumbnail: img.thumbnail ?? img.src ?? "",
-            }))
-          : []
-      );
-
-    const permalink =
-      typeof raw.permalink === "string" && raw.permalink.length > 0
-        ? raw.permalink
-        : undefined;
+    const images = (
+      raw.images && raw.images.length > 0 ? raw.images : [StoreImage.DEFAULT]
+    ).map(StoreImage.create);
 
     return new CartItem({
       key: raw.key,
       id: raw.id,
       type: (raw.type as "simple" | "variation") ?? "simple",
       name: raw.name,
-      variations,
+      variation,
       prices: raw.prices,
       totals: raw.totals,
       quantity: raw.quantity,
-      permalink,
       images,
     });
   }
@@ -101,26 +105,19 @@ export class CartItem implements NormalizedCartItem {
 
   /** map attribute -> value for convenient lookups */
   get attributesMap(): ReadonlyMap<string, string> {
-    return new Map(this.variations.map((v) => [v.attribute, v.value]));
+    return new Map(this.variation.map((v) => [v.attribute, v.value]));
   }
 
   /** "Mint / XXS/XS" */
   get variationLabel(): string {
-    if (!this.variations.length) return "";
-    return this.variations.map((v) => v.value).join(" / ");
+    if (!this.variation.length) return "";
+    return this.variation.map((v) => v.value).join(", ");
   }
 
   /** "Foret Sele – Mint / XXS/XS" */
   get title(): string {
     const suffix = this.variationLabel;
     return suffix ? `${this.name} – ${suffix}` : this.name;
-  }
-
-  /** Parent product URL (strip query from permalink like ?attribute_pa_...) */
-  get parentPermalink(): string | undefined {
-    if (!this.permalink) return undefined;
-    const q = this.permalink.indexOf("?");
-    return q >= 0 ? this.permalink.slice(0, q) : this.permalink;
   }
 
   /** Unit price in minor units (e.g. øre) */
@@ -157,11 +154,10 @@ export class CartItem implements NormalizedCartItem {
       id: this.id,
       type: this.type,
       name: this.name,
-      variations: this.variations,
+      variation: this.variation,
       prices: this.prices,
       totals: this.totals,
       quantity: next,
-      permalink: this.permalink,
       images: this.images,
     });
   }

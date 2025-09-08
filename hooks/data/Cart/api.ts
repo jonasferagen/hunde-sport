@@ -46,7 +46,8 @@ export function handleResponse(
  * Fetches the cart from the API.
  * @returns {Promise<Cart>} The cart data and token.
  */
-export async function fetchCart(): Promise<Cart> {
+export async function fetchCart(cartToken?: string): Promise<Cart> {
+  apiClient.headers["cart-token"] = cartToken || "";
   const response = await apiClient.get<any>(ENDPOINTS.CART.GET());
   return handleResponse(response, "fetchCart");
 }
@@ -58,7 +59,6 @@ export async function addItem(
   // Keep the token
   apiClient.headers["cart-token"] = cartToken;
 
-  // ✅ Send EXACTLY what Purchasable.toCartItem() produced (including extensions)
   const response = await apiClient.post<any>(
     ENDPOINTS.CART.ADD_ITEM(),
     options

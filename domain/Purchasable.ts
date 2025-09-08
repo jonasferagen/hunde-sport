@@ -65,8 +65,8 @@ export class Purchasable {
 
     if (this.attributeSelection) {
       this.isInSelection = true;
-      this.variation = (product as VariableProduct).findVariation(
-        this.attributeSelection
+      this.variation = this.attributeSelection.findVariation(
+        product as VariableProduct
       );
     }
 

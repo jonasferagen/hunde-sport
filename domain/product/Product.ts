@@ -1,6 +1,8 @@
 // domain/product/Product.ts
 import { CustomField, type CustomFieldData } from "@/domain/CustomField";
 import type { ProductPrices } from "@/domain/pricing/types";
+import type { AttributeData } from "@/domain/product/Attribute";
+import type { VariationData } from "@/domain/product/Variation";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 import { cleanHtml } from "@/lib/formatters";
 
@@ -38,8 +40,8 @@ export type ProductData = {
       fields?: CustomFieldData[];
     };
   };
-  attributes: any[];
-  variations: any[];
+  attributes: AttributeData[];
+  variations: VariationData[];
 };
 
 type NormalizedProduct = {
@@ -103,10 +105,14 @@ export abstract class Product implements NormalizedProduct {
     this.type = data.type;
     this.parent = data.parent;
     this.extensions = data.extensions;
+
+    if (data.images.length === 0) {
+      throw new Error("Product must have at least one image");
+    }
   }
 
   get featuredImage(): StoreImage {
-    return this.images[0]!; /* @TODO* : This should be guaranteed to be here */
+    return this.images[0]!;
   }
   get availability(): ProductAvailability {
     return {
@@ -143,7 +149,11 @@ export abstract class Product implements NormalizedProduct {
       permalink: data.permalink,
       description: data.description ?? "",
       short_description: data.short_description ?? "",
-      images: (data.images ?? [StoreImage.DEFAULT]).map(StoreImage.create),
+      images: (data.images && data.images.length > 0
+        ? data.images
+        : [StoreImage.DEFAULT]
+      ).map(StoreImage.create),
+
       categories: data.categories,
       prices: data.prices,
       on_sale: data.on_sale ?? false,

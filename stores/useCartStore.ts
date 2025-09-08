@@ -18,11 +18,13 @@ import {
   initialState,
 } from "./cartStore";
 
-export const useCartStore = create<CartState & CartActions>()(
+type CartPersistState = CartState & { _hasHydrated: boolean };
+
+export const useCartStore = create<CartPersistState & CartActions>()(
   persist(
     (set, get) => ({
       ...initialState,
-
+      _hasHydrated: false,
       // NEW: dumb setters
       setCart: (cart) =>
         set({
@@ -95,7 +97,13 @@ export const useCartStore = create<CartState & CartActions>()(
     {
       name: "cart-storage",
       storage: createJSONStorage(() => createSmartExpoStorage()),
-      partialize: (state) => ({ cartToken: state.cartToken }), // keep only token
+      partialize: (state) => ({ cartToken: state.cartToken }),
+      onRehydrateStorage: () => {
+        return () => {
+          // this runs *after* hydration; the store exists now
+          useCartStore.setState({ _hasHydrated: true });
+        };
+      },
     }
   )
 );
@@ -105,3 +113,6 @@ export const useCartIsLoading = () =>
 
 export const useItemIsUpdating = (key: string) =>
   useCartStore((s) => !!s.updatingKeys[key]);
+
+export const useCartToken = () => useCartStore((s) => s.cartToken);
+export const useCartHasHydrated = () => useCartStore((s) => s._hasHydrated);

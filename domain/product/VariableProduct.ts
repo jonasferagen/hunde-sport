@@ -1,6 +1,4 @@
-import type { AttributeSelection } from "@/domain/product/AttributeSelection";
 import { Term, type TermData } from "@/domain/product/Term";
-import { intersectSets } from "@/lib/util";
 
 import { Attribute, type AttributeData } from "./Attribute";
 import { Product, type ProductData } from "./Product";
@@ -22,17 +20,7 @@ export class VariableProduct extends Product {
   public readonly variations: ReadonlyMap<string, Variation>;
 
   private readonly attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
-  private readonly attributeHasVariations: ReadonlyMap<
-    string,
-    ReadonlySet<string>
-  >;
-  private readonly termHasAttributes: ReadonlyMap<string, ReadonlySet<string>>;
   private readonly termHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
-  private readonly variationHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
-  private readonly variationHasAttributes: ReadonlyMap<
-    string,
-    ReadonlySet<string>
-  >;
 
   private constructor(data: ProductData) {
     const base = Product.mapBase(data, "variable");
@@ -50,11 +38,7 @@ export class VariableProduct extends Product {
       variations
     );
     this.attributeHasTerms = rel.attributeHasTerms;
-    this.attributeHasVariations = rel.attributeHasVariations;
-    this.termHasAttributes = rel.termHasAttributes;
     this.termHasVariations = rel.termHasVariations;
-    this.variationHasTerms = rel.variationHasTerms;
-    this.variationHasAttributes = rel.variationHasAttributes;
   }
 
   static create(data: ProductData): VariableProduct {
@@ -122,13 +106,11 @@ export class VariableProduct extends Product {
       variationHasTerms.set(vKey, new Set());
       variationHasAttributes.set(vKey, new Set());
     }
-
     // attributes ↔ terms
     for (const t of terms.values()) {
       termHasAttributes.get(t.key)!.add(t.attrKey);
       attributeHasTerms.get(t.attrKey)!.add(t.key);
     }
-
     // variations ↔ terms / attributes
     for (const v of variations.values()) {
       // terms
@@ -142,7 +124,6 @@ export class VariableProduct extends Product {
         attributeHasVariations.get(aKey)!.add(v.key);
       }
     }
-
     // Return as readonly views
     return {
       attributeHasTerms,
@@ -167,28 +148,6 @@ export class VariableProduct extends Product {
     );
   }
 
-  // Variations for an attribute
-  getVariationsByAttribute(attrKey: string): ReadonlySet<Variation> {
-    assertKnown(this.attributes, attrKey, "attribute");
-    return new Set(
-      Array.from(
-        this.attributeHasVariations.get(attrKey)!,
-        (k) => this.variations.get(k)!
-      )
-    );
-  }
-
-  // Attributes for a term
-  getAttributesByTerm(termKey: string): ReadonlySet<Attribute> {
-    assertKnown(this.terms, termKey, "term");
-    return new Set(
-      Array.from(
-        this.termHasAttributes.get(termKey)!,
-        (k) => this.attributes.get(k)!
-      )
-    );
-  }
-
   // Variations for a term
   getVariationsByTerm(termKey: string): ReadonlySet<Variation> {
     assertKnown(this.terms, termKey, "term");
@@ -199,45 +158,6 @@ export class VariableProduct extends Product {
         (k) => this.variations.get(k)!
       )
     );
-  }
-
-  // Terms for a variation
-  getTermsByVariation(variationKey: string): ReadonlySet<Term> {
-    assertKnown(this.variations, variationKey, "variation");
-    return new Set(
-      Array.from(
-        this.variationHasTerms.get(variationKey)!,
-        (k) => this.terms.get(k)!
-      )
-    );
-  }
-
-  // Attributes for a variation
-  getAttributesByVariation(variationKey: string): ReadonlySet<Attribute> {
-    assertKnown(this.variations, variationKey, "variation");
-    return new Set(
-      Array.from(
-        this.variationHasAttributes.get(variationKey)!,
-        (k) => this.attributes.get(k)!
-      )
-    );
-  }
-
-  findVariation(attributeSelection: AttributeSelection): Variation | undefined {
-    if (!attributeSelection.isComplete()) {
-      return undefined;
-    }
-    const sets = [];
-    for (const term of attributeSelection.getTerms()) {
-      const v = this.getVariationsByTerm(term!.key);
-      sets.push(v);
-    }
-    const I = intersectSets(...sets);
-    if (I.size === 0) {
-      console.error("No matching variation found for terms");
-      return;
-    }
-    return Array.from(I)[0]; // Always set to first
   }
 }
 

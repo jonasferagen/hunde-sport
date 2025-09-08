@@ -2,12 +2,6 @@
 import { formatPrice } from "@/domain/pricing/format";
 import type { CurrencyHeader } from "@/domain/pricing/types";
 
-export type CartItemVariation = {
-  raw_attribute?: string;
-  attribute: string;
-  value: string;
-};
-
 export type WcTotals = CurrencyHeader & {
   total_price: string;
   total_tax: string;

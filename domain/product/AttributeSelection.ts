@@ -1,3 +1,7 @@
+import type { Variation } from "@/domain/product/Variation";
+import { intersectSets } from "@/lib/util";
+import type { VariableProduct } from "@/types";
+
 import { Attribute, type AttrKey } from "./Attribute";
 import { Term } from "./Term";
 
@@ -49,5 +53,22 @@ export class AttributeSelection {
 
   getTerms(): (Term | undefined)[] {
     return Object.values(this.selected);
+  }
+
+  findVariation(variableProduct: VariableProduct): Variation | undefined {
+    if (!this.isComplete()) {
+      return undefined;
+    }
+    const sets = [];
+    for (const term of this.getTerms()) {
+      const v = variableProduct.getVariationsByTerm(term!.key);
+      sets.push(v);
+    }
+    const I = intersectSets(...sets);
+    if (I.size === 0) {
+      console.error("No matching variation found for terms");
+      return;
+    }
+    return Array.from(I)[0]; // Always set to first
   }
 }
