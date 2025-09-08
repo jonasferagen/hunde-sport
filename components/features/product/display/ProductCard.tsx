@@ -8,7 +8,7 @@ import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui/themed-components/ThemedStacks";
-import { ProductProvider } from "@/contexts";
+
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { getScaledImageUrl } from "@/lib/helpers";
 import type { PurchasableProduct } from "@/types";
@@ -27,20 +27,18 @@ export const ProductCard = React.memo(function ProductCard({
 }: ProductCardProps) {
   const { to } = useCanonicalNavigation();
   return (
-    <ProductProvider product={product}>
-      <ThemedYStack container box {...props}>
-        <ThemedLinearGradient />
-        <ThemedXStack
-          onPress={() => {
-            to("product", product);
-          }}
-        >
-          <ProductCardImage product={product} />
-          <ProductCardDescription product={product} />
-        </ThemedXStack>
-        <PurchaseFlow product={product} />
-      </ThemedYStack>
-    </ProductProvider>
+    <ThemedYStack container box {...props}>
+      <ThemedLinearGradient />
+      <ThemedXStack
+        onPress={() => {
+          to("product", product);
+        }}
+      >
+        <ProductCardImage product={product} />
+        <ProductCardDescription product={product} />
+      </ThemedXStack>
+      <PurchaseFlow product={product} />
+    </ThemedYStack>
   );
 });
 
