@@ -66,4 +66,4 @@ export const THEME_ERROR = "error";
 export const THEME_WARNING = "warning";
 export const THEME_DANGER = "danger";
 export const THEME_SUCCESS = "success";
-export const THEME_INFO = "info";
+export const THEME_INFO = "info1";

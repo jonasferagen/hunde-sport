@@ -14,9 +14,15 @@ import {
   ThemedText,
   ThemedYStack,
 } from "@/components/ui";
-import { BOTTOM_BAR_HEIGHT, THEME_BOTTOM_BAR } from "@/config/app";
+import { IconBadge } from "@/components/ui/Badge";
+import {
+  BOTTOM_BAR_HEIGHT,
+  THEME_BOTTOM_BAR,
+  THEME_PRICE_TAG,
+} from "@/config/app";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { useDrawerStore } from "@/stores/ui/drawerStore";
+import { useCart } from "@/stores/useCartStore";
 
 const StyledTab = styled(Tabs.Tab, {
   pos: "relative",
@@ -95,6 +101,9 @@ export const CustomBottomBarContents = () => {
     },
     [currentTab, to]
   );
+
+  const cart = useCart();
+  const cartQty = cart.totalQuantity;
   return (
     <ThemedYStack
       theme={THEME_BOTTOM_BAR}
@@ -113,15 +122,22 @@ export const CustomBottomBarContents = () => {
           <ThemedLinearGradient />
           <StyledTab value="index">
             <Home />
-            <ThemedText>Hjem</ThemedText>
+            <ThemedText tabular>Hjem</ThemedText>
           </StyledTab>
           <StyledTab value="search">
             <Search />
-            <ThemedText>Søk</ThemedText>
+            <ThemedText tabular>Søk</ThemedText>
           </StyledTab>
           <StyledTab value="cart">
-            <ShoppingCart />
-            <ThemedText>Handlekurv</ThemedText>
+            <ThemedYStack pos="relative">
+              <IconBadge theme={THEME_PRICE_TAG}>
+                <ThemedText mt="$-1.5" fow="bold">
+                  {cartQty}
+                </ThemedText>
+              </IconBadge>
+              <ShoppingCart />
+            </ThemedYStack>
+            <ThemedText tabular>Handlekurv</ThemedText>
           </StyledTab>
         </StyledTabsList>
       </StyledTabs>

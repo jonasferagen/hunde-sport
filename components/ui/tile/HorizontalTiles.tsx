@@ -7,6 +7,7 @@ import {
   ProductAvailabilityStatus,
   ProductPrice,
 } from "@/components/features/product/display";
+import { TileBadge } from "@/components/ui/Badge";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import { ThemedYStack } from "@/components/ui/themed-components";
 import { THEME_PRICE_TAG } from "@/config/app";
@@ -18,7 +19,6 @@ import { spacePx } from "@/lib/helpers";
 import type { QueryResult } from "@/lib/query/query";
 import type { PurchasableProduct } from "@/types";
 
-import { TileBadge } from "./TileBadge";
 import { TileFixed } from "./TileFixed";
 
 interface HorizontalTilesProps<T> extends StackProps {
