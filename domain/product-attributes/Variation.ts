@@ -17,15 +17,16 @@ export class Variation {
   readonly options: Record<string, string>[] = [];
   private constructor(data: VariationData) {
     this.key = String(data.id);
+    let skey = [];
     for (const a of data.attributes ?? []) {
       const attrKey = slugKey(a.name);
-      const termSlug = slugKey(a.value);
-      const termKey = `${attrKey}:${termSlug}`;
+      const termKey = slugKey(a.value);
       this.attrKeys.push(attrKey);
       this.termKeys.push(termKey);
-      this.options.push({ attribute: attrKey, value: termSlug });
+      this.options.push({ attribute: attrKey, value: termKey });
+      skey.push(`${attrKey}:${termKey}`);
     }
-    this.selectionKey = this.termKeys.map((termKey) => termKey).join("|");
+    this.selectionKey = skey.join("|");
   }
 
   static create(data: VariationData): Variation {

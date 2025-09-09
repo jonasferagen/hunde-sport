@@ -12,18 +12,14 @@ export type AttributeData = {
 
 export class Attribute {
   readonly index: number;
-  /** stable internal key you own (lowercased slug of label) */
   readonly key: AttrKey; // e.g. "farge"
-  /** the label form you’ll send for locals */
-  //readonly cartKey: string; // e.g. "farge"
   readonly label: string;
   readonly hasVariations: boolean;
 
   private constructor(data: AttributeData, index: number) {
+    this.key = slugKey(data.name);
     this.index = index;
     this.label = data.name;
-    this.key = slugKey(data.name);
-    //this.cartKey = data.name; // using label form consistently
     this.hasVariations = data.has_variations;
   }
   static create(data: AttributeData, index: number): Attribute {

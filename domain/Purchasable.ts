@@ -159,14 +159,13 @@ export class Purchasable {
         ...(ext ? { extensions: ext.extensions } : {}),
       };
     }
-
-    const id = Number(this.variation!.key);
-    const variation = { variation: this.variation!.options };
+    const _variation = this.variation!;
+    const id = Number(_variation!.key);
 
     return {
       id,
       quantity,
-      ...variation,
+      variation: _variation.options,
       ...(ext ? { extensions: ext.extensions } : {}),
     };
   }
