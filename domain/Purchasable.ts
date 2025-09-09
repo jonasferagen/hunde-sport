@@ -89,17 +89,6 @@ export class Purchasable {
     return this.product.hasCustomFields;
   }
 
-  /** Any non-empty custom values entered? */
-  get hasAnyCustomValues(): boolean {
-    const arr = this.customFields ?? [];
-    for (const f of arr) {
-      const v = f?.value;
-      if (typeof v === "string" && v.trim().length > 0) return true;
-      if (typeof v === "number" && Number.isFinite(v)) return true;
-    }
-    return false;
-  }
-
   private get needsCustomization(): boolean {
     return this.hasCustomFields && !this.isInCustomization;
   }

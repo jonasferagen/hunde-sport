@@ -2,8 +2,8 @@
 import { CustomField, type CustomFieldData } from "@/domain/CustomField";
 import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductPrices } from "@/domain/pricing/types";
-import type { AttributeData } from "@/domain/product/Attribute";
-import type { VariationData } from "@/domain/product/Variation";
+import type { AttributeData } from "@/domain/product-attributes/Attribute";
+import type { VariationData } from "@/domain/product-attributes/Variation";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 import { cleanHtml } from "@/lib/formatters";
 

@@ -18,6 +18,7 @@ export type CustomFieldData = {
   lines?: number;
   value?: string;
 };
+type ExtensionEntry = { key: string; value: string };
 
 export class CustomField implements NormalizedCustomField {
   readonly key: string;
@@ -54,35 +55,25 @@ export class CustomField implements NormalizedCustomField {
     return this;
   }
 
-  static toCartExtensions(fields: CustomField[] | undefined) {
+  toCartExtension(): ExtensionEntry {
+    const trimmed = (this.value ?? "").trim();
+    return { key: this.key, value: trimmed };
+  }
+
+  /**
+   * Static wrapper: folds multiple fields into the cart extensions shape.
+   */
+  static toCartExtensions(fields: readonly CustomField[] | undefined) {
     if (!fields || fields.length === 0) return undefined;
 
-    const cleaned: Record<string, string> = {};
-    for (const f of fields) {
-      const t = (f.value ?? "").trim();
-      if (t.length > 0) cleaned[f.key] = t;
-    }
-    if (Object.keys(cleaned).length === 0) return undefined;
+    const entries = fields
+      .map((f) => f.toCartExtension())
+      .filter((e) => e.value);
 
-    return { extensions: { app_fpf: { values: cleaned } } };
+    const values = Object.fromEntries(
+      entries.map(({ key, value }) => [key, value])
+    );
+
+    return { extensions: { app_fpf: { values } } } as const;
   }
 }
-
-// ------- WC shapes (adapter-only types)
-export type FpfValues = Record<string, string>;
-type LineItemLike = {
-  extensions?: {
-    app_fpf?: { values?: FpfValues | Record<string, never> } | null;
-  } | null;
-};
-
-export const getFpfValuesFromLineItem = (
-  lineItem: LineItemLike | null | undefined
-): FpfValues | undefined => {
-  const vals = lineItem?.extensions?.app_fpf?.values;
-  return vals && Object.keys(vals).length > 0 ? (vals as FpfValues) : undefined;
-};
-
-export const hasAnyFpfValues = (
-  lineItem: LineItemLike | null | undefined
-): boolean => !!getFpfValuesFromLineItem(lineItem);
