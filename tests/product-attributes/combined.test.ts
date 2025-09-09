@@ -11,22 +11,16 @@ import {
 describe("Attribute/Term/Variation integration", () => {
   test("variation termKeys match created Terms keys", () => {
     // 1) Build attributes
-    const aFarge = Attribute.create(
-      {
-        name: "Farge",
-        has_variations: true,
-        terms: [],
-      } satisfies AttributeData,
-      0
-    );
-    const aSize = Attribute.create(
-      {
-        name: "Størrelse",
-        has_variations: true,
-        terms: [],
-      } satisfies AttributeData,
-      1
-    );
+    const aFarge = Attribute.create({
+      name: "Farge",
+      has_variations: true,
+      terms: [],
+    } satisfies AttributeData);
+    const aSize = Attribute.create({
+      name: "Størrelse",
+      has_variations: true,
+      terms: [],
+    } satisfies AttributeData);
 
     // 2) Build term maps
     const tBlaa = Term.create(aFarge, {
@@ -63,10 +57,11 @@ describe("Attribute/Term/Variation integration", () => {
   });
 
   test("unknown term results in missing lookup key", () => {
-    const aFarge = Attribute.create(
-      { name: "Farge", has_variations: true, terms: [] } as AttributeData,
-      0
-    );
+    const aFarge = Attribute.create({
+      name: "Farge",
+      has_variations: true,
+      terms: [],
+    } as AttributeData);
 
     const tBlaa = Term.create(aFarge, {
       id: 8,
