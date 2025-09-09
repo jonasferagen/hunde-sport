@@ -25,9 +25,7 @@ export class Variation {
       this.termKeys.push(termKey);
       this.options.push({ attribute: attrKey, value: termSlug });
     }
-    this.selectionKey = this.options
-      .map((o) => `${o.attribute}:${o.value}`)
-      .join("|");
+    this.selectionKey = this.termKeys.map((termKey) => termKey).join("|");
   }
 
   static create(data: VariationData): Variation {

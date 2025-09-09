@@ -61,11 +61,9 @@ export class Purchasable {
     }
     this.productVariation = productVariation;
     this.attributeSelection = attributeSelection;
-    if (this.attributeSelection) {
+    if (attributeSelection) {
       this.isInSelection = true;
-      this.variation = this.attributeSelection.findVariation(
-        product as VariableProduct
-      );
+      this.variation = this.variableProduct.findVariation(attributeSelection);
     }
     if (customFields) {
       this.isInCustomization = true;

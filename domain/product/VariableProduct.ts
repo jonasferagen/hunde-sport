@@ -1,3 +1,4 @@
+import type { AttributeSelection } from "@/domain/product-attributes/AttributeSelection";
 import { Term, type TermData } from "@/domain/product-attributes/Term";
 
 import { Attribute, type AttributeData } from "../product-attributes/Attribute";
@@ -19,6 +20,7 @@ export class VariableProduct extends Product {
   public readonly terms: ReadonlyMap<string, Term>;
   public readonly variations: ReadonlyMap<string, Variation>;
 
+  private readonly selectionHasVariation: ReadonlyMap<string, string>;
   private readonly attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
   private readonly termHasVariations: ReadonlyMap<string, ReadonlySet<string>>;
 
@@ -26,11 +28,13 @@ export class VariableProduct extends Product {
     const base = Product.mapBase(data, "variable");
     super(base);
 
-    const { attributes, terms, variations } = VariableProduct.parse(data);
+    const { attributes, terms, variations, selectionHasVariation } =
+      VariableProduct.parse(data);
 
     this.attributes = attributes;
     this.terms = terms;
     this.variations = variations;
+    this.selectionHasVariation = selectionHasVariation;
 
     const rel = VariableProduct.buildRelationships(
       attributes,
@@ -54,6 +58,7 @@ export class VariableProduct extends Product {
     attributes: ReadonlyMap<string, Attribute>;
     terms: ReadonlyMap<string, Term>;
     variations: ReadonlyMap<string, Variation>;
+    selectionHasVariation: ReadonlyMap<string, string>;
   } {
     const attributes = new Map<string, Attribute>();
     const terms = new Map<string, Term>();
@@ -70,19 +75,27 @@ export class VariableProduct extends Product {
       }
       attributes.set(attr.key, attr);
     }
+
     // Variations (skip those referencing unknown/sanitized-out terms)
-    const combinations = new Map<string, boolean>();
+    const selectionHasVariation = new Map<string, string>();
+
     for (const v of data.variations ?? []) {
       const variation = Variation.create(v as VariationData);
       if (variation.termKeys.every((k) => terms.has(k))) {
-        if (combinations.has(variation.selectionKey)) {
+        if (selectionHasVariation.has(variation.selectionKey)) {
           continue;
         }
         variations.set(variation.key, variation);
-        combinations.set(variation.selectionKey, true);
+        selectionHasVariation.set(variation.selectionKey, variation.key);
       }
     }
-    return { attributes, terms, variations };
+
+    return {
+      attributes,
+      terms,
+      variations,
+      selectionHasVariation,
+    };
   }
 
   static buildRelationships(
@@ -163,6 +176,15 @@ export class VariableProduct extends Product {
         (k) => this.variations.get(k)!
       )
     );
+  }
+
+  findVariation(selection: AttributeSelection): Variation | undefined {
+    if (!selection.isComplete()) {
+      return undefined;
+    }
+    const sKey = selection.selectionKey!;
+    const vKey = this.selectionHasVariation.get(sKey)!;
+    return this.variations.get(vKey)!;
   }
 }
 

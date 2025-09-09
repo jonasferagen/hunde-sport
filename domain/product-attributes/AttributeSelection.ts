@@ -1,11 +1,5 @@
-import { intersectSets } from "@/lib/util";
-import type { VariableProduct } from "@/types";
-
 import { Attribute, type AttrKey } from "./Attribute";
 import { Term } from "./Term";
-import type { Variation } from "./Variation";
-
-type AttributeRecord = Record<AttrKey, Term | undefined>;
 
 type SelectionInfo = {
   selectedTerm: Term | undefined;
@@ -13,64 +7,60 @@ type SelectionInfo = {
   otherSelectedTerm: Term | undefined;
 };
 
-export class AttributeSelection {
-  public readonly selected: AttributeRecord;
+export type AttributeSelectionKey = string;
 
-  private constructor(selected: AttributeRecord) {
+export class AttributeSelection {
+  public readonly selected: ReadonlyMap<AttrKey, Term | undefined>;
+
+  private constructor(selected: Map<AttrKey, Term | undefined>) {
     this.selected = selected;
   }
 
   static create(
     attributes: ReadonlyMap<AttrKey, Attribute>
   ): AttributeSelection {
-    const selected: AttributeRecord = {};
-    for (const key of attributes.keys()) selected[key] = undefined;
+    const selected = new Map<AttrKey, Term | undefined>();
+    for (const key of attributes.keys()) {
+      selected.set(key, undefined);
+    }
     return new AttributeSelection(selected);
   }
 
+  get selectionKey(): AttributeSelectionKey | undefined {
+    if (!this.isComplete()) {
+      return undefined;
+    }
+
+    return this.getTerms()
+      .map((t) => t!.key)
+      .join("|");
+  }
+
   public current(attrKey: AttrKey): SelectionInfo {
-    const selectedTerm = this.selected[attrKey];
-    const attrKeys = Object.keys(this.selected).flat();
+    const selectedTerm = this.selected.get(attrKey);
+    const attrKeys = Array.from(this.selected.keys());
     const otherAttrKey: AttrKey | undefined = attrKeys.findLast(
       (k) => k !== attrKey
     );
     const otherSelectedTerm = otherAttrKey
-      ? this.selected[otherAttrKey]
+      ? this.selected.get(otherAttrKey)
       : undefined;
     return { selectedTerm, otherAttrKey, otherSelectedTerm };
   }
 
   with(attrKey: AttrKey, term: Term | undefined) {
-    const record = { ...this.selected, [attrKey]: term };
+    const record = new Map(this.selected);
+    record.set(attrKey, term);
     return new AttributeSelection(record);
   }
 
   isComplete(): boolean {
-    const keys = Object.keys(this.selected);
+    const keys = this.selected.size;
     const terms = this.getTerms().filter((t) => t !== undefined);
-    return keys.length === terms.length;
+    return keys === terms.length;
   }
 
   getTerms(): (Term | undefined)[] {
-    return Object.values(this.selected);
-  }
-
-  findVariation(variableProduct: VariableProduct): Variation | undefined {
-    if (!this.isComplete()) {
-      return undefined;
-    }
-    const sets = [];
-    for (const term of this.getTerms()) {
-      const v = variableProduct.getVariationsByTerm(term!.key);
-      sets.push(v);
-    }
-    const I = intersectSets(...sets);
-
-    if (I.size !== 1) {
-      throw new Error(
-        `Expected single variation, got ${I.size}: variableProduct ${variableProduct.id}`
-      );
-    }
-    return Array.from(I)[0]; // Always set to first
+    return Array.from(this.selected.values());
   }
 }

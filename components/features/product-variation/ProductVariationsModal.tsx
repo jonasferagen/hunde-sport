@@ -48,7 +48,7 @@ export const ProductVariationsModalContent = ({
       if (!attributeSelection.isComplete()) {
         return undefined;
       }
-      const variation = attributeSelection.findVariation(variableProduct);
+      const variation = variableProduct.findVariation(attributeSelection);
       return productVariations.get(variation!.key);
     },
     [variableProduct, productVariations]
