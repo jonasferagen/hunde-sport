@@ -3,7 +3,6 @@ import type { ExpoConfig } from "@expo/config";
 import pkg from "./package.json" assert { type: "json" };
 
 const VERSION = pkg.version as string;
-const RUNTIME = "1.0";
 const PROJECT_ID = "aa3dceb9-3292-426e-8e46-ff11539b7122";
 
 // Decide variant: dev when APP_VARIANT=dev or when using the "internal-apk-dev" profile
@@ -24,7 +23,7 @@ export default (): ExpoConfig => ({
   slug: SLUG,
   scheme: SCHEME,
   version: VERSION,
-  runtimeVersion: RUNTIME,
+  runtimeVersion: { policy: "fingerprint" },
   updates: {
     enabled: true,
     checkAutomatically: "ON_LOAD",

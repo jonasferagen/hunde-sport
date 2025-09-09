@@ -6,9 +6,9 @@ import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { useVariableProductContext, VariableProductProvider } from "@/contexts";
 
-import type { AttrKey } from "@/domain/product/Attribute";
-import { AttributeSelection } from "@/domain/product/AttributeSelection";
-import type { Term } from "@/domain/product/Term";
+import type { AttrKey } from "@/domain/product-attributes/Attribute";
+import { AttributeSelection } from "@/domain/product-attributes/AttributeSelection";
+import type { Term } from "@/domain/product-attributes/Term";
 import { Purchasable } from "@/types";
 import { ProductVariationSelect } from "./ProductVariationSelect";
 

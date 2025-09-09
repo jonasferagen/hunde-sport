@@ -1,5 +1,5 @@
-import type { AttrKey } from "@/domain/product/Attribute";
-import type { TermKey } from "@/domain/product/Term";
+import type { AttrKey } from "@/domain/product-attributes/Attribute";
+import type { TermKey } from "@/domain/product-attributes/Term";
 import { slugKey } from "@/lib/formatters";
 
 export type VariationKey = string;
@@ -13,7 +13,7 @@ export class Variation {
   readonly key: VariationKey; // `${id}`
   readonly attrKeys: AttrKey[] = []; // ["farge","storrelse"]
   readonly termKeys: TermKey[] = []; // composite term keys matching Term.key
-
+  readonly selectionKey: string; // "farge:blaa|storrelse:xl" (ORDER-INSENSITIVE)
   readonly options: Record<string, string>[] = [];
   private constructor(data: VariationData) {
     this.key = String(data.id);
@@ -25,6 +25,9 @@ export class Variation {
       this.termKeys.push(termKey);
       this.options.push({ attribute: attrKey, value: termSlug });
     }
+    this.selectionKey = this.options
+      .map((o) => `${o.attribute}:${o.value}`)
+      .join("|");
   }
 
   static create(data: VariationData): Variation {

@@ -1,9 +1,9 @@
-import type { Variation } from "@/domain/product/Variation";
 import { intersectSets } from "@/lib/util";
 import type { VariableProduct } from "@/types";
 
 import { Attribute, type AttrKey } from "./Attribute";
 import { Term } from "./Term";
+import type { Variation } from "./Variation";
 
 type AttributeRecord = Record<AttrKey, Term | undefined>;
 

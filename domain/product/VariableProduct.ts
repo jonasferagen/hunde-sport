@@ -1,8 +1,8 @@
-import { Term, type TermData } from "@/domain/product/Term";
+import { Term, type TermData } from "@/domain/product-attributes/Term";
 
-import { Attribute, type AttributeData } from "./Attribute";
+import { Attribute, type AttributeData } from "../product-attributes/Attribute";
+import { Variation, type VariationData } from "../product-attributes/Variation";
 import { Product, type ProductData } from "./Product";
-import { Variation, type VariationData } from "./Variation";
 
 type RelationshipMaps = {
   attributeHasTerms: ReadonlyMap<string, ReadonlySet<string>>;
@@ -62,7 +62,7 @@ export class VariableProduct extends Product {
     let index = 0;
     for (const a of data.attributes ?? []) {
       const attr = Attribute.create(a as AttributeData, index++);
-      if (!attr.has_variations) continue;
+      if (!attr.hasVariations) continue;
 
       for (const t of a.terms ?? []) {
         const term = Term.create(attr, t as TermData); // composite key
@@ -71,10 +71,15 @@ export class VariableProduct extends Product {
       attributes.set(attr.key, attr);
     }
     // Variations (skip those referencing unknown/sanitized-out terms)
+    const combinations = new Map<string, boolean>();
     for (const v of data.variations ?? []) {
       const variation = Variation.create(v as VariationData);
       if (variation.termKeys.every((k) => terms.has(k))) {
+        if (combinations.has(variation.selectionKey)) {
+          continue;
+        }
         variations.set(variation.key, variation);
+        combinations.set(variation.selectionKey, true);
       }
     }
     return { attributes, terms, variations };

@@ -4,6 +4,19 @@ import { Product } from "@/domain/product/Product";
 import { VariableProduct } from "@/domain/product/VariableProduct";
 import { loadFixture } from "@/tests/product/helpers";
 
+// Fixture facts (kept in one place)
+const FIXTURE = {
+  id: 27445,
+  type: "variable" as const,
+  attrsExpected: 2, // farge + Størrelse
+  colors: 17,
+  sizes: 9,
+  duplicatePairs: 1, // the “rosa-gra + xss” pair appears twice with different IDs
+  variationRows: 13, // total rows in the fixture (including the duplicate)
+};
+const TOTAL_TERMS = FIXTURE.colors + FIXTURE.sizes;
+const TOTAL_VARIATIONS_DEDUPED = FIXTURE.variationRows - FIXTURE.duplicatePairs;
+
 describe("VariableProduct", () => {
   let data: ProductData;
 
@@ -11,92 +24,82 @@ describe("VariableProduct", () => {
     data = loadFixture("variable-attr-double.json");
   });
 
-  it("constructs via factory and exposes readonly maps", () => {
-    const p = Product.create(data);
-    expect(p).toBeInstanceOf(VariableProduct);
+  const makeVP = () => Product.create(data) as VariableProduct;
 
-    const vp = p as VariableProduct;
+  const getAttrKey = (vp: VariableProduct, name: string) => {
+    const entry = [...vp.attributes.entries()].find(
+      ([, a]) => a.label.toLowerCase() === name.toLowerCase()
+    );
+    if (!entry) throw new Error(`Attribute not found: ${name}`);
+    return entry[0];
+  };
+
+  it("constructs via factory and exposes readonly maps", () => {
+    const vp = makeVP();
 
     // basics forwarded from Product base
-    expect(vp.id).toBe(27445);
-    expect(vp.type).toBe("variable");
+    expect(vp.id).toBe(FIXTURE.id);
+    expect(vp.type).toBe(FIXTURE.type);
     expect(vp.isVariable).toBe(true);
 
     // core collections exist and look sane
-    expect(vp.attributes.size).toBe(2); // farge, Størrelse
-    expect(vp.terms.size).toBe(26); // 17 colors + 9 sizes (from fixture)
-    expect(vp.variations.size).toBe(13); // number of variation rows in fixture
+    expect(vp.attributes.size).toBe(FIXTURE.attrsExpected);
+    expect(vp.terms.size).toBe(TOTAL_TERMS);
+    expect(vp.variations.size).toBe(TOTAL_VARIATIONS_DEDUPED);
   });
 
   it("getTermsByAttribute returns the correct Term set for each attribute", () => {
-    const vp = VariableProduct.create(data);
+    const vp = makeVP();
 
-    // discover attribute keys by name to avoid relying on key format
-    const entries = Array.from(vp.attributes.entries());
-    const colorEntry = entries.find(
-      ([, a]) => a.label.toLowerCase() === "farge"
-    );
-    const sizeEntry = entries.find(([, a]) =>
-      a.label.toLowerCase().includes("størrelse")
-    );
-
-    expect(colorEntry).toBeTruthy();
-    expect(sizeEntry).toBeTruthy();
-
-    const [colorKey] = colorEntry!;
-    const [sizeKey] = sizeEntry!;
+    const colorKey = getAttrKey(vp, "farge");
+    const sizeKey = getAttrKey(vp, "størrelse");
 
     const colorTerms = vp.getTermsByAttribute(colorKey);
     const sizeTerms = vp.getTermsByAttribute(sizeKey);
 
-    expect(colorTerms.size).toBe(17);
-    expect(sizeTerms.size).toBe(9);
+    expect(colorTerms.size).toBe(FIXTURE.colors);
+    expect(sizeTerms.size).toBe(FIXTURE.sizes);
 
-    // every term returned should point back to the attribute
+    // every term returned should point back to the owning attribute
     for (const t of colorTerms) expect(t.attrKey).toBe(colorKey);
     for (const t of sizeTerms) expect(t.attrKey).toBe(sizeKey);
   });
 
   it("getVariationsByTerm returns variations that include that term", () => {
-    const vp = VariableProduct.create(data);
+    const vp = makeVP();
 
-    // pick any term and assert round-trip through the index
-    const [someTermKey, someTerm] = Array.from(vp.terms.entries())[0]!;
+    const [someTermKey, someTerm] = [...vp.terms.entries()][0]!;
     const byTerm = vp.getVariationsByTerm(someTermKey);
 
-    // sanity: the set exists (may be empty for rarely-used terms)
     expect(byTerm).toBeInstanceOf(Set);
 
-    // if any variations reference this term, they must include it in their termKeys
     for (const v of byTerm) {
       expect(v.termKeys).toContain(someTermKey);
-      // and its attribute keys should include the owning attribute of the term
       expect(v.attrKeys).toContain(someTerm.attrKey);
     }
   });
 
-  it("handles duplicate variations for the same term pair (does not dedupe IDs)", () => {
-    const vp = VariableProduct.create(data);
+  it("dedupes duplicate variations for the same term pair (keeps one ID)", () => {
+    const vp = makeVP();
 
-    // find the term with slug 'rosa-gra' (appears twice with size XSS in fixture)
-    const rosaGra = Array.from(vp.terms.values()).find(
-      (t) => t.slug === "rosa-gra"
+    // find the color term with slug 'rosa-gra' (appears twice with size XSS in the raw fixture)
+    const rosaGra = [...vp.terms.values()].find(
+      (t) => (t as any).slug === "rosa-gra"
     );
     expect(rosaGra).toBeTruthy();
 
     const varsForRosaGra = vp.getVariationsByTerm(rosaGra!.key);
 
-    // we expect at least 2 variations to reference this color term
-    expect(varsForRosaGra.size).toBeGreaterThanOrEqual(2);
+    // after de-dupe we expect a single variation for that pair
+    expect(varsForRosaGra.size).toBe(1);
 
-    // ensure all reported variations truly include the term
     for (const v of varsForRosaGra) {
       expect(v.termKeys).toContain(rosaGra!.key);
     }
   });
 
   it("throws on unknown attribute/term keys in safe getters", () => {
-    const vp = VariableProduct.create(data);
+    const vp = makeVP();
 
     expect(() => vp.getTermsByAttribute("__nope__")).toThrow(
       /Unknown attribute key/i
@@ -107,29 +110,28 @@ describe("VariableProduct", () => {
   });
 
   it("parse() skips attributes without has_variations and filters invalid variations", () => {
-    // craft a copy with one attribute that has_variations=false and one variation referencing a non-existent term key
+    // copy + add a non-variant attribute and a bogus variation referencing it
     const modified: ProductData = JSON.parse(JSON.stringify(data));
+
     modified.attributes.push({
       id: 999,
       name: "irrelevant",
       taxonomy: "pa_irrelevant",
       has_variations: false,
       terms: [{ id: 1, name: "X", slug: "x" }],
-    });
+    } as any);
 
-    // bogus variation referencing a term that won't exist (because attr not variant)
     modified.variations.push({
       id: 123456,
       attributes: [{ name: "irrelevant", value: "x" }],
-    });
+    } as any);
 
     const parsed = VariableProduct.parse(modified);
-    // attribute without variations should still be created but not contribute terms
-    // (depending on your Attribute.create, but terms from non-variant attrs shouldn't be kept)
-    // We assert that total term count remains the same as original fixture (26)
-    expect(parsed.terms.size).toBe(26);
 
-    // and that the bogus variation is filtered out (original had 13)
-    expect(parsed.variations.size).toBe(13);
+    // terms count should remain unaffected by the non-variant attribute
+    expect(parsed.terms.size).toBe(TOTAL_TERMS);
+
+    // bogus variation filtered; still equals our deduped baseline
+    expect(parsed.variations.size).toBe(TOTAL_VARIATIONS_DEDUPED);
   });
 });
