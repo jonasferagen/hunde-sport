@@ -59,9 +59,9 @@ export class VariableProduct extends Product {
     const terms = new Map<string, Term>();
     const variations = new Map<string, Variation>();
 
-    // Attributes + Terms
+    let index = 0;
     for (const a of data.attributes ?? []) {
-      const attr = Attribute.create(a as AttributeData);
+      const attr = Attribute.create(a as AttributeData, index++);
       if (!attr.has_variations) continue;
 
       for (const t of a.terms ?? []) {

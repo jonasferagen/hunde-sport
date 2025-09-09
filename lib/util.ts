@@ -19,9 +19,3 @@ export function intersectSets<T>(...sets: ReadonlySet<T>[]): ReadonlySet<T> {
 
   return acc;
 }
-
-export const freezeMap = <K, V>(m: Map<K, V>): ReadonlyMap<K, V> =>
-  new Map(m) as ReadonlyMap<K, V>;
-
-export const freezeSet = <T>(s: Set<T>): ReadonlySet<T> =>
-  new Set(s) as ReadonlySet<T>;

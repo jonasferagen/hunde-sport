@@ -59,17 +59,14 @@ export class Purchasable {
     if (this.product.type === "simple") {
       return;
     }
-
     this.productVariation = productVariation;
     this.attributeSelection = attributeSelection;
-
     if (this.attributeSelection) {
       this.isInSelection = true;
       this.variation = this.attributeSelection.findVariation(
         product as VariableProduct
       );
     }
-
     if (customFields) {
       this.isInCustomization = true;
       this.customFields = customFields;
@@ -165,11 +162,11 @@ export class Purchasable {
       };
     }
 
-    const options = this.variation!.options;
-    const variation = { variation: options };
+    const id = Number(this.variation!.key);
+    const variation = { variation: this.variation!.options };
 
     return {
-      id: this.product.id,
+      id,
       quantity,
       ...variation,
       ...(ext ? { extensions: ext.extensions } : {}),
