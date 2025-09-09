@@ -25,7 +25,12 @@ export default (): ExpoConfig => ({
   scheme: SCHEME,
   version: VERSION,
   runtimeVersion: RUNTIME,
-  updates: { enabled: true, url: `https://u.expo.dev/${PROJECT_ID}` },
+  updates: {
+    enabled: true,
+    checkAutomatically: "ON_LOAD",
+    fallbackToCacheTimeout: 0,
+    url: `https://u.expo.dev/${PROJECT_ID}`,
+  },
   jsEngine: "hermes",
   orientation: "portrait",
   userInterfaceStyle: "automatic",

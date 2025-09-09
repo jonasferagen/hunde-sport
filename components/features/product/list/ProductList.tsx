@@ -67,11 +67,19 @@ export const ProductList = React.memo(function ProductList({
       if (firstTime) animatedIdsRef.current.add(product.id);
 
       const delay = (index % 8) * 20;
-
+      const baseOpacity = firstTime ? 0.12 : 1;
       return (
         <Animated.View
           // FlashList owns keys via keyExtractor — don’t add a key here
-          entering={firstTime ? FadeIn.delay(delay) : undefined}
+          entering={
+            firstTime
+              ? FadeIn.delay(delay).withInitialValues({
+                  opacity: baseOpacity,
+                  transform: [{ scale: 0.98 }],
+                })
+              : undefined
+          }
+          collapsable={false}
         >
           <ProductCard
             product={product}

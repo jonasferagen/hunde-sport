@@ -131,7 +131,7 @@ export const CustomBottomBarContents = () => {
             <ThemedYStack pos="relative">
               {cartQty > 0 && (
                 <IconBadge theme={THEME_PRICE_TAG}>
-                  <ThemedText mt="$-1.5" fow="bold">
+                  <ThemedText mt="$-1.5" p="$0.5" fow="bold" size="$2">
                     {cartQty}
                   </ThemedText>
                 </IconBadge>

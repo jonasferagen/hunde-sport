@@ -36,9 +36,11 @@ export const CartListItem = ({ itemKey }: { itemKey: string }) => {
   const item = useCartStore((s) => s.cart.itemsByKey.get(itemKey)!);
   const isUpdating = useCartStore((s) => !!s.updatingKeys?.[itemKey]);
   const { updateItem, removeItem } = useCartStore(
-    useShallow((s) => ({ updateItem: s.updateItem, removeItem: s.removeItem }))
+    useShallow((s) => ({
+      updateItem: s.updateItem,
+      removeItem: s.removeItem,
+    }))
   );
-
   const { key, quantity, name } = item;
   const variation = item.variationLabel;
 

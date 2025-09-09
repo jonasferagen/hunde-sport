@@ -55,5 +55,8 @@ export const slugKey = (s: unknown) =>
     .trim()
     .toLowerCase()
     .normalize("NFKD") // split accents
-    .replace(/\p{Diacritic}/gu, "") // remove accents (ø -> o, å -> a)
-    .replace(/\s+/g, "-"); // optional; keeps consistency with term slugs
+    .replace(/\p{Diacritic}/gu, "") // remove diacritics (ø -> o, å -> a)
+    .replace(/[øö]/g, "o") // handle Nordic/Germanic o variants
+    .replace(/[æä]/g, "a") // handle a variants
+    .replace(/[ß]/g, "ss") // German sharp s
+    .replace(/\s+/g, "-");

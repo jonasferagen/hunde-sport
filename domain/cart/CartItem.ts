@@ -113,7 +113,7 @@ export class CartItem implements NormalizedCartItem {
 
   get variationLabel(): string {
     if (!this.variation.length) return "";
-    return this.variation.map((v) => v.value).join(",");
+    return this.variation.map((v) => v.value).join(", ");
   }
 
   /** "Foret Sele – Mint / XXS/XS" */
@@ -121,6 +121,7 @@ export class CartItem implements NormalizedCartItem {
     const suffix = this.variationLabel;
     return suffix ? `${this.name}, ${suffix}` : this.name;
   }
+
   // Optional: immutable quantity update for your Cart methods
   withQuantity(quantity: number): CartItem {
     return new CartItem({ ...this, quantity } as NormalizedCartItem);
