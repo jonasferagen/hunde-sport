@@ -11,18 +11,17 @@ export type AttributeData = {
 };
 
 export class Attribute {
-  readonly index: number;
   readonly key: AttrKey; // e.g. "farge"
   readonly label: string;
   readonly hasVariations: boolean;
 
-  private constructor(data: AttributeData, index: number) {
+  private constructor(data: AttributeData) {
     this.key = slugKey(data.name);
-    this.index = index;
+
     this.label = data.name;
     this.hasVariations = data.has_variations;
   }
-  static create(data: AttributeData, index: number): Attribute {
-    return new Attribute(data, index);
+  static create(data: AttributeData): Attribute {
+    return new Attribute(data);
   }
 }

@@ -26,13 +26,13 @@ export class AttributeSelection {
     return new AttributeSelection(selected);
   }
 
-  get selectionKey(): AttributeSelectionKey | undefined {
+  get key(): AttributeSelectionKey | undefined {
     if (!this.isComplete()) {
       return undefined;
     }
 
     return this.getTerms()
-      .map((t) => t!.key)
+      .map((t) => t?.compositeKey)
       .join("|");
   }
 

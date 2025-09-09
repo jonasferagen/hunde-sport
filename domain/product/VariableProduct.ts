@@ -64,9 +64,8 @@ export class VariableProduct extends Product {
     const terms = new Map<string, Term>();
     const variations = new Map<string, Variation>();
 
-    let index = 0;
     for (const a of data.attributes ?? []) {
-      const attr = Attribute.create(a as AttributeData, index++);
+      const attr = Attribute.create(a as AttributeData);
       if (!attr.hasVariations) continue;
 
       for (const t of a.terms ?? []) {
@@ -182,7 +181,7 @@ export class VariableProduct extends Product {
     if (!selection.isComplete()) {
       return undefined;
     }
-    const sKey = selection.selectionKey!;
+    const sKey = selection.key!;
     const vKey = this.selectionHasVariation.get(sKey)!;
     return this.variations.get(vKey)!;
   }
