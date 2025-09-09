@@ -65,9 +65,11 @@ export class AttributeSelection {
       sets.push(v);
     }
     const I = intersectSets(...sets);
-    if (I.size === 0) {
-      console.error("No matching variation found for terms");
-      return;
+
+    if (I.size !== 1) {
+      throw new Error(
+        `Expected single variation, got ${I.size}: variableProduct ${variableProduct.id}`
+      );
     }
     return Array.from(I)[0]; // Always set to first
   }
