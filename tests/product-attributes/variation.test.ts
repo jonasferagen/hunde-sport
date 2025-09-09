@@ -17,7 +17,7 @@ describe("Variation", () => {
 
     expect(v.key).toBe("123");
     expect(v.attrKeys).toEqual(["farge", "storrelse"]);
-    expect(v.termKeys).toEqual(["farge:blaa", "storrelse:xl"]);
+    expect(v.termKeys).toEqual(["blaa", "xl"]);
     expect(v.options).toEqual([
       { attribute: "farge", value: "blaa" },
       { attribute: "storrelse", value: "xl" },

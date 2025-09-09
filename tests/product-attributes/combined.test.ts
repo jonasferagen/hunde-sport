@@ -81,7 +81,7 @@ describe("Attribute/Term/Variation integration", () => {
     });
 
     // Variation still computes the key, but your parse step would filter it out.
-    expect(v.termKeys).toContain("farge:rod");
-    expect(termMap.has("farge:rod")).toBe(false);
+    expect(v.termKeys).toContain("rod");
+    expect(termMap.has("rod")).toBe(false);
   });
 });

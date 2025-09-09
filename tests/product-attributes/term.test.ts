@@ -19,13 +19,13 @@ describe("Term", () => {
     const term = Term.create(attr, t);
 
     expect(term.attrKey).toBe("farge");
-    expect(term.key).toBe("farge:blaa");
+    expect(term.key).toBe("blaa");
     expect(term.label).toBe("Blå"); // capitalize just normalizes casing; adjust if needed
   });
 
   test("works with already-normalized term slug", () => {
     const attr = mkAttr("Størrelse");
     const term = Term.create(attr, { id: 1, name: "XL", slug: "xl" });
-    expect(term.key).toBe("storrelse:xl");
+    expect(term.key).toBe("xl");
   });
 });

@@ -84,7 +84,7 @@ describe("VariableProduct", () => {
 
     // find the color term with slug 'rosa-gra' (appears twice with size XSS in the raw fixture)
     const rosaGra = [...vp.terms.values()].find(
-      (t) => (t as any).slug === "rosa-gra"
+      (t) => (t as any).key === "rosa-gra"
     );
     expect(rosaGra).toBeTruthy();
 
