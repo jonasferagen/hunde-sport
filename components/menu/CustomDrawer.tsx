@@ -59,7 +59,7 @@ const CustomDrawerContent = () => {
       </ThemedYStack>
       <ThemedYStack box container jc="flex-end" theme={THEME_SHEET_BG2}>
         <ThemedText size="$1" ta="right">
-          v{version} (build {build})
+          v{version} - (build {build})
         </ThemedText>
       </ThemedYStack>
     </ThemedYStack>
