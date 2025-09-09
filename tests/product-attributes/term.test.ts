@@ -5,10 +5,11 @@ import {
 import { Term, type TermData } from "@/domain/product-attributes/Term";
 
 function mkAttr(name: string) {
-  return Attribute.create(
-    { name, has_variations: true, terms: [] } satisfies AttributeData,
-    0
-  );
+  return Attribute.create({
+    name,
+    has_variations: true,
+    terms: [],
+  } satisfies AttributeData);
 }
 
 describe("Term", () => {
