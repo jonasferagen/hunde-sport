@@ -130,6 +130,25 @@ function app_fpf_create_cart_restore_token_rest( WP_REST_Request $request ) {
 		}
 	}
 
+	$store_cart_token = isset($cart_data['_app_store_cart_token'])
+		? sanitize_text_field( (string) $cart_data['_app_store_cart_token'] )
+		: '';
+
+	if ( $store_cart_token !== '' && WC()->session ) {
+		$wc_session_id = (string) WC()->session->get_customer_id();
+		if ( $wc_session_id !== '' ) {
+			// Keep the link for a short period (e.g., 2 days). Adjust as you like.
+			set_transient(
+				'app_cart_link_' . md5($store_cart_token),
+				[
+					'wc_session' => $wc_session_id,
+					'created'    => time(),
+				],
+				DAY_IN_SECONDS * 2
+			);
+		}
+	}
+
 	// One-time use
 	delete_transient( 'app_fpf_cart_restore_' . $restore_token );
 
