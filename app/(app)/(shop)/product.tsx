@@ -1,3 +1,5 @@
 import { ProductScreen } from "@/screens/ProductScreen";
 
-export default () => <ProductScreen />;
+export default function Product() {
+  return <ProductScreen />;
+}

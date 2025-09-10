@@ -13,10 +13,8 @@ import { ThemedXStack } from "@/components/ui";
 import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
 import { Loader } from "@/components/ui/Loader";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
-import { useVisibleItems } from "@/hooks/ui/useVisibleItems";
 import type { PurchasableProduct } from "@/types";
 
-import { BottomMoreHint, type BottomMoreHintHandle } from "./BottomMoreHint";
 // inside ProductList:
 
 interface ProductListProps {
@@ -37,7 +35,7 @@ export const ProductList = React.memo(function ProductList({
   isLoadingMore,
   hasMore,
   transitionKey,
-  totalProducts,
+  //totalProducts,
 }: ProductListProps) {
   const keyExtractor = React.useCallback(
     (p: PurchasableProduct) => String(p.id),
@@ -54,18 +52,21 @@ export const ProductList = React.memo(function ProductList({
     if (hasMore && !isLoadingMore) loadMore();
   }, [hasMore, isLoadingMore, loadMore]);
 
+  /*
   const {
     state: vis,
     onViewableItemsChanged,
     viewabilityConfig,
   } = useVisibleItems();
-  const hintRef = React.useRef<BottomMoreHintHandle>(null);
-  const enabled = products.length < totalProducts;
-  const shown = Math.min(vis.last >= 0 ? vis.last + 1 : 0, totalProducts);
-
+  //const hintRef = React.useRef<BottomMoreHintHandle>(null);
+//  const enabled = products.length < totalProducts;
+//  const shown = Math.min(vis.last >= 0 ? vis.last + 1 : 0, totalProducts);
+*/
+  /*
   const onScroll = React.useCallback(() => {
     hintRef.current?.kick();
   }, []);
+  */
   const renderItem = React.useCallback(
     ({ item: product, index }: { item: PurchasableProduct; index: number }) => {
       const firstTime = !animatedIdsRef.current.has(product.id);
@@ -97,22 +98,24 @@ export const ProductList = React.memo(function ProductList({
           drawDistance={800}
           getItemType={() => "product"}
           removeClippedSubviews={false}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={viewabilityConfig}
-          onScroll={onScroll}
+          //  onViewableItemsChanged={onViewableItemsChanged}
+          //  viewabilityConfig={viewabilityConfig}
+          // onScroll={onScroll}
           scrollEventThrottle={32}
           showsVerticalScrollIndicator={false}
-        />
-        <BottomMoreHint
-          ref={hintRef}
-          enabled={enabled}
-          shown={shown}
-          total={totalProducts}
         />
       </ThemedXStack>
     </View>
   );
 });
+
+/* 
+        <BottomMoreHint
+          ref={hintRef}
+          enabled={enabled}
+          shown={shown}
+          total={totalProducts}
+        /> */
 
 type ItemAnimatorProps = {
   product: PurchasableProduct;
@@ -130,9 +133,9 @@ function ItemAnimator({ product, index, firstTime }: ItemAnimatorProps) {
     const timer = setTimeout(() => {
       // only nudge to 1 if we somehow didn't get there
       if (opacityValue.value < 1) {
-        opacityValue.value = withTiming(1, { duration: 250 });
+        opacityValue.value = withTiming(1, { duration: 200 });
       }
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [firstTime, opacityValue]);

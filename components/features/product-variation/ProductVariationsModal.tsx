@@ -5,11 +5,12 @@ import { PurchaseButton } from "@/components/features/product/purchase/PurchaseB
 import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { useVariableProductContext, VariableProductProvider } from "@/contexts";
-
 import type { AttrKey } from "@/domain/product-attributes/Attribute";
 import { AttributeSelection } from "@/domain/product-attributes/AttributeSelection";
 import type { Term } from "@/domain/product-attributes/Term";
+import { openModal } from "@/stores/ui/modalStore";
 import { Purchasable } from "@/types";
+
 import { ProductVariationSelect } from "./ProductVariationSelect";
 
 const IMAGE_H = 200;
@@ -76,7 +77,11 @@ export const ProductVariationsModalContent = ({
       footer={
         <ThemedYStack>
           <ThemedYStack mb="$3" />
-          <PurchaseButton purchasable={newPurchasable} onSuccess={close} />
+          <PurchaseButton
+            purchasable={newPurchasable}
+            onSuccess={close}
+            onOpenCustomization={onOpenCustomization}
+          />
         </ThemedYStack>
       }
     >
@@ -89,4 +94,12 @@ export const ProductVariationsModalContent = ({
       />
     </ModalLayout>
   );
+};
+const onOpenCustomization = async (p: Purchasable) => {
+  const { ProductCustomizationModal } = await import(
+    "@/components/features/purchasable/ProductCustomizationModal"
+  );
+  openModal((_, api) => (
+    <ProductCustomizationModal purchasable={p} close={() => api.close()} />
+  ));
 };

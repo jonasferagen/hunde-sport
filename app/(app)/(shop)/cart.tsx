@@ -1,2 +1,4 @@
 import { CartScreen } from "@/screens/CartScreen";
-export default () => <CartScreen />;
+export default function Cart() {
+  return <CartScreen />;
+}

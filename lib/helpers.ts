@@ -45,6 +45,7 @@ export const getScaledImageUrl = (
       // Still validate URL format
       const urlObject = new URL(url);
       return urlObject.toString();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error("Invalid URL:", url);
       return placeholderBase64;
@@ -68,6 +69,7 @@ export const getScaledImageUrl = (
 
     urlObject.search = params.toString();
     return urlObject.toString();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     console.error("Invalid URL:", url);
     return placeholderBase64;

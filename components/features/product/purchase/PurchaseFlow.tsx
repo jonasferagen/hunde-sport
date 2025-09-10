@@ -2,6 +2,7 @@
 import React from "react";
 
 import { Purchasable } from "@/domain/Purchasable";
+import { openModal } from "@/stores/ui/modalStore";
 import { type PurchasableProduct } from "@/types";
 
 import { PurchaseButton } from "./PurchaseButton";
@@ -19,5 +20,29 @@ export function PurchaseFlow({ product }: Props) {
     [product]
   );
 
-  return <PurchaseButton purchasable={purchasable} />;
+  return (
+    <PurchaseButton
+      purchasable={purchasable}
+      onOpenCustomization={onOpenCustomization}
+      onOpenVariations={onOpenVariations}
+    />
+  );
 }
+
+const onOpenCustomization = async (p: Purchasable) => {
+  const { ProductCustomizationModal } = await import(
+    "@/components/features/purchasable/ProductCustomizationModal"
+  );
+  openModal((_, api) => (
+    <ProductCustomizationModal purchasable={p} close={() => api.close()} />
+  ));
+};
+
+const onOpenVariations = async (p: Purchasable) => {
+  const { ProductVariationsModal } = await import(
+    "@/components/features/product-variation/ProductVariationsModal"
+  );
+  openModal((_, api) => (
+    <ProductVariationsModal purchasable={p} close={() => api.close()} />
+  ));
+};

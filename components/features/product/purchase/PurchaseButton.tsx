@@ -14,7 +14,6 @@ import { decidePurchasable } from "@/components/features/product/purchase/ctaDec
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { Purchasable } from "@/domain/Purchasable";
 import { useAddToCart } from "@/hooks/useAddToCart";
-import { openModal } from "@/stores/ui/modalStore";
 
 import { PurchaseButtonPriceTag } from "./PurchaseButtonPriceTag";
 
@@ -31,12 +30,16 @@ type Props = {
   purchasable: Purchasable;
   onSuccess?: () => void;
   onError?: (message?: string) => void;
+  onOpenVariations?: (p: Purchasable) => void | Promise<void>;
+  onOpenCustomization?: (p: Purchasable) => void | Promise<void>;
 };
 
 export const PurchaseButton = React.memo(function PurchaseButton({
   purchasable,
   onSuccess,
   onError,
+  onOpenVariations,
+  onOpenCustomization,
 }: Props) {
   const decision = decidePurchasable(purchasable.status);
   const { theme, iconKey, label } = decision;
@@ -60,10 +63,10 @@ export const PurchaseButton = React.memo(function PurchaseButton({
           onPress();
           break;
         case "openVariations":
-          await openVariationsNow(purchasable);
+          await onOpenVariations?.(purchasable);
           break;
         case "openCustomize":
-          await openCustomizationNow(purchasable);
+          await onOpenCustomization?.(purchasable);
           break;
         case "noop":
         default:
@@ -90,7 +93,7 @@ export const PurchaseButton = React.memo(function PurchaseButton({
     />
   );
 });
-
+/*
 async function openCustomizationNow(purchasable: Purchasable) {
   const { ProductCustomizationModal } = await import(
     "@/components/features/purchasable/ProductCustomizationModal"
@@ -113,4 +116,4 @@ async function openVariationsNow(purchasable: Purchasable) {
       close={() => api.close()}
     />
   ));
-}
+} */

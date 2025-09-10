@@ -1,10 +1,10 @@
-import { ProductCategoryTiles } from "@/components/features/product-category/ProductCategoryTiles";
 import {
   DebugProducts,
   DiscountedProducts,
   FeaturedProducts,
   RecentProducts,
 } from "@/components/features/product/list/ProductRail";
+import { ProductCategoryTiles } from "@/components/features/product-category/ProductCategoryTiles";
 import {
   PageBody,
   PageHeader,

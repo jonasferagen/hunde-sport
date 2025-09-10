@@ -11,9 +11,7 @@ import { TileBadge } from "@/components/ui/Badge";
 import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import { ThemedYStack } from "@/components/ui/themed-components";
 import { THEME_PRICE_TAG } from "@/config/app";
-
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
-import { useVisibleItems } from "@/hooks/ui/useVisibleItems";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { spacePx } from "@/lib/helpers";
 import type { QueryResult } from "@/lib/query/query";
@@ -104,12 +102,13 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
 
   const edges = useEdgeFades("horizontal");
 
+  /*
   const {
     state: vis,
     onViewableItemsChanged,
     viewabilityConfig,
   } = useVisibleItems();
-
+*/
   const HeaderSpacer: React.FC = React.useCallback(
     () => <RNView style={{ width: leadPx }} />,
     [leadPx]
@@ -148,7 +147,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
             w={estimatedItemSize}
             h={estimatedItemCrossSize}
             imagePriority={index < 3 ? "high" : "low"}
-            interactive={vis.set.has(index) /* or something derived from vp */}
+            // interactive={vis.set.has(index) /* or something derived from vp */}
           >
             {!item.availability.isInStock && (
               <ThemedYStack
@@ -171,7 +170,7 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
         </RNView>
       );
     },
-    [gapPx, estimatedItemSize, estimatedItemCrossSize, vis.set, to]
+    [gapPx, estimatedItemSize, estimatedItemCrossSize, to]
   );
 
   const listRef = React.useRef<FlashListRef<PurchasableProduct>>(null);
@@ -195,8 +194,8 @@ const HorizontalTilesBody: React.FC<BodyProps> = ({
         showsHorizontalScrollIndicator={false}
         onScroll={edges.onScroll}
         scrollEventThrottle={32}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
+        //  onViewableItemsChanged={onViewableItemsChanged}
+        //  viewabilityConfig={viewabilityConfig}
         decelerationRate="fast"
         snapToAlignment="start"
         snapToInterval={estimatedItemSize + gapPx} // still correct with fixed-size tiles

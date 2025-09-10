@@ -1,6 +1,5 @@
 import { Redirect, useLocalSearchParams } from "expo-router";
 
-import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
 import {
   ProductAvailabilityStatus,
   ProductDescription,
@@ -10,6 +9,7 @@ import {
   ProductTitle,
 } from "@/components/features/product/display/";
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
+import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
 import {
   PageBody,
   PageFooter,

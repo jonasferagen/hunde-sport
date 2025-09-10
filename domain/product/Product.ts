@@ -6,11 +6,7 @@ import type { AttributeData } from "@/domain/product-attributes/Attribute";
 import type { VariationData } from "@/domain/product-attributes/Variation";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 import { cleanHtml } from "@/lib/formatters";
-
-type CategoryRefData = {
-  id: number;
-  name: string;
-};
+import type { CategoryRef, CategoryRefData } from "@/types";
 
 export interface ProductAvailability {
   isInStock: boolean;
@@ -55,7 +51,7 @@ type NormalizedProduct = {
   on_sale: boolean;
   prices: ProductPrices;
   images: StoreImage[];
-  categories: CategoryRefData[];
+  categories: CategoryRef[];
   is_purchasable: boolean;
   is_in_stock: boolean;
   is_on_backorder: boolean;
@@ -80,7 +76,7 @@ export abstract class Product implements NormalizedProduct {
   readonly is_in_stock: boolean;
   readonly is_purchasable: boolean;
   readonly is_on_backorder: boolean;
-  readonly categories: CategoryRefData[]; /* @TODO* : always ensure a categoryRef - we can use 0 if nothing is set in the data */
+  readonly categories: CategoryRef[]; /* @TODO* : always ensure a categoryRef - we can use 0 if nothing is set in the data */
   readonly type: "simple" | "variable" | "variation";
   readonly parent: number;
 

@@ -8,7 +8,6 @@ import {
   ThemedXStack,
   ThemedYStack,
 } from "@/components/ui/themed-components/ThemedStacks";
-
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { getScaledImageUrl } from "@/lib/helpers";
 import type { PurchasableProduct } from "@/types";

@@ -1,4 +1,4 @@
-import { SearchScreen } from '@/screens/SearchScreen';
-export default () => <SearchScreen />;
-
-
+import { SearchScreen } from "@/screens/SearchScreen";
+export default function Search() {
+  return <SearchScreen />;
+}

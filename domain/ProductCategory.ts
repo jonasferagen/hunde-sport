@@ -1,6 +1,16 @@
 // domain/ProductCategory.ts
 import { StoreImage, type StoreImageData } from "./StoreImage";
 
+export type CategoryRef = {
+  id: number;
+  name: string;
+};
+
+export type CategoryRefData = {
+  id: number;
+  name: string;
+};
+
 export type ProductCategoryData = {
   id: number;
   name: string;

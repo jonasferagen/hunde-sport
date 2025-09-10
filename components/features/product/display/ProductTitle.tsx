@@ -1,5 +1,6 @@
-import { Product } from "@/domain/product/Product";
 import { Heading, type SizableTextProps } from "tamagui";
+
+import { Product } from "@/domain/product/Product";
 
 interface ProductTitleProps extends SizableTextProps {
   product: Product;
