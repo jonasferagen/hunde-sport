@@ -3,12 +3,12 @@ import { ChevronRight } from "@tamagui/lucide-icons";
 import React from "react";
 import { ScrollView } from "tamagui";
 
+import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import {
   ThemedText,
   ThemedXStack,
   type ThemedXStackProps,
-} from "@/components/ui";
-import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
+} from "@/components/ui/themed-components";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import type { ProductCategory } from "@/types";

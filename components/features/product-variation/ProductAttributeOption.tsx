@@ -2,7 +2,11 @@
 import React from "react";
 
 import { ProductPriceRange } from "@/components/features/product/display/ProductPrice";
-import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui";
+import {
+  ThemedButton,
+  ThemedText,
+  ThemedXStack,
+} from "@/components/ui/themed-components";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
 import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductVariation, Term } from "@/domain/product";

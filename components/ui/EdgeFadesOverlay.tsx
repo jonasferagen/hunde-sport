@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { getVariableValue, useTheme, XStack, YStack } from "tamagui";
 
-import { ThemedLinearGradient } from "@/components/ui";
+import { ThemedLinearGradient } from "@/components/ui/themed-components";
 
 type Props = {
   orientation: "horizontal" | "vertical";

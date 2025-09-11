@@ -1,8 +1,12 @@
 import { Minus, Plus, X } from "@tamagui/lucide-icons";
 import { useShallow } from "zustand/react/shallow";
 
-import { ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui";
 import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
+import {
+  ThemedText,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui/themed-components";
 import { ThemedButton } from "@/components/ui/themed-components/ThemedButton";
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from "@/config/app";
 // ⬅️ add this

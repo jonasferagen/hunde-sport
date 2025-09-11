@@ -2,7 +2,10 @@
 import React from "react";
 import type { ThemeName } from "tamagui";
 
-import { ThemedXStack, type ThemedXStackProps } from "@/components/ui";
+import {
+  ThemedXStack,
+  type ThemedXStackProps,
+} from "@/components/ui/themed-components";
 
 type Corner = "tl" | "tr" | "bl" | "br";
 

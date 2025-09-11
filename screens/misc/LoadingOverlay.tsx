@@ -9,7 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import type { StackProps } from "tamagui";
 
-import { ThemedYStack } from "@/components/ui";
+import { ThemedYStack } from "@/components/ui/themed-components";
 import { ThemedSpinner } from "@/components/ui/themed-components/ThemedSpinner";
 import { useNavigationProgress } from "@/stores/ui/navigationProgressStore"; // { active, start, stop }
 

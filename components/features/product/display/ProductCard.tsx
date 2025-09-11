@@ -2,7 +2,7 @@ import React from "react";
 import type { StackProps } from "tamagui";
 
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
-import { ThemedImage } from "@/components/ui";
+import { ThemedImage } from "@/components/ui/themed-components";
 import { ThemedLinearGradient } from "@/components/ui/themed-components/ThemedLinearGradient";
 import {
   ThemedXStack,

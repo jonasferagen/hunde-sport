@@ -1,7 +1,11 @@
 // components/ui/InlineSpinnerSwap.tsx
 import React from "react";
 
-import { ThemedSpinner, ThemedText, ThemedXStack } from "@/components/ui";
+import {
+  ThemedSpinner,
+  ThemedText,
+  ThemedXStack,
+} from "@/components/ui/themed-components";
 
 type Props = {
   loading: boolean;

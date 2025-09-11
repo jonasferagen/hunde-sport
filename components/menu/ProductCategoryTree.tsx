@@ -15,13 +15,13 @@ import Animated, {
 import { getTokenValue } from "tamagui";
 import { create } from "zustand";
 
+import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
 import {
   ThemedButton,
   ThemedText,
   ThemedXStack,
   ThemedYStack,
-} from "@/components/ui";
-import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
+} from "@/components/ui/themed-components";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import {

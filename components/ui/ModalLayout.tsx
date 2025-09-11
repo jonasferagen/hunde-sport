@@ -2,7 +2,11 @@ import { X } from "@tamagui/lucide-icons";
 import * as React from "react";
 import { H4, ScrollView, type ScrollViewProps } from "tamagui";
 
-import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui";
+import {
+  ThemedButton,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui/themed-components";
 
 type ModalLayoutProps = {
   /** Header title area (text or custom node) */

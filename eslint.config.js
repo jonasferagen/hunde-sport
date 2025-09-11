@@ -40,7 +40,10 @@ module.exports = defineConfig([
       "import/no-unresolved": "error",
       "import/no-duplicates": "warn",
       "import/no-cycle": ["warn", { maxDepth: 1 }],
-
+      "import/no-unused-modules": [
+        "warn",
+        { unusedExports: true, missingExports: true },
+      ],
       // sorting (source of truth)
       "simple-import-sort/imports": "warn",
       "simple-import-sort/exports": "warn",

@@ -1,7 +1,7 @@
 import React from "react";
 import { type StackProps, XStack, YStack } from "tamagui";
 
-import { ThemedYStack } from "@/components/ui";
+import { ThemedYStack } from "@/components/ui/themed-components";
 import { TileSquare } from "@/components/ui/tile/TileSquare";
 import { NUM_CATEGORY_TILE_COLUMNS } from "@/config/app";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";

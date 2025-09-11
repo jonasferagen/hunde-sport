@@ -1,6 +1,6 @@
 import type { SizableTextProps } from "tamagui";
 
-import { ThemedText } from "@/components/ui";
+import { ThemedText } from "@/components/ui/themed-components";
 import type { PurchasableProduct } from "@/types";
 
 interface ProductDescriptionProps extends SizableTextProps {

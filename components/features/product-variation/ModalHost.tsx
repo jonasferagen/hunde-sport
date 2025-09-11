@@ -3,7 +3,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Sheet } from "tamagui";
 import { useShallow } from "zustand/react/shallow";
 
-import { ThemedLinearGradient, ThemedYStack } from "@/components/ui";
+import {
+  ThemedLinearGradient,
+  ThemedYStack,
+} from "@/components/ui/themed-components";
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from "@/config/app";
 import { AppToastProvider } from "@/contexts";
 import { useModalSettled } from "@/hooks/ui/useModalSettled";

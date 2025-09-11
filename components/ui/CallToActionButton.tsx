@@ -4,8 +4,12 @@ import React from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Theme, type ThemeName } from "tamagui";
 
-import { ThemedSpinner, ThemedText, ThemedXStack } from "@/components/ui";
-import { ThemedButton } from "@/components/ui/themed-components";
+import {
+  ThemedButton,
+  ThemedSpinner,
+  ThemedText,
+  ThemedXStack,
+} from "@/components/ui/themed-components";
 
 type CallToActionButtonProps = React.ComponentProps<typeof ThemedButton> & {
   label?: string;

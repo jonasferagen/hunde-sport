@@ -15,10 +15,9 @@
     "android": "expo run:android",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "prune": "ts-prune -g",
+    "knip": "knip",
     "test": "jest",
-    "verify": "npm run typecheck && npm run lint && npm run prune && npm test",
-    "ios": "expo run:ios"
+    "verify": "npm run typecheck && npm run lint && npm run knip && npm test"
   },
   "engines": {
     "node": "22.18.0",
@@ -65,7 +64,6 @@
     "polished": "^4.3.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-freeze": "^1.0.4",
     "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-in-app-updates": "^0.2.2",

@@ -9,7 +9,7 @@ import {
   useFeaturedProducts,
   useProductsByIds,
   useRecentProducts,
-} from "@/hooks/data/Product";
+} from "@/hooks/data/product/queries";
 import type { QueryResult } from "@/lib/query/query";
 import type { PurchasableProduct } from "@/types";
 

@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import type { StackProps } from "tamagui";
 
-import { ThemedText, ThemedXStack } from "@/components/ui";
+import { ThemedText, ThemedXStack } from "@/components/ui/themed-components";
 
 export const Chip = ({ children, ...props }: StackProps): JSX.Element => {
   const chipContent = (

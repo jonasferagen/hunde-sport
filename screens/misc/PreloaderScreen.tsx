@@ -6,10 +6,10 @@ import * as SplashScreen from "expo-splash-screen";
 import React from "react";
 import { Image, Paragraph } from "tamagui";
 
-import { ThemedText, ThemedYStack } from "@/components/ui";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
-import { useCart } from "@/hooks/data/Cart";
-import { useProductCategories } from "@/hooks/data/ProductCategory";
+import { ThemedText, ThemedYStack } from "@/components/ui/themed-components";
+import { useCart } from "@/hooks/data/cart/queries";
+import { useProductCategories } from "@/hooks/data/product-category/queries";
 import { useAutoPaginateQueryResult } from "@/lib/query/query";
 import { queryClient } from "@/lib/queryClient";
 import { useProductCategoryStore } from "@/stores/productCategoryStore";

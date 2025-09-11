@@ -11,7 +11,7 @@ import { ProductCategory } from "@/domain/ProductCategory";
 import { SimpleProduct, VariableProduct } from "@/types";
 export type NavPolicy = "switch" | "push"; // | 'replace';
 
-export interface Route<TArgs extends any[] = any[]> {
+interface Route<TArgs extends any[] = any[]> {
   name: string;
   label: string;
   icon: React.FC<any>;

@@ -4,9 +4,9 @@ import * as React from "react";
 import { Linking } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
-import { ThemedText, ThemedXStack } from "@/components/ui";
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
+import { ThemedText, ThemedXStack } from "@/components/ui/themed-components";
 import { THEME_CTA_CHECKOUT } from "@/config/app";
 import { useCartIsLoading, useCartStore } from "@/stores/useCartStore";
 

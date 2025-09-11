@@ -2,8 +2,8 @@ import React from "react";
 
 import { ProductImage } from "@/components/features/product/display/ProductImage";
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
-import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
+import { ThemedYStack } from "@/components/ui/themed-components";
 import { useVariableProductContext, VariableProductProvider } from "@/contexts";
 import type { AttrKey } from "@/domain/product-attributes/Attribute";
 import { AttributeSelection } from "@/domain/product-attributes/AttributeSelection";

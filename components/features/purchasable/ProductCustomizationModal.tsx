@@ -2,8 +2,8 @@ import * as React from "react";
 import { Paragraph } from "tamagui";
 
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
-import { ThemedYStack } from "@/components/ui";
 import { ModalLayout } from "@/components/ui/ModalLayout";
+import { ThemedYStack } from "@/components/ui/themed-components";
 import { CustomField } from "@/domain/CustomField";
 import { Purchasable } from "@/types";
 

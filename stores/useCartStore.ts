@@ -7,7 +7,7 @@ import {
   addItem as apiAddItem,
   removeItem as apiRemoveItem,
   updateItem as apiUpdateItem,
-} from "@/hooks/data/Cart/api";
+} from "@/hooks/data/cart/api";
 import { log } from "@/lib/logger";
 import { createSmartExpoStorage } from "@/lib/storage";
 

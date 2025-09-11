@@ -2,7 +2,7 @@
 import React from "react";
 import { H4, type YStackProps } from "tamagui";
 
-import { ThemedYStack } from "@/components/ui";
+import { ThemedYStack } from "@/components/ui/themed-components";
 
 type PageSectionProps = YStackProps & {
   title?: string;

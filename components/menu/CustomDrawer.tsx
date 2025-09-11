@@ -40,8 +40,8 @@ export const CustomDrawer = ({
 const CustomDrawerContent = () => {
   const hasOpened = useDrawerStore((s) => s.hasOpened);
   const closeDrawer = useDrawerStore((s) => s.closeDrawer);
-  const version = Application.nativeApplicationVersion ?? "?.?"; // versionName / CFBundleShortVersionString
-  const build = Application.nativeBuildVersion ?? "N/A"; // versionCode / CFBundleVersion
+  const version = Application.nativeApplicationVersion ?? "?.?";
+  const build = Application.nativeBuildVersion ?? "N/A";
   const c1 = resolveThemeToken(THEME_SHEET_BG1, "background");
   const c2 = resolveThemeToken(THEME_SHEET_BG2, "background");
 

@@ -2,7 +2,7 @@
 import { H3 } from "tamagui";
 
 import { ProductAttributeOption } from "@/components/features/product-variation/ProductAttributeOption";
-import { ThemedXStack, ThemedYStack } from "@/components/ui";
+import { ThemedXStack, ThemedYStack } from "@/components/ui/themed-components";
 import { useVariableProductContext } from "@/contexts";
 import type { AttributeSelection, Term } from "@/domain/product/";
 type Props = {

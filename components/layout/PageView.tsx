@@ -1,11 +1,13 @@
 // PageView.tsx
-// Memoized backdrop so PageView re-renders don't recompute gradient math
 import { useIsFocused } from "@react-navigation/native";
 import React from "react";
 import type { YStackProps } from "tamagui";
 
 import { BottomInsetSpacer } from "@/components/menu/CustomBottomBar";
-import { ThemedLinearGradient, ThemedYStack } from "@/components/ui";
+import {
+  ThemedLinearGradient,
+  ThemedYStack,
+} from "@/components/ui/themed-components";
 
 const PageBackdrop = React.memo(function PageBackdrop({
   token = "background",

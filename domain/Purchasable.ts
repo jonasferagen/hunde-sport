@@ -6,7 +6,7 @@ import type {
   Variation,
 } from "@/domain/product";
 import { Product } from "@/domain/product/Product";
-import type { AddItemOptions } from "@/hooks/data/Cart/api";
+import type { AddItemOptions } from "@/hooks/data/cart/api";
 import type { SimpleProduct, VariableProduct } from "@/types";
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 

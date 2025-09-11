@@ -9,9 +9,9 @@ import Animated, {
 import { View } from "tamagui";
 
 import { ProductCard } from "@/components/features/product/display/ProductCard";
-import { ThemedXStack } from "@/components/ui";
 import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
 import { Loader } from "@/components/ui/Loader";
+import { ThemedXStack } from "@/components/ui/themed-components";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import type { PurchasableProduct } from "@/types";
 

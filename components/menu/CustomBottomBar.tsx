@@ -9,12 +9,12 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styled, Tabs } from "tamagui";
 
+import { IconBadge } from "@/components/ui/Badge";
 import {
   ThemedLinearGradient,
   ThemedText,
   ThemedYStack,
-} from "@/components/ui";
-import { IconBadge } from "@/components/ui/Badge";
+} from "@/components/ui/themed-components";
 import {
   BOTTOM_BAR_HEIGHT,
   THEME_BOTTOM_BAR,

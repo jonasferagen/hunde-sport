@@ -6,7 +6,7 @@ import { View } from "tamagui";
 
 import { CustomDrawer } from "@/components/menu/CustomDrawer";
 import { CustomHeader } from "@/components/menu/CustomHeader";
-import { ThemedYStack } from "@/components/ui";
+import { ThemedYStack } from "@/components/ui/themed-components";
 import { LoadingOverlay } from "@/screens/misc/LoadingOverlay";
 
 const AppLayout = () => {

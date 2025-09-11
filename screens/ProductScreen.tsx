@@ -1,5 +1,6 @@
 import { Redirect, useLocalSearchParams } from "expo-router";
 
+import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
 import {
   ProductAvailabilityStatus,
   ProductDescription,
@@ -9,18 +10,17 @@ import {
   ProductTitle,
 } from "@/components/features/product/display/";
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
-import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
 import {
   PageBody,
   PageFooter,
   PageSection,
   PageView,
 } from "@/components/layout";
-import { ThemedXStack } from "@/components/ui";
 import { Loader } from "@/components/ui/Loader";
+import { ThemedXStack } from "@/components/ui/themed-components";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { ProductCategoryProvider } from "@/contexts/ProductCategoryContext";
-import { useProduct } from "@/hooks/data/Product";
+import { useProduct } from "@/hooks/data/product/queries";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
 import { Purchasable, type PurchasableProduct } from "@/types";

@@ -6,7 +6,7 @@ import { ProductCategoryHeader } from "@/components/features/product-category/Pr
 import { ProductCategoryProducts } from "@/components/features/product-category/ProductCategoryProducts";
 import { PageBody, PageSection, PageView } from "@/components/layout";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ThemedXStack } from "@/components/ui";
+import { ThemedXStack } from "@/components/ui/themed-components";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
 import {
