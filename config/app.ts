@@ -10,6 +10,7 @@ export const NUM_CATEGORY_TILE_COLUMNS = 3;
 export const PRODUCT_TILE_WIDTH: DimensionValue = 160;
 export const PRODUCT_TILE_HEIGHT: DimensionValue = 120;
 
+/* Needed for popdown/popup upon drawer open/close */
 export const BOTTOM_BAR_HEIGHT: DimensionValue = 80;
 
 export const THEME_SHEET = "light";
