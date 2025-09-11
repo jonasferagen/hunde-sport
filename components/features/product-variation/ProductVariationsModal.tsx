@@ -86,7 +86,10 @@ export const ProductVariationsModalContent = ({
       }
     >
       <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
-        <ProductImage product={variableProduct} img_height={IMAGE_H} />
+        <ProductImage 
+        product={variableProduct} 
+        img_height={IMAGE_H} 
+        />
       </ThemedYStack>
       <ProductVariationSelect
         attributeSelection={attributeSelection}

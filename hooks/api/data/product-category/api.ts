@@ -1,4 +1,4 @@
-import { endpoints, type Pagination } from "@/config/api";
+import { endpoints, type Pagination } from "@/hooks/api/api";
 import { apiClient } from "@/lib/apiClient";
 import { responseTransformer } from "@/lib/query/responseTransformer";
 import { ProductCategory } from "@/types";

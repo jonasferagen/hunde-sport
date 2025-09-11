@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-import { createCartRestoreToken, getCheckoutUrl } from "@/hooks/checkout/api";
+import { createCartRestoreToken, getCheckoutUrl } from "@/hooks/api/checkout/api";
 import {
   addItem as apiAddItem,
   removeItem as apiRemoveItem,
   updateItem as apiUpdateItem,
-} from "@/hooks/data/cart/api";
+} from "@/hooks/api/data/cart/api";
 import { log } from "@/lib/logger";
 import { createSmartExpoStorage } from "@/lib/storage";
 

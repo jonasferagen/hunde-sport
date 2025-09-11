@@ -1,6 +1,6 @@
 // services/products.ts
-import { endpoints, type Pagination } from "@/config/api";
 import { Product } from "@/domain/product/Product";
+import { endpoints, type Pagination } from "@/hooks/api/api";
 import { apiClient } from "@/lib/apiClient";
 import { responseTransformer } from "@/lib/query/responseTransformer";
 import type { ProductCategory } from "@/types";

@@ -6,7 +6,7 @@ This checklist standardizes our Android release process for the Play Store (Expo
 
 ## 0) Prerequisites
 
-- Logged into Expo CLI and EAS (`expo whoami`, `eas whoami`).
+- Logged into Expo CLI and EAS (`npx expo whoami`, `npx eas whoami`).
 - Play Console access and signing is set up (EAS-managed signing recommended).
 - `.env`/secrets configured for production.
 

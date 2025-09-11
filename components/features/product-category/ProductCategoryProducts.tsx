@@ -1,7 +1,7 @@
 import { ProductList } from "@/components/features/product/list/ProductList";
 import { Loader } from "@/components/ui/Loader";
 import { ThemedYStack } from "@/components/ui/themed-components";
-import { useProductsByProductCategory } from "@/hooks/data/product/queries";
+import { useProductsByProductCategory } from "@/hooks/api/data/product/queries";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
 import { ProductCategory } from "@/types";
 

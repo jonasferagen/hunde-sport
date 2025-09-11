@@ -1,7 +1,7 @@
 // src/lib/apiClient.ts
 import { type ApiResponse, create } from "apisauce";
 
-import { BASE_URL } from "@/config/api";
+import { BASE_URL } from "@/hooks/api/api";
 import { log } from "@/lib/logger";
 
 import { ApiError, isRetriable } from "./httpError";

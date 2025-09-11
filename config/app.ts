@@ -1,5 +1,10 @@
 import { type DimensionValue } from "react-native";
 
+export const DOMAIN = "hunde-sport.no" as const;
+export const BASE_URL = `https://${DOMAIN}` as const;
+export const STORE_URL = `${BASE_URL}/wp-json/wc/store/v1` as const;
+export const CHECKOUT_URL = `${BASE_URL}/kassen` as const;
+
 export const NUM_CATEGORY_TILE_COLUMNS = 3;
 
 export const PRODUCT_TILE_WIDTH: DimensionValue = 160;

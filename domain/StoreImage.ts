@@ -1,4 +1,5 @@
 // domain/store-image/StoreImage.ts
+import { Image } from "react-native";
 
 export type StoreImageData = {
   id: number;
@@ -29,6 +30,9 @@ export class StoreImage implements NormalizedStoreImage {
   readonly name: string;
   readonly alt: string;
 
+  private _intrinsicWidth?: number;
+  private _intrinsicHeight?: number;
+
   private constructor(data: NormalizedStoreImage) {
     this.id = data.id;
     this.src = data.src;
@@ -39,9 +43,47 @@ export class StoreImage implements NormalizedStoreImage {
     this.alt = data.alt;
   }
 
-  bestSrc(): string {
-    return this.srcset && this.srcset.length > 0 ? this.srcset : this.src;
+
+  /**
+   * Lazily load the intrinsic image size and cache it.
+   */
+  async getIntrinsicSize(): Promise<{ width: number; height: number }> {
+    if (this._intrinsicWidth && this._intrinsicHeight) {
+      return { width: this._intrinsicWidth, height: this._intrinsicHeight };
+    }
+    return new Promise((resolve, reject) => {
+      Image.getSize(
+        this.src,
+        (w, h) => {
+          this._intrinsicWidth = w;
+          this._intrinsicHeight = h;
+          resolve({ width: w, height: h });
+        },
+        reject
+      );
+    });
   }
+
+  /**
+   * Aspect ratio (width / height) if known, otherwise undefined.
+   */
+  get aspectRatio(): number | undefined {
+    if (this._intrinsicWidth && this._intrinsicHeight) {
+      return this._intrinsicWidth / this._intrinsicHeight;
+    }
+    return undefined;
+  }
+
+  /**
+   * Heuristic: is this image at risk of being low quality
+   * for the given display size and devicePixelRatio?
+   */
+  qualityAt(displayWidth: number, dpr: number): "ok" | "low" {
+    if (!this._intrinsicWidth) return "ok"; // unknown yet
+    const ratio = this._intrinsicWidth / (displayWidth * dpr);
+    return ratio < 0.75 ? "low" : "ok";
+  }
+
   bestThumb(): string {
     return this.thumbnail && this.thumbnail.length > 0
       ? this.thumbnail

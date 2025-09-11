@@ -8,8 +8,8 @@ import { Image, Paragraph } from "tamagui";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { ThemedText, ThemedYStack } from "@/components/ui/themed-components";
-import { useCart } from "@/hooks/data/cart/queries";
-import { useProductCategories } from "@/hooks/data/product-category/queries";
+import { useCart } from "@/hooks/api/data/cart/queries";
+import { useProductCategories } from "@/hooks/api/data/product-category/queries";
 import { useAutoPaginateQueryResult } from "@/lib/query/query";
 import { queryClient } from "@/lib/queryClient";
 import { useProductCategoryStore } from "@/stores/productCategoryStore";
@@ -62,7 +62,8 @@ export const PreloaderScreen = () => {
               ? "Henter skrifttyper…"
               : !data.allDone
               ? "Klargjør data…"
-              : ""}
+              : ""
+              }
           </ThemedText>
 
           {/* Progress lines */}

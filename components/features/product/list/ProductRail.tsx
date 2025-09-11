@@ -8,7 +8,7 @@ import {
   useDiscountedProducts,
   useFeaturedProducts,
   useRecentProducts,
-} from "@/hooks/data/product/queries";
+} from "@/hooks/api/data/product/queries";
 import type { QueryResult } from "@/lib/query/query";
 import type { PurchasableProduct } from "@/types";
 

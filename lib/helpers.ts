@@ -23,78 +23,6 @@ const parseDim = (
   return null;
 };
 
-export const getScaledImageUrl = (
-  url: string,
-  width?: DimensionValue,
-  height?: DimensionValue,
-  fit: "cover" | "contain" | "fill" | "inside" | "outside" = "cover"
-): string => {
-  const w = width != null ? parseDim(width) : null;
-  const h = height != null ? parseDim(height) : null;
-
-  const numWidth = w?.type === "px" ? w.value : 0;
-  const numHeight = h?.type === "px" ? h.value : 0;
-
-  if (!url) {
-    return placeholderBase64;
-  }
-
-  // If we don't have any numeric pixel dimension, return the original URL (no resize)
-  if (!numWidth && !numHeight) {
-    try {
-      // Still validate URL format
-      const urlObject = new URL(url);
-      return urlObject.toString();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      console.error("Invalid URL:", url);
-      return placeholderBase64;
-    }
-  }
-
-  try {
-    const urlObject = new URL(url);
-    const params = new URLSearchParams();
-
-    if (numWidth && numHeight) {
-      params.set("resize", `${numWidth},${numHeight}`);
-    } else if (numWidth) {
-      params.set("w", String(numWidth));
-    } else if (numHeight) {
-      params.set("h", String(numHeight));
-    }
-
-    params.set("fit", fit);
-    params.set("ssl", "1");
-
-    urlObject.search = params.toString();
-    return urlObject.toString();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    console.error("Invalid URL:", url);
-    return placeholderBase64;
-  }
-};
-
-export const getAspectRatio = (
-  width: DimensionValue | undefined,
-  height: DimensionValue | undefined
-): number => {
-  const w = parseDim(width);
-  const h = parseDim(height);
-
-  if (!w || !h) return 1;
-  if (h.value === 0) return 1;
-
-  // Only compute when comparable units
-  if (w.type === h.type) {
-    return w.value / h.value;
-  }
-
-  // Mixed units (px vs %) — ambiguous; fallback
-  return 1;
-};
-
 export function spacePx(token: string | number) {
   const key =
     typeof token === "string" && token.startsWith("$")
@@ -124,3 +52,46 @@ export function resolveThemeToken(
   const v = themeObj[token];
   return String(getVariableValue(v));
 }
+
+
+export const getScaledImageUrl = (
+  url: string,
+  width?: DimensionValue,
+  height?: DimensionValue
+): string => {
+  if (!url) return placeholderBase64;
+
+  const w = width != null ? parseDim(width) : null;
+  const h = height != null ? parseDim(height) : null;
+  const numW = w?.type === "px" ? Math.round(w.value) : 0;
+  const numH = h?.type === "px" ? Math.round(h.value) : 0;
+
+  try {
+    const u = new URL(url);
+
+    // Always rewrite the query to avoid inheriting Jetpack’s existing fit=X,Y
+    const params = new URLSearchParams();
+
+    if (numW && numH) {
+      params.set("resize", `${numW},${numH}`);
+    } else if (numW) {
+      params.set("w", String(numW));
+    } else if (numH) {
+      params.set("h", String(numH));
+    } else {
+      // no numeric dims provided → just return a validated URL
+      return u.toString();
+    }
+
+    // Jetpack likes ssl=1; keep it, but DO NOT set `fit=cover/contain`
+    params.set("ssl", "1");
+
+    u.search = params.toString();
+    return u.toString();
+  } catch {
+    console.error("Invalid URL:", url);
+    return placeholderBase64;
+  }
+};
+
+

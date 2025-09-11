@@ -15,7 +15,7 @@ import { Loader } from "@/components/ui/Loader";
 import { SearchBar } from "@/components/ui/search-bar/SearchBar";
 import { ThemedXStack, ThemedYStack } from "@/components/ui/themed-components";
 import { ThemedSpinner } from "@/components/ui/themed-components/ThemedSpinner";
-import { useProductsBySearch } from "@/hooks/data/product/queries";
+import { useProductsBySearch } from "@/hooks/api/data/product/queries";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue"; // simple 200–300ms debounce hook
 

@@ -110,7 +110,6 @@ export abstract class Product implements NormalizedProduct {
     }
   }
 
-
   get isVariable(): boolean {
     return this.type === "variable";
   }
@@ -129,7 +128,6 @@ export abstract class Product implements NormalizedProduct {
   get priceBook() {
     return PriceBook.from(this.prices);
   }
-
   get featuredImage(): StoreImage {
     return this.images[0];
   }

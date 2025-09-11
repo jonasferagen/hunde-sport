@@ -20,7 +20,7 @@ import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack } from "@/components/ui/themed-components";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { ProductCategoryProvider } from "@/contexts/ProductCategoryContext";
-import { useProduct } from "@/hooks/data/product/queries";
+import { useProduct } from "@/hooks/api/data/product/queries";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
 import { Purchasable, type PurchasableProduct } from "@/types";

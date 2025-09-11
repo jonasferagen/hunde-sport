@@ -1,13 +1,11 @@
 // config/api.ts
+import { BASE_URL, CHECKOUT_URL, STORE_URL } from '@/config/app';
+
 export type Pagination = {
   page?: number;
   per_page?: number;
   order?: "asc" | "desc";
 };
-
-export const DOMAIN = "hunde-sport.no" as const;
-export const BASE_URL = `https://${DOMAIN}` as const;
-export const API = `${BASE_URL}/wp-json/wc/store/v1` as const;
 
 type QuerySegment = Record<string, unknown> | undefined;
 export const queryString = (...segments: QuerySegment[]) => {
@@ -31,28 +29,28 @@ export const queryString = (...segments: QuerySegment[]) => {
 
 export const endpoints = {
   products: {
-    get: (id: number) => `${API}/products/${id}`,
+    get: (id: number) => `${STORE_URL}/products/${id}`,
     list: (params?: Record<string, unknown>) =>
-      `${API}/products${queryString(params)}`,
+      `${STORE_URL}/products${queryString(params)}`,
   },
 
   cart: {
-    base: `${API}/cart`,
-    get: () => `${API}/cart`,
-    addItem: () => `${API}/cart/add-item`,
-    updateItem: () => `${API}/cart/update-item`,
-    removeItem: () => `${API}/cart/remove-item`,
+    base: `${STORE_URL}/cart`,
+    get: () => `${STORE_URL}/cart`,
+    addItem: () => `${STORE_URL}/cart/add-item`,
+    updateItem: () => `${STORE_URL}/cart/update-item`,
+    removeItem: () => `${STORE_URL}/cart/remove-item`,
   },
 
   checkout: {
     restoreToken: () => `${BASE_URL}/wp-json/custom/v1/cart-restore-token`,
     checkoutUrl: (restoreToken: string) =>
-      `${BASE_URL}/kassen?restore_token=${encodeURIComponent(restoreToken)}`,
+      `${CHECKOUT_URL}?restore_token=${encodeURIComponent(restoreToken)}`,
   },
 
   categories: {
-    get: (id: number) => `${API}/products/categories/${id}`,
+    get: (id: number) => `${STORE_URL}/products/categories/${id}`,
     list: (params?: Record<string, unknown>) =>
-      `${API}/products/categories${queryString(params)}`,
+      `${STORE_URL}/products/categories${queryString(params)}`,
   },
 };

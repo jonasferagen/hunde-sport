@@ -1,6 +1,6 @@
 import type { ApiResponse } from "apisauce";
 
-import { endpoints } from "@/config/api";
+import { endpoints } from "@/hooks/api/api";
 import { apiClient } from "@/lib/apiClient";
 
 interface RestoreTokenResponse {

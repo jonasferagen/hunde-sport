@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useMemo } from "react";
 
 import type { Variation } from "@/domain/product";
-import { useProductVariations } from "@/hooks/data/product/queries";
+import { useProductVariations } from "@/hooks/api/data/product/queries";
 import { useAutoPaginateQueryResult } from "@/lib/query/query";
 import { ProductVariation, VariableProduct } from "@/types";
 

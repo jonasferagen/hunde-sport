@@ -6,7 +6,7 @@ import type {
   ProductPriceRange,
   ProductPriceRange as ProductPriceRangeType,
 } from "@/domain/pricing/types";
-import { useProductVariation } from "@/hooks/data/product/queries"; // adjust path
+import { useProductVariation } from "@/hooks/api/data/product/queries"; // adjust path
 import { VariableProduct } from "@/types";
 
 export type UseProductPriceRangeResult = {
