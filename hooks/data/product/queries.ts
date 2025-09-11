@@ -41,12 +41,12 @@ export const useProduct = (
   return result;
 };
 
-export const useProductsByIds = (
+export const useDebugProducts = (
   ids: number[]
 ): QueryResult<PurchasableProduct> => {
   const result = useInfiniteQuery({
     queryKey: ["products-by-ids", ids],
-    queryFn: ({ pageParam }) => fetchProductsByIds(ids, { page: pageParam }),
+    queryFn: ({ pageParam }) => fetchProductsByIds(ids, { pagination: { page: pageParam }}),
     enabled: !!ids && ids.length > 0,
     ...queryOptions,
   });
@@ -60,21 +60,22 @@ export const useProductsBySearch = (
   const result = useInfiniteQuery({
     queryKey: ["products-by-search", query],
     queryFn: ({ pageParam }) =>
-      fetchProductsBySearch(query, { page: pageParam }),
+      fetchProductsBySearch(query, { pagination: { page: pageParam }}),
     ...options,
     ...queryOptions,
+    enabled: !!query,
     placeholderData: undefined, // empty list
   });
   return useQueryResult<PurchasableProduct>(result);
 };
 
 export const useFeaturedProducts = (
-  options = { enabled: true, perPage: 3 }
+  options = {  perPage: 3 }
 ): QueryResult<PurchasableProduct> => {
   const result = useInfiniteQuery({
     queryKey: ["featured-products"],
     queryFn: ({ pageParam }) =>
-      fetchFeaturedProducts({ page: pageParam, per_page: options.perPage }),
+      fetchFeaturedProducts({ pagination: { page: pageParam, per_page : options.perPage }}),
     ...queryOptions,
   });
   return useQueryResult<PurchasableProduct>(result);
@@ -82,39 +83,38 @@ export const useFeaturedProducts = (
 
 export const useProductsByProductCategory = (
   productCategory: ProductCategory,
-  options = { enabled: true, perPage: 3 }
+  options = { perPage: 3 }
 ): QueryResult<PurchasableProduct> => {
   const result = useInfiniteQuery({
     queryKey: ["products-by-product-category", productCategory.id],
     queryFn: ({ pageParam }) =>
       fetchProductsByProductCategory(productCategory, {
-        page: pageParam,
-        per_page: options.perPage,
-      }),
+         pagination: { page: pageParam, per_page : options.perPage }
+        }),
     ...queryOptions,
   });
   return useQueryResult<PurchasableProduct>(result);
 };
 
 export const useDiscountedProducts = (
-  options = { enabled: true, perPage: 3 }
+  options = { perPage: 3 }
 ): QueryResult<PurchasableProduct> => {
   const result = useInfiniteQuery({
     queryKey: ["on-sale-products"],
     queryFn: ({ pageParam }) =>
-      fetchDiscountedProducts({ page: pageParam, per_page: options.perPage }),
+      fetchDiscountedProducts({ pagination: { page: pageParam, per_page : options.perPage }}),
     ...queryOptions,
   });
   return useQueryResult<PurchasableProduct>(result);
 };
 
 export const useRecentProducts = (
-  options = { enabled: true, perPage: 3 }
+  options = {  perPage: 3 }
 ): QueryResult<PurchasableProduct> => {
   const result = useInfiniteQuery({
     queryKey: ["recent-products"],
     queryFn: ({ pageParam }) =>
-      fetchRecentProducts({ page: pageParam, per_page: options.perPage }),
+      fetchRecentProducts({ pagination: { page: pageParam, per_page : options.perPage }}),
     ...queryOptions,
   });
   return useQueryResult<PurchasableProduct>(result);
@@ -122,15 +122,13 @@ export const useRecentProducts = (
 
 export const useProductVariations = (
   product: Product,
-  options = { enabled: true, perPage: 10, order: "asc" }
+  options = {  perPage: 10, order: "asc" as "asc" | "desc"}
 ): QueryResult<ProductVariation> => {
   const result = useInfiniteQuery({
     queryKey: ["product-variations", product.id],
     queryFn: ({ pageParam }) =>
-      fetchProductVariations(product.id, {
-        page: pageParam,
-        per_page: options.perPage,
-        order: options.order,
+      fetchProductVariations(product.id, { 
+        pagination: { page: pageParam, per_page : options.perPage, order: options.order}, 
       }),
     enabled: product.isVariable,
     ...queryOptions,
@@ -147,9 +145,9 @@ export function useProductVariation(
     enabled: product.isVariable,
     queryFn: async () => {
       const page = await fetchProductVariations(product.id, {
-        page: 1,
-        per_page: 1,
-        order: options.order,
+        pagination: {
+          order: options.order
+        }
       });
       return page.data[0] ?? null;
     },

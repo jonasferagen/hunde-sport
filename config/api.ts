@@ -1,87 +1,58 @@
-// Base URL for API requests
-
-export type PaginationOptions = {
+// config/api.ts
+export type Pagination = {
   page?: number;
   per_page?: number;
-  order?: string;
+  order?: "asc" | "desc";
 };
 
-const paginate = (paginationOptions: PaginationOptions = {}) => {
-  const { page = 1, per_page = 10, order = "asc" } = paginationOptions;
-  return `&page=${page}&per_page=${per_page}&order=${order}`;
+export const DOMAIN = "hunde-sport.no" as const;
+export const BASE_URL = `https://${DOMAIN}` as const;
+export const API = `${BASE_URL}/wp-json/wc/store/v1` as const;
+
+type QuerySegment = Record<string, unknown> | undefined;
+export const queryString = (...segments: QuerySegment[]) => {
+  const p = new URLSearchParams();
+  for (const seg of segments) {
+    if (!seg) continue;
+    for (const [k, v] of Object.entries(seg)) {
+      if (v == null) continue;
+      if (Array.isArray(v)) {
+        if (v.length) p.set(k, v.join(","));
+      } else if (typeof v === "boolean") {
+        p.set(k, v ? "true" : "false");
+      } else {
+        p.set(k, String(v));
+      }
+    }
+  }
+  const s = p.toString();
+  return s ? `?${s}` : "";
 };
 
-const DOMAIN = "hunde-sport.no";
-const BASE_URL = `https://${DOMAIN}`;
-const API_BASE_URL = `${BASE_URL}/wp-json/wc/store/v1`;
-const CART_RESTORE_TOKEN_URL = `${BASE_URL}/wp-json/custom/v1/cart-restore-token`;
-const CHECKOUT_URL = `${BASE_URL}/kassen`;
-
-const PRODUCT_CATEGORIES_URL = `${API_BASE_URL}/products/categories`;
-const PRODUCTS_URL = `${API_BASE_URL}/products`;
-const CART_URL = `${API_BASE_URL}/cart`;
-
-const ALL_STATUSES = "status=any";
-const ALL_STOCK_STATUSES = "stock_status=instock,onbackorder,outofstock";
-
-const PRODUCTS_FILTER = `${ALL_STATUSES}&${ALL_STOCK_STATUSES}`;
-
-const PRODUCTS_LIST = (pagination: PaginationOptions = {}) => {
-  return `${PRODUCTS_URL}?${PRODUCTS_FILTER}${paginate(pagination)}&orderby=title`;
-};
-
-const PRODUCT_VARIATIONS_LIST = (
-  product_id: number,
-  pagination: PaginationOptions = {}
-) => {
-  return `${PRODUCTS_URL}?${PRODUCTS_FILTER}&type=variation&parent=${product_id}${paginate(pagination)}&orderby=price`;
-};
-
-const PRODUCT_CATEGORIES_LIST = (pagination: PaginationOptions = {}) => {
-  return `${PRODUCT_CATEGORIES_URL}?${paginate(pagination)}`;
-};
-
-// API endpoints
-export const ENDPOINTS = {
-  CATEGORIES: {
-    GET: (id: number) => `${PRODUCT_CATEGORIES_URL}/${id}`,
-    LIST: (pagination?: PaginationOptions) =>
-      `${PRODUCT_CATEGORIES_LIST(pagination)}`,
-  },
-  PRODUCTS: {
-    GET: (id: number) => `${PRODUCTS_URL}/${id}`,
-    FEATURED: (pagination?: PaginationOptions) =>
-      `${PRODUCTS_LIST(pagination)}&featured=true`,
-    DISCOUNTED: (pagination?: PaginationOptions) =>
-      `${PRODUCTS_LIST(pagination)}&on_sale=true`,
-    SEARCH: (query: string, pagination?: PaginationOptions) =>
-      `${PRODUCTS_LIST(pagination)}&search=${query}`,
-    BY_IDS: (product_ids: number[], pagination?: PaginationOptions) =>
-      `${PRODUCTS_LIST(pagination)}&include=${product_ids.join(",")}`,
-    RECENT: (pagination?: PaginationOptions) =>
-      `${PRODUCTS_LIST(pagination)}&orderby=date&order=desc`,
-    BY_PRODUCT_CATEGORY: (
-      product_category_id: number,
-      pagination?: PaginationOptions
-    ) => `${PRODUCTS_LIST(pagination)}&category=${product_category_id}`,
+export const endpoints = {
+  products: {
+    get: (id: number) => `${API}/products/${id}`,
+    list: (params?: Record<string, unknown>) =>
+      `${API}/products${queryString(params)}`,
   },
 
-  PRODUCT_VARIATIONS: {
-    LIST: (product_id: number, pagination?: PaginationOptions) =>
-      `${PRODUCT_VARIATIONS_LIST(product_id, pagination)}&orderby=price`,
+  cart: {
+    base: `${API}/cart`,
+    get: () => `${API}/cart`,
+    addItem: () => `${API}/cart/add-item`,
+    updateItem: () => `${API}/cart/update-item`,
+    removeItem: () => `${API}/cart/remove-item`,
   },
 
-  CART: {
-    GET: () => `${CART_URL}`,
-    ADD_ITEM: () => `${CART_URL}/add-item`,
-    UPDATE_ITEM: () => `${CART_URL}/update-item`,
-    REMOVE_ITEM: () => `${CART_URL}/remove-item`,
+  checkout: {
+    restoreToken: () => `${BASE_URL}/wp-json/custom/v1/cart-restore-token`,
+    checkoutUrl: (restoreToken: string) =>
+      `${BASE_URL}/kassen?restore_token=${encodeURIComponent(restoreToken)}`,
   },
-  CHECKOUT: {
-    CART_RESTORE_TOKEN: () => `${CART_RESTORE_TOKEN_URL}`,
-    CHECKOUT: (restoreToken: string) =>
-      `${CHECKOUT_URL}?restore_token=${restoreToken}`,
+
+  categories: {
+    get: (id: number) => `${API}/products/categories/${id}`,
+    list: (params?: Record<string, unknown>) =>
+      `${API}/products/categories${queryString(params)}`,
   },
 };
-
-export { API_BASE_URL };

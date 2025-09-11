@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-import { ENDPOINTS } from "@/config/api";
-import { createCartRestoreToken } from "@/hooks/checkout/api";
+import { createCartRestoreToken, getCheckoutUrl } from "@/hooks/checkout/api";
 import {
   addItem as apiAddItem,
   removeItem as apiRemoveItem,
@@ -83,11 +82,8 @@ export const useCartStore = create<CartPersistState & CartActions>()(
             "CartStore: restore token created",
             restoreToken.substring(0, 10) + "..."
           );
-          const checkoutUrl = new URL(
-            ENDPOINTS.CHECKOUT.CHECKOUT(restoreToken)
-          );
-          log.info("CartStore: checkout URL created");
-          return checkoutUrl;
+
+          return getCheckoutUrl(restoreToken);
         } catch (error) {
           log.error("CartStore: checkout failed.", error);
           throw error;

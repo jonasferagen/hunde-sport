@@ -1,157 +1,138 @@
-import { ENDPOINTS, type PaginationOptions } from "@/config/api";
+// services/products.ts
+import { endpoints, type Pagination } from "@/config/api";
 import { Product } from "@/domain/product/Product";
 import { apiClient } from "@/lib/apiClient";
 import { responseTransformer } from "@/lib/query/responseTransformer";
-import { ProductCategory } from "@/types";
+import type { ProductCategory } from "@/types";
 
-/**
- * Fetch a single product by WooCommerce Store API ID.
- *
- * GET wc/store/v1/products/{id}
- *
- * Uses `mapToProduct` to return a domain model instance.
- *
- * @param id - The product ID.
- * @returns Promise resolving to a domain product (`SimpleProduct` | `VariableProduct` | `ProductVariation`).
- * @throws Error If the request fails or the API reports a problem.
- */
+/** Filters supported for Woo Store API product listing */
+export type ProductFilters = {
+  /** true (default) => API default (instock only). false => include all stock statuses. */
+  onlyInStock?: boolean;
+  search?: string;
+  orderby?: string;          // e.g., "date", "title", "price"
+  include?: number[];        // product IDs
+  category?: number;         // term ID
+  type?: "variation";
+  parent?: number;           // parent product for variations
+  featured?: boolean;
+  on_sale?: boolean;
+};
+
+export type QueryOptions = {
+  pagination?: Pagination;
+  filters?: ProductFilters;
+};
+
+const STOCK_ANY = ["instock", "onbackorder", "outofstock"] as const;
+
+const defaults = {
+  pagination: { page: 1, per_page: 10, order: "asc" as const },
+} as const;
+
+/** Shallow merge for { pagination, filters } */
+const mergeOptions = (a?: QueryOptions, b?: QueryOptions): QueryOptions => ({
+  pagination: { ...a?.pagination, ...b?.pagination },
+  filters: { ...a?.filters, ...b?.filters },
+});
+
+/** Turn QueryOptions into URL param record */
+const buildParams = (opts?: QueryOptions): Record<string, unknown> => {
+  const p = { ...defaults.pagination, ...(opts?.pagination ?? {}) };
+  const f = opts?.filters ?? {};
+
+  // Only set stock_status when caller explicitly wants "any" stock
+  const stock =
+    f.onlyInStock === false ? { stock_status: [...STOCK_ANY] } : undefined;
+
+  return {
+    page: p.page,
+    per_page: p.per_page,
+    order: p.order,
+
+    ...stock,
+    search: f.search,
+    orderby: f.orderby,
+    include: f.include,
+    category: f.category,
+    type: f.type,
+    parent: f.parent,
+    featured: f.featured,
+    on_sale: f.on_sale,
+  };
+};
+
+/** Single product */
 export async function fetchProduct(id: number): Promise<Product> {
-  const response = await apiClient.get<any>(`${ENDPOINTS.PRODUCTS.GET(id)}`);
-  if (response.problem) {
-    throw new Error(response.problem);
-  }
-  // Note: This is a single product fetch, so we don't use the responseTransformer here.
+  const response = await apiClient.get<any>(endpoints.products.get(id));
+  if (response.problem) throw new Error(response.problem);
   return Product.create(response.data);
 }
 
-/**
- * Fetch featured products (paginated).
- *
- * GET wc/store/v1/products?featured=true
- *
- * @param pagination - Optional pagination options. Defaults: { page: 1, per_page: 10 }.
- * @returns Promise resolving to { data, totalPages, total } where `data` contains domain products (`SimpleProduct` | `VariableProduct`).
- * @throws Error If the request fails or the API reports a problem.
- */
-export const fetchFeaturedProducts = async (pagination?: PaginationOptions) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCTS.FEATURED(pagination)
+/** Featured (orderby=title & featured=true) */
+export const fetchFeaturedProducts = async (opts?: QueryOptions) => {
+  const url = endpoints.products.list(
+    buildParams(mergeOptions(opts, { filters: { orderby: "title", featured: true } }))
   );
-
+  const response = await apiClient.get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
-/**
- * Fetch products by IDs (paginated).
- *
- * GET wc/store/v1/products?include=...
- *
- * @param ids - Array of product IDs to fetch.
- * @param pagination - Optional pagination options. Defaults: { page: 1, per_page: 10 }.
- * @returns Promise resolving to { data, totalPages, total } where `data` contains domain products (`SimpleProduct` | `VariableProduct`).
- * @throws Error If the request fails or the API reports a problem.
- */
-export const fetchProductsByIds = async (
-  ids: number[],
-  pagination?: PaginationOptions
-) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCTS.BY_IDS(ids, pagination)
+/** By IDs */
+export const fetchProductsByIds = async (ids: number[], opts?: QueryOptions) => {
+  const url = endpoints.products.list(
+    buildParams(mergeOptions(opts, { filters: { include: ids } }))
   );
+  const response = await apiClient.get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
-/**
- * Fetch products matching a text query (paginated).
- *
- * GET wc/store/v1/products?search=...
- *
- * @param query - The search query string.
- * @param pagination - Optional pagination options. Defaults: { page: 1, per_page: 10 }.
- * @returns Promise resolving to { data, totalPages, total } where `data` contains domain products (`SimpleProduct` | `VariableProduct`).
- * @throws Error If the request fails or the API reports a problem.
- */
-export const fetchProductsBySearch = async (
-  query: string,
-  pagination?: PaginationOptions
-) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCTS.SEARCH(query, pagination)
+/** Search */
+export const fetchProductsBySearch = async (query: string, opts?: QueryOptions) => {
+  const url = endpoints.products.list(
+    buildParams(mergeOptions(opts, { filters: { search: query } }))
   );
+  const response = await apiClient.get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
-/**
- * Fetch products within a given product category (paginated).
- *
- * GET wc/store/v1/products?category={id}
- *
- * @param productCategory - The category object whose products to fetch.
- * @param pagination - Optional pagination options. Defaults: { page: 1, per_page: 10 }.
- * @returns Promise resolving to { data, totalPages, total } where `data` contains domain products (`SimpleProduct` | `VariableProduct`).
- * @throws Error If the request fails or the API reports a problem.
- */
+/** By Product Category */
 export const fetchProductsByProductCategory = async (
   productCategory: ProductCategory,
-  pagination?: PaginationOptions
+  opts?: QueryOptions
 ) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCTS.BY_PRODUCT_CATEGORY(productCategory.id, pagination)
+  const url = endpoints.products.list(
+    buildParams(mergeOptions(opts, { filters: { category: productCategory.id } }))
   );
+  const response = await apiClient.get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
-/**
- * Fetch most recent products (paginated).
- *
- * GET wc/store/v1/products?orderby=date&order=desc
- *
- * @param pagination - Optional pagination options. Defaults: { page: 1, per_page: 10 }.
- * @returns Promise resolving to { data, totalPages, total } where `data` contains domain products (`SimpleProduct` | `VariableProduct`).
- * @throws Error If the request fails or the API reports a problem.
- */
-export const fetchRecentProducts = async (pagination?: PaginationOptions) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCTS.RECENT(pagination)
+/** Recent (orderby=date) */
+export const fetchRecentProducts = async (opts?: QueryOptions) => {
+  const url = endpoints.products.list(
+    buildParams(mergeOptions(opts, { filters: { orderby: "date" } }))
   );
+  const response = await apiClient.get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
-/**
- * Fetch discounted (on sale) products (paginated).
- *
- * GET wc/store/v1/products?on_sale=true
- *
- * @param pagination - Optional pagination options. Defaults: { page: 1, per_page: 10 }.
- * @returns Promise resolving to { data, totalPages, total } where `data` contains domain products (`SimpleProduct` | `VariableProduct`).
- * @throws Error If the request fails or the API reports a problem.
- */
-export const fetchDiscountedProducts = async (
-  pagination?: PaginationOptions
-) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCTS.DISCOUNTED(pagination)
+/** Discounted (on_sale=true) */
+export const fetchDiscountedProducts = async (opts?: QueryOptions) => {
+  const url = endpoints.products.list(
+    buildParams(mergeOptions(opts, { filters: { on_sale: true } }))
   );
+  const response = await apiClient.get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
-/**
- * Fetch product variations for a variable product (paginated).
- *
- * GET wc/store/v1/products?type=variation&parent={id}
- *
- * @param id - The ID of the parent (variable) product.
- * @param pagination - Optional pagination options. Defaults: { page: 1, per_page: 10 }.
- * @returns Promise resolving to { data, totalPages, total } where `data` contains `ProductVariation` items.
- * @throws Error If the request fails or the API reports a problem.
- */
-export const fetchProductVariations = async (
-  id: number,
-  pagination?: PaginationOptions
-) => {
-  const response = await apiClient.get<any[]>(
-    ENDPOINTS.PRODUCT_VARIATIONS.LIST(id, pagination)
+/** Variations (type=variation, parent=id, orderby=price) */
+export const fetchProductVariations = async (id: number, opts?: QueryOptions) => {
+  const url = endpoints.products.list(
+    buildParams(
+      mergeOptions(opts, { filters: { type: "variation", parent: id, orderby: "price" } })
+    )
   );
-
+  const response = await apiClient.get<any[]>(url);
   return responseTransformer(response, Product.create);
 };

@@ -1,6 +1,6 @@
 import type { ApiResponse } from "apisauce";
 
-import { ENDPOINTS } from "@/config/api";
+import { endpoints } from "@/config/api";
 import { Cart, type CartData } from "@/domain/cart/Cart";
 import { apiClient } from "@/lib/apiClient";
 
@@ -48,7 +48,7 @@ export function handleResponse(
  */
 export async function fetchCart(cartToken?: string): Promise<Cart> {
   apiClient.headers["cart-token"] = cartToken || "";
-  const response = await apiClient.get<any>(ENDPOINTS.CART.GET());
+  const response = await apiClient.get<any>(endpoints.cart.get());
   return handleResponse(response, "fetchCart");
 }
 
@@ -60,7 +60,7 @@ export async function addItem(
   apiClient.headers["cart-token"] = cartToken;
 
   const response = await apiClient.post<any>(
-    ENDPOINTS.CART.ADD_ITEM(),
+    endpoints.cart.addItem(),
     options
   );
 
@@ -78,7 +78,7 @@ export async function updateItem(
   { key, quantity }: { key: string; quantity: number }
 ): Promise<Cart> {
   apiClient.headers["cart-token"] = cartToken;
-  const response = await apiClient.post<any>(ENDPOINTS.CART.UPDATE_ITEM(), {
+  const response = await apiClient.post<any>(endpoints.cart.updateItem(), {
     key,
     quantity,
   });
@@ -97,7 +97,7 @@ export async function removeItem(
   { key }: { key: string }
 ): Promise<Cart> {
   apiClient.headers["cart-token"] = cartToken;
-  const response = await apiClient.post<any>(ENDPOINTS.CART.REMOVE_ITEM(), {
+  const response = await apiClient.post<any>(endpoints.cart.removeItem(), {
     // Woocommerce uses POST for removal
     key,
   });

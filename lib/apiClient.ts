@@ -1,13 +1,13 @@
 // src/lib/apiClient.ts
 import { type ApiResponse, create } from "apisauce";
 
-import { API_BASE_URL } from "@/config/api";
+import { BASE_URL } from "@/config/api";
 import { log } from "@/lib/logger";
 
 import { ApiError, isRetriable } from "./httpError";
 
 const apiClient = create({
-  baseURL: API_BASE_URL,
+  baseURL: BASE_URL,
   headers: { Accept: "application/json" },
   timeout: 15000, // important on mobile
 });
