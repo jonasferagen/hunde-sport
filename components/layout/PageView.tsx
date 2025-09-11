@@ -39,7 +39,8 @@ export const PageView = React.memo(function PageView({
     >
       {withGradient ? <PageBackdrop token={gradientToken} /> : null}
       {children}
-      <BottomInsetSpacer />
+
+      <BottomInsetSpacer/>
     </ThemedYStack>
   );
 });

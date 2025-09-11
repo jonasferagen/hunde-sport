@@ -108,8 +108,9 @@ export const CustomBottomBarContents = () => {
       theme={THEME_BOTTOM_BAR}
       w="100%"
       pos="absolute"
-      o={1}
+ 
       b={insets.bottom}
+      h={BOTTOM_BAR_HEIGHT}
     >
       <StyledTabs
         key={currentTab}

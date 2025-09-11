@@ -65,6 +65,7 @@ export class Purchasable {
       this.isInSelection = true;
       this.variation = this.variableProduct.findVariation(attributeSelection);
     }
+
     if (customFields) {
       this.isInCustomization = true;
       this.customFields = customFields;

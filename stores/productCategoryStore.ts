@@ -25,7 +25,7 @@ const EMPTY: readonly ProductCategory[] = Object.freeze([]);
 
 export const useProductCategoryStore = create<ProductCategoryState>(
   (set, get) => {
-    const dummyRoot = ProductCategory.ROOT;
+    const dummyRoot = ProductCategory.DEFAULT;
 
     return {
       items: [dummyRoot],
@@ -103,8 +103,8 @@ export const useBreadcrumbTrail = (
     }
 
     // ensure synthetic root at the very start
-    if (trail.length === 0 || trail[0]?.id !== ProductCategory.ROOT.id) {
-      trail.unshift(ProductCategory.ROOT);
+    if (trail.length === 0 || trail[0]?.id !== ProductCategory.DEFAULT.id) {
+      trail.unshift(ProductCategory.DEFAULT);
     }
 
     return trail;

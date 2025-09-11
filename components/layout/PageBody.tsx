@@ -1,7 +1,6 @@
 // PageBody.tsx
 import React from "react";
 import { ScrollView as GHScrollView } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { YStackProps } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui/themed-components";
@@ -16,8 +15,6 @@ interface PageBodyProps extends YStackProps {
 
 export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
   function PageBody({ children, mode = "static", ...props }, ref) {
-    const insets = useSafeAreaInsets();
-    const bottomInset = insets.bottom;
     const content = (
       <ThemedYStack box f={1} mih={0} p="none" gap="none" {...props}>
         {children}
@@ -30,7 +27,7 @@ export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingHorizontal: 0, // padding only here in scroll mode
-          paddingBottom: bottomInset, // keep content above the bottom bar
+         
         }}
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled

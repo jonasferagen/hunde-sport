@@ -1,20 +1,25 @@
 {
-    "$schema": "https://unpkg.com/knip@latest/schema.json",
-    "project": [
-        "**/*.{ts,tsx}"
-    ],
-    "ignoreDependencies": [
-        // Expo & RN modules are often loaded natively/babel
-        "expo*",
-        "react-native*",
-        "@tamagui/*",
-        "metro-minify-terser",
-        "burnt"
-    ],
-    "ignore": [
-        "android/**",
-        "ios/**",
-        "node_modules/**",
-        "scripts/**"
-    ]
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "project": [
+    "index.{ts,tsx}",
+    "app/**/*.{ts,tsx}"
+  ],
+  "ignore": [
+    "android/**",
+    "ios/**",
+    ".expo/**",
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    "node_modules/**",
+    "scripts/**"
+  ],
+  "ignoreDependencies": [
+    // Expo & RN modules are often loaded natively/babel
+    "expo*",
+    "react-native*",
+    "@tamagui/*",
+    "metro-minify-terser",
+    "burnt",
+  ],
 }

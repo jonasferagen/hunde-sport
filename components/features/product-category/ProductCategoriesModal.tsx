@@ -30,9 +30,7 @@ export function ProductCategoriesModal({
               to("product-category", item);
               close();
             }}
-            aria-label={`Open ${item.name}`}
-          >
-            {/* You said you'll swap out H4 if not needed */}
+            aria-label={`Open ${item.name}`}>
             <H4>{item.name}</H4>
             <ChevronRight />
           </ThemedButton>

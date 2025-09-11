@@ -1,15 +1,31 @@
 // domain/ProductCategory.ts
 import { StoreImage, type StoreImageData } from "./StoreImage";
 
-export type CategoryRef = {
+export type ProductCategoryRefData = {
   id: number;
   name: string;
 };
 
-export type CategoryRefData = {
+export class ProductCategoryRef  {
   id: number;
   name: string;
+
+  private constructor(data: ProductCategoryRefData) {
+    this.id = data.id;
+    this.name = data.name;
+  }
+
+  static create(data: ProductCategoryRefData) {
+    return new ProductCategoryRef(data);
+  }
+
+  static readonly DEFAULT = Object.freeze(
+    ProductCategoryRef.create({
+      id : 0,
+      name: "Hjem",
+    }) as ProductCategoryRef);
 };
+
 
 export type ProductCategoryData = {
   id: number;
@@ -67,8 +83,9 @@ export class ProductCategory implements NormalizedProductCategory {
       slug: data.slug,
       count: data.count,
     });
-  } /** Optional synthetic root for UI (breadcrumbs etc.) */
-  static readonly ROOT = Object.freeze(
+  } 
+  /** Synthetic root for UI (breadcrumbs etc.) */
+  static readonly DEFAULT = Object.freeze(
     ProductCategory.create({
       id: 0,
       name: "Hjem",

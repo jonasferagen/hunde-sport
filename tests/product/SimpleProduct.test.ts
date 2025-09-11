@@ -70,9 +70,7 @@ describe("SimpleProduct", () => {
 
   it("throws if given non-simple type", () => {
     const wrong: ProductData = { ...data, type: "variable" as const };
-    expect(() => SimpleProduct.create(wrong)).toThrow(
-      /non-simple|Invalid data type/i
-    );
+    expect(() => SimpleProduct.create(wrong)).toThrow(/non-simple|Invalid data type/i);
   });
 
   it("uses StoreImage.DEFAULT when images are missing", () => {

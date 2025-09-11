@@ -1,4 +1,3 @@
-// Re-export models
 
 import type { ProductVariation } from "@/domain/product/ProductVariation";
 import type { SimpleProduct } from "@/domain/product/SimpleProduct";
@@ -12,3 +11,4 @@ export * from "@/domain/ProductCategory";
 export * from "@/domain/Purchasable";
 
 export type Product = SimpleProduct | VariableProduct | ProductVariation;
+export type NonEmptyArray<T> = [T, ...T[]];

@@ -3,11 +3,11 @@ const { defineConfig } = require("eslint/config");
 const expo = require("eslint-config-expo/flat");
 const simpleImportSort = require("eslint-plugin-simple-import-sort");
 const prettierFlat = require("eslint-config-prettier");
-
+//const importPlugin = require("eslint-plugin-import");
+const unusedImports = require("eslint-plugin-unused-imports");
 module.exports = defineConfig([
   // Expo flat preset(s)
   ...expo,
-
   {
     ignores: [
       "node_modules/**",
@@ -22,6 +22,7 @@ module.exports = defineConfig([
 
     plugins: {
       "simple-import-sort": simpleImportSort,
+      "unused-imports": unusedImports,
     },
 
     settings: {
@@ -40,10 +41,7 @@ module.exports = defineConfig([
       "import/no-unresolved": "error",
       "import/no-duplicates": "warn",
       "import/no-cycle": ["warn", { maxDepth: 1 }],
-      "import/no-unused-modules": [
-        "warn",
-        { unusedExports: true, missingExports: true },
-      ],
+      "unused-imports/no-unused-imports": "error",
       // sorting (source of truth)
       "simple-import-sort/imports": "warn",
       "simple-import-sort/exports": "warn",

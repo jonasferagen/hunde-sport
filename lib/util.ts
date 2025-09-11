@@ -1,5 +1,13 @@
 // @/lib/util.ts
 
+import type { NonEmptyArray } from "@/types";
+
+
+export function toNonEmptyArray<T>(items: readonly T[] | null | undefined, fallback: T): NonEmptyArray<T> {
+  return (items && items.length ? items : [fallback]) as NonEmptyArray<T>;
+}
+
+
 export function intersectSets<T>(...sets: ReadonlySet<T>[]): ReadonlySet<T> {
   if (sets.length === 0) return new Set<T>();
   if (sets.length === 1) return sets[0]!;
@@ -16,6 +24,6 @@ export function intersectSets<T>(...sets: ReadonlySet<T>[]): ReadonlySet<T> {
     if (newAcc.size === 0) return newAcc; // short-circuit
     acc = newAcc;
   }
-
   return acc;
 }
+

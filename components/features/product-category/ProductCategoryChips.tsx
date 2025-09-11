@@ -3,12 +3,12 @@ import React from "react";
 import { Chip } from "@/components/ui/chips/Chip";
 import { ThemedXStack } from "@/components/ui/themed-components";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { type CategoryRef, ProductCategory } from "@/types";
+import { type ProductCategoryRef, ProductCategory } from "@/types";
 
 export const ProductCategoryChips = React.memo(function ProductCategoryChips({
   categoryRefs,
 }: {
-  categoryRefs: CategoryRef[];
+  categoryRefs: ProductCategoryRef[];
 }) {
   const { to } = useCanonicalNavigation();
   return (

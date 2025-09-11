@@ -49,8 +49,8 @@ export const ProductScreen = () => {
   return (
     <ProductCategoryProvider
       productCategoryId={
-        productCategoryId || product.categories[0]?.id || 0
-      } /** @TODO at least one category should be guaranteed*/
+        productCategoryId || product.categories[0].id
+      } 
     >
       <ProductScreenContent product={product as PurchasableProduct} />
     </ProductCategoryProvider>

@@ -48,8 +48,8 @@ export class StoreImage implements NormalizedStoreImage {
       : this.src;
   }
 
-  static create(data: StoreImageData): StoreImage {
-    if (!data) return StoreImage.DEFAULT;
+  static create(data?: StoreImageData): StoreImage {
+    if (!data) return StoreImage.DEFAULT;  
     // normalize with safe defaults
     return new StoreImage({
       id: typeof data.id === "number" ? data.id : 0,

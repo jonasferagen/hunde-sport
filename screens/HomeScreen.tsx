@@ -42,7 +42,7 @@ export const HomeScreen = () => {
   }
 
   return (
-    <PageView bg="red">
+    <PageView>
       <PageHeader container>
         <SearchBar onSubmit={handleSearch} />
       </PageHeader>

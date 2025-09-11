@@ -4,9 +4,11 @@ import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductPrices } from "@/domain/pricing/types";
 import type { AttributeData } from "@/domain/product-attributes/Attribute";
 import type { VariationData } from "@/domain/product-attributes/Variation";
+import { ProductCategoryRef, type ProductCategoryRefData } from "@/domain/ProductCategory";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 import { cleanHtml } from "@/lib/formatters";
-import type { CategoryRef, CategoryRefData } from "@/types";
+import { toNonEmptyArray } from '@/lib/util';
+import type { NonEmptyArray } from "@/types";
 
 export interface ProductAvailability {
   isInStock: boolean;
@@ -23,7 +25,7 @@ export type ProductData = {
   description: string;
   short_description: string;
   images: StoreImageData[];
-  categories: CategoryRefData[];
+  categories: ProductCategoryRefData[];
   prices: ProductPrices;
   on_sale: boolean;
   featured: boolean;
@@ -50,8 +52,8 @@ type NormalizedProduct = {
   description: string;
   on_sale: boolean;
   prices: ProductPrices;
-  images: StoreImage[];
-  categories: CategoryRef[];
+  images: NonEmptyArray<StoreImage>;
+  categories: NonEmptyArray<ProductCategoryRef>;
   is_purchasable: boolean;
   is_in_stock: boolean;
   is_on_backorder: boolean;
@@ -69,14 +71,14 @@ export abstract class Product implements NormalizedProduct {
   readonly permalink: string;
   readonly description: string;
   readonly short_description: string;
-  readonly images: StoreImage[];
+  readonly images:NonEmptyArray<StoreImage>; 
+  readonly categories: NonEmptyArray<ProductCategoryRef>;
   readonly prices: ProductPrices;
   readonly on_sale: boolean;
   readonly featured: boolean;
   readonly is_in_stock: boolean;
   readonly is_purchasable: boolean;
   readonly is_on_backorder: boolean;
-  readonly categories: CategoryRef[]; /* @TODO* : always ensure a categoryRef - we can use 0 if nothing is set in the data */
   readonly type: "simple" | "variable" | "variation";
   readonly parent: number;
 
@@ -108,21 +110,7 @@ export abstract class Product implements NormalizedProduct {
     }
   }
 
-  get priceBook() {
-    return PriceBook.from(this.prices);
-  }
 
-  get featuredImage(): StoreImage {
-    return this.images[0]!;
-  }
-  get availability(): ProductAvailability {
-    return {
-      isInStock: this.is_in_stock,
-      isPurchasable: this.is_purchasable,
-      isOnSale: this.on_sale,
-      isOnBackOrder: this.is_on_backorder,
-    };
-  }
   get isVariable(): boolean {
     return this.type === "variable";
   }
@@ -138,11 +126,27 @@ export abstract class Product implements NormalizedProduct {
   get hasCustomFields(): boolean {
     return this.customFields.length > 0;
   }
+  get priceBook() {
+    return PriceBook.from(this.prices);
+  }
 
+  get featuredImage(): StoreImage {
+    return this.images[0];
+  }
+  get availability(): ProductAvailability {
+    return {
+      isInStock: this.is_in_stock,
+      isPurchasable: this.is_purchasable,
+      isOnSale: this.on_sale,
+      isOnBackOrder: this.is_on_backorder,
+    };
+  }
   static mapBase(
     data: ProductData,
     forceType: ProductData["type"]
   ): NormalizedProduct {
+
+
     return {
       id: data.id,
       name: data.name,
@@ -150,12 +154,8 @@ export abstract class Product implements NormalizedProduct {
       permalink: data.permalink,
       description: data.description ?? "",
       short_description: data.short_description ?? "",
-      images: (data.images && data.images.length > 0
-        ? data.images
-        : [StoreImage.DEFAULT]
-      ).map(StoreImage.create),
-
-      categories: data.categories,
+      images: toNonEmptyArray(data.images.map(StoreImage.create), StoreImage.DEFAULT),
+      categories: toNonEmptyArray( data.categories.map(ProductCategoryRef.create), ProductCategoryRef.DEFAULT),
       prices: data.prices,
       on_sale: data.on_sale ?? false,
       featured: data.featured ?? false,
