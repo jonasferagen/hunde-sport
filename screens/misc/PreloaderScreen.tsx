@@ -20,130 +20,22 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 /** -------------------- Screen -------------------- **/
 export const PreloaderScreen = () => {
   const fonts = useFontsStep();
-  const cart = useCartStep({ enabled: fonts.ready });
-  const categories = useCategoriesStep({ enabled: cart.ready });
 
-  // static labels for the 3 sequential steps
-  const labels = [
-    "Henter skrifttyper..",
-    "Henter handlekurv..",
-    "Henter kategorier..",
-  ] as const;
+  // Start data once fonts are ready; never toggle back.
+  const data = useBootData({ enabled: fonts.ready });
 
-  // figure out which step is active purely from readiness
-  const steps = [fonts, cart, categories] as const;
-  const activeIndex = steps.findIndex((s) => !s.ready);
-  const allReady = activeIndex === -1;
-  const active = allReady ? null : steps[activeIndex];
-
+  // Hide splash once fonts are ready (do this once; no regress)
   React.useEffect(() => {
     if (fonts.ready) SplashScreen.hideAsync().catch(() => {});
   }, [fonts.ready]);
 
+  // Navigate when both data tasks are done (cart + categories)
   React.useEffect(() => {
-    if (allReady) router.replace("/(app)");
-  }, [allReady]);
+    if (data.allDone) router.replace("/(app)");
+  }, [data.allDone]);
 
-  return (
-    <PreloaderView
-      label={allReady ? "" : labels[activeIndex]}
-      progress={active?.progress}
-      error={active?.error}
-      onRetry={active?.retry}
-    />
-  );
-};
+  const showPanel = !fonts.ready || !data.allDone || !!data.error;
 
-/** -------------------- Steps -------------------- **/
-type StepState = {
-  ready: boolean;
-  progress?: string;
-  error?: Error | null;
-  retry?: () => void;
-};
-
-/* 1) Fonts */
-function useFontsStep(): StepState {
-  const [ready] = useFonts({
-    Montserrat: require("@/assets/fonts/Montserrat/Montserrat-Regular.ttf"),
-    "Montserrat-Bold": require("@/assets/fonts/Montserrat/Montserrat-Bold.ttf"),
-  });
-  return { ready };
-}
-
-/* 2) Cart */
-function useCartStep({ enabled }: { enabled: boolean }): StepState {
-  const { data, isSuccess, isError, error, refetch, isFetching } = useCart({
-    enabled,
-  });
-  const setCart = useCartStore((s) => s.setCart);
-
-  React.useEffect(() => {
-    if (isSuccess) setCart(data ?? null);
-  }, [isSuccess, data, setCart]);
-
-  const ready = !!data && isSuccess;
-  const progress = enabled && isFetching ? "…" : undefined;
-  const retry = isError ? () => refetch() : undefined;
-
-  return {
-    ready,
-    progress,
-    error: (isError ? (error as Error) : null) ?? null,
-    retry,
-  };
-}
-
-/* 3) Product Categories */
-function useCategoriesStep({ enabled }: { enabled: boolean }): StepState {
-  const setProductCategories = useProductCategoryStore(
-    (s) => s.setProductCategories
-  );
-
-  const result = useProductCategories({ enabled });
-  useAutoPaginateQueryResult(result);
-
-  const { isFetching, items, total, error, refetch } = result;
-
-  // push into store
-  React.useEffect(() => {
-    if (enabled) setProductCategories(items);
-  }, [enabled, items, setProductCategories]);
-
-  const count = items.length;
-  const ready = !isFetching && count >= total;
-
-  const progress = !ready
-    ? total && total > 0
-      ? `(${Math.min(count, total)}/${total})`
-      : undefined
-    : undefined;
-
-  const retry = error
-    ? async () => {
-        await queryClient.resetQueries({ queryKey: ["product-categories"] });
-        refetch();
-      }
-    : undefined;
-
-  return { ready, progress, error: (error as Error) ?? null, retry };
-}
-
-/** -------------------- View -------------------- **/
-type PreloaderViewProps = {
-  label?: string;
-  progress?: string;
-  error?: Error | null;
-  onRetry?: () => void;
-};
-
-function PreloaderView({
-  label,
-  progress,
-  error,
-  onRetry,
-}: PreloaderViewProps) {
-  const showPanel = !!label || !!progress || !!error;
   return (
     <ThemedYStack f={1} box p="$4">
       <ThemedYStack f={1} jc="flex-end" ai="center" mt={Math.round(200 / 2)}>
@@ -164,35 +56,147 @@ function PreloaderView({
           ai="center"
           opacity={showPanel ? 1 : 0}
         >
-          {!!label && (
-            <ThemedText size="$4" tabular ta="center" o={error ? 1 : 0.9}>
-              {label}
-            </ThemedText>
-          )}
+          {/* Headline */}
+          <ThemedText size="$4" tabular ta="center" o={data.error ? 1 : 0.9}>
+            {!fonts.ready
+              ? "Henter skrifttyper…"
+              : !data.allDone
+              ? "Klargjør data…"
+              : ""}
+          </ThemedText>
 
-          {!!progress && !error && (
-            <Paragraph ta="center" o={0.8}>
-              {progress}
-            </Paragraph>
-          )}
-
-          {error && (
+          {/* Progress lines */}
+          {fonts.ready && !data.allDone && !data.error && (
             <>
               <Paragraph ta="center" o={0.8}>
-                {error.message}
+                Handlekurv: {data.cart.ready ? "✓" : data.cart.fetching ? "…" : "–"}
               </Paragraph>
-              {!!onRetry && (
-                <CallToActionButton
-                  w="60%"
-                  label="Prøv igjen"
-                  after={<RefreshCw />}
-                  onPress={onRetry}
-                />
-              )}
+              <Paragraph ta="center" o={0.8}>
+                Kategorier:{" "}
+                {data.categories.ready
+                  ? "✓"
+                  : data.categories.progress ?? (data.categories.fetching ? "…" : "–")}
+              </Paragraph>
+            </>
+          )}
+
+          {/* Error + Retry */}
+          {data.error && (
+            <>
+              <Paragraph ta="center" o={0.9}>
+                {data.error.message}
+              </Paragraph>
+              <CallToActionButton
+                w="60%"
+                label="Prøv igjen"
+                after={<RefreshCw />}
+                onPress={data.retry}
+              />
             </>
           )}
         </ThemedYStack>
       </ThemedYStack>
     </ThemedYStack>
   );
+};
+
+/** -------------------- Steps -------------------- **/
+
+type StepState = {
+  ready: boolean;
+  fetching?: boolean;
+  progress?: string;
+  error?: Error | null;
+};
+
+function useFontsStep(): StepState {
+  const [loaded] = useFonts({
+    Montserrat: require("@/assets/fonts/Montserrat/Montserrat-Regular.ttf"),
+    "Montserrat-Bold": require("@/assets/fonts/Montserrat/Montserrat-Bold.ttf"),
+  });
+
+  // One-way toggle: once true, never false
+  const [ready, setReady] = React.useState(false);
+  React.useEffect(() => {
+    if (loaded) setReady(true);
+  }, [loaded]);
+
+  return { ready };
+}
+
+function useBootData({ enabled }: { enabled: boolean }) {
+  const setCart = useCartStore((s) => s.setCart);
+  const setProductCategories = useProductCategoryStore((s) => s.setProductCategories);
+
+  // Gate both queries from a single flag that only moves false -> true
+  const [dataEnabled, setDataEnabled] = React.useState(false);
+  React.useEffect(() => {
+    if (enabled) setDataEnabled(true);
+  }, [enabled]);
+
+  /** Cart */
+  const {
+    data: cartData,
+    isFetching: cartFetching,
+    isSuccess: cartSuccess,
+    isError: cartIsError,
+    error: cartError,
+    refetch: refetchCart,
+  } = useCart({ enabled: dataEnabled });
+
+  // Mark done once; never regress on refetch
+  const [cartDone, setCartDone] = React.useState(false);
+  React.useEffect(() => {
+    if (!cartDone && cartSuccess && cartData) {
+      setCart(cartData);
+      setCartDone(true);
+    }
+  }, [cartDone, cartSuccess, cartData, setCart]);
+
+  /** Categories (infinite) */
+  const catResult = useProductCategories({ enabled: dataEnabled });
+  useAutoPaginateQueryResult(catResult);
+
+  const { isFetching: catFetching, items, total, isError: catIsError, error: catError, refetch: refetchCats } =
+    catResult;
+
+  // Done when we've fetched all pages (never regress)
+  const [categoriesDone, setCategoriesDone] = React.useState(false);
+  const categoriesReadyNow = Boolean(!catFetching && total && items.length >= (total ?? 0));
+  React.useEffect(() => {
+    if (!categoriesDone && categoriesReadyNow) {
+      setProductCategories(items);
+      setCategoriesDone(true);
+    }
+  }, [categoriesDone, categoriesReadyNow, items, setProductCategories]);
+
+  const categoriesProgress =
+    total && total > 0 ? `(${Math.min(items.length, total)}/${total})` : undefined;
+
+  /** Aggregate */
+  const anyError = (cartIsError && (cartError as Error)) || (catIsError && (catError as Error)) || null;
+  const allDone = cartDone && categoriesDone;
+
+  const retry = async () => {
+    // Clear only relevant queries and refetch
+    await queryClient.resetQueries({ queryKey: ["cart"] });
+    await queryClient.resetQueries({ queryKey: ["product-categories"] });
+    refetchCart();
+    refetchCats();
+  };
+
+  return {
+    allDone,
+    error: anyError,
+    retry,
+    cart: {
+      ready: cartDone,
+      fetching: cartFetching,
+    },
+    categories: {
+      ready: categoriesDone,
+      fetching: catFetching,
+      progress: categoriesProgress,
+    },
+  };
 }

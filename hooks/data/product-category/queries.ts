@@ -12,11 +12,11 @@ import { fetchProductCategories } from "./api";
 const queryOptions = makeQueryOptions<ProductCategory>();
 
 export const useProductCategories = (
-  options = { enabled: true }
+  options = { }
 ): QueryResult<ProductCategory> => {
   const result = useInfiniteQuery({
     queryKey: ["product-categories"],
-    queryFn: ({ pageParam }) => fetchProductCategories({ page: pageParam }),
+    queryFn: ({ pageParam }) => fetchProductCategories({ page: pageParam, per_page: 20 }),
     ...queryOptions,
     ...options,
   });

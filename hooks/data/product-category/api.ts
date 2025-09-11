@@ -10,9 +10,3 @@ export async function fetchProductCategories(pagination?: Pagination) {
   return responseTransformer(response, ProductCategory.create);
 }
 
-/*
-export async function fetchProductCategory(id: number) {
-  const response = await apiClient.get<any[]>(ENDPOINTS.CATEGORIES.GET(id));
-  return mapToProductCategory(response.data);
-}
-*/
