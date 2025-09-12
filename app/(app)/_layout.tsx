@@ -6,8 +6,8 @@ import { View } from "tamagui";
 
 import { CustomDrawer } from "@/components/menu/CustomDrawer";
 import { CustomHeader } from "@/components/menu/CustomHeader";
+import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
 import { ThemedYStack } from "@/components/ui/themed-components";
-import { LoadingOverlay } from "@/screens/misc/LoadingOverlay";
 
 const AppLayout = () => {
   //const isOpen = useDrawerStore((s) => s.status !== 'closed');

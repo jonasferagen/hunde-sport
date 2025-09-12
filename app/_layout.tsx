@@ -9,7 +9,7 @@ import { PortalProvider, TamaguiProvider } from "tamagui";
 import { ModalHost } from "@/components/features/product-variation/ModalHost";
 import { AppToastProvider } from "@/contexts";
 import { usePlayStoreUpdates } from "@/hooks/usePlayStoreUpdates";
-import { queryClient } from "@/lib/queryClient";
+import { queryClient } from "@/lib/api/queryClient";
 import appConfig from "@/tamagui/tamagui.config";
 
 Sentry.init({

@@ -10,11 +10,11 @@ import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { ThemedText, ThemedYStack } from "@/components/ui/themed-components";
 import { useCart } from "@/hooks/api/data/cart/queries";
 import { useProductCategories } from "@/hooks/api/data/product-category/queries";
-import { useAutoPaginateQueryResult } from "@/lib/query/query";
-import { queryClient } from "@/lib/queryClient";
+import { useAutoPaginateQueryResult } from "@/lib/api/query";
+import { queryClient } from "@/lib/api/queryClient";
 import { useProductCategoryStore } from "@/stores/productCategoryStore";
 import { useCartStore } from "@/stores/useCartStore";
-
+ 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 /** -------------------- Screen -------------------- **/

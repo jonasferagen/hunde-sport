@@ -58,7 +58,7 @@ export class CartItem implements NormalizedCartItem {
     this.key = n.key;
     this.id = n.id;
     this.type = n.type;
-    this.name = n.name;
+    this.name = cleanHtml(n.name);
     this.variation = n.variation;
     this.prices = n.prices;
     this.totals = n.totals;

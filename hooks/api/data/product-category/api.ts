@@ -1,6 +1,6 @@
 import { endpoints, type Pagination } from "@/hooks/api/api";
-import { apiClient } from "@/lib/apiClient";
-import { responseTransformer } from "@/lib/query/responseTransformer";
+import { apiClient } from "@/lib/api/apiClient";
+import { responseTransformer } from "@/lib/api/responseTransformer";
 import { ProductCategory } from "@/types";
 
 export async function fetchProductCategories(pagination?: Pagination) {

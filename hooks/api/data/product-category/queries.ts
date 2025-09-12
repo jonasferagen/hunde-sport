@@ -4,7 +4,7 @@ import {
   makeQueryOptions,
   type QueryResult,
   useQueryResult,
-} from "@/lib/query/query";
+} from "@/lib/api/query";
 import { ProductCategory } from "@/types";
 
 import { fetchProductCategories } from "./api";

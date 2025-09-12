@@ -2,7 +2,7 @@ import type { ApiResponse } from "apisauce";
 
 import { Cart, type CartData } from "@/domain/cart/Cart";
 import { endpoints } from "@/hooks/api/api";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient } from "@/lib/api/apiClient";
 
 export interface AddItemOptions {
   id: number;
@@ -63,8 +63,10 @@ export async function addItem(
     endpoints.cart.addItem(),
     options
   );
+ 
 
-  return handleResponse(response, "addItem");
+ return handleResponse(response, "addItem");
+
 }
 /**
  * Updates an item's quantity in the cart.

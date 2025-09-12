@@ -10,7 +10,7 @@ import {
 import { THEME_SHEET, THEME_SHEET_BG1, THEME_SHEET_BG2 } from "@/config/app";
 import { AppToastProvider } from "@/contexts";
 import { useModalSettled } from "@/hooks/ui/useModalSettled";
-import { resolveThemeToken } from "@/lib/helpers";
+import { resolveThemeToken } from "@/lib/theme";
 import { setModalPosition, useModalStore } from "@/stores/ui/modalStore";
 
 export const ModalHost = () => {

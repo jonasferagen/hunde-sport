@@ -3,12 +3,6 @@ import { parseDocument } from "htmlparser2";
 
 export const cleanHtml = (html: string) => htmlToPlainText(decode(html));
 
-export const cleanNumber = (value: string) => {
-  if (value == null || value === "") return 0;
-
-  const num = parseFloat(value);
-  return isNaN(num) ? 0 : num;
-};
 
 export const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1);

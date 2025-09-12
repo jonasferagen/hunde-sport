@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/themed-components";
 import { ThemedSurface } from "@/components/ui/themed-components/ThemedSurface";
 import type { StoreImage } from "@/domain/StoreImage";
-import { getScaledImageUrl } from "@/lib/helpers";
+import { getScaledImageUrl } from "@/lib/image";
 
 type TileFixedProps = YStackProps & {
   title: string;

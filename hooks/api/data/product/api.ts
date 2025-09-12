@@ -1,8 +1,8 @@
 // services/products.ts
 import { Product } from "@/domain/product/Product";
 import { endpoints, type Pagination } from "@/hooks/api/api";
-import { apiClient } from "@/lib/apiClient";
-import { responseTransformer } from "@/lib/query/responseTransformer";
+import { apiClient } from "@/lib/api/apiClient";
+import { responseTransformer } from "@/lib/api/responseTransformer";
 import type { ProductCategory } from "@/types";
 
 /** Filters supported for Woo Store API product listing */

@@ -5,7 +5,7 @@ import { ThemedYStack } from "@/components/ui/themed-components";
 import { TileSquare } from "@/components/ui/tile/TileSquare";
 import { NUM_CATEGORY_TILE_COLUMNS } from "@/config/app";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { spacePx } from "@/lib/helpers";
+import { spacePx } from "@/lib/theme";
 import { useProductCategories } from "@/stores/productCategoryStore";
 
 export const ProductCategoryTiles = React.memo(function ProductCategoryTiles(

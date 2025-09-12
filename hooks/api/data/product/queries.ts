@@ -8,7 +8,7 @@ import {
   makeQueryOptions,
   type QueryResult,
   useQueryResult,
-} from "@/lib/query/query";
+} from "@/lib/api/query";
 import {
   type Product,
   ProductCategory,

@@ -6,8 +6,8 @@ import type { AttributeData } from "@/domain/product-attributes/Attribute";
 import type { VariationData } from "@/domain/product-attributes/Variation";
 import { ProductCategoryRef, type ProductCategoryRefData } from "@/domain/ProductCategory";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
+import { toNonEmptyArray } from "@/lib/array";
 import { cleanHtml } from "@/lib/formatters";
-import { toNonEmptyArray } from '@/lib/util';
 import type { NonEmptyArray } from "@/types";
 
 export interface ProductAvailability {
@@ -16,6 +16,9 @@ export interface ProductAvailability {
   isOnSale: boolean;
   isOnBackOrder: boolean;
 }
+
+type ProductType = 'simple' | 'variable' | 'variation'; 
+
 
 export type ProductData = {
   id: number;
@@ -59,7 +62,7 @@ type NormalizedProduct = {
   is_on_backorder: boolean;
   featured: boolean;
   parent: number;
-  type: "simple" | "variable" | "variation";
+  type: ProductType;
   extensions: {
     customFields?: CustomField[];
   };
@@ -79,7 +82,7 @@ export abstract class Product implements NormalizedProduct {
   readonly is_in_stock: boolean;
   readonly is_purchasable: boolean;
   readonly is_on_backorder: boolean;
-  readonly type: "simple" | "variable" | "variation";
+  readonly type: ProductType;
   readonly parent: number;
 
   readonly extensions: {

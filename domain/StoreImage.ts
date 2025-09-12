@@ -1,5 +1,8 @@
 // domain/store-image/StoreImage.ts
-import { Image } from "react-native";
+
+
+export type ImageIntrinsicSize = { width: number; height: number };
+export type ImageSizeProvider = (uri: string) => Promise<ImageIntrinsicSize>;
 
 export type StoreImageData = {
   id: number;
@@ -43,25 +46,25 @@ export class StoreImage implements NormalizedStoreImage {
     this.alt = data.alt;
   }
 
+  private static imageSizeProvider: ImageSizeProvider | null = null;
+
 
   /**
    * Lazily load the intrinsic image size and cache it.
    */
-  async getIntrinsicSize(): Promise<{ width: number; height: number }> {
+ async getIntrinsicSize(): Promise<ImageIntrinsicSize> {
     if (this._intrinsicWidth && this._intrinsicHeight) {
       return { width: this._intrinsicWidth, height: this._intrinsicHeight };
     }
-    return new Promise((resolve, reject) => {
-      Image.getSize(
-        this.src,
-        (w, h) => {
-          this._intrinsicWidth = w;
-          this._intrinsicHeight = h;
-          resolve({ width: w, height: h });
-        },
-        reject
-      );
-    });
+    const provider = StoreImage.imageSizeProvider;
+    if (!provider) {
+      // safe fallback for non-RN/test environments
+      return { width: 0, height: 0 };
+    }
+    const { width, height } = await provider(this.src);
+    this._intrinsicWidth = width;
+    this._intrinsicHeight = height;
+    return { width, height };
   }
 
   /**
@@ -74,21 +77,16 @@ export class StoreImage implements NormalizedStoreImage {
     return undefined;
   }
 
-  /**
-   * Heuristic: is this image at risk of being low quality
-   * for the given display size and devicePixelRatio?
-   */
   qualityAt(displayWidth: number, dpr: number): "ok" | "low" {
     if (!this._intrinsicWidth) return "ok"; // unknown yet
     const ratio = this._intrinsicWidth / (displayWidth * dpr);
     return ratio < 0.75 ? "low" : "ok";
   }
 
-  bestThumb(): string {
-    return this.thumbnail && this.thumbnail.length > 0
-      ? this.thumbnail
-      : this.src;
+  static configureImageSizeProvider(provider: ImageSizeProvider) {
+    StoreImage.imageSizeProvider = provider;
   }
+
 
   static create(data?: StoreImageData): StoreImage {
     if (!data) return StoreImage.DEFAULT;  

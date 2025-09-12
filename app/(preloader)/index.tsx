@@ -1,4 +1,4 @@
-import { PreloaderScreen } from "@/screens/misc/PreloaderScreen";
+import { PreloaderScreen } from "@/screens/PreloaderScreen";
 
 const App = () => {
   return <PreloaderScreen />;

@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Chip } from "@/components/ui/chips/Chip";
+import { Chip } from "@/components/ui/Chip";
 import { ThemedXStack } from "@/components/ui/themed-components";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { type ProductCategoryRef, ProductCategory } from "@/types";
+import { ProductCategory, type ProductCategoryRef } from "@/types";
 
 export const ProductCategoryChips = React.memo(function ProductCategoryChips({
   categoryRefs,

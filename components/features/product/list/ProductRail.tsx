@@ -9,7 +9,7 @@ import {
   useFeaturedProducts,
   useRecentProducts,
 } from "@/hooks/api/data/product/queries";
-import type { QueryResult } from "@/lib/query/query";
+import type { QueryResult } from "@/lib/api/query";
 import type { PurchasableProduct } from "@/types";
 
 /** A hook that returns product query results. Args vary per hook. */

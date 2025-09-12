@@ -5,7 +5,7 @@ import type { YStackProps } from "tamagui";
 import { ThemedYStack } from "@/components/ui/themed-components";
 import { ThemedImage } from "@/components/ui/themed-components/ThemedImage";
 import { Product } from "@/domain/product/Product";
-import { getScaledImageUrl } from "@/lib/helpers";
+import { getScaledImageUrl } from "@/lib/image";
 
 const IMAGE_HEIGHT = 300;
 

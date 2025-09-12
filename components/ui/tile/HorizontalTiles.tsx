@@ -13,8 +13,8 @@ import { ThemedYStack } from "@/components/ui/themed-components";
 import { THEME_PRICE_TAG } from "@/config/app";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { spacePx } from "@/lib/helpers";
-import type { QueryResult } from "@/lib/query/query";
+import type { QueryResult } from "@/lib/api/query";
+import { spacePx } from "@/lib/theme";
 import { Purchasable, type PurchasableProduct } from "@/types";
 
 import { TileFixed } from "./TileFixed";
