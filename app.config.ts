@@ -7,13 +7,16 @@ const PROJECT_ID = "aa3dceb9-3292-426e-8e46-ff11539b7122";
 
 // Decide variant: dev when APP_VARIANT=dev or when using the "internal-apk-dev" profile
 const profile = process.env.EAS_BUILD_PROFILE;
-const isDevVariant = process.env.APP_VARIANT === "dev" || profile === "internal-apk-dev";
+const isDevVariant =
+  process.env.APP_VARIANT === "dev" || profile === "internal-apk-dev";
 
 // IDs for store vs dev
 const NAME = isDevVariant ? "Hundesport (Dev)" : "Hundesport";
 const SLUG = "hunde-sport";
 const SCHEME = isDevVariant ? "hundesport-dev" : "hundesport";
-const PACKAGE = isDevVariant ? "com.anonymous.hundesport.dev" : "com.anonymous.hundesport";
+const PACKAGE = isDevVariant
+  ? "com.anonymous.hundesport.dev"
+  : "com.anonymous.hundesport";
 
 export default (): ExpoConfig => ({
   name: NAME,
@@ -37,7 +40,7 @@ export default (): ExpoConfig => ({
     edgeToEdgeEnabled: true,
     softwareKeyboardLayoutMode: "pan",
     adaptiveIcon: {
-      foregroundImage: "@/assets/images/adaptive-icon.png",
+      foregroundImage: "/assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
     permissions: ["INTERNET", "ACCESS_NETWORK_STATE", "VIBRATE"],
@@ -48,14 +51,14 @@ export default (): ExpoConfig => ({
     [
       "expo-splash-screen",
       {
-        image: "@/assets/images/splash-icon.png",
+        image: "/assets/images/splash-icon.png",
         imageWidth: 200,
         resizeMode: "contain",
         backgroundColor: "#ffffff",
       },
     ],
     [
-      "@sentry/react-native/expo",
+      "/sentry/react-native/expo",
       {
         url: "https://sentry.io/",
         project: "hunde-sport",

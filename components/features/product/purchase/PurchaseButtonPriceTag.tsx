@@ -4,18 +4,14 @@ import { ProductPrice } from "@/components/features/product/ui/ProductPrice";
 import { ThemedSurface } from "@/components/ui/themed/ThemedSurface";
 import type { Purchasable } from "@/types";
 
-export function PurchaseButtonPriceTag({ purchasable }: { purchasable: Purchasable }) {
-  return (
-    <ThemedSurface theme="shade" h="$6" ai="center" jc="center" px="none" mr={-20} minWidth={80}>
-      <ProductPrice purchasable={purchasable} />
-    </ThemedSurface>
-  );
-}
-/*
-export function PurchaseButtonRight({ children }: any) {
+export function PurchaseButtonPriceTag({
+  purchasable,
+}: {
+  purchasable: Purchasable;
+}) {
   return (
     <ThemedSurface
-      theme="tint"
+      theme="shade"
       h="$6"
       ai="center"
       jc="center"
@@ -23,8 +19,7 @@ export function PurchaseButtonRight({ children }: any) {
       mr={-20}
       minWidth={80}
     >
-      {children}
+      <ProductPrice purchasable={purchasable} />
     </ThemedSurface>
   );
 }
-*/

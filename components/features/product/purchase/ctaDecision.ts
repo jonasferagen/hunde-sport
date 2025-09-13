@@ -1,10 +1,20 @@
 // features/purchase/ctaDecision.ts
 import type { ThemeName } from "tamagui";
 
-import { THEME_CTA_BUY, THEME_CTA_OUTOFSTOCK, THEME_CTA_SELECTION_NEEDED, THEME_CTA_UNAVAILABLE, THEME_CTA_VIEW } from "@/config/app";
+import {
+  THEME_CTA_BUY,
+  THEME_CTA_OUTOFSTOCK,
+  THEME_CTA_SELECTION_NEEDED,
+  THEME_CTA_UNAVAILABLE,
+  THEME_CTA_VIEW,
+} from "@/config/app";
 import type { PurchasableStatus, StatusDescriptor } from "@/domain/Purchasable";
 
-export type DecisionNext = "addToCart" | "openVariations" | "openCustomize" | "noop";
+export type DecisionNext =
+  | "addToCart"
+  | "openVariations"
+  | "openCustomize"
+  | "noop";
 
 export type Decision = {
   next: DecisionNext;

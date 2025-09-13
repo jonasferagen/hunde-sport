@@ -6,7 +6,6 @@ import {
   PageSection,
   PageView,
 } from "@/components/chrome/layout";
-import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
 import {
   ProductAvailabilityStatus,
@@ -16,6 +15,7 @@ import {
   ProductPrice,
   ProductTitle,
 } from "@/components/features/product/ui";
+import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
 import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack } from "@/components/ui/themed";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";

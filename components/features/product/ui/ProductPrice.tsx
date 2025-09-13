@@ -2,13 +2,21 @@
 import { StarFull } from "@tamagui/lucide-icons";
 import React from "react";
 
-import { ThemedSpinner, ThemedText, type ThemedTextProps, ThemedXStack } from "@/components/ui/themed";
+import {
+  ThemedSpinner,
+  ThemedText,
+  type ThemedTextProps,
+  ThemedXStack,
+} from "@/components/ui/themed";
 import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductPriceRange as ProductPriceRangeType } from "@/domain/pricing/types";
 import { useProductPriceRange } from "@/hooks/useProductPriceRange";
 import type { Purchasable, VariableProduct } from "@/types";
 
-const PriceLine = ({ showIcon, children }: React.PropsWithChildren<{ showIcon?: boolean }>) => (
+const PriceLine = ({
+  showIcon,
+  children,
+}: React.PropsWithChildren<{ showIcon?: boolean }>) => (
   <ThemedXStack ai="center" gap="$1" pos="relative">
     {showIcon ? <StarFull scale={0.5} color="gold" /> : null}
     <ThemedText>{children}</ThemedText>
@@ -20,7 +28,11 @@ type ProductPriceSimpleProps = {
   showIcon?: boolean;
 } & ThemedTextProps;
 
-export const ProductPrice = React.memo(function ProductPrice({ showIcon = false, purchasable, ...textProps }: ProductPriceSimpleProps) {
+export const ProductPrice = React.memo(function ProductPrice({
+  showIcon = false,
+  purchasable,
+  ...textProps
+}: ProductPriceSimpleProps) {
   const effectiveProduct = purchasable.effectiveProduct;
   const { availability } = effectiveProduct;
   const { isInStock, isPurchasable, isOnSale } = availability;
@@ -28,12 +40,17 @@ export const ProductPrice = React.memo(function ProductPrice({ showIcon = false,
 
   // Variable products: render dedicated subcomponent that uses the hook internally
   if (effectiveProduct.isVariable) {
-    return <ProductPriceVariable variableProduct={effectiveProduct as VariableProduct} {...textProps} />;
+    return (
+      <ProductPriceVariable
+        variableProduct={effectiveProduct as VariableProduct}
+        {...textProps}
+      />
+    );
   }
 
   // Simple product pricing
   const saleValid = isOnSale; // authoritative from WC Store API
-  const isFree = isInStock && priceBook.price.minor === 0;
+  const isFree = isPurchasable && isInStock && priceBook.price.minor === 0;
   const subtle = Boolean(!isInStock || !isPurchasable || textProps.subtle);
 
   if (saleValid) {
@@ -76,7 +93,11 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
   const same = PriceBook.isEqual(min, max);
 
   const minLabel = min.fmtPrice();
-  const label = same ? minLabel : short ? `Fra ${minLabel}` : `${minLabel} – ${max.fmtPrice()}`;
+  const label = same
+    ? minLabel
+    : short
+      ? `Fra ${minLabel}`
+      : `${minLabel} – ${max.fmtPrice()}`;
 
   return (
     <PriceLine showIcon={showIcon}>
@@ -86,8 +107,12 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
 });
 
 /** Subcomponent that safely calls the hook (no conditional hook calls) */
-function ProductPriceVariable({ variableProduct, ...textProps }: { variableProduct: VariableProduct } & ThemedTextProps) {
-  const { productPriceRange, isLoading } = useProductPriceRange(variableProduct);
+function ProductPriceVariable({
+  variableProduct,
+  ...textProps
+}: { variableProduct: VariableProduct } & ThemedTextProps) {
+  const { productPriceRange, isLoading } =
+    useProductPriceRange(variableProduct);
 
   if (isLoading || !productPriceRange) {
     return (
@@ -97,5 +122,7 @@ function ProductPriceVariable({ variableProduct, ...textProps }: { variableProdu
     );
   }
 
-  return <ProductPriceRange productPriceRange={productPriceRange} {...textProps} />;
+  return (
+    <ProductPriceRange productPriceRange={productPriceRange} {...textProps} />
+  );
 }

@@ -1,12 +1,24 @@
 // @/domain/purchasable/Purchasable.ts
 import { CustomField } from "@/domain/CustomField";
-import type { AttributeSelection, ProductVariation, Variation } from "@/domain/product";
+import type {
+  AttributeSelection,
+  ProductVariation,
+  Variation,
+} from "@/domain/product";
 import { Product } from "@/domain/product/Product";
 import type { AddItemOptions } from "@/hooks/api/data/cart/api";
 import type { SimpleProduct, VariableProduct } from "@/types";
+
 export type PurchasableProduct = SimpleProduct | VariableProduct;
 
-export type PurchasableStatus = "ready" | "select" | "select_incomplete" | "customize" | "customize_incomplete" | "sold_out" | "unavailable";
+export type PurchasableStatus =
+  | "ready"
+  | "select"
+  | "select_incomplete"
+  | "customize"
+  | "customize_incomplete"
+  | "sold_out"
+  | "unavailable";
 
 export type StatusDescriptor = { key: PurchasableStatus; label: string };
 
@@ -38,7 +50,12 @@ export class Purchasable {
   private isInSelection: boolean = false;
   private isInCustomization: boolean = false;
 
-  private constructor({ product, attributeSelection, productVariation, customFields }: Props) {
+  private constructor({
+    product,
+    attributeSelection,
+    productVariation,
+    customFields,
+  }: Props) {
     this.product = product;
     if (this.product.type === "simple") {
       return;
@@ -116,12 +133,13 @@ export class Purchasable {
   validate(): void {
     if (this.status.key === "ready") return;
     const { product, status } = this;
-    throw new Error(`Invalid state for add-to-cart: ${status.key} (id=${product.id}, name=${product.name}, type=${product.type})`);
+    throw new Error(
+      `Invalid state for add-to-cart: ${status.key} (id=${product.id}, name=${product.name}, type=${product.type})`,
+    );
   }
 
   toCartItem(quantity = 1): AddItemOptions {
     this.validate();
-
     const ext = CustomField.toCartExtensions(this.customFields);
 
     if (this.product.isSimple) {
@@ -131,13 +149,11 @@ export class Purchasable {
         ...(ext ? { extensions: ext.extensions } : {}),
       };
     }
-    const _variation = this.variation!;
-    const id = Number(_variation!.key);
-
+    const id = Number(this.variation!.key);
     return {
       id,
       quantity,
-      variation: _variation.options,
+      variation: this.variation!.options,
       ...(ext ? { extensions: ext.extensions } : {}),
     };
   }
