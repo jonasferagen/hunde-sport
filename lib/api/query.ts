@@ -2,9 +2,25 @@
 import type { UseInfiniteQueryResult } from "@tanstack/react-query";
 import React from "react";
 
+import type { PaginationOpts } from "@/hooks/api/api";
+import type { ProductFilters } from "@/hooks/api/data/product/api";
+
 import type { Page } from "./responseTransformer";
 
-export const makeQueryOptions = <T>() => {
+// The queryFn returns Page<TItem>; InfiniteData<Page<TItem>> matches placeholderData for infinite queries.
+type QueryOverride = {
+  enabled?: boolean;
+};
+
+export type QueryOpts = {
+  query?: QueryOverride;
+  pagination?: PaginationOpts;
+  filter?: ProductFilters;
+};
+
+export const makeQueryOptions = <T>(
+  options: QueryOpts = { query: { enabled: true } },
+) => {
   return {
     initialPageParam: 1,
     getNextPageParam: (lastPage: Page<T>, allPages: Page<T>[]) => {
@@ -13,6 +29,7 @@ export const makeQueryOptions = <T>() => {
       const out = totalPages && nextPage <= totalPages ? nextPage : undefined;
       return out;
     },
+    ...options,
   };
 };
 export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, "data"> & {
@@ -23,7 +40,7 @@ export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, "data"> & {
 };
 
 export const useQueryResult = <T extends { id: number }>(
-  result: UseInfiniteQueryResult<any, any>
+  result: UseInfiniteQueryResult<any, any>,
 ): QueryResult<T> => {
   const { data: dataResult, ...rest } = result;
   if (result.error) {
@@ -66,7 +83,7 @@ type AutoPaginateOpts = {
 
 export function useAutoPaginateQueryResult<T>(
   q: QueryResult<T>,
-  opts: AutoPaginateOpts = {}
+  opts: AutoPaginateOpts = {},
 ) {
   const {
     status,

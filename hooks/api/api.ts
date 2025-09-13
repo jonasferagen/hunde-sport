@@ -1,7 +1,7 @@
 // config/api.ts
-import { BASE_URL, CHECKOUT_URL, STORE_URL } from '@/config/app';
+import { BASE_URL, CHECKOUT_URL, STORE_URL } from "@/config/app";
 
-export type Pagination = {
+export type PaginationOpts = {
   page?: number;
   per_page?: number;
   order?: "asc" | "desc";
