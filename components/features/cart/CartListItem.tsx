@@ -13,7 +13,7 @@ const QtyStepper = ({ value, onInc, onDec, disabled }: { value: number; onInc: (
     <ThemedButton circular onPress={onDec} disabled={disabled || value <= 1}>
       <Minus />
     </ThemedButton>
-    <ThemedText size="$6" w={34} ta="center">
+    <ThemedText size="$6" w={34} ta="center" tabular>
       {value}
     </ThemedText>
     <ThemedButton circular onPress={onInc} disabled={disabled}>
