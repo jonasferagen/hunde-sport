@@ -50,7 +50,7 @@ export const ProductPrice = React.memo(function ProductPrice({
 
   // Simple product pricing
   const saleValid = isOnSale; // authoritative from WC Store API
-  const isFree = isPurchasable && isInStock && priceBook.price.minor === 0;
+  const isFree = isInStock && priceBook.price.minor === 0;
   const subtle = Boolean(!isInStock || !isPurchasable || textProps.subtle);
 
   if (saleValid) {
@@ -66,7 +66,11 @@ export const ProductPrice = React.memo(function ProductPrice({
     );
   }
 
-  const label = isFree ? "Gratis!" : priceBook.fmtPrice();
+  const label = isFree
+    ? isPurchasable
+      ? "Gratis!"
+      : "Ta kontakt"
+    : priceBook.fmtPrice();
   return (
     <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
       <ThemedText {...textProps} subtle={subtle}>

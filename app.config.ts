@@ -58,7 +58,7 @@ export default (): ExpoConfig => ({
       },
     ],
     [
-      "/sentry/react-native/expo",
+      "@sentry/react-native/expo",
       {
         url: "https://sentry.io/",
         project: "hunde-sport",
