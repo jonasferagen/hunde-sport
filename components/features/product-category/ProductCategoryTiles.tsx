@@ -1,16 +1,14 @@
 import React from "react";
 import { type StackProps, XStack, YStack } from "tamagui";
 
-import { ThemedYStack } from "@/components/ui/themed-components";
-import { TileSquare } from "@/components/ui/tile/TileSquare";
+import { ThemedYStack } from "@/components/ui/themed";
+import { TileSquare } from "@/components/ui/tiles/TileSquare";
 import { NUM_CATEGORY_TILE_COLUMNS } from "@/config/app";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { spacePx } from "@/lib/theme";
 import { useProductCategories } from "@/stores/productCategoryStore";
 
-export const ProductCategoryTiles = React.memo(function ProductCategoryTiles(
-  props: StackProps
-) {
+export const ProductCategoryTiles = React.memo(function ProductCategoryTiles(props: StackProps) {
   const productCategories = useProductCategories(0);
 
   const GAP = "$3";

@@ -5,8 +5,8 @@ import { Linking } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
 import { CallToActionButton } from "@/components/ui/CallToActionButton";
-import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
-import { ThemedText, ThemedXStack } from "@/components/ui/themed-components";
+import { ThemedText, ThemedXStack } from "@/components/ui/themed";
+import { InlineSpinnerSwap } from "@/components/widgets/InlineSpinnerSwap";
 import { THEME_CTA_CHECKOUT } from "@/config/app";
 import { useCartIsLoading, useCartStore } from "@/stores/useCartStore";
 
@@ -27,8 +27,7 @@ export const CheckoutButton = () => {
     try {
       const checkoutUrl = await useCartStore.getState().checkout();
       const url = checkoutUrl.toString();
-      if (!(await Linking.canOpenURL(url)))
-        throw new Error("Cannot open checkout URL");
+      if (!(await Linking.canOpenURL(url))) throw new Error("Cannot open checkout URL");
       await Linking.openURL(url);
     } finally {
       setRedirecting(false);
@@ -40,9 +39,7 @@ export const CheckoutButton = () => {
       <ThemedText tabular>
         {qty} {qty === 1 ? "vare" : "varer"}
       </ThemedText>
-      <InlineSpinnerSwap loading={isLoading}>
-        {totals.formatItemsTotal()}
-      </InlineSpinnerSwap>
+      <InlineSpinnerSwap loading={isLoading}>{totals.formatItemsTotal()}</InlineSpinnerSwap>
     </ThemedXStack>
   );
 

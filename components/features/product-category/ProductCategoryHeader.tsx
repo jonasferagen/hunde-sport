@@ -3,7 +3,7 @@ import { Ellipsis } from "@tamagui/lucide-icons";
 import React from "react";
 import { Theme } from "tamagui";
 
-import { ThemedButton } from "@/components/ui/themed-components";
+import { ThemedButton } from "@/components/ui/themed";
 import { openModal } from "@/stores/ui/modalStore";
 import type { ProductCategory } from "@/types";
 
@@ -18,11 +18,7 @@ export const ProductCategoryHeader: React.FC<{
   const openAll = React.useCallback(() => {
     openModal(
       (payload, api) => (
-        <ProductCategoriesModal
-          productCategories={(payload as any).productCategories}
-          title={(payload as any).title}
-          close={() => api.close()}
-        />
+        <ProductCategoriesModal productCategories={(payload as any).productCategories} title={(payload as any).title} close={() => api.close()} />
       ),
       { productCategories, title: productCategory.name }
     );

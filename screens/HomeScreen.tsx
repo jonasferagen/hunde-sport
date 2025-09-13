@@ -1,17 +1,7 @@
+import { PageBody, PageHeader, PageSection, PageView } from "@/components/chrome/layout";
 import { ProductCategoryTiles } from "@/components/features/product-category/ProductCategoryTiles";
-import {
-  DebugProducts,
-  DiscountedProducts,
-  FeaturedProducts,
-  RecentProducts,
-} from "@/components/features/product/list/ProductRail";
-import {
-  PageBody,
-  PageHeader,
-  PageSection,
-  PageView,
-} from "@/components/layout";
-import { SearchBar } from "@/components/ui/search-bar/SearchBar";
+import { DebugProducts, DiscountedProducts, FeaturedProducts, RecentProducts } from "@/components/features/product/list/ProductRail";
+import { SearchBar } from "@/components/widgets/SearchBar";
 import {
   THEME_CATEGORIES,
   THEME_CATEGORIES_BG,
@@ -61,10 +51,7 @@ export const HomeScreen = () => {
         <PageSection title="Tilbud" theme={THEME_PRODUCTS_DISCOUNTED_BG}>
           <DiscountedProducts theme={THEME_PRODUCTS_DISCOUNTED} />
         </PageSection>
-        <PageSection
-          title="Utvalgte produkter"
-          theme={THEME_PRODUCTS_FEATURED_BG}
-        >
+        <PageSection title="Utvalgte produkter" theme={THEME_PRODUCTS_FEATURED_BG}>
           <FeaturedProducts key="featured" theme={THEME_PRODUCTS_FEATURED} />
         </PageSection>
       </PageBody>

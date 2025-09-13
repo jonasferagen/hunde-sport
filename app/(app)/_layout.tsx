@@ -4,24 +4,19 @@ import Drawer from "expo-router/drawer";
 import React from "react";
 import { View } from "tamagui";
 
-import { CustomDrawer } from "@/components/menu/CustomDrawer";
-import { CustomHeader } from "@/components/menu/CustomHeader";
-import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
-import { ThemedYStack } from "@/components/ui/themed-components";
+import { NavDrawer } from "@/components/chrome/navigation/NavDrawer";
+import { NavHeader } from "@/components/chrome/navigation/NavHeader";
+import { ThemedYStack } from "@/components/ui/themed";
+import { LoadingOverlay } from "@/components/widgets/LoadingOverlay";
 
 const AppLayout = () => {
   //const isOpen = useDrawerStore((s) => s.status !== 'closed');
 
-  const drawerContent = React.useCallback(
-    (props: DrawerContentComponentProps) => (
-      <CustomDrawer navigation={props.navigation} />
-    ),
-    []
-  );
+  const drawerContent = React.useCallback((props: DrawerContentComponentProps) => <NavDrawer navigation={props.navigation} />, []);
 
   const screenOptions = React.useMemo(
     () => ({
-      header: () => <CustomHeader />,
+      header: () => <NavHeader />,
       swipeEnabled: true,
       freezeOnBlur: true, // default
       unmountOnBlur: false, // default
@@ -33,16 +28,8 @@ const AppLayout = () => {
   return (
     <View f={1} pos="relative" zi={10}>
       <ThemedYStack pos="absolute" fullscreen bg="$background">
-        <Drawer
-          drawerContent={drawerContent}
-          screenOptions={screenOptions}
-          detachInactiveScreens={false}
-          initialRouteName="(shop)"
-        >
-          <Drawer.Screen
-            name="(shop)"
-            options={{ sceneStyle: { backgroundColor: "transparent" } }}
-          />
+        <Drawer drawerContent={drawerContent} screenOptions={screenOptions} detachInactiveScreens={false} initialRouteName="(shop)">
+          <Drawer.Screen name="(shop)" options={{ sceneStyle: { backgroundColor: "transparent" } }} />
         </Drawer>
         <LoadingOverlay zi={99} />
       </ThemedYStack>

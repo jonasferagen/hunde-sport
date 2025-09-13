@@ -3,7 +3,7 @@ import { ChevronDown } from "@tamagui/lucide-icons";
 import React from "react";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 
-import { ThemedText, ThemedXStack } from "@/components/ui/themed-components";
+import { ThemedText, ThemedXStack } from "@/components/ui/themed";
 import { THEME_HINT } from "@/config/app";
 
 type BottomMoreHintHandle = {

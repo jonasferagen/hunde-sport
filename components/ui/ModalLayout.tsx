@@ -2,11 +2,7 @@ import { X } from "@tamagui/lucide-icons";
 import * as React from "react";
 import { H4, ScrollView, type ScrollViewProps } from "tamagui";
 
-import {
-  ThemedButton,
-  ThemedXStack,
-  ThemedYStack,
-} from "@/components/ui/themed-components";
+import { ThemedButton, ThemedXStack, ThemedYStack } from "@/components/ui/themed";
 
 type ModalLayoutProps = {
   /** Header title area (text or custom node) */
@@ -31,26 +27,12 @@ type ModalLayoutProps = {
  * Minimal, opinionated modal layout:
  * Header (title + close), Body (scrollable by default), Footer (actions)
  */
-export function ModalLayout({
-  title,
-  onClose,
-  children,
-  footer,
-  scroll = true,
-  scrollProps,
-}: ModalLayoutProps) {
+export function ModalLayout({ title, onClose, children, footer, scroll = true, scrollProps }: ModalLayoutProps) {
   return (
     <ThemedYStack f={1} mih={0} gap="$3" p="$2">
       {/* Header */}
       <ThemedXStack ai="center">
-        <H4
-          f={1}
-          fow="bold"
-          numberOfLines={2}
-          adjustsFontSizeToFit
-          minimumFontScale={0.8}
-          ellipsizeMode="tail"
-        >
+        <H4 f={1} fow="bold" numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8} ellipsizeMode="tail">
           {title}
         </H4>
 
@@ -62,13 +44,7 @@ export function ModalLayout({
       {/* Body */}
       <ThemedYStack f={1} mih={0}>
         {scroll ? (
-          <ScrollView
-            f={1}
-            keyboardShouldPersistTaps="handled"
-            removeClippedSubviews={false}
-            contentContainerStyle={{ paddingBottom: 12 }}
-            {...scrollProps}
-          >
+          <ScrollView f={1} keyboardShouldPersistTaps="handled" removeClippedSubviews={false} contentContainerStyle={{ paddingBottom: 12 }} {...scrollProps}>
             {children}
           </ScrollView>
         ) : (

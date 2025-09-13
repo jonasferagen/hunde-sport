@@ -1,9 +1,9 @@
 import React from "react";
 
-import { ProductImage } from "@/components/features/product/display/ProductImage";
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
+import { ProductImage } from "@/components/features/product/ui/ProductImage";
 import { ModalLayout } from "@/components/ui/ModalLayout";
-import { ThemedYStack } from "@/components/ui/themed-components";
+import { ThemedYStack } from "@/components/ui/themed";
 import { useVariableProductContext, VariableProductProvider } from "@/contexts";
 import type { AttrKey } from "@/domain/product-attributes/Attribute";
 import { AttributeSelection } from "@/domain/product-attributes/AttributeSelection";
@@ -28,21 +28,12 @@ export const ProductVariationsModal = ({ close, purchasable }: Props) => {
   );
 };
 
-export const ProductVariationsModalContent = ({
-  close,
-  purchasable,
-}: {
-  close: () => void;
-  purchasable: Purchasable;
-}) => {
+export const ProductVariationsModalContent = ({ close, purchasable }: { close: () => void; purchasable: Purchasable }) => {
   const { productVariations } = useVariableProductContext();
   const variableProduct = purchasable.variableProduct;
 
-  const initialAttributeSelection = AttributeSelection.create(
-    purchasable.variableProduct.attributes
-  );
-  const [attributeSelection, setAttributeSelection] =
-    React.useState<AttributeSelection>(initialAttributeSelection!);
+  const initialAttributeSelection = AttributeSelection.create(purchasable.variableProduct.attributes);
+  const [attributeSelection, setAttributeSelection] = React.useState<AttributeSelection>(initialAttributeSelection!);
 
   const resolveProductVariation = React.useMemo(
     () => (attributeSelection: AttributeSelection) => {
@@ -77,32 +68,17 @@ export const ProductVariationsModalContent = ({
       footer={
         <ThemedYStack>
           <ThemedYStack mb="$3" />
-          <PurchaseButton
-            purchasable={newPurchasable}
-            onSuccess={close}
-            onOpenCustomization={onOpenCustomization}
-          />
+          <PurchaseButton purchasable={newPurchasable} onSuccess={close} onOpenCustomization={onOpenCustomization} />
         </ThemedYStack>
-      }
-    >
+      }>
       <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
-        <ProductImage 
-        product={variableProduct} 
-        img_height={IMAGE_H} 
-        />
+        <ProductImage product={variableProduct} img_height={IMAGE_H} />
       </ThemedYStack>
-      <ProductVariationSelect
-        attributeSelection={attributeSelection}
-        onSelect={onSelect}
-      />
+      <ProductVariationSelect attributeSelection={attributeSelection} onSelect={onSelect} />
     </ModalLayout>
   );
 };
 const onOpenCustomization = async (p: Purchasable) => {
-  const { ProductCustomizationModal } = await import(
-    "@/components/features/purchasable/ProductCustomizationModal"
-  );
-  openModal((_, api) => (
-    <ProductCustomizationModal purchasable={p} close={() => api.close()} />
-  ));
+  const { ProductCustomizationModal } = await import("@/components/features/purchasable/ui/ProductCustomizationModal");
+  openModal((_, api) => <ProductCustomizationModal purchasable={p} close={() => api.close()} />);
 };

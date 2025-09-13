@@ -1,17 +1,12 @@
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import Animated, {
-  FadeIn,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { FadeIn, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { View } from "tamagui";
 
-import { ProductCard } from "@/components/features/product/display/ProductCard";
-import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
+import { ProductCard } from "@/components/features/product/ui/ProductCard";
 import { Loader } from "@/components/ui/Loader";
-import { ThemedXStack } from "@/components/ui/themed-components";
+import { ThemedXStack } from "@/components/ui/themed";
+import { DefaultTextContent } from "@/components/widgets/DefaultTextContent";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import type { PurchasableProduct } from "@/types";
 
@@ -37,10 +32,7 @@ export const ProductList = React.memo(function ProductList({
   transitionKey,
   //totalProducts,
 }: ProductListProps) {
-  const keyExtractor = React.useCallback(
-    (p: PurchasableProduct) => String(p.id),
-    []
-  );
+  const keyExtractor = React.useCallback((p: PurchasableProduct) => String(p.id), []);
 
   const animatedIdsRef = React.useRef<Set<number>>(new Set());
   React.useEffect(() => {
@@ -67,17 +59,12 @@ export const ProductList = React.memo(function ProductList({
     hintRef.current?.kick();
   }, []);
   */
-  const renderItem = React.useCallback(
-    ({ item: product, index }: { item: PurchasableProduct; index: number }) => {
-      const firstTime = !animatedIdsRef.current.has(product.id);
-      if (firstTime) animatedIdsRef.current.add(product.id);
+  const renderItem = React.useCallback(({ item: product, index }: { item: PurchasableProduct; index: number }) => {
+    const firstTime = !animatedIdsRef.current.has(product.id);
+    if (firstTime) animatedIdsRef.current.add(product.id);
 
-      return (
-        <ItemAnimator product={product} index={index} firstTime={firstTime} />
-      );
-    },
-    []
-  );
+    return <ItemAnimator product={product} index={index} firstTime={firstTime} />;
+  }, []);
 
   return (
     <View f={1}>
@@ -88,12 +75,8 @@ export const ProductList = React.memo(function ProductList({
           keyExtractor={keyExtractor}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.8}
-          ListFooterComponent={
-            isLoadingMore ? <Loader w="100%" h={ITEM_HEIGHT} /> : null
-          }
-          ListEmptyComponent={
-            <DefaultTextContent>Ingen produkter funnet</DefaultTextContent>
-          }
+          ListFooterComponent={isLoadingMore ? <Loader w="100%" h={ITEM_HEIGHT} /> : null}
+          ListEmptyComponent={<DefaultTextContent>Ingen produkter funnet</DefaultTextContent>}
           contentContainerStyle={{ flexGrow: 1 }}
           drawDistance={800}
           getItemType={() => "product"}
@@ -149,15 +132,9 @@ function ItemAnimator({ product, index, firstTime }: ItemAnimatorProps) {
   return (
     // Outer handles FadeIn (defaults). It can animate opacity+transform.
     // Inner controls its own opacity for the safeguard; no conflict because different nodes.
-    <Animated.View
-      entering={firstTime ? FadeIn.delay(delay) : undefined}
-      collapsable={false}
-    >
+    <Animated.View entering={firstTime ? FadeIn.delay(delay) : undefined} collapsable={false}>
       <Animated.View style={opacityStyle}>
-        <ProductCard
-          product={product}
-          theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
-        />
+        <ProductCard product={product} theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2} />
       </Animated.View>
     </Animated.View>
   );

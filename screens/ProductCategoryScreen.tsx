@@ -1,19 +1,15 @@
 import { Redirect, useLocalSearchParams } from "expo-router";
 import { YStack } from "tamagui";
 
+import { PageBody, PageSection, PageView } from "@/components/chrome/layout";
+import { PageHeader } from "@/components/chrome/layout/PageHeader";
 import { Breadcrumbs } from "@/components/features/product-category/Breadcrumbs";
 import { ProductCategoryHeader } from "@/components/features/product-category/ProductCategoryHeader";
 import { ProductCategoryProducts } from "@/components/features/product-category/ProductCategoryProducts";
-import { PageBody, PageSection, PageView } from "@/components/layout";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { ThemedXStack } from "@/components/ui/themed-components";
+import { ThemedXStack } from "@/components/ui/themed";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
-import {
-  useBreadcrumbTrail,
-  useProductCategories,
-  useProductCategory,
-} from "@/stores/productCategoryStore";
+import { useBreadcrumbTrail, useProductCategories, useProductCategory } from "@/stores/productCategoryStore";
 
 export const ProductCategoryScreen = () => {
   useRenderGuard("ProductCategoryScreen");
@@ -38,10 +34,7 @@ export const ProductCategoryScreen = () => {
             <Breadcrumbs trail={trail} isLastClickable />
           </YStack>
           <YStack>
-            <ProductCategoryHeader
-              productCategory={productCategory}
-              productCategories={productCategories}
-            />
+            <ProductCategoryHeader productCategory={productCategory} productCategories={productCategories} />
           </YStack>
         </ThemedXStack>
       </PageHeader>

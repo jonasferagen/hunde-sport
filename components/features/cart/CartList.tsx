@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 
-import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
-import { ThemedYStack } from "@/components/ui/themed-components";
+import { ThemedYStack } from "@/components/ui/themed";
+import { DefaultTextContent } from "@/components/widgets/DefaultTextContent";
 import { useCartStore } from "@/stores/useCartStore";
 
 import { CartListItem } from "./CartListItem";

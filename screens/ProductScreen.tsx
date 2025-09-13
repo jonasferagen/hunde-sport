@@ -1,23 +1,11 @@
 import { Redirect, useLocalSearchParams } from "expo-router";
 
+import { PageBody, PageFooter, PageSection, PageView } from "@/components/chrome/layout";
 import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
-import {
-  ProductAvailabilityStatus,
-  ProductDescription,
-  ProductImage,
-  ProductImageGallery,
-  ProductPrice,
-  ProductTitle,
-} from "@/components/features/product/display/";
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
-import {
-  PageBody,
-  PageFooter,
-  PageSection,
-  PageView,
-} from "@/components/layout";
+import { ProductAvailabilityStatus, ProductDescription, ProductImage, ProductImageGallery, ProductPrice, ProductTitle } from "@/components/features/product/ui";
 import { Loader } from "@/components/ui/Loader";
-import { ThemedXStack } from "@/components/ui/themed-components";
+import { ThemedXStack } from "@/components/ui/themed";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { ProductCategoryProvider } from "@/contexts/ProductCategoryContext";
 import { useProduct } from "@/hooks/api/data/product/queries";
@@ -29,8 +17,7 @@ export const ProductScreen = () => {
   useRenderGuard("ProductScreen");
 
   const ready = useScreenReady();
-  const { id, productCategoryId: productCategoryIdFromParams } =
-    useLocalSearchParams<{ id: string; productCategoryId?: string }>();
+  const { id, productCategoryId: productCategoryIdFromParams } = useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
   const productCategoryId = Number(productCategoryIdFromParams);
   const { data: product, isLoading } = useProduct(productId, {
@@ -47,11 +34,7 @@ export const ProductScreen = () => {
   }
 
   return (
-    <ProductCategoryProvider
-      productCategoryId={
-        productCategoryId || product.categories[0].id
-      } 
-    >
+    <ProductCategoryProvider productCategoryId={productCategoryId || product.categories[0].id}>
       <ProductScreenContent product={product as PurchasableProduct} />
     </ProductCategoryProvider>
   );
@@ -68,35 +51,20 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
         <PageSection theme={THEME_PRODUCT_ITEM_1} padded>
           <ThemedXStack split>
             <ThemedXStack f={1} miw={0} h="100%" ai="center">
-              <ProductTitle
-                f={1}
-                mih={0}
-                numberOfLines={2}
-                adjustsFontSizeToFit
-                ellipsizeMode="tail"
-                product={purchasable.product}
-              />
+              <ProductTitle f={1} mih={0} numberOfLines={2} adjustsFontSizeToFit ellipsizeMode="tail" product={purchasable.product} />
             </ThemedXStack>
 
             <ProductPrice fos="$6" purchasable={purchasable} />
           </ThemedXStack>
           <ThemedXStack split>
-            <ProductAvailabilityStatus
-              productAvailability={product.availability}
-            />
+            <ProductAvailabilityStatus productAvailability={product.availability} />
           </ThemedXStack>
         </PageSection>
-        <PageSection
-          padded
-          title="Produktinformasjon"
-          theme={THEME_PRODUCT_ITEM_2}
-        >
+        <PageSection padded title="Produktinformasjon" theme={THEME_PRODUCT_ITEM_2}>
           <ProductDescription product={product} long />
         </PageSection>
         <PageSection padded title="Produktbilder" theme={THEME_PRODUCT_ITEM_1}>
-          {product.images.length > 0 && (
-            <ProductImageGallery product={product} />
-          )}
+          {product.images.length > 0 && <ProductImageGallery product={product} />}
         </PageSection>
         <PageSection padded title="Kategorier" theme={THEME_PRODUCT_ITEM_2}>
           <ProductCategoryChips categoryRefs={product.categories} />

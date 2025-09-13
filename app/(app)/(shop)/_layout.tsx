@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { PortalItem } from "tamagui";
 
-import { CustomBottomBar } from "@/components/menu/CustomBottomBar";
+import { NavBottomBar } from "@/components/chrome/navigation/NavBottomBar";
 import { routes } from "@/config/routes";
 import { useCanonicalBackHandler } from "@/hooks/useCanonicalNavigation";
 
@@ -22,7 +22,7 @@ export default function ShopLayout() {
         ))}
       </Stack>
       <PortalItem>
-        <CustomBottomBar />
+        <NavBottomBar />
       </PortalItem>
     </>
   );

@@ -3,12 +3,8 @@ import { ChevronRight } from "@tamagui/lucide-icons";
 import React from "react";
 import { ScrollView } from "tamagui";
 
-import { EdgeFadesOverlay } from "@/components/ui/EdgeFadesOverlay";
-import {
-  ThemedText,
-  ThemedXStack,
-  type ThemedXStackProps,
-} from "@/components/ui/themed-components";
+import { ThemedText, ThemedXStack, type ThemedXStackProps } from "@/components/ui/themed";
+import { EdgeFadesOverlay } from "@/components/widgets/EdgeFadesOverlay";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import type { ProductCategory } from "@/types";
@@ -18,11 +14,7 @@ interface BreadcrumbsProps extends ThemedXStackProps {
   trail: readonly ProductCategory[];
 }
 
-export const Breadcrumbs = React.memo(function Breadcrumbs({
-  isLastClickable = false,
-  trail,
-  ...stackProps
-}: BreadcrumbsProps) {
+export const Breadcrumbs = React.memo(function Breadcrumbs({ isLastClickable = false, trail, ...stackProps }: BreadcrumbsProps) {
   const edges = useEdgeFades("horizontal");
   if (trail.length === 0) return null;
 
@@ -35,25 +27,15 @@ export const Breadcrumbs = React.memo(function Breadcrumbs({
         onScroll={edges.onScroll}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: "center", paddingHorizontal: 4 }}
-      >
+        contentContainerStyle={{ alignItems: "center", paddingHorizontal: 4 }}>
         <ThemedXStack ai="center" gap="$1.5">
           {trail.map((cat, idx) => (
-            <Breadcrumb
-              key={cat.id}
-              category={cat}
-              isLast={idx === trail.length - 1}
-              isLastClickable={isLastClickable}
-            />
+            <Breadcrumb key={cat.id} category={cat} isLast={idx === trail.length - 1} isLastClickable={isLastClickable} />
           ))}
         </ThemedXStack>
       </ScrollView>
 
-      <EdgeFadesOverlay
-        orientation="horizontal"
-        visibleStart={edges.atStart}
-        visibleEnd={edges.atEnd}
-      />
+      <EdgeFadesOverlay orientation="horizontal" visibleStart={edges.atStart} visibleEnd={edges.atEnd} />
     </ThemedXStack>
   );
 });
@@ -70,27 +52,14 @@ const Breadcrumb = ({ category, isLast, isLastClickable }: BreadcrumbProps) => {
   const clickable = !isLast || isLastClickable;
 
   const TextEl = (
-    <ThemedText
-      size="$6"
-      fow={clickable ? "bold" : "normal"}
-      textDecorationLine={clickable ? "underline" : "none"}
-      px="$2"
-      py="$1"
-      numberOfLines={1}
-    >
+    <ThemedText size="$6" fow={clickable ? "bold" : "normal"} textDecorationLine={clickable ? "underline" : "none"} px="$2" py="$1" numberOfLines={1}>
       {category.name}
     </ThemedText>
   );
 
   return (
     <ThemedXStack ai="center" gap="$1">
-      {clickable ? (
-        <ThemedXStack onPress={() => to("product-category", category)}>
-          {TextEl}
-        </ThemedXStack>
-      ) : (
-        TextEl
-      )}
+      {clickable ? <ThemedXStack onPress={() => to("product-category", category)}>{TextEl}</ThemedXStack> : TextEl}
       {!isLast && <ChevronRight size="$2" />}
     </ThemedXStack>
   );

@@ -3,18 +3,13 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { SizableText } from "tamagui";
 
+import { PageBody, PageHeader, PageSection, PageView } from "@/components/chrome/layout";
 import { ProductList } from "@/components/features/product/list/ProductList";
-import {
-  PageBody,
-  PageHeader,
-  PageSection,
-  PageView,
-} from "@/components/layout";
-import { DefaultTextContent } from "@/components/ui/DefaultTextContent";
 import { Loader } from "@/components/ui/Loader";
-import { SearchBar } from "@/components/ui/search-bar/SearchBar";
-import { ThemedXStack, ThemedYStack } from "@/components/ui/themed-components";
-import { ThemedSpinner } from "@/components/ui/themed-components/ThemedSpinner";
+import { ThemedXStack, ThemedYStack } from "@/components/ui/themed";
+import { ThemedSpinner } from "@/components/ui/themed/ThemedSpinner";
+import { DefaultTextContent } from "@/components/widgets/DefaultTextContent";
+import { SearchBar } from "@/components/widgets/SearchBar";
 import { useProductsBySearch } from "@/hooks/api/data/product/queries";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue"; // simple 200–300ms debounce hook
@@ -25,8 +20,7 @@ export const SearchScreen = () => {
   const params = useLocalSearchParams<{ query?: string | string[] }>();
 
   // coerce param to a plain string (Expo can give string[])
-  const paramToString = (q: string | string[] | undefined) =>
-    Array.isArray(q) ? (q[0] ?? "") : (q ?? "");
+  const paramToString = (q: string | string[] | undefined) => (Array.isArray(q) ? (q[0] ?? "") : (q ?? ""));
 
   const [query, setQuery] = React.useState(() => paramToString(params.query));
 
@@ -50,9 +44,7 @@ export const SearchScreen = () => {
   };
 
   const isSearching = result.isLoading && !!searchQuery;
-  const title = query
-    ? `Søkeresultater for "${query}"`
-    : "Søk etter produkter, merker og kategorier.";
+  const title = query ? `Søkeresultater for "${query}"` : "Søk etter produkter, merker og kategorier.";
   const total = isSearching ? <ThemedSpinner /> : `(${result.total ?? 0})`;
 
   return (
@@ -77,9 +69,7 @@ export const SearchScreen = () => {
           {!ready ? null : !searchQuery ? null : result.isLoading ? (
             <Loader />
           ) : !result.items?.length ? (
-            <DefaultTextContent>
-              Ingen resultater funnet for &quot;{searchQuery}&quot;
-            </DefaultTextContent>
+            <DefaultTextContent>Ingen resultater funnet for &quot;{searchQuery}&quot;</DefaultTextContent>
           ) : (
             <ThemedYStack f={1} mih={0}>
               <ProductList

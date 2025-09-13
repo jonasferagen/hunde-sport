@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { enableFreeze, enableScreens } from "react-native-screens";
 import { PortalProvider, TamaguiProvider } from "tamagui";
 
-import { ModalHost } from "@/components/features/product-variation/ModalHost";
+import { ModalHost } from "@/components/chrome/ModalHost";
 import { AppToastProvider } from "@/contexts";
 import { usePlayStoreUpdates } from "@/hooks/usePlayStoreUpdates";
 import { queryClient } from "@/lib/api/queryClient";

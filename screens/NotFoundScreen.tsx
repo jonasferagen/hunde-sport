@@ -1,15 +1,13 @@
 import { Button, H1 } from "tamagui";
 
-import { ThemedYStack } from "@/components/ui/themed-components";
+import { ThemedYStack } from "@/components/ui/themed";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 
 interface NotFoundScreenProps {
   message?: string;
 }
- 
-export const NotFoundScreen = ({
-  message = "Siden ble ikke funnet.",
-}: NotFoundScreenProps) => {
+
+export const NotFoundScreen = ({ message = "Siden ble ikke funnet." }: NotFoundScreenProps) => {
   const { to } = useCanonicalNavigation();
   return (
     <ThemedYStack flex={1} jc="center" ai="center" gap="$4">

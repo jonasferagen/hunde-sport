@@ -1,6 +1,6 @@
 import { ProductList } from "@/components/features/product/list/ProductList";
 import { Loader } from "@/components/ui/Loader";
-import { ThemedYStack } from "@/components/ui/themed-components";
+import { ThemedYStack } from "@/components/ui/themed";
 import { useProductsByProductCategory } from "@/hooks/api/data/product/queries";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
 import { ProductCategory } from "@/types";
@@ -12,14 +12,7 @@ type Props = {
 export const ProductCategoryProducts = ({ productCategory }: Props) => {
   useRenderGuard("ProductCategoryProducts");
 
-  const {
-    items: products = [],
-    isLoading,
-    fetchNextPage,
-    isFetchingNextPage,
-    hasNextPage,
-    total,
-  } = useProductsByProductCategory(productCategory);
+  const { items: products = [], isLoading, fetchNextPage, isFetchingNextPage, hasNextPage, total } = useProductsByProductCategory(productCategory);
 
   return (
     <ThemedYStack f={1} mih={0}>

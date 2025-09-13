@@ -2,7 +2,7 @@ import { ChevronRight } from "@tamagui/lucide-icons";
 import { H4 } from "tamagui";
 
 import { ModalLayout } from "@/components/ui/ModalLayout";
-import { ThemedButton, ThemedYStack } from "@/components/ui/themed-components";
+import { ThemedButton, ThemedYStack } from "@/components/ui/themed";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import type { ProductCategory } from "@/types";
 

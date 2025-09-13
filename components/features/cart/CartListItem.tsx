@@ -1,28 +1,14 @@
 import { Minus, Plus, X } from "@tamagui/lucide-icons";
 import { useShallow } from "zustand/react/shallow";
 
-import { InlineSpinnerSwap } from "@/components/ui/InlineSpinnerSwap";
-import {
-  ThemedText,
-  ThemedXStack,
-  ThemedYStack,
-} from "@/components/ui/themed-components";
-import { ThemedButton } from "@/components/ui/themed-components/ThemedButton";
+import { ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui/themed";
+import { ThemedButton } from "@/components/ui/themed/ThemedButton";
+import { InlineSpinnerSwap } from "@/components/widgets/InlineSpinnerSwap";
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from "@/config/app";
 // ⬅️ add this
 import { useCartStore } from "@/stores/useCartStore";
 
-const QtyStepper = ({
-  value,
-  onInc,
-  onDec,
-  disabled,
-}: {
-  value: number;
-  onInc: () => void;
-  onDec: () => void;
-  disabled?: boolean;
-}) => (
+const QtyStepper = ({ value, onInc, onDec, disabled }: { value: number; onInc: () => void; onDec: () => void; disabled?: boolean }) => (
   <ThemedXStack ai="center" gap="$2">
     <ThemedButton circular onPress={onDec} disabled={disabled || value <= 1}>
       <Minus />
@@ -57,14 +43,7 @@ export const CartListItem = ({ itemKey }: { itemKey: string }) => {
               {name} {variation}
             </ThemedText>
           </ThemedYStack>
-          <ThemedButton
-            circular
-            interactive={false}
-            bg="transparent"
-            boc="transparent"
-            onPress={() => removeItem(key)}
-            aria-label="Fjern"
-          >
+          <ThemedButton circular interactive={false} bg="transparent" boc="transparent" onPress={() => removeItem(key)} aria-label="Fjern">
             <X />
           </ThemedButton>
         </ThemedXStack>
@@ -72,19 +51,12 @@ export const CartListItem = ({ itemKey }: { itemKey: string }) => {
 
       <ThemedYStack theme={THEME_CART_ITEM_2} box container>
         <ThemedXStack ai="center">
-          <QtyStepper
-            value={quantity}
-            onInc={() => updateItem(key, quantity + 1)}
-            onDec={() => updateItem(key, quantity - 1)}
-          />
+          <QtyStepper value={quantity} onInc={() => updateItem(key, quantity + 1)} onDec={() => updateItem(key, quantity - 1)} />
 
           {/* Right side: line total (big) + unit price (small) */}
           <ThemedXStack f={1} ai="center" jc="flex-end">
             <ThemedYStack ai="flex-end" gap="$1">
-              <InlineSpinnerSwap
-                loading={isUpdating}
-                textProps={{ size: "$6" }}
-              >
+              <InlineSpinnerSwap loading={isUpdating} textProps={{ size: "$6" }}>
                 {item.formatLineTotal()}
               </InlineSpinnerSwap>
               <ThemedText size="$2" o={0.7}>

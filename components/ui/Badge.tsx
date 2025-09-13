@@ -2,10 +2,7 @@
 import React from "react";
 import type { ThemeName } from "tamagui";
 
-import {
-  ThemedXStack,
-  type ThemedXStackProps,
-} from "@/components/ui/themed-components";
+import { ThemedXStack, type ThemedXStackProps } from "@/components/ui/themed";
 
 type Corner = "tl" | "tr" | "bl" | "br";
 
@@ -16,13 +13,7 @@ type BadgeBaseProps = ThemedXStackProps & {
   children: React.ReactNode;
 };
 
-export function BadgeBase({
-  corner,
-  offset = "$2",
-  theme,
-  children,
-  ...props
-}: BadgeBaseProps) {
+export function BadgeBase({ corner, offset = "$2", theme, children, ...props }: BadgeBaseProps) {
   const pos: Partial<Record<Corner, Partial<ThemedXStackProps>>> = {
     tl: { t: offset, l: offset },
     tr: { t: offset, r: offset },
@@ -41,8 +32,7 @@ export function BadgeBase({
       elevation="$2"
       br="$3"
       pointerEvents="none" // decorative by default
-      {...props}
-    >
+      {...props}>
       {children}
     </ThemedXStack>
   );
@@ -55,25 +45,9 @@ interface TileBadgeProps extends ThemedXStackProps {
   children: React.ReactNode;
 }
 
-export const TileBadge = ({
-  corner = "tr",
-  offset = "$2",
-  theme,
-  children,
-  ...props
-}: TileBadgeProps) => {
+export const TileBadge = ({ corner = "tr", offset = "$2", theme, children, ...props }: TileBadgeProps) => {
   return (
-    <BadgeBase
-      corner={corner}
-      offset={offset}
-      theme={theme}
-      p="$1"
-      px="$2"
-      gap="$2"
-      br="$3"
-      ov="hidden"
-      {...props}
-    >
+    <BadgeBase corner={corner} offset={offset} theme={theme} p="$1" px="$2" gap="$2" br="$3" ov="hidden" {...props}>
       {children}
     </BadgeBase>
   );
@@ -96,8 +70,7 @@ export const IconBadge = ({ theme, children, ...props }: IconBadgeProps) => {
       p="$1"
       elevation="$4"
       br={9999}
-      {...props}
-    >
+      {...props}>
       {children}
     </BadgeBase>
   );

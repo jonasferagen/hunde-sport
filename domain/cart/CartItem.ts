@@ -4,7 +4,6 @@ import { Currency } from "@/domain/pricing/Currency";
 import { Money } from "@/domain/pricing/Money";
 import type { CartItemTotalsData, ProductPrices } from "@/domain/pricing/types";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
-
 import { cleanHtml, slugKey } from "@/lib/formatters";
 
 type CartItemVariationData = {
