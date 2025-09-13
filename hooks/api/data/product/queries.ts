@@ -46,10 +46,10 @@ export const useDebugProducts = (
   ids: number[],
 ): QueryResult<PurchasableProduct> => {
   const result = useInfiniteQuery({
+    enabled: !!ids && ids.length > 0,
     queryKey: ["products-by-ids", ids],
     queryFn: ({ pageParam }) =>
       fetchProductsByIds(ids, { pagination: { page: pageParam } }),
-    enabled: !!ids && ids.length > 0,
     ...queryOptions,
   });
   return useQueryResult<PurchasableProduct>(result);
@@ -61,10 +61,11 @@ export const useProductsBySearch = (
 ): QueryResult<PurchasableProduct> => {
   const queryOptions = makeQueryOptions(options);
   const result = useInfiniteQuery({
-    ...queryOptions,
+    enabled: !!query,
     queryKey: ["products-by-search", query],
     queryFn: ({ pageParam }) =>
       fetchProductsBySearch(query, { pagination: { page: pageParam } }),
+    ...queryOptions,
   });
   return useQueryResult<PurchasableProduct>(result);
 };
@@ -135,6 +136,7 @@ export const useProductVariations = (
   options = { perPage: 10, order: "asc" as "asc" | "desc" },
 ): QueryResult<ProductVariation> => {
   const result = useInfiniteQuery({
+    enabled: product.isVariable,
     queryKey: ["product-variations", product.id],
     queryFn: ({ pageParam }) =>
       fetchProductVariations(product.id, {
@@ -144,7 +146,6 @@ export const useProductVariations = (
           order: options.order,
         },
       }),
-    enabled: product.isVariable,
     ...queryOptions,
   });
   return useQueryResult<ProductVariation>(result);
@@ -155,8 +156,8 @@ export function useProductVariation(
   options = { order: "asc" as "asc" | "desc" },
 ) {
   return useQuery({
-    queryKey: ["product-variation", product.id, options.order],
     enabled: product.isVariable,
+    queryKey: ["product-variation", product.id, options.order],
     queryFn: async () => {
       const page = await fetchProductVariations(product.id, {
         pagination: {

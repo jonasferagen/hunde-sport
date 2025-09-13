@@ -7,7 +7,6 @@ import type { ProductFilters } from "@/hooks/api/data/product/api";
 
 import type { Page } from "./responseTransformer";
 
-// The queryFn returns Page<TItem>; InfiniteData<Page<TItem>> matches placeholderData for infinite queries.
 type QueryOverride = {
   enabled?: boolean;
 };
