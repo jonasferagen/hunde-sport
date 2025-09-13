@@ -1,6 +1,6 @@
 import type { SizableTextProps } from "tamagui";
 
-import { ThemedText } from "@/components/ui/themed";
+import { ThemedParagraph } from "@/components/ui/themed/ThemedParagraph";
 import type { PurchasableProduct } from "@/types";
 
 interface ProductDescriptionProps extends SizableTextProps {
@@ -12,8 +12,8 @@ export const ProductDescription = ({ long = false, product, ...sizableTextProps 
   const description = long ? product.description || product.short_description : product.short_description;
 
   return (
-    <ThemedText fos="$2" lh="$1" textDecorationLine="none" {...sizableTextProps}>
+    <ThemedParagraph fos="$2" lh="$1" textDecorationLine="none" {...sizableTextProps}>
       {description || "Ingen beskrivelse tilgjengelig"}
-    </ThemedText>
+    </ThemedParagraph>
   );
 };

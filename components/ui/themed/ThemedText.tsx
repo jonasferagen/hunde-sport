@@ -9,6 +9,12 @@ const ThemedTextBase = styled(SizableText, {
   variants: {
     bold: { true: { fow: "bold" } },
     subtle: { true: { col: "$colorTransparent" } },
+    copyable: {
+      true: {
+        userSelect: "auto",
+        pointerEvents: "auto", // make sure it can receive long-press
+      },
+    },
     tabular: {
       true: {
         numberOfLines: 1,
@@ -28,12 +34,11 @@ export type ThemedTextProps = React.ComponentProps<typeof ThemedTextBase> & {
   bold?: boolean;
   subtle?: boolean;
   tabular?: boolean;
+  copyable?: boolean;
 };
 export type ThemedTextRef = React.ComponentRef<typeof ThemedTextBase>;
 
-export const ThemedText = React.forwardRef<ThemedTextRef, ThemedTextProps>(
-  function ThemedText(props, ref) {
-    return <ThemedTextBase ref={ref} {...props} />;
-  }
-);
+export const ThemedText = React.forwardRef<ThemedTextRef, ThemedTextProps>(function ThemedText(props, ref) {
+  return <ThemedTextBase ref={ref} {...props} />;
+});
 ThemedText.displayName = "ThemedText";
