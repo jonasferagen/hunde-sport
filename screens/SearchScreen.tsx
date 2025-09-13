@@ -3,7 +3,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { SizableText } from "tamagui";
 
-import { PageBody, PageHeader, PageSection, PageView } from "@/components/chrome/layout";
+import {
+  PageBody,
+  PageHeader,
+  PageSection,
+  PageView,
+} from "@/components/chrome/layout";
 import { ProductList } from "@/components/features/product/list/ProductList";
 import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack, ThemedYStack } from "@/components/ui/themed";
@@ -18,21 +23,23 @@ export const SearchScreen = () => {
   const ready = useScreenReady();
 
   const params = useLocalSearchParams<{ query?: string | string[] }>();
-
-  // coerce param to a plain string (Expo can give string[])
-  const paramToString = (q: string | string[] | undefined) => (Array.isArray(q) ? (q[0] ?? "") : (q ?? ""));
+  const paramToString = (q: string | string[] | undefined) =>
+    Array.isArray(q) ? (q[0] ?? "") : (q ?? "");
 
   const [query, setQuery] = React.useState(() => paramToString(params.query));
-
-  // ✅ keep local state in sync with URL when navigating here again
+  const searchQuery: string = useDebouncedValue(query, 250);
+  // keep local state in sync with URL when navigating here again
   React.useEffect(() => {
     setQuery(paramToString(params.query));
   }, [params.query]);
 
-  const searchQuery = useDebouncedValue(query, 250);
+  const isSearchable: boolean = ready && searchQuery.trim().length >= 2;
+  // “User is typing” (debounce active, no request yet)
+  const isDebounceActive: boolean =
+    ready && query.trim().length >= 2 && query !== searchQuery;
 
   const result = useProductsBySearch(searchQuery, {
-    enabled: ready && searchQuery.trim().length > 0,
+    enabled: isSearchable,
   });
 
   const router = useRouter();
@@ -43,8 +50,10 @@ export const SearchScreen = () => {
     router.setParams({ query: q || undefined });
   };
 
-  const isSearching = result.isLoading && !!searchQuery;
-  const title = query ? `Søkeresultater for "${query}"` : "Søk etter produkter, merker og kategorier.";
+  const isSearching = isDebounceActive || result.isFetching;
+  const title = query
+    ? `Søkeresultater for "${query}"`
+    : "Søk etter produkter, merker og kategorier.";
   const total = isSearching ? <ThemedSpinner /> : `(${result.total ?? 0})`;
 
   return (
@@ -69,7 +78,9 @@ export const SearchScreen = () => {
           {!ready ? null : !searchQuery ? null : result.isLoading ? (
             <Loader />
           ) : !result.items?.length ? (
-            <DefaultTextContent>Ingen resultater funnet for &quot;{searchQuery}&quot;</DefaultTextContent>
+            <DefaultTextContent>
+              Ingen resultater funnet for &quot;{searchQuery}&quot;
+            </DefaultTextContent>
           ) : (
             <ThemedYStack f={1} mih={0}>
               <ProductList
