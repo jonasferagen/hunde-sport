@@ -1,4 +1,4 @@
-// @domain/pricing/Currency.ts
+// @/domain/pricing/Currency.ts
 import type { CurrencyHeader } from "./types";
 
 type NormalizedCurrency = CurrencyHeader;

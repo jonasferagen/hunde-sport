@@ -4,7 +4,10 @@
     "strict": true,
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
-    "target": "ES2020",
+    "target": "ES2024",
+    "lib": [
+      "ES2024"
+    ],
     "jsx": "react-jsx",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -12,13 +15,19 @@
     "noUncheckedIndexedAccess": true, // catches many subtle runtime errors
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@domain/*": ["domain/*"],
-      "@cart/*": ["domain/cart/*"],
-      "@product/*": ["domain/product/*"],
-      "@tests/*": ["tests/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@tests/*": [
+        "tests/*"
+      ]
     },
-    "types": ["react", "react-native", "expo", "jest"]
+    "types": [
+      "react",
+      "react-native",
+      "expo",
+      "jest"
+    ]
   },
   "include": [
     "app",

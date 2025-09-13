@@ -80,3 +80,9 @@ export class ProductCategory {
   }
 }
 ```
+
+We use a single root alias: @/ → project root.
+All imports must be of the form:
+@/domain/...
+@/components/...
+@/hooks/...

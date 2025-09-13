@@ -1,4 +1,4 @@
-// @domain/cart/ItemTotals.ts
+// @/domain/cart/ItemTotals.ts
 import { Currency } from "@/domain/pricing/Currency";
 import { Money } from "@/domain/pricing/Money";
 import type { CartItemTotalsData } from "@/domain/pricing/types";
@@ -41,10 +41,7 @@ export class CartItemTotals {
 
   /** Discounted (if available) else fallback to subtotal; always tax-inclusive. */
   amountWithTax(discounted = true): Money {
-    if (
-      discounted &&
-      (this.lineTotal.minor !== 0 || this.lineTotalTax.minor !== 0)
-    ) {
+    if (discounted && (this.lineTotal.minor !== 0 || this.lineTotalTax.minor !== 0)) {
       return this.lineTotal.add(this.lineTotalTax);
     }
     return this.lineSubtotal.add(this.lineSubtotalTax);

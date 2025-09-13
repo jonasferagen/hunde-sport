@@ -19,7 +19,7 @@ export type ProductPrices = CurrencyHeader & {
   };
 };
 
-// @domain/pricing/types.ts (or cart/types)
+// @/domain/pricing/types.ts (or cart/types)
 export type CartItemTotalsData = CurrencyHeader & {
   line_total: string; // discounted base excl. tax
   line_total_tax: string; // tax for discounted base

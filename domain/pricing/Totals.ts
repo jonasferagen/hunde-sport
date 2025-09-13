@@ -1,4 +1,4 @@
-// @domain/pricing/Totals.ts
+// @/domain/pricing/Totals.ts
 import { Currency } from "./Currency";
 import { Money } from "./Money";
 import type { CurrencyHeader } from "./types";
@@ -97,12 +97,7 @@ export class Totals {
   }
 
   isZero(): boolean {
-    return (
-      this.total.minor === 0 &&
-      this.items.minor === 0 &&
-      this.shipping.minor === 0 &&
-      this.discount.minor === 0
-    );
+    return this.total.minor === 0 && this.items.minor === 0 && this.shipping.minor === 0 && this.discount.minor === 0;
   }
 
   formatItemsTotal(): string {

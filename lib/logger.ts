@@ -1,27 +1,30 @@
 // lib/logger.ts
 import { logger, type transportFunctionType } from "react-native-logs";
 
-type Severity = "debug" | "info" | "warn" | "error" | "verbose" | "silent";
-type LogInstance = ReturnType<typeof logger.createLogger>;
+export type Severity = "debug" | "info" | "warn" | "error";
+export type Logger = { [K in Severity]: (...args: unknown[]) => void };
 
-let logInstance: LogInstance = logger.createLogger({ enabled: false });
+const supportedSeverities: Severity[] = ["debug", "info", "warn", "error"];
 
-export function configureLogger(options: {
-  severity?: Severity;
+// Start with no-ops, so calls are always defined pre-bootstrap.
+let currentLogger: Logger = Object.fromEntries(supportedSeverities.map((severity) => [severity, (..._args: unknown[]) => {}])) as Logger;
+
+export function configureLogger(configureLoggerOptions: {
+  severity?: "debug" | "info" | "warn" | "error" | "verbose" | "silent";
   transport?: transportFunctionType<any>;
   enabled?: boolean;
 }) {
-  logInstance = logger.createLogger({
-    severity: options.severity ?? "debug",
-    transport: options.transport,
-    enabled: options.enabled ?? true,
-  });
+  const created = logger.createLogger({
+    severity: configureLoggerOptions.severity ?? "debug",
+    transport: configureLoggerOptions.transport,
+    enabled: configureLoggerOptions.enabled ?? true,
+  }) as Record<string, (...args: unknown[]) => void>;
+
+  // Normalize to our guaranteed shape (fill gaps with no-ops).
+  currentLogger = Object.fromEntries(supportedSeverities.map((severity) => [severity, created[severity] ?? (() => {})])) as Logger;
 }
 
-export const log: LogInstance = new Proxy({} as LogInstance, {
-  // delegate every call (debug/info/warn/error, etc.) to the current instance
-  get(_t, prop) {
-    // @ts-expect-error dynamic proxy to underlying logger instance
-    return logInstance[prop];
-  },
-});
+// Stable facade that forwards to the current instance.
+export const log: Logger = Object.fromEntries(
+  supportedSeverities.map((severity) => [severity, (...args: unknown[]) => currentLogger[severity](...args)])
+) as Logger;

@@ -20,17 +20,11 @@ module.exports = function (api) {
           root: ["./"],
           alias: {
             "@": "./",
-            "@domain": "./domain",
-            "@cart": "./domain/cart",
-            "@product": "./domain/product",
           },
           extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
         },
       ],
-      stripConsoles && [
-        "transform-remove-console",
-        { exclude: ["error", "warn"] },
-      ],
+      stripConsoles && ["transform-remove-console", { exclude: ["error", "warn"] }],
       "react-native-reanimated/plugin", // keep last
     ].filter(Boolean),
   };

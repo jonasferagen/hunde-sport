@@ -1,4 +1,4 @@
-// @domain/pricing/PriceBook.ts
+// @/domain/pricing/PriceBook.ts
 import { Currency } from "./Currency";
 import { Money } from "./Money";
 import type { ProductPriceRange, ProductPrices } from "./types";
@@ -11,14 +11,7 @@ export class PriceBook {
   readonly rangeMin?: Money; // optional
   readonly rangeMax?: Money; // optional
 
-  private constructor(args: {
-    currency: Currency;
-    price: Money;
-    regular: Money;
-    sale: Money;
-    rangeMin?: Money;
-    rangeMax?: Money;
-  }) {
+  private constructor(args: { currency: Currency; price: Money; regular: Money; sale: Money; rangeMin?: Money; rangeMax?: Money }) {
     this.currency = args.currency;
     this.price = args.price;
     this.regular = args.regular;
@@ -37,29 +30,18 @@ export class PriceBook {
       price: Money.fromMinor(p(prices.price), currency),
       regular: Money.fromMinor(p(prices.regular_price), currency),
       sale: Money.fromMinor(p(prices.sale_price), currency),
-      rangeMin: prices.price_range?.min_amount
-        ? Money.fromMinor(p(prices.price_range.min_amount), currency)
-        : undefined,
-      rangeMax: prices.price_range?.max_amount
-        ? Money.fromMinor(p(prices.price_range.max_amount), currency)
-        : undefined,
+      rangeMin: prices.price_range?.min_amount ? Money.fromMinor(p(prices.price_range.min_amount), currency) : undefined,
+      rangeMax: prices.price_range?.max_amount ? Money.fromMinor(p(prices.price_range.max_amount), currency) : undefined,
     });
   }
 
   // --- equality / compare ---
   static isEqual(a: PriceBook, b: PriceBook): boolean {
-    return (
-      Currency.isEqual(a.currency, b.currency) &&
-      a.price === b.price &&
-      a.regular === b.regular &&
-      a.sale === b.sale
-    );
+    return Currency.isEqual(a.currency, b.currency) && a.price === b.price && a.regular === b.regular && a.sale === b.sale;
   }
 
   // --- min/max range finder ---
-  static getProductPriceRange(
-    priceBooks: readonly PriceBook[]
-  ): ProductPriceRange {
+  static getProductPriceRange(priceBooks: readonly PriceBook[]): ProductPriceRange {
     if (priceBooks.length === 0) {
       throw new Error("No PriceBooks provided");
     }
@@ -97,8 +79,6 @@ export class PriceBook {
     if (!this.rangeMax || this.rangeMin.minor === this.rangeMax.minor) {
       return this.rangeMin.format();
     }
-    return short
-      ? `Fra ${this.rangeMin.format()}`
-      : `${this.rangeMin.format()} – ${this.rangeMax!.format()}`;
+    return short ? `Fra ${this.rangeMin.format()}` : `${this.rangeMin.format()} – ${this.rangeMax!.format()}`;
   }
 }

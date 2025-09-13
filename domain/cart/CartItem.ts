@@ -1,9 +1,9 @@
-// @domain/cart/CartItem.ts
-import { CartItemTotals } from "@domain/cart/CartItemTotals";
-import { Currency } from "@domain/pricing/Currency";
-import { Money } from "@domain/pricing/Money";
-import type { CartItemTotalsData, ProductPrices } from "@domain/pricing/types";
-import { StoreImage, type StoreImageData } from "@domain/StoreImage";
+// @/domain/cart/CartItem.ts
+import { CartItemTotals } from "@/domain/cart/CartItemTotals";
+import { Currency } from "@/domain/pricing/Currency";
+import { Money } from "@/domain/pricing/Money";
+import type { CartItemTotalsData, ProductPrices } from "@/domain/pricing/types";
+import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 
 import { cleanHtml, slugKey } from "@/lib/formatters";
 
@@ -75,9 +75,7 @@ export class CartItem implements NormalizedCartItem {
       term_key: slugKey(v.value),
     }));
 
-    const images = (
-      raw.images && raw.images.length > 0 ? raw.images : [StoreImage.DEFAULT]
-    ).map(StoreImage.create);
+    const images = (raw.images && raw.images.length > 0 ? raw.images : [StoreImage.DEFAULT]).map(StoreImage.create);
 
     return new CartItem({
       key: raw.key,
@@ -86,7 +84,7 @@ export class CartItem implements NormalizedCartItem {
       name: raw.name,
       variation,
       prices: raw.prices,
-      totals: CartItemTotals.create(raw.totals), 
+      totals: CartItemTotals.create(raw.totals),
       quantity: raw.quantity,
       images,
     });
