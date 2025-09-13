@@ -8,11 +8,20 @@ interface ProductDescriptionProps extends SizableTextProps {
   product: PurchasableProduct;
 }
 
-export const ProductDescription = ({ long = false, product, ...sizableTextProps }: ProductDescriptionProps) => {
-  const description = long ? product.description || product.short_description : product.short_description;
+export const ProductDescription = ({
+  long,
+  product,
+  ...sizableTextProps
+}: ProductDescriptionProps) => {
+  const description = long ? product.description : product.short_description;
 
   return (
-    <ThemedParagraph fos="$2" lh="$1" textDecorationLine="none" {...sizableTextProps}>
+    <ThemedParagraph
+      fos="$2"
+      lh="$1"
+      textDecorationLine="none"
+      {...sizableTextProps}
+    >
       {description || "Ingen beskrivelse tilgjengelig"}
     </ThemedParagraph>
   );

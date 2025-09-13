@@ -89,7 +89,6 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
           theme={THEME_PRODUCT_ITEM_2}
         >
           <ProductDescription product={product} />
-
           <ProductDescription product={product} long />
         </PageSection>
         <PageSection padded title="Produktbilder" theme={THEME_PRODUCT_ITEM_1}>

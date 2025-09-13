@@ -1,12 +1,24 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-import { createCartRestoreToken, getCheckoutUrl } from "@/hooks/api/checkout/api";
-import { addItem as apiAddItem, removeItem as apiRemoveItem, updateItem as apiUpdateItem } from "@/hooks/api/data/cart/api";
+import {
+  createCartRestoreToken,
+  getCheckoutUrl,
+} from "@/hooks/api/checkout/api";
+import {
+  addItem as apiAddItem,
+  removeItem as apiRemoveItem,
+  updateItem as apiUpdateItem,
+} from "@/hooks/api/data/cart/api";
 import { log } from "@/lib/logger";
 import { createSmartExpoStorage } from "@/lib/storage";
 
-import { type CartActions, type CartState, handleCartAction, initialState } from "./cartStore";
+import {
+  type CartActions,
+  type CartState,
+  handleCartAction,
+  initialState,
+} from "./cartStore";
 
 type CartPersistState = CartState & { _hasHydrated: boolean };
 
@@ -15,7 +27,6 @@ export const useCartStore = create<CartPersistState & CartActions>()(
     (set, get) => ({
       ...initialState,
       _hasHydrated: false,
-      // NEW: dumb setters
       setCart: (cart) =>
         set({
           cart,
@@ -24,7 +35,6 @@ export const useCartStore = create<CartPersistState & CartActions>()(
 
       reset: () => set({ ...initialState }),
 
-      // optimistic actions (unchanged)
       addItem: async (options) => {
         const { cart } = get();
         await handleCartAction(
@@ -36,7 +46,7 @@ export const useCartStore = create<CartPersistState & CartActions>()(
               ...options,
               variation: options.variation || [],
             }),
-          cart
+          cart,
         );
       },
 
@@ -48,7 +58,7 @@ export const useCartStore = create<CartPersistState & CartActions>()(
           set,
           (token) => apiUpdateItem(token, { key, quantity }),
           cart ? cart.withUpdatedQuantity(key, quantity) : null,
-          { itemKey: key }
+          { itemKey: key },
         );
       },
 
@@ -60,7 +70,7 @@ export const useCartStore = create<CartPersistState & CartActions>()(
           set,
           (token) => apiRemoveItem(token, { key }),
           cart ? cart.withoutItem(key) : null,
-          { itemKey: key } // ✅
+          { itemKey: key }, // ✅
         );
       },
 
@@ -69,8 +79,10 @@ export const useCartStore = create<CartPersistState & CartActions>()(
         const { cartToken } = get();
         try {
           const restoreToken = await createCartRestoreToken(cartToken);
-          log.info("CartStore: restore token created", restoreToken.substring(0, 10) + "...");
-
+          log.info(
+            "CartStore: restore token created",
+            restoreToken.substring(0, 10) + "...",
+          );
           return getCheckoutUrl(restoreToken);
         } catch (error) {
           log.error("CartStore: checkout failed.", error);
@@ -88,15 +100,18 @@ export const useCartStore = create<CartPersistState & CartActions>()(
           useCartStore.setState({ _hasHydrated: true });
         };
       },
-    }
-  )
+    },
+  ),
 );
 
-export const useCartIsLoading = () => useCartStore((s) => s.isUpdating || Object.keys(s.updatingKeys).length > 0);
+export const useCartIsLoading = () =>
+  useCartStore((s) => s.isUpdating || Object.keys(s.updatingKeys).length > 0);
 
-export const useItemIsUpdating = (key: string) => useCartStore((s) => !!s.updatingKeys[key]);
+export const useItemIsUpdating = (key: string) =>
+  useCartStore((s) => !!s.updatingKeys[key]);
 
 export const useCartToken = () => useCartStore((s) => s.cartToken);
 export const useCartHasHydrated = () => useCartStore((s) => s._hasHydrated);
 
-export const useCartTotalQuantity = () => useCartStore((s) => s.cart.totalQuantity);
+export const useCartTotalQuantity = () =>
+  useCartStore((s) => s.cart.totalQuantity);

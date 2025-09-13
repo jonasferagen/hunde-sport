@@ -15,7 +15,7 @@ export interface CartState {
   cart: Cart;
   cartToken: string;
   isUpdating: boolean; // whole-cart ops only
-  updatingKeys: Record<string, true>; // presence-only map ✅
+  updatingKeys: Record<string, number>; // presence-only map ✅
   error: string | null;
 }
 
@@ -23,7 +23,7 @@ export const initialState: CartState = {
   cart: Cart.DEFAULT,
   cartToken: "",
   isUpdating: false,
-  updatingKeys: {}, // ✅
+  updatingKeys: {},
   error: null,
 };
 
@@ -33,7 +33,7 @@ let cartActionVersion = 0;
 type GetState = () => CartState;
 // allow functional set for precise updates
 type SetState = (
-  partial: Partial<CartState> | ((s: CartState) => Partial<CartState>)
+  partial: Partial<CartState> | ((s: CartState) => Partial<CartState>),
 ) => void;
 type ApiCall = (cartToken: string) => Promise<Cart>;
 type HandleOpts = { itemKey?: string };
@@ -44,7 +44,7 @@ export async function handleCartAction(
   set: SetState,
   apiCall: ApiCall,
   optimisticCart: Cart | null,
-  opts: HandleOpts = {}
+  opts: HandleOpts = {},
 ) {
   const { itemKey } = opts;
   const { cartToken, cart: currentCart } = get();
@@ -61,9 +61,9 @@ export async function handleCartAction(
     cart: optimisticCart
       ? Cart.rebuild(optimisticCart, { lastUpdated: now })
       : s.cart,
-    isUpdating: !itemKey || s.isUpdating, // only flip global when no itemKey
+    isUpdating: !itemKey || s.isUpdating,
     updatingKeys: itemKey
-      ? { ...s.updatingKeys, [itemKey]: true }
+      ? { ...s.updatingKeys, [itemKey]: (s.updatingKeys[itemKey] ?? 0) + 1 } // ⬅️ ++
       : s.updatingKeys,
     error: null,
   }));
@@ -88,14 +88,16 @@ export async function handleCartAction(
       }));
     }
   } finally {
-    // per-item: always clear presence (keeps things simple & robust)
     if (itemKey) {
       set((s) => {
-        const { [itemKey]: _omit, ...rest } = s.updatingKeys;
-        return { updatingKeys: rest };
+        const nextCount = (s.updatingKeys[itemKey] ?? 1) - 1;
+        if (nextCount <= 0) {
+          const { [itemKey]: _drop, ...rest } = s.updatingKeys;
+          return { updatingKeys: rest }; // ⬅️ gone when 0
+        }
+        return { updatingKeys: { ...s.updatingKeys, [itemKey]: nextCount } };
       });
     }
-    // global flag only cleared by the latest action
     if (thisVersion === cartActionVersion) {
       set({ isUpdating: false });
     }

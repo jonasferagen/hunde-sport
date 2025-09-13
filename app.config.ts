@@ -40,7 +40,7 @@ export default (): ExpoConfig => ({
     edgeToEdgeEnabled: true,
     softwareKeyboardLayoutMode: "pan",
     adaptiveIcon: {
-      foregroundImage: "/assets/images/adaptive-icon.png",
+      foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
     permissions: ["INTERNET", "ACCESS_NETWORK_STATE", "VIBRATE"],
@@ -51,7 +51,7 @@ export default (): ExpoConfig => ({
     [
       "expo-splash-screen",
       {
-        image: "/assets/images/splash-icon.png",
+        image: "./assets/images/splash-icon.png",
         imageWidth: 200,
         resizeMode: "contain",
         backgroundColor: "#ffffff",
