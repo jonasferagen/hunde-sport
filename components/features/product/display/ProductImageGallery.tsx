@@ -6,7 +6,7 @@ import { ScrollView, XStack, YStack } from "tamagui";
 
 import { ThemedImage } from "@/components/ui/themed-components/ThemedImage";
 import { Product } from "@/domain/product/Product";
-import { getScaledImageUrl } from "@/lib/image";
+import { getScaledImageUrl } from "@/lib/image/image";
 import { spacePx } from "@/lib/theme";
 
 interface ProductImageGalleryProps extends YStackProps {

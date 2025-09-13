@@ -12,25 +12,6 @@ import { usePlayStoreUpdates } from "@/hooks/usePlayStoreUpdates";
 import { queryClient } from "@/lib/api/queryClient";
 import appConfig from "@/tamagui/tamagui.config";
 
-Sentry.init({
-  dsn: "https://b7fe570697a6a8f88822825ef7d9462f@o4509876451606528.ingest.de.sentry.io/4509909104722000",
-
-  // Adds more context data to events (IP address, cookies, user, etc.)
-  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
-  sendDefaultPii: true,
-
-  // Configure Session Replay
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1,
-  integrations: [
-    Sentry.mobileReplayIntegration(),
-    Sentry.feedbackIntegration(),
-  ],
-
-  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-  // spotlight: __DEV__,
-});
-
 enableScreens(true);
 enableFreeze(true);
 

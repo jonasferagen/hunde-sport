@@ -9,7 +9,7 @@ import {
   ThemedYStack,
 } from "@/components/ui/themed-components/ThemedStacks";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { getScaledImageUrl } from "@/lib/image";
+import { getScaledImageUrl } from "@/lib/image/image";
 import type { PurchasableProduct } from "@/types";
 
 import { ProductDescription } from "./ProductDescription";

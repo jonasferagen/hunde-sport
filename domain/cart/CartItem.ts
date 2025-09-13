@@ -86,7 +86,7 @@ export class CartItem implements NormalizedCartItem {
       name: raw.name,
       variation,
       prices: raw.prices,
-      totals: CartItemTotals.create(raw.totals), // ⬅️ normalize
+      totals: CartItemTotals.create(raw.totals), 
       quantity: raw.quantity,
       images,
     });

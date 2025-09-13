@@ -1,7 +1,7 @@
 // services/products.ts
 import { Product } from "@/domain/product/Product";
 import { endpoints, type Pagination } from "@/hooks/api/api";
-import { apiClient } from "@/lib/api/apiClient";
+import { getApiClient } from "@/lib/api/apiClient";
 import { responseTransformer } from "@/lib/api/responseTransformer";
 import type { ProductCategory } from "@/types";
 
@@ -64,7 +64,7 @@ const buildParams = (opts?: QueryOptions): Record<string, unknown> => {
 
 /** Single product */
 export async function fetchProduct(id: number): Promise<Product> {
-  const response = await apiClient.get<any>(endpoints.products.get(id));
+  const response = await getApiClient().get<any>(endpoints.products.get(id));
   if (response.problem) throw new Error(response.problem);
   return Product.create(response.data);
 }
@@ -74,7 +74,7 @@ export const fetchFeaturedProducts = async (opts?: QueryOptions) => {
   const url = endpoints.products.list(
     buildParams(mergeOptions(opts, { filters: { orderby: "title", featured: true } }))
   );
-  const response = await apiClient.get<any[]>(url);
+  const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
@@ -83,7 +83,7 @@ export const fetchProductsByIds = async (ids: number[], opts?: QueryOptions) => 
   const url = endpoints.products.list(
     buildParams(mergeOptions(opts, { filters: { include: ids } }))
   );
-  const response = await apiClient.get<any[]>(url);
+  const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
@@ -92,7 +92,7 @@ export const fetchProductsBySearch = async (query: string, opts?: QueryOptions) 
   const url = endpoints.products.list(
     buildParams(mergeOptions(opts, { filters: { search: query } }))
   );
-  const response = await apiClient.get<any[]>(url);
+  const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
@@ -104,7 +104,7 @@ export const fetchProductsByProductCategory = async (
   const url = endpoints.products.list(
     buildParams(mergeOptions(opts, { filters: { category: productCategory.id } }))
   );
-  const response = await apiClient.get<any[]>(url);
+  const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
@@ -113,7 +113,7 @@ export const fetchRecentProducts = async (opts?: QueryOptions) => {
   const url = endpoints.products.list(
     buildParams(mergeOptions(opts, { filters: { orderby: "date" } }))
   );
-  const response = await apiClient.get<any[]>(url);
+  const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
@@ -122,7 +122,7 @@ export const fetchDiscountedProducts = async (opts?: QueryOptions) => {
   const url = endpoints.products.list(
     buildParams(mergeOptions(opts, { filters: { on_sale: true } }))
   );
-  const response = await apiClient.get<any[]>(url);
+  const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
@@ -133,6 +133,6 @@ export const fetchProductVariations = async (id: number, opts?: QueryOptions) =>
       mergeOptions(opts, { filters: { type: "variation", parent: id, orderby: "price" } })
     )
   );
-  const response = await apiClient.get<any[]>(url);
+  const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };

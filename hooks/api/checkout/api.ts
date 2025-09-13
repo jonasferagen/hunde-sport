@@ -1,7 +1,7 @@
 import type { ApiResponse } from "apisauce";
 
 import { endpoints } from "@/hooks/api/api";
-import { apiClient } from "@/lib/api/apiClient";
+import { getApiClient } from "@/lib/api/apiClient";
 
 interface RestoreTokenResponse {
   success: boolean;
@@ -20,7 +20,7 @@ export async function createCartRestoreToken(
 ): Promise<string> {
   const payload = { jwt_token: jwtToken };
 
-  const response: ApiResponse<RestoreTokenResponse> = await apiClient.post(
+  const response: ApiResponse<RestoreTokenResponse> = await getApiClient().post(
     endpoints.checkout.restoreToken(),
     payload
   );

@@ -1,6 +1,7 @@
 // domain/store-image/StoreImage.ts
 
 
+
 export type ImageIntrinsicSize = { width: number; height: number };
 export type ImageSizeProvider = (uri: string) => Promise<ImageIntrinsicSize>;
 

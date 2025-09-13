@@ -1,10 +1,10 @@
 // PageSection.tsx
 import React from "react";
-import { H4, type YStackProps } from "tamagui";
 
-import { ThemedYStack } from "@/components/ui/themed-components";
+import { ThemedYStack, type ThemedYStackProps } from "@/components/ui/themed-components";
+import { ThemedHeading } from "@/components/ui/themed-components/ThemedHeading";
 
-type PageSectionProps = YStackProps & {
+type PageSectionProps = ThemedYStackProps & {
   title?: string;
   fill?: boolean;
   padded?: boolean;
@@ -28,7 +28,9 @@ export const PageSection: React.FC<PageSectionProps> = ({
 
   return (
     <ThemedYStack box py={py} px={px} {...stackProps}>
-      {title ? <H4 mx={mx}>{title}</H4> : null}
+      {title ? <ThemedHeading 
+      mx={mx} 
+      >{title}</ThemedHeading> : null}
 
       <ThemedYStack f={fill ? 1 : undefined} mih={fill ? 0 : undefined}>
         {children}

@@ -2,7 +2,7 @@ import type { ApiResponse } from "apisauce";
 
 import { Cart, type CartData } from "@/domain/cart/Cart";
 import { endpoints } from "@/hooks/api/api";
-import { apiClient } from "@/lib/api/apiClient";
+import { getApiClient } from "@/lib/api/apiClient";
 
 export interface AddItemOptions {
   id: number;
@@ -47,6 +47,7 @@ export function handleResponse(
  * @returns {Promise<Cart>} The cart data and token.
  */
 export async function fetchCart(cartToken?: string): Promise<Cart> {
+  const apiClient = getApiClient();
   apiClient.headers["cart-token"] = cartToken || "";
   const response = await apiClient.get<any>(endpoints.cart.get());
   return handleResponse(response, "fetchCart");
@@ -56,7 +57,7 @@ export async function addItem(
   cartToken: string,
   options: AddItemOptions
 ): Promise<Cart> {
-  // Keep the token
+ const apiClient = getApiClient();
   apiClient.headers["cart-token"] = cartToken;
 
   const response = await apiClient.post<any>(
@@ -79,6 +80,7 @@ export async function updateItem(
   cartToken: string,
   { key, quantity }: { key: string; quantity: number }
 ): Promise<Cart> {
+   const apiClient = getApiClient();
   apiClient.headers["cart-token"] = cartToken;
   const response = await apiClient.post<any>(endpoints.cart.updateItem(), {
     key,
@@ -95,9 +97,10 @@ export async function updateItem(
  * @returns {Promise<Cart>} An object containing the updated cart data.
  */
 export async function removeItem(
-  cartToken: string,
+cartToken: string,
   { key }: { key: string }
 ): Promise<Cart> {
+   const apiClient = getApiClient();
   apiClient.headers["cart-token"] = cartToken;
   const response = await apiClient.post<any>(endpoints.cart.removeItem(), {
     // Woocommerce uses POST for removal
