@@ -8,17 +8,37 @@ export type QueryOpts = {
   enabled?: boolean;
 };
 
-export const makeQueryOptions = <T>(options?: QueryOpts) => {
+export const makeQueryOptions = <T>(
+  fetchFn: (firstParam?: any, paginationParams?: any) => Promise<Page<T>>,
+  firstParam?: any,
+  paginationParams?: Record<string, any>,
+  options?: QueryOpts,
+) => {
   return {
     initialPageParam: 1,
     getNextPageParam: (lastPage: Page<T>, allPages: Page<T>[]) => {
       const nextPage = allPages.length + 1;
       const totalPages = lastPage?.totalPages;
-      const out = totalPages && nextPage <= totalPages ? nextPage : undefined;
-      return out;
+      return totalPages && nextPage <= totalPages ? nextPage : undefined;
     },
+    queryFn: ({ pageParam }: { pageParam: number }) => {
+      const paginationWithPage = {
+        page: pageParam,
+        per_page: 10,
+        ...paginationParams,
+      };
+
+      // If there's a first parameter, call with both params
+      if (firstParam !== undefined) {
+        return fetchFn(firstParam, paginationWithPage);
+      }
+      // Otherwise, call with just pagination params
+      return fetchFn(paginationWithPage);
+    },
+    ...options,
   };
 };
+
 export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, "data"> & {
   total: number;
   totalPages: number;

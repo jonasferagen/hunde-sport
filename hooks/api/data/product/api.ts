@@ -17,6 +17,8 @@ type FixedProductFilters = {
   on_sale?: boolean;
 };
 
+/* @TODO Add these in the list endpoints ? See product-category */
+
 const defaultsPaginationOpts: PaginationOpts = {
   page: 1,
   per_page: 10,

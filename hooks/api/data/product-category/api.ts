@@ -3,6 +3,8 @@ import { getApiClient } from "@/lib/api/apiClient";
 import { responseTransformer } from "@/lib/api/responseTransformer";
 import { ProductCategory } from "@/types";
 
+/** @TODO: Check products */
+
 export async function fetchProductCategories(pagination?: PaginationOpts) {
   const response = await getApiClient().get<any[]>(
     endpoints.categories.list(pagination),

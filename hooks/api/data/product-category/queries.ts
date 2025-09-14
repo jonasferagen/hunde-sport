@@ -12,16 +12,19 @@ import { ProductCategory } from "@/types";
 import { fetchProductCategories } from "./api";
 
 export const useProductCategories = (
-  options: QueryOpts,
-  pagination: PaginationOpts,
+  options?: QueryOpts,
+  pagination: PaginationOpts = { per_page: 100 },
 ): QueryResult<ProductCategory> => {
-  const queryOptions = makeQueryOptions<ProductCategory>(options);
+  const queryOptions = makeQueryOptions<ProductCategory>(
+    fetchProductCategories,
+    undefined,
+    { ...pagination },
+    options,
+  );
+
   const result = useInfiniteQuery({
     queryKey: ["product-categories"],
-    queryFn: ({ pageParam }) =>
-      fetchProductCategories({ page: pageParam, ...pagination }),
     ...queryOptions,
-    ...options,
   });
   return useQueryResult<ProductCategory>(result);
 };
