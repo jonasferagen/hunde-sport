@@ -3,9 +3,11 @@ import { getDevicePixelRatio } from "@/lib/image/dpr";
 export type ImageIntrinsicSize = { width: number; height: number };
 export type ImageSizeProvider = (uri: string) => Promise<ImageIntrinsicSize>;
 export type ImageScaleFunction = (
-  imageUri: string,
+  imageUrl: string,
   targetWidthPx: number,
   targetHeightPx: number,
+  fitMode?: "auto" | "resize" | "fit", // auto: width-only/height-only; resize: crop; fit: no-crop
+  quality?: number, // 10–100
 ) => string;
 
 export type StoreImageData = {
@@ -39,6 +41,7 @@ export class StoreImage implements NormalizedStoreImage {
 
   private _intrinsicWidth?: number;
   private _intrinsicHeight?: number;
+  private _aspectRatio?: number;
 
   private constructor(data: NormalizedStoreImage) {
     this.id = data.id;
@@ -74,6 +77,11 @@ export class StoreImage implements NormalizedStoreImage {
     const { width, height } = await provider(this.src);
     this._intrinsicWidth = width;
     this._intrinsicHeight = height;
+
+    if (width > 0 && height > 0) {
+      this._aspectRatio = width / height;
+    }
+
     return { width, height };
   }
 
@@ -81,8 +89,10 @@ export class StoreImage implements NormalizedStoreImage {
    * Aspect ratio (width / height) if known, otherwise undefined.
    */
   get aspectRatio(): number | undefined {
+    if (this._aspectRatio) return this._aspectRatio;
     if (this._intrinsicWidth && this._intrinsicHeight) {
-      return this._intrinsicWidth / this._intrinsicHeight;
+      this._aspectRatio = this._intrinsicWidth / this._intrinsicHeight;
+      return this._aspectRatio;
     }
     return undefined;
   }
@@ -98,19 +108,20 @@ export class StoreImage implements NormalizedStoreImage {
    * - If no scaler is configured, falls back to original `src`.
    * - Caller controls DPR policy (e.g., `Math.min(PixelRatio.get(), 2)`).
    */
-  getScaledUri(displayWidthPx: number, displayHeightPx: number): string {
+  getScaledUri(displayWidthPx: number, displayHeightPx?: number): string {
     const imageScaleFunction = StoreImage.imageScaleFunction;
     if (!imageScaleFunction) return this.src;
 
-    const devicePixelRatio = getDevicePixelRatio();
-    const targetWidthPx = Math.max(
-      1,
-      Math.round(displayWidthPx * devicePixelRatio),
-    );
-    const targetHeightPx = Math.max(
-      1,
-      Math.round(displayHeightPx * devicePixelRatio),
-    );
+    const dpr = getDevicePixelRatio();
+
+    const targetWidthPx =
+      displayWidthPx > 0 ? Math.round(displayWidthPx * dpr) : 0;
+
+    // IMPORTANT: do NOT clamp to 1; allow 0 to mean “no height”
+    const targetHeightPx =
+      displayHeightPx && displayHeightPx > 0
+        ? Math.round(displayHeightPx * dpr)
+        : 0;
 
     return imageScaleFunction(this.src, targetWidthPx, targetHeightPx);
   }

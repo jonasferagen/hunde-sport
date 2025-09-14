@@ -36,7 +36,7 @@ export interface ThemedImageProps extends YStackProps {
 export const ThemedImage = memo(function ThemedImage({
   title,
   uri,
-  contentFit = "cover",
+  contentFit = "contain",
   aspectRatio,
   showSpinner = false,
   transitionMs = 0, // keep 0 in lists for perf

@@ -9,6 +9,7 @@ import {
   ThemedYStack,
 } from "@/components/ui/themed/ThemedStacks";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
+import { buildImageRenderPlan } from "@/lib/image/fit";
 import type { PurchasableProduct } from "@/types";
 
 import { ProductDescription } from "./ProductDescription";
@@ -41,7 +42,11 @@ export const ProductCard = React.memo(function ProductCard({
 });
 
 const ProductCardImage = ({ product }: { product: PurchasableProduct }) => {
-  const uri = product.featuredImage.getScaledUri(IMAGE_SIZE, IMAGE_SIZE);
+  const { uri, contentFit } = buildImageRenderPlan({
+    image: product.featuredImage,
+    displayWidthPx: IMAGE_SIZE,
+    displayHeightPx: IMAGE_SIZE,
+  });
   return (
     <ThemedYStack
       w={IMAGE_SIZE}
@@ -56,6 +61,7 @@ const ProductCardImage = ({ product }: { product: PurchasableProduct }) => {
         title={product.name}
         w={IMAGE_SIZE}
         h={IMAGE_SIZE}
+        contentFit={contentFit}
       />
     </ThemedYStack>
   );

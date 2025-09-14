@@ -28,6 +28,7 @@ import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 export const HomeScreen = () => {
   const ready = useScreenReady();
   const { to } = useCanonicalNavigation();
+
   const handleSearch = (q: string) => {
     const text = q.trim();
     if (!text) {

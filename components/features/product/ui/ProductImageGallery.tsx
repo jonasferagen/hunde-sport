@@ -2,11 +2,16 @@ import { Galeria } from "@nandorojo/galeria";
 import React, { useMemo, useState } from "react";
 import { useWindowDimensions } from "react-native";
 import type { YStackProps } from "tamagui";
-import { ScrollView, XStack, YStack } from "tamagui";
+import { ScrollView } from "tamagui";
 
-import { ThemedImage } from "@/components/ui/themed/ThemedImage";
+import {
+  ThemedImage,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui/themed";
 import type { Product } from "@/domain/product/Product";
 import type { StoreImage } from "@/domain/StoreImage";
+import { buildImageRenderPlan } from "@/lib/image/fit";
 import { spacePx } from "@/lib/theme";
 
 interface ProductImageGalleryProps extends YStackProps {
@@ -41,37 +46,44 @@ export const ProductImageGallery = ({
   // 1) URIs for the expanded viewer (request at least screen size in device pixels)
   const fullImageUris = useMemo(
     () =>
-      images.map((storeImage) =>
-        storeImage.getScaledUri(
-          Math.ceil(screenWidthPx),
-          Math.ceil(screenHeightPx),
-        ),
-      ),
+      images.map((storeImage) => {
+        const { uri } = buildImageRenderPlan({
+          image: storeImage,
+          displayWidthPx: screenWidthPx,
+          displayHeightPx: screenHeightPx,
+          defaultFit: "contain",
+        });
+        return uri;
+      }),
     [images, screenWidthPx, screenHeightPx],
   );
 
   // 2) URIs for grid thumbnails (square)
   const thumbImageUris = useMemo(
     () =>
-      images.map((storeImage) =>
-        storeImage.getScaledUri(thumbSizePx, thumbSizePx),
-      ),
+      images.map((storeImage) => {
+        return storeImage.getScaledUri(thumbSizePx, thumbSizePx);
+      }),
     [images, thumbSizePx],
   );
 
   return (
-    <YStack f={1} {...stackProps}>
+    <ThemedYStack f={1} {...stackProps}>
       {/* IMPORTANT: pass full-res here */}
       <Galeria urls={fullImageUris}>
         <ScrollView>
-          <XStack
+          <ThemedXStack
             fw="wrap"
             m={-halfGapPx}
             onLayout={(e) => setContainerWidthPx(e.nativeEvent.layout.width)}
           >
             {images.map((_storeImage: StoreImage, imageIndex: number) => (
-              <YStack key={imageIndex} w={columnWidthPercent} p={halfGapPx}>
-                <YStack w="100%" aspectRatio={1} br="$2" ov="hidden">
+              <ThemedYStack
+                key={imageIndex}
+                w={columnWidthPercent}
+                p={halfGapPx}
+              >
+                <ThemedYStack w="100%" aspectRatio={1} br="$2" ov="hidden">
                   <Galeria.Image index={imageIndex}>
                     <ThemedImage
                       uri={thumbImageUris[imageIndex]!}
@@ -82,12 +94,12 @@ export const ProductImageGallery = ({
                       h="100%"
                     />
                   </Galeria.Image>
-                </YStack>
-              </YStack>
+                </ThemedYStack>
+              </ThemedYStack>
             ))}
-          </XStack>
+          </ThemedXStack>
         </ScrollView>
       </Galeria>
-    </YStack>
+    </ThemedYStack>
   );
 };

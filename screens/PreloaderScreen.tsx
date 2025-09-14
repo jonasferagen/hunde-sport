@@ -39,24 +39,45 @@ export const PreloaderScreen = () => {
   return (
     <ThemedYStack f={1} box p="$4">
       <ThemedYStack f={1} jc="flex-end" ai="center" mt={Math.round(200 / 2)}>
-        <Image source={require("@/assets/images/splash-icon.png")} style={{ width: 200, height: 200 }} />
+        <Image
+          source={require("@/assets/images/splash-icon.png")}
+          style={{ width: 200, height: 200 }}
+        />
       </ThemedYStack>
 
       <ThemedYStack f={1} jc="flex-start" ai="center">
-        <ThemedYStack w="100%" maw={420} p="$2" br="$2" bg="$backgroundHover" minHeight={120} ai="center" opacity={showPanel ? 1 : 0}>
+        <ThemedYStack
+          w="100%"
+          maw={420}
+          p="$2"
+          br="$2"
+          bg="$backgroundHover"
+          minHeight={120}
+          ai="center"
+          opacity={showPanel ? 1 : 0}
+        >
           {/* Headline */}
           <ThemedText size="$4" tabular ta="center" o={data.error ? 1 : 0.9}>
-            {!fonts.ready ? "Henter skrifttyper…" : !data.allDone ? "Klargjør data…" : ""}
+            {!fonts.ready
+              ? "Henter skrifttyper…"
+              : !data.allDone
+                ? "Klargjør data…"
+                : ""}
           </ThemedText>
 
           {/* Progress lines */}
           {fonts.ready && !data.allDone && !data.error && (
             <>
               <Paragraph ta="center" o={0.8}>
-                Handlekurv: {data.cart.ready ? "✓" : data.cart.fetching ? "…" : "–"}
+                Handlekurv:{" "}
+                {data.cart.ready ? "✓" : data.cart.fetching ? "…" : "–"}
               </Paragraph>
               <Paragraph ta="center" o={0.8}>
-                Kategorier: {data.categories.ready ? "✓" : (data.categories.progress ?? (data.categories.fetching ? "…" : "–"))}
+                Kategorier:{" "}
+                {data.categories.ready
+                  ? "✓"
+                  : (data.categories.progress ??
+                    (data.categories.fetching ? "…" : "–"))}
               </Paragraph>
             </>
           )}
@@ -67,7 +88,12 @@ export const PreloaderScreen = () => {
               <Paragraph ta="center" o={0.9}>
                 {data.error.message}
               </Paragraph>
-              <CallToActionButton w="60%" label="Prøv igjen" after={<RefreshCw />} onPress={data.retry} />
+              <CallToActionButton
+                w="60%"
+                label="Prøv igjen"
+                after={<RefreshCw />}
+                onPress={data.retry}
+              />
             </>
           )}
         </ThemedYStack>
@@ -102,7 +128,9 @@ function useFontsStep(): StepState {
 
 function useBootData({ enabled }: { enabled: boolean }) {
   const setCart = useCartStore((s) => s.setCart);
-  const setProductCategories = useProductCategoryStore((s) => s.setProductCategories);
+  const setProductCategories = useProductCategoryStore(
+    (s) => s.setProductCategories,
+  );
 
   // Gate both queries from a single flag that only moves false -> true
   const [dataEnabled, setDataEnabled] = React.useState(false);
@@ -133,11 +161,20 @@ function useBootData({ enabled }: { enabled: boolean }) {
   const catResult = useProductCategories({ enabled: dataEnabled });
   useAutoPaginateQueryResult(catResult);
 
-  const { isFetching: catFetching, items, total, isError: catIsError, error: catError, refetch: refetchCats } = catResult;
+  const {
+    isFetching: catFetching,
+    items,
+    total,
+    isError: catIsError,
+    error: catError,
+    refetch: refetchCats,
+  } = catResult;
 
   // Done when we've fetched all pages (never regress)
   const [categoriesDone, setCategoriesDone] = React.useState(false);
-  const categoriesReadyNow = Boolean(!catFetching && total && items.length >= (total ?? 0));
+  const categoriesReadyNow = Boolean(
+    !catFetching && total && items.length >= (total ?? 0),
+  );
   React.useEffect(() => {
     if (!categoriesDone && categoriesReadyNow) {
       setProductCategories(items);
@@ -145,10 +182,16 @@ function useBootData({ enabled }: { enabled: boolean }) {
     }
   }, [categoriesDone, categoriesReadyNow, items, setProductCategories]);
 
-  const categoriesProgress = total && total > 0 ? `(${Math.min(items.length, total)}/${total})` : undefined;
+  const categoriesProgress =
+    total && total > 0
+      ? `(${Math.min(items.length, total)}/${total})`
+      : undefined;
 
   /** Aggregate */
-  const anyError = (cartIsError && (cartError as Error)) || (catIsError && (catError as Error)) || null;
+  const anyError =
+    (cartIsError && (cartError as Error)) ||
+    (catIsError && (catError as Error)) ||
+    null;
   const allDone = cartDone && categoriesDone;
 
   const retry = async () => {

@@ -6,10 +6,14 @@ import { PageHeader } from "@/components/chrome/layout/PageHeader";
 import { Breadcrumbs } from "@/components/features/product-category/Breadcrumbs";
 import { ProductCategoryHeader } from "@/components/features/product-category/ProductCategoryHeader";
 import { ProductCategoryProducts } from "@/components/features/product-category/ProductCategoryProducts";
-import { ThemedXStack } from "@/components/ui/themed";
+import { ThemedXStack, ThemedYStack } from "@/components/ui/themed";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
-import { useBreadcrumbTrail, useProductCategories, useProductCategory } from "@/stores/productCategoryStore";
+import {
+  useBreadcrumbTrail,
+  useProductCategories,
+  useProductCategory,
+} from "@/stores/productCategoryStore";
 
 export const ProductCategoryScreen = () => {
   useRenderGuard("ProductCategoryScreen");
@@ -30,11 +34,14 @@ export const ProductCategoryScreen = () => {
     <PageView>
       <PageHeader theme="shade">
         <ThemedXStack box split>
-          <YStack f={1}>
+          <ThemedYStack f={1}>
             <Breadcrumbs trail={trail} isLastClickable />
-          </YStack>
+          </ThemedYStack>
           <YStack>
-            <ProductCategoryHeader productCategory={productCategory} productCategories={productCategories} />
+            <ProductCategoryHeader
+              productCategory={productCategory}
+              productCategories={productCategories}
+            />
           </YStack>
         </ThemedXStack>
       </PageHeader>

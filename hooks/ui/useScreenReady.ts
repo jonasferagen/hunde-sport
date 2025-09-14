@@ -33,7 +33,7 @@ export function useScreenReady(opts: ScreenReadyOptions = {}) {
             if (canceled) return;
             setReady(true);
           },
-          Math.max(0, delayMs)
+          Math.max(0, delayMs),
         );
         // cleanup the timeout if focus changes quickly
         return () => clearTimeout(id);
@@ -43,7 +43,7 @@ export function useScreenReady(opts: ScreenReadyOptions = {}) {
         canceled = true;
         task.cancel();
       };
-    }, [delayMs])
+    }, [delayMs]),
   );
 
   // When ready flips true, stop overlay once and notify
