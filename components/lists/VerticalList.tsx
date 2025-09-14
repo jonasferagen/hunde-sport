@@ -1,3 +1,4 @@
+// components/lists/VerticalList.tsx
 import {
   FlashList,
   type FlashListProps,
@@ -23,6 +24,8 @@ type Base<T> = Pick<
   | "onScroll"
   | "scrollEventThrottle"
   | "getItemType"
+  | "onViewableItemsChanged"
+  | "viewabilityConfig"
 >;
 
 export interface VerticalListProps<T> extends Base<T> {
@@ -31,11 +34,8 @@ export interface VerticalListProps<T> extends Base<T> {
   ListFooterComponent?: React.ReactElement | null;
   ListEmptyComponent?: React.ReactElement | null;
 
-  /** Optional: animate items once per identity key (e.g., categoryId/search) */
   animateFirstTimeKey?: string | number;
-  /** Optional: make a stable id for animation tracking (defaults to keyExtractor(id)) */
   getStableId?: (item: T) => number | string;
-  /** Stagger batch size (how many items share the same delay group) */
   staggerMod?: number; // default 8
 }
 
@@ -53,11 +53,12 @@ export function VerticalList<T>({
   onScroll,
   scrollEventThrottle = 32,
   getItemType,
+  onViewableItemsChanged,
+  viewabilityConfig,
   animateFirstTimeKey,
   getStableId,
   staggerMod = 8,
 }: VerticalListProps<T>) {
-  // Track which items have already animated (per identity key)
   const animatedIdsRef = React.useRef<Set<string | number>>(new Set());
   React.useEffect(() => {
     animatedIdsRef.current.clear();
@@ -68,10 +69,8 @@ export function VerticalList<T>({
       const id =
         getStableId?.(info.item) ??
         (keyExtractor ? keyExtractor(info.item, info.index) : info.index);
-
       const firstTime = !animatedIdsRef.current.has(id);
       if (firstTime) animatedIdsRef.current.add(id);
-
       const delay = (info.index % (staggerMod || 1)) * 20;
 
       return (
@@ -100,6 +99,8 @@ export function VerticalList<T>({
         onScroll={onScroll}
         scrollEventThrottle={scrollEventThrottle}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
       />
     </View>
   );
@@ -111,13 +112,10 @@ const ItemAnimator: React.FC<{
   children: React.ReactNode;
 }> = ({ firstTime, delay, children }) => {
   const opacity = useSharedValue(firstTime ? 0.7 : 1);
-
   React.useEffect(() => {
     if (!firstTime) return;
     opacity.value = withDelay(delay, withTiming(1, { duration: 200 }));
   }, [firstTime, opacity, delay]);
-
   const style = useAnimatedStyle(() => ({ opacity: opacity.value }));
-
   return <Animated.View style={style}>{children}</Animated.View>;
 };

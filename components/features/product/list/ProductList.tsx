@@ -1,7 +1,11 @@
+// ProductList.tsx
 import type { ListRenderItem as FlashListRenderItem } from "@shopify/flash-list";
 import React from "react";
 
 import { ProductCard } from "@/components/features/product/ui/ProductCard";
+import { BottomMoreHint } from "@/components/lists/BottomMoreHint";
+import { useIdleHint } from "@/components/lists/hooks/useIdleHint";
+import { useListProgress } from "@/components/lists/hooks/useListProgress";
 import { VerticalList } from "@/components/lists/VerticalList";
 import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack } from "@/components/ui/themed";
@@ -14,7 +18,7 @@ interface ProductListProps {
   loadMore: () => void;
   isLoadingMore: boolean;
   hasMore: boolean;
-  transitionKey: string | number; // when data identity changes
+  transitionKey: string | number;
   totalProducts: number;
 }
 
@@ -26,16 +30,12 @@ export const ProductList = React.memo(function ProductList({
   isLoadingMore,
   hasMore,
   transitionKey,
+  totalProducts,
 }: ProductListProps) {
   const keyExtractor = React.useCallback(
     (p: PurchasableProduct) => String(p.id),
     [],
   );
-
-  const onEndReached = React.useCallback(() => {
-    if (hasMore && !isLoadingMore) loadMore();
-  }, [hasMore, isLoadingMore, loadMore]);
-
   const renderItem: FlashListRenderItem<PurchasableProduct> = React.useCallback(
     ({ item: product, index }) => (
       <ProductCard
@@ -45,9 +45,30 @@ export const ProductList = React.memo(function ProductList({
     ),
     [],
   );
+  const onEndReached = React.useCallback(() => {
+    if (hasMore && !isLoadingMore) loadMore();
+  }, [hasMore, isLoadingMore, loadMore]);
+
+  // progress tracking (headless)
+  const { shown, onViewableItemsChanged, viewabilityConfig } =
+    useListProgress<PurchasableProduct>(totalProducts);
+
+  // hint control (headless)
+  const { hintRef, onAnyScroll } = useIdleHint({
+    enabled: hasMore,
+    shown,
+    autoOnProgressOnly: true, // change to false to kick on every scroll
+  });
+
+  const onScroll = React.useCallback(
+    (e: any) => {
+      onAnyScroll();
+    },
+    [onAnyScroll],
+  );
 
   return (
-    <ThemedXStack f={1} mih={0}>
+    <ThemedXStack f={1} mih={0} pos="relative">
       <VerticalList<PurchasableProduct>
         data={products}
         renderItem={renderItem}
@@ -64,6 +85,21 @@ export const ProductList = React.memo(function ProductList({
         getStableId={(p) => p.id}
         drawDistance={800}
         showsVerticalScrollIndicator={false}
+        // progress wiring (pure pass-through)
+        onViewableItemsChanged={onViewableItemsChanged.current}
+        viewabilityConfig={viewabilityConfig}
+        onScroll={onScroll}
+      />
+
+      {/* overlayed hint (separate file) */}
+      <BottomMoreHint
+        ref={hintRef}
+        enabled={hasMore}
+        shown={Math.min(shown, totalProducts)}
+        total={totalProducts}
+        idleMs={600}
+        offsetRight={12}
+        offsetBottom={12}
       />
     </ThemedXStack>
   );
