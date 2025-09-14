@@ -1,41 +1,54 @@
 import { Galeria } from "@nandorojo/galeria";
-import { Dimensions, PixelRatio } from "react-native";
+import React from "react";
+import { Dimensions } from "react-native";
 import type { YStackProps } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui/themed";
 import { ThemedImage } from "@/components/ui/themed/ThemedImage";
-import { Product } from "@/domain/product/Product";
+import type { Product } from "@/domain/product/Product";
 
-const IMAGE_HEIGHT = 300;
-
-interface ProductImageProps {
+type ProductImageProps = YStackProps & {
   product: Product;
-  img_height?: number;
-  stackProps?: YStackProps;
-}
+  /** Display height in px (caps the visible area). */
+  imageHeightPx?: number;
+  /** Display width in px; defaults to screen width. */
+  imageWidthPx?: number;
+  /** Client-side fit policy only (doesn't affect server scaling). */
+  contentFit?: "cover" | "contain";
+};
+
+const DEFAULT_HEIGHT_PX = 300;
 
 export const ProductImage = ({
   product,
-  img_height = IMAGE_HEIGHT,
+  imageHeightPx = DEFAULT_HEIGHT_PX,
+  imageWidthPx,
+  contentFit = "cover",
   ...stackProps
 }: ProductImageProps) => {
-  const { width: screenWidth } = Dimensions.get("window");
+  const { width: screenWidthPx } = Dimensions.get("window");
+  const displayWidthPx = Math.max(1, Math.round(imageWidthPx ?? screenWidthPx));
 
-  const dpr = Math.min(PixelRatio.get(), 2);
-  const uri = product.featuredImage.getScaledUri(screenWidth, screenWidth, dpr);
+  const scaledUri = product.featuredImage.getScaledUri(displayWidthPx, 0);
 
   return (
     <ThemedYStack
       w="100%"
-      h={img_height}
+      h={imageHeightPx}
       ov="hidden"
       boc="$borderColor"
       br="$3"
       {...stackProps}
     >
-      <Galeria urls={[uri!]}>
+      <Galeria urls={[scaledUri]}>
         <Galeria.Image>
-          <ThemedImage w="100%" h="100%" uri={uri} title={product.name} />
+          <ThemedImage
+            w="100%"
+            h="100%"
+            uri={scaledUri}
+            title={product.name}
+            contentFit={contentFit}
+          />
         </Galeria.Image>
       </Galeria>
     </ThemedYStack>

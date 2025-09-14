@@ -3,7 +3,7 @@ import type { DimensionValue } from "react-native";
 
 import { getDevicePixelRatio } from "@/lib/image/dpr";
 
-export const placeholderBase64 =
+const placeholderBase64 =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAAEFJREFUCB1jYGBgYAAAAAQAAVcCkE0AAAAASUVORK5CYII=";
 
 type ParsedDimPx =
