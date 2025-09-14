@@ -1,7 +1,7 @@
 import React from "react";
 import type { StackProps } from "tamagui";
 
-import { GridTiles } from "@/components/ui/tiles/layout/GridTiles";
+import { SimpleGrid } from "@/components/lists/SimpleGrid";
 import { SquareTile } from "@/components/ui/tiles/SquareTile";
 import { NUM_CATEGORY_TILE_COLUMNS } from "@/config/app";
 import type { ProductCategory } from "@/domain/ProductCategory";
@@ -16,14 +16,12 @@ export const ProductCategoryTiles = React.memo(function ProductCategoryTiles(
   const approxW = Math.round(160 / NUM_CATEGORY_TILE_COLUMNS);
 
   return (
-    <GridTiles
+    <SimpleGrid
       {...props}
       items={productCategories}
       columns={NUM_CATEGORY_TILE_COLUMNS}
       square
-      keyExtractor={(productCategory: ProductCategory) =>
-        String(productCategory.id)
-      }
+      keyExtractor={(c: ProductCategory) => String(c.id)}
       renderItem={({ item }) => (
         <SquareTile
           title={item.name}

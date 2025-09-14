@@ -4,7 +4,7 @@ import type { SpaceTokens, StackProps } from "tamagui";
 import { ThemedXStack, ThemedYStack } from "@/components/ui/themed";
 import { spacePx } from "@/lib/theme";
 
-export type GridTilesProps<T> = StackProps & {
+export type SimpleGridProps<T> = StackProps & {
   items: readonly T[];
   columns: number;
   gapToken?: SpaceTokens; // spacing between tiles (defaults to $3)
@@ -13,7 +13,7 @@ export type GridTilesProps<T> = StackProps & {
   renderItem: (args: { item: T; index: number }) => ReactNode;
 };
 
-export function GridTiles<T>({
+export function SimpleGrid<T>({
   items,
   columns,
   gapToken = "$3",
@@ -21,7 +21,7 @@ export function GridTiles<T>({
   keyExtractor,
   renderItem,
   ...stackProps
-}: GridTilesProps<T>) {
+}: SimpleGridProps<T>) {
   const gapPx = spacePx(gapToken as string);
   const half = Math.round(gapPx / 2);
   const colPct = `${100 / columns}%`;

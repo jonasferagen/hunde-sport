@@ -3,9 +3,6 @@ import type { ListRenderItem as FlashListRenderItem } from "@shopify/flash-list"
 import React from "react";
 
 import { ProductCard } from "@/components/features/product/ui/ProductCard";
-import { BottomMoreHint } from "@/components/lists/BottomMoreHint";
-import { useIdleHint } from "@/components/lists/hooks/useIdleHint";
-import { useListProgress } from "@/components/lists/hooks/useListProgress";
 import { VerticalList } from "@/components/lists/VerticalList";
 import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack } from "@/components/ui/themed";
@@ -30,7 +27,7 @@ export const ProductList = React.memo(function ProductList({
   isLoadingMore,
   hasMore,
   transitionKey,
-  totalProducts,
+  //totalProducts,
 }: ProductListProps) {
   const keyExtractor = React.useCallback(
     (p: PurchasableProduct) => String(p.id),
@@ -50,6 +47,8 @@ export const ProductList = React.memo(function ProductList({
   }, [hasMore, isLoadingMore, loadMore]);
 
   // progress tracking (headless)
+  /*
+
   const { shown, onViewableItemsChanged, viewabilityConfig } =
     useListProgress<PurchasableProduct>(totalProducts);
 
@@ -58,15 +57,15 @@ export const ProductList = React.memo(function ProductList({
     enabled: hasMore,
     shown,
     autoOnProgressOnly: true, // change to false to kick on every scroll
-  });
+  }); 
 
   const onScroll = React.useCallback(
-    (e: any) => {
+    (_e: any) => {
       onAnyScroll();
     },
     [onAnyScroll],
   );
-
+  */
   return (
     <ThemedXStack f={1} mih={0} pos="relative">
       <VerticalList<PurchasableProduct>
@@ -86,12 +85,14 @@ export const ProductList = React.memo(function ProductList({
         drawDistance={800}
         showsVerticalScrollIndicator={false}
         // progress wiring (pure pass-through)
+        /*
         onViewableItemsChanged={onViewableItemsChanged.current}
         viewabilityConfig={viewabilityConfig}
-        onScroll={onScroll}
+        onScroll={onScroll} */
       />
 
-      {/* overlayed hint (separate file) */}
+      {/* overlayed hint  */}
+      {/*
       <BottomMoreHint
         ref={hintRef}
         enabled={hasMore}
@@ -100,7 +101,7 @@ export const ProductList = React.memo(function ProductList({
         idleMs={600}
         offsetRight={12}
         offsetBottom={12}
-      />
+      /> */}
     </ThemedXStack>
   );
 });

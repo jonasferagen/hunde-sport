@@ -1,7 +1,7 @@
 // components/lists/hooks/useIdleHint.ts
 import React from "react";
 
-import type { BottomMoreHintHandle } from "../BottomMoreHint";
+import type { BottomMoreHintHandle } from "../../components/lists/util/BottomMoreHint";
 
 export function useIdleHint(opts: {
   enabled: boolean;
