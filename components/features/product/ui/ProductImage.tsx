@@ -1,11 +1,10 @@
 import { Galeria } from "@nandorojo/galeria";
-import { Dimensions } from "react-native";
+import { Dimensions, PixelRatio } from "react-native";
 import type { YStackProps } from "tamagui";
 
 import { ThemedYStack } from "@/components/ui/themed";
 import { ThemedImage } from "@/components/ui/themed/ThemedImage";
 import { Product } from "@/domain/product/Product";
-import { getScaledImageUrl } from "@/lib/image/image";
 
 const IMAGE_HEIGHT = 300;
 
@@ -15,13 +14,25 @@ interface ProductImageProps {
   stackProps?: YStackProps;
 }
 
-export const ProductImage = ({ product, img_height = IMAGE_HEIGHT, ...stackProps }: ProductImageProps) => {
+export const ProductImage = ({
+  product,
+  img_height = IMAGE_HEIGHT,
+  ...stackProps
+}: ProductImageProps) => {
   const { width: screenWidth } = Dimensions.get("window");
-  const image = product.featuredImage;
-  const uri = getScaledImageUrl(image.src, screenWidth, screenWidth);
+
+  const dpr = Math.min(PixelRatio.get(), 2);
+  const uri = product.featuredImage.getScaledUri(screenWidth, screenWidth, dpr);
 
   return (
-    <ThemedYStack w="100%" h={img_height} ov="hidden" boc="$borderColor" br="$3" {...stackProps}>
+    <ThemedYStack
+      w="100%"
+      h={img_height}
+      ov="hidden"
+      boc="$borderColor"
+      br="$3"
+      {...stackProps}
+    >
       <Galeria urls={[uri!]}>
         <Galeria.Image>
           <ThemedImage w="100%" h="100%" uri={uri} title={product.name} />

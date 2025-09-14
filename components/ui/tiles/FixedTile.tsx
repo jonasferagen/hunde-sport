@@ -1,7 +1,6 @@
 // TileFixed.tsx (refined)
 import type { ImageProps } from "expo-image";
 import React from "react";
-import { PixelRatio } from "react-native";
 import type { YStackProps } from "tamagui";
 
 import {
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/themed";
 import { ThemedSurface } from "@/components/ui/themed/ThemedSurface";
 import type { StoreImage } from "@/domain/StoreImage";
-import { getScaledImageUrl } from "@/lib/image/image";
 
 type FixedTileProps = YStackProps & {
   title: string;
@@ -39,12 +37,7 @@ export const FixedTile = React.memo(function FixedTile({
   children,
   ...props
 }: FixedTileProps) {
-  const dpr = Math.min(PixelRatio.get(), 2);
-  const uri = React.useMemo(
-    () =>
-      getScaledImageUrl(image.src, Math.round(w * dpr), Math.round(h * dpr)),
-    [image.src, w, h, dpr],
-  );
+  const uri = React.useMemo(() => image.getScaledUri(w, h), [image, w, h]);
 
   return (
     <ThemedSurface

@@ -1,6 +1,5 @@
 // TileSquare.tsx
 import React, { useMemo } from "react";
-import { PixelRatio } from "react-native";
 import type { YStackProps } from "tamagui";
 
 import {
@@ -11,7 +10,6 @@ import {
 } from "@/components/ui/themed";
 import { ThemedSurface } from "@/components/ui/themed/ThemedSurface";
 import type { StoreImage } from "@/domain/StoreImage";
-import { getScaledImageUrl } from "@/lib/image/image";
 
 type SquareTileProps = YStackProps & {
   title: string;
@@ -35,12 +33,9 @@ export const SquareTile = React.memo(function SquareTile({
 }: SquareTileProps) {
   // Ask your scaler for a square; skip measuring
 
-  const dpr = Math.min(PixelRatio.get(), 2);
-  const approxPx = Math.round(approxW * dpr);
-
   const uri = useMemo(
-    () => getScaledImageUrl(image.src, approxPx, approxPx),
-    [image.src, approxPx],
+    () => image.getScaledUri(approxW, approxW),
+    [image, approxW],
   );
 
   return (

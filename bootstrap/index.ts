@@ -7,6 +7,7 @@ import { BASE_URL, SENTRY_DSN } from "@/config/app";
 import { StoreImage } from "@/domain/StoreImage";
 import { configureApiClient } from "@/lib/api/apiClient";
 import { configureDprProvider } from "@/lib/image/dpr";
+import { buildScaledImageUrlPx } from "@/lib/image/image";
 import { configureLogger } from "@/lib/logger";
 // Logger
 configureLogger({
@@ -22,9 +23,16 @@ configureDprProvider(() => PixelRatio.get());
 StoreImage.configureImageSizeProvider(
   (uri) =>
     new Promise((resolve, reject) =>
-      Image.getSize(uri, (w, h) => resolve({ width: w, height: h }), reject)
-    )
+      Image.getSize(uri, (w, h) => resolve({ width: w, height: h }), reject),
+    ),
 );
+
+StoreImage.configureImageScaleFunction(
+  (imageUrl, targetWidthPx, targetHeightPx) =>
+    buildScaledImageUrlPx(imageUrl, targetWidthPx, targetHeightPx),
+);
+
+configureDprProvider(() => Math.min(PixelRatio.get(), 2)); // current project policy
 
 // API client (env-specific settings live here)
 configureApiClient({

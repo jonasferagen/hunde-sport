@@ -1,9 +1,12 @@
 // domain/store-image/StoreImage.ts
-
-
-
+import { getDevicePixelRatio } from "@/lib/image/dpr";
 export type ImageIntrinsicSize = { width: number; height: number };
 export type ImageSizeProvider = (uri: string) => Promise<ImageIntrinsicSize>;
+export type ImageScaleFunction = (
+  imageUri: string,
+  targetWidthPx: number,
+  targetHeightPx: number,
+) => string;
 
 export type StoreImageData = {
   id: number;
@@ -48,12 +51,18 @@ export class StoreImage implements NormalizedStoreImage {
   }
 
   private static imageSizeProvider: ImageSizeProvider | null = null;
+  private static imageScaleFunction: ImageScaleFunction | null = null;
 
-
+  static configureImageSizeProvider(provider: ImageSizeProvider) {
+    StoreImage.imageSizeProvider = provider;
+  }
+  static configureImageScaleFunction(imageScaleFunction: ImageScaleFunction) {
+    StoreImage.imageScaleFunction = imageScaleFunction;
+  }
   /**
    * Lazily load the intrinsic image size and cache it.
    */
- async getIntrinsicSize(): Promise<ImageIntrinsicSize> {
+  async getIntrinsicSize(): Promise<ImageIntrinsicSize> {
     if (this._intrinsicWidth && this._intrinsicHeight) {
       return { width: this._intrinsicWidth, height: this._intrinsicHeight };
     }
@@ -84,13 +93,30 @@ export class StoreImage implements NormalizedStoreImage {
     return ratio < 0.75 ? "low" : "ok";
   }
 
-  static configureImageSizeProvider(provider: ImageSizeProvider) {
-    StoreImage.imageSizeProvider = provider;
+  /**
+   * Returns a scaled URI for rendering at the given display size and DPR.
+   * - If no scaler is configured, falls back to original `src`.
+   * - Caller controls DPR policy (e.g., `Math.min(PixelRatio.get(), 2)`).
+   */
+  getScaledUri(displayWidthPx: number, displayHeightPx: number): string {
+    const imageScaleFunction = StoreImage.imageScaleFunction;
+    if (!imageScaleFunction) return this.src;
+
+    const devicePixelRatio = getDevicePixelRatio();
+    const targetWidthPx = Math.max(
+      1,
+      Math.round(displayWidthPx * devicePixelRatio),
+    );
+    const targetHeightPx = Math.max(
+      1,
+      Math.round(displayHeightPx * devicePixelRatio),
+    );
+
+    return imageScaleFunction(this.src, targetWidthPx, targetHeightPx);
   }
 
-
   static create(data?: StoreImageData): StoreImage {
-    if (!data) return StoreImage.DEFAULT;  
+    if (!data) return StoreImage.DEFAULT;
     // normalize with safe defaults
     return new StoreImage({
       id: typeof data.id === "number" ? data.id : 0,
@@ -112,6 +138,6 @@ export class StoreImage implements NormalizedStoreImage {
       alt: "",
       srcset: "",
       sizes: "",
-    })
+    }),
   ) as StoreImage;
 }

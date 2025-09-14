@@ -4,9 +4,11 @@ import type { StackProps } from "tamagui";
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
 import { ThemedImage } from "@/components/ui/themed";
 import { ThemedLinearGradient } from "@/components/ui/themed/ThemedLinearGradient";
-import { ThemedXStack, ThemedYStack } from "@/components/ui/themed/ThemedStacks";
+import {
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui/themed/ThemedStacks";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { getScaledImageUrl } from "@/lib/image/image";
 import type { PurchasableProduct } from "@/types";
 
 import { ProductDescription } from "./ProductDescription";
@@ -17,7 +19,10 @@ interface ProductCardProps extends StackProps {
 }
 
 const IMAGE_SIZE = 80;
-export const ProductCard = React.memo(function ProductCard({ product, ...props }: ProductCardProps) {
+export const ProductCard = React.memo(function ProductCard({
+  product,
+  ...props
+}: ProductCardProps) {
   const { to } = useCanonicalNavigation();
   return (
     <ThemedYStack container box {...props}>
@@ -25,7 +30,8 @@ export const ProductCard = React.memo(function ProductCard({ product, ...props }
       <ThemedXStack
         onPress={() => {
           to("product", product);
-        }}>
+        }}
+      >
         <ProductCardImage product={product} />
         <ProductCardDescription product={product} />
       </ThemedXStack>
@@ -35,15 +41,30 @@ export const ProductCard = React.memo(function ProductCard({ product, ...props }
 });
 
 const ProductCardImage = ({ product }: { product: PurchasableProduct }) => {
-  const uri = getScaledImageUrl(product.featuredImage.src, IMAGE_SIZE, IMAGE_SIZE);
+  const uri = product.featuredImage.getScaledUri(IMAGE_SIZE, IMAGE_SIZE);
   return (
-    <ThemedYStack w={IMAGE_SIZE} h={IMAGE_SIZE} bw={1} boc="$borderColor" br="$3" ov="hidden">
-      <ThemedImage uri={uri} title={product.name} w={IMAGE_SIZE} h={IMAGE_SIZE} />
+    <ThemedYStack
+      w={IMAGE_SIZE}
+      h={IMAGE_SIZE}
+      bw={1}
+      boc="$borderColor"
+      br="$3"
+      ov="hidden"
+    >
+      <ThemedImage
+        uri={uri}
+        title={product.name}
+        w={IMAGE_SIZE}
+        h={IMAGE_SIZE}
+      />
     </ThemedYStack>
   );
 };
 
-const ProductCardDescription = ({ product, ...stackProps }: StackProps & { product: PurchasableProduct }) => {
+const ProductCardDescription = ({
+  product,
+  ...stackProps
+}: StackProps & { product: PurchasableProduct }) => {
   return (
     <ThemedYStack f={1} jc="flex-start" gap="$2" {...stackProps}>
       <ThemedXStack gap="$2" ai="flex-start" jc="space-between">
