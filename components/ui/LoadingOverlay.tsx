@@ -9,9 +9,9 @@ import Animated, {
 } from "react-native-reanimated";
 import type { StackProps } from "tamagui";
 
+import { Loader } from "@/components/ui/Loader";
 import { ThemedYStack } from "@/components/ui/themed";
-import { ThemedSpinner } from "@/components/ui/themed/ThemedSpinner";
-import { useNavigationProgress } from "@/stores/ui/navigationProgressStore"; // { active, start, stop }
+import { useNavigationProgress } from "@/stores/ui/navigationProgressStore";
 export const LoadingOverlay = React.memo(function LoadingOverlay({
   ...props
 }: StackProps) {
@@ -49,15 +49,8 @@ export const LoadingOverlay = React.memo(function LoadingOverlay({
       ]}
     >
       {/* your content */}
-      <ThemedYStack
-        ai="center"
-        jc="center"
-        w="100%"
-        h="100%"
-        {...props}
-        theme="tertiary_shade"
-      >
-        <ThemedSpinner size="large" color="$background" o={0.8} />
+      <ThemedYStack ai="center" jc="center" w="100%" h="100%" {...props}>
+        <Loader />
       </ThemedYStack>
     </Animated.View>
   );

@@ -13,6 +13,7 @@ import type { PurchasableProduct } from "@/types";
 interface ProductListProps {
   products: PurchasableProduct[];
   loadMore: () => void;
+  isLoading: boolean;
   isLoadingMore: boolean;
   hasMore: boolean;
   transitionKey: string | number;
@@ -23,6 +24,7 @@ const ITEM_HEIGHT = 170;
 
 export const ProductList = React.memo(function ProductList({
   products,
+  isLoading,
   loadMore,
   isLoadingMore,
   hasMore,
@@ -78,7 +80,9 @@ export const ProductList = React.memo(function ProductList({
           isLoadingMore ? <Loader w="100%" h={ITEM_HEIGHT} /> : null
         }
         ListEmptyComponent={
-          <DefaultTextContent>Ingen produkter funnet</DefaultTextContent>
+          !isLoading ? (
+            <DefaultTextContent>Ingen produkter funnet</DefaultTextContent>
+          ) : null
         }
         animateFirstTimeKey={transitionKey}
         getStableId={(p) => p.id}

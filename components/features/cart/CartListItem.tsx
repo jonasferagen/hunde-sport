@@ -5,7 +5,6 @@ import { ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui/themed";
 import { ThemedButton } from "@/components/ui/themed/ThemedButton";
 import { InlineSpinnerSwap } from "@/components/widgets/InlineSpinnerSwap";
 import { THEME_CART_ITEM_1, THEME_CART_ITEM_2 } from "@/config/app";
-// ⬅️ add this
 import { useCartStore } from "@/stores/useCartStore";
 
 const QtyStepper = ({

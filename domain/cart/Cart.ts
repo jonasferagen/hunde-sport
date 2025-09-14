@@ -6,7 +6,7 @@ import { CartItem, type CartItemData } from "./CartItem";
 export type CartData = {
   items?: CartItemData[];
   items_weight?: number;
-  totals: TotalsData | Totals; // ⬅️ accepts raw or normalized
+  totals: TotalsData | Totals;
   has_calculated_shipping?: boolean;
   shipping_rates?: unknown;
 };
@@ -69,7 +69,7 @@ export class Cart implements NormalizedCart {
 
   static create(data: CartData, token: string): Cart {
     const items = Object.freeze(
-      (data.items ?? []).map((i) => CartItem.create(i))
+      (data.items ?? []).map((i) => CartItem.create(i)),
     );
 
     const totals =
@@ -101,7 +101,7 @@ export class Cart implements NormalizedCart {
           shippingRates: patch.shippingRates ?? base.shippingRates,
           lastUpdated: patch.lastUpdated ?? base.lastUpdated,
         },
-        { itemKeys: base._itemKeys, itemsByKey: base._itemsByKey }
+        { itemKeys: base._itemKeys, itemsByKey: base._itemsByKey },
       );
     }
 
@@ -121,7 +121,7 @@ export class Cart implements NormalizedCart {
         shippingRates: patch.shippingRates ?? base.shippingRates,
         lastUpdated: patch.lastUpdated ?? base.lastUpdated,
       },
-      derived
+      derived,
     );
   }
 
@@ -135,8 +135,8 @@ export class Cart implements NormalizedCart {
         has_calculated_shipping: false,
         shipping_rates: null,
       },
-      "token"
-    ) as Cart
+      "token",
+    ) as Cart,
   );
 
   get totalQuantity(): number {
@@ -155,13 +155,13 @@ export class Cart implements NormalizedCart {
         items: frozen,
         lastUpdated: Date.now(),
       },
-      derived
+      derived,
     );
   }
 
   withUpdatedQuantity(key: string, quantity: number): Cart {
     const next = this.items.map((it) =>
-      it.key === key ? it.withQuantity(quantity) : it
+      it.key === key ? it.withQuantity(quantity) : it,
     );
     return this.withItems(next);
   }

@@ -16,7 +16,6 @@ import {
   ProductTitle,
 } from "@/components/features/product/ui";
 import { ProductCategoryChips } from "@/components/features/product-category/ProductCategoryChips";
-import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack } from "@/components/ui/themed";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { ProductCategoryProvider } from "@/contexts/ProductCategoryContext";
@@ -27,19 +26,13 @@ import { type PurchasableProduct } from "@/types";
 
 export const ProductScreen = () => {
   useRenderGuard("ProductScreen");
-
-  const ready = useScreenReady();
+  useScreenReady();
   const { id, productCategoryId: productCategoryIdFromParams } =
     useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
   const productCategoryId = Number(productCategoryIdFromParams);
-  const { data: product, isLoading } = useProduct(productId);
+  const { data: product } = useProduct(productId);
 
-  if (!ready) return null;
-
-  if (isLoading) {
-    return <Loader />;
-  }
   if (!product) {
     return <Redirect href="/" />;
   }

@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Paragraph } from "tamagui";
 
 import { PurchaseButton } from "@/components/features/product/purchase/PurchaseButton";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { ThemedYStack } from "@/components/ui/themed";
+import { ThemedParagraph } from "@/components/ui/themed/ThemedParagraph";
 import { CustomField } from "@/domain/CustomField";
 import { Purchasable } from "@/types";
 
@@ -61,7 +61,7 @@ export const ProductCustomizationModalContent = ({
       }
     >
       <ThemedYStack gap="$3">
-        <Paragraph>{product.short_description}</Paragraph>
+        <ThemedParagraph>{product.short_description}</ThemedParagraph>
         <ProductCustomizationForm
           fields={customFields}
           onChange={setCustomFields}

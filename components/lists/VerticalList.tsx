@@ -33,7 +33,6 @@ export interface VerticalListProps<T> extends Base<T> {
   renderItem: FlashListRenderItem<T>;
   ListFooterComponent?: React.ReactElement | null;
   ListEmptyComponent?: React.ReactElement | null;
-
   animateFirstTimeKey?: string | number;
   getStableId?: (item: T) => number | string;
   staggerMod?: number; // default 8
@@ -111,7 +110,7 @@ const ItemAnimator: React.FC<{
   delay: number;
   children: React.ReactNode;
 }> = ({ firstTime, delay, children }) => {
-  const opacity = useSharedValue(firstTime ? 0.7 : 1);
+  const opacity = useSharedValue(firstTime ? 0.2 : 1);
   React.useEffect(() => {
     if (!firstTime) return;
     opacity.value = withDelay(delay, withTiming(1, { duration: 200 }));

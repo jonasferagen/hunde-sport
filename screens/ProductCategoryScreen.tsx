@@ -23,9 +23,6 @@ export const ProductCategoryScreen = () => {
   const productCategories = useProductCategories(Number(id));
   const trail = useBreadcrumbTrail(Number(id));
 
-  if (!ready) {
-    return null;
-  }
   if (!productCategory || productCategory.id === 0) {
     return <Redirect href="/" />;
   }
@@ -47,7 +44,9 @@ export const ProductCategoryScreen = () => {
       </PageHeader>
       <PageBody>
         <PageSection fill f={1} mih={0}>
-          <ProductCategoryProducts productCategory={productCategory} />
+          {ready && (
+            <ProductCategoryProducts productCategory={productCategory} />
+          )}
         </PageSection>
       </PageBody>
     </PageView>
