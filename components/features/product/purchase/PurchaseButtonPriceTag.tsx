@@ -19,7 +19,7 @@ export function PurchaseButtonPriceTag({
       mr={-20}
       minWidth={100}
     >
-      <ProductPrice purchasable={purchasable} />
+      <ProductPrice product={purchasable.effectiveProduct} />
     </ThemedSurface>
   );
 }

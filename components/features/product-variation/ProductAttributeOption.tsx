@@ -1,7 +1,10 @@
 // components/features/product-variation/ProductAttributeOption.tsx
 import React from "react";
 
-import { ProductPriceRange } from "@/components/features/product/ui/ProductPrice";
+import {
+  ProductPrice,
+  ProductPriceRange,
+} from "@/components/features/product/ui/ProductPrice";
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui/themed";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
 import { PriceBook } from "@/domain/pricing/PriceBook";
@@ -16,18 +19,47 @@ type Props = {
   onPress?: () => void;
 };
 
-export const ProductAttributeOption = React.memo(({ isSelected, productVariations, label, disabled = false, onPress }: Props) => {
-  const productPriceRange = productVariations.length > 0 ? PriceBook.getProductPriceRange(productVariations.map((v) => v.priceBook)) : null;
+export const ProductAttributeOption = React.memo(
+  ({
+    isSelected,
+    productVariations,
+    label,
+    disabled = false,
+    onPress,
+  }: Props) => {
+    const productPriceRange =
+      productVariations.length > 0
+        ? PriceBook.getProductPriceRange(
+            productVariations.map((v) => v.priceBook),
+          )
+        : null;
 
-  return (
-    <ThemedXStack ai="center" gap="$2" theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}>
-      <ThemedButton size="$4" bw={2} aria-label={label} aria-pressed={isSelected} aria-disabled={disabled} disabled={disabled} onPress={onPress}>
-        <ThemedXStack f={1} jc="space-between" gap="$2">
-          <ThemedText>{label}</ThemedText>
-          {productPriceRange && <ProductPriceRange productPriceRange={productPriceRange} />}
-        </ThemedXStack>
-      </ThemedButton>
-    </ThemedXStack>
-  );
-});
+    return (
+      <ThemedXStack
+        ai="center"
+        gap="$2"
+        theme={isSelected ? THEME_OPTION_SELECTED : THEME_OPTION}
+      >
+        <ThemedButton
+          size="$4"
+          bw={2}
+          aria-label={label}
+          aria-pressed={isSelected}
+          aria-disabled={disabled}
+          disabled={disabled}
+          onPress={onPress}
+        >
+          <ThemedXStack f={1} jc="space-between" gap="$2">
+            <ThemedText>{label}</ThemedText>
+            {productVariations.length === 1 ? (
+              <ProductPrice product={productVariations[0]!} />
+            ) : productPriceRange ? (
+              <ProductPriceRange productPriceRange={productPriceRange} />
+            ) : null}
+          </ThemedXStack>
+        </ThemedButton>
+      </ThemedXStack>
+    );
+  },
+);
 ProductAttributeOption.displayName = "ProductAttributeOption";

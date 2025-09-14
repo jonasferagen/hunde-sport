@@ -11,7 +11,7 @@ import {
 import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductPriceRange as ProductPriceRangeType } from "@/domain/pricing/types";
 import { useProductPriceRange } from "@/hooks/useProductPriceRange";
-import type { Purchasable, VariableProduct } from "@/types";
+import type { Product, VariableProduct } from "@/types";
 
 const PriceLine = ({
   showIcon,
@@ -24,25 +24,24 @@ const PriceLine = ({
 );
 
 type ProductPriceSimpleProps = {
-  purchasable: Purchasable;
+  product: Product;
   showIcon?: boolean;
 } & ThemedTextProps;
 
 export const ProductPrice = React.memo(function ProductPrice({
   showIcon = false,
-  purchasable,
+  product,
   ...textProps
 }: ProductPriceSimpleProps) {
-  const effectiveProduct = purchasable.effectiveProduct;
-  const { availability } = effectiveProduct;
+  const { availability } = product;
   const { isInStock, isPurchasable, isOnSale } = availability;
-  const priceBook: PriceBook = effectiveProduct.priceBook;
+  const priceBook: PriceBook = product.priceBook;
 
   // Variable products: render dedicated subcomponent that uses the hook internally
-  if (effectiveProduct.isVariable) {
+  if (product.isVariable) {
     return (
       <ProductPriceVariable
-        variableProduct={effectiveProduct as VariableProduct}
+        variableProduct={product as VariableProduct}
         {...textProps}
       />
     );
@@ -55,7 +54,7 @@ export const ProductPrice = React.memo(function ProductPrice({
     return (
       <PriceLine showIcon={showIcon}>
         <ThemedXStack gap="$2">
-          <ThemedText disabled subtle {...textProps}>
+          <ThemedText disabled {...textProps}>
             {priceBook.fmtRegular()}
           </ThemedText>
           <ThemedText {...textProps} subtle={subtle}>

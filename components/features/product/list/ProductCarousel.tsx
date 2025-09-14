@@ -25,7 +25,7 @@ import {
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import type { QueryResult } from "@/lib/api/query";
 import { spacePx } from "@/lib/theme";
-import { Purchasable, type PurchasableProduct } from "@/types";
+import { type PurchasableProduct } from "@/types";
 
 type AnyProductsHook<Args extends any[] = any[]> = (
   ...args: Args
@@ -125,7 +125,6 @@ const ProductTile: React.FC<{
   h: number;
   onPress: () => void;
 }> = ({ product, index, gapPx, w, h, onPress }) => {
-  const purchasable = Purchasable.create({ product });
   return (
     <ThemedYStack w={w} h={h} mr={gapPx}>
       <FixedTile
@@ -150,7 +149,7 @@ const ProductTile: React.FC<{
             productAvailability={product.availability}
             showInStock={false}
           />
-          <ProductPrice purchasable={purchasable} showIcon />
+          <ProductPrice product={product} showIcon />
         </TileBadge>
       </FixedTile>
     </ThemedYStack>

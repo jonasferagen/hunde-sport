@@ -23,7 +23,7 @@ import { ProductCategoryProvider } from "@/contexts/ProductCategoryContext";
 import { useProduct } from "@/hooks/api/data/product/queries";
 import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useRenderGuard } from "@/hooks/useRenderGuard";
-import { Purchasable, type PurchasableProduct } from "@/types";
+import { type PurchasableProduct } from "@/types";
 
 export const ProductScreen = () => {
   useRenderGuard("ProductScreen");
@@ -33,9 +33,7 @@ export const ProductScreen = () => {
     useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
   const productCategoryId = Number(productCategoryIdFromParams);
-  const { data: product, isLoading } = useProduct(productId, {
-    enabled: ready,
-  });
+  const { data: product, isLoading } = useProduct(productId);
 
   if (!ready) return null;
 
@@ -56,7 +54,6 @@ export const ProductScreen = () => {
 };
 
 const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
-  const purchasable = Purchasable.create({ product });
   return (
     <PageView theme="secondary">
       <PageBody mode="scroll">
@@ -72,10 +69,10 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
                 numberOfLines={2}
                 adjustsFontSizeToFit
                 ellipsizeMode="tail"
-                product={purchasable.product}
+                product={product}
               />
             </ThemedXStack>
-            <ProductPrice fos="$6" purchasable={purchasable} />
+            <ProductPrice fos="$6" product={product} />
           </ThemedXStack>
           <ThemedXStack split>
             <ProductAvailabilityStatus
