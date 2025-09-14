@@ -1,8 +1,12 @@
 import { ChevronRight } from "@tamagui/lucide-icons";
-import { H4 } from "tamagui";
 
 import { ModalLayout } from "@/components/ui/ModalLayout";
-import { ThemedButton, ThemedYStack } from "@/components/ui/themed";
+import {
+  ThemedButton,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui/themed";
+import { ThemedHeading } from "@/components/ui/themed/ThemedHeading";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import type { ProductCategory } from "@/types";
 
@@ -30,8 +34,12 @@ export function ProductCategoriesModal({
               to("product-category", item);
               close();
             }}
-            aria-label={`Open ${item.name}`}>
-            <H4>{item.name}</H4>
+            aria-label={`Open ${item.name}`}
+          >
+            <ThemedXStack f={1} split>
+              <ThemedHeading>{item.name}</ThemedHeading>
+              <ThemedHeading tabular>({item.count})</ThemedHeading>
+            </ThemedXStack>
             <ChevronRight />
           </ThemedButton>
         ))}

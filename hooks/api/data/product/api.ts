@@ -15,6 +15,7 @@ type FixedProductFilters = {
   parent?: number;
   featured?: boolean;
   on_sale?: boolean;
+  stock_status?: string[];
 };
 
 /* @TODO Add these in the list endpoints ? See product-category */
@@ -45,9 +46,11 @@ const buildListingParams = (
     parent: f.parent,
     featured: f.featured,
     on_sale: f.on_sale,
-    // Note: we intentionally do NOT set stock_status => uses API default (instock only)
+    stock_status: f.stock_status, // Note: we intentionally do NOT set stock_status => uses API default (instock only)
   };
 };
+
+const ANY_STOCK_STATUS = ["instock", "outofstock", "onbackorder"];
 
 /** Single product */
 export async function fetchProduct(productId: number): Promise<Product> {
@@ -99,16 +102,23 @@ export const fetchProductsByProductCategory = async (
   paginationOpts?: PaginationOpts,
 ) => {
   const url = endpoints.products.list(
-    buildListingParams(paginationOpts, { category: productCategory.id }),
+    buildListingParams(paginationOpts, {
+      category: productCategory.id,
+      stock_status: ANY_STOCK_STATUS,
+    }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
-/** Recent (orderby=date) */
 export const fetchRecentProducts = async (paginationOpts?: PaginationOpts) => {
   const url = endpoints.products.list(
-    buildListingParams(paginationOpts, { orderby: "date" }),
+    buildListingParams(
+      { order: "desc", ...paginationOpts }, // Default to descending order
+      {
+        orderby: "date",
+      },
+    ),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);

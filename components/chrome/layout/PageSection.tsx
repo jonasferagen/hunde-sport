@@ -12,7 +12,13 @@ type PageSectionProps = ThemedYStackProps & {
 
 const SPACE = "$3";
 
-export const PageSection: React.FC<PageSectionProps> = ({ title, children, fill = false, padded = false, ...stackProps }) => {
+export const PageSection: React.FC<PageSectionProps> = ({
+  title,
+  children,
+  fill = false,
+  padded = false,
+  ...stackProps
+}) => {
   const hasChildren = React.Children.toArray(children).some(Boolean);
   if (!hasChildren) return null;
 

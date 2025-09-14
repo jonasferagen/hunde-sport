@@ -194,9 +194,12 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({
           f={1}
           onPress={() => to("product-category", productCategory)}
         >
-          <ThemedText f={1} letterSpacing={0.5}>
-            {productCategory.name}
-          </ThemedText>
+          <ThemedXStack f={1} split>
+            <ThemedText f={1} letterSpacing={0.5}>
+              {productCategory.name}
+            </ThemedText>
+            <ThemedText tabular>({productCategory.count})</ThemedText>
+          </ThemedXStack>
         </ThemedButton>
       </ThemedXStack>
 

@@ -46,4 +46,3 @@ export const ThemedText = React.forwardRef<ThemedTextRef, ThemedTextProps>(
     return <ThemedTextBase ref={ref} {...props} />;
   },
 );
-ThemedText.displayName = "ThemedText";

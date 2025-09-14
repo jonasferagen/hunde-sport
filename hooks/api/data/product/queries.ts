@@ -104,7 +104,7 @@ export const useProductsByProductCategory = (
   const queryOptions = makeQueryOptions<PurchasableProduct>(
     fetchProductsByProductCategory,
     productCategory,
-    { per_page: 3, ...pagination },
+    { ...pagination },
     options,
   );
   const result = useInfiniteQuery({
