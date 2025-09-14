@@ -74,8 +74,10 @@ export const TileFixed = React.memo(function TileFixed({
           fullscreen
           t="auto"
           p="$2.5"
-          jc="flex-end"
           pointerEvents="none"
+          ai="center"
+          jc="center"
+          h={50}
         >
           <ThemedLinearGradient
             fullscreen
@@ -84,13 +86,7 @@ export const TileFixed = React.memo(function TileFixed({
             opacity={0.8}
             pointerEvents="none"
           />
-          <ThemedText
-            bold
-            col="$color"
-            numberOfLines={titleLines}
-            adjust
-            ta="center"
-          >
+          <ThemedText bold col="$color" numberOfLines={2} lh={16} ta="center">
             {title}
           </ThemedText>
         </ThemedYStack>

@@ -18,14 +18,12 @@ const ThemedTextBase = styled(SizableText, {
     tabular: {
       true: {
         numberOfLines: 1,
-        ellipsizeMode: "clip",
         fontVariant: ["tabular-nums"],
         flexShrink: 1,
       },
     },
     adjust: {
       true: {
-        numberOfLines: 2,
         ellipsizeMode: "tail",
       },
     },
