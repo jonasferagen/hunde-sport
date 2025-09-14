@@ -48,20 +48,20 @@ export const ProductPrice = React.memo(function ProductPrice({
     );
   }
 
-  // Simple product pricing
-  const saleValid = isOnSale; // authoritative from WC Store API
   const isFree = isInStock && priceBook.price.minor === 0;
   const subtle = Boolean(!isInStock || !isPurchasable || textProps.subtle);
 
-  if (saleValid) {
+  if (isOnSale) {
     return (
       <PriceLine showIcon={showIcon}>
-        <ThemedText disabled subtle {...textProps}>
-          {priceBook.fmtRegular()}
-        </ThemedText>
-        <ThemedText {...textProps} subtle={subtle}>
-          {priceBook.fmtSale()}
-        </ThemedText>
+        <ThemedXStack gap="$2">
+          <ThemedText disabled subtle {...textProps}>
+            {priceBook.fmtRegular()}
+          </ThemedText>
+          <ThemedText {...textProps} subtle={subtle}>
+            {priceBook.fmtSale()}
+          </ThemedText>
+        </ThemedXStack>
       </PriceLine>
     );
   }

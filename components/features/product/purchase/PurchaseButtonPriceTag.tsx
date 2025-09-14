@@ -17,7 +17,7 @@ export function PurchaseButtonPriceTag({
       jc="center"
       px="none"
       mr={-20}
-      minWidth={80}
+      minWidth={100}
     >
       <ProductPrice purchasable={purchasable} />
     </ThemedSurface>

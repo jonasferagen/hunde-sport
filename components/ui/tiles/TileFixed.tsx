@@ -4,7 +4,12 @@ import React from "react";
 import { PixelRatio } from "react-native";
 import type { YStackProps } from "tamagui";
 
-import { ThemedImage, ThemedLinearGradient, ThemedText, ThemedYStack } from "@/components/ui/themed";
+import {
+  ThemedImage,
+  ThemedLinearGradient,
+  ThemedText,
+  ThemedYStack,
+} from "@/components/ui/themed";
 import { ThemedSurface } from "@/components/ui/themed/ThemedSurface";
 import type { StoreImage } from "@/domain/StoreImage";
 import { getScaledImageUrl } from "@/lib/image/image";
@@ -30,15 +35,26 @@ export const TileFixed = React.memo(function TileFixed({
   onPress,
   imagePriority,
   showGradient = true,
-  titleLines = 2,
+  titleLines = 1,
   children,
   ...props
 }: TileFixedProps) {
   const dpr = Math.min(PixelRatio.get(), 2);
-  const uri = React.useMemo(() => getScaledImageUrl(image.src, Math.round(w * dpr), Math.round(h * dpr)), [image.src, w, h, dpr]);
+  const uri = React.useMemo(
+    () =>
+      getScaledImageUrl(image.src, Math.round(w * dpr), Math.round(h * dpr)),
+    [image.src, w, h, dpr],
+  );
 
   return (
-    <ThemedSurface w={w} h={h} interactive={true} f={1} onPress={onPress} {...props}>
+    <ThemedSurface
+      w={w}
+      h={h}
+      interactive={true}
+      f={1}
+      onPress={onPress}
+      {...props}
+    >
       <ThemedImage
         priority={imagePriority}
         uri={uri}
@@ -54,9 +70,27 @@ export const TileFixed = React.memo(function TileFixed({
 
       {/* overlays shouldn't block taps */}
       {showGradient && (
-        <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end" pointerEvents="none">
-          <ThemedLinearGradient fullscreen start={[0, 0.2]} end={[0, 0.9]} opacity={0.8} pointerEvents="none" />
-          <ThemedText bold col="$color" numberOfLines={titleLines} ellipse ta="center">
+        <ThemedYStack
+          fullscreen
+          t="auto"
+          p="$2.5"
+          jc="flex-end"
+          pointerEvents="none"
+        >
+          <ThemedLinearGradient
+            fullscreen
+            start={[0, 0.2]}
+            end={[0, 0.9]}
+            opacity={0.8}
+            pointerEvents="none"
+          />
+          <ThemedText
+            bold
+            col="$color"
+            numberOfLines={titleLines}
+            adjust
+            ta="center"
+          >
             {title}
           </ThemedText>
         </ThemedYStack>

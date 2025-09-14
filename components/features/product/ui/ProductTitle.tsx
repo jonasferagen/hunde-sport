@@ -17,7 +17,7 @@ export const ProductTitle = ({
       numberOfLines={1}
       ellipsizeMode="tail" // if it still can’t fit, add …
       adjustsFontSizeToFit // shrink to fit (native)
-      minimumFontScale={0.7} // don’t shrink below 80% (tweak as needed){...props}>
+      minimumFontScale={0.8} // don’t shrink below 80% (tweak as needed){...props}>
       {...props}
     >
       {product.name}

@@ -3,7 +3,12 @@ import React, { useMemo } from "react";
 import { PixelRatio } from "react-native";
 import type { YStackProps } from "tamagui";
 
-import { ThemedImage, ThemedLinearGradient, ThemedText, ThemedYStack } from "@/components/ui/themed";
+import {
+  ThemedImage,
+  ThemedLinearGradient,
+  ThemedText,
+  ThemedYStack,
+} from "@/components/ui/themed";
 import { ThemedSurface } from "@/components/ui/themed/ThemedSurface";
 import type { StoreImage } from "@/domain/StoreImage";
 import { getScaledImageUrl } from "@/lib/image/image";
@@ -25,7 +30,7 @@ export const TileSquare = React.memo(function TileSquare({
   children,
   onPress,
   showGradient = true,
-  titleLines = 2,
+  titleLines = 1,
   ...props
 }: TileSquareProps) {
   // Ask your scaler for a square; skip measuring
@@ -33,7 +38,10 @@ export const TileSquare = React.memo(function TileSquare({
   const dpr = Math.min(PixelRatio.get(), 2);
   const approxPx = Math.round(approxW * dpr);
 
-  const uri = useMemo(() => getScaledImageUrl(image.src, approxPx, approxPx), [image.src, approxPx]);
+  const uri = useMemo(
+    () => getScaledImageUrl(image.src, approxPx, approxPx),
+    [image.src, approxPx],
+  );
 
   return (
     <ThemedSurface interactive={true} f={1} bw={1} onPress={onPress} {...props}>
@@ -42,8 +50,20 @@ export const TileSquare = React.memo(function TileSquare({
         {children}
         {showGradient && (
           <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end">
-            <ThemedLinearGradient fullscreen start={[0, 0.2]} end={[0, 0.9]} opacity={0.8} />
-            <ThemedText fow="bold" col="black" numberOfLines={titleLines} ellipse ta="center">
+            <ThemedLinearGradient
+              fullscreen
+              start={[0, 0.2]}
+              end={[0, 0.9]}
+              opacity={0.8}
+            />
+            <ThemedText
+              fow="bold"
+              col="black"
+              numberOfLines={titleLines}
+              ta="center"
+              ellipsizeMode="tail"
+              fos="$2"
+            >
               {title}
             </ThemedText>
           </ThemedYStack>

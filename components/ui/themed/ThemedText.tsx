@@ -19,10 +19,14 @@ const ThemedTextBase = styled(SizableText, {
       true: {
         numberOfLines: 1,
         ellipsizeMode: "clip",
-        adjustsFontSizeToFit: true,
-        minimumFontScale: 0.7,
         fontVariant: ["tabular-nums"],
         flexShrink: 1,
+      },
+    },
+    adjust: {
+      true: {
+        numberOfLines: 2,
+        ellipsizeMode: "tail",
       },
     },
   },
@@ -35,10 +39,13 @@ export type ThemedTextProps = React.ComponentProps<typeof ThemedTextBase> & {
   subtle?: boolean;
   tabular?: boolean;
   copyable?: boolean;
+  adjust?: boolean;
 };
 export type ThemedTextRef = React.ComponentRef<typeof ThemedTextBase>;
 
-export const ThemedText = React.forwardRef<ThemedTextRef, ThemedTextProps>(function ThemedText(props, ref) {
-  return <ThemedTextBase ref={ref} {...props} />;
-});
+export const ThemedText = React.forwardRef<ThemedTextRef, ThemedTextProps>(
+  function ThemedText(props, ref) {
+    return <ThemedTextBase ref={ref} {...props} />;
+  },
+);
 ThemedText.displayName = "ThemedText";
