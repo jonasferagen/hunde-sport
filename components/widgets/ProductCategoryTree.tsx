@@ -99,7 +99,6 @@ export const ProductCategoryBranch = memo(function ProductCategoryBranch({
   const node = useProductCategory(id);
   const children = useProductCategories(id);
   const hasChildren = children.length > 0;
-
   const isExpanded = useIsExpanded(id);
 
   return (
@@ -157,12 +156,12 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({
   pathIds,
 }: RenderItemProps) {
   const { to } = useCanonicalNavigation();
-  const ctx = React.useContext(TreeCtx);
+  // const ctx = React.useContext(TreeCtx);
   const setActivePathIds = useSetActivePathIds();
   const INDENT = React.useMemo(() => getTokenValue("$6", "space"), []);
   const rowRef = React.useRef<View>(null);
+  /*
   const MIN_SPACE_BELOW = 160;
-
   const ensureRoomBelow = React.useCallback(() => {
     if (!ctx?.scrollRef.current || !rowRef.current) return;
     rowRef.current.measureInWindow((_x, y, _w, h) => {
@@ -178,13 +177,14 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({
       }
     });
   }, [ctx]);
+  */
   const onToggleExpandPath = React.useCallback(() => {
     if (!hasChildren) return;
     // If currently expanded, collapse to parent path; else set this node's path.
     const nextPathIds = isExpanded ? pathIds.slice(0, -1) : pathIds;
-    ensureRoomBelow();
+    //  ensureRoomBelow();
     setActivePathIds(nextPathIds);
-  }, [hasChildren, isExpanded, pathIds, ensureRoomBelow, setActivePathIds]);
+  }, [hasChildren, isExpanded, pathIds, setActivePathIds]);
 
   return (
     <ThemedXStack ref={rowRef} w="100%" ai="center" gap="$2" mb="$2">
