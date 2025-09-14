@@ -14,7 +14,7 @@ import { ThemedSurface } from "@/components/ui/themed/ThemedSurface";
 import type { StoreImage } from "@/domain/StoreImage";
 import { getScaledImageUrl } from "@/lib/image/image";
 
-type TileFixedProps = YStackProps & {
+type FixedTileProps = YStackProps & {
   title: string;
   image: StoreImage;
   w: number;
@@ -26,7 +26,7 @@ type TileFixedProps = YStackProps & {
   interactive?: boolean;
 };
 
-export const TileFixed = React.memo(function TileFixed({
+export const FixedTile = React.memo(function FixedTile({
   title,
   image,
   w,
@@ -38,7 +38,7 @@ export const TileFixed = React.memo(function TileFixed({
   titleLines = 1,
   children,
   ...props
-}: TileFixedProps) {
+}: FixedTileProps) {
   const dpr = Math.min(PixelRatio.get(), 2);
   const uri = React.useMemo(
     () =>

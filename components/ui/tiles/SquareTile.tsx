@@ -13,7 +13,7 @@ import { ThemedSurface } from "@/components/ui/themed/ThemedSurface";
 import type { StoreImage } from "@/domain/StoreImage";
 import { getScaledImageUrl } from "@/lib/image/image";
 
-type TileSquareProps = YStackProps & {
+type SquareTileProps = YStackProps & {
   title: string;
   image: StoreImage;
   /** Approx pixel width to request from CDN; avoids onLayout. */
@@ -23,7 +23,7 @@ type TileSquareProps = YStackProps & {
   onPress: () => void;
 };
 
-export const TileSquare = React.memo(function TileSquare({
+export const SquareTile = React.memo(function SquareTile({
   title,
   image,
   approxW = 200, // safe default; CDN can upscale/downscale
@@ -32,7 +32,7 @@ export const TileSquare = React.memo(function TileSquare({
   showGradient = true,
   titleLines = 1,
   ...props
-}: TileSquareProps) {
+}: SquareTileProps) {
   // Ask your scaler for a square; skip measuring
 
   const dpr = Math.min(PixelRatio.get(), 2);

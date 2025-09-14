@@ -1,14 +1,21 @@
 // ProductRail.tsx
 import { type SpaceTokens, type StackProps, Theme } from "tamagui";
 
-import { HorizontalTiles } from "@/components/ui/tiles/HorizontalTiles";
+import { HorizontalTiles } from "@/components/ui/tiles/layout/HorizontalTiles";
 import { PRODUCT_TILE_HEIGHT, PRODUCT_TILE_WIDTH } from "@/config/app";
-import { useDebugProducts, useDiscountedProducts, useFeaturedProducts, useRecentProducts } from "@/hooks/api/data/product/queries";
+import {
+  useDebugProducts,
+  useDiscountedProducts,
+  useFeaturedProducts,
+  useRecentProducts,
+} from "@/hooks/api/data/product/queries";
 import type { QueryResult } from "@/lib/api/query";
 import type { PurchasableProduct } from "@/types";
 
 /** A hook that returns product query results. Args vary per hook. */
-type AnyProductsHook<Args extends any[] = any[]> = (...args: Args) => QueryResult<PurchasableProduct>;
+type AnyProductsHook<Args extends any[] = any[]> = (
+  ...args: Args
+) => QueryResult<PurchasableProduct>;
 
 type ProductRailProps<Args extends any[] = any[]> = StackProps & {
   /** Pass the hook itself, e.g. `useFeaturedProducts` or `useProductsByIds` */
@@ -55,11 +62,17 @@ export function ProductRail<Args extends any[] = any[]>({
 }
 
 /** Convenience wrappers with no-arg hooks */
-export const RecentProducts = (p: StackProps) => <ProductRail {...p} useQuery={useRecentProducts} />;
+export const RecentProducts = (p: StackProps) => (
+  <ProductRail {...p} useQuery={useRecentProducts} />
+);
 
-export const DiscountedProducts = (p: StackProps) => <ProductRail {...p} useQuery={useDiscountedProducts} />;
+export const DiscountedProducts = (p: StackProps) => (
+  <ProductRail {...p} useQuery={useDiscountedProducts} />
+);
 
-export const FeaturedProducts = (p: StackProps) => <ProductRail {...p} useQuery={useFeaturedProducts} />;
+export const FeaturedProducts = (p: StackProps) => (
+  <ProductRail {...p} useQuery={useFeaturedProducts} />
+);
 
 /** Debug: pass hook + args separately */
 export const DebugProducts = (p: StackProps) => (
