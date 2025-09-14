@@ -4,7 +4,12 @@ import React from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Theme, type ThemeName } from "tamagui";
 
-import { ThemedButton, ThemedSpinner, ThemedText, ThemedXStack } from "@/components/ui/themed";
+import {
+  ThemedButton,
+  ThemedSpinner,
+  ThemedText,
+  ThemedXStack,
+} from "@/components/ui/themed";
 
 type CallToActionButtonProps = React.ComponentProps<typeof ThemedButton> & {
   label?: string;
@@ -17,9 +22,22 @@ type CallToActionButtonProps = React.ComponentProps<typeof ThemedButton> & {
   loading?: boolean;
 };
 
-export const CallToActionButton = React.forwardRef<React.ComponentRef<typeof ThemedButton>, CallToActionButtonProps>(function CallToActionButton(
-  { onPress, disabled, theme, before, after, label, trailing, loading = false, ...props },
-  ref
+export const CallToActionButton = React.forwardRef<
+  React.ComponentRef<typeof ThemedButton>,
+  CallToActionButtonProps
+>(function CallToActionButton(
+  {
+    onPress,
+    disabled,
+    theme,
+    before,
+    after,
+    label,
+    trailing,
+    loading = false,
+    ...props
+  },
+  ref,
 ) {
   const isDisabled = disabled || loading;
 
@@ -39,11 +57,18 @@ export const CallToActionButton = React.forwardRef<React.ComponentRef<typeof The
         aria-busy={loading}
         accessibilityState={{ disabled: isDisabled, busy: loading }}
         bw={2}
-        {...props}>
+        {...props}
+      >
         <ThemedButton.Before>{before}</ThemedButton.Before>
 
         {/* Left label */}
-        <ThemedButton.Text>{loading ? <ThemedSpinner /> : label ? <ThemedText tabular>{label}</ThemedText> : null}</ThemedButton.Text>
+        <ThemedButton.Text>
+          {loading ? (
+            <ThemedSpinner />
+          ) : label ? (
+            <ThemedText tabular>{label}</ThemedText>
+          ) : null}
+        </ThemedButton.Text>
 
         {/* Flexible middle/right area that pushes the arrow to the edge */}
         <ThemedXStack f={1} jc="flex-end" ai="center">

@@ -36,8 +36,6 @@ export const ProductPrice = React.memo(function ProductPrice({
   const { availability } = product;
   const { isInStock, isPurchasable, isOnSale } = availability;
   const priceBook: PriceBook = product.priceBook;
-
-  // Variable products: render dedicated subcomponent that uses the hook internally
   if (product.isVariable) {
     return (
       <ProductPriceVariable
@@ -92,9 +90,7 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
   ...textProps
 }: ProductPriceRangeProps) {
   const { min, max } = productPriceRange;
-
   const same = PriceBook.isEqual(min, max);
-
   const minLabel = min.fmtPrice();
   const label = same
     ? minLabel
@@ -108,7 +104,6 @@ export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
     </PriceLine>
   );
 });
-
 /** Subcomponent that safely calls the hook (no conditional hook calls) */
 function ProductPriceVariable({
   variableProduct,
@@ -117,10 +112,17 @@ function ProductPriceVariable({
   const { productPriceRange, isLoading } =
     useProductPriceRange(variableProduct);
 
-  if (isLoading || !productPriceRange) {
+  if (isLoading) {
     return (
       <PriceLine>
         <ThemedSpinner scale={0.7} />
+      </PriceLine>
+    );
+  }
+  if (!productPriceRange) {
+    return (
+      <PriceLine>
+        <ThemedText {...textProps}>Kommer</ThemedText>
       </PriceLine>
     );
   }

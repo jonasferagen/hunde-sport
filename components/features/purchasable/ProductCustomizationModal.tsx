@@ -15,13 +15,28 @@ type Props = {
 };
 
 export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
-  return <ProductCustomizationModalContent close={close} purchasable={purchasable} />;
+  return (
+    <ProductCustomizationModalContent close={close} purchasable={purchasable} />
+  );
 };
 
-export const ProductCustomizationModalContent = ({ close, purchasable }: { close: () => void; purchasable: Purchasable }) => {
-  const { product, attributeSelection, productVariation, customFields: initialCustomFields } = purchasable;
+export const ProductCustomizationModalContent = ({
+  close,
+  purchasable,
+}: {
+  close: () => void;
+  purchasable: Purchasable;
+}) => {
+  const {
+    product,
+    attributeSelection,
+    productVariation,
+    customFields: initialCustomFields,
+  } = purchasable;
 
-  const [customFields, setCustomFields] = React.useState<CustomField[]>(initialCustomFields ?? product.customFields ?? []);
+  const [customFields, setCustomFields] = React.useState<CustomField[]>(
+    initialCustomFields ?? product.customFields ?? [],
+  );
 
   const newPurchasable = React.useMemo(
     () =>
@@ -31,7 +46,7 @@ export const ProductCustomizationModalContent = ({ close, purchasable }: { close
         attributeSelection,
         productVariation,
       }),
-    [product, attributeSelection, productVariation, customFields]
+    [product, attributeSelection, productVariation, customFields],
   );
 
   return (
@@ -43,10 +58,14 @@ export const ProductCustomizationModalContent = ({ close, purchasable }: { close
           <ThemedYStack mb="$3" />
           <PurchaseButton purchasable={newPurchasable} onSuccess={close} />
         </ThemedYStack>
-      }>
+      }
+    >
       <ThemedYStack gap="$3">
         <Paragraph>{product.short_description}</Paragraph>
-        <ProductCustomizationForm fields={customFields} onChange={setCustomFields} />
+        <ProductCustomizationForm
+          fields={customFields}
+          onChange={setCustomFields}
+        />
       </ThemedYStack>
     </ModalLayout>
   );

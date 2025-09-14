@@ -31,7 +31,7 @@ export function PurchaseFlow({ product }: Props) {
 
 const onOpenCustomization = async (p: Purchasable) => {
   const { ProductCustomizationModal } = await import(
-    "@/components/features/purchasable/ui/ProductCustomizationModal"
+    "@/components/features/purchasable/ProductCustomizationModal"
   );
   openModal((_, api) => (
     <ProductCustomizationModal purchasable={p} close={() => api.close()} />

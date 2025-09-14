@@ -28,7 +28,7 @@ export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
   select_incomplete: "Velg ...",
   customize: "Tilpass",
   customize_incomplete: "Fyll inn påkrevde felt",
-  sold_out: "Utsolgt",
+  sold_out: "Ikke på lager",
   unavailable: "Ikke tilgjengelig",
 } as const;
 

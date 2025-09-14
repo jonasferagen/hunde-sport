@@ -28,12 +28,21 @@ export const ProductVariationsModal = ({ close, purchasable }: Props) => {
   );
 };
 
-export const ProductVariationsModalContent = ({ close, purchasable }: { close: () => void; purchasable: Purchasable }) => {
+export const ProductVariationsModalContent = ({
+  close,
+  purchasable,
+}: {
+  close: () => void;
+  purchasable: Purchasable;
+}) => {
   const { productVariations } = useVariableProductContext();
   const variableProduct = purchasable.variableProduct;
 
-  const initialAttributeSelection = AttributeSelection.create(purchasable.variableProduct.attributes);
-  const [attributeSelection, setAttributeSelection] = React.useState<AttributeSelection>(initialAttributeSelection!);
+  const initialAttributeSelection = AttributeSelection.create(
+    purchasable.variableProduct.attributes,
+  );
+  const [attributeSelection, setAttributeSelection] =
+    React.useState<AttributeSelection>(initialAttributeSelection!);
 
   const resolveProductVariation = React.useMemo(
     () => (attributeSelection: AttributeSelection) => {
@@ -43,7 +52,7 @@ export const ProductVariationsModalContent = ({ close, purchasable }: { close: (
       const variation = variableProduct.findVariation(attributeSelection);
       return productVariations.get(variation!.key);
     },
-    [variableProduct, productVariations]
+    [variableProduct, productVariations],
   );
 
   const onSelect = (attrKey: AttrKey, term: Term | undefined) => {
@@ -58,7 +67,7 @@ export const ProductVariationsModalContent = ({ close, purchasable }: { close: (
         attributeSelection,
         productVariation: resolveProductVariation(attributeSelection),
       }),
-    [variableProduct, attributeSelection, resolveProductVariation]
+    [variableProduct, attributeSelection, resolveProductVariation],
   );
 
   return (
@@ -68,17 +77,29 @@ export const ProductVariationsModalContent = ({ close, purchasable }: { close: (
       footer={
         <ThemedYStack>
           <ThemedYStack mb="$3" />
-          <PurchaseButton purchasable={newPurchasable} onSuccess={close} onOpenCustomization={onOpenCustomization} />
+          <PurchaseButton
+            purchasable={newPurchasable}
+            onSuccess={close}
+            onOpenCustomization={onOpenCustomization}
+          />
         </ThemedYStack>
-      }>
+      }
+    >
       <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
         <ProductImage product={variableProduct} img_height={IMAGE_H} />
       </ThemedYStack>
-      <ProductVariationSelect attributeSelection={attributeSelection} onSelect={onSelect} />
+      <ProductVariationSelect
+        attributeSelection={attributeSelection}
+        onSelect={onSelect}
+      />
     </ModalLayout>
   );
 };
 const onOpenCustomization = async (p: Purchasable) => {
-  const { ProductCustomizationModal } = await import("@/components/features/purchasable/ui/ProductCustomizationModal");
-  openModal((_, api) => <ProductCustomizationModal purchasable={p} close={() => api.close()} />);
+  const { ProductCustomizationModal } = await import(
+    "@/components/features/purchasable/ProductCustomizationModal"
+  );
+  openModal((_, api) => (
+    <ProductCustomizationModal purchasable={p} close={() => api.close()} />
+  ));
 };
