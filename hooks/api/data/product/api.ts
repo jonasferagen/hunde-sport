@@ -38,7 +38,7 @@ const buildListingParams = (
     order: p.order,
     // fixed filters
     search: f.search,
-    orderby: f.orderby,
+    orderby: f.orderby ?? "title",
     include: f.include,
     category: f.category,
     type: f.type,
@@ -63,7 +63,7 @@ export const fetchFeaturedProducts = async (
   paginationOpts?: PaginationOpts,
 ) => {
   const url = endpoints.products.list(
-    buildListingParams(paginationOpts, { orderby: "title", featured: true }),
+    buildListingParams(paginationOpts, { featured: true }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);

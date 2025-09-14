@@ -169,7 +169,7 @@ export const useProductVariations = (
 
 export function useProductVariation(
   product: Product,
-  options?: QueryOpts,
+  _options?: QueryOpts,
   pagination?: PaginationOpts,
 ) {
   return useQuery({
