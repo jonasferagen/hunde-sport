@@ -4,7 +4,7 @@ import { PurchaseButton } from "@/components/features/product/purchase/PurchaseB
 import { ProductImage } from "@/components/features/product/ui/ProductImage";
 import { ModalLayout } from "@/components/ui/ModalLayout";
 import { ThemedYStack } from "@/components/ui/themed";
-import { useVariableProductContext, VariableProductProvider } from "@/contexts";
+import { ProductProvider, useProductProvider } from "@/contexts";
 import type { AttrKey } from "@/domain/product-attributes/Attribute";
 import { AttributeSelection } from "@/domain/product-attributes/AttributeSelection";
 import type { Term } from "@/domain/product-attributes/Term";
@@ -22,9 +22,9 @@ type Props = {
 
 export const ProductVariationsModal = ({ close, purchasable }: Props) => {
   return (
-    <VariableProductProvider variableProduct={purchasable.variableProduct}>
+    <ProductProvider product={purchasable.variableProduct}>
       <ProductVariationsModalContent close={close} purchasable={purchasable} />
-    </VariableProductProvider>
+    </ProductProvider>
   );
 };
 
@@ -35,7 +35,7 @@ export const ProductVariationsModalContent = ({
   close: () => void;
   purchasable: Purchasable;
 }) => {
-  const { productVariations } = useVariableProductContext();
+  const { productVariations } = useProductProvider();
   const variableProduct = purchasable.variableProduct;
 
   const initialAttributeSelection = AttributeSelection.create(
@@ -86,7 +86,7 @@ export const ProductVariationsModalContent = ({
       }
     >
       <ThemedYStack w="100%" h={IMAGE_H} mb="$3">
-        <ProductImage product={variableProduct} img_height={IMAGE_H} />
+        <ProductImage product={variableProduct} imageHeightPx={IMAGE_H} />
       </ThemedYStack>
       <ProductVariationSelect
         attributeSelection={attributeSelection}

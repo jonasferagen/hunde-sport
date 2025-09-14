@@ -16,6 +16,7 @@ import {
   PRODUCT_TILE_WIDTH,
   THEME_PRICE_TAG,
 } from "@/config/app";
+import { ProductProvider, useProductProvider } from "@/contexts";
 import {
   useDebugProducts,
   useDiscountedProducts,
@@ -78,14 +79,16 @@ export function ProductCarousel<Args extends any[] = any[]>({
 
   const renderItem = React.useCallback(
     ({ item, index }: { item: PurchasableProduct; index: number }) => (
-      <ProductTile
-        product={item}
-        index={index}
-        gapPx={gapPx}
-        w={itemW}
-        h={itemH}
-        onPress={() => to("product", item)}
-      />
+      <ProductProvider product={item}>
+        <ProductTile
+          product={item}
+          index={index}
+          gapPx={gapPx}
+          w={itemW}
+          h={itemH}
+          onPress={() => to("product", item)}
+        />
+      </ProductProvider>
     ),
     [gapPx, itemW, itemH, to],
   );
@@ -93,9 +96,9 @@ export function ProductCarousel<Args extends any[] = any[]>({
   const onEndReached = React.useCallback(() => {
     if (!isLoading && !isFetchingNextPage && hasNextPage) fetchNextPage();
   }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
-  if (!products?.length) return null;
+
   return (
-    <Theme name={theme || null}>
+    <Theme name={theme}>
       <HorizontalList<PurchasableProduct>
         data={products}
         renderItem={renderItem as any}
@@ -125,6 +128,8 @@ const ProductTile: React.FC<{
   h: number;
   onPress: () => void;
 }> = ({ product, index, gapPx, w, h, onPress }) => {
+  const { isLoading } = useProductProvider();
+
   return (
     <ThemedYStack w={w} h={h} mr={gapPx}>
       <FixedTile
@@ -136,21 +141,17 @@ const ProductTile: React.FC<{
         imagePriority={index < 3 ? "high" : "low"}
       >
         {!product.availability.isInStock && (
-          <ThemedYStack
-            bg="$background"
-            fullscreen
-            pos="absolute"
-            o={0.4}
-            pointerEvents="none"
-          />
+          <ThemedYStack bg="$background" fullscreen pos="absolute" o={0.4} />
         )}
-        <TileBadge theme={THEME_PRICE_TAG} corner="tr">
-          <ProductAvailabilityStatus
-            productAvailability={product.availability}
-            showInStock={false}
-          />
-          <ProductPrice product={product} showIcon />
-        </TileBadge>
+        {isLoading ? null : (
+          <TileBadge theme={THEME_PRICE_TAG} corner="tr">
+            <ProductAvailabilityStatus
+              productAvailability={product.availability}
+              showInStock={false}
+            />
+            <ProductPrice product={product} showIcon />
+          </TileBadge>
+        )}
       </FixedTile>
     </ThemedYStack>
   );

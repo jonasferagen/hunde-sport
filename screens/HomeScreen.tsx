@@ -37,10 +37,7 @@ export const HomeScreen = () => {
     } // open search screen empty
     to("search", text);
   };
-
-  if (!ready) {
-    return null;
-  }
+  if (!ready) return null;
 
   return (
     <PageView>

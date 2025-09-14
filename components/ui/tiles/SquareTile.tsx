@@ -54,10 +54,10 @@ export const SquareTile = React.memo(function SquareTile({
             <ThemedText
               fow="bold"
               col="black"
-              numberOfLines={titleLines}
               ta="center"
               ellipsizeMode="tail"
               fos="$2"
+              numberOfLines={titleLines}
             >
               {title}
             </ThemedText>

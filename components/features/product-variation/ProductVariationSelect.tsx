@@ -3,21 +3,27 @@ import { H3 } from "tamagui";
 
 import { ProductAttributeOption } from "@/components/features/product-variation/ProductAttributeOption";
 import { ThemedXStack, ThemedYStack } from "@/components/ui/themed";
-import { useVariableProductContext } from "@/contexts";
+import { useProductProvider } from "@/contexts";
 import type { AttributeSelection, Term } from "@/domain/product/";
+import type { VariableProduct } from "@/types";
 type Props = {
   onSelect: (attrKey: string, term: Term | undefined) => void;
   attributeSelection: AttributeSelection;
 };
 
-export function ProductVariationSelect({ onSelect, attributeSelection }: Props) {
-  const { variableProduct, findByVariations } = useVariableProductContext();
+export function ProductVariationSelect({
+  onSelect,
+  attributeSelection,
+}: Props) {
+  const { product, findByVariations } = useProductProvider();
+  const variableProduct = product as VariableProduct;
 
   return (
     <ThemedXStack split ai="flex-start" gap="$2">
       {[...variableProduct.attributes].map(([attrKey, attribute]) => {
         const terms = variableProduct.getTermsByAttribute(attrKey);
-        const { selectedTerm, otherSelectedTerm } = attributeSelection.current(attrKey);
+        const { selectedTerm, otherSelectedTerm } =
+          attributeSelection.current(attrKey);
 
         return (
           <ThemedYStack key={attrKey} f={1} gap="$2">
@@ -26,7 +32,9 @@ export function ProductVariationSelect({ onSelect, attributeSelection }: Props) 
             </H3>
             {Array.from(terms).map((term: Term) => {
               const isSelected = selectedTerm?.key === term.key;
-              const termVariations = variableProduct.getVariationsByTerm(term.key);
+              const termVariations = variableProduct.getVariationsByTerm(
+                term.key,
+              );
 
               const { disabled, availableVariations } = (() => {
                 // If no other attribute is selected, term is enabled if it has any variations
@@ -37,10 +45,16 @@ export function ProductVariationSelect({ onSelect, attributeSelection }: Props) 
                   };
                 }
                 // If other attribute is selected, check if there's intersection between variations
-                const otherTermVariations = variableProduct.getVariationsByTerm(otherSelectedTerm.key);
+                const otherTermVariations = variableProduct.getVariationsByTerm(
+                  otherSelectedTerm.key,
+                );
 
                 // Find intersection: variations that contain both terms
-                const sharedVariations = new Set(Array.from(termVariations).filter((variation) => otherTermVariations.has(variation)));
+                const sharedVariations = new Set(
+                  Array.from(termVariations).filter((variation) =>
+                    otherTermVariations.has(variation),
+                  ),
+                );
 
                 return {
                   disabled: sharedVariations.size === 0,
@@ -58,7 +72,9 @@ export function ProductVariationSelect({ onSelect, attributeSelection }: Props) 
                   isSelected={isSelected}
                   disabled={disabled}
                   productVariations={productVariations}
-                  onPress={() => onSelect(attrKey, isSelected ? undefined : term)} // Toggle active term
+                  onPress={() =>
+                    onSelect(attrKey, isSelected ? undefined : term)
+                  } // Toggle active term
                 />
               ) : null;
             })}

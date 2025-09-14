@@ -38,13 +38,12 @@ export const FixedTile = React.memo(function FixedTile({
   ...props
 }: FixedTileProps) {
   const uri = React.useMemo(() => image.getScaledUri(w, h), [image, w, h]);
-
   return (
     <ThemedSurface
       w={w}
       h={h}
-      interactive={true}
       f={1}
+      interactive={true}
       onPress={onPress}
       {...props}
     >
@@ -53,7 +52,6 @@ export const FixedTile = React.memo(function FixedTile({
         uri={uri}
         title={title}
         contentFit="cover"
-        transitionMs={0}
         cachePolicy="memory-disk"
         recyclingKey={uri}
         w="100%"
@@ -84,7 +82,6 @@ export const FixedTile = React.memo(function FixedTile({
           </ThemedText>
         </ThemedYStack>
       )}
-
       {children}
     </ThemedSurface>
   );
