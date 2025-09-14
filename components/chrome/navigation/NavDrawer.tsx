@@ -5,7 +5,12 @@ import React from "react";
 import { H3 } from "tamagui";
 
 import { Loader } from "@/components/ui/Loader";
-import { ThemedLinearGradient, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui/themed";
+import {
+  ThemedLinearGradient,
+  ThemedText,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui/themed";
 import { ThemedButton } from "@/components/ui/themed/ThemedButton";
 import { ProductCategoryTree } from "@/components/widgets/ProductCategoryTree";
 import { THEME_SHEET_BG1, THEME_SHEET_BG2 } from "@/config/app";
@@ -13,7 +18,11 @@ import { useDrawerSettled } from "@/hooks/ui/useDrawerSettled";
 import { resolveThemeToken } from "@/lib/theme";
 import { useDrawerStore } from "@/stores/ui/drawerStore";
 
-export const NavDrawer = ({ navigation }: { navigation: DrawerContentComponentProps["navigation"] }) => {
+export const NavDrawer = ({
+  navigation,
+}: {
+  navigation: DrawerContentComponentProps["navigation"];
+}) => {
   useDrawerSettled();
 
   const installControls = useDrawerStore((s) => s.installControls);
@@ -45,7 +54,11 @@ const NavDrawerContent = () => {
       </ThemedXStack>
       <ThemedYStack f={1} mih={0}>
         <ThemedLinearGradient fromColor={c1} toColor={c2} alpha={1} />
-        {hasOpened ? <ProductCategoryTree colors={[c1, c2]} /> : <Loader />}
+        {hasOpened ? (
+          <ProductCategoryTree colors={[c1, c2]} />
+        ) : (
+          <Loader size="large" />
+        )}
       </ThemedYStack>
       <ThemedYStack box container jc="flex-end" theme={THEME_SHEET_BG2}>
         <ThemedText size="$1" ta="right">

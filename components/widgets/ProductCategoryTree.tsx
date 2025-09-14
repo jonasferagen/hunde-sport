@@ -3,15 +3,31 @@ import { ChevronDown } from "@tamagui/lucide-icons";
 import React, { type ComponentRef, memo } from "react";
 import { View } from "react-native";
 import type { AnimatedRef } from "react-native-reanimated";
-import Animated, { FadeIn, FadeOut, LinearTransition, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { getTokenValue } from "tamagui";
 import { create } from "zustand";
 
-import { ThemedButton, ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui/themed";
+import {
+  ThemedButton,
+  ThemedText,
+  ThemedXStack,
+  ThemedYStack,
+} from "@/components/ui/themed";
 import { EdgeFadesOverlay } from "@/components/widgets/EdgeFadesOverlay";
 import { useEdgeFades } from "@/hooks/ui/useEdgeFades";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
-import { useProductCategories, useProductCategory } from "@/stores/productCategoryStore";
+import {
+  useProductCategories,
+  useProductCategory,
+} from "@/stores/productCategoryStore";
 import type { ProductCategory } from "@/types";
 
 // Instance type for Animated.ScrollView
@@ -25,15 +41,23 @@ type TreeCtxValue = {
 };
 const TreeCtx = React.createContext<TreeCtxValue | null>(null);
 
-export const ProductCategoryTree = ({ colors }: { colors: [string, string] }) => {
+export const ProductCategoryTree = ({
+  colors,
+}: {
+  colors: [string, string];
+}) => {
   // Single entry: start at root (id=0)
   const scrollRef = useAnimatedRef<AnimatedScrollViewRef>();
   const lastYRef = React.useRef(0);
   const viewportYRef = React.useRef(0);
   const viewportHRef = React.useRef(0);
 
-  const ctx = React.useMemo(() => ({ scrollRef, lastYRef, viewportYRef, viewportHRef }), [scrollRef]);
-  const { atStart, atEnd, onLayout, onContentSizeChange, onScroll } = useEdgeFades("vertical");
+  const ctx = React.useMemo(
+    () => ({ scrollRef, lastYRef, viewportYRef, viewportHRef }),
+    [scrollRef],
+  );
+  const { atStart, atEnd, onLayout, onContentSizeChange, onScroll } =
+    useEdgeFades("vertical");
 
   return (
     <TreeCtx.Provider value={ctx}>
@@ -43,10 +67,11 @@ export const ProductCategoryTree = ({ colors }: { colors: [string, string] }) =>
           onScroll={onScroll}
           scrollEventThrottle={16}
           onContentSizeChange={(w, h) => onContentSizeChange(w, h)}
-          contentContainerStyle={{ paddingBottom: 12 }}>
+          contentContainerStyle={{ paddingBottom: 12 }}
+        >
           <ThemedYStack container>
             {/* Render from the dummy root downwards */}
-            <ProductCategoryBranch id={0} level={0} />
+            <ProductCategoryBranch id={0} level={0} pathIds={[0]} />
           </ThemedYStack>
         </Animated.ScrollView>
         <EdgeFadesOverlay
@@ -62,28 +87,51 @@ export const ProductCategoryTree = ({ colors }: { colors: [string, string] }) =>
   );
 };
 
-export const ProductCategoryBranch = memo(function ProductCategoryBranch({ id, level }: { id: number; level: number }) {
+export const ProductCategoryBranch = memo(function ProductCategoryBranch({
+  id,
+  level,
+  pathIds,
+}: {
+  id: number;
+  level: number;
+  pathIds: number[];
+}) {
   const node = useProductCategory(id);
   const children = useProductCategories(id);
   const hasChildren = children.length > 0;
 
   const isExpanded = useIsExpanded(id);
-  const toggle = useToggleExpanded();
 
   return (
     <Animated.View layout={LinearTransition.duration(150)} collapsable={false}>
       <ThemedYStack>
         {node.id > 0 && (
           <ThemedXStack>
-            <ProductCategoryTreeItem productCategory={node} level={level} isExpanded={isExpanded} hasChildren={hasChildren} handleExpand={toggle} />
+            <ProductCategoryTreeItem
+              productCategory={node}
+              level={level}
+              isExpanded={isExpanded}
+              hasChildren={hasChildren}
+              pathIds={pathIds}
+            />
           </ThemedXStack>
         )}
 
         {isExpanded && hasChildren && (
-          <Animated.View entering={FadeIn.duration(150)} exiting={FadeOut.duration(120)} collapsable={false} style={{ width: "100%" }}>
+          <Animated.View
+            entering={FadeIn.duration(150)}
+            exiting={FadeOut.duration(120)}
+            collapsable={false}
+            style={{ width: "100%" }}
+          >
             <ThemedYStack>
-              {children.map((c) => (
-                <ProductCategoryBranch key={c.id} id={c.id} level={level + 1} />
+              {children.map((childProductCategory) => (
+                <ProductCategoryBranch
+                  key={childProductCategory.id}
+                  id={childProductCategory.id}
+                  level={level + 1}
+                  pathIds={[...pathIds, childProductCategory.id]}
+                />
               ))}
             </ThemedYStack>
           </Animated.View>
@@ -98,12 +146,19 @@ interface RenderItemProps {
   isExpanded: boolean;
   level: number;
   hasChildren: boolean;
-  handleExpand: (id: number) => void;
+  pathIds: number[];
 }
 
-const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({ productCategory, isExpanded, level, hasChildren, handleExpand }: RenderItemProps) {
+const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({
+  productCategory,
+  isExpanded,
+  level,
+  hasChildren,
+  pathIds,
+}: RenderItemProps) {
   const { to } = useCanonicalNavigation();
   const ctx = React.useContext(TreeCtx);
+  const setActivePathIds = useSetActivePathIds();
   const INDENT = React.useMemo(() => getTokenValue("$6", "space"), []);
   const rowRef = React.useRef<View>(null);
   const MIN_SPACE_BELOW = 160;
@@ -123,11 +178,22 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({ productC
       }
     });
   }, [ctx]);
+  const onToggleExpandPath = React.useCallback(() => {
+    if (!hasChildren) return;
+    // If currently expanded, collapse to parent path; else set this node's path.
+    const nextPathIds = isExpanded ? pathIds.slice(0, -1) : pathIds;
+    ensureRoomBelow();
+    setActivePathIds(nextPathIds);
+  }, [hasChildren, isExpanded, pathIds, ensureRoomBelow, setActivePathIds]);
 
   return (
     <ThemedXStack ref={rowRef} w="100%" ai="center" gap="$2" mb="$2">
       <ThemedXStack ml={(level - 1) * INDENT} f={1}>
-        <ThemedButton theme="shade" f={1} onPress={() => to("product-category", productCategory)}>
+        <ThemedButton
+          theme="shade"
+          f={1}
+          onPress={() => to("product-category", productCategory)}
+        >
           <ThemedText f={1} letterSpacing={0.5}>
             {productCategory.name}
           </ThemedText>
@@ -138,13 +204,11 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({ productC
         fs={1}
         theme="shade"
         circular
-        onPress={() => {
-          ensureRoomBelow();
-          handleExpand(productCategory.id);
-        }}
+        onPress={onToggleExpandPath}
         disabled={!hasChildren}
         opacity={hasChildren ? 1 : 0}
-        pointerEvents={hasChildren ? "auto" : "none"}>
+        pointerEvents={hasChildren ? "auto" : "none"}
+      >
         {hasChildren && <AnimatedListExpansionIcon expanded={isExpanded} />}
       </ThemedButton>
     </ThemedXStack>
@@ -165,20 +229,22 @@ const AnimatedListExpansionIcon = ({ expanded }: { expanded: boolean }) => {
     </Animated.View>
   );
 };
-
-type UI = {
-  expanded: Record<number, boolean>;
-  toggle: (id: number) => void;
-  setExpanded: (id: number, value: boolean) => void;
+type CategoryTreeUI = {
+  /** e.g. [0, 10, 42] = root -> top-level 10 -> child 42 */
+  activePathIds: number[];
+  setActivePathIds: (activePathIds: number[]) => void;
+  isExpanded: (productCategoryId: number) => boolean;
 };
 
-const useCategoryTreeStore = create<UI>((set, _get) => ({
-  // default: root expanded
-  expanded: { 0: true },
-  toggle: (id) => set((s) => ({ expanded: { ...s.expanded, [id]: !s.expanded[id] } })),
-  setExpanded: (id, value) => set((s) => ({ expanded: { ...s.expanded, [id]: value } })),
+const useCategoryTreeStore = create<CategoryTreeUI>((set, get) => ({
+  activePathIds: [0], // root open by default
+  setActivePathIds: (activePathIds) => set({ activePathIds }),
+  isExpanded: (productCategoryId) =>
+    get().activePathIds.includes(productCategoryId),
 }));
 
-const useIsExpanded = (id: number) => useCategoryTreeStore((s) => !!s.expanded[id]); // no id===0 hack needed
+export const useIsExpanded = (productCategoryId: number) =>
+  useCategoryTreeStore((s) => s.isExpanded(productCategoryId));
 
-const useToggleExpanded = () => useCategoryTreeStore((s) => s.toggle);
+export const useSetActivePathIds = () =>
+  useCategoryTreeStore((s) => s.setActivePathIds);
