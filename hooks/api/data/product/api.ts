@@ -5,52 +5,36 @@ import { getApiClient } from "@/lib/api/apiClient";
 import { responseTransformer } from "@/lib/api/responseTransformer";
 import type { ProductCategory } from "@/types";
 
-/** Filters supported for Woo Store API product listing */
-export type ProductFilters = {
-  /** true (default) => API default (instock only). false => include all stock statuses. */
-  onlyInStock?: boolean;
+/** Internal: limited subset of filters we still use per endpoint */
+type FixedProductFilters = {
   search?: string;
-  orderby?: string; // e.g., "date", "title", "price"
-  include?: number[]; // product IDs
-  category?: number; // term ID
+  orderby?: "date" | "title" | "price";
+  include?: number[];
+  category?: number;
   type?: "variation";
-  parent?: number; // parent product for variations
+  parent?: number;
   featured?: boolean;
   on_sale?: boolean;
 };
 
-type FetchOpts = {
-  pagination?: PaginationOpts;
-  filters?: ProductFilters;
-};
-
-const STOCK_ANY = ["instock", "onbackorder", "outofstock"] as const;
-
-const defaults = {
-  pagination: { page: 1, per_page: 10, order: "asc" as const },
+const defaultsPaginationOpts: PaginationOpts = {
+  page: 1,
+  per_page: 10,
+  order: "asc",
 } as const;
 
-/** Shallow merge for { pagination, filters } */
-const mergeOptions = (a?: FetchOpts, b?: FetchOpts): FetchOpts => ({
-  pagination: { ...a?.pagination, ...b?.pagination },
-  filters: { ...a?.filters, ...b?.filters },
-});
-
-/** Turn QueryOptions into URL param record */
-const buildParams = (opts?: FetchOpts): Record<string, unknown> => {
-  const p = { ...defaults.pagination, ...(opts?.pagination ?? {}) };
-  const f = opts?.filters ?? {};
-
-  // Only set stock_status when caller explicitly wants "any" stock
-  const stock =
-    f.onlyInStock === false ? { stock_status: [...STOCK_ANY] } : undefined;
-
+/** Build final query params from pagination + fixed filters */
+const buildListingParams = (
+  paginationOpts?: PaginationOpts,
+  fixedProductFilters?: FixedProductFilters,
+): Record<string, unknown> => {
+  const p = { ...defaultsPaginationOpts, ...(paginationOpts ?? {}) };
+  const f = fixedProductFilters ?? {};
   return {
     page: p.page,
     per_page: p.per_page,
     order: p.order,
-
-    ...stock,
+    // fixed filters
     search: f.search,
     orderby: f.orderby,
     include: f.include,
@@ -59,31 +43,37 @@ const buildParams = (opts?: FetchOpts): Record<string, unknown> => {
     parent: f.parent,
     featured: f.featured,
     on_sale: f.on_sale,
+    // Note: we intentionally do NOT set stock_status => uses API default (instock only)
   };
 };
 
 /** Single product */
-export async function fetchProduct(id: number): Promise<Product> {
-  const response = await getApiClient().get<any>(endpoints.products.get(id));
+export async function fetchProduct(productId: number): Promise<Product> {
+  const response = await getApiClient().get<any>(
+    endpoints.products.get(productId),
+  );
   if (response.problem) throw new Error(response.problem);
   return Product.create(response.data);
 }
 
 /** Featured (orderby=title & featured=true) */
-export const fetchFeaturedProducts = async (opts?: FetchOpts) => {
+export const fetchFeaturedProducts = async (
+  paginationOpts?: PaginationOpts,
+) => {
   const url = endpoints.products.list(
-    buildParams(
-      mergeOptions(opts, { filters: { orderby: "title", featured: true } }),
-    ),
+    buildListingParams(paginationOpts, { orderby: "title", featured: true }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
 /** By IDs */
-export const fetchProductsByIds = async (ids: number[], opts?: FetchOpts) => {
+export const fetchProductsByIds = async (
+  productIds: number[],
+  paginationOpts?: PaginationOpts,
+) => {
   const url = endpoints.products.list(
-    buildParams(mergeOptions(opts, { filters: { include: ids } })),
+    buildListingParams(paginationOpts, { include: productIds }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
@@ -91,11 +81,11 @@ export const fetchProductsByIds = async (ids: number[], opts?: FetchOpts) => {
 
 /** Search */
 export const fetchProductsBySearch = async (
-  query: string,
-  opts?: FetchOpts,
+  searchQuery: string,
+  paginationOpts?: PaginationOpts,
 ) => {
   const url = endpoints.products.list(
-    buildParams(mergeOptions(opts, { filters: { search: query } })),
+    buildListingParams(paginationOpts, { search: searchQuery }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
@@ -104,43 +94,46 @@ export const fetchProductsBySearch = async (
 /** By Product Category */
 export const fetchProductsByProductCategory = async (
   productCategory: ProductCategory,
-  opts?: FetchOpts,
+  paginationOpts?: PaginationOpts,
 ) => {
   const url = endpoints.products.list(
-    buildParams(
-      mergeOptions(opts, { filters: { category: productCategory.id } }),
-    ),
+    buildListingParams(paginationOpts, { category: productCategory.id }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
 /** Recent (orderby=date) */
-export const fetchRecentProducts = async (opts?: FetchOpts) => {
+export const fetchRecentProducts = async (paginationOpts?: PaginationOpts) => {
   const url = endpoints.products.list(
-    buildParams(mergeOptions(opts, { filters: { orderby: "date" } })),
+    buildListingParams(paginationOpts, { orderby: "date" }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
 /** Discounted (on_sale=true) */
-export const fetchDiscountedProducts = async (opts?: FetchOpts) => {
+export const fetchDiscountedProducts = async (
+  paginationOpts?: PaginationOpts,
+) => {
   const url = endpoints.products.list(
-    buildParams(mergeOptions(opts, { filters: { on_sale: true } })),
+    buildListingParams(paginationOpts, { on_sale: true }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);
 };
 
 /** Variations (type=variation, parent=id, orderby=price) */
-export const fetchProductVariations = async (id: number, opts?: FetchOpts) => {
+export const fetchProductVariations = async (
+  parentProductId: number,
+  paginationOpts?: PaginationOpts,
+) => {
   const url = endpoints.products.list(
-    buildParams(
-      mergeOptions(opts, {
-        filters: { type: "variation", parent: id, orderby: "price" },
-      }),
-    ),
+    buildListingParams(paginationOpts, {
+      type: "variation",
+      parent: parentProductId,
+      orderby: "price",
+    }),
   );
   const response = await getApiClient().get<any[]>(url);
   return responseTransformer(response, Product.create);

@@ -16,18 +16,18 @@ export type UseProductPriceRangeResult = {
 };
 
 export function useProductPriceRange(
-  variableProduct: VariableProduct
+  variableProduct: VariableProduct,
 ): UseProductPriceRangeResult {
   const {
     data: minV,
     isLoading: l1,
     error: e1,
-  } = useProductVariation(variableProduct, { order: "asc" });
+  } = useProductVariation(variableProduct, {}, { order: "asc" });
   const {
     data: maxV,
     isLoading: l2,
     error: e2,
-  } = useProductVariation(variableProduct, { order: "desc" });
+  } = useProductVariation(variableProduct, {}, { order: "desc" });
 
   const isLoading = l1 || l2;
   const error = e1 ?? e2 ?? undefined;

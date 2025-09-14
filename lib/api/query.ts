@@ -2,24 +2,13 @@
 import type { UseInfiniteQueryResult } from "@tanstack/react-query";
 import React from "react";
 
-import type { PaginationOpts } from "@/hooks/api/api";
-import type { ProductFilters } from "@/hooks/api/data/product/api";
-
 import type { Page } from "./responseTransformer";
 
-type QueryOverride = {
+export type QueryOpts = {
   enabled?: boolean;
 };
 
-export type QueryOpts = {
-  query?: QueryOverride;
-  pagination?: PaginationOpts;
-  filter?: ProductFilters;
-};
-
-export const makeQueryOptions = <T>(
-  options: QueryOpts = { query: { enabled: true } },
-) => {
+export const makeQueryOptions = <T>(options?: QueryOpts) => {
   return {
     initialPageParam: 1,
     getNextPageParam: (lastPage: Page<T>, allPages: Page<T>[]) => {
@@ -28,7 +17,6 @@ export const makeQueryOptions = <T>(
       const out = totalPages && nextPage <= totalPages ? nextPage : undefined;
       return out;
     },
-    ...options,
   };
 };
 export type QueryResult<T> = Omit<UseInfiniteQueryResult<T>, "data"> & {
