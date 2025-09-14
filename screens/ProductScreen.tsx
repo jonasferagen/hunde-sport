@@ -72,7 +72,7 @@ const ProductScreenContent = ({ product }: { product: PurchasableProduct }) => {
                 product={product}
               />
             </ThemedXStack>
-            <ProductPrice fos="$6" product={product} />
+            <ProductPrice size="$7" product={product} />
           </ThemedXStack>
           <ThemedXStack split>
             <ProductAvailabilityStatus

@@ -1,16 +1,12 @@
 // components/features/product-variation/ProductAttributeOption.tsx
 import React from "react";
 
-import {
-  ProductPrice,
-  ProductPriceRange,
-} from "@/components/features/product/ui/ProductPrice";
+import { ProductPrice } from "@/components/features/product/ui/ProductPrice";
 import { ThemedButton, ThemedText, ThemedXStack } from "@/components/ui/themed";
 import { THEME_OPTION, THEME_OPTION_SELECTED } from "@/config/app";
-import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductVariation, Term } from "@/domain/product";
 
-type Props = {
+type ProductAttributeOptionProps = {
   term: Term;
   label: string;
   isSelected: boolean;
@@ -20,20 +16,13 @@ type Props = {
 };
 
 export const ProductAttributeOption = React.memo(
-  ({
+  function ProductAttributeOption({
     isSelected,
     productVariations,
     label,
     disabled = false,
     onPress,
-  }: Props) => {
-    const productPriceRange =
-      productVariations.length > 0
-        ? PriceBook.getProductPriceRange(
-            productVariations.map((v) => v.priceBook),
-          )
-        : null;
-
+  }: ProductAttributeOptionProps) {
     return (
       <ThemedXStack
         ai="center"
@@ -51,15 +40,12 @@ export const ProductAttributeOption = React.memo(
         >
           <ThemedXStack f={1} jc="space-between" gap="$2">
             <ThemedText>{label}</ThemedText>
-            {productVariations.length === 1 ? (
-              <ProductPrice product={productVariations[0]!} />
-            ) : productPriceRange ? (
-              <ProductPriceRange productPriceRange={productPriceRange} />
-            ) : null}
+            <ProductPrice productVariations={productVariations} />
           </ThemedXStack>
         </ThemedButton>
       </ThemedXStack>
     );
   },
 );
+
 ProductAttributeOption.displayName = "ProductAttributeOption";

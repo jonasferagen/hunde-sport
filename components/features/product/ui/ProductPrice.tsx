@@ -9,125 +9,126 @@ import {
   ThemedXStack,
 } from "@/components/ui/themed";
 import { PriceBook } from "@/domain/pricing/PriceBook";
-import type { ProductPriceRange as ProductPriceRangeType } from "@/domain/pricing/types";
+import type { ProductVariation } from "@/domain/product";
 import { useProductPriceRange } from "@/hooks/useProductPriceRange";
 import type { Product, VariableProduct } from "@/types";
 
+// Narrowed prop for text sizing only
+type ThemedTextSize = ThemedTextProps["size"];
+
 const PriceLine = ({
   showIcon,
+  beforePrice,
   children,
-}: React.PropsWithChildren<{ showIcon?: boolean }>) => (
-  <ThemedXStack ai="center" gap="$1" pos="relative">
+  size,
+}: React.PropsWithChildren<{
+  showIcon?: boolean;
+  beforePrice?: React.ReactNode; // rendered disabled before the main price
+  size?: ThemedTextSize;
+}>) => (
+  <ThemedXStack ai="center" gap="$2" pos="relative">
     {showIcon ? <StarFull scale={0.5} color="gold" /> : null}
-    <ThemedText>{children}</ThemedText>
+    {beforePrice ? (
+      <ThemedText disabled size={size}>
+        {beforePrice}
+      </ThemedText>
+    ) : null}
+    <ThemedText size={size}>{children}</ThemedText>
   </ThemedXStack>
 );
 
-type ProductPriceSimpleProps = {
+type ProductPriceFromProductProps = {
   product: Product;
   showIcon?: boolean;
-} & ThemedTextProps;
+  size?: ThemedTextSize;
+};
 
-export const ProductPrice = React.memo(function ProductPrice({
-  showIcon = false,
-  product,
-  ...textProps
-}: ProductPriceSimpleProps) {
-  const { availability } = product;
-  const { isInStock, isPurchasable, isOnSale } = availability;
-  const priceBook: PriceBook = product.priceBook;
+type ProductPriceFromVariationsProps = {
+  productVariations: ProductVariation[]; // 1 => exact price, >1 => range, 0 => null
+  showIcon?: boolean;
+  size?: ThemedTextSize;
+};
+
+type ProductPriceProps =
+  | ProductPriceFromProductProps
+  | ProductPriceFromVariationsProps;
+
+export const ProductPrice = React.memo(function ProductPrice(
+  props: ProductPriceProps,
+) {
+  // --- Variations array path ---
+  if ("productVariations" in props) {
+    const { productVariations, showIcon = false, size } = props;
+    const { length } = productVariations ?? [];
+
+    if (!length) return null;
+
+    if (length === 1) {
+      return (
+        <ProductPrice
+          product={productVariations[0] as Product}
+          showIcon={showIcon}
+          size={size}
+        />
+      );
+    }
+
+    const productPriceRange = PriceBook.getProductPriceRange(
+      productVariations.map((productVariation) => productVariation.priceBook),
+    );
+
+    // Price range (no sale prefix here)
+    return (
+      <PriceLine size={size}>
+        {PriceBook.fmtPriceRange(productPriceRange)}
+      </PriceLine>
+    );
+  }
+
+  // --- Single product path ---
+  const { product, showIcon = false, size } = props;
+
   if (product.isVariable) {
     return (
       <ProductPriceVariable
         variableProduct={product as VariableProduct}
-        {...textProps}
+        size={size}
       />
     );
+    // Note: icon behavior for variable range unchanged (no icon by default).
   }
 
-  const isFree = isInStock && priceBook.price.minor === 0;
-  const subtle = Boolean(!isInStock || !isPurchasable || textProps.subtle);
+  // Simple product with PriceBook driving flags/format
+  const { priceBook } = product;
 
-  if (isOnSale) {
-    return (
-      <PriceLine showIcon={showIcon}>
-        <ThemedXStack gap="$2">
-          <ThemedText disabled {...textProps}>
-            {priceBook.fmtRegular()}
-          </ThemedText>
-          <ThemedText {...textProps} subtle={subtle}>
-            {priceBook.fmtSale()}
-          </ThemedText>
-        </ThemedXStack>
-      </PriceLine>
-    );
-  }
-
-  const label = isFree
-    ? isPurchasable
-      ? "Gratis!"
-      : "Ta kontakt"
-    : priceBook.fmtPrice();
   return (
-    <PriceLine showIcon={showIcon && (isFree || isOnSale)}>
-      <ThemedText {...textProps} subtle={subtle}>
-        {label}
-      </ThemedText>
+    <PriceLine
+      showIcon={showIcon && (priceBook.isFree || priceBook.isOnSale)}
+      beforePrice={priceBook.isOnSale ? priceBook.fmtRegular() : undefined}
+      size={size}
+    >
+      {priceBook.isOnSale ? priceBook.fmtSale() : priceBook.fmtPrice()}
     </PriceLine>
   );
 });
 
-type ProductPriceRangeProps = {
-  productPriceRange: ProductPriceRangeType;
-  showIcon?: boolean;
-  short?: boolean;
-} & ThemedTextProps;
-
-export const ProductPriceRange = React.memo(function ProductPriceRangeCmp({
-  productPriceRange,
-  showIcon = false,
-  short = true,
-  ...textProps
-}: ProductPriceRangeProps) {
-  const { min, max } = productPriceRange;
-  const same = PriceBook.isEqual(min, max);
-  const minLabel = min.fmtPrice();
-  const label = same
-    ? minLabel
-    : short
-      ? `Fra ${minLabel}`
-      : `${minLabel} – ${max.fmtPrice()}`;
-
-  return (
-    <PriceLine showIcon={showIcon}>
-      <ThemedText {...textProps}>{label}</ThemedText>
-    </PriceLine>
-  );
-});
 /** Subcomponent that safely calls the hook (no conditional hook calls) */
 function ProductPriceVariable({
   variableProduct,
-  ...textProps
-}: { variableProduct: VariableProduct } & ThemedTextProps) {
+  size,
+}: {
+  variableProduct: VariableProduct;
+  size?: ThemedTextSize;
+}) {
   const { productPriceRange, isLoading } =
     useProductPriceRange(variableProduct);
 
-  if (isLoading) {
-    return (
-      <PriceLine>
-        <ThemedSpinner scale={0.7} />
-      </PriceLine>
-    );
-  }
-  if (!productPriceRange) {
-    return (
-      <PriceLine>
-        <ThemedText {...textProps}>Kommer</ThemedText>
-      </PriceLine>
-    );
-  }
+  let content: React.ReactNode;
+  if (isLoading) content = <ThemedSpinner scale={0.7} />;
+  else if (!productPriceRange) content = "Kommer";
+  else content = PriceBook.fmtPriceRange(productPriceRange);
 
-  return (
-    <ProductPriceRange productPriceRange={productPriceRange} {...textProps} />
-  );
+  return <PriceLine size={size}>{content}</PriceLine>;
 }
+
+export default ProductPrice;

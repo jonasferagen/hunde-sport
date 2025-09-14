@@ -34,8 +34,8 @@ export function useProductPriceRange(
 
   const productPriceRange = useMemo<ProductPriceRange | null>(() => {
     if (!minV?.prices || !maxV?.prices) return null;
-    const minPB = PriceBook.from(minV.prices);
-    const maxPB = PriceBook.from(maxV.prices);
+    const minPB = PriceBook.from(minV.prices, minV.availability);
+    const maxPB = PriceBook.from(maxV.prices, minV.availability);
     return PriceBook.getProductPriceRange([minPB, maxPB]);
   }, [minV, maxV]);
 

@@ -1,4 +1,6 @@
 // @/domain/pricing/PriceBook.ts
+import type { ProductAvailability } from "@/types";
+
 import { Currency } from "./Currency";
 import { Money } from "./Money";
 import type { ProductPriceRange, ProductPrices } from "./types";
@@ -10,18 +12,31 @@ export class PriceBook {
   readonly sale: Money; // sale
   readonly rangeMin?: Money; // optional
   readonly rangeMax?: Money; // optional
+  readonly availability: ProductAvailability;
 
-  private constructor(args: { currency: Currency; price: Money; regular: Money; sale: Money; rangeMin?: Money; rangeMax?: Money }) {
+  private constructor(args: {
+    currency: Currency;
+    price: Money;
+    regular: Money;
+    sale: Money;
+    rangeMin?: Money;
+    rangeMax?: Money;
+    availability: ProductAvailability;
+  }) {
     this.currency = args.currency;
     this.price = args.price;
     this.regular = args.regular;
     this.sale = args.sale;
     this.rangeMin = args.rangeMin;
     this.rangeMax = args.rangeMax;
+    this.availability = args.availability;
     Object.freeze(this);
   }
 
-  static from(prices: ProductPrices): PriceBook {
+  static from(
+    prices: ProductPrices,
+    availability: ProductAvailability,
+  ): PriceBook {
     const currency = Currency.create(prices);
     const p = (s?: string) => (s ? Number.parseInt(s, 10) || 0 : 0);
 
@@ -30,18 +45,30 @@ export class PriceBook {
       price: Money.fromMinor(p(prices.price), currency),
       regular: Money.fromMinor(p(prices.regular_price), currency),
       sale: Money.fromMinor(p(prices.sale_price), currency),
-      rangeMin: prices.price_range?.min_amount ? Money.fromMinor(p(prices.price_range.min_amount), currency) : undefined,
-      rangeMax: prices.price_range?.max_amount ? Money.fromMinor(p(prices.price_range.max_amount), currency) : undefined,
+      rangeMin: prices.price_range?.min_amount
+        ? Money.fromMinor(p(prices.price_range.min_amount), currency)
+        : undefined,
+      rangeMax: prices.price_range?.max_amount
+        ? Money.fromMinor(p(prices.price_range.max_amount), currency)
+        : undefined,
+      availability,
     });
   }
 
   // --- equality / compare ---
   static isEqual(a: PriceBook, b: PriceBook): boolean {
-    return Currency.isEqual(a.currency, b.currency) && a.price === b.price && a.regular === b.regular && a.sale === b.sale;
+    return (
+      Currency.isEqual(a.currency, b.currency) &&
+      a.price === b.price &&
+      a.regular === b.regular &&
+      a.sale === b.sale
+    );
   }
 
   // --- min/max range finder ---
-  static getProductPriceRange(priceBooks: readonly PriceBook[]): ProductPriceRange {
+  static getProductPriceRange(
+    priceBooks: readonly PriceBook[],
+  ): ProductPriceRange {
     if (priceBooks.length === 0) {
       throw new Error("No PriceBooks provided");
     }
@@ -62,10 +89,14 @@ export class PriceBook {
     return { min, max };
   }
 
-  /** Convenience formatters (full style, with prefix) */
-  fmtPrice() {
-    return this.price.format();
+  get isFree(): boolean {
+    return this.availability.isInStock && this.price.minor === 0;
   }
+
+  get isOnSale(): boolean {
+    return this.availability.isOnSale;
+  }
+
   fmtRegular() {
     return this.regular.format();
   }
@@ -73,12 +104,33 @@ export class PriceBook {
     return this.sale.format();
   }
 
-  /** Range labels; `short=true` matches your current “Fra …” */
+  fmtPrice() {
+    return this.isFree
+      ? this.availability.isPurchasable
+        ? "Gratis!"
+        : "Ta kontakt"
+      : this.price.format();
+  }
+
+  static fmtPriceRange(
+    range: ProductPriceRange,
+    short: boolean = true,
+  ): string {
+    const { min, max } = range;
+    const same = PriceBook.isEqual(min, max);
+    const minLabel = min.fmtPrice();
+
+    if (same) return minLabel;
+    return short ? `Fra ${minLabel}` : `${minLabel} – ${max.fmtPrice()}`;
+  }
+  /*
   fmtRange(short = true): string | null {
     if (!this.rangeMin) return null;
     if (!this.rangeMax || this.rangeMin.minor === this.rangeMax.minor) {
       return this.rangeMin.format();
     }
-    return short ? `Fra ${this.rangeMin.format()}` : `${this.rangeMin.format()} – ${this.rangeMax!.format()}`;
-  }
+    return short
+      ? `Fra ${this.rangeMin.format()}`
+      : `${this.rangeMin.format()} – ${this.rangeMax!.format()}`;
+  } */
 }

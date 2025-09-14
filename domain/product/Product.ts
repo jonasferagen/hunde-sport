@@ -4,7 +4,10 @@ import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductPrices } from "@/domain/pricing/types";
 import type { AttributeData } from "@/domain/product-attributes/Attribute";
 import type { VariationData } from "@/domain/product-attributes/Variation";
-import { ProductCategoryRef, type ProductCategoryRefData } from "@/domain/ProductCategory";
+import {
+  ProductCategoryRef,
+  type ProductCategoryRefData,
+} from "@/domain/ProductCategory";
 import { StoreImage, type StoreImageData } from "@/domain/StoreImage";
 import { toNonEmptyArray } from "@/lib/array";
 import { cleanHtml } from "@/lib/formatters";
@@ -17,8 +20,7 @@ export interface ProductAvailability {
   isOnBackOrder: boolean;
 }
 
-type ProductType = 'simple' | 'variable' | 'variation'; 
-
+type ProductType = "simple" | "variable" | "variation";
 
 export type ProductData = {
   id: number;
@@ -74,7 +76,7 @@ export abstract class Product implements NormalizedProduct {
   readonly permalink: string;
   readonly description: string;
   readonly short_description: string;
-  readonly images:NonEmptyArray<StoreImage>; 
+  readonly images: NonEmptyArray<StoreImage>;
   readonly categories: NonEmptyArray<ProductCategoryRef>;
   readonly prices: ProductPrices;
   readonly on_sale: boolean;
@@ -129,7 +131,7 @@ export abstract class Product implements NormalizedProduct {
     return this.customFields.length > 0;
   }
   get priceBook() {
-    return PriceBook.from(this.prices);
+    return PriceBook.from(this.prices, this.availability);
   }
   get featuredImage(): StoreImage {
     return this.images[0];
@@ -142,12 +144,11 @@ export abstract class Product implements NormalizedProduct {
       isOnBackOrder: this.is_on_backorder,
     };
   }
+
   static mapBase(
     data: ProductData,
-    forceType: ProductData["type"]
+    forceType: ProductData["type"],
   ): NormalizedProduct {
-
-
     return {
       id: data.id,
       name: data.name,
@@ -155,8 +156,14 @@ export abstract class Product implements NormalizedProduct {
       permalink: data.permalink,
       description: data.description ?? "",
       short_description: data.short_description ?? "",
-      images: toNonEmptyArray(data.images.map(StoreImage.create), StoreImage.DEFAULT),
-      categories: toNonEmptyArray( data.categories.map(ProductCategoryRef.create), ProductCategoryRef.DEFAULT),
+      images: toNonEmptyArray(
+        data.images.map(StoreImage.create),
+        StoreImage.DEFAULT,
+      ),
+      categories: toNonEmptyArray(
+        data.categories.map(ProductCategoryRef.create),
+        ProductCategoryRef.DEFAULT,
+      ),
       prices: data.prices,
       on_sale: data.on_sale ?? false,
       featured: data.featured ?? false,

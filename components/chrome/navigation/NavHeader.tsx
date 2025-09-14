@@ -1,8 +1,13 @@
 // NavHeader.tsx
 import { Menu } from "@tamagui/lucide-icons";
-import { H3, Theme } from "tamagui";
+import { Theme } from "tamagui";
 
-import { ThemedButton, ThemedLinearGradient, ThemedXStack } from "@/components/ui/themed";
+import {
+  ThemedButton,
+  ThemedLinearGradient,
+  ThemedXStack,
+} from "@/components/ui/themed";
+import { ThemedHeading } from "@/components/ui/themed/ThemedHeading";
 import { THEME_HEADER } from "@/config/app";
 import { useHeaderTitle } from "@/config/routes";
 import { useDrawerStore } from "@/stores/ui/drawerStore";
@@ -16,9 +21,15 @@ export const NavHeader = () => {
       <ThemedXStack container split box>
         <ThemedLinearGradient />
         <ThemedXStack f={1} miw={0} h="100%" ai="center">
-          <H3 mih={0} f={1} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
+          <ThemedHeading
+            size="$7"
+            mih={0}
+            f={1}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+          >
             {title}
-          </H3>
+          </ThemedHeading>
         </ThemedXStack>
         <ThemedButton circular disabled={!openDrawer} onPress={openDrawer}>
           <Menu />
