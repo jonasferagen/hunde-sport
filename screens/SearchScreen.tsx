@@ -1,7 +1,6 @@
 // SearchScreen.tsx
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
-import { SizableText } from "tamagui";
 
 import {
   PageBody,
@@ -11,7 +10,7 @@ import {
 } from "@/components/chrome/layout";
 import { ProductList } from "@/components/features/product/list/ProductList";
 import { Loader } from "@/components/ui/Loader";
-import { ThemedXStack, ThemedYStack } from "@/components/ui/themed";
+import { ThemedText, ThemedXStack, ThemedYStack } from "@/components/ui/themed";
 import { ThemedSpinner } from "@/components/ui/themed/ThemedSpinner";
 import { DefaultTextContent } from "@/components/widgets/DefaultTextContent";
 import { SearchBar } from "@/components/widgets/SearchBar";
@@ -68,8 +67,8 @@ export const SearchScreen = () => {
           />
         </ThemedYStack>
         <ThemedXStack split>
-          <SizableText f={1}>{title}</SizableText>
-          <SizableText f={0}>{total}</SizableText>
+          <ThemedText f={1}>{title}</ThemedText>
+          <ThemedText f={0}>{total}</ThemedText>
         </ThemedXStack>
       </PageHeader>
       <PageBody>
@@ -90,6 +89,7 @@ export const SearchScreen = () => {
                 isLoadingMore={result.isLoading || result.isFetchingNextPage}
                 hasMore={result.hasNextPage}
                 totalProducts={result.total}
+                isLoading={result.isLoading}
               />
             </ThemedYStack>
           )}

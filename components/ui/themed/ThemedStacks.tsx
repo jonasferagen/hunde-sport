@@ -1,10 +1,15 @@
 // ThemedStacks.tsx
 
-import { rgba } from "polished";
 import type { ComponentProps, ComponentRef, ReactNode } from "react";
 import React from "react";
+import {
+  Easing,
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+} from "react-native-reanimated";
 import type { SizeTokens, StackProps, XStackProps, YStackProps } from "tamagui";
-import { getVariableValue, Stack, styled, XStack, YStack } from "tamagui";
+import { Stack, styled, XStack, YStack } from "tamagui";
 
 const DEFAULT_SIZE = "$3";
 
@@ -15,6 +20,7 @@ const config = {
   bg: "transparent",
   pos: "relative",
   p: 0,
+  animation: "fast",
 
   variants: {
     container: {
@@ -25,11 +31,16 @@ const config = {
     pressable: { true: { pressStyle: { opacity: 0.7 } } },
     box: { true: { bw: 0, boc: "$borderColor", bg: "$background" } },
     rounded: { true: { br: "$3" } },
-    bgOpacity: (alpha: number, { theme }: { theme: any }) => {
-      const tokenValue = theme["background"];
-      const base = String(getVariableValue(tokenValue));
-      const a = Math.max(0, Math.min(1, Number(alpha) || 0));
-      return { bg: rgba(base, a) };
+    fade: {
+      true: {
+        entering: FadeIn.duration(250),
+        exiting: FadeOut.duration(200),
+      } as any,
+    },
+    spring: {
+      true: {
+        layout: LinearTransition.duration(200).easing(Easing.ease),
+      } as any,
     },
   },
 } as const;
@@ -39,7 +50,7 @@ const ThemedStackBase = styled(Stack, config);
 const ThemedYStackBase = styled(YStack, config);
 const ThemedXStackBase = styled(XStack, config);
 
-type Props = { bgOpacity?: number };
+type Props = { fade?: boolean; spring?: boolean };
 type WithChildren<P> = Omit<P, "children"> & { children?: ReactNode };
 
 // If you ever need it internally:
@@ -62,12 +73,12 @@ export const ThemedYStack = React.forwardRef<
   ThemedYStackProps
 >(function ThemedYStack(props, ref) {
   const { onPress, pressable, ...rest } = props as any;
+
   return (
     <ThemedYStackBase
       ref={ref}
       {...rest}
       onPress={onPress}
-      // auto-enable pressable if onPress is provided, unless explicitly overridden
       pressable={pressable ?? !!onPress}
     />
   );
@@ -81,6 +92,7 @@ export const ThemedXStack = React.forwardRef<
   ThemedXStackProps
 >(function ThemedXStack(props, ref) {
   const { onPress, pressable, ...rest } = props as any;
+
   return (
     <ThemedXStackBase
       ref={ref}

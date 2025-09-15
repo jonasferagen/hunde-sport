@@ -144,7 +144,7 @@ const ProductTile: React.FC<{
           <ThemedYStack bg="$background" fullscreen pos="absolute" o={0.4} />
         )}
         {isLoading ? null : (
-          <TileBadge theme={THEME_PRICE_TAG} corner="tr">
+          <TileBadge theme={THEME_PRICE_TAG} corner="tr" fade spring>
             <ProductAvailabilityStatus
               productAvailability={product.availability}
               showInStock={false}

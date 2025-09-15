@@ -3,11 +3,11 @@ import { StarFull } from "@tamagui/lucide-icons";
 import React from "react";
 
 import {
-  ThemedSpinner,
   ThemedText,
   type ThemedTextProps,
   ThemedXStack,
 } from "@/components/ui/themed";
+import { InlineSpinnerSwap } from "@/components/widgets/InlineSpinnerSwap";
 import { PriceBook } from "@/domain/pricing/PriceBook";
 import type { ProductVariation } from "@/domain/product";
 import { useProductPriceRange } from "@/hooks/useProductPriceRange";
@@ -16,24 +16,33 @@ import type { Product, VariableProduct } from "@/types";
 // Narrowed prop for text sizing only
 type ThemedTextSize = ThemedTextProps["size"];
 
+// PriceLine.tsx
+type PriceLineProps = React.PropsWithChildren<{
+  showIcon?: boolean;
+  beforePrice?: React.ReactNode;
+  size?: ThemedTextSize;
+  loading?: boolean;
+}>;
+
 const PriceLine = ({
   showIcon,
   beforePrice,
-  children,
   size,
-}: React.PropsWithChildren<{
-  showIcon?: boolean;
-  beforePrice?: React.ReactNode; // rendered disabled before the main price
-  size?: ThemedTextSize;
-}>) => (
+  loading,
+  children,
+}: PriceLineProps) => (
   <ThemedXStack ai="center" gap="$2" pos="relative">
     {showIcon ? <StarFull scale={0.5} color="gold" /> : null}
+
     {beforePrice ? (
       <ThemedText disabled size={size}>
         {beforePrice}
       </ThemedText>
     ) : null}
-    <ThemedText size={size}>{children}</ThemedText>
+
+    <InlineSpinnerSwap loading={!!loading} textProps={{ size, tabular: true }}>
+      {children ?? "000,-"}
+    </InlineSpinnerSwap>
   </ThemedXStack>
 );
 
@@ -112,7 +121,6 @@ export const ProductPrice = React.memo(function ProductPrice(
   );
 });
 
-/** Subcomponent that safely calls the hook (no conditional hook calls) */
 function ProductPriceVariable({
   variableProduct,
   size,
@@ -123,12 +131,15 @@ function ProductPriceVariable({
   const { productPriceRange, isLoading } =
     useProductPriceRange(variableProduct);
 
-  let content: React.ReactNode;
-  if (isLoading) content = <ThemedSpinner scale={0.7} />;
-  else if (!productPriceRange) content = "Kommer";
-  else content = PriceBook.fmtPriceRange(productPriceRange);
+  const text = productPriceRange
+    ? PriceBook.fmtPriceRange(productPriceRange)
+    : "Kommer";
 
-  return <PriceLine size={size}>{content}</PriceLine>;
+  return (
+    <PriceLine size={size} loading={isLoading}>
+      {!isLoading ? text : undefined}
+    </PriceLine>
+  );
 }
 
 export default ProductPrice;
