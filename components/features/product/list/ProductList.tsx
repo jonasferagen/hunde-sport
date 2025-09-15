@@ -1,6 +1,7 @@
 // ProductList.tsx
 import { type ListRenderItem as FlashListRenderItem } from "@shopify/flash-list";
 import React from "react";
+import { Dimensions } from "react-native";
 
 import { ProductCard } from "@/components/features/product/ui/ProductCard";
 import { VerticalList } from "@/components/lists/VerticalList";
@@ -10,7 +11,6 @@ import { DefaultTextContent } from "@/components/widgets/DefaultTextContent";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
 import { useEvent } from "@/hooks/useEvent";
 import type { PurchasableProduct } from "@/types";
-
 interface ProductListProps {
   products: PurchasableProduct[];
   loadMore: () => void;
@@ -46,6 +46,8 @@ export const ProductList = React.memo(function ProductList({
   const onEndReached = React.useCallback(() => {
     if (hasMore && !isLoadingMore) loadMore();
   }, [hasMore, isLoadingMore, loadMore]);
+
+  const drawDistance = Dimensions.get("window").height * 2;
 
   // progress tracking (headless)
   /*
@@ -83,7 +85,7 @@ export const ProductList = React.memo(function ProductList({
             <DefaultTextContent>Ingen produkter funnet</DefaultTextContent>
           ) : null
         }
-        drawDistance={800}
+        drawDistance={drawDistance}
         showsVerticalScrollIndicator={false}
         // progress wiring (pure pass-through)
         /*
