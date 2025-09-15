@@ -4,7 +4,7 @@ import {
   type FlashListProps,
   type ListRenderItem as FlashListRenderItem,
 } from "@shopify/flash-list";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { View } from "tamagui";
 
 type Base<T> = Pick<
@@ -36,7 +36,6 @@ export function VerticalList<T>({
   onEndReachedThreshold = 0.8,
   ListFooterComponent,
   ListEmptyComponent,
-  drawDistance = 800,
   contentContainerStyle,
   showsVerticalScrollIndicator = false,
   onScroll,
@@ -44,8 +43,17 @@ export function VerticalList<T>({
   onViewableItemsChanged,
   viewabilityConfig,
 }: VerticalListProps<T>) {
+  const prefetchFactor = 2;
+  const [vh, setVh] = useState(0); // list viewport height
+
+  // Option A: tie prefetch to viewport height
+  const drawDistance = useMemo(
+    () => Math.max(800, Math.round(vh * prefetchFactor)),
+    [vh, prefetchFactor],
+  );
+
   return (
-    <View f={1}>
+    <View f={1} onLayout={(e) => setVh(e.nativeEvent.layout.height)}>
       <FlashList
         data={data as T[]}
         renderItem={renderItem}
@@ -54,7 +62,7 @@ export function VerticalList<T>({
         onEndReachedThreshold={onEndReachedThreshold}
         ListFooterComponent={ListFooterComponent ?? null}
         ListEmptyComponent={ListEmptyComponent ?? null}
-        contentContainerStyle={contentContainerStyle ?? { flexGrow: 1 }}
+        contentContainerStyle={contentContainerStyle}
         drawDistance={drawDistance}
         removeClippedSubviews={false}
         onScroll={onScroll}
