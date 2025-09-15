@@ -4,17 +4,12 @@ import {
   ThemedYStack,
   type ThemedYStackProps,
 } from "@/components/ui/themed/ThemedStacks";
+import { THEME_LOADER } from "@/config/app";
 
 export const Loader = ({ ...props }: ThemedYStackProps) => {
   return (
-    <ThemedYStack
-      f={1}
-      jc="center"
-      ai="center"
-      theme="tertiary_shade"
-      {...props}
-    >
-      <ThemedSpinner size="large" theme="tertiary" color="$background" />
+    <ThemedYStack f={1} jc="center" ai="center" theme={THEME_LOADER} {...props}>
+      <ThemedSpinner size="large" o={0.7} color="$background" />
       <AnimalIcon size="$1" col="$background" />
     </ThemedYStack>
   );

@@ -4,7 +4,8 @@ export const DOMAIN = "hunde-sport.no" as const;
 export const BASE_URL = `https://${DOMAIN}` as const;
 export const STORE_URL = `${BASE_URL}/wp-json/wc/store/v1` as const;
 export const CHECKOUT_URL = `${BASE_URL}/kassen` as const;
-export const SENTRY_DSN = "https://b7fe570697a6a8f88822825ef7d9462f@o4509876451606528.ingest.de.sentry.io/4509909104722000";
+export const SENTRY_DSN =
+  "https://b7fe570697a6a8f88822825ef7d9462f@o4509876451606528.ingest.de.sentry.io/4509909104722000";
 
 export const NUM_CATEGORY_TILE_COLUMNS = 3;
 
@@ -55,3 +56,5 @@ export const THEME_PRODUCTS_DISCOUNTED_BG = "secondary_tint";
 
 export const THEME_PRODUCTS_FEATURED = "light";
 export const THEME_PRODUCTS_FEATURED_BG = "secondary";
+
+export const THEME_LOADER = "dark_tertiary";
