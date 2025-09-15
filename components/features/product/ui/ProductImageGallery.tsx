@@ -1,5 +1,5 @@
 import { Galeria } from "@nandorojo/galeria";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useWindowDimensions } from "react-native";
 import type { YStackProps } from "tamagui";
 import { ScrollView } from "tamagui";

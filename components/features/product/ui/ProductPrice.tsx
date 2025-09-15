@@ -31,7 +31,7 @@ const PriceLine = ({
   loading,
   children,
 }: PriceLineProps) => (
-  <ThemedXStack ai="center" gap="$2" pos="relative">
+  <ThemedXStack ai="center" gap="$2" pos="relative" animation="fast" fade>
     {showIcon ? <StarFull scale={0.5} color="gold" /> : null}
 
     {beforePrice ? (
@@ -41,7 +41,7 @@ const PriceLine = ({
     ) : null}
 
     <InlineSpinnerSwap loading={!!loading} textProps={{ size, tabular: true }}>
-      {children ?? "000,-"}
+      {children ?? "00,-"}
     </InlineSpinnerSwap>
   </ThemedXStack>
 );

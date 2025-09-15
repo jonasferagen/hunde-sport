@@ -54,11 +54,7 @@ const NavDrawerContent = () => {
       </ThemedXStack>
       <ThemedYStack f={1} mih={0}>
         <ThemedLinearGradient fromColor={c1} toColor={c2} alpha={1} />
-        {hasOpened ? (
-          <ProductCategoryTree colors={[c1, c2]} />
-        ) : (
-          <Loader size="large" />
-        )}
+        {hasOpened ? <ProductCategoryTree colors={[c1, c2]} /> : <Loader />}
       </ThemedYStack>
       <ThemedYStack box container jc="flex-end" theme={THEME_SHEET_BG2}>
         <ThemedText size="$1" ta="right">

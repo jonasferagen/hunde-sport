@@ -17,7 +17,6 @@ type Base<T> = Pick<
   | "showsVerticalScrollIndicator"
   | "onScroll"
   | "scrollEventThrottle"
-  | "getItemType"
   | "onViewableItemsChanged"
   | "viewabilityConfig"
 >;
@@ -27,9 +26,6 @@ export interface VerticalListProps<T> extends Base<T> {
   renderItem: FlashListRenderItem<T>;
   ListFooterComponent?: React.ReactElement | null;
   ListEmptyComponent?: React.ReactElement | null;
-  animateFirstTimeKey?: string | number;
-  getStableId?: (item: T) => number | string;
-  staggerMod?: number; // default 8
 }
 
 export function VerticalList<T>({
@@ -45,7 +41,6 @@ export function VerticalList<T>({
   showsVerticalScrollIndicator = false,
   onScroll,
   scrollEventThrottle = 32,
-  getItemType,
   onViewableItemsChanged,
   viewabilityConfig,
 }: VerticalListProps<T>) {
@@ -61,7 +56,6 @@ export function VerticalList<T>({
         ListEmptyComponent={ListEmptyComponent ?? null}
         contentContainerStyle={contentContainerStyle ?? { flexGrow: 1 }}
         drawDistance={drawDistance}
-        getItemType={getItemType}
         removeClippedSubviews={false}
         onScroll={onScroll}
         scrollEventThrottle={scrollEventThrottle}

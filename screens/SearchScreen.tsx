@@ -42,18 +42,16 @@ export const SearchScreen = () => {
   });
 
   const router = useRouter();
-  const submitInThisScreen = (text: string) => {
-    const q = text.trim();
-    setQuery(q);
-    // keep URL shareable (optional but nice)
-    router.setParams({ query: q || undefined });
-  };
-
   const isSearching = isDebounceActive || result.isFetching;
   const title = query
     ? `Søkeresultater for "${query}"`
     : "Søk etter produkter, merker og kategorier.";
   const total = isSearching ? <ThemedSpinner /> : `(${result.total ?? 0})`;
+
+  React.useEffect(() => {
+    if (!ready) return;
+    router.setParams({ query: searchQuery || undefined });
+  }, [ready, router, searchQuery]);
 
   return (
     <PageView>
@@ -62,7 +60,6 @@ export const SearchScreen = () => {
           <SearchBar
             value={query}
             onChangeText={setQuery}
-            onSubmit={submitInThisScreen} // <- keep URL & state in sync
             placeholder="Produktsøk"
           />
         </ThemedYStack>

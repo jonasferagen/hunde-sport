@@ -38,6 +38,8 @@
     "@tanstack/react-query": "^5.82.0",
     "apisauce": "^3.2.0",
     "burnt": "^0.13.0",
+    "eslint-plugin-react-native": "^5.0.0",
+    "eslint-plugin-react-perf": "^3.3.3",
     "expo": "53.0.22",
     "expo-application": "~6.1.5",
     "expo-constants": "~17.1.7",

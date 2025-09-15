@@ -1,5 +1,5 @@
 // ProductList.tsx
-import type { ListRenderItem as FlashListRenderItem } from "@shopify/flash-list";
+import { type ListRenderItem as FlashListRenderItem } from "@shopify/flash-list";
 import React from "react";
 
 import { ProductCard } from "@/components/features/product/ui/ProductCard";
@@ -8,6 +8,7 @@ import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack } from "@/components/ui/themed";
 import { DefaultTextContent } from "@/components/widgets/DefaultTextContent";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
+import { useEvent } from "@/hooks/useEvent";
 import type { PurchasableProduct } from "@/types";
 
 interface ProductListProps {
@@ -28,22 +29,20 @@ export const ProductList = React.memo(function ProductList({
   loadMore,
   isLoadingMore,
   hasMore,
-  transitionKey,
   //totalProducts,
 }: ProductListProps) {
-  const keyExtractor = React.useCallback(
-    (p: PurchasableProduct) => String(p.id),
-    [],
+  const keyExtractor = useEvent((p: PurchasableProduct) => String(p.id));
+  const renderItem: FlashListRenderItem<PurchasableProduct> = useEvent(
+    ({ item: product, index }) => {
+      return (
+        <ProductCard
+          product={product}
+          theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
+        />
+      );
+    },
   );
-  const renderItem: FlashListRenderItem<PurchasableProduct> = React.useCallback(
-    ({ item: product, index }) => (
-      <ProductCard
-        product={product}
-        theme={index % 2 === 0 ? THEME_PRODUCT_ITEM_1 : THEME_PRODUCT_ITEM_2}
-      />
-    ),
-    [],
-  );
+
   const onEndReached = React.useCallback(() => {
     if (hasMore && !isLoadingMore) loadMore();
   }, [hasMore, isLoadingMore, loadMore]);
@@ -84,8 +83,6 @@ export const ProductList = React.memo(function ProductList({
             <DefaultTextContent>Ingen produkter funnet</DefaultTextContent>
           ) : null
         }
-        animateFirstTimeKey={transitionKey}
-        getStableId={(p) => p.id}
         drawDistance={800}
         showsVerticalScrollIndicator={false}
         // progress wiring (pure pass-through)

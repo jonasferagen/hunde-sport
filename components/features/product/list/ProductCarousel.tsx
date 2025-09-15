@@ -148,8 +148,8 @@ const ProductTile: React.FC<{
             theme={THEME_PRICE_TAG}
             corner="tr"
             animation="fast"
-            fade
             spring
+            fade
           >
             <ProductAvailabilityStatus
               productAvailability={product.availability}

@@ -5,6 +5,9 @@ const simpleImportSort = require("eslint-plugin-simple-import-sort");
 const prettierFlat = require("eslint-config-prettier");
 //const importPlugin = require("eslint-plugin-import");
 const unusedImports = require("eslint-plugin-unused-imports");
+const reactPerf = require("eslint-plugin-react-perf");
+const rn = require("eslint-plugin-react-native");
+
 module.exports = defineConfig([
   // Expo flat preset(s)
   ...expo,
@@ -23,6 +26,8 @@ module.exports = defineConfig([
     plugins: {
       "simple-import-sort": simpleImportSort,
       "unused-imports": unusedImports,
+      "react-perf": reactPerf,
+      "react-native": rn,
     },
 
     settings: {
@@ -45,6 +50,13 @@ module.exports = defineConfig([
       // sorting (source of truth)
       "simple-import-sort/imports": "warn",
       "simple-import-sort/exports": "warn",
+      "react-perf/jsx-no-new-object-as-prop": "warn",
+      "react-perf/jsx-no-new-array-as-prop": "warn",
+      "react-perf/jsx-no-new-function-as-prop": "warn",
+      "react/jsx-no-bind": ["warn", { allowArrowFunctions: false }],
+      "react/jsx-no-constructed-context-values": "warn",
+      "react/no-unstable-nested-components": "warn",
+      "react-native/no-inline-styles": "warn",
     },
   },
 
