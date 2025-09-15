@@ -26,12 +26,16 @@ import { type PurchasableProduct } from "@/types";
 
 export const ProductScreen = () => {
   useRenderGuard("ProductScreen");
-  useScreenReady();
+  const ready = useScreenReady();
   const { id, productCategoryId: productCategoryIdFromParams } =
     useLocalSearchParams<{ id: string; productCategoryId?: string }>();
   const productId = Number(id);
   const productCategoryId = Number(productCategoryIdFromParams);
-  const { data: product } = useProduct(productId);
+  const { data: product, isLoading } = useProduct(productId);
+
+  if (isLoading || !ready) {
+    return null;
+  }
 
   if (!product) {
     return <Redirect href="/" />;

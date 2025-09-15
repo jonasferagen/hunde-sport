@@ -45,7 +45,7 @@ export const CartListItem = ({ itemKey }: { itemKey: string }) => {
 
   return (
     <>
-      <ThemedYStack theme={THEME_CART_ITEM_1} box container>
+      <ThemedYStack theme={THEME_CART_ITEM_1} box container bw={1}>
         <ThemedXStack ai="center" jc="center">
           <ThemedYStack f={1} miw={0} jc="center">
             <ThemedText size="$6" numberOfLines={2}>

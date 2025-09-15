@@ -5,12 +5,6 @@ import {
   type ListRenderItem as FlashListRenderItem,
 } from "@shopify/flash-list";
 import React from "react";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from "react-native-reanimated";
 import { View } from "tamagui";
 
 type Base<T> = Pick<
@@ -54,38 +48,12 @@ export function VerticalList<T>({
   getItemType,
   onViewableItemsChanged,
   viewabilityConfig,
-  animateFirstTimeKey,
-  getStableId,
-  staggerMod = 8,
 }: VerticalListProps<T>) {
-  const animatedIdsRef = React.useRef<Set<string | number>>(new Set());
-  React.useEffect(() => {
-    animatedIdsRef.current.clear();
-  }, [animateFirstTimeKey]);
-
-  const _renderItem: FlashListRenderItem<T> = React.useCallback(
-    (info) => {
-      const id =
-        getStableId?.(info.item) ??
-        (keyExtractor ? keyExtractor(info.item, info.index) : info.index);
-      const firstTime = !animatedIdsRef.current.has(id);
-      if (firstTime) animatedIdsRef.current.add(id);
-      const delay = (info.index % (staggerMod || 1)) * 20;
-
-      return (
-        <ItemAnimator firstTime={!!firstTime} delay={delay}>
-          {renderItem(info)}
-        </ItemAnimator>
-      );
-    },
-    [getStableId, keyExtractor, renderItem, staggerMod],
-  );
-
   return (
     <View f={1}>
       <FlashList
         data={data as T[]}
-        renderItem={_renderItem}
+        renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={onEndReached}
         onEndReachedThreshold={onEndReachedThreshold}
@@ -104,17 +72,3 @@ export function VerticalList<T>({
     </View>
   );
 }
-
-const ItemAnimator: React.FC<{
-  firstTime: boolean;
-  delay: number;
-  children: React.ReactNode;
-}> = ({ firstTime, delay, children }) => {
-  const opacity = useSharedValue(firstTime ? 0.2 : 1);
-  React.useEffect(() => {
-    if (!firstTime) return;
-    opacity.value = withDelay(delay, withTiming(1, { duration: 200 }));
-  }, [firstTime, opacity, delay]);
-  const style = useAnimatedStyle(() => ({ opacity: opacity.value }));
-  return <Animated.View style={style}>{children}</Animated.View>;
-};

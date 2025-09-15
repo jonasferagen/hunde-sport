@@ -20,7 +20,6 @@ const config = {
   bg: "transparent",
   pos: "relative",
   p: 0,
-  animation: "fast",
 
   variants: {
     container: {
@@ -33,8 +32,8 @@ const config = {
     rounded: { true: { br: "$3" } },
     fade: {
       true: {
-        entering: FadeIn.duration(250),
-        exiting: FadeOut.duration(200),
+        entering: FadeIn.duration(140),
+        exiting: FadeOut.duration(140),
       } as any,
     },
     spring: {
