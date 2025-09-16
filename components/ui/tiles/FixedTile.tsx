@@ -23,6 +23,8 @@ type FixedTileProps = YStackProps & {
   imagePriority?: ImageProps["priority"];
   interactive?: boolean;
 };
+const GRADIENT_START = [0, 0.2];
+const GRADIENT_END = [0, 0.9];
 
 export const FixedTile = React.memo(function FixedTile({
   title,
@@ -72,8 +74,8 @@ export const FixedTile = React.memo(function FixedTile({
         >
           <ThemedLinearGradient
             fullscreen
-            start={[0, 0.2]}
-            end={[0, 0.9]}
+            start={GRADIENT_START}
+            end={GRADIENT_END}
             opacity={0.8}
             pointerEvents="none"
           />

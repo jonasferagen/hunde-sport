@@ -41,7 +41,8 @@ export const PreloaderScreen = () => {
       <ThemedYStack f={1} jc="flex-end" ai="center" mt={Math.round(200 / 2)}>
         <Image
           source={require("@/assets/images/splash-icon.png")}
-          style={{ width: 200, height: 200 }}
+          w={200}
+          h={200}
         />
       </ThemedYStack>
 

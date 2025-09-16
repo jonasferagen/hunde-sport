@@ -21,6 +21,9 @@ type SquareTileProps = YStackProps & {
   onPress: () => void;
 };
 
+const GRADIENT_START = [0, 0.2];
+const GRADIENT_END = [0, 0.9];
+
 export const SquareTile = React.memo(function SquareTile({
   title,
   image,
@@ -47,8 +50,8 @@ export const SquareTile = React.memo(function SquareTile({
           <ThemedYStack fullscreen t="auto" p="$2.5" jc="flex-end">
             <ThemedLinearGradient
               fullscreen
-              start={[0, 0.2]}
-              end={[0, 0.9]}
+              start={GRADIENT_START}
+              end={GRADIENT_END}
               opacity={0.8}
             />
             <ThemedText

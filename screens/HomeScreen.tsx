@@ -1,3 +1,5 @@
+import { useEvent } from "tamagui";
+
 import {
   PageBody,
   PageHeader,
@@ -29,14 +31,14 @@ export const HomeScreen = () => {
   const ready = useScreenReady();
   const { to } = useCanonicalNavigation();
 
-  const handleSearch = (q: string) => {
+  const handleSearch = useEvent((q: string) => {
     const text = q.trim();
     if (!text) {
       to("search");
       return;
     } // open search screen empty
     to("search", text);
-  };
+  });
   if (!ready) return null;
 
   return (
