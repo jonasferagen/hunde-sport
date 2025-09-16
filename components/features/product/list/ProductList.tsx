@@ -8,7 +8,7 @@ import { Loader } from "@/components/ui/Loader";
 import { ThemedXStack } from "@/components/ui/themed";
 import { DefaultTextContent } from "@/components/widgets/DefaultTextContent";
 import { THEME_PRODUCT_ITEM_1, THEME_PRODUCT_ITEM_2 } from "@/config/app";
-import { useEvent } from "@/hooks/useEvent";
+import { useStableCallback } from "@/hooks/useStableCallback";
 import type { PurchasableProduct } from "@/types";
 interface ProductListProps {
   products: PurchasableProduct[];
@@ -30,8 +30,10 @@ export const ProductList = React.memo(function ProductList({
   hasMore,
   //totalProducts,
 }: ProductListProps) {
-  const keyExtractor = useEvent((p: PurchasableProduct) => String(p.id));
-  const renderItem: FlashListRenderItem<PurchasableProduct> = useEvent(
+  const keyExtractor = useStableCallback((p: PurchasableProduct) =>
+    String(p.id),
+  );
+  const renderItem: FlashListRenderItem<PurchasableProduct> = useStableCallback(
     ({ item: product, index }) => {
       return (
         <ProductCard

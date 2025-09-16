@@ -1,5 +1,5 @@
 import React from "react";
-import type { StackProps } from "tamagui";
+import { type StackProps, useEvent } from "tamagui";
 
 import { PurchaseFlow } from "@/components/features/product/purchase/PurchaseFlow";
 import { ThemedImage } from "@/components/ui/themed";
@@ -25,14 +25,11 @@ export const ProductCard = React.memo(function ProductCard({
   ...props
 }: ProductCardProps) {
   const { to } = useCanonicalNavigation();
+  const onPress = useEvent(() => to("product", product));
   return (
     <ThemedYStack container box {...props}>
       <ThemedLinearGradient />
-      <ThemedXStack
-        onPress={() => {
-          to("product", product);
-        }}
-      >
+      <ThemedXStack onPress={onPress}>
         <ProductCardImage product={product} />
         <ProductCardDescription product={product} />
       </ThemedXStack>

@@ -1,6 +1,6 @@
 import React from "react";
 import type { SpaceTokens, StackProps } from "tamagui";
-import { Theme } from "tamagui";
+import { Theme, useEvent } from "tamagui";
 
 import {
   ProductAvailabilityStatus,
@@ -24,6 +24,7 @@ import {
   useRecentProducts,
 } from "@/hooks/api/data/product/queries";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
+import { useStableCallback } from "@/hooks/useStableCallback";
 import type { QueryResult } from "@/lib/api/query";
 import { spacePx } from "@/lib/theme";
 import { type PurchasableProduct } from "@/types";
@@ -76,21 +77,24 @@ export function ProductCarousel<Args extends any[] = any[]>({
   );
 
   const { to } = useCanonicalNavigation();
+  const onPress = useEvent((p: PurchasableProduct) => to("product", p));
 
   const renderItem = React.useCallback(
-    ({ item, index }: { item: PurchasableProduct; index: number }) => (
-      <ProductProvider product={item}>
-        <ProductTile
-          product={item}
-          index={index}
-          gapPx={gapPx}
-          w={itemW}
-          h={itemH}
-          onPress={() => to("product", item)}
-        />
-      </ProductProvider>
-    ),
-    [gapPx, itemW, itemH, to],
+    ({ item, index }: { item: PurchasableProduct; index: number }) => {
+      return (
+        <ProductProvider product={item}>
+          <ProductTile
+            product={item}
+            index={index}
+            gapPx={gapPx}
+            w={itemW}
+            h={itemH}
+            onPressProduct={onPress}
+          />
+        </ProductProvider>
+      );
+    },
+    [gapPx, itemW, itemH, onPress],
   );
 
   const onEndReached = React.useCallback(() => {
@@ -102,7 +106,7 @@ export function ProductCarousel<Args extends any[] = any[]>({
       <HorizontalList<PurchasableProduct>
         data={products}
         renderItem={renderItem as any}
-        keyExtractor={(p) => String(p.id)}
+        keyExtractor={useStableCallback((p) => String(p.id))}
         headerEl={headerEl}
         footerEl={footerEl}
         snapToInterval={itemW + gapPx}
@@ -126,10 +130,12 @@ const ProductTile: React.FC<{
   gapPx: number;
   w: number;
   h: number;
-  onPress: () => void;
-}> = ({ product, index, gapPx, w, h, onPress }) => {
+  onPressProduct: (p: PurchasableProduct) => void;
+}> = ({ product, index, gapPx, w, h, onPressProduct }) => {
   const { isLoading } = useProductProvider();
-
+  const onPress = useEvent(() => {
+    onPressProduct(product);
+  });
   return (
     <ThemedYStack w={w} h={h} mr={gapPx}>
       <FixedTile
@@ -175,11 +181,15 @@ export const FeaturedProducts = (p: StackProps) => (
   <ProductCarousel {...p} useQuery={useFeaturedProducts} />
 );
 
-/** Debug: pass hook + args separately */
+const debugProductArgs = [27445, 26995];
+
+const DEBUG_QUERY_ARGS: Parameters<typeof useDebugProducts> = [
+  debugProductArgs,
+];
 export const DebugProducts = (p: StackProps) => (
   <ProductCarousel
     {...p}
     useQuery={useDebugProducts}
-    useQueryArgs={[[27445, 26995]]}
+    useQueryArgs={DEBUG_QUERY_ARGS}
   />
 );

@@ -15,6 +15,8 @@ import appConfig from "@/tamagui/tamagui.config";
 enableScreens(true);
 enableFreeze(true);
 
+const flexStyle = { flex: 1 };
+const screenOptions = { headerShown: false };
 const RootLayout = () => {
   usePlayStoreUpdates({
     checkOnStart: true,
@@ -23,19 +25,14 @@ const RootLayout = () => {
   });
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={flexStyle}>
+        <SafeAreaView style={flexStyle}>
           <TamaguiProvider config={appConfig}>
             <PortalProvider shouldAddRootHost>
               <AppToastProvider>
                 <ModalHost />
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen
-                    name="(app)"
-                    options={{
-                      contentStyle: { backgroundColor: "transparent" },
-                    }}
-                  />
+                <Stack screenOptions={screenOptions}>
+                  <Stack.Screen name="(app)" />
                 </Stack>
               </AppToastProvider>
             </PortalProvider>

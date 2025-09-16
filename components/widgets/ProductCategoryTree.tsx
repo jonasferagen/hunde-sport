@@ -12,7 +12,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { getTokenValue } from "tamagui";
+import { getTokenValue, useEvent } from "tamagui";
 import { create } from "zustand";
 
 import {
@@ -40,7 +40,8 @@ type TreeCtxValue = {
   viewportHRef: { current: number };
 };
 const TreeCtx = React.createContext<TreeCtxValue | null>(null);
-
+const contentContainerStyle = { paddingBottom: 12 };
+const parentPathIds: number[] = [];
 export const ProductCategoryTree = ({
   colors,
 }: {
@@ -66,12 +67,16 @@ export const ProductCategoryTree = ({
           ref={scrollRef}
           onScroll={onScroll}
           scrollEventThrottle={16}
-          onContentSizeChange={(w, h) => onContentSizeChange(w, h)}
-          contentContainerStyle={{ paddingBottom: 12 }}
+          onContentSizeChange={useEvent((w, h) => onContentSizeChange(w, h))}
+          contentContainerStyle={contentContainerStyle}
         >
           <ThemedYStack container>
             {/* Render from the dummy root downwards */}
-            <ProductCategoryBranch id={0} level={0} pathIds={[0]} />
+            <ProductCategoryBranch
+              id={0}
+              level={0}
+              parentPathIds={parentPathIds}
+            />
           </ThemedYStack>
         </Animated.ScrollView>
         <EdgeFadesOverlay
@@ -87,18 +92,28 @@ export const ProductCategoryTree = ({
   );
 };
 
+const fullWidth = { flex: 1 };
+type ProductCategoryBranchProps = {
+  id: number;
+  level: number;
+  /** The accumulated path up to (but not including) this id */
+  parentPathIds: readonly number[];
+};
+
 export const ProductCategoryBranch = memo(function ProductCategoryBranch({
   id,
   level,
-  pathIds,
-}: {
-  id: number;
-  level: number;
-  pathIds: number[];
-}) {
+  parentPathIds,
+}: ProductCategoryBranchProps) {
+  // build this node's full path once per id/parentPathIds
+  const pathIds = React.useMemo(
+    () => [...parentPathIds, id],
+    [parentPathIds, id],
+  );
+
   const node = useProductCategory(id);
-  const children = useProductCategories(id);
-  const hasChildren = children.length > 0;
+  const childCategories = useProductCategories(id);
+  const hasChildren = childCategories.length > 0;
   const isExpanded = useIsExpanded(id);
 
   return (
@@ -121,15 +136,15 @@ export const ProductCategoryBranch = memo(function ProductCategoryBranch({
             entering={FadeIn.duration(150)}
             exiting={FadeOut.duration(120)}
             collapsable={false}
-            style={{ width: "100%" }}
+            style={fullWidth}
           >
             <ThemedYStack>
-              {children.map((childProductCategory) => (
+              {childCategories.map((c) => (
                 <ProductCategoryBranch
-                  key={childProductCategory.id}
-                  id={childProductCategory.id}
+                  key={c.id}
+                  id={c.id}
                   level={level + 1}
-                  pathIds={[...pathIds, childProductCategory.id]}
+                  parentPathIds={pathIds} // <- no inline array; stable prop
                 />
               ))}
             </ThemedYStack>
@@ -155,29 +170,10 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({
   hasChildren,
   pathIds,
 }: RenderItemProps) {
-  const { to } = useCanonicalNavigation();
-  // const ctx = React.useContext(TreeCtx);
   const setActivePathIds = useSetActivePathIds();
   const INDENT = React.useMemo(() => getTokenValue("$6", "space"), []);
   const rowRef = React.useRef<View>(null);
-  /*
-  const MIN_SPACE_BELOW = 160;
-  const ensureRoomBelow = React.useCallback(() => {
-    if (!ctx?.scrollRef.current || !rowRef.current) return;
-    rowRef.current.measureInWindow((_x, y, _w, h) => {
-      const visibleBottom = ctx.viewportYRef.current + ctx.viewportHRef.current;
-      const rowBottom = y + h;
-      const deficit = MIN_SPACE_BELOW - (visibleBottom - rowBottom);
-      if (deficit > 0) {
-        ctx.scrollRef.current?.scrollTo({
-          x: 0,
-          y: ctx.lastYRef.current + deficit,
-          animated: true,
-        });
-      }
-    });
-  }, [ctx]);
-  */
+
   const onToggleExpandPath = React.useCallback(() => {
     if (!hasChildren) return;
     // If currently expanded, collapse to parent path; else set this node's path.
@@ -186,14 +182,13 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({
     setActivePathIds(nextPathIds);
   }, [hasChildren, isExpanded, pathIds, setActivePathIds]);
 
+  const { to } = useCanonicalNavigation();
+  const onPress = useEvent(() => to("product-category", productCategory));
+
   return (
     <ThemedXStack ref={rowRef} w="100%" ai="center" gap="$2" mb="$2">
       <ThemedXStack ml={(level - 1) * INDENT} f={1}>
-        <ThemedButton
-          theme="shade"
-          f={1}
-          onPress={() => to("product-category", productCategory)}
-        >
+        <ThemedButton theme="shade" f={1} onPress={onPress}>
           <ThemedXStack f={1} split>
             <ThemedText f={1} letterSpacing={0.5}>
               {productCategory.name}

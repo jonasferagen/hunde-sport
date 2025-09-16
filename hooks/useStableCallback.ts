@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export function useEvent<T extends (...a: any[]) => any>(fn: T): T {
+export function useStableCallback<T extends (...a: any[]) => any>(fn: T): T {
   const ref = React.useRef(fn);
   React.useLayoutEffect(() => {
     ref.current = fn;
