@@ -1,9 +1,10 @@
 // babel.config.js
 module.exports = function (api) {
   api.cache(true);
-  const profile = process.env.EAS_BUILD_PROFILE; // 'production', 'preview', etc.
+  const easChannel = process.env.EAS_BUILD_CHANNEL; // e.g. "production"
   const keepLogs = process.env.KEEP_LOGS === "1";
-  const stripConsoles = profile === "production" && !keepLogs;
+  // Strip consoles in any build published on the "production" channel:
+  const stripConsoles = easChannel === "production" && !keepLogs;
 
   return {
     presets: ["babel-preset-expo"],
@@ -13,7 +14,7 @@ module.exports = function (api) {
         {
           components: ["tamagui"],
           config: "./tamagui/tamagui.config.ts",
-          logTimings: true,
+          logTimings: false,
         },
       ],
       [

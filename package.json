@@ -54,7 +54,7 @@
     "expo-linking": "~8.0.8",
     "expo-router": "~6.0.8",
     "expo-splash-screen": "~31.0.10",
-    "expo-storage": "~53.0.11",
+    "expo-storage": "^54.0.2",
     "expo-system-ui": "~6.0.7",
     "expo-updates": "~29.0.11",
     "expo-web-browser": "~15.0.7",
@@ -102,9 +102,7 @@
     "typescript": "~5.9.2"
   },
   "overrides": {
-    "framer-motion": "^11.0.0",
     "react-native": "0.81.4",
-    "react-native-device-info": "10.3.0",
     "react-dom": "19.1.0"
   },
   "private": true,
