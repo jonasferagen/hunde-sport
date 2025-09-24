@@ -214,9 +214,9 @@ const ProductCategoryTreeItem = memo(function ProductCategoryTreeItem({
 });
 
 const AnimatedListExpansionIcon = ({ expanded }: { expanded: boolean }) => {
-  const rotation = useSharedValue(expanded ? 180 : 0);
+  const rotation = useSharedValue(expanded ? 0 : -90);
   React.useEffect(() => {
-    rotation.value = withTiming(expanded ? 180 : 0, { duration: 150 });
+    rotation.value = withTiming(expanded ? 0 : -90, { duration: 150 });
   }, [expanded, rotation]);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ rotateZ: `${rotation.value}deg` }],

@@ -1,0 +1,99 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    // --- TypeScript: use project TS & keep it snappy ---
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "typescript.disableAutomaticTypeAcquisition": true,
+    "typescript.tsserver.maxTsServerMemory": 4096,
+    "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+    "typescript.tsserver.watchOptions": {
+      "watchFile": "useFsEvents",
+      "watchDirectory": "useFsEvents",
+      "fallbackPolling": "dynamicPriorityPolling",
+      "synchronousWatchDirectory": false
+    },
+    "typescript.suggest.autoImports": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.suggest.autoImports": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    // --- Keep native/build dirs out of editor/search/watchers ---
+    "files.exclude": {
+      "android": true,
+      "ios": true,
+      ".expo": true,
+      "dist": true,
+      "build": true,
+      "coverage": true,
+      "**/.gradle": true,
+      "**/node_modules/**": true
+    },
+    "search.exclude": {
+      "android/**": true,
+      "ios/**": true,
+      ".expo/**": true,
+      "dist/**": true,
+      "build/**": true,
+      "coverage/**": true,
+      "**/.gradle/**": true,
+      "**/node_modules/**": true
+    },
+    "files.watcherExclude": {
+      "**/android/**": true,
+      "**/ios/**": true,
+      ".expo/**": true,
+      "dist/**": true,
+      "build/**": true,
+      "coverage/**": true,
+      "**/.gradle/**": true,
+      "**/node_modules/**": true
+    },
+    // --- ESLint + Prettier workflow ---
+    "eslint.useFlatConfig": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "always"
+    },
+    // Prettier as global default formatter
+    "prettier.requireConfig": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "typescript.format.enable": false,
+    "javascript.format.enable": false,
+    "eslint.format.enable": false,
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    // QoL
+    "editor.parameterHints.enabled": true,
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.inlineSuggest.enabled": false,
+    "editor.suggest.preview": false,
+    "git.enabled": true,
+    "git.autofetch": false,
+    "explorer.excludeGitIgnore": false
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "msjsdiag.vscode-react-native"
+    ]
+  }
+}

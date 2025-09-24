@@ -46,14 +46,17 @@ export function VerticalList<T>({
   const prefetchFactor = 2;
   const [vh, setVh] = useState(0); // list viewport height
 
-  // Option A: tie prefetch to viewport height
   const drawDistance = useMemo(
     () => Math.max(800, Math.round(vh * prefetchFactor)),
     [vh, prefetchFactor],
   );
 
+  const handleLayout = React.useCallback((e: any) => {
+    setVh(e.nativeEvent.layout.height);
+  }, []);
+
   return (
-    <View f={1} onLayout={(e) => setVh(e.nativeEvent.layout.height)}>
+    <View f={1} onLayout={handleLayout}>
       <FlashList
         data={data as T[]}
         renderItem={renderItem}
