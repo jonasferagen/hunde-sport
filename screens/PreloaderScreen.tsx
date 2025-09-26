@@ -31,7 +31,7 @@ export const PreloaderScreen = () => {
 
   // Navigate when both data tasks are done (cart + categories)
   React.useEffect(() => {
-    if (data.allDone) router.replace("/(app)");
+    if (data.allDone) router.replace("/(app)/(shop)");
   }, [data.allDone]);
 
   const showPanel = !fonts.ready || !data.allDone || !!data.error;

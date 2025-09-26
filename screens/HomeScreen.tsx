@@ -28,6 +28,7 @@ import { useScreenReady } from "@/hooks/ui/useScreenReady";
 import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 
 export const HomeScreen = () => {
+  console.log("hs");
   const ready = useScreenReady();
   const { to } = useCanonicalNavigation();
 

@@ -3,10 +3,12 @@ import type {
   DrawerContentComponentProps,
   DrawerNavigationOptions,
 } from "@react-navigation/drawer";
+import Drawer from "expo-router/drawer";
 import { View } from "tamagui";
 
 import { NavDrawer } from "@/components/chrome/navigation/NavDrawer";
 import { NavHeader } from "@/components/chrome/navigation/NavHeader";
+import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
 import { ThemedYStack } from "@/components/ui/themed";
 
 // ----- Hoisted renderers (stable, no closure over AppLayout) -----------------
@@ -29,7 +31,17 @@ const SCREEN_OPTIONS: DrawerNavigationOptions = {
 const AppLayout = () => {
   return (
     <View f={1} pos="relative" zi={10}>
-      <ThemedYStack pos="absolute" fullscreen bg="$background"></ThemedYStack>
+      <ThemedYStack pos="absolute" fullscreen bg="$background">
+        <Drawer
+          drawerContent={renderDrawerContent}
+          screenOptions={SCREEN_OPTIONS}
+          detachInactiveScreens={false}
+          initialRouteName="(shop)"
+        >
+          <Drawer.Screen name="(shop)" />
+        </Drawer>
+        <LoadingOverlay zi={99} />
+      </ThemedYStack>
     </View>
   );
 };
