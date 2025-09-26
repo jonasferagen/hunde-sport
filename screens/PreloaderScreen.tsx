@@ -1,7 +1,6 @@
 // app/(preloader)/PreloaderScreen.tsx
 import { RefreshCw } from "@tamagui/lucide-icons";
 import { useFonts } from "expo-font";
-import { router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
 import { Image, Paragraph } from "tamagui";
@@ -10,6 +9,7 @@ import { CallToActionButton } from "@/components/ui/CallToActionButton";
 import { ThemedText, ThemedYStack } from "@/components/ui/themed";
 import { useCart } from "@/hooks/api/data/cart/queries";
 import { useProductCategories } from "@/hooks/api/data/product-category/queries";
+import { useCanonicalNavigation } from "@/hooks/useCanonicalNavigation";
 import { useAutoPaginateQueryResult } from "@/lib/api/query";
 import { queryClient } from "@/lib/api/queryClient";
 import { useProductCategoryStore } from "@/stores/productCategoryStore";
@@ -23,6 +23,7 @@ export const PreloaderScreen = () => {
 
   // Start data once fonts are ready; never toggle back.
   const data = useBootData({ enabled: fonts.ready });
+  const { toWithoutOverlay } = useCanonicalNavigation();
 
   // Hide splash once fonts are ready (do this once; no regress)
   React.useEffect(() => {
@@ -31,8 +32,8 @@ export const PreloaderScreen = () => {
 
   // Navigate when both data tasks are done (cart + categories)
   React.useEffect(() => {
-    if (data.allDone) router.replace("/(app)/(shop)");
-  }, [data.allDone]);
+    if (data.allDone) toWithoutOverlay("index");
+  }, [data.allDone, toWithoutOverlay]);
 
   const showPanel = !fonts.ready || !data.allDone || !!data.error;
 
