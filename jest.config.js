@@ -1,9 +1,6 @@
 // jest.config.js
 module.exports = {
-  testEnvironment: "node",
-  transform: {
-    "^.+\\.(t|j)sx?$": ["babel-jest", { configFile: "./babel.config.js" }],
-  },
+  preset: "jest-expo",
   testPathIgnorePatterns: ["/node_modules/", "/tests/quarantine/"],
   transformIgnorePatterns: ["/node_modules/"],
   moduleNameMapper: {

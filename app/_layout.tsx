@@ -15,6 +15,10 @@ import appConfig from "@/tamagui/tamagui.config";
 enableScreens(true);
 enableFreeze(true);
 
+export const unstable_settings = {
+  initialRouteName: "(preloader)/index" as const,
+};
+
 const flexStyle = { flex: 1 };
 const screenOptions = { headerShown: false };
 const RootLayout = () => {
@@ -31,10 +35,7 @@ const RootLayout = () => {
             <PortalProvider shouldAddRootHost>
               <AppToastProvider>
                 <ModalHost />
-                <Stack
-                  screenOptions={screenOptions}
-                  initialRouteName="(preloader)/index"
-                >
+                <Stack screenOptions={screenOptions}>
                   <Stack.Screen name="(preloader)/index" />
                   <Stack.Screen name="(app)" />
                 </Stack>
