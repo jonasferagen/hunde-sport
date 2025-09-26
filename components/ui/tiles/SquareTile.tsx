@@ -1,4 +1,5 @@
 // TileSquare.tsx
+import type { LinearGradientPoint } from "expo-linear-gradient";
 import React, { useMemo } from "react";
 import type { YStackProps } from "tamagui";
 
@@ -21,8 +22,8 @@ type SquareTileProps = YStackProps & {
   onPress: () => void;
 };
 
-const GRADIENT_START = [0, 0.2];
-const GRADIENT_END = [0, 0.9];
+const GRADIENT_START: LinearGradientPoint = [0, 0.2];
+const GRADIENT_END: LinearGradientPoint = [0, 0.9];
 
 export const SquareTile = React.memo(function SquareTile({
   title,

@@ -1,6 +1,7 @@
 // components/lists/EdgeFadesOverlay.tsx
+import type { LinearGradientPoint } from "expo-linear-gradient";
 import { rgba } from "polished";
-import React, { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -26,10 +27,10 @@ const ABS_BOTTOM = {
   right: 0,
 } as const;
 
-const GRADIENT_H_START = [1, 0] as const; // horizontal: right -> left
-const GRADIENT_H_END = [0, 0] as const;
-const GRADIENT_V_START = [0, 1] as const; // vertical: bottom -> top
-const GRADIENT_V_END = [0, 0] as const;
+const GRADIENT_H_START: LinearGradientPoint = [1, 0] as const; // horizontal: right -> left
+const GRADIENT_H_END: LinearGradientPoint = [0, 0] as const;
+const GRADIENT_V_START: LinearGradientPoint = [0, 1] as const; // vertical: bottom -> top
+const GRADIENT_V_END: LinearGradientPoint = [0, 0] as const;
 
 type Props = {
   orientation: "horizontal" | "vertical";
@@ -105,22 +106,10 @@ export function EdgeFadesOverlay({
   const endStyleObj = useAnimatedStyle(() => ({ opacity: endOp.value }));
 
   // memoized style arrays (avoid inline [a, b] in JSX)
-  const startStyleH = useMemo(
-    () => [ABS_LEFT, startStyleObj] as const,
-    [startStyleObj],
-  );
-  const endStyleH = useMemo(
-    () => [ABS_RIGHT, endStyleObj] as const,
-    [endStyleObj],
-  );
-  const startStyleV = useMemo(
-    () => [ABS_TOP, startStyleObj] as const,
-    [startStyleObj],
-  );
-  const endStyleV = useMemo(
-    () => [ABS_BOTTOM, endStyleObj] as const,
-    [endStyleObj],
-  );
+  const startStyleH = useMemo(() => [ABS_LEFT, startStyleObj], [startStyleObj]);
+  const endStyleH = useMemo(() => [ABS_RIGHT, endStyleObj], [endStyleObj]);
+  const startStyleV = useMemo(() => [ABS_TOP, startStyleObj], [startStyleObj]);
+  const endStyleV = useMemo(() => [ABS_BOTTOM, endStyleObj], [endStyleObj]);
 
   // Colors (memoize to avoid new strings/arrays in JSX)
   const startTransparent = useMemo(() => rgba(startColor, 0), [startColor]);
@@ -129,20 +118,20 @@ export function EdgeFadesOverlay({
   const endSolid = useMemo(() => rgba(endColor, 1), [endColor]);
 
   const colorsStartH = useMemo(
-    () => [startTransparent, startSolid] as const,
+    () => [startTransparent, startSolid],
     [startTransparent, startSolid],
   );
   const colorsEndH = useMemo(
-    () => [endSolid, endTransparent] as const,
+    () => [endSolid, endTransparent],
     [endSolid, endTransparent],
   );
 
   const colorsStartV = useMemo(
-    () => [startTransparent, startSolid] as const,
+    () => [startTransparent, startSolid],
     [startTransparent, startSolid],
   );
   const colorsEndV = useMemo(
-    () => [endSolid, endTransparent] as const,
+    () => [endSolid, endTransparent],
     [endSolid, endTransparent],
   );
 

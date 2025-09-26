@@ -6,7 +6,7 @@ export type ImageScaleFunction = (
   imageUrl: string,
   targetWidthPx: number,
   targetHeightPx: number,
-  fitMode?: "auto" | "resize" | "fit", // auto: width-only/height-only; resize: crop; fit: no-crop
+  fitMode?: "auto" | "resize" | "fit",
   quality?: number, // 10–100
 ) => string;
 

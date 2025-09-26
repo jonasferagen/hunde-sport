@@ -5,10 +5,12 @@ import pkg from "./package.json" assert { type: "json" };
 const VERSION = pkg.version as string;
 const PROJECT_ID = "aa3dceb9-3292-426e-8e46-ff11539b7122";
 
-// Decide variant: dev when APP_VARIANT=dev or when using the "internal-apk-dev" profile
-const profile = process.env.EAS_BUILD_PROFILE;
+const profile = process.env.EAS_BUILD_PROFILE ?? "";
+
 const isDevVariant =
-  process.env.APP_VARIANT === "dev" || profile === "internal-apk-dev";
+  process.env.APP_VARIANT === "dev" ||
+  profile === "development" ||
+  profile === "internal-apk-dev";
 
 // IDs for store vs dev
 const NAME = isDevVariant ? "Hundesport (Dev)" : "Hundesport";

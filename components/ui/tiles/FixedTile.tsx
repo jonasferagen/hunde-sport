@@ -1,5 +1,6 @@
 // TileFixed.tsx (refined)
 import type { ImageProps } from "expo-image";
+import type { LinearGradientPoint } from "expo-linear-gradient";
 import React from "react";
 import type { YStackProps } from "tamagui";
 
@@ -23,8 +24,8 @@ type FixedTileProps = YStackProps & {
   imagePriority?: ImageProps["priority"];
   interactive?: boolean;
 };
-const GRADIENT_START = [0, 0.2];
-const GRADIENT_END = [0, 0.9];
+const GRADIENT_START: LinearGradientPoint = [0, 0.2];
+const GRADIENT_END: LinearGradientPoint = [0, 0.9];
 
 export const FixedTile = React.memo(function FixedTile({
   title,

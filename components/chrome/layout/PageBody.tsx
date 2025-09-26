@@ -13,32 +13,35 @@ interface PageBodyProps extends YStackProps {
   pad?: SpaceToken; // NEW: horizontal padding
 }
 
-export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(function PageBody({ children, mode = "static", ...props }, ref) {
-  const content = (
-    <ThemedYStack box f={1} mih={0} p="none" gap="none" {...props}>
-      {children}
-    </ThemedYStack>
-  );
+export const PageBody = React.forwardRef<GHScrollView, PageBodyProps>(
+  function PageBody({ children, mode = "static", ...props }, ref) {
+    const content = (
+      <ThemedYStack box f={1} mih={0} p="none" gap="none" {...props}>
+        {children}
+      </ThemedYStack>
+    );
 
-  return mode === "scroll" ? (
-    <GHScrollView
-      ref={ref}
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        paddingHorizontal: 0, // padding only here in scroll mode
-      }}
-      keyboardShouldPersistTaps="handled"
-      nestedScrollEnabled
-      // iOS-only; helps prevent diagonal conflict
-      directionalLockEnabled
-      // optional “quiet” feel:
-      bounces={false}
-      overScrollMode="never"
-      scrollEventThrottle={16}
-      showsVerticalScrollIndicator>
-      {content}
-    </GHScrollView>
-  ) : (
-    content
-  );
-});
+    return mode === "scroll" ? (
+      <GHScrollView
+        ref={ref}
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingHorizontal: 0, // padding only here in scroll mode
+        }}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled
+        // iOS-only; helps prevent diagonal conflict
+        directionalLockEnabled
+        // optional “quiet” feel:
+        bounces={false}
+        overScrollMode="never"
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator
+      >
+        {content}
+      </GHScrollView>
+    ) : (
+      content
+    );
+  },
+);

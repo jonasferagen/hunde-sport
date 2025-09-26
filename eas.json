@@ -3,7 +3,10 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development"
+      "channel": "development",
+      "env": {
+        "APP_VARIANT": "dev"
+      }
     },
     "internal-apk-dev": {
       "distribution": "internal",
@@ -26,7 +29,9 @@
     "internal-apk-prod": {
       "distribution": "internal",
       "channel": "production",
-      "android": { "buildType": "apk" }
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "cli": {
