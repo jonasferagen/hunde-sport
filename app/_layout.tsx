@@ -18,33 +18,29 @@ enableFreeze(true);
 const flexStyle = { flex: 1 };
 const screenOptions = { headerShown: false };
 const RootLayout = () => {
-  try {
-    usePlayStoreUpdates({
-      checkOnStart: true,
-      checkOnForeground: true,
-      immediate: false,
-    });
-    return (
-      <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={flexStyle}>
-          <SafeAreaView style={flexStyle}>
-            <TamaguiProvider config={appConfig}>
-              <PortalProvider shouldAddRootHost>
-                <AppToastProvider>
-                  <ModalHost />
-                  <Stack screenOptions={screenOptions}>
-                    <Stack.Screen name="(app)" />
-                  </Stack>
-                </AppToastProvider>
-              </PortalProvider>
-            </TamaguiProvider>
-          </SafeAreaView>
-        </GestureHandlerRootView>
-      </QueryClientProvider>
-    );
-  } catch (e) {
-    console.error(e);
-  }
+  usePlayStoreUpdates({
+    checkOnStart: true,
+    checkOnForeground: true,
+    immediate: false,
+  });
+  return (
+    <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView style={flexStyle}>
+        <SafeAreaView style={flexStyle}>
+          <TamaguiProvider config={appConfig}>
+            <PortalProvider shouldAddRootHost>
+              <AppToastProvider>
+                <ModalHost />
+                <Stack screenOptions={screenOptions}>
+                  <Stack.Screen name="(app)" />
+                </Stack>
+              </AppToastProvider>
+            </PortalProvider>
+          </TamaguiProvider>
+        </SafeAreaView>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
+  );
 };
 
 export default Sentry.wrap(RootLayout);
