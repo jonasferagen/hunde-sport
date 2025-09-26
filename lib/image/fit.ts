@@ -2,11 +2,14 @@
 
 import type {
   BuildImageRenderPlanParams,
- ChooseImageFitParams, ImageFitDecision,  ImageRenderPlan } from "@/lib/image/types";
+  ChooseImageFitParams,
+  ImageFitDecision,
+  ImageRenderPlan,
+} from "@/lib/image/types";
 
 
 /** Your pure policy function (place the full body you have here) */
-export function chooseImageFit({
+function chooseImageFit({
   imageAspect,
   displayWidth,
   displayHeight,

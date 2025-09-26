@@ -5,7 +5,7 @@ import { log } from "@/lib/logger";
 
 import { ApiError, isRetriable } from "./httpError";
 
-export type ApiClientOptions = {
+type ApiClientOptions = {
   baseURL: string;
   timeoutMs?: number;
   enableLogging?: boolean;

@@ -14,7 +14,7 @@ import {
 import { ThemedSurface } from "./ThemedSurface";
 
 const DEFAULT_SIZE: SizeTokens = "$4";
-export const ButtonContext = createStyledContext({ size: DEFAULT_SIZE });
+const ButtonContext = createStyledContext({ size: DEFAULT_SIZE });
 
 type SizeKey = "$2" | "$3" | "$4" | "$5" | "$6";
 const SIZES: Record<
@@ -45,7 +45,7 @@ const FOCUS_STYLE = {
   outlineStyle: "solid",
 } as const;
 
-export const ButtonFrame = styled(ThemedSurface, {
+const ButtonFrame = styled(ThemedSurface, {
   name: "ThemedButton",
   context: ButtonContext,
   bg: "$background",
@@ -94,7 +94,7 @@ export const ButtonFrame = styled(ThemedSurface, {
   defaultVariants: { interactive: true, size: DEFAULT_SIZE },
 });
 
-export const ButtonText = styled(Text, {
+const ButtonText = styled(Text, {
   name: "ButtonText",
   context: ButtonContext,
   color: "$color",

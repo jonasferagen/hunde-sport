@@ -9,7 +9,7 @@ export const capitalize = (str: string) =>
 
 const isAllWhitespace = (str: string) => /^\s*$/.test(str);
 
-export const htmlToPlainText = (html: string): string => {
+const htmlToPlainText = (html: string): string => {
   const dom = parseDocument(html);
 
   const walk = (nodes: any[]): string => {

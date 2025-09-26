@@ -1,5 +1,5 @@
 // ProductCategoryProvider.tsx
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useMemo } from "react";
 
 import { ProductCategory } from "@/domain/ProductCategory";
 import {
@@ -15,15 +15,6 @@ interface ProductCategoryContextType {
 }
 
 const Ctx = createContext<ProductCategoryContextType | undefined>(undefined);
-
-export const useProductCategoryContext = () => {
-  const ctx = useContext(Ctx);
-  if (!ctx)
-    throw new Error(
-      "useProductCategoryContext must be used within a ProductCategoryProvider"
-    );
-  return ctx;
-};
 
 export const ProductCategoryProvider = React.memo(
   function ProductCategoryProvider({

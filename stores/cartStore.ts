@@ -1,11 +1,11 @@
 // stores/cartStore.ts
 import { Cart } from "@/domain/cart/Cart";
-import type { AddItemOptions } from "@/hooks/api/data/cart/api";
+import type { CartAddItemOptions } from "@/domain/cart/types";
 
 export interface CartActions {
   setCart: (cart: Cart) => void;
   reset: () => void;
-  addItem: (options: AddItemOptions) => Promise<void>;
+  addItem: (options: CartAddItemOptions) => Promise<void>;
   updateItem: (key: string, quantity: number) => Promise<void>;
   removeItem: (key: string) => Promise<void>;
   checkout: () => Promise<URL>;

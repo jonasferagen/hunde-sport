@@ -1,12 +1,12 @@
 // @/domain/purchasable/Purchasable.ts
 import { CustomField } from "@/domain/CustomField";
+import type { CartAddItemOptions } from "@/domain/cart/types";
 import type {
   AttributeSelection,
   ProductVariation,
   Variation,
 } from "@/domain/product";
 import { Product } from "@/domain/product/Product";
-import type { AddItemOptions } from "@/hooks/api/data/cart/api";
 import type { SimpleProduct, VariableProduct } from "@/types";
 
 export type PurchasableProduct = SimpleProduct | VariableProduct;
@@ -22,7 +22,7 @@ export type PurchasableStatus =
 
 export type StatusDescriptor = { key: PurchasableStatus; label: string };
 
-export const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
+const DEFAULT_STATUS_LABEL: Record<PurchasableStatus, string> = {
   ready: "Kjøp",
   select: "Se varianter",
   select_incomplete: "Velg ...",
@@ -138,7 +138,7 @@ export class Purchasable {
     );
   }
 
-  toCartItem(quantity = 1): AddItemOptions {
+  toCartItem(quantity = 1): CartAddItemOptions {
     this.validate();
     const ext = CustomField.toCartExtensions(this.customFields);
 

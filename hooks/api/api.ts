@@ -8,7 +8,7 @@ export type PaginationOpts = {
 };
 
 type QuerySegment = Record<string, unknown> | undefined;
-export const queryString = (...segments: QuerySegment[]) => {
+const queryString = (...segments: QuerySegment[]) => {
   const p = new URLSearchParams();
   for (const seg of segments) {
     if (!seg) continue;

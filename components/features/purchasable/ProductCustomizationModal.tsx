@@ -20,7 +20,7 @@ export const ProductCustomizationModal = ({ close, purchasable }: Props) => {
   );
 };
 
-export const ProductCustomizationModalContent = ({
+const ProductCustomizationModalContent = ({
   close,
   purchasable,
 }: {

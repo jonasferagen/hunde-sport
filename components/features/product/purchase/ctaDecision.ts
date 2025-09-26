@@ -10,13 +10,13 @@ import {
 } from "@/config/app";
 import type { PurchasableStatus, StatusDescriptor } from "@/domain/Purchasable";
 
-export type DecisionNext =
+type DecisionNext =
   | "addToCart"
   | "openVariations"
   | "openCustomize"
   | "noop";
 
-export type Decision = {
+type Decision = {
   next: DecisionNext;
   disabled: boolean;
   iconKey: string;

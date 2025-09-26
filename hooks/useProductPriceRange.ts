@@ -9,7 +9,7 @@ import type {
 import { useProductVariation } from "@/hooks/api/data/product/queries"; // adjust path
 import { VariableProduct } from "@/types";
 
-export type UseProductPriceRangeResult = {
+type UseProductPriceRangeResult = {
   productPriceRange: ProductPriceRangeType | null;
   isLoading: boolean;
   error?: unknown;

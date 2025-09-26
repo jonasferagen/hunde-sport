@@ -1,7 +1,7 @@
 import { buildThemes } from "./themeFactory";
 
 // theme-config.ts
-export const config = {
+const config = {
   primary: { light: "#C8E6E5", dark: "#275554" },
   secondary: { light: "#DDE2C3", dark: "#474e25" },
   tertiary: { light: "#94aa5f", dark: "#060703" },
@@ -21,11 +21,6 @@ export const config = {
 } as const;
 
 export const mintTheme = buildThemes(config);
-
-// Optional: handy type for <Theme name="...">
-export type AppThemeName =
-  | `light_${keyof typeof config & string}`
-  | `dark_${keyof typeof config & string}`;
 
 /*export const THEME_ERROR = "error4";
 export const THEME_WARNING = "warning3";

@@ -13,7 +13,7 @@ type BadgeBaseProps = ThemedXStackProps & {
   children: React.ReactNode;
 };
 
-export function BadgeBase({
+function BadgeBase({
   corner,
   offset = "$2",
   theme,

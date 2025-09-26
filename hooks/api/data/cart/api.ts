@@ -1,21 +1,11 @@
 import type { ApiResponse } from "apisauce";
 
 import { Cart, type CartData } from "@/domain/cart/Cart";
+import type { CartAddItemOptions } from "@/domain/cart/types";
 import { endpoints } from "@/hooks/api/api";
 import { getApiClient } from "@/lib/api/apiClient";
 
-export interface AddItemOptions {
-  id: number;
-  quantity: number;
-  variation?: Record<string, string>[];
-  extensions?: {
-    app_fpf?: {
-      values: Record<string, string>;
-    };
-  };
-}
-
-export function handleResponse(
+function handleResponse(
   response: ApiResponse<CartData>,
   context: string
 ): Cart {
@@ -55,7 +45,7 @@ export async function fetchCart(cartToken?: string): Promise<Cart> {
 
 export async function addItem(
   cartToken: string,
-  options: AddItemOptions
+  options: CartAddItemOptions
 ): Promise<Cart> {
  const apiClient = getApiClient();
   apiClient.headers["cart-token"] = cartToken;

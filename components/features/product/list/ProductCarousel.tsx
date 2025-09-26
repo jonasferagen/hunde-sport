@@ -46,7 +46,7 @@ type ProductCarouselProps<Args extends any[] = any[]> = StackProps & {
   indicatorWidthToken?: SpaceTokens;
 };
 
-export function ProductCarousel<Args extends any[] = any[]>({
+function ProductCarousel<Args extends any[] = any[]>({
   useQuery,
   useQueryArgs,
   leadingInsetToken = "$3",

@@ -7,7 +7,7 @@ type SelectionInfo = {
   otherSelectedTerm: Term | undefined;
 };
 
-export type AttributeSelectionKey = string;
+type AttributeSelectionKey = string;
 
 export class AttributeSelection {
   public readonly selected: ReadonlyMap<AttrKey, Term | undefined>;
@@ -17,7 +17,7 @@ export class AttributeSelection {
   }
 
   static create(
-    attributes: ReadonlyMap<AttrKey, Attribute>
+    attributes: ReadonlyMap<AttrKey, Attribute>,
   ): AttributeSelection {
     const selected = new Map<AttrKey, Term | undefined>();
     for (const key of attributes.keys()) {
@@ -40,7 +40,7 @@ export class AttributeSelection {
     const selectedTerm = this.selected.get(attrKey);
     const attrKeys = Array.from(this.selected.keys());
     const otherAttrKey: AttrKey | undefined = attrKeys.findLast(
-      (k) => k !== attrKey
+      (k) => k !== attrKey,
     );
     const otherSelectedTerm = otherAttrKey
       ? this.selected.get(otherAttrKey)

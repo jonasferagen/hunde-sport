@@ -6,15 +6,15 @@ import type { Purchasable } from "@/domain/Purchasable";
 import { haptic } from "@/lib/haptics";
 import { useCartStore } from "@/stores/useCartStore";
 
-export type ActionStatus = "idle" | "loading" | "success" | "error";
+type ActionStatus = "idle" | "loading" | "success" | "error";
 
-export type AddActionOpts = {
+type AddActionOpts = {
   quantity?: number;
   onSuccess?: () => void;
   onError?: (message?: string) => void;
 };
 
-export type AddActionReturn = {
+type AddActionReturn = {
   isLoading: boolean;
   status: ActionStatus;
   error?: string;

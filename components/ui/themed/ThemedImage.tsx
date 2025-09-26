@@ -9,7 +9,7 @@ import { type YStackProps } from "tamagui";
 
 type Fit = NonNullable<ExpoImageProps["contentFit"]>;
 
-export interface ThemedImageProps extends YStackProps {
+interface ThemedImageProps extends YStackProps {
   title?: string;
   uri: string;
   /** 'cover' is typical for tiles */

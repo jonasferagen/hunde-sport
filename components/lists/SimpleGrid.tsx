@@ -4,7 +4,7 @@ import type { SpaceTokens, StackProps } from "tamagui";
 import { ThemedXStack, ThemedYStack } from "@/components/ui/themed";
 import { spacePx } from "@/lib/theme";
 
-export type SimpleGridProps<T> = StackProps & {
+type SimpleGridProps<T> = StackProps & {
   items: readonly T[];
   columns: number;
   gapToken?: SpaceTokens; // spacing between tiles (defaults to $3)

@@ -37,8 +37,8 @@ const ThemedParagraphBase = styled(Paragraph, {
   },
 } as const);
 
-export type ThemedParagraphProps = React.ComponentProps<typeof ThemedParagraphBase>;
-export type ThemedParagraphRef = React.ComponentRef<typeof ThemedParagraphBase>;
+type ThemedParagraphProps = React.ComponentProps<typeof ThemedParagraphBase>;
+type ThemedParagraphRef = React.ComponentRef<typeof ThemedParagraphBase>;
 
 export const ThemedParagraph = React.forwardRef<ThemedParagraphRef, ThemedParagraphProps>((props, ref) => (
   <ThemedParagraphBase

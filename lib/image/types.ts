@@ -18,7 +18,7 @@ export type BuildImageRenderPlanParams = {
   preferWidthOnlyForContain?: boolean;
 };
 
-export type ImageFit = "cover" | "contain";
+type ImageFit = "cover" | "contain";
 
 export type ChooseImageFitParams = {
   // Derived from StoreImage.getIntrinsicSize() when available

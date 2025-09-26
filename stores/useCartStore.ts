@@ -107,9 +107,6 @@ export const useCartStore = create<CartPersistState & CartActions>()(
 export const useCartIsLoading = () =>
   useCartStore((s) => s.isUpdating || Object.keys(s.updatingKeys).length > 0);
 
-export const useItemIsUpdating = (key: string) =>
-  useCartStore((s) => !!s.updatingKeys[key]);
-
 export const useCartToken = () => useCartStore((s) => s.cartToken);
 export const useCartHasHydrated = () => useCartStore((s) => s._hasHydrated);
 

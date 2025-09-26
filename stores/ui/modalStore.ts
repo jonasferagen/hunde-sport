@@ -93,5 +93,4 @@ export const useModalStore = create<ModalState>((set, get) => ({
 // tiny helpers (kept minimal)
 export const openModal = (...args: Parameters<ModalState["openModal"]>) =>
   useModalStore.getState().openModal(...args);
-export const closeModal = () => useModalStore.getState().closeModal();
 export const setModalPosition = useModalStore.getState().setPosition;

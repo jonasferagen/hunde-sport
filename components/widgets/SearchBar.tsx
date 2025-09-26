@@ -4,7 +4,7 @@ import { XStack } from "tamagui";
 
 import { ThemedInput } from "@/components/ui/themed";
 
-export interface SearchBarProps {
+interface SearchBarProps {
   placeholder?: string;
   /** Controlled value: if provided, component mirrors this */
   value?: string;

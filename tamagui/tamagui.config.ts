@@ -11,7 +11,7 @@ import { mintTheme } from "./themes/mintTheme";
 // 1) Names as a typed union
 type BuiltThemeName = (typeof mintTheme.themeNames)[number];
 type NativeThemeName = keyof typeof defaultConfig.themes;
-export type AppThemeName = NativeThemeName | BuiltThemeName;
+type AppThemeName = NativeThemeName | BuiltThemeName;
 
 // 2) Make the merged themes map keep literal keys (avoid widening to `string`)
 type ThemeMap<K extends string> = Record<K, Record<string, any>>;
@@ -29,7 +29,7 @@ const appConfig = createTamagui({
   themeNames: mintTheme.themeNames,
 });
 
-export type AppConfig = typeof appConfig;
+type AppConfig = typeof appConfig;
 declare module "@tamagui/core" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface TamaguiCustomConfig extends AppConfig {}

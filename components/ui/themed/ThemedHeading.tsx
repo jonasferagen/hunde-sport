@@ -20,12 +20,12 @@ const ThemedHeadingBase = styled(Heading, {
 /* @TODO: This should not be necessary
  * Shares common functionality with ThemedText, look into merging this
  */
-export type ThemedHeadingProps = React.ComponentProps<
+type ThemedHeadingProps = React.ComponentProps<
   typeof ThemedHeadingBase
 > & {
   tabular?: boolean;
 };
-export type ThemedHeadingRef = React.ComponentRef<typeof ThemedHeadingBase>;
+type ThemedHeadingRef = React.ComponentRef<typeof ThemedHeadingBase>;
 
 export const ThemedHeading = React.forwardRef<
   ThemedHeadingRef,

@@ -1,7 +1,7 @@
 // @/domain/pricing/Money.ts
 import { Currency } from "./Currency";
 
-export type MoneyFormatOptions = {
+type MoneyFormatOptions = {
   style?: "full" | "short"; // short shows "-" for zero decimals
   omitPrefix?: boolean; // omit currency_prefix
 };
@@ -35,7 +35,8 @@ export class Money {
     const style = opts?.style ?? "short";
     const omitPrefix = opts?.omitPrefix ?? true;
 
-    const { minorUnit, decimalSeparator, thousandSeparator, prefix, suffix } = this.currency; // assumes Currency exposes these
+    const { minorUnit, decimalSeparator, thousandSeparator, prefix, suffix } =
+      this.currency; // assumes Currency exposes these
 
     const n = this.minor;
     const sign = n < 0 ? "-" : "";
@@ -44,7 +45,10 @@ export class Money {
 
     const intPart = Math.floor(abs / base).toString();
     const fracPart = (abs % base).toString().padStart(minorUnit, "0");
-    const intWithSep = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+    const intWithSep = intPart.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      thousandSeparator,
+    );
     const hasFraction = minorUnit > 0 && Number(fracPart) !== 0;
 
     const body =

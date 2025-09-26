@@ -28,7 +28,7 @@ export const ProductVariationsModal = ({ close, purchasable }: Props) => {
   );
 };
 
-export const ProductVariationsModalContent = ({
+const ProductVariationsModalContent = ({
   close,
   purchasable,
 }: {

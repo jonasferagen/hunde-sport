@@ -22,7 +22,7 @@ type Base<T> = Pick<
   | "getItemType"
 >;
 
-export interface HorizontalListProps<T> extends Base<T> {
+interface HorizontalListProps<T> extends Base<T> {
   data: readonly T[];
   renderItem: FlashListRenderItem<T>;
 

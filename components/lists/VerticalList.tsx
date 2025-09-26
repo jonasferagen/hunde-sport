@@ -21,7 +21,7 @@ type Base<T> = Pick<
   | "viewabilityConfig"
 >;
 
-export interface VerticalListProps<T> extends Base<T> {
+interface VerticalListProps<T> extends Base<T> {
   data: readonly T[];
   renderItem: FlashListRenderItem<T>;
   ListFooterComponent?: React.ReactElement | null;

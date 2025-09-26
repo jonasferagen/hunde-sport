@@ -100,7 +100,7 @@ type ProductCategoryBranchProps = {
   parentPathIds: readonly number[];
 };
 
-export const ProductCategoryBranch = memo(function ProductCategoryBranch({
+const ProductCategoryBranch = memo(function ProductCategoryBranch({
   id,
   level,
   parentPathIds,
@@ -241,8 +241,8 @@ const useCategoryTreeStore = create<CategoryTreeUI>((set, get) => ({
     get().activePathIds.includes(productCategoryId),
 }));
 
-export const useIsExpanded = (productCategoryId: number) =>
+const useIsExpanded = (productCategoryId: number) =>
   useCategoryTreeStore((s) => s.isExpanded(productCategoryId));
 
-export const useSetActivePathIds = () =>
+const useSetActivePathIds = () =>
   useCategoryTreeStore((s) => s.setActivePathIds);

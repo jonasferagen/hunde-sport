@@ -39,7 +39,7 @@ export type ThemedTextProps = React.ComponentProps<typeof ThemedTextBase> & {
   copyable?: boolean;
   adjust?: boolean;
 };
-export type ThemedTextRef = React.ComponentRef<typeof ThemedTextBase>;
+type ThemedTextRef = React.ComponentRef<typeof ThemedTextBase>;
 
 export const ThemedText = React.forwardRef<ThemedTextRef, ThemedTextProps>(
   function ThemedText(props, ref) {

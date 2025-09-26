@@ -2,7 +2,7 @@
 import { darken, getLuminance, lighten, rgba } from "polished";
 
 /** The token surface your components expect */
-export type ThemeTemplate = {
+type ThemeTemplate = {
   background: string;
   backgroundFocus: string;
   backgroundHover: string;
@@ -28,14 +28,14 @@ export type ThemeTemplate = {
 };
 
 /** Your input config */
-export type PaletteConfig = Record<string, { light: string; dark: string }>;
+type PaletteConfig = Record<string, { light: string; dark: string }>;
 
 /** Variant suffixes we generate per palette key */
 type VariantSuffix = "" | "_tint" | "_shade";
 type BaseKey<C> = Extract<keyof C, string>;
 
 /** Nice typed theme-name union from the config you pass in */
-export type ThemeNames<C extends PaletteConfig> =
+type ThemeNames<C extends PaletteConfig> =
   | "light"
   | "dark"
   | `${"light" | "dark"}_${BaseKey<C>}`
@@ -67,7 +67,7 @@ const AMOUNTS = {
  * Text flips to black/white for contrast. Hover/Press/Focus go darker on light
  * bases and lighter on dark bases for consistent perceived depth.
  */
-export function makeTemplate(base: string): ThemeTemplate {
+function makeTemplate(base: string): ThemeTemplate {
   const isLightBg = getLuminance(base) > 0.5;
   const text = isLightBg ? "#000000" : "#FFFFFF";
 

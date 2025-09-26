@@ -7,7 +7,7 @@ import SpInAppUpdates, {
   type StartUpdateOptions,
 } from "sp-react-native-in-app-updates";
 
-export type InAppUpdatesOptions = {
+type InAppUpdatesOptions = {
   checkOnStart?: boolean;
   checkOnForeground?: boolean;
   immediate?: boolean; // IMMEDIATE helps verify quickly

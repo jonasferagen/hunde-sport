@@ -1,6 +1,6 @@
 import { type DimensionValue } from "react-native";
 
-export const DOMAIN = "hunde-sport.no" as const;
+const DOMAIN = "hunde-sport.no" as const;
 export const BASE_URL = `https://${DOMAIN}` as const;
 export const STORE_URL = `${BASE_URL}/wp-json/wc/store/v1` as const;
 export const CHECKOUT_URL = `${BASE_URL}/kassen` as const;
@@ -22,7 +22,6 @@ export const THEME_SHEET_BG2 = "secondary";
 export const THEME_HEADER = "primary";
 export const THEME_BOTTOM_BAR = "secondary";
 
-export const THEME_HINT = "dark_secondary_shade";
 
 export const THEME_PAGE_HEADER = "primary";
 export const THEME_PAGE_FOOTER = "secondary_shade";

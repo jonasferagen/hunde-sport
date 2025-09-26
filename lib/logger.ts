@@ -1,8 +1,8 @@
 // lib/logger.ts
 import { logger, type transportFunctionType } from "react-native-logs";
 
-export type Severity = "debug" | "info" | "warn" | "error";
-export type Logger = { [K in Severity]: (...args: unknown[]) => void };
+type Severity = "debug" | "info" | "warn" | "error";
+type Logger = { [K in Severity]: (...args: unknown[]) => void };
 
 const supportedSeverities: Severity[] = ["debug", "info", "warn", "error"];
 

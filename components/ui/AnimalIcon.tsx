@@ -9,7 +9,7 @@ type IconComponent = (props: IconProps) => JSX.Element;
 // Non-empty tuple ensures there's at least one icon in the pool
 const ICONS = [Cat, Dog, Fish, Squirrel, Rat, Bird] as const;
 
-export interface AnimalIconProps extends IconProps {
+interface AnimalIconProps extends IconProps {
   /** Pick a specific animal icon. If omitted, a random one is chosen (stable per mount). */
   icon?: IconComponent;
 }

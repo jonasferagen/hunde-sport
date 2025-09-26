@@ -65,7 +65,7 @@ export function NavBottomBar() {
   );
 }
 
-export const CustomBottomBarContents = () => {
+const CustomBottomBarContents = () => {
   const insets = useSafeAreaInsets();
 
   const { to } = useCanonicalNavigation();

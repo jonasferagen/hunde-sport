@@ -8,8 +8,8 @@ import {
   FadeOut,
   LinearTransition,
 } from "react-native-reanimated";
-import type { SizeTokens, StackProps, XStackProps, YStackProps } from "tamagui";
-import { Stack, styled, XStack, YStack } from "tamagui";
+import type { SizeTokens, XStackProps, YStackProps } from "tamagui";
+import { styled, XStack, YStack } from "tamagui";
 
 const DEFAULT_SIZE = "$3";
 
@@ -44,24 +44,11 @@ const config = {
   },
 } as const;
 
-// Keep bases internal
-const ThemedStackBase = styled(Stack, config);
 const ThemedYStackBase = styled(YStack, config);
 const ThemedXStackBase = styled(XStack, config);
 
 type Props = { fade?: boolean; spring?: boolean };
 type WithChildren<P> = Omit<P, "children"> & { children?: ReactNode };
-
-// If you ever need it internally:
-type ThemedStackProps = WithChildren<
-  ComponentProps<typeof ThemedStackBase> & StackProps & Props
->;
-export const _ThemedStack = React.forwardRef<
-  ComponentRef<typeof ThemedStackBase>,
-  ThemedStackProps
->(function _ThemedStack(props, ref) {
-  return <ThemedStackBase ref={ref} {...props} />;
-});
 
 // Public components
 export type ThemedYStackProps = WithChildren<

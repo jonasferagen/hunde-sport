@@ -2,7 +2,7 @@ import type { AttrKey } from "@/domain/product-attributes/Attribute";
 import type { TermKey } from "@/domain/product-attributes/Term";
 import { slugKey } from "@/lib/formatters";
 
-export type VariationKey = string;
+type VariationKey = string;
 
 export type VariationData = {
   id: number;

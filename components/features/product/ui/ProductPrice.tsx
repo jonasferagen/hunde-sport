@@ -141,5 +141,3 @@ function ProductPriceVariable({
     </PriceLine>
   );
 }
-
-export default ProductPrice;

@@ -1,8 +1,8 @@
 // domain/store-image/StoreImage.ts
 import { getDevicePixelRatio } from "@/lib/image/dpr";
-export type ImageIntrinsicSize = { width: number; height: number };
-export type ImageSizeProvider = (uri: string) => Promise<ImageIntrinsicSize>;
-export type ImageScaleFunction = (
+type ImageIntrinsicSize = { width: number; height: number };
+type ImageSizeProvider = (uri: string) => Promise<ImageIntrinsicSize>;
+type ImageScaleFunction = (
   imageUrl: string,
   targetWidthPx: number,
   targetHeightPx: number,
