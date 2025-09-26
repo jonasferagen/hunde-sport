@@ -1,6 +1,9 @@
+// app/(app)/(shop)/_layout.tsx
 import { Stack } from "expo-router";
 import { StyleSheet } from "react-native";
+import { PortalItem } from "tamagui";
 
+import { NavBottomBar } from "@/components/chrome/navigation/NavBottomBar";
 import { routes } from "@/config/routes";
 import { useCanonicalBackHandler } from "@/hooks/useCanonicalNavigation";
 
@@ -34,6 +37,9 @@ export default function ShopLayout() {
           />
         ))}
       </Stack>
+      <PortalItem>
+        <NavBottomBar />
+      </PortalItem>
     </>
   );
 }

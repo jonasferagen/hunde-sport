@@ -23,7 +23,8 @@ export const PreloaderScreen = () => {
 
   // Start data once fonts are ready; never toggle back.
   const data = useBootData({ enabled: fonts.ready });
-  const { toWithoutOverlay } = useCanonicalNavigation();
+  const { to } = useCanonicalNavigation();
+  const hasNavigatedRef = React.useRef(false);
 
   // Hide splash once fonts are ready (do this once; no regress)
   React.useEffect(() => {
@@ -32,8 +33,11 @@ export const PreloaderScreen = () => {
 
   // Navigate when both data tasks are done (cart + categories)
   React.useEffect(() => {
-    if (data.allDone) toWithoutOverlay("index");
-  }, [data.allDone, toWithoutOverlay]);
+    if (data.allDone && !hasNavigatedRef.current) {
+      hasNavigatedRef.current = true;
+      to("index");
+    }
+  }, [data.allDone, to]);
 
   const showPanel = !fonts.ready || !data.allDone || !!data.error;
 

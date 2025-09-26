@@ -24,7 +24,7 @@ export type AddActionReturn = {
 
 export function useAddToCart(
   purchasable: Purchasable,
-  opts?: AddActionOpts
+  opts?: AddActionOpts,
 ): AddActionReturn {
   const { quantity = 1, onSuccess, onError } = opts ?? {};
   const addItem = useCartStore((s) => s.addItem);
@@ -41,7 +41,6 @@ export function useAddToCart(
 
     try {
       const options = purchasable.toCartItem(quantity);
-      console.log("[AddToCart] payload", JSON.stringify(options, null, 2));
       await addItem(options);
 
       haptic.success();

@@ -1,7 +1,7 @@
+// app/(preloader)/index.tsx
+
 import { PreloaderScreen } from "@/screens/PreloaderScreen";
 
-const App = () => {
+export default function Preloader() {
   return <PreloaderScreen />;
-};
-
-export default App;
+}

@@ -31,7 +31,11 @@ const RootLayout = () => {
             <PortalProvider shouldAddRootHost>
               <AppToastProvider>
                 <ModalHost />
-                <Stack screenOptions={screenOptions}>
+                <Stack
+                  screenOptions={screenOptions}
+                  initialRouteName="(preloader)/index"
+                >
+                  <Stack.Screen name="(preloader)/index" />
                   <Stack.Screen name="(app)" />
                 </Stack>
               </AppToastProvider>
