@@ -34,7 +34,6 @@ export const PreloaderScreen = () => {
   // Navigate when both data tasks are done (cart + categories)
   React.useEffect(() => {
     if (data.allDone && !hasNavigatedRef.current) {
-      console.log("aaa");
       hasNavigatedRef.current = true;
       to("index");
     }
