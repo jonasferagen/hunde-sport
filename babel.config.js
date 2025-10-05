@@ -20,8 +20,9 @@ module.exports = function (api) {
       [
         "module-resolver",
         {
+          root: ["./"],
           alias: {
-            "@": ".",
+            "@": "./src",
             "react-native-device-info": "./react-native-device-info.js",
           },
           extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],

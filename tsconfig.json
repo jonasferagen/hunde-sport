@@ -16,10 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./*"
-      ],
-      "@tests/*": [
-        "tests/*"
+        "src/*"
       ]
     },
     "types": [
@@ -30,19 +27,10 @@
     ]
   },
   "include": [
-    "app",
-    "components",
-    "contexts",
-    "hooks",
-    "lib",
-    "screens",
-    "tamagui",
-    "types",
+    "src",
     "index.ts",
-    "index.tsx",
     "expo-env.d.ts",
     ".expo/types/**/*.ts",
-    "tests"
   ],
   "exclude": [
     "node_modules",

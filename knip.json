@@ -2,19 +2,7 @@
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "project": [
     "index.{ts,tsx}",
-    "app/**/*.{ts,tsx}",
-    "bootstrap/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
-    "config/**/*.{ts,tsx}",
-    "contexts/**/*.{ts,tsx}",
-    "domain/**/*.{ts,tsx}",
-    "hooks/**/*.{ts,tsx}",
-    "lib/**/*.{ts,tsx}",
-    "screens/**/*.{ts,tsx}",
-    "stores/**/*.{ts,tsx}",
-    "tamagui/**/*.{ts,tsx}",
-    "tests/**/*.{ts,tsx}",
-    "types/**/*.{ts,tsx}"
+    "src/**/*.{ts,tsx}"
   ],
   "ignore": [
     "android/**",
@@ -29,6 +17,7 @@
   "ignoreDependencies": [
     "expo*",
     "@tamagui/*",
-    "burnt"
+    "burnt",
+    "metro-minify-terser"
   ]
 }

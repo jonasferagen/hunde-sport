@@ -1,4 +1,6 @@
 // metro.config.js
+const path = require("path");
+
 const { getSentryExpoConfig } = require("@sentry/react-native/metro");
 
 /** @type {import('expo/metro-config').MetroConfig} */
@@ -12,5 +14,8 @@ config.resolver.sourceExts ??= [];
 if (!config.resolver.sourceExts.includes("mjs")) {
   config.resolver.sourceExts.push("mjs");
 }
+
+config.resolver.alias ??= {};
+config.resolver.alias["@"] = path.resolve(__dirname, "src");
 
 module.exports = config;
