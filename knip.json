@@ -14,7 +14,7 @@
     "stores/**/*.{ts,tsx}",
     "tamagui/**/*.{ts,tsx}",
     "tests/**/*.{ts,tsx}",
-    "types/**/*.{ts,tsx}",
+    "types/**/*.{ts,tsx}"
   ],
   "ignore": [
     "android/**",
@@ -27,9 +27,8 @@
     "scripts/**"
   ],
   "ignoreDependencies": [
-    // Expo & RN modules are often loaded natively/babel
     "expo*",
     "@tamagui/*",
-    "burnt",
-  ],
+    "burnt"
+  ]
 }

@@ -2,6 +2,9 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "../wingfish-control-frontend"
     }
   ],
   "settings": {

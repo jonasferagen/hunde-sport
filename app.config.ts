@@ -36,7 +36,7 @@ export default (): ExpoConfig => ({
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
-  platforms: ["android"],
+  platforms: ["android", "ios"],
   android: {
     package: PACKAGE,
     edgeToEdgeEnabled: true,
@@ -46,6 +46,13 @@ export default (): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     permissions: ["INTERNET", "ACCESS_NETWORK_STATE", "VIBRATE"],
+  },
+  ios: {
+    bundleIdentifier: "no.hundesport.app",
+    supportsTablet: false,
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+    },
   },
   plugins: [
     "expo-router",

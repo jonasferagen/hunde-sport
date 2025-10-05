@@ -12,17 +12,18 @@ import { setModalPosition, useModalStore } from "@/stores/ui/modalStore";
 
 export const ModalHost = () => {
   // ...
-  const { open, renderer, payload, snapPoints, position, closeModal, status } = useModalStore(
-    useShallow((s) => ({
-      open: s.open,
-      renderer: s.renderer,
-      payload: s.payload,
-      snapPoints: s.snapPoints,
-      position: s.position,
-      closeModal: s.closeModal,
-      status: s.status,
-    }))
-  );
+  const { open, renderer, payload, snapPoints, position, closeModal, status } =
+    useModalStore(
+      useShallow((s) => ({
+        open: s.open,
+        renderer: s.renderer,
+        payload: s.payload,
+        snapPoints: s.snapPoints,
+        position: s.position,
+        closeModal: s.closeModal,
+        status: s.status,
+      })),
+    );
 
   const { onHostLayout } = useModalSettled();
   const body =
@@ -51,10 +52,23 @@ export const ModalHost = () => {
       onPositionChange={setModalPosition}
       unmountChildrenWhenHidden
       dismissOnSnapToBottom
-      animation="spring">
-      <Sheet.Overlay animation="spring" enterStyle={{ opacity: 0 }} style={{ backgroundColor: "rgba(0,0,0,0.15)" }} />
+      animation="spring"
+    >
+      <Sheet.Overlay
+        animation="spring"
+        enterStyle={{ opacity: 0 }}
+        style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
+      />
       <Sheet.Handle />
-      <Sheet.Frame f={1} mih={0} p="$4" mb={insets.bottom} gap="$3" onLayout={onHostLayout} theme={THEME_SHEET}>
+      <Sheet.Frame
+        f={1}
+        mih={0}
+        p="$4"
+        mb={insets.bottom}
+        gap="$3"
+        onLayout={onHostLayout}
+        theme={THEME_SHEET}
+      >
         <ThemedLinearGradient fromColor={c1} toColor={c2} alpha={1} />
         <ThemedYStack f={1} mih={0}>
           <AppToastProvider>{body}</AppToastProvider>
