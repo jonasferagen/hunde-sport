@@ -1,7 +1,7 @@
 {
   "name": "hunde-sport",
   "main": "index.ts",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "config": {
     "app_pkg_prod": "com.anonymous.hundesport",
     "app_pkg_dev": "com.anonymous.hundesport.dev"

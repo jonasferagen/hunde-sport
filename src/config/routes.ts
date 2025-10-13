@@ -9,7 +9,7 @@ import React from "react";
 
 import { ProductCategory } from "@/domain/ProductCategory";
 import { SimpleProduct, VariableProduct } from "@/types";
-export type NavPolicy = "switch" | "push"; // | 'replace';
+export type NavPolicy = "switch" | "push" | "replace";
 
 interface Route<TArgs extends any[] = any[]> {
   name: string;
@@ -38,7 +38,7 @@ export const routes = {
     icon: Home,
     path: () => ({ pathname: paths.home }),
     showInDrawer: true,
-    nav: "switch", // top-level switch (doesn't stack)
+    nav: "replace", // welcome -> app shouldn't keep preloader on stack
   } satisfies Route,
 
   cart: {

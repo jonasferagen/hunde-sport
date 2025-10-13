@@ -57,9 +57,14 @@ const NavDrawerContent = () => {
         {hasOpened ? <ProductCategoryTree colors={[c1, c2]} /> : <Loader />}
       </ThemedYStack>
       <ThemedYStack box container jc="flex-end" theme={THEME_SHEET_BG2}>
-        <ThemedText size="$1" ta="right">
-          v{version} - (build {build})
-        </ThemedText>
+        <ThemedXStack split>
+          <ThemedText size="$1" ta="left">
+            {/*  genia.no */}
+          </ThemedText>
+          <ThemedText size="$1" ta="right">
+            v{version} - (build {build})
+          </ThemedText>
+        </ThemedXStack>
       </ThemedYStack>
     </ThemedYStack>
   );

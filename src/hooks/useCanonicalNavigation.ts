@@ -92,6 +92,7 @@ export function useCanonicalNavigation() {
         scheduleNav(() => {
           if (targetPath === pathname) {
             if (policy === "push") router.push(href);
+            else if (policy === "replace") router.replace(href);
             else {
               const nextKey = paramsKey(href.params as any);
               if (nextKey && nextKey !== currentParamsKey) {
@@ -101,8 +102,8 @@ export function useCanonicalNavigation() {
             return;
           }
           if (policy === "push") router.push(href);
-          else if (policy === "switch") router.navigate(href);
-          else router.replace(href);
+          else if (policy === "replace") router.replace(href);
+          else router.navigate(href);
         }, withoutOverlay);
       })();
 

@@ -36,6 +36,7 @@ export default (): ExpoConfig => ({
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
+  icon: "./src/assets/images/icon.png",
   platforms: ["android", "ios"],
   android: {
     package: PACKAGE,
